@@ -26,6 +26,8 @@ import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.utils.DateTimeUtils;
 import org.wordpress.android.util.AppLog;
@@ -58,16 +60,24 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         if (response != null && response instanceof Map) {
                             PostModel postModel = postResponseObjectToPostModel(response, site, post.isPage());
                             if (postModel != null) {
-                                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(postModel));
+                                RemotePostPayload payload = new RemotePostPayload(postModel, site);
+                                mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                             } else {
-                                // TODO: do nothing or dispatch error?
+                                RemotePostPayload payload = new RemotePostPayload(post, site);
+                                payload.error = new PostError(PostErrorType.INVALID_RESPONSE);
+                                mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                             }
                         }
                     }
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // TODO: Implement lower-level catching in BaseXMLRPCClient
+                        // Possible non-generic errors:
+                        // 404 - "Invalid post ID."
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
+                        payload.error = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                     }
                 });
 
@@ -107,14 +117,20 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         if (posts != null) {
                             mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                         } else {
-                            // TODO: do nothing or dispatch error?
+                            payload.error = new PostError(PostErrorType.INVALID_RESPONSE);
+                            mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                         }
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // TODO: Implement lower-level catching in BaseXMLRPCClient
+                        // Possible non-generic errors:
+                        // 403 - "The post type specified is not valid"
+                        // TODO: Check the error message and flag this as INVALID_POST_TYPE if applicable
+                        PostError postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 }
         );
@@ -157,7 +173,15 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // TODO: Implement lower-level catching in BaseXMLRPCClient
+                        // Possible non-generic errors:
+                        // 403 - "Invalid post type"
+                        // 403 - "Invalid term ID" (invalid category or tag id)
+                        // 404 - "Invalid post ID." (editing only)
+                        // 404 - "Invalid attachment ID." (invalid featured image)
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        // TODO: Check the error message and flag this as one of the above specific errors if applicable
+                        payload.error = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
                     }
                 });
 
@@ -176,13 +200,19 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 new Listener() {
                     @Override
                     public void onResponse(Object response) {
-                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(post));
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // TODO: Implement lower-level catching in BaseXMLRPCClient
+                        // Possible non-generic errors:
+                        // 404 - "Invalid post ID."
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
+                        payload.error = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 });
 
