@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.discovery;
 
+import android.support.annotation.NonNull;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
@@ -9,7 +11,6 @@ import org.wordpress.android.fluxc.network.BaseRequest;
 
 import java.io.UnsupportedEncodingException;
 
-// TODO: Would be great to use generics / return POJO or model direclty (see GSON code?)
 public class DiscoveryRequest extends BaseRequest<String> {
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("text/xml; charset=%s", PROTOCOL_CHARSET);
@@ -35,6 +36,12 @@ public class DiscoveryRequest extends BaseRequest<String> {
             parsed = new String(response.data);
         }
         return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
+    }
+
+    @Override
+    public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
+        // no op
+        return error;
     }
 
     @Override
