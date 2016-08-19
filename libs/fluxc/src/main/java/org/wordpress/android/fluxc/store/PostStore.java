@@ -123,6 +123,10 @@ public class PostStore extends Store {
             this.type = PostErrorType.fromString(type);
             this.message = message;
         }
+
+        public PostError(PostErrorType type) {
+            this(type, "");
+        }
     }
 
     // OnChanged events
@@ -160,6 +164,7 @@ public class PostStore extends Store {
     public enum PostErrorType {
         UNKNOWN_POST,
         UNKNOWN_POST_TYPE,
+        INVALID_RESPONSE,
         GENERIC_ERROR;
 
         public static PostErrorType fromString(String string) {
