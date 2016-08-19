@@ -1,0 +1,10 @@
+wp.getOptions
+wp.getPostFormats
+wp.getUsersBlogs
+system.listMethods
+
+wp.deletePost
+wp.editPost
+wp.getPost
+wp.getPosts
+wp.newPost
