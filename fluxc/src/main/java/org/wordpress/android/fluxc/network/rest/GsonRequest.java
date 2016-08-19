@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.network.BaseRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-public class GsonRequest<T> extends BaseRequest<T> {
+public abstract class GsonRequest<T> extends BaseRequest<T> {
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
