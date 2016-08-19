@@ -100,12 +100,12 @@ public class XMLRPCRequest extends BaseRequest<Object> {
             XMLRPCFault xmlrpcFault = (XMLRPCFault) error.volleyError.getCause();
             if (xmlrpcFault.getFaultCode() == 401) {
                 // Augmented error
-                error.error = GenericErrorType.AUTHORIZATION_REQUIRED;
+                error.type = GenericErrorType.AUTHORIZATION_REQUIRED;
                 // Unauthorized
                 payload.error.type = AuthenticationErrorType.AUTHORIZATION_REQUIRED;
             } else if (xmlrpcFault.getFaultCode() == 403) {
                 // Augmented error
-                error.error = GenericErrorType.NOT_AUTHENTICATED;
+                error.type = GenericErrorType.NOT_AUTHENTICATED;
                 // Not authenticated
                 payload.error.type = AuthenticationErrorType.NOT_AUTHENTICATED;
             }
@@ -113,7 +113,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
 
         // TODO: mOnAuthFailedListener should not be called here and the class/callback should de renamed to something
         // like "onLowNetworkLevelError"
-        switch (error.error) {
+        switch (error.type) {
             case HTTP_AUTH_ERROR:
                 payload.error.type = AuthenticationErrorType.HTTP_AUTH_ERROR;
                 break;
