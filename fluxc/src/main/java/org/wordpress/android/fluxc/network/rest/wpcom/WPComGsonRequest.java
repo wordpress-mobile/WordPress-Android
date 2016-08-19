@@ -19,6 +19,14 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
     private static final String REST_AUTHORIZATION_HEADER = "Authorization";
     private static final String REST_AUTHORIZATION_FORMAT = "Bearer %s";
 
+    public static class WPComGsonNetworkError extends BaseNetworkError {
+        public String apiError;
+        public WPComGsonNetworkError(BaseNetworkError error) {
+            super(error);
+            this.apiError = "";
+        }
+    }
+
     public WPComGsonRequest(int method, String url, Map<String, String> params, Class<T> clazz,
                             Listener<T> listener, BaseErrorListener errorListener) {
         super(method, params, url, clazz, listener, errorListener);
@@ -38,10 +46,9 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
 
     @Override
     public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
-        // Fire OnAuthFailedListener if it matches certain types of error
+        WPComGsonNetworkError returnedError = new WPComGsonNetworkError(error);
         if (error.hasVolleyError() && error.volleyError.networkResponse != null
-                && error.volleyError.networkResponse.statusCode >= 400
-                && mOnAuthFailedListener != null) {
+                && error.volleyError.networkResponse.statusCode >= 400) {
             String jsonString;
             try {
                 jsonString = new String(error.volleyError.networkResponse.data,
@@ -50,26 +57,29 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
                 jsonString = "";
             }
 
-            // TODO: we could use GSON here
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(jsonString);
             } catch (JSONException e) {
                 jsonObject = new JSONObject();
             }
+            String apiError = jsonObject.optString("error", "");
+            String apiMessage = jsonObject.optString("error_description", "");
 
-            String apiResponseError = jsonObject.optString("error", "");
-            if (apiResponseError.equals("authorization_required")
-                    || apiResponseError.equals("invalid_token")
-                    || apiResponseError.equals("access_denied")
-                    || apiResponseError.equals("needs_2fa")) {
-                AuthenticationError authError = new AuthenticationError(Authenticator.jsonErrorToAuthenticationError
-                        (jsonObject), jsonObject.optString("error_description", ""));
+            // Augment BaseNetworkError by what we can parse from the response
+            returnedError.apiError = apiError;
+            returnedError.message = apiMessage;
+
+            // Check if we know this error
+            if (apiError.equals("authorization_required") || apiError.equals("invalid_token")
+                    || apiError.equals("access_denied") || apiError.equals("needs_2fa")) {
+                AuthenticationError authError = new AuthenticationError(
+                        Authenticator.jsonErrorToAuthenticationError(jsonObject), apiMessage);
                 AuthenticateErrorPayload payload = new AuthenticateErrorPayload(authError);
-                // TODO: Replace the listener by an "internal" action
                 mOnAuthFailedListener.onAuthFailed(payload);
             }
         }
-        return error;
+
+        return returnedError;
     }
 }
