@@ -38,36 +38,36 @@ public abstract class BaseRequest<T> extends Request<T> {
     private BaseErrorListener mErrorListener;
 
     public static class BaseNetworkError {
-        public GenericErrorType error;
+        public GenericErrorType type;
         public String message;
         public VolleyError volleyError;
 
         public BaseNetworkError(@NonNull BaseNetworkError error) {
             this.message = error.message;
-            this.error = error.error;
+            this.type = error.type;
             this.volleyError = error.volleyError;
         }
 
         public BaseNetworkError(@NonNull GenericErrorType error, @NonNull String message, @NonNull VolleyError volleyError) {
             this.message = message;
-            this.error = error;
+            this.type = error;
             this.volleyError = volleyError;
         }
         public BaseNetworkError(@NonNull GenericErrorType error, @NonNull VolleyError volleyError) {
             this.message = "";
-            this.error = error;
+            this.type = error;
             this.volleyError = volleyError;
         }
         public BaseNetworkError(@NonNull VolleyError volleyError) {
-            this.error = UNKNOWN;
+            this.type = UNKNOWN;
             this.message = "";
             this.volleyError = volleyError;
         }
         public BaseNetworkError(@NonNull GenericErrorType error) {
-            this.error = error;
+            this.type = error;
         }
         public boolean isGeneric() {
-            return error != null;
+            return type != null;
         }
         public boolean hasVolleyError() {
             return volleyError != null;
