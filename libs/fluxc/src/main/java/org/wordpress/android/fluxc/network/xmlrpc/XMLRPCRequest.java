@@ -99,16 +99,13 @@ public class XMLRPCRequest extends BaseRequest<Object> {
         if (error.hasVolleyError() && error.volleyError.getCause() instanceof XMLRPCFault) {
             XMLRPCFault xmlrpcFault = (XMLRPCFault) error.volleyError.getCause();
             if (xmlrpcFault.getFaultCode() == 401) {
-                // Augmented error
-                error.type = GenericErrorType.AUTHORIZATION_REQUIRED;
-                // Unauthorized
+                error.type = GenericErrorType.AUTHORIZATION_REQUIRED; // Augmented error
                 payload.error.type = AuthenticationErrorType.AUTHORIZATION_REQUIRED;
             } else if (xmlrpcFault.getFaultCode() == 403) {
-                // Augmented error
-                error.type = GenericErrorType.NOT_AUTHENTICATED;
-                // Not authenticated
+                error.type = GenericErrorType.NOT_AUTHENTICATED; // Augmented error
                 payload.error.type = AuthenticationErrorType.NOT_AUTHENTICATED;
             }
+            error.message = xmlrpcFault.getMessage();
         }
 
         // TODO: mOnAuthFailedListener should not be called here and the class/callback should de renamed to something
