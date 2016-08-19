@@ -200,7 +200,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequest
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
-//                .post(RequestBody.create(MediaType.parse("text/xml"), file))
                 .post(requestBody)
                 .build();
 
