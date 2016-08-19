@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.xmlrpc;
 
+import android.support.annotation.NonNull;
 import android.util.Xml;
 
 import com.android.volley.AuthFailureError;
@@ -7,7 +8,6 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
@@ -26,8 +26,6 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.List;
-
-import javax.net.ssl.SSLHandshakeException;
 
 // TODO: Would be great to use generics / return POJO or model direclty (see GSON code?)
 public class XMLRPCRequest extends BaseRequest<Object> {
@@ -95,28 +93,39 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     }
 
     @Override
-    public void deliverError(VolleyError error) {
-        super.deliverError(error);
-        // XMLRPC Error
+    public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
         AuthenticateErrorPayload payload = new AuthenticateErrorPayload(AuthenticationErrorType.GENERIC_ERROR);
-        if (error.getCause() instanceof XMLRPCFault) {
-            XMLRPCFault xmlrpcFault = (XMLRPCFault) error.getCause();
+        // XMLRPC errors are not managed in the layer below (BaseRequest), so check them here:
+        if (error.hasVolleyError() && error.volleyError.getCause() instanceof XMLRPCFault) {
+            XMLRPCFault xmlrpcFault = (XMLRPCFault) error.volleyError.getCause();
             if (xmlrpcFault.getFaultCode() == 401) {
+                // Augmented error
+                error.error = GenericErrorType.AUTHORIZATION_REQUIRED;
                 // Unauthorized
                 payload.error.type = AuthenticationErrorType.AUTHORIZATION_REQUIRED;
             } else if (xmlrpcFault.getFaultCode() == 403) {
+                // Augmented error
+                error.error = GenericErrorType.NOT_AUTHENTICATED;
                 // Not authenticated
                 payload.error.type = AuthenticationErrorType.NOT_AUTHENTICATED;
             }
         }
-        // Invalid SSL Handshake
-        if (error.getCause() instanceof SSLHandshakeException) {
-            payload.error.type = AuthenticationErrorType.INVALID_SSL_CERTIFICATE;
+
+        // TODO: mOnAuthFailedListener should not be called here and the class/callback should de renamed to something
+        // like "onLowNetworkLevelError"
+        switch (error.error) {
+            case HTTP_AUTH_ERROR:
+                payload.error.type = AuthenticationErrorType.HTTP_AUTH_ERROR;
+                break;
+            case INVALID_SSL_CERTIFICATE:
+                payload.error.type = AuthenticationErrorType.INVALID_SSL_CERTIFICATE;
+                break;
         }
-        // Invalid HTTP Auth
-        if (error instanceof AuthFailureError) {
-            payload.error.type = AuthenticationErrorType.HTTP_AUTH_ERROR;
+
+        if (payload.error.type != AuthenticationErrorType.GENERIC_ERROR) {
+            mOnAuthFailedListener.onAuthFailed(payload);
         }
-        mOnAuthFailedListener.onAuthFailed(payload);
+
+        return error;
     }
 }
