@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
@@ -64,7 +65,11 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
                 jsonObject = new JSONObject();
             }
             String apiError = jsonObject.optString("error", "");
-            String apiMessage = jsonObject.optString("error_description", "");
+            String apiMessage = jsonObject.optString("message", "");
+            if (TextUtils.isEmpty(apiMessage)) {
+                // Auth endpoints use "error_description" instead of "message"
+                apiMessage = jsonObject.optString("error_description", "");
+            }
 
             // Augment BaseNetworkError by what we can parse from the response
             returnedError.apiError = apiError;
