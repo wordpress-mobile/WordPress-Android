@@ -18,8 +18,4 @@ public class XMLRPCFault extends XMLRPCException {
     public int getFaultCode() {
         return faultCode;
     }
-
-    public String getMessage() {
-        return super.getMessage() + " [Code: " + this.faultCode + "]";
-    }
 }

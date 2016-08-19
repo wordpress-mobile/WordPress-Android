@@ -1,7 +1,9 @@
 package org.wordpress.android.fluxc.network.rest.wpcom;
 
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.json.JSONException;
@@ -17,6 +19,14 @@ import java.util.Map;
 public class WPComGsonRequest<T> extends GsonRequest<T> {
     private static final String REST_AUTHORIZATION_HEADER = "Authorization";
     private static final String REST_AUTHORIZATION_FORMAT = "Bearer %s";
+
+    public static class WPComGsonNetworkError extends BaseNetworkError {
+        public String apiError;
+        public WPComGsonNetworkError(BaseNetworkError error) {
+            super(error);
+            this.apiError = "";
+        }
+    }
 
     public WPComGsonRequest(int method, String url, Map<String, String> params, Class<T> clazz,
                             Listener<T> listener, BaseErrorListener errorListener) {
@@ -36,42 +46,45 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
     }
 
     @Override
-    public void deliverError(VolleyError volleyError) {
-        // Fire OnAuthFailedListener if it matches certain types of error
-        if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode >= 400
-                && mOnAuthFailedListener != null) {
+    public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
+        WPComGsonNetworkError returnedError = new WPComGsonNetworkError(error);
+        if (error.hasVolleyError() && error.volleyError.networkResponse != null
+                && error.volleyError.networkResponse.statusCode >= 400) {
             String jsonString;
             try {
-                jsonString = new String(volleyError.networkResponse.data,
-                        HttpHeaderParser.parseCharset(volleyError.networkResponse.headers));
+                jsonString = new String(error.volleyError.networkResponse.data,
+                        HttpHeaderParser.parseCharset(error.volleyError.networkResponse.headers));
             } catch (UnsupportedEncodingException e) {
                 jsonString = "";
             }
 
-            // TODO: we could use GSON here
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(jsonString);
             } catch (JSONException e) {
                 jsonObject = new JSONObject();
             }
+            String apiError = jsonObject.optString("error", "");
+            String apiMessage = jsonObject.optString("message", "");
+            if (TextUtils.isEmpty(apiMessage)) {
+                // Auth endpoints use "error_description" instead of "message"
+                apiMessage = jsonObject.optString("error_description", "");
+            }
 
-            String apiResponseError = jsonObject.optString("error", "");
-            if (apiResponseError.equals("authorization_required")
-                    || apiResponseError.equals("invalid_token")
-                    || apiResponseError.equals("access_denied")
-                    || apiResponseError.equals("needs_2fa")) {
-                AuthenticationError error = new AuthenticationError(Authenticator.jsonErrorToAuthenticationError
-                        (jsonObject), jsonObject.optString("error_description", ""));
-                AuthenticateErrorPayload payload = new AuthenticateErrorPayload(error);
-                // TODO: Replace the listener by an "internal" action
+            // Augment BaseNetworkError by what we can parse from the response
+            returnedError.apiError = apiError;
+            returnedError.message = apiMessage;
+
+            // Check if we know this error
+            if (apiError.equals("authorization_required") || apiError.equals("invalid_token")
+                    || apiError.equals("access_denied") || apiError.equals("needs_2fa")) {
+                AuthenticationError authError = new AuthenticationError(
+                        Authenticator.jsonErrorToAuthenticationError(jsonObject), apiMessage);
+                AuthenticateErrorPayload payload = new AuthenticateErrorPayload(authError);
                 mOnAuthFailedListener.onAuthFailed(payload);
             }
         }
 
-        // We must deliver all errors to the caller, so OnChangedEvent.error can be updated.
-        // We should probably do a first kind of error filtering here, for generic errors that would be the same for
-        // all kind of endpoints (40x, 500, timeout, ...).
-        super.deliverError(volleyError);
+        return returnedError;
     }
 }
