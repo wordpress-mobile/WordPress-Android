@@ -146,8 +146,8 @@ public class UploadRequestBody extends RequestBody {
         // write file to xml
         InputStream is = new DataInputStream(new FileInputStream(mMedia.getFilePath()));
         byte[] buffer = new byte[3600];//you must use a 24bit multiple
-        int length = -1;
-        String chunk = null;
+        int length;
+        String chunk;
         while ((length = is.read(buffer)) > 0) {
             chunk = Base64.encodeToString(buffer, 0, length, Base64.DEFAULT);
             bufferedSink.write(chunk.getBytes(), 0, length);
