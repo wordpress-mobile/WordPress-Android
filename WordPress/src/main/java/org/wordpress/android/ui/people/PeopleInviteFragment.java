@@ -117,7 +117,7 @@ public class PeopleInviteFragment extends Fragment implements
 
         Role role = mRole;
         if (role == null) {
-            role = loadDefaultRole();
+            role = getDefaultRole();
         }
 
         mUsernameEditText = (MultiUsernameEditText) view.findViewById(R.id.invite_usernames);
@@ -263,7 +263,7 @@ public class PeopleInviteFragment extends Fragment implements
         }
     }
 
-    private Role loadDefaultRole() {
+    private Role getDefaultRole() {
         Role[] inviteRoles = Role.inviteRoles(isPrivateSite());
         return inviteRoles[0];
     }
@@ -489,7 +489,7 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         if (mUsernameButtons.size() == 0) {
-            setRole(loadDefaultRole());
+            setRole(getDefaultRole());
             resetEditTextContent(mCustomMessageEditText);
         }
     }
