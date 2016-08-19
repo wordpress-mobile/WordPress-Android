@@ -169,8 +169,6 @@ public class GCMMessageService extends GcmListenerService {
             sActiveNotificationsMap.put(pushId, data);
         }
 
-        Bitmap largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(noteType));
-
         // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
         if (NotificationsUtils.isNotificationsEnabled(this)) {
             Map<String, Object> properties = new HashMap<>();
@@ -187,36 +185,43 @@ public class GCMMessageService extends GcmListenerService {
             AnalyticsTracker.flush();
         }
 
+        showGroupNotificationForActiveNotificationsMap(pushId, noteId, noteType, data.getString("icon"), title, message);
+    }
+
+    private void showGroupNotificationForActiveNotificationsMap(int pushId, String noteId, String noteType,
+                                                                String largeIconUri, String title, String message) {
+
         // Build the new notification, add group to support wearable stacking
         NotificationCompat.Builder builder = getNotificationBuilder(title, message);
 
-        // Add some actions if this is a comment notification
-        if (noteType.equals(PUSH_TYPE_COMMENT)) {
-            Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
-            commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-            commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            commentReplyIntent.setAction("android.intent.action.MAIN");
-            commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
-            commentReplyIntent.addCategory("comment-reply");
-            commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
-            if (noteId != null) {
-                commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
-            }
-            PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(this, 0, commentReplyIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
-                    commentReplyPendingIntent);
-        }
-
+        Bitmap largeIconBitmap = getLargeIconBitmap(largeIconUri, shouldCircularizeNoteIcon(noteType));
         if (largeIconBitmap != null) {
             builder.setLargeIcon(largeIconBitmap);
         }
 
-        showNotificationForBuilder(builder, this, pushId);
+        showIndividualNotificationForBuilder(builder, noteType, noteId, pushId);
 
         // Also add a group summary notification, which is required for non-wearable devices
         showGroupNotificationForBuilder(builder, message);
+    }
+
+    private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+        // Add some actions if this is a comment notification
+        Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
+        commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+        commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        commentReplyIntent.setAction("android.intent.action.MAIN");
+        commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
+        commentReplyIntent.addCategory("comment-reply");
+        commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
+        if (noteId != null) {
+            commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+        }
+        PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(this, 0, commentReplyIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
+                commentReplyPendingIntent);
     }
 
     private Bitmap getLargeIconBitmap(String iconUrl, boolean shouldCircularizeIcon){
@@ -307,7 +312,17 @@ public class GCMMessageService extends GcmListenerService {
             builder.setGroupSummary(true);
             showNotificationForBuilder(builder, this, GROUP_NOTIFICATION_ID);
         }
+    }
 
+    private void showIndividualNotificationForBuilder(NotificationCompat.Builder builder, String noteType, String noteId, int pushId) {
+        if (builder == null) {
+            return;
+        }
+
+        if (noteType.equals(PUSH_TYPE_COMMENT)) {
+            addActionsForCommentNotification(builder, noteId);
+        }
+        showNotificationForBuilder(builder, this, pushId);
     }
 
     // Displays a notification to the user
@@ -365,56 +380,66 @@ public class GCMMessageService extends GcmListenerService {
         notificationManager.notify(notificationId, builder.build());
     }
 
+    private void rebuildAndUpdateNotificationsOnSystemBar(Bundle data) {
+        Bitmap largeIconBitmap = null;
+        // here notify the existing group notification by eliminating the line that is now gone
+        String title = getNotificationTitleOrAppNameFromBundle(data);
+        String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
+
+        if (sActiveNotificationsMap.size() == 1) {
+            //only one notification remains, so get the proper message for it and re-instate in the system dashboard
+            Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
+            if (remainingNote != null) {
+                String remainingNoteTitle = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_TITLE));
+                if (!TextUtils.isEmpty(remainingNoteTitle)) {
+                    title = remainingNoteTitle;
+                }
+                String remainingNoteMessage = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_MSG));
+                if (!TextUtils.isEmpty(remainingNoteMessage)) {
+                    message = remainingNoteMessage;
+                }
+                largeIconBitmap = getLargeIconBitmap(remainingNote.getString("icon"),
+                        shouldCircularizeNoteIcon(remainingNote.getString(PUSH_ARG_TYPE)));
+            }
+        }
+
+        NotificationCompat.Builder builder = getNotificationBuilder(title, message);
+
+        if (largeIconBitmap == null) {
+            largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(PUSH_TYPE_BADGE_RESET));
+        }
+
+        if (largeIconBitmap != null) {
+            builder.setLargeIcon(largeIconBitmap);
+        }
+
+        showGroupNotificationForBuilder(builder, message);
+
+    }
+
+    private String getNotificationTitleOrAppNameFromBundle(Bundle data){
+        String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
+        if (title == null) {
+            title = getString(R.string.app_name);
+        }
+        return title;
+    }
+
     // Clear all notifications
     private void handleBadgeResetPN(Bundle data) {
         if (data != null && data.containsKey(PUSH_ARG_NOTE_ID)) {
             removeNotificationWithNoteIdFromSystemBar(this, data);
             //now that we cleared the specific notif, we can check and make any visual updates
             if (sActiveNotificationsMap.size() > 0) {
-                Bitmap largeIconBitmap = null;
-                // here notify the existing group notification by eliminating the line that is now gone
-                String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
-                if (title == null) {
-                    title = getString(R.string.app_name);
-                }
-                String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
-
-                if (sActiveNotificationsMap.size() == 1) {
-                    //only one notification remains, so get the proper message for it and re-instate in the system dashboard
-                    Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
-                    if (remainingNote != null) {
-                        String remainingNoteTitle = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_TITLE));
-                        if (!TextUtils.isEmpty(remainingNoteTitle)) {
-                            title = remainingNoteTitle;
-                        }
-                        String remainingNoteMessage = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_MSG));
-                        if (!TextUtils.isEmpty(remainingNoteMessage)) {
-                            message = remainingNoteMessage;
-                        }
-                        largeIconBitmap = getLargeIconBitmap(remainingNote.getString("icon"),
-                                shouldCircularizeNoteIcon(remainingNote.getString(PUSH_ARG_TYPE)));
-                    }
-                }
-
-                NotificationCompat.Builder builder = getNotificationBuilder(title, message);
-
-                if (largeIconBitmap == null) {
-                    largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(PUSH_TYPE_BADGE_RESET));
-                }
-
-                if (largeIconBitmap != null) {
-                    builder.setLargeIcon(largeIconBitmap);
-                }
-
-                showGroupNotificationForBuilder(builder, message);
+                rebuildAndUpdateNotificationsOnSystemBar(data);
             }
-        } else {
-            //TODO: check if this is necessary:
-            // As of my tests, opening the notifications tab on the web client
-            //will trigger a full PN reset, which won't be necessary at all if we implement granular deletion
-            //as per removeNotificationWithNoteIdFromSystemBar();
-            //removeAllNotifications(this);
         }
+
+        if (data == null || !data.containsKey(PUSH_ARG_NOTE_ID))  {
+            // ignore the reset-badge PN if it's a global one
+            return;
+        }
+
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
