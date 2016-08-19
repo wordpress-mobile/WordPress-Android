@@ -1,11 +1,14 @@
 package org.wordpress.android.fluxc.network;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Base64;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Response.ErrorListener;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 
@@ -15,9 +18,16 @@ import org.wordpress.android.util.AppLog;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
+import javax.net.ssl.SSLHandshakeException;
+
+import static org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN;
+
+public abstract class BaseRequest<T> extends Request<T> {
     public interface OnAuthFailedListener {
         void onAuthFailed(AuthenticateErrorPayload errorType);
+    }
+    public interface BaseErrorListener {
+        void onErrorResponse(@NonNull BaseNetworkError error);
     }
 
     private static final String USER_AGENT_HEADER = "User-Agent";
@@ -25,25 +35,39 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
 
     protected OnAuthFailedListener mOnAuthFailedListener;
     protected final Map<String, String> mHeaders = new HashMap<>(2);
+    private BaseErrorListener mErrorListener;
 
     public static class BaseNetworkError {
-        public GenericErrorType error;
+        public GenericErrorType type;
         public String message;
         public VolleyError volleyError;
 
-        public BaseNetworkError(@NonNull GenericErrorType error, @Nullable String message, @NonNull VolleyError volleyError) {
+        public BaseNetworkError(@NonNull BaseNetworkError error) {
+            this.message = error.message;
+            this.type = error.type;
+            this.volleyError = error.volleyError;
+        }
+
+        public BaseNetworkError(@NonNull GenericErrorType error, @NonNull String message, @NonNull VolleyError volleyError) {
             this.message = message;
-            this.error = error;
+            this.type = error;
+            this.volleyError = volleyError;
+        }
+        public BaseNetworkError(@NonNull GenericErrorType error, @NonNull VolleyError volleyError) {
+            this.message = "";
+            this.type = error;
             this.volleyError = volleyError;
         }
         public BaseNetworkError(@NonNull VolleyError volleyError) {
+            this.type = UNKNOWN;
+            this.message = "";
             this.volleyError = volleyError;
         }
         public BaseNetworkError(@NonNull GenericErrorType error) {
-            this.error = error;
+            this.type = error;
         }
         public boolean isGeneric() {
-            return error != null;
+            return type != null;
         }
         public boolean hasVolleyError() {
             return volleyError != null;
@@ -51,43 +75,31 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
     }
 
     public enum GenericErrorType {
+        // Network Layer
+        TIMEOUT,
+        NO_CONNECTION,
+        NETWORK_ERROR,
+
+        // HTTP Layer
         NOT_FOUND,
         CENSORED,
         SERVER_ERROR,
-        TIMEOUT,
-        INVALID_RESPONSE
+        INVALID_SSL_CERTIFICATE,
+        HTTP_AUTH_ERROR,
+
+        // Web Application Layer
+        INVALID_RESPONSE,
+        AUTHORIZATION_REQUIRED,
+        NOT_AUTHENTICATED,
+        PARSE_ERROR,
+
+        // Other
+        UNKNOWN,
     }
 
-    public static abstract class BaseErrorListener implements ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            AppLog.e(AppLog.T.API, "Volley error", error);
-            this.onErrorResponse(getGenericError(error));
-        }
-
-        private @NonNull BaseNetworkError getGenericError(VolleyError volleyError) {
-            if (volleyError.networkResponse == null) {
-                return new BaseNetworkError(volleyError);
-            }
-            if (volleyError instanceof TimeoutError) {
-                return new BaseNetworkError(GenericErrorType.TIMEOUT, "", volleyError);
-            }
-            switch (volleyError.networkResponse.statusCode) {
-                case 404:
-                    return new BaseNetworkError(GenericErrorType.NOT_FOUND, volleyError.getMessage(), volleyError);
-                case 451:
-                    return new BaseNetworkError(GenericErrorType.CENSORED, volleyError.getMessage(), volleyError);
-                case 500:
-                    return new BaseNetworkError(GenericErrorType.SERVER_ERROR, volleyError.getMessage(), volleyError);
-            }
-            return new BaseNetworkError(volleyError);
-        }
-
-        public abstract void onErrorResponse(@NonNull BaseNetworkError error);
-    }
-
-    public BaseRequest(int method, String url, BaseErrorListener listener) {
-        super(method, url, listener);
+    public BaseRequest(int method, String url, BaseErrorListener errorListener) {
+        super(method, url, null);
+        mErrorListener = errorListener;
         // Make sure all our custom Requests are never cached.
         setShouldCache(false);
         setRetryPolicy(new DefaultRetryPolicy(DEFAULT_REQUEST_TIMEOUT,
@@ -123,5 +135,63 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
         setRetryPolicy(new DefaultRetryPolicy(DEFAULT_REQUEST_TIMEOUT, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
+    private @NonNull BaseNetworkError getBaseNetworkError(VolleyError volleyError) {
+        // No connection
+        if (volleyError.getCause() instanceof NoConnectionError) {
+            return new BaseNetworkError(GenericErrorType.NO_CONNECTION, volleyError);
+        }
 
+        // Network error
+        if (volleyError.getCause() instanceof NetworkError) {
+            return new BaseNetworkError(GenericErrorType.NETWORK_ERROR, volleyError);
+        }
+
+        // Invalid SSL Handshake
+        if (volleyError.getCause() instanceof SSLHandshakeException) {
+            return new BaseNetworkError(GenericErrorType.INVALID_SSL_CERTIFICATE, volleyError);
+        }
+
+        // Invalid HTTP Auth
+        if (volleyError instanceof AuthFailureError) {
+            return new BaseNetworkError(GenericErrorType.HTTP_AUTH_ERROR, volleyError);
+        }
+
+        // Timeout
+        if (volleyError instanceof TimeoutError) {
+            return new BaseNetworkError(GenericErrorType.TIMEOUT, volleyError);
+        }
+
+        // Parse Error
+        if (volleyError instanceof ParseError) {
+            return new BaseNetworkError(GenericErrorType.PARSE_ERROR, volleyError);
+        }
+
+        // Null networkResponse? Can't get more infos
+        if (volleyError.networkResponse == null) {
+            return new BaseNetworkError(volleyError);
+        }
+
+        // Get Error by HTTP response code
+        switch (volleyError.networkResponse.statusCode) {
+            case 404:
+                return new BaseNetworkError(GenericErrorType.NOT_FOUND, volleyError.getMessage(), volleyError);
+            case 451:
+                return new BaseNetworkError(GenericErrorType.CENSORED, volleyError.getMessage(), volleyError);
+            case 500:
+                return new BaseNetworkError(GenericErrorType.SERVER_ERROR, volleyError.getMessage(), volleyError);
+        }
+
+        // Nothing found
+        return new BaseNetworkError(volleyError);
+    }
+
+    public abstract BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error);
+
+    @Override
+    public final void deliverError(VolleyError volleyError) {
+        AppLog.e(AppLog.T.API, "Volley error", volleyError);
+        BaseNetworkError baseNetworkError = getBaseNetworkError(volleyError);
+        BaseNetworkError modifiedBaseNetworkError = deliverBaseNetworkError(baseNetworkError);
+        mErrorListener.onErrorResponse(modifiedBaseNetworkError);
+    }
 }
