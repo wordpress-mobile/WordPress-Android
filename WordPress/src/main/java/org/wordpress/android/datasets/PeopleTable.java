@@ -100,7 +100,9 @@ public class PeopleTable {
         switch (table) {
             case TEAM_TABLE:
                 values.put("user_name", person.getUsername());
-                values.put("role", person.getRole().toString());
+                if (person.getRole() != null) {
+                    values.put("role", person.getRole().toString());
+                }
                 break;
             case FOLLOWERS_TABLE:
                 values.put("user_name", person.getUsername());
