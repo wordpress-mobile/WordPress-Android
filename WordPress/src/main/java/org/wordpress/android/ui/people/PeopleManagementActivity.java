@@ -458,7 +458,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             personDetailFragment.changeRole(event.newRole);
         }
 
-        PeopleUtils.updateRole(this, blogId, person.getPersonID(), event.newRole, event.localTableBlogId,
+        PeopleUtils.updateRole(blogId, person.getPersonID(), event.newRole, event.localTableBlogId,
                 new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {

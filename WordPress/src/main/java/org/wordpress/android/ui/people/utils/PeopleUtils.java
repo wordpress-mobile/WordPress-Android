@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.people.utils;
 
-import android.content.Context;
-
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -159,8 +157,8 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void updateRole(Context context, final String blogId, long personID, Role newRole,
-                                  final int localTableBlogId, final UpdateUserCallback callback) {
+    public static void updateRole(final String blogId, long personID, Role newRole, final int localTableBlogId,
+                                  final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -445,8 +443,8 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void sendInvitations(Context context, final List<String> usernames, Role role, String message,
-                                       String dotComBlogId, final InvitationsSendCallback callback) {
+    public static void sendInvitations(final List<String> usernames, Role role, String message, String dotComBlogId,
+                                       final InvitationsSendCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
