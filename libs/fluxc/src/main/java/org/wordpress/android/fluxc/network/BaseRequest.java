@@ -43,6 +43,12 @@ public abstract class BaseRequest<T> extends Request<T> {
         public String message;
         public VolleyError volleyError;
 
+        public BaseNetworkError(@NonNull BaseNetworkError error) {
+            this.message = error.message;
+            this.error = error.error;
+            this.volleyError = error.volleyError;
+        }
+
         public BaseNetworkError(@NonNull GenericErrorType error, @NonNull String message, @NonNull VolleyError volleyError) {
             this.message = message;
             this.error = error;
