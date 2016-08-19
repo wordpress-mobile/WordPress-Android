@@ -6,7 +6,6 @@ import android.util.Base64;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.utils.MediaUtils;
-import org.wordpress.android.util.AppLog;
 
 import java.io.DataInputStream;
 import java.io.File;
