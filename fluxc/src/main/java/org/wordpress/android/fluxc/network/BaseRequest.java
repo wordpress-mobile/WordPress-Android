@@ -9,7 +9,6 @@ import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 
@@ -165,11 +164,6 @@ public abstract class BaseRequest<T> extends Request<T> {
         // Parse Error
         if (volleyError instanceof ParseError) {
             return new BaseNetworkError(GenericErrorType.PARSE_ERROR, volleyError);
-        }
-
-        // Parse Error
-        if (volleyError instanceof ServerError) {
-            return new BaseNetworkError(GenericErrorType.SERVER_ERROR, volleyError);
         }
 
         // Null networkResponse? Can't get more infos
