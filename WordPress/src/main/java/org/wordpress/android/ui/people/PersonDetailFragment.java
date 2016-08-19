@@ -105,7 +105,9 @@ public class PersonDetailFragment extends Fragment {
 
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             mDisplayNameTextView.setText(StringUtils.unescapeHTML(person.getDisplayName()));
-            mRoleTextView.setText(StringUtils.capitalize(person.getRole().toDisplayString()));
+            if (person.getRole() != null) {
+                mRoleTextView.setText(StringUtils.capitalize(person.getRole().toDisplayString()));
+            }
 
             if (!TextUtils.isEmpty(person.getUsername())) {
                 mUsernameTextView.setText(String.format("@%s", person.getUsername()));
@@ -171,7 +173,7 @@ public class PersonDetailFragment extends Fragment {
 
     private void showRoleChangeDialog() {
         Person person = loadPerson();
-        if (person == null) {
+        if (person == null || person.getRole() == null) {
             return;
         }
 
