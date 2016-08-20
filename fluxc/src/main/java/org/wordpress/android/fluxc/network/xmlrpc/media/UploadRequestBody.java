@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import okhttp3.MediaType;
@@ -26,13 +25,11 @@ import okio.Sink;
 
 /**
  * A {@link ProgressListener} is required, use {@link MultipartBody} if progress is not needed.
- *
- * ref http://stackoverflow.com/questions/35528751/okhttp-3-tracking-multipart-upload-progress
  */
 public class UploadRequestBody extends RequestBody {
     private static final MediaType MEDIA_TYPE = MediaType.parse("text/xml; charset=utf-8");
     private static final String PREPEND_XML_FORMAT =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+            "<?xml version=\"1.0\"?>" +
             "<methodCall>" +
             "<methodName>wp.uploadFile</methodName>" +
             "<params>" +
@@ -42,10 +39,10 @@ public class UploadRequestBody extends RequestBody {
             "<param><value><struct>" + // data
             "<member><name>name</name><value><string>%s</string></value></member>" + // name
             "<member><name>type</name><value><string>%s</string></value></member>" + // type
+                    "<member><name>overwrite</name><value><boolean>1</boolean></value></member>" +
             "<member><name>bits</name><value><base64>"; // bits
     private static final String APPEND_XML =
             "</base64></value></member>" +
-            "<member><name>overwrite</name><value><boolean>1</boolean></value></member>" +
             "</struct></value></param>" +
             "</params>" +
             "</methodCall>";
@@ -99,6 +96,8 @@ public class UploadRequestBody extends RequestBody {
     private final String mPrependString;
     private final long mContentLength;
 
+    private long mBytesWritten = 0;
+
     public UploadRequestBody(MediaModel media, ProgressListener listener, SiteModel site) {
         // validate arguments
         if (listener == null) {
@@ -117,16 +116,7 @@ public class UploadRequestBody extends RequestBody {
                 site.getDotOrgSiteId(), site.getUsername(), site.getPassword(),
                 mMedia.getFileName(), mMedia.getMimeType());
 
-        try {
-            mContentLength = (mPrependString + APPEND_XML).getBytes("UTF-8").length + mediaFile.length();
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("failed to determine content size");
-        }
-    }
-
-    @Override
-    public long contentLength() {
-        return mContentLength;
+        mContentLength = mediaFile.length();
     }
 
     @Override
@@ -140,7 +130,7 @@ public class UploadRequestBody extends RequestBody {
         BufferedSink bufferedSink = Okio.buffer(countingSink);
 
         // write XML up to point of file
-        bufferedSink.write(mPrependString.getBytes(), 0, mPrependString.length());
+        bufferedSink.writeUtf8(mPrependString);
 
         // write file to xml
         InputStream is = new DataInputStream(new FileInputStream(mMedia.getFilePath()));
@@ -149,12 +139,13 @@ public class UploadRequestBody extends RequestBody {
         String chunk;
         while ((length = is.read(buffer)) > 0) {
             chunk = Base64.encodeToString(buffer, 0, length, Base64.DEFAULT);
-            bufferedSink.write(chunk.getBytes(), 0, length);
+            mBytesWritten += length;
+            bufferedSink.writeUtf8(chunk);
         }
         is.close();
 
         // write remainder or XML
-        bufferedSink.write(APPEND_XML.getBytes(), 0, APPEND_XML.length());
+        bufferedSink.writeUtf8(APPEND_XML);
 
         bufferedSink.flush();
     }
@@ -167,8 +158,6 @@ public class UploadRequestBody extends RequestBody {
      * Custom Sink that reports progress to listener as bytes are written.
      */
     protected final class CountingSink extends ForwardingSink {
-        private long mBytesWritten = 0;
-
         public CountingSink(Sink delegate) {
             super(delegate);
         }
@@ -176,8 +165,7 @@ public class UploadRequestBody extends RequestBody {
         @Override
         public void write(Buffer source, long byteCount) throws IOException {
             super.write(source, byteCount);
-            mBytesWritten += byteCount;
-            mListener.onProgress(mMedia, (float) mBytesWritten / contentLength());
+            mListener.onProgress(mMedia, (float) mBytesWritten / mContentLength);
         }
     }
 }
