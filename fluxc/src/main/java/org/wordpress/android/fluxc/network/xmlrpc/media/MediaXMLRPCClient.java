@@ -12,7 +12,9 @@ import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
+import org.wordpress.android.fluxc.network.MediaNetworkListener;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
@@ -35,7 +37,7 @@ import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
-public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequestBody.ProgressListener {
+public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
     public static final String MEDIA_ID_KEY         = "attachment_id";
     public static final String POST_ID_KEY          = "parent";
     public static final String TITLE_KEY            = "title";
@@ -49,17 +51,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequest
     public static final String WIDTH_KEY            = "width";
     public static final String HEIGHT_KEY           = "height";
 
-    public interface MediaXmlRpcListener {
-        void onMediaError(MediaAction cause, Exception error);
-        void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia, List<Exception> errors);
-        void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia, List<Exception> errors);
-        void onMediaDeleted(MediaAction cause, List<MediaModel> deletedMedia, List<Exception> errors);
-        void onMediaUploadProgress(MediaAction cause, MediaModel media, float progress);
-    }
-
     private static final String FILE_NAME_REGEX = "^.*/([A-Za-z0-9_-]+)\\.\\w+$";
 
-    private MediaXmlRpcListener mListener;
+    private MediaNetworkListener mListener;
     private OkHttpClient mOkHttpClient;
 
     public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okClient,
@@ -175,7 +169,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequest
         }
     }
 
-    public void setListener(MediaXmlRpcListener listener) {
+    public void setListener(MediaNetworkListener listener) {
         mListener = listener;
     }
 
@@ -196,7 +190,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequest
                 .password(site.getPassword())
                 .build();
 
-        UploadRequestBody requestBody = new UploadRequestBody(media, this, site);
+        XmlrpcUploadRequestBody requestBody = new XmlrpcUploadRequestBody(media, this, site);
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
