@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.MediaNetworkListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
@@ -21,8 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class MediaStore extends Store
-        implements MediaRestClient.MediaRestListener, MediaXMLRPCClient.MediaXmlRpcListener {
+public class MediaStore extends Store implements MediaNetworkListener {
     //
     // Payloads
     //
