@@ -9,7 +9,9 @@ import com.android.volley.VolleyError;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.network.MediaNetworkListener;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
@@ -44,16 +46,8 @@ import okhttp3.OkHttpClient;
  *     (via {@link #deleteMedia(long, List)})</li>
  * </ul>
  */
-public class MediaRestClient extends BaseWPComRestClient implements UploadRequestBody.ProgressListener {
-    public interface MediaRestListener {
-        void onMediaError(MediaAction cause, Exception error);
-        void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia, List<Exception> errors);
-        void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia, List<Exception> errors);
-        void onMediaDeleted(MediaAction cause, List<MediaModel> deletedMedia, List<Exception> errors);
-        void onMediaUploadProgress(MediaAction cause, MediaModel media, float progress);
-    }
-
-    private MediaRestListener mListener;
+public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
+    private MediaNetworkListener mListener;
     private OkHttpClient mOkHttpClient;
 
     public MediaRestClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okClient,
@@ -183,14 +177,14 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
         }
     }
 
-    public void setListener(MediaRestListener listener) {
+    public void setListener(MediaNetworkListener listener) {
         mListener = listener;
     }
 
     // Used in both uploadMedia and pushMedia methods
     private void performUpload(MediaModel media, long siteId) {
         String url = WPCOMREST.sites.site(siteId).media.item(media.getMediaId()).getUrlV1_1();
-        final UploadRequestBody body = new UploadRequestBody(media, this);
+        final RestUploadRequestBody body = new RestUploadRequestBody(media, this);
         String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
 
         okhttp3.Request request = new okhttp3.Request.Builder()
