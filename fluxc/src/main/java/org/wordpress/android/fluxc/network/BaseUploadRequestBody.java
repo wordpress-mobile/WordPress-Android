@@ -1,22 +1,17 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.media;
+package org.wordpress.android.fluxc.network;
 
 import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.utils.MediaUtils;
-import org.wordpress.android.util.AppLog;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okio.Buffer;
-import okio.BufferedSink;
 import okio.ForwardingSink;
-import okio.Okio;
 import okio.Sink;
 
 /**
@@ -26,11 +21,7 @@ import okio.Sink;
  *
  * ref http://stackoverflow.com/questions/35528751/okhttp-3-tracking-multipart-upload-progress
  */
-public class UploadRequestBody extends RequestBody {
-    private static final String MEDIA_DATA_KEY = "media[0]";
-    private static final String MEDIA_ATTRIBUTES_KEY = "attrs[0]";
-    private static final String MEDIA_PARAM_FORMAT = MEDIA_ATTRIBUTES_KEY + "[%s]";
-
+public abstract class BaseUploadRequestBody extends RequestBody {
     /**
      * Callback to report upload progress as body data is written to the sink for network delivery.
      */
@@ -48,7 +39,7 @@ public class UploadRequestBody extends RequestBody {
      *
      * @return null if {@code media} is valid, otherwise a string describing why it's invalid
      */
-    public static String validateMedia(MediaModel media) {
+    public static String hasRequiredData(MediaModel media) {
         if (media == null) return "media cannot be null";
 
         // validate MIME type is recognized
@@ -75,66 +66,26 @@ public class UploadRequestBody extends RequestBody {
     }
 
     private final MediaModel       mMedia;
-    private final MultipartBody    mMultipartBody;
     private final ProgressListener mListener;
 
-    public UploadRequestBody(MediaModel media, ProgressListener listener) {
+    public BaseUploadRequestBody(MediaModel media, ProgressListener listener) {
         // validate arguments
         if (listener == null) {
             throw new IllegalArgumentException("progress listener cannot be null");
         }
-        String mediaError = validateMedia(media);
+        String mediaError = hasRequiredData(media);
         if (mediaError != null) {
             throw new IllegalArgumentException(mediaError);
         }
 
         mMedia = media;
         mListener = listener;
-        mMultipartBody = buildMultipartBody();
     }
 
-    @Override
-    public long contentLength() {
-        try {
-            return mMultipartBody.contentLength();
-        } catch (IOException e) {
-            AppLog.w(AppLog.T.MEDIA, "Error determining mMultipartBody content length: " + e);
-        }
-        return -1L;
-    }
-
-    @Override
-    public MediaType contentType() {
-        return mMultipartBody.contentType();
-    }
-
-    @Override
-    public void writeTo(BufferedSink sink) throws IOException {
-        CountingSink countingSink = new CountingSink(sink);
-        BufferedSink bufferedSink = Okio.buffer(countingSink);
-        mMultipartBody.writeTo(bufferedSink);
-        bufferedSink.flush();
-    }
+    protected abstract float getProgress(long bytesWritten);
 
     public MediaModel getMedia() {
         return mMedia;
-    }
-
-    private MultipartBody buildMultipartBody() {
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-
-        // add media attributes
-        Map<String, String> mediaData = MediaUtils.getMediaRestParams(mMedia);
-        for (String key : mediaData.keySet()) {
-            builder.addFormDataPart(String.format(MEDIA_PARAM_FORMAT, key), mediaData.get(key));
-        }
-
-        // add media file data
-        File mediaFile = new File(mMedia.getFilePath());
-        RequestBody body = RequestBody.create(MediaType.parse(mMedia.getMimeType()), mediaFile);
-        builder.addFormDataPart(MEDIA_DATA_KEY, mMedia.getFileName(), body);
-
-        return builder.build();
     }
 
     /**
@@ -151,7 +102,7 @@ public class UploadRequestBody extends RequestBody {
         public void write(Buffer source, long byteCount) throws IOException {
             super.write(source, byteCount);
             mBytesWritten += byteCount;
-            mListener.onProgress(mMedia, (float) mBytesWritten / contentLength());
+            mListener.onProgress(mMedia, getProgress(mBytesWritten));
         }
     }
 }
