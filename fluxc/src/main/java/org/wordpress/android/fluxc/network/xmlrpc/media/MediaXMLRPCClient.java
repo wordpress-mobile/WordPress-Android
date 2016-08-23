@@ -38,6 +38,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
+    // keys for de-serializing remote responses
     public static final String MEDIA_ID_KEY         = "attachment_id";
     public static final String POST_ID_KEY          = "parent";
     public static final String TITLE_KEY            = "title";
@@ -50,6 +51,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     public static final String METADATA_KEY         = "metadata";
     public static final String WIDTH_KEY            = "width";
     public static final String HEIGHT_KEY           = "height";
+
+    // keys for pushing changes to existing remote media
+    public static final String TITLE_EDIT_KEY       = "post_title";
+    public static final String DESCRIPTION_EDIT_KEY = "post_content";
+    public static final String CAPTION_EDIT_KEY     = "post_excerpt";
 
     private static final String FILE_NAME_REGEX = "^.*/([A-Za-z0-9_-]+)\\.\\w+$";
 
@@ -71,6 +77,12 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     public void pushMedia(final SiteModel site, List<MediaModel> mediaList) {
         for (final MediaModel media : mediaList) {
             List<Object> params = getBasicParams(site);
+            params.add(media.getMediaId());
+            Map<String, Object> mediaFields = new HashMap<>();
+            mediaFields.put(TITLE_EDIT_KEY, media.getTitle());
+            mediaFields.put(DESCRIPTION_EDIT_KEY, media.getDescription());
+            mediaFields.put(CAPTION_EDIT_KEY, media.getCaption());
+            params.add(mediaFields);
             add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.EDIT_MEDIA, params,
                     new Listener() {
                         @Override public void onResponse(Object response) {
@@ -109,7 +121,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params,
                 new Listener() {
                     @Override public void onResponse(Object response) {
-                        AppLog.v(T.MEDIA, "Successful response from XMLRPC.getMediaLibrary");
+                        AppLog.v(T.MEDIA, "Successful response from XMLRPC.GET_MEDIA_LIBRARY");
                         List<MediaModel> media = allMediaResponseToMediaModelList(response);
                         notifyMediaPulled(MediaAction.PULL_ALL_MEDIA, media, null);
                     }
@@ -124,6 +136,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     public void pullMedia(SiteModel site, List<Long> mediaIds) {
+        if (mediaIds == null || mediaIds.isEmpty()) return;
+
         for (Long mediaId : mediaIds) {
             List<Object> params = getBasicParams(site);
             params.add(mediaId);
@@ -182,6 +196,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             return;
         }
 
+        XmlrpcUploadRequestBody requestBody = new XmlrpcUploadRequestBody(media, this, site);
         HttpUrl url = new HttpUrl.Builder()
                 .scheme(xmlrpcUrl.getProtocol())
                 .host(xmlrpcUrl.getHost())
@@ -189,9 +204,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 .username(site.getUsername())
                 .password(site.getPassword())
                 .build();
-
-        XmlrpcUploadRequestBody requestBody = new XmlrpcUploadRequestBody(media, this, site);
-
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
                 .post(requestBody)
