@@ -25,14 +25,13 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -65,7 +64,7 @@ public class SiteXMLRPCClientTest {
                     deliverResponse.setAccessible(true);
                     deliverResponse.invoke(request, o.result);
                 } catch (Exception e) {
-                    AppLog.e(T.API, e);
+                    assertTrue("Unexpected exception: " + e, false);
                 }
                 mCountDownLatch.countDown();
                 return null;
