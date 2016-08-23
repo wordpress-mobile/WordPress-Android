@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -20,12 +21,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.android.volley.Request.Method.HEAD;
+
 public class PeopleUtils {
     // We limit followers we display to 1000 to avoid API performance issues
     public static int FOLLOWER_PAGE_LIMIT = 50;
     public static int FETCH_LIMIT = 20;
-    private static String ROLE_FOLLOWER = "follower";
-    private static String ROLE_VIEWER = "viewer";
 
     public static void fetchUsers(final SiteModel site, final int offset, final FetchUsersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -157,7 +158,7 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void updateRole(final SiteModel site, long personID, String newRole, final int localTableBlogId,
+    public static void updateRole(final SiteModel site, long personID, Role newRole, final int localTableBlogId,
                                   final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -189,7 +190,7 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("roles", newRole.toLowerCase());
+        params.put("roles", newRole.toRESTString());
         String path = String.format(Locale.US, "sites/%d/users/%d", site.getSiteId(), personID);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
@@ -441,7 +442,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void sendInvitations(final List<String> usernames, String role, String message, long dotComBlogId,
+    public static void sendInvitations(final List<String> usernames, Role role, String message, long dotComBlogId,
                                        final InvitationsSendCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -500,17 +501,12 @@ public class PeopleUtils {
             }
         };
 
-        // This is an ugly hack but the remote accepts "follower" as parameter when you're inviting a viewer
-        if (role.toLowerCase().equals(ROLE_VIEWER)) {
-            role = ROLE_FOLLOWER;
-        }
-
         String path = String.format("sites/%s/invites/new", dotComBlogId);
         Map<String, String> params = new HashMap<>();
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
         }
-        params.put("role", role);
+        params.put("role", role.toRESTString());
         params.put("message", message);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
