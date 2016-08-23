@@ -141,7 +141,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     public void pullMedia(SiteModel site, List<Long> mediaIds) {
-        if (mediaIds == null || mediaIds.isEmpty()) return;
+        if (site == null || mediaIds == null || mediaIds.isEmpty()) return;
 
         for (Long mediaId : mediaIds) {
             List<Object> params = getBasicParams(site);
@@ -172,13 +172,15 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     public void deleteMedia(SiteModel site, List<MediaModel> media) {
+        if (site == null || media == null || media.isEmpty()) return;
+
         for (final MediaModel mediaItem : media) {
             List<Object> params = getBasicParams(site);
             params.add(mediaItem.getMediaId());
             add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_MEDIA, params,
                     new Listener() {
                         @Override public void onResponse(Object response) {
-                            AppLog.v(T.MEDIA, "Successful response from XMLRPC.deleteMedia");
+                            AppLog.v(T.MEDIA, "Successful response from XMLRPC.DELETE_MEDIA");
                             List<MediaModel> media = new ArrayList<>(1);
                             media.add(responseMapToMediaModel((HashMap) response));
                             if (mListener != null) {
@@ -188,8 +190,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     },
                     new ErrorListener() {
                         @Override public void onErrorResponse(VolleyError error) {
-                            AppLog.e(T.MEDIA, "Volley error", error);
-                            notifyMediaError(MediaAction.DELETE_MEDIA, mediaItem, MediaNetworkError.UNKNOWN, error);
+                            String msg = "Error response from XMLRPC.DELETE_MEDIA: " + error;
+                            AppLog.v(T.MEDIA, msg);
+                            if (msg.contains("404")) {
+                                notifyMediaError(MediaAction.DELETE_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND, error);
+                            }
                         }
                     }
             ));
