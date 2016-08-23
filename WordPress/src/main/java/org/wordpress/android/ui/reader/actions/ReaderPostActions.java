@@ -16,6 +16,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderUserIdList;
@@ -282,7 +283,9 @@ public class ReaderPostActions {
 
         // don't bump stats for posts in blogs the current user is an admin of, unless
         // this is a private post since we count views for private posts from admins
-        if (!post.isPrivate && siteStore.getSiteBySiteId(post.blogId).isAdmin()) {
+        SiteModel site = siteStore.getSiteBySiteId(post.blogId);
+        // site will be null here if the user is not the owner or a member of the site
+        if (site != null && !post.isPrivate && site.isAdmin()) {
             AppLog.d(T.READER, "skipped bump page view - user is admin");
             return;
         }
