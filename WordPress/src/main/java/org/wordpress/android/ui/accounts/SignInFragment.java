@@ -29,7 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.credentials.Credential;
-import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -49,7 +48,7 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
-import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -821,7 +820,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         ft.commitAllowingStateLoss();
     }
 
-    private void showAuthError(AuthenticationError error, String errorMessage) {
+    private void showAuthError(AuthenticationErrorType error, String errorMessage) {
         switch (error) {
             case INCORRECT_USERNAME_OR_PASSWORD:
                 handleInvalidUsernameOrPassword(R.string.username_or_password_incorrect);
@@ -895,8 +894,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         AppLog.i(T.NUX, event.toString());
-        if (event.isError) {
-            showAuthError(event.errorType, event.errorMessage);
+        if (event.isError()) {
+            showAuthError(event.error.type, event.error.message);
             endProgress();
             return;
         }
@@ -930,21 +929,25 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDiscoverySucceeded(AccountStore.OnDiscoverySucceeded event) {
+    public void onDiscoverySucceeded(AccountStore.OnDiscoveryResponse event) {
+        if (event.isError()) {
+            handleDiscoveryError(event.error, event.failedEndpoint);
+            return;
+        }
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
         mSelfhostedPayload.url = event.xmlRpcEndpoint;
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(mSelfhostedPayload));
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDiscoveryFailed(AccountStore.OnDiscoveryFailed event) {
+    public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
+        AppLog.e(T.API, "Discover error: " + error);
         endProgress();
-        if (event.error == DiscoveryError.WORDPRESS_COM_SITE) {
+        if (error == DiscoveryError.WORDPRESS_COM_SITE) {
             signInAndFetchBlogListWPCom();
-        } else if (event.error == DiscoveryError.HTTP_AUTH_REQUIRED) {
-            askForHttpAuthCredentials(event.failedEndpoint);
-        } else if (event.error == DiscoveryError.ERRONEOUS_SSL_CERTIFICATE) {
-            mSelfhostedPayload.url = event.failedEndpoint;
+        } else if (error == DiscoveryError.HTTP_AUTH_REQUIRED) {
+            askForHttpAuthCredentials(failedEndpoint);
+        } else if (error == DiscoveryError.ERRONEOUS_SSL_CERTIFICATE) {
+            mSelfhostedPayload.url = failedEndpoint;
             if (isAdded()) {
                 SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
                         new Callback() {
@@ -960,6 +963,5 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 });
             }
         }
-        AppLog.e(T.API, "Discover error: " + event.error);
     }
 }

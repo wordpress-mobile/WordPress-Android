@@ -233,8 +233,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     public void onAccountChanged(OnAccountChanged event) {
         if (!isAdded()) return;
 
-        if (event.isError) {
-            switch (event.errorType) {
+        if (event.isError()) {
+            switch (event.error.type) {
                 case SETTINGS_FETCH_ERROR:
                     ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
                     break;
