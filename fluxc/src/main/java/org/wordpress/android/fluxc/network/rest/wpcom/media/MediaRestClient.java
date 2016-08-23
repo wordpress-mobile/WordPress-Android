@@ -1,16 +1,17 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media;
 
+import android.support.annotation.NonNull;
+
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.MediaNetworkListener;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
@@ -70,7 +71,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             String url = WPCOMREST.sites.site(siteId).media.item(media.getMediaId()).getUrlV1_1();
             add(new WPComGsonRequest<>(Method.POST, url, MediaUtils.getMediaRestParams(media),
                     MediaWPComRestResponse.class, new Listener<MediaWPComRestResponse>() {
-                @Override public void onResponse(MediaWPComRestResponse response) {
+                @Override
+                public void onResponse(MediaWPComRestResponse response) {
                     MediaModel responseMedia = MediaUtils.mediaFromRestResponse(response);
                     AppLog.v(AppLog.T.MEDIA, "media pushed to site: " + responseMedia.getUrl());
                     List<MediaModel> mediaList = new ArrayList<>();
@@ -78,15 +80,19 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     notifyMediaPushed(MediaAction.PUSH_MEDIA,
                             new ChangedMediaPayload(mediaList, null, null));
                 }
-            }, new ErrorListener() {
-                @Override public void onErrorResponse(VolleyError error) {
-                    if (error.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
-                        AppLog.i(AppLog.T.MEDIA, "media does not exist, uploading");
-                        performUpload(media, siteId);
-                    } else {
-                        AppLog.e(AppLog.T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA error: " + error);
-                    }
+            }, new BaseRequest.BaseErrorListener() {
+                @Override
+                public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                 }
+//                    new ErrorListener() {
+//                @Override public void onErrorResponse(VolleyError error) {
+//                    if (error.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
+//                        AppLog.i(AppLog.T.MEDIA, "media does not exist, uploading");
+//                        performUpload(media, siteId);
+//                    } else {
+//                        AppLog.e(AppLog.T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA error: " + error);
+//                    }
+//                }
             }));
         }
     }
@@ -108,17 +114,22 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         String url = WPCOMREST.sites.site(siteId).media.getUrlV1_1();
         add(new WPComGsonRequest<>(Method.GET, url, null, MultipleMediaResponse.class,
                 new Listener<MultipleMediaResponse>() {
-                    @Override public void onResponse(MultipleMediaResponse response) {
+                    @Override
+                    public void onResponse(MultipleMediaResponse response) {
                         AppLog.v(AppLog.T.MEDIA, "pulled all media for site");
                         notifyMediaPulled(MediaAction.PULL_ALL_MEDIA, new ChangedMediaPayload(
                                 MediaUtils.mediaListFromRestResponse(response), null, null));
                     }
-                }, new ErrorListener() {
-                    @Override public void onErrorResponse(VolleyError error) {
-                        AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
-                        notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, error);
-                    }
-                }));
+                }, new BaseRequest.BaseErrorListener() {
+            @Override
+            public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+            }
+//                new ErrorListener() {
+//                    @Override public void onErrorResponse(VolleyError error) {
+//                        AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
+//                        notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, error);
+//                    }
+        }));
     }
 
     /**
@@ -134,16 +145,21 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             String url = WPCOMREST.sites.site(siteId).media.item(mediaId).getUrlV1_1();
             add(new WPComGsonRequest<>(Method.GET, url, null, MediaWPComRestResponse.class,
                     new Listener<MediaWPComRestResponse>() {
-                        @Override public void onResponse(MediaWPComRestResponse response) {
+                        @Override
+                        public void onResponse(MediaWPComRestResponse response) {
                             MediaModel media = MediaUtils.mediaFromRestResponse(response);
                             AppLog.v(AppLog.T.MEDIA, "pulled media with ID: " + media.getMediaId());
                             onPullMediaResponse(payload, media, null, requestCount);
                         }
-                    }, new ErrorListener() {
-                        @Override public void onErrorResponse(VolleyError error) {
-                            AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
-                            onPullMediaResponse(payload, null, error, requestCount);
-                    }
+                    }, new BaseRequest.BaseErrorListener() {
+                @Override
+                public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                }
+//                        new ErrorListener() {
+//                            @Override public void onErrorResponse(VolleyError error) {
+//                                AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
+//                                onPullMediaResponse(payload, null, error, requestCount);
+//                        }
             }));
         }
     }
@@ -166,14 +182,18 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             notifyMediaDeleted(MediaAction.DELETE_MEDIA,
                                     new ChangedMediaPayload(mediaList, null, null));
                         }
-                    },
-                    new ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            AppLog.v(AppLog.T.MEDIA, "VolleyError deleting media: " + error);
-                            notifyMediaError(MediaAction.DELETE_MEDIA, toDelete, MediaNetworkListener.MediaNetworkError.UNKNOWN, error);
-                        }
-                    }
+                    }, new BaseRequest.BaseErrorListener() {
+                @Override
+                public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                }
+            }
+//                    new ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            AppLog.v(AppLog.T.MEDIA, "VolleyError deleting media: " + error);
+//                            notifyMediaError(MediaAction.DELETE_MEDIA, toDelete, MediaNetworkListener.MediaNetworkError.UNKNOWN, error);
+//                        }
+//                    }
             ));
         }
     }
