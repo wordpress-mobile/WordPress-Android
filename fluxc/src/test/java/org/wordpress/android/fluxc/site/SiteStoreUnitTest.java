@@ -28,15 +28,10 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateDotComSite;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSite;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOverRestOnly;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generatePostFormats;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedNonJPSite;
+import static org.wordpress.android.fluxc.utils.SiteUtils.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteStoreUnitTest {
-    private Dispatcher mDispatcher = new Dispatcher();
     private SiteStore mSiteStore = new SiteStore(new Dispatcher(), Mockito.mock(SiteRestClient.class),
             Mockito.mock(SiteXMLRPCClient.class));
 
