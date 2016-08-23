@@ -17,7 +17,6 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -25,6 +24,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PostAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -234,8 +234,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     public void onAccountChanged(OnAccountChanged event) {
         if (!isAdded()) return;
 
-        if (event.isError) {
-            switch (event.errorType) {
+        if (event.isError()) {
+            switch (event.error.type) {
                 case SETTINGS_FETCH_ERROR:
                     ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
                     break;

@@ -553,7 +553,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @SuppressWarnings("unused")
     @Subscribe
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError) {
+        if (event.isError()) {
             AuthenticationDialogUtils.showAuthErrorView(this);
         }
     }

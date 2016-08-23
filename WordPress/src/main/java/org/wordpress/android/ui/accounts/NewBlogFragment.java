@@ -21,7 +21,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -142,7 +142,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mSiteTitleTextField.requestFocus();
     }
 
-    protected boolean showError(NewSiteError newSiteError, String message) {
+    protected boolean showError(NewSiteErrorType newSiteError, String message) {
         if (!isAdded()) {
             return false;
         }
@@ -315,9 +315,9 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     @Subscribe
     public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
-        if (event.isError) {
+        if (event.isError()) {
             endProgress();
-            showError(event.errorType, event.errorMessage);
+            showError(event.error.type, event.error.message);
             return;
         }
         // Site created, update sites
