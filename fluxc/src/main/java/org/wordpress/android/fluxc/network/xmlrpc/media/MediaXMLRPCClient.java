@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
-import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCException;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
@@ -26,6 +25,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 import org.xmlpull.v1.XmlPullParserException;
+
+import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

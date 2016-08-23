@@ -6,6 +6,8 @@ import com.android.volley.Response.Listener;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -14,7 +16,6 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.MediaStore;

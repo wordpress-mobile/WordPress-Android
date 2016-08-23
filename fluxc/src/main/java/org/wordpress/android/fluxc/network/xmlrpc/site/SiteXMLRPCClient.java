@@ -1,24 +1,25 @@
 package org.wordpress.android.fluxc.network.xmlrpc.site;
 
+import android.support.annotation.NonNull;
+
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
-import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
@@ -45,15 +46,18 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                         if (sites != null) {
                             mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sites));
                         } else {
-                            // TODO: do nothing or dispatch error?
+                            sites = new SitesModel();
+                            sites.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
+                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sites));
                         }
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(T.API, "Volley error", error);
-                        // TODO: Error, dispatch network error
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SitesModel sites = new SitesModel();
+                        sites.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sites));
                     }
                 }
         );
@@ -89,10 +93,12 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(T.API, "Volley error", error);
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SiteModel site = new SiteModel();
+                        site.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
                     }
                 }
         );
@@ -115,10 +121,13 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                                 FetchedPostFormatsPayload(site, postFormats)));
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(T.API, "Volley error", error);
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
+                                new ArrayList<PostFormatModel>());
+                        payload.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
                     }
                 }
         );
@@ -130,7 +139,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             return null;
         }
         Object[] responseArray = (Object[]) response;
-        SitesModel sites = new SitesModel();
+        List<SiteModel> siteArray = new ArrayList<>();
         for (Object siteObject: responseArray) {
             if (!(siteObject instanceof HashMap)) {
                 continue;
@@ -140,9 +149,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             // TODO: use MapUtils.getX(map,"", defaultValue) here
             site.setDotOrgSiteId(Integer.parseInt((String) siteMap.get("blogid")));
             site.setName((String) siteMap.get("blogName"));
-            // TODO: set a canonical URL here
             site.setUrl((String) siteMap.get("url"));
-            site.setLoginUrl((String) siteMap.get("login_url"));
             site.setXmlRpcUrl((String) siteMap.get("xmlrpc"));
             site.setIsAdmin((Boolean) siteMap.get("isAdmin"));
             // Self Hosted won't be hidden
@@ -151,14 +158,22 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             site.setIsWPCom(false);
             site.setUsername(username);
             site.setPassword(password);
-            sites.add(site);
+            siteArray.add(site);
         }
 
-        if (sites.isEmpty()) {
+        if (siteArray.isEmpty()) {
             return null;
         }
 
-        return sites;
+        return new SitesModel(siteArray);
+    }
+
+    private long string2Long(String s, long defvalue) {
+        try {
+            return Long.valueOf(s);
+        } catch (NumberFormatException e) {
+            return defvalue;
+        }
     }
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
@@ -170,7 +185,9 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         Boolean post_thumbnail = getOption(blogOptions, "post_thumbnail", Boolean.class);
         oldModel.setIsFeaturedImageSupported((post_thumbnail != null) && post_thumbnail);
         oldModel.setTimezone(getOption(blogOptions, "time_zone", String.class));
-        long dotComIdForJetpack = Long.valueOf(getOption(blogOptions, "jetpack_client_id", String.class));
+        oldModel.setLoginUrl(getOption(blogOptions, "login_url", String.class));
+        oldModel.setAdminUrl(getOption(blogOptions, "admin_url", String.class));
+        long dotComIdForJetpack = string2Long(getOption(blogOptions, "jetpack_client_id", String.class), -1);
         oldModel.setSiteId(dotComIdForJetpack);
         // If the blog is not public, it's private. Note: this field doesn't always exist.
         oldModel.setIsPrivate(false);

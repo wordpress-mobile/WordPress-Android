@@ -40,7 +40,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
     /**
      * Used for PULL_ALL_MEDIA and PULL_MEDIA actions
      */
-    public static class PullMediaPayload implements Payload {
+    public static class PullMediaPayload extends Payload {
         public SiteModel site;
         public List<Long> mediaIds;
         public PullMediaPayload(SiteModel site, List<Long> mediaIds) {
@@ -52,7 +52,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
     /**
      * Used for DELETE_MEDIA, REMOVE_MEDIA, PUSH_MEDIA, and UPDATE_MEDIA actions
      */
-    public static class ChangeMediaPayload implements Payload {
+    public static class ChangeMediaPayload extends Payload {
         public SiteModel site;
         public List<MediaModel> media;
         public ChangeMediaPayload(SiteModel site, List<MediaModel> media) {
@@ -61,7 +61,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
         }
     }
 
-    public static class ChangedMediaPayload implements Payload {
+    public static class ChangedMediaPayload extends Payload {
         public List<MediaModel> media;
         public List<Exception> errors;
         public Exception error;
