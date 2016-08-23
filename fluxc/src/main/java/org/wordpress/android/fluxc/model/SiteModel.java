@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
+import android.support.annotation.NonNull;
+
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -7,8 +9,12 @@ import com.yarolegovich.wellsql.core.annotation.RawConstraints;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.Serializable;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
@@ -90,8 +96,14 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
         return mUrl;
     }
 
-    public void setUrl(String url) {
-        mUrl = url;
+    public void setUrl(@NonNull String url) {
+        try {
+            // Normalize the URL, because it can be used as an identifier.
+            mUrl = (new URI(url)).normalize().toString();
+        } catch (URISyntaxException e) {
+            // Don't set the URL
+            AppLog.e(T.API, "Trying to set an invalid url: " + url);
+        }
     }
 
     public String getLoginUrl() {
