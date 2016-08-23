@@ -156,14 +156,8 @@ public class MediaStore extends Store implements MediaNetworkListener {
     public void onMediaError(MediaAction cause, MediaModel media, MediaNetworkError error) {
         AppLog.d(AppLog.T.MEDIA, cause + " caused exception: " + error);
 
-        long statusCode = -1L;
-        if (error.exception != null && error.exception instanceof VolleyError && ((VolleyError) error.exception).networkResponse != null) {
-            statusCode = ((VolleyError) error.exception).networkResponse.statusCode;
-        }
-        if (statusCode > 0) {
-            if (cause == MediaAction.PULL_MEDIA) {
-                notifyMediaError(MediaError.MEDIA_NOT_FOUND, cause, error.exception);
-            }
+        if (error == MediaNetworkError.MEDIA_NOT_FOUND) {
+            notifyMediaError(MediaError.MEDIA_NOT_FOUND, cause, error.exception);
         }
     }
 
@@ -350,6 +344,12 @@ public class MediaStore extends Store implements MediaNetworkListener {
     }
 
     private void performPullMedia(PullMediaPayload payload) {
+        if (payload.mediaIds == null || payload.mediaIds.isEmpty() || payload.mediaIds.contains(null)) {
+            // null or empty media list -or- list contains a null value
+            notifyMediaError(MediaError.NULL_MEDIA_ARG, MediaAction.PULL_MEDIA, null);
+            return;
+        }
+
         if (payload.site.isWPCom()) {
             mMediaRestClient.pullMedia(payload.site.getSiteId(), payload.mediaIds);
         } else {
