@@ -12,17 +12,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPStoreUtils;
 
 import javax.inject.Inject;
 
@@ -129,10 +135,12 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @Override
     protected void onStop() {
+        mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -165,6 +173,13 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             // Checks for stats widgets that were synched with a blog that could be gone now.
             //            StatsWidgetProvider.updateWidgetsOnLogout(this);
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteRemoved(OnSiteRemoved event) {
+        setResult(RESULT_BLOG_REMOVED);
+        finish();
     }
 
     private void loadSettingsForBlog() {
