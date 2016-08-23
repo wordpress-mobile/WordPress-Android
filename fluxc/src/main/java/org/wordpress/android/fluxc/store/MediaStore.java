@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
 
-import com.android.volley.VolleyError;
 import com.wellsql.generated.MediaModelTable;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -358,6 +357,11 @@ public class MediaStore extends Store implements MediaNetworkListener {
     }
 
     private void performDeleteMedia(ChangeMediaPayload payload) {
+        if (payload.media == null || payload.media.isEmpty() || payload.media.contains(null)) {
+            notifyMediaError(MediaError.NULL_MEDIA_ARG, MediaAction.DELETE_MEDIA, null);
+            return;
+        }
+
         if (payload.site.isWPCom()) {
             mMediaRestClient.deleteMedia(payload.site.getSiteId(), payload.media);
         } else {
