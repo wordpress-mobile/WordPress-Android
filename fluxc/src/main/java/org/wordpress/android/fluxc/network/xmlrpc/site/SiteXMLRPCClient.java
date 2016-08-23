@@ -149,7 +149,6 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             // TODO: use MapUtils.getX(map,"", defaultValue) here
             site.setDotOrgSiteId(Integer.parseInt((String) siteMap.get("blogid")));
             site.setName((String) siteMap.get("blogName"));
-            // TODO: set a canonical URL here
             site.setUrl((String) siteMap.get("url"));
             site.setXmlRpcUrl((String) siteMap.get("xmlrpc"));
             site.setIsAdmin((Boolean) siteMap.get("isAdmin"));
