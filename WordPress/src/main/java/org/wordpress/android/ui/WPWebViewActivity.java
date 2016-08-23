@@ -100,7 +100,7 @@ public class WPWebViewActivity extends WebViewActivity {
         openWPCOMURL(context, url);
     }
 
-    // Note: The webview has links disabled!!
+    // Note: The webview has links disabled
     public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, Post post, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
@@ -108,7 +108,7 @@ public class WPWebViewActivity extends WebViewActivity {
         }
 
         if (site == null) {
-            AppLog.e(AppLog.T.UTILS, "Blog obj is null");
+            AppLog.e(AppLog.T.UTILS, "Site is null");
             return;
         }
 
