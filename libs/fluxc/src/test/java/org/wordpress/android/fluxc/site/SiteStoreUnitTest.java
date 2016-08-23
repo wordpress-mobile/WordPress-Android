@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc;
+package org.wordpress.android.fluxc.site;
 
 import android.content.Context;
 
@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
@@ -19,7 +20,6 @@ import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.SiteStore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.wordpress.android.fluxc.utils.SiteUtils.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteStoreUnitTest {
@@ -368,59 +369,5 @@ public class SiteStoreUnitTest {
         matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(
                 SiteModelTable.IS_WPCOM, true, "EYE");
         assertEquals(1, matchingSites.size());
-    }
-
-    public SiteModel generateDotComSite() {
-        SiteModel example = new SiteModel();
-        example.setId(1);
-        example.setSiteId(556);
-        example.setIsWPCom(true);
-        example.setIsVisible(true);
-        return example;
-    }
-
-    public SiteModel generateSelfHostedNonJPSite() {
-        SiteModel example = new SiteModel();
-        example.setId(2);
-        example.setDotOrgSiteId(6);
-        example.setIsWPCom(false);
-        example.setIsJetpack(false);
-        example.setIsVisible(true);
-        example.setXmlRpcUrl("http://some.url/xmlrpc.php");
-        return example;
-    }
-
-    public SiteModel generateJetpackSite() {
-        SiteModel example = new SiteModel();
-        example.setId(3);
-        example.setSiteId(982);
-        example.setDotOrgSiteId(8);
-        example.setIsWPCom(false);
-        example.setIsJetpack(true);
-        example.setIsVisible(true);
-        example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
-        return example;
-    }
-
-    public SiteModel generateJetpackSiteOverRestOnly() {
-        SiteModel example = new SiteModel();
-        example.setId(4);
-        example.setSiteId(5623);
-        example.setIsWPCom(false);
-        example.setIsJetpack(true);
-        example.setIsVisible(true);
-        example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
-        return example;
-    }
-
-    public List<PostFormatModel> generatePostFormats(String... names) {
-        List<PostFormatModel> res = new ArrayList<>();
-        for (String name : names) {
-            PostFormatModel postFormat = new PostFormatModel();
-            postFormat.setSlug(name.toLowerCase());
-            postFormat.setDisplayName(name);
-            res.add(postFormat);
-        }
-        return res;
     }
 }
