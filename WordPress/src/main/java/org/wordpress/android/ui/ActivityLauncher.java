@@ -149,7 +149,7 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogAdmin(Context context, SiteModel site) {
-        if (site == null) {
+        if (site == null || site.getAdminUrl() == null) {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
