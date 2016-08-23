@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.Role;
 
 public class RoleSelectDialogFragment extends DialogFragment {
     private static final String IS_PRIVATE_TAG = "is_private";
@@ -16,12 +17,16 @@ public class RoleSelectDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         boolean isPrivateSite = getArguments().getBoolean(IS_PRIVATE_TAG);
-        int roleRes = isPrivateSite ? R.array.invite_roles_private : R.array.invite_roles_public;
-        final String[] roles = getResources().getStringArray(roleRes);
+        final Role[] roles = Role.inviteRoles(isPrivateSite);
+        final String[] stringRoles = new String[roles.length];
+        for (int i = 0; i < roles.length; i++) {
+            stringRoles[i] = roles[i].toDisplayString();
+        }
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.role);
-        builder.setItems(roles, new DialogInterface.OnClickListener() {
+        builder.setItems(stringRoles, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!isAdded()) {
@@ -56,6 +61,6 @@ public class RoleSelectDialogFragment extends DialogFragment {
 
     // Container Activity must implement this interface
     public interface OnRoleSelectListener {
-        void onRoleSelected(String newRole);
+        void onRoleSelected(Role newRole);
     }
 }
