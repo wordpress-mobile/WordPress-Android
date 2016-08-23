@@ -53,9 +53,11 @@ public class SiteXMLRPCClientTest {
             public Void answer(InvocationOnMock invocation) {
                 XMLRPCRequest request = (XMLRPCRequest) invocation.getArguments()[0];
                 try {
-                    Class<XMLRPCRequest> requestClass = (Class<XMLRPCRequest>) Class.forName("org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest");
+                    Class<XMLRPCRequest> requestClass = (Class<XMLRPCRequest>)
+                                    Class.forName("org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest");
                     // Object o = request.parseNetworkResponse(data)
-                    Method parseNetworkResponse = requestClass.getDeclaredMethod("parseNetworkResponse", NetworkResponse.class);
+                    Method parseNetworkResponse = requestClass.getDeclaredMethod("parseNetworkResponse",
+                            NetworkResponse.class);
                     parseNetworkResponse.setAccessible(true);
                     NetworkResponse nr = new NetworkResponse(mMockedResponse.getBytes());
                     Response<Object> o = (Response<Object>) parseNetworkResponse.invoke(request, nr);
