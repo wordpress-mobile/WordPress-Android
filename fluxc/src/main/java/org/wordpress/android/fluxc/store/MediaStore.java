@@ -371,7 +371,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
 
     private boolean isWellFormedForUpload(@NonNull List<MediaModel> mediaList) {
         for (MediaModel media : mediaList) {
-            if (media == null || BaseUploadRequestBody.hasRequiredData(media) == null) return false;
+            if (media == null || BaseUploadRequestBody.hasRequiredData(media) != null) return false;
         }
         return true;
     }
