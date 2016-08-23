@@ -115,7 +115,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }, new ErrorListener() {
                     @Override public void onErrorResponse(VolleyError error) {
                         AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
-                        notifyMediaError(MediaAction.PULL_ALL_MEDIA, error);
+                        notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, error);
                     }
                 }));
     }
@@ -170,7 +170,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             AppLog.v(AppLog.T.MEDIA, "VolleyError deleting media: " + error);
-                            notifyMediaError(MediaAction.DELETE_MEDIA, error);
+                            notifyMediaError(MediaAction.DELETE_MEDIA, toDelete, MediaNetworkListener.MediaNetworkError.UNKNOWN, error);
                         }
                     }
             ));
@@ -205,13 +205,13 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             resultList, null, null));
                 } else {
                     AppLog.w(AppLog.T.MEDIA, "error uploading media: " + response);
-                    notifyMediaError(MediaAction.UPLOAD_MEDIA, new Exception(response.toString()));
+                    notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, new Exception(response.toString()));
                 }
             }
 
             @Override public void onFailure(Call call, IOException e) {
                 AppLog.w(AppLog.T.MEDIA, "media upload failed: " + e);
-                notifyMediaError(MediaAction.UPLOAD_MEDIA, e);
+                notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, e);
             }
         });
     }
@@ -223,7 +223,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         payload.media.add(media);
         payload.errors.add(error);
         if (payload.media.size() == count) {
-            mListener.onMediaPulled(MediaAction.PULL_MEDIA, payload.media, payload.errors);
+            mListener.onMediaPulled(MediaAction.PULL_MEDIA, payload.media);
         }
     }
 
@@ -235,25 +235,26 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
     private void notifyMediaPulled(MediaAction cause, ChangedMediaPayload payload) {
         if (mListener != null) {
-            mListener.onMediaPulled(cause, payload.media, payload.errors);
+            mListener.onMediaPulled(cause, payload.media);
         }
     }
 
     private void notifyMediaPushed(MediaAction cause, ChangedMediaPayload payload) {
         if (mListener != null) {
-            mListener.onMediaPushed(cause, payload.media, payload.errors);
+            mListener.onMediaPushed(cause, payload.media);
         }
     }
 
     private void notifyMediaDeleted(MediaAction cause, ChangedMediaPayload payload) {
         if (mListener != null) {
-            mListener.onMediaDeleted(cause, payload.media, payload.errors);
+            mListener.onMediaDeleted(cause, payload.media);
         }
     }
 
-    private void notifyMediaError(MediaAction cause, Exception error) {
+    private void notifyMediaError(MediaAction cause, MediaModel media, MediaNetworkListener.MediaNetworkError error, Exception exception) {
         if (mListener != null) {
-            mListener.onMediaError(cause, error);
+            error.exception = exception;
+            mListener.onMediaError(cause, media, error);
         }
     }
 }
