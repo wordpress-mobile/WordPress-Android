@@ -156,8 +156,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     },
                     new ErrorListener() {
                         @Override public void onErrorResponse(VolleyError error) {
-                            AppLog.e(T.MEDIA, "Volley error", error);
-                            if (error.networkResponse != null && error.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
+                            String msg = "Error response from XMLRPC.GET_MEDIA_ITEM: " + error;
+                            AppLog.v(T.MEDIA, msg);
+                            if (msg.contains("404")) {
+                                notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND, error);
+                            } else if (error.networkResponse != null && error.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
                                 notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND, error);
                             } else {
                                 notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.UNKNOWN, error);
