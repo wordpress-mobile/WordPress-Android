@@ -59,7 +59,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
 
     @Override
     protected float getProgress(long bytesWritten) {
-        return mMediaBytesWritten / mMediaSize;
+        return (float) mMediaBytesWritten / mMediaSize;
     }
 
     @Override
