@@ -51,7 +51,6 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -444,14 +443,6 @@ public class WordPress extends MultiDexApplication {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UserSignedOutCompletely event) {
-        try {
-            SelfSignedSSLCertsManager.getInstance(getContext()).emptyLocalKeyStoreFile();
-        } catch (GeneralSecurityException e) {
-            AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
-        } catch (IOException e) {
-            AppLog.e(T.UTILS, "Error while cleaning the Local KeyStore File", e);
-        }
-
         flushHttpCache();
 
         // Analytics resets

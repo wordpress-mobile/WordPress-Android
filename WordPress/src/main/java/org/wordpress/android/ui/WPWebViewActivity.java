@@ -231,7 +231,7 @@ public class WPWebViewActivity extends WebViewActivity {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            webViewClient = new WPWebViewClient(site, allowedURL, mAccountStore.getAccessToken());
+            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else {
             webViewClient = new URLFilteredWebViewClient(allowedURL);
         }

@@ -61,6 +61,7 @@ import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeWebActivity;
+import org.wordpress.android.util.WPWebViewClient;
 
 import javax.inject.Singleton;
 
@@ -135,6 +136,7 @@ public interface AppComponent {
     void inject(ReaderPostPagerActivity object);
 
     void inject(WPWebViewActivity object);
+    void inject(WPWebViewClient object);
     void inject(PostPreviewFragment object);
     void inject(PostUploadService object);
 

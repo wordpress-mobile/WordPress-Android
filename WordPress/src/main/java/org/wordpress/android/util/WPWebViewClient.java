@@ -7,15 +7,20 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
+import java.security.cert.X509Certificate;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import static org.wordpress.android.util.SelfSignedSSLUtils.sslCertificateToX509;
 
 /**
  * WebViewClient that is capable of handling HTTP authentication requests using the HTTP
@@ -24,15 +29,15 @@ import java.util.List;
 public class WPWebViewClient extends URLFilteredWebViewClient {
     private final SiteModel mSite;
     private String mToken;
+    protected @Inject MemorizingTrustManager mMemorizingTrustManager;
 
     public WPWebViewClient(SiteModel site, String token) {
-        super();
-        mSite = site;
-        mToken = token;
+        this(site, token, null);
     }
 
-    public WPWebViewClient(SiteModel site, List<String> urls, String token) {
+    public WPWebViewClient(SiteModel site, String token, List<String> urls) {
         super(urls);
+        ((WordPress) WordPress.getContext()).component().inject(this);
         mSite = site;
         mToken = token;
     }
@@ -46,17 +51,14 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
         super.onPageStarted(view, url, favicon);
     }
 
+
+
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-        try {
-            if (SelfSignedSSLCertsManager.getInstance(view.getContext()).isCertificateTrusted(error.getCertificate())) {
-                handler.proceed();
-                return;
-            }
-        } catch (GeneralSecurityException e) {
-            // Do nothing
-        } catch (IOException e) {
-            // Do nothing
+        X509Certificate certificate = sslCertificateToX509(error.getCertificate());
+        if (certificate != null && mMemorizingTrustManager.isCertificateAccepted(certificate)) {
+            handler.proceed();
+            return;
         }
 
         super.onReceivedSslError(view, handler, error);
