@@ -372,7 +372,6 @@ public class SiteStoreUnitTest {
 
     public SiteModel generateDotComSite() {
         SiteModel example = new SiteModel();
-        example.setId(1);
         example.setSiteId(556);
         example.setIsWPCom(true);
         example.setIsVisible(true);
@@ -381,7 +380,6 @@ public class SiteStoreUnitTest {
 
     public SiteModel generateSelfHostedNonJPSite() {
         SiteModel example = new SiteModel();
-        example.setId(2);
         example.setDotOrgSiteId(6);
         example.setIsWPCom(false);
         example.setIsJetpack(false);
@@ -392,7 +390,6 @@ public class SiteStoreUnitTest {
 
     public SiteModel generateJetpackSite() {
         SiteModel example = new SiteModel();
-        example.setId(3);
         example.setSiteId(982);
         example.setDotOrgSiteId(8);
         example.setIsWPCom(false);
@@ -404,7 +401,6 @@ public class SiteStoreUnitTest {
 
     public SiteModel generateJetpackSiteOverRestOnly() {
         SiteModel example = new SiteModel();
-        example.setId(4);
         example.setSiteId(5623);
         example.setIsWPCom(false);
         example.setIsJetpack(true);
