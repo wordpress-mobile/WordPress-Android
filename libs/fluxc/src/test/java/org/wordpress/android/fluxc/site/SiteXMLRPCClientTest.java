@@ -55,13 +55,15 @@ public class SiteXMLRPCClientTest {
                 try {
                     Class<XMLRPCRequest> requestClass = (Class<XMLRPCRequest>)
                                     Class.forName("org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest");
+                    // Reflection code equivalent to:
                     // Object o = request.parseNetworkResponse(data)
                     Method parseNetworkResponse = requestClass.getDeclaredMethod("parseNetworkResponse",
                             NetworkResponse.class);
                     parseNetworkResponse.setAccessible(true);
                     NetworkResponse nr = new NetworkResponse(mMockedResponse.getBytes());
                     Response<Object> o = (Response<Object>) parseNetworkResponse.invoke(request, nr);
-                    // request.deliverResponse(Object o)
+                    // Reflection code equivalent to:
+                    // request.deliverResponse(o)
                     Method deliverResponse = requestClass.getDeclaredMethod("deliverResponse", Object.class);
                     deliverResponse.setAccessible(true);
                     deliverResponse.invoke(request, o.result);
