@@ -39,7 +39,7 @@ import javax.inject.Singleton;
 @Singleton
 public class AccountStore extends Store {
     // Payloads
-    public static class AuthenticatePayload implements Payload {
+    public static class AuthenticatePayload extends Payload {
         public String username;
         public String password;
         public String twoStepCode;
@@ -51,13 +51,13 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class PostAccountSettingsPayload implements Payload {
+    public static class PostAccountSettingsPayload extends Payload {
         public Map<String, String> params;
         public PostAccountSettingsPayload() {
         }
     }
 
-    public static class NewAccountPayload implements Payload {
+    public static class NewAccountPayload extends Payload {
         public String username;
         public String password;
         public String email;
@@ -71,44 +71,41 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class UpdateTokenPayload implements Payload {
+    public static class UpdateTokenPayload extends Payload {
         public UpdateTokenPayload(String token) { this.token = token; }
         public String token;
     }
 
     // OnChanged Events
-    public class OnAccountChanged extends OnChanged {
-        public boolean isError;
-        public AccountError errorType;
+    public class OnAccountChanged extends OnChanged<AccountError> {
         public boolean accountInfosChanged;
         public AccountAction causeOfChange;
     }
 
-    public class OnAuthenticationChanged extends OnChanged {
-        public boolean isError;
-        public AuthenticationError errorType;
-        public String errorMessage;
+    public class OnAuthenticationChanged extends OnChanged<AuthenticationError> {
     }
 
-    public class OnDiscoverySucceeded extends OnChanged {
+    public class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
-    }
-
-    public class OnDiscoveryFailed extends OnChanged {
-        public DiscoveryError error;
         public String failedEndpoint;
     }
 
-    public class OnNewUserCreated extends OnChanged {
-        public boolean isError;
-        public NewUserError errorType;
-        public String errorMessage;
+    public class OnNewUserCreated extends OnChanged<NewUserError> {
         public boolean dryRun;
     }
 
+    public static class AuthenticationError implements OnChangedError {
+        public AuthenticationErrorType type;
+        public String message;
+        public AuthenticationError(AuthenticationErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     // Enums
-    public enum AuthenticationError {
+    public enum AuthenticationErrorType {
         // From response's "error" field
         ACCESS_DENIED,
         AUTHORIZATION_REQUIRED,
@@ -133,9 +130,9 @@ public class AccountStore extends Store {
         // Generic error
         GENERIC_ERROR;
 
-        public static AuthenticationError fromString(String string) {
+        public static AuthenticationErrorType fromString(String string) {
             if (string != null) {
-                for (AuthenticationError v : AuthenticationError.values()) {
+                for (AuthenticationErrorType v : AuthenticationErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -145,14 +142,32 @@ public class AccountStore extends Store {
         }
     }
 
-    public enum AccountError {
+    public static class AccountError implements OnChangedError {
+        public AccountErrorType type;
+        public String message;
+        public AccountError(AccountErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum AccountErrorType {
         ACCOUNT_FETCH_ERROR,
         SETTINGS_FETCH_ERROR,
         SETTINGS_POST_ERROR,
         GENERIC_ERROR
     }
 
-    public enum NewUserError {
+    public static class NewUserError implements OnChangedError {
+        public NewUserErrorType type;
+        public String message;
+        public NewUserError(NewUserErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum NewUserErrorType {
         USERNAME_ONLY_LOWERCASE_LETTERS_AND_NUMBERS,
         USERNAME_REQUIRED,
         USERNAME_NOT_ALLOWED,
@@ -170,9 +185,9 @@ public class AccountStore extends Store {
         EMAIL_RESERVED,
         GENERIC_ERROR;
 
-        public static NewUserError fromString(String string) {
+        public static NewUserErrorType fromString(String string) {
             if (string != null) {
-                for (NewUserError v : NewUserError.values()) {
+                for (NewUserErrorType v : NewUserErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -213,9 +228,7 @@ public class AccountStore extends Store {
         if (actionType == AuthenticationAction.AUTHENTICATE_ERROR) {
             OnAuthenticationChanged event = new OnAuthenticationChanged();
             AuthenticateErrorPayload payload = (AuthenticateErrorPayload) action.getPayload();
-            event.isError = true;
-            event.errorMessage = payload.errorMessage;
-            event.errorType = payload.errorType;
+            event.error = payload.error;
             emitChange(event);
         } else if (actionType == AuthenticationAction.AUTHENTICATE) {
             AuthenticatePayload payload = (AuthenticatePayload) action.getPayload();
@@ -225,17 +238,18 @@ public class AccountStore extends Store {
             mSelfHostedEndpointFinder.findEndpoint(payload.url, payload.username, payload.password);
         } else if (actionType == AuthenticationAction.DISCOVERY_RESULT) {
             DiscoveryResultPayload payload = (DiscoveryResultPayload) action.getPayload();
-            if (payload.isError) {
-                OnDiscoveryFailed discoveryFailed = new OnDiscoveryFailed();
-                discoveryFailed.error = payload.error;
-                discoveryFailed.failedEndpoint = payload.failedEndpoint;
-                emitChange(discoveryFailed);
+            OnDiscoveryResponse discoveryResponse = new OnDiscoveryResponse();
+            if (payload.isError()) {
+                discoveryResponse.error = DiscoveryError.GENERIC_ERROR;
+                discoveryResponse.failedEndpoint = payload.failedEndpoint;
+            } else if (payload.isDiscoveryError()) {
+                discoveryResponse.error = payload.discoveryError;
+                discoveryResponse.failedEndpoint = payload.failedEndpoint;
             } else {
-                OnDiscoverySucceeded discoverySucceeded = new OnDiscoverySucceeded();
-                discoverySucceeded.xmlRpcEndpoint = payload.xmlRpcEndpoint;
-                discoverySucceeded.wpRestEndpoint = payload.wpRestEndpoint;
-                emitChange(discoverySucceeded);
+                discoveryResponse.xmlRpcEndpoint = payload.xmlRpcEndpoint;
+                discoveryResponse.wpRestEndpoint = payload.wpRestEndpoint;
             }
+            emitChange(discoveryResponse);
         } else if (actionType == AccountAction.FETCH_ACCOUNT) {
             // fetch only Account
             mAccountRestClient.fetchAccount();
@@ -251,7 +265,7 @@ public class AccountStore extends Store {
                 mAccount.copyAccountAttributes(data.account);
                 updateDefaultAccount(mAccount, AccountAction.FETCH_ACCOUNT);
             } else {
-                emitAccountChangeError(AccountError.ACCOUNT_FETCH_ERROR);
+                emitAccountChangeError(AccountErrorType.ACCOUNT_FETCH_ERROR);
             }
         } else if (actionType == AccountAction.FETCHED_SETTINGS) {
             AccountRestPayload data = (AccountRestPayload) action.getPayload();
@@ -259,7 +273,7 @@ public class AccountStore extends Store {
                 mAccount.copyAccountSettingsAttributes(data.account);
                 updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
             } else {
-                emitAccountChangeError(AccountError.SETTINGS_FETCH_ERROR);
+                emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
             }
         } else if (actionType == AccountAction.POSTED_SETTINGS) {
             AccountPostSettingsResponsePayload data = (AccountPostSettingsResponsePayload) action.getPayload();
@@ -273,7 +287,7 @@ public class AccountStore extends Store {
                     emitChange(accountChanged);
                 }
             } else {
-                emitAccountChangeError(AccountError.SETTINGS_POST_ERROR);
+                emitAccountChangeError(AccountErrorType.SETTINGS_POST_ERROR);
             }
         } else if (actionType == AccountAction.UPDATE_ACCOUNT) {
             AccountModel accountModel = (AccountModel) action.getPayload();
@@ -288,19 +302,16 @@ public class AccountStore extends Store {
         } else if (actionType == AccountAction.CREATED_NEW_ACCOUNT) {
             NewAccountResponsePayload payload = (NewAccountResponsePayload) action.getPayload();
             OnNewUserCreated onNewUserCreated = new OnNewUserCreated();
-            onNewUserCreated.isError = payload.isError;
-            onNewUserCreated.errorType = payload.errorType;
-            onNewUserCreated.errorMessage = payload.errorMessage;
+            onNewUserCreated.error = payload.error;
             onNewUserCreated.dryRun = payload.dryRun;
             emitChange(onNewUserCreated);
         }
     }
 
-    private void emitAccountChangeError(AccountError errorType) {
-        OnAccountChanged accountChanged = new OnAccountChanged();
-        accountChanged.isError = true;
-        accountChanged.errorType = errorType;
-        emitChange(accountChanged);
+    private void emitAccountChangeError(AccountErrorType errorType) {
+        OnAccountChanged event = new OnAccountChanged();
+        event.error = new AccountError(errorType, null);
+        emitChange(event);
     }
 
     private void newAccount(NewAccountPayload payload) {
@@ -372,9 +383,9 @@ public class AccountStore extends Store {
                     public void onErrorResponse(VolleyError volleyError) {
                         AppLog.e(T.API, "Authentication error");
                         OnAuthenticationChanged event = new OnAuthenticationChanged();
-                        event.errorType = Authenticator.volleyErrorToAuthenticationError(volleyError);
-                        event.errorMessage = Authenticator.volleyErrorToErrorMessage(volleyError);
-                        event.isError = true;
+                        event.error = new AuthenticationError(
+                                Authenticator.volleyErrorToAuthenticationError(volleyError),
+                                Authenticator.volleyErrorToErrorMessage(volleyError));
                         emitChange(event);
                     }
                 });
@@ -382,7 +393,7 @@ public class AccountStore extends Store {
 
     private boolean checkError(AccountRestPayload payload, String log) {
         if (payload.isError()) {
-            AppLog.w(T.API, log + "\nError: " + payload.error.getMessage());
+            AppLog.w(T.API, log + "\nError: " + payload.error.volleyError);
             return true;
         }
         return false;

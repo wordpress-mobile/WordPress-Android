@@ -4,7 +4,6 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
@@ -15,7 +14,7 @@ import org.wordpress.android.fluxc.network.BaseRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-public class GsonRequest<T> extends BaseRequest<T> {
+public abstract class GsonRequest<T> extends BaseRequest<T> {
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
@@ -25,7 +24,7 @@ public class GsonRequest<T> extends BaseRequest<T> {
     private final Map<String, String> mParams;
 
     public GsonRequest(int method, Map<String, String> params, String url, Class<T> clazz, Listener<T> listener,
-                       ErrorListener errorListener) {
+                       BaseErrorListener errorListener) {
         super(method, addParamsToUrlIfGet(method, url, params), errorListener);
         mClass = clazz;
         mListener = listener;

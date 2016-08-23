@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -56,12 +57,13 @@ public class Authenticator {
     public interface ErrorListener extends Response.ErrorListener {
     }
 
-    public static class AuthenticateErrorPayload implements Payload {
-        public AuthenticationError errorType;
-        public String errorMessage;
-        public AuthenticateErrorPayload(@NonNull AuthenticationError errorType, @NonNull String errorMessage) {
-            this.errorType = errorType;
-            this.errorMessage = errorMessage;
+    public static class AuthenticateErrorPayload extends Payload {
+        public AuthenticationError error;
+        public AuthenticateErrorPayload(@NonNull AuthenticationError error) {
+            this.error = error;
+        }
+        public AuthenticateErrorPayload(@NonNull AuthenticationErrorType errorType) {
+            this.error = new AuthenticationError(errorType, "");
         }
     }
 
@@ -190,7 +192,7 @@ public class Authenticator {
         }
     }
 
-    public static AuthenticationError volleyErrorToAuthenticationError(VolleyError error) {
+    public static AuthenticationErrorType volleyErrorToAuthenticationError(VolleyError error) {
         if (error != null && error.networkResponse != null && error.networkResponse.data != null) {
             String jsonString = new String(error.networkResponse.data);
             try {
@@ -200,7 +202,7 @@ public class Authenticator {
                 AppLog.e(T.API, e);
             }
         }
-        return AuthenticationError.GENERIC_ERROR;
+        return AuthenticationErrorType.GENERIC_ERROR;
     }
 
     public static String volleyErrorToErrorMessage(VolleyError error) {
@@ -216,17 +218,17 @@ public class Authenticator {
         return null;
     }
 
-    public static AuthenticationError jsonErrorToAuthenticationError(JSONObject jsonObject) {
-        AuthenticationError error = AuthenticationError.GENERIC_ERROR;
+    public static AuthenticationErrorType jsonErrorToAuthenticationError(JSONObject jsonObject) {
+        AuthenticationErrorType error = AuthenticationErrorType.GENERIC_ERROR;
         if (jsonObject != null) {
             String errorType = jsonObject.optString("error", "");
             String errorMessage = jsonObject.optString("error_description", "");
-            error = AuthenticationError.fromString(errorType);
+            error = AuthenticationErrorType.fromString(errorType);
             // Special cases for vague error types
-            if (error == AuthenticationError.INVALID_REQUEST) {
+            if (error == AuthenticationErrorType.INVALID_REQUEST) {
                 // Try to parse the error message to specify the error
                 if (errorMessage.contains("Incorrect username or password.")) {
-                    return AuthenticationError.INCORRECT_USERNAME_OR_PASSWORD;
+                    return AuthenticationErrorType.INCORRECT_USERNAME_OR_PASSWORD;
                 }
             }
         }
