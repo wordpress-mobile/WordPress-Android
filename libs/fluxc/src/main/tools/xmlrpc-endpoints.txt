@@ -1,4 +1,9 @@
 wp.getOptions
 wp.getPostFormats
 wp.getUsersBlogs
+wp.getMediaLibrary
+wp.getMediaItem
+wp.editPost
+wp.deletePost
+wp.uploadFile
 system.listMethods
