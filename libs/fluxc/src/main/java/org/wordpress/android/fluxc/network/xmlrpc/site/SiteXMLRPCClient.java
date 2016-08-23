@@ -169,6 +169,14 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         return new SitesModel(siteArray);
     }
 
+    private long string2Long(String s, long defvalue) {
+        try {
+            return Long.valueOf(s);
+        } catch (NumberFormatException e) {
+            return defvalue;
+        }
+    }
+
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
         Map<?, ?> blogOptions = (Map<?, ?>) response;
         oldModel.setName(getOption(blogOptions, "blog_title", String.class));
@@ -180,7 +188,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         oldModel.setTimezone(getOption(blogOptions, "time_zone", String.class));
         oldModel.setLoginUrl(getOption(blogOptions, "login_url", String.class));
         oldModel.setAdminUrl(getOption(blogOptions, "admin_url", String.class));
-        long dotComIdForJetpack = Long.valueOf(getOption(blogOptions, "jetpack_client_id", String.class));
+        long dotComIdForJetpack = string2Long(getOption(blogOptions, "jetpack_client_id", String.class), -1);
         oldModel.setSiteId(dotComIdForJetpack);
         // If the blog is not public, it's private. Note: this field doesn't always exist.
         oldModel.setIsPrivate(false);
