@@ -59,19 +59,29 @@ public class SiteSqlUtils {
         if (site == null) {
             return 0;
         }
-        // TODO: Check if the URL is not enough, we could get surprise with the site id with .org sites becoming
-        // jetpack sites
+
+        // If the site already exist and has an id, we want to update it.
         List<SiteModel> siteResult = WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.SITE_ID, site.getSiteId())
-                .equals(SiteModelTable.URL, site.getUrl())
+                .equals(SiteModelTable.ID, site.getId())
                 .endGroup().endWhere().getAsModel();
+
+        // Looks like a new site, make sure we don't already have it.
         if (siteResult.isEmpty()) {
-            // insert
+            // TODO: Make the URL enough, we could get surprise with the site id with .org sites becoming jetpack sites
+            siteResult = WellSql.select(SiteModel.class)
+                    .where().beginGroup()
+                    .equals(SiteModelTable.SITE_ID, site.getSiteId())
+                    .equals(SiteModelTable.URL, site.getUrl())
+                    .endGroup().endWhere().getAsModel();
+        }
+
+        if (siteResult.isEmpty()) {
+            // No site with this local ID, or REMOTE_ID + URL, then insert it
             WellSql.insert(site).asSingleTransaction(true).execute();
             return 0;
         } else {
-            // update
+            // Update old site
             int oldId = siteResult.get(0).getId();
             return WellSql.update(SiteModel.class).whereId(oldId)
                     .put(site, new UpdateAllExceptId<SiteModel>()).execute();

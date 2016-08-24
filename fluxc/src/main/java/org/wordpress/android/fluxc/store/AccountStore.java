@@ -283,6 +283,7 @@ public class AccountStore extends Store {
                     updateDefaultAccount(mAccount, AccountAction.PUSH_SETTINGS);
                 } else {
                     OnAccountChanged accountChanged = new OnAccountChanged();
+                    accountChanged.causeOfChange = AccountAction.PUSH_SETTINGS;
                     accountChanged.accountInfosChanged = false;
                     emitChange(accountChanged);
                 }

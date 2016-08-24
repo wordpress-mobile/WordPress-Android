@@ -35,7 +35,7 @@ public class AccountModelTest {
         copyAccount.setDisplayName("copyDisplayName");
         copyAccount.setProfileUrl("copyProfileUrl");
         copyAccount.setAvatarUrl("copyAvatarUrl");
-        copyAccount.setPrimaryBlogId(testAccount.getPrimaryBlogId() + 1);
+        copyAccount.setPrimarySiteId(testAccount.getPrimarySiteId() + 1);
         copyAccount.setSiteCount(testAccount.getSiteCount() + 1);
         copyAccount.setVisibleSiteCount(testAccount.getVisibleSiteCount() + 1);
         copyAccount.setEmail("copyEmail");
@@ -52,7 +52,7 @@ public class AccountModelTest {
         AccountModel testAccount = getTestAccount();
         AccountModel copyAccount = getTestAccount();
         copyAccount.setUserName("copyUsername");
-        copyAccount.setPrimaryBlogId(testAccount.getPrimaryBlogId() + 1);
+        copyAccount.setPrimarySiteId(testAccount.getPrimarySiteId() + 1);
         copyAccount.setFirstName("copyFirstName");
         copyAccount.setLastName("copyLastName");
         copyAccount.setAboutMe("copyAboutMe");

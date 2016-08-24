@@ -19,10 +19,15 @@ public class WPComEndpointTest {
 
         // Sites - Posts
         assertEquals("/sites/56/posts/", WPCOMREST.sites.site(56).posts.getEndpoint());
-        assertEquals("/sites/56/posts/new/", WPCOMREST.sites.site(56).posts.new_.getEndpoint());
         assertEquals("/sites/56/posts/78/", WPCOMREST.sites.site(56).posts.post(78).getEndpoint());
         assertEquals("/sites/56/posts/78/delete/", WPCOMREST.sites.site(56).posts.post(78).delete.getEndpoint());
         assertEquals("/sites/56/posts/new/", WPCOMREST.sites.site(56).posts.new_.getEndpoint());
+
+        // Sites - Media
+        assertEquals("/sites/56/media/", WPCOMREST.sites.site(56).media.getEndpoint());
+        assertEquals("/sites/56/media/78/", WPCOMREST.sites.site(56).media.item(78).getEndpoint());
+        assertEquals("/sites/56/media/78/delete/", WPCOMREST.sites.site(56).media.item(78).delete.getEndpoint());
+        assertEquals("/sites/56/media/new/", WPCOMREST.sites.site(56).media.new_.getEndpoint());
 
         // Me
         assertEquals("/me/", WPCOMREST.me.getEndpoint());
