@@ -1,10 +1,12 @@
 wp.getOptions
 wp.getPostFormats
 wp.getUsersBlogs
-system.listMethods
-
-wp.deletePost
-wp.editPost
+wp.getMediaLibrary
+wp.getMediaItem
 wp.getPost
 wp.getPosts
 wp.newPost
+wp.editPost
+wp.deletePost
+wp.uploadFile
+system.listMethods
