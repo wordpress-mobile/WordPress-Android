@@ -19,7 +19,7 @@ public class AccountModel extends Payload implements Identifiable {
     @Column private String mDisplayName;
     @Column private String mProfileUrl; // profile_URL
     @Column private String mAvatarUrl; // avatar_URL
-    @Column private long mPrimaryBlogId;
+    @Column private long mPrimarySiteId;
     @Column private int mSiteCount;
     @Column private int mVisibleSiteCount;
     @Column private String mEmail;
@@ -57,7 +57,7 @@ public class AccountModel extends Payload implements Identifiable {
                 StringUtils.equals(getDisplayName(), otherAccount.getDisplayName()) &&
                 StringUtils.equals(getProfileUrl(), otherAccount.getProfileUrl()) &&
                 StringUtils.equals(getAvatarUrl(), otherAccount.getAvatarUrl()) &&
-                getPrimaryBlogId() == otherAccount.getPrimaryBlogId() &&
+                getPrimarySiteId() == otherAccount.getPrimarySiteId() &&
                 getSiteCount() == otherAccount.getSiteCount() &&
                 getVisibleSiteCount() == otherAccount.getVisibleSiteCount() &&
                 StringUtils.equals(getFirstName(), otherAccount.getFirstName()) &&
@@ -75,7 +75,7 @@ public class AccountModel extends Payload implements Identifiable {
         mDisplayName = "";
         mProfileUrl = "";
         mAvatarUrl = "";
-        mPrimaryBlogId = 0;
+        mPrimarySiteId = 0;
         mSiteCount = 0;
         mVisibleSiteCount = 0;
         mEmail = "";
@@ -98,7 +98,7 @@ public class AccountModel extends Payload implements Identifiable {
         setDisplayName(other.getDisplayName());
         setProfileUrl(other.getProfileUrl());
         setAvatarUrl(other.getAvatarUrl());
-        setPrimaryBlogId(other.getPrimaryBlogId());
+        setPrimarySiteId(other.getPrimarySiteId());
         setSiteCount(other.getSiteCount());
         setVisibleSiteCount(other.getVisibleSiteCount());
         setEmail(other.getEmail());
@@ -110,7 +110,7 @@ public class AccountModel extends Payload implements Identifiable {
     public void copyAccountSettingsAttributes(AccountModel other) {
         if (other == null) return;
         setUserName(other.getUserName());
-        setPrimaryBlogId(other.getPrimaryBlogId());
+        setPrimarySiteId(other.getPrimarySiteId());
         setFirstName(other.getFirstName());
         setLastName(other.getLastName());
         setAboutMe(other.getAboutMe());
@@ -129,12 +129,12 @@ public class AccountModel extends Payload implements Identifiable {
         mUserId = userId;
     }
 
-    public void setPrimaryBlogId(long primaryBlogId) {
-        mPrimaryBlogId = primaryBlogId;
+    public void setPrimarySiteId(long primarySiteId) {
+        mPrimarySiteId = primarySiteId;
     }
 
-    public long getPrimaryBlogId() {
-        return mPrimaryBlogId;
+    public long getPrimarySiteId() {
+        return mPrimarySiteId;
     }
 
     public String getUserName() {

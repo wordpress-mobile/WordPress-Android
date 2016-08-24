@@ -127,8 +127,8 @@ public class AccountRestClient extends BaseWPComRestClient {
     /**
      * Performs an HTTP POST call to the v1.1 /me/settings/ endpoint. Upon receiving
      * a response (success or error) a {@link AccountAction#POSTED_SETTINGS} action is dispatched
-     * with a payload of type {@link AccountPostSettingsResponsePayload}. {@link AccountPostSettingsResponsePayload#isError()} can
-     * be used to determine the result of the request.
+     * with a payload of type {@link AccountPostSettingsResponsePayload}.
+     * {@link AccountPostSettingsResponsePayload#isError()} can be used to determine the result of the request.
      *
      * No HTTP POST call is made if the given parameter map is null or contains no entries.
      */
@@ -214,7 +214,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         account.setDisplayName(from.display_name);
         account.setUserName(from.username);
         account.setEmail(from.email);
-        account.setPrimaryBlogId(from.primary_blog);
+        account.setPrimarySiteId(from.primary_blog);
         account.setAvatarUrl(from.avatar_URL);
         account.setProfileUrl(from.profile_URL);
         account.setDate(from.date);
@@ -234,13 +234,15 @@ public class AccountRestClient extends BaseWPComRestClient {
         account.setAvatarUrl(from.avatar_URL);
         account.setPendingEmailChange(from.user_email_change_pending);
         account.setWebAddress(from.user_URL);
-        account.setPrimaryBlogId(from.primary_site_ID);
+        account.setPrimarySiteId(from.primary_site_ID);
         return account;
     }
 
-    public static boolean updateAccountModelFromPostSettingsResponse(AccountModel accountModel, Map<String, Object> from) {
+    public static boolean updateAccountModelFromPostSettingsResponse(AccountModel accountModel,
+                Map<String, Object> from) {
         AccountModel old = new AccountModel();
         old.copyAccountAttributes(accountModel);
+        old.setId(accountModel.getId());
         old.copyAccountSettingsAttributes(accountModel);
         if (from.containsKey("display_name")) accountModel.setDisplayName((String) from.get("display_name"));
         if (from.containsKey("first_name")) accountModel.setFirstName((String) from.get("first_name"));
@@ -251,7 +253,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                 ("user_email_change_pending"));
         if (from.containsKey("new_user_email")) accountModel.setEmail((String) from.get("new_user_email"));
         if (from.containsKey("user_URL")) accountModel.setWebAddress((String) from.get("user_URL"));
-        if (from.containsKey("primary_site_ID")) accountModel.setPrimaryBlogId((Long) from.get("primary_site_ID"));
+        if (from.containsKey("primary_site_ID")) accountModel.setPrimarySiteId(
+                ((Double) from.get("primary_site_ID")).longValue());
         return !old.equals(accountModel);
     }
 }
