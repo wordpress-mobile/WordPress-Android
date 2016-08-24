@@ -133,9 +133,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (mediaIds == null || mediaIds.isEmpty()) return;
 
         final int requestCount = mediaIds.size();
+        final MediaStore.ChangedMediaPayload payload = new MediaStore.ChangedMediaPayload(
+                new ArrayList<MediaModel>(), new ArrayList<Exception>(), null);
         for (final Long mediaId : mediaIds) {
-            final MediaStore.ChangedMediaPayload payload = new MediaStore.ChangedMediaPayload(
-                    new ArrayList<MediaModel>(), new ArrayList<Exception>(), null);
             String url = WPCOMREST.sites.site(siteId).media.item(mediaId).getUrlV1_1();
             add(new WPComGsonRequest<>(Method.GET, url, null, MediaWPComRestResponse.class,
                     new Listener<MediaWPComRestResponse>() {
