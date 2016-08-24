@@ -83,16 +83,13 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                    if (error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
+                        AppLog.i(AppLog.T.MEDIA, "media does not exist, uploading");
+                        performUpload(media, siteId);
+                    } else {
+                        AppLog.e(AppLog.T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA error: " + error);
+                    }
                 }
-//                    new ErrorListener() {
-//                @Override public void onErrorResponse(VolleyError error) {
-//                    if (error.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
-//                        AppLog.i(AppLog.T.MEDIA, "media does not exist, uploading");
-//                        performUpload(media, siteId);
-//                    } else {
-//                        AppLog.e(AppLog.T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA error: " + error);
-//                    }
-//                }
             }));
         }
     }
@@ -123,12 +120,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }, new BaseRequest.BaseErrorListener() {
             @Override
             public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
+                notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, error.volleyError);
             }
-//                new ErrorListener() {
-//                    @Override public void onErrorResponse(VolleyError error) {
-//                        AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
-//                        notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, error);
-//                    }
         }));
     }
 
@@ -154,12 +148,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                    AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
+                    onPullMediaResponse(payload, null, error, requestCount);
                 }
-//                        new ErrorListener() {
-//                            @Override public void onErrorResponse(VolleyError error) {
-//                                AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
-//                                onPullMediaResponse(payload, null, error, requestCount);
-//                        }
             }));
         }
     }
@@ -185,16 +176,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                    AppLog.v(AppLog.T.MEDIA, "VolleyError deleting media: " + error);
+                    notifyMediaError(MediaAction.DELETE_MEDIA, toDelete, MediaNetworkListener.MediaNetworkError.UNKNOWN, error.volleyError);
                 }
-            }
-//                    new ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            AppLog.v(AppLog.T.MEDIA, "VolleyError deleting media: " + error);
-//                            notifyMediaError(MediaAction.DELETE_MEDIA, toDelete, MediaNetworkListener.MediaNetworkError.UNKNOWN, error);
-//                        }
-//                    }
-            ));
+            }));
         }
     }
 
@@ -240,9 +225,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Helper method used by pullMedia to track response progress
      */
-    private void onPullMediaResponse(ChangedMediaPayload payload, MediaModel media, Exception error, int count) {
+    private void onPullMediaResponse(ChangedMediaPayload payload, MediaModel media, BaseRequest.BaseNetworkError error, int count) {
         payload.media.add(media);
-        payload.errors.add(error);
+        payload.errors.add(error.volleyError);
         if (payload.media.size() == count) {
             mListener.onMediaPulled(MediaAction.PULL_MEDIA, payload.media);
         }
