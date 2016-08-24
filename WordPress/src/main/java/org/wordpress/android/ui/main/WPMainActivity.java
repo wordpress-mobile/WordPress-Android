@@ -56,11 +56,9 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPStoreUtils;
@@ -669,7 +667,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         }
 
         // Try to select the primary wpcom site
-        long siteId = mAccountStore.getAccount().getPrimaryBlogId();
+        long siteId = mAccountStore.getAccount().getPrimarySiteId();
         SiteModel primarySite = mSiteStore.getSiteBySiteId(siteId);
         // Primary site found, select it
         if (primarySite != null) {
