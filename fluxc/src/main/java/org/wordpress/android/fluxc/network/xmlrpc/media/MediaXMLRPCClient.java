@@ -5,6 +5,7 @@ import android.webkit.MimeTypeMap;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.MediaAction;
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListene
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCException;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
 import org.wordpress.android.util.AppLog;
@@ -109,21 +111,16 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                    String msg = "Error response from XMLRPC.EDIT_MEDIA: ";
+                    if (is404Response(error)) {
+                        msg += "media does not exist";
+                    } else {
+                        msg += "unhandled XMLRPC.EDIT_MEDIA response: " + error;
+                    }
+                    AppLog.e(T.MEDIA, msg);
+                    notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.UNKNOWN, new Exception(msg));
                 }
-//                    new ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        String msg = "Error response from XMLRPC.EDIT_MEDIA: ";
-//                        if (error != null && error.networkResponse != null && error.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
-//                            msg += "media does not exist";
-//                        } else {
-//                            msg += "unhandled XMLRPC.EDIT_MEDIA response: " + error;
-//                        }
-//                        AppLog.e(T.MEDIA, msg);
-//                        notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.UNKNOWN, new Exception(msg));
-//                    }
-        }
-            ));
+            }));
         }
     }
 
@@ -143,15 +140,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }, new BaseRequest.BaseErrorListener() {
             @Override
             public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                AppLog.e(T.MEDIA, "Volley error", error.volleyError);
+                notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkError.UNKNOWN, error.volleyError);
             }
-        }
-//                new ErrorListener() {
-//                @Override public void onErrorResponse(VolleyError error) {
-//                    AppLog.e(T.MEDIA, "Volley error", error);
-//                    notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkError.UNKNOWN, error);
-//                }
-//            }
-        ));
+        }));
     }
 
     public void pullMedia(SiteModel site, List<Long> mediaIds) {
@@ -170,21 +162,15 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                    String msg = "Error response from XMLRPC.GET_MEDIA_ITEM: " + error;
+                    AppLog.v(T.MEDIA, msg);
+                    if (is404Response(error)) {
+                        notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND, error.volleyError);
+                    } else {
+                        notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.UNKNOWN, error.volleyError);
+                    }
                 }
-//                    new ErrorListener() {
-//                    @Override public void onErrorResponse(VolleyError error) {
-//                        String msg = "Error response from XMLRPC.GET_MEDIA_ITEM: " + error;
-//                        AppLog.v(T.MEDIA, msg);
-//                        if (msg.contains("404")) {
-//                            notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND, error);
-//                        } else if (error.networkResponse != null && error.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
-//                            notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND, error);
-//                        } else {
-//                            notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.UNKNOWN, error);
-//                        }
-//                    }
-        }
-            ));
+            }));
         }
     }
 
@@ -215,18 +201,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                    String msg = "Error response from XMLRPC.DELETE_MEDIA: " + error;
+                    AppLog.v(T.MEDIA, msg);
+                    if (is404Response(error)) {
+                        notifyMediaError(MediaAction.DELETE_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND, error.volleyError);
+                    }
                 }
-            }
-//            new ErrorListener() {
-//                    @Override public void onErrorResponse(VolleyError error) {
-//                        String msg = "Error response from XMLRPC.DELETE_MEDIA: " + error;
-//                        AppLog.v(T.MEDIA, msg);
-//                        if (msg.contains("404")) {
-//                            notifyMediaError(MediaAction.DELETE_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND, error);
-//                        }
-//                    }
-//                }
-            ));
+            }));
         }
     }
 
@@ -344,6 +325,27 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
 
         return mediaModel;
+    }
+
+    private boolean is404Response(BaseRequest.BaseNetworkError error) {
+        if (error.hasVolleyError() && error.volleyError != null) {
+            VolleyError volleyError = error.volleyError;
+            if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
+                return true;
+            }
+
+            if (volleyError.getCause() instanceof XMLRPCFault) {
+                if (((XMLRPCFault) volleyError.getCause()).getFaultCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+                    return true;
+                }
+            }
+        }
+
+        if (error.isGeneric() && error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
+            return true;
+        }
+
+        return false;
     }
 
     private void notifyMediaProgress(MediaModel media, float progress) {

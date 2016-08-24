@@ -303,10 +303,6 @@ public class MediaStore extends Store implements MediaNetworkListener {
             // null or empty media list -or- list contains a null value
             notifyMediaError(MediaError.NULL_MEDIA_ARG, MediaAction.PUSH_MEDIA, null);
             return;
-        } else if (!isWellFormedForUpload(payload.media)) {
-            // list contained media items with insufficient data
-            notifyMediaError(MediaError.MALFORMED_MEDIA_ARG, MediaAction.PUSH_MEDIA, null);
-            return;
         }
 
         if (payload.site.isWPCom()) {
