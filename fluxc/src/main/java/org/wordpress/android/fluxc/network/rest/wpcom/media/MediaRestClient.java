@@ -189,7 +189,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
     // Used in both uploadMedia and pushMedia methods
     private void performUpload(MediaModel media, long siteId) {
-        String url = WPCOMREST.sites.site(siteId).media.item(media.getMediaId()).getUrlV1_1();
+        String url = WPCOMREST.sites.site(siteId).media.new_.getUrlV1_1();
         final RestUploadRequestBody body = new RestUploadRequestBody(media, this);
         String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
 
