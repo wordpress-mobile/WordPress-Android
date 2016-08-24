@@ -227,7 +227,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      */
     private void onPullMediaResponse(ChangedMediaPayload payload, MediaModel media, BaseRequest.BaseNetworkError error, int count) {
         payload.media.add(media);
-        payload.errors.add(error.volleyError);
+        if (error != null) {
+            payload.errors.add(error.volleyError);
+        }
         if (payload.media.size() == count) {
             mListener.onMediaPulled(MediaAction.PULL_MEDIA, payload.media);
         }
