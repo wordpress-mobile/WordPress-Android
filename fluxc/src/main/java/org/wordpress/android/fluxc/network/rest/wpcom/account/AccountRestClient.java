@@ -241,6 +241,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     public static boolean updateAccountModelFromPostSettingsResponse(AccountModel accountModel, Map<String, Object> from) {
         AccountModel old = new AccountModel();
         old.copyAccountAttributes(accountModel);
+        old.setId(accountModel.getId());
         old.copyAccountSettingsAttributes(accountModel);
         if (from.containsKey("display_name")) accountModel.setDisplayName((String) from.get("display_name"));
         if (from.containsKey("first_name")) accountModel.setFirstName((String) from.get("first_name"));
