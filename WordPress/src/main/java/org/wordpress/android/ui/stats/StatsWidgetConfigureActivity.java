@@ -27,6 +27,8 @@ import org.wordpress.android.util.WPStoreUtils;
 
 import javax.inject.Inject;
 
+import static com.android.volley.Request.Method.HEAD;
+
 public class StatsWidgetConfigureActivity extends AppCompatActivity
         implements StatsWidgetConfigureAdapter.OnSiteClickListener {
 
@@ -123,7 +125,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     }
 
     private void setNewAdapter() {
-        mAdapter = new StatsWidgetConfigureAdapter(this, mAccountStore.getAccount().getPrimaryBlogId());
+        mAdapter = new StatsWidgetConfigureAdapter(this, mAccountStore.getAccount().getPrimarySiteId());
         mAdapter.setOnSiteClickListener(this);
     }
 

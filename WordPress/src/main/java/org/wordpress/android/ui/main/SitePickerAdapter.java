@@ -390,7 +390,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
             SiteList sites = new SiteList(siteModels);
 
             // sort by blog/host
-            final long primaryBlogId = mAccountStore.getAccount().getPrimaryBlogId();
+            final long primaryBlogId = mAccountStore.getAccount().getPrimarySiteId();
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
                     if (primaryBlogId > 0) {
