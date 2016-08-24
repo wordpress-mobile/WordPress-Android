@@ -58,7 +58,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
-import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
@@ -539,12 +538,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
     // Events
 
-    // TODO: STORES: this must be replaced by onAuthenticationChanged
-    @SuppressWarnings("unused")
-    public void onEventMainThread(UserSignedOutWordPressCom event) {
-        resetFragments();
-    }
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
@@ -558,18 +551,9 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     public void onAccountChanged(OnAccountChanged event) {
         if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed out
+            resetFragments();
             ActivityLauncher.showSignInForResult(this);
         }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.InvalidSslCertificateDetected event) {
-        SelfSignedSSLUtils.showSSLWarningDialog(this, mMemorizingTrustManager, null);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.LoginLimitDetected event) {
-        ToastUtils.showToast(this, R.string.limit_reached, ToastUtils.Duration.LONG);
     }
 
     @SuppressWarnings("unused")

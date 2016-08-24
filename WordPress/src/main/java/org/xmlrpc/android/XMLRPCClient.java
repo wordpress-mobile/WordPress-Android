@@ -7,15 +7,10 @@ import android.util.Xml;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
@@ -23,7 +18,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.xmlpull.v1.XmlPullParser;
@@ -43,7 +37,6 @@ import java.io.SequenceInputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,8 +45,6 @@ import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLPeerUnverifiedException;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * A WordPress XMLRPC Client.
@@ -502,10 +493,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                             || "wp.getPostStatusList".equals(method) || "wp.getPageStatusList".equals(method)) {
                             break;
                         }
-                        EventBus.getDefault().post(new CoreEvents.InvalidCredentialsDetected());
+                        // no more: EventBus.getDefault().post(new CoreEvents.InvalidCredentialsDetected());
                         break;
                     case 425:
-                        EventBus.getDefault().post(new CoreEvents.TwoFactorAuthenticationDetected());
+                        // no more: EventBus.getDefault().post(new CoreEvents.TwoFactorAuthenticationDetected());
                         break;
                     //TODO: Check the login limit here
                     default:
@@ -538,7 +529,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                     AppLog.e(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected on wordpress.com");
                 } else {
                     AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
-                    EventBus.getDefault().post(new CoreEvents.InvalidSslCertificateDetected());
+                    // no more: EventBus.getDefault().post(new CoreEvents.InvalidSslCertificateDetected());
                 }
                 throw e;
             } catch (SSLPeerUnverifiedException e) {
@@ -546,7 +537,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                     AppLog.e(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected on wordpress.com");
                 } else {
                     AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
-                    EventBus.getDefault().post(new CoreEvents.InvalidSslCertificateDetected());
+                    // no more: EventBus.getDefault().post(new CoreEvents.InvalidSslCertificateDetected());
                 }
                 throw e;
             } catch (IOException e) {
@@ -573,7 +564,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         String errorMessage = exception.getMessage().toLowerCase();
         if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503")) &&
             (errorMessage.contains("limit reached") || errorMessage.contains("login limit"))) {
-            EventBus.getDefault().post(new CoreEvents.LoginLimitDetected());
+            // no more: EventBus.getDefault().post(new CoreEvents.LoginLimitDetected());
             return true;
         }
         return false;

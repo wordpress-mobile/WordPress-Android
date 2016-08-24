@@ -57,7 +57,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -71,8 +70,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Allows interfacing with WordPress site settings. Works with WP.com and WP.org v4.5+ (pending).

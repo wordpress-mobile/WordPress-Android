@@ -10,8 +10,6 @@ import android.content.res.Configuration;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.support.multidex.MultiDexApplication;
@@ -30,9 +28,10 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.wordpress.rest.RestClient;
-import com.wordpress.rest.RestRequest;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
@@ -45,6 +44,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.modules.AppComponent;
 import org.wordpress.android.modules.DaggerAppComponent;
@@ -63,9 +63,6 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.CoreEvents;
-import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
-import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
@@ -214,7 +211,8 @@ public class WordPress extends MultiDexApplication {
                 .sendNoSubscriberEvent(false)
                 .throwSubscriberException(true)
                 .installDefaultEventBus();
-        EventBus.getDefault().register(this);
+
+        mDispatcher.register(this);
 
         RestClientUtils.setUserAgent(getUserAgent());
 
@@ -330,25 +328,16 @@ public class WordPress extends MultiDexApplication {
     public static RestClientUtils getRestClientUtils() {
         if (mRestClientUtils == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtils = new RestClientUtils(mContext, requestQueue, authenticator, mOnAuthFailedListener);
+            mRestClientUtils = new RestClientUtils(mContext, requestQueue, authenticator, null);
         }
         return mRestClientUtils;
     }
-
-    private static RestRequest.OnAuthFailedListener mOnAuthFailedListener = new RestRequest.OnAuthFailedListener() {
-        @Override
-        public void onAuthFailed() {
-            if (getContext() == null) return;
-            // If this is called, it means the WP.com token is no longer valid.
-            EventBus.getDefault().post(new CoreEvents.RestApiUnauthorized());
-        }
-    };
 
     public static RestClientUtils getRestClientUtilsV1_1() {
         if (mRestClientUtilsVersion1_1 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
             mRestClientUtilsVersion1_1 = new RestClientUtils(mContext, requestQueue, authenticator,
-                    mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_1);
+                    null, RestClient.REST_CLIENT_VERSIONS.V1_1);
         }
         return mRestClientUtilsVersion1_1;
     }
@@ -357,7 +346,7 @@ public class WordPress extends MultiDexApplication {
         if (mRestClientUtilsVersion1_2 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
             mRestClientUtilsVersion1_2 = new RestClientUtils(mContext, requestQueue, authenticator,
-                    mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_2);
+                    null, RestClient.REST_CLIENT_VERSIONS.V1_2);
         }
         return mRestClientUtilsVersion1_2;
     }
@@ -366,7 +355,7 @@ public class WordPress extends MultiDexApplication {
         if (mRestClientUtilsVersion1_3 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
             mRestClientUtilsVersion1_3 = new RestClientUtils(mContext, requestQueue, authenticator,
-                    mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_3);
+                    null, RestClient.REST_CLIENT_VERSIONS.V1_3);
         }
         return mRestClientUtilsVersion1_3;
     }
@@ -375,7 +364,7 @@ public class WordPress extends MultiDexApplication {
         if (mRestClientUtilsVersion0 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
             mRestClientUtilsVersion0 = new RestClientUtils(mContext, requestQueue, authenticator,
-                    mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V0);
+                    null, RestClient.REST_CLIENT_VERSIONS.V0);
         }
         return mRestClientUtilsVersion0;
     }
@@ -441,34 +430,27 @@ public class WordPress extends MultiDexApplication {
         AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT);
 
         removeWpComUserRelatedData(getApplicationContext());
-
-        // broadcast an event: wpcom user signed out
-        // TODO: STORES: kill this when we have a signout action in AccountStore
-        EventBus.getDefault().post(new UserSignedOutWordPressCom());
-
-        // broadcast an event only if the user is completely signed out (wpcom and other .org sites)
-        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            // TODO: STORES: kill this when we have a signout action in AccountStore
-            EventBus.getDefault().post(new UserSignedOutCompletely());
-        }
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(UserSignedOutCompletely event) {
-        flushHttpCache();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountChanged(OnAccountChanged event) {
+        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            flushHttpCache();
 
-        // Analytics resets
-        AnalyticsTracker.endSession(false);
-        AnalyticsTracker.clearAllData();
+            // Analytics resets
+            AnalyticsTracker.endSession(false);
+            AnalyticsTracker.clearAllData();
 
-        // disable passcode lock
-        AbstractAppLock appLock = AppLockManager.getInstance().getAppLock();
-        if (appLock != null) {
-            appLock.setPassword(null);
+            // disable passcode lock
+            AbstractAppLock appLock = AppLockManager.getInstance().getAppLock();
+            if (appLock != null) {
+                appLock.setPassword(null);
+            }
+
+            // dangerously delete all content!
+            wpDB.dangerouslyDeleteAllContent();
         }
-
-        // dangerously delete all content!
-        wpDB.dangerouslyDeleteAllContent();
     }
 
     public void removeWpComUserRelatedData(Context context) {
@@ -486,16 +468,10 @@ public class WordPress extends MultiDexApplication {
             AppLog.e(T.NOTIFS, "Could not delete GCM Token", e);
         }
 
-
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                // reset default account
-                mDispatcher.dispatch(AccountActionBuilder.newSignOutAction());
-                // delete wpcom sites
-                mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomSitesAction());
-            }
-        });
+        // reset default account
+        mDispatcher.dispatch(AccountActionBuilder.newSignOutAction());
+        // delete wpcom sites
+        mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomSitesAction());
 
         // reset all reader-related prefs & data
         AppPrefs.reset();
