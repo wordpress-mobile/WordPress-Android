@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPostSettingsResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
@@ -51,9 +51,9 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class PostAccountSettingsPayload extends Payload {
+    public static class PushAccountSettingsPayload extends Payload {
         public Map<String, String> params;
-        public PostAccountSettingsPayload() {
+        public PushAccountSettingsPayload() {
         }
     }
 
@@ -257,7 +257,7 @@ public class AccountStore extends Store {
             // fetch only Account Settings
             mAccountRestClient.fetchAccountSettings();
         } else if (actionType == AccountAction.PUSH_SETTINGS) {
-            PostAccountSettingsPayload payload = (PostAccountSettingsPayload) action.getPayload();
+            PushAccountSettingsPayload payload = (PushAccountSettingsPayload) action.getPayload();
             mAccountRestClient.postAccountSettings(payload.params);
         } else if (actionType == AccountAction.FETCHED_ACCOUNT) {
             AccountRestPayload data = (AccountRestPayload) action.getPayload();
@@ -276,9 +276,9 @@ public class AccountStore extends Store {
                 emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
             }
         } else if (actionType == AccountAction.PUSHED_SETTINGS) {
-            AccountPostSettingsResponsePayload data = (AccountPostSettingsResponsePayload) action.getPayload();
+            AccountPushSettingsResponsePayload data = (AccountPushSettingsResponsePayload) action.getPayload();
             if (!data.isError()) {
-                boolean updated = AccountRestClient.updateAccountModelFromPostSettingsResponse(mAccount, data.settings);
+                boolean updated = AccountRestClient.updateAccountModelFromPushSettingsResponse(mAccount, data.settings);
                 if (updated) {
                     updateDefaultAccount(mAccount, AccountAction.PUSH_SETTINGS);
                 } else {
