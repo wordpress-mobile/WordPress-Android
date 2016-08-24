@@ -251,7 +251,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                 ("user_email_change_pending"));
         if (from.containsKey("new_user_email")) accountModel.setEmail((String) from.get("new_user_email"));
         if (from.containsKey("user_URL")) accountModel.setWebAddress((String) from.get("user_URL"));
-        if (from.containsKey("primary_site_ID")) accountModel.setPrimaryBlogId((Long) from.get("primary_site_ID"));
+        if (from.containsKey("primary_site_ID")) accountModel.setPrimaryBlogId(
+                ((Double) from.get("primary_site_ID")).longValue());
         return !old.equals(accountModel);
     }
 }
