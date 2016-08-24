@@ -10,12 +10,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.lang.model.element.Modifier;
 
 public class XMLRPCPoet {
-    public static TypeSpec generate(File endpointFile, String fileName) throws IOException {
+    public static TypeSpec generate(File endpointFile, String fileName, Map<String, List<String>> aliases)
+            throws IOException {
         TypeSpec.Builder XMLRPCBuilder = TypeSpec.enumBuilder(fileName)
                 .addModifiers(Modifier.PUBLIC)
                 .addField(String.class, "mEndpoint", Modifier.PRIVATE, Modifier.FINAL);
@@ -51,6 +54,17 @@ public class XMLRPCPoet {
                             .addMember("value", "$S", fullEndpoint)
                             .build())
                     .build());
+        }
+
+        // Add endpoint aliases
+        for (String endpoint : aliases.keySet()) {
+            for (String alias : aliases.get(endpoint)) {
+                XMLRPCBuilder.addEnumConstant(alias, TypeSpec.anonymousClassBuilder("$S", endpoint)
+                        .addAnnotation(AnnotationSpec.builder(Endpoint.class)
+                                .addMember("value", "$S", endpoint)
+                                .build())
+                        .build());
+            }
         }
 
         in.close();

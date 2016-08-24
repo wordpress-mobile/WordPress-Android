@@ -12,8 +12,8 @@
 /sites/$site/posts/new/
 
 /sites/$site/media/
+/sites/$site/media/$media_ID/
+/sites/$site/media/$media_ID/delete/
 /sites/$site/media/new/
-/sites/$site/media/$item_ID/
-/sites/$site/media/$item_ID/delete/
 
 /users/new/
