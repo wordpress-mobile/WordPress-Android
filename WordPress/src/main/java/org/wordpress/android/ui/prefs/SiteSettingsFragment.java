@@ -586,7 +586,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // Locally save the site
         mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
-        EventBus.getDefault().post(new CoreEvents.BlogListChanged());
     }
 
     @Override

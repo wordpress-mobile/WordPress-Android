@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -30,6 +32,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -188,7 +191,8 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
         if (!isFinishing()) {
             getAdapter().loadSites();
         }
@@ -362,8 +366,6 @@ public class SitePickerActivity extends AppCompatActivity
             setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.localId));
             mDidUserSelectSite = true;
             SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.localId);
-            // Fetch site informations and options
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
             finish();
         }
     }

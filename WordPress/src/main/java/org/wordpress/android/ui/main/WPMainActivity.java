@@ -27,12 +27,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -660,6 +662,9 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             AppPrefs.setSelectedSite(-1);
             return;
         }
+        // When we select a site, we want to update its informations or options
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
+
         // Make selected site visible
         selectedSite.setIsVisible(true);
         AppPrefs.setSelectedSite(selectedSite.getId());
@@ -702,5 +707,15 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         }
 
         // Else no site selected
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        // "Reload" selected site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
+        if (site != null) {
+            mSelectedSite = site;
+        }
     }
 }

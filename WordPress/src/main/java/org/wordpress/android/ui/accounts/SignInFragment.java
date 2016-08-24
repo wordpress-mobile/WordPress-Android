@@ -917,7 +917,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
-        // Sites updated, login step is successful. Note: the user can have zero sites.
 
         // Login Successful
         trackAnalyticsSignIn();

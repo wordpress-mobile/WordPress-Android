@@ -18,11 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -439,7 +442,8 @@ public class MySiteFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
         if (!isAdded()) {
             return;
         }
