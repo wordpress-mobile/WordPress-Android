@@ -128,7 +128,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     private void setNewAdapter() {
         Blog blog = WordPress.getCurrentBlog();
         int localBlogId = (blog != null ? blog.getLocalTableBlogId() : 0);
-        mAdapter = new StatsWidgetConfigureAdapter(this, localBlogId, mAccountStore.getAccount().getPrimaryBlogId());
+        mAdapter = new StatsWidgetConfigureAdapter(this, localBlogId, mAccountStore.getAccount().getPrimarySiteId());
         mAdapter.setOnSiteClickListener(this);
     }
 

@@ -148,7 +148,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mEmailPreference.setSummary(account.getEmail());
         mWebAddressPreference.setSummary(account.getWebAddress());
 
-        String blogId = String.valueOf(account.getPrimaryBlogId());
+        String blogId = String.valueOf(account.getPrimarySiteId());
         changePrimaryBlogPreference(blogId);
 
         checkIfEmailChangeIsPending();
