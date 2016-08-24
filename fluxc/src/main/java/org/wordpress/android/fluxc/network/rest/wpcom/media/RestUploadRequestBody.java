@@ -36,7 +36,7 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
 
     @Override
     protected float getProgress(long bytesWritten) {
-        return bytesWritten / contentLength();
+        return (float) bytesWritten / contentLength();
     }
 
     @Override
