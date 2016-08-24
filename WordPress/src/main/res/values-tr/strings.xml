@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_fetch_users_list">Site kullanıcıları getirilemedi</string>
+	<string name="plans_manage">Planınızı yönetin:\nWordPress.com/plans</string>
+	<string name="people_empty_list_filtered_viewers">Henüz hiç izleyiciniz yok.</string>
+	<string name="people_fetching">Kullanıcılar getiriliyor..</string>
+	<string name="title_follower">Takipçi</string>
+	<string name="title_email_follower">E-posta takipçisi</string>
+	<string name="people_empty_list_filtered_email_followers">Henüz hiç e-posta takipçiniz yok.</string>
+	<string name="people_empty_list_filtered_followers">Henüz hiç takipçiniz yok.</string>
+	<string name="people_empty_list_filtered_users">Henüz hiç kullanıcınız yok.</string>
+	<string name="people_dropdown_item_email_followers">E-posta takipçileri</string>
+	<string name="people_dropdown_item_viewers">İzleyiciler</string>
+	<string name="people_dropdown_item_followers">Takipçiler</string>
+	<string name="people_dropdown_item_team">Takım</string>
+	<string name="invite_message_usernames_limit">10 taneye kadar e-posta adresi ve/veya WordPress.com kullanıcısı davet edin. Kullanıcı adına ihtiyacı olanlara, nasol oluşturacaklarına dair bilgilendirme gönderilecek.</string>
+	<string name="viewer_remove_confirmation_message">Bu izleyiciyi kaldırırsanız artık sitenizi ziyaret edemeyecek.\n\nHala bu kullanıcıyı kaldırmak istiyor musunuz?</string>
+	<string name="follower_remove_confirmation_message">Eğer kaldırılırsa, bu takipçi site hakkındaki bildirimleri almayı kesecek, tabi tekrar takibe başlayana kadar.\n\nHala bu takipçiyi kaldırmak istiyor musunuz?</string>
+	<string name="follower_subscribed_since">%1$s tarihinden beri</string>
+	<string name="reader_label_view_gallery">Galeriyi görüntüle</string>
+	<string name="reader_label_image_count">%d görsel</string>
+	<string name="error_remove_follower">Takipçi kaldırılamıyor</string>
+	<string name="error_remove_viewer">İzleyici kaldırılamıyor</string>
+	<string name="error_fetch_email_followers_list">Sitenin e-posta takipçileri getirilemedi</string>
+	<string name="error_fetch_followers_list">Site takipçileri getirilemedi</string>
 	<string name="editor_failed_uploads_switch_html">Bazı ortam yüklemeleri başarısız oldu. HTML moduna geçebilirsiniz\n        Tüm başarısız yüklemeleri kaldırılıp devam edilsin mi?</string>
 	<string name="format_bar_description_html">HTML modu</string>
 	<string name="visual_editor">Görsel düzenleyici</string>
@@ -29,10 +52,11 @@
 	<string name="invite_error_some_failed">Davet gönderildi fakat hata(lar) oluştu!</string>
 	<string name="invite_sent">Davet başarıyla gönderildi</string>
 	<string name="tap_to_try_again">Tekrar denemek için dokunun!</string>
+	<string name="invite_error_for_username">%1$s: %2$s</string>
 	<string name="invite_error_sending">Davet gönderilmeye çalışılırken bir hata oluştu!</string>
-	<string name="invite_error_invalid_usenames_multiple">Gönderemiyor: Geçersiz kullanıcı adları veya e-postalar</string>
-	<string name="invite_error_invalid_usenames_one">Gönderemiyor: bir kullanıcı adı veya e-posta geçersiz</string>
-	<string name="invite_error_no_usenames">Lütfen en az bir kullanıcı adı ekleyin</string>
+	<string name="invite_error_invalid_usernames_multiple">Gönderemiyor: Geçersiz kullanıcı adları veya e-postalar</string>
+	<string name="invite_error_invalid_usernames_one">Gönderemiyor: bir kullanıcı adı veya e-posta geçersiz</string>
+	<string name="invite_error_no_usernames">Lütfen en az bir kullanıcı adı ekleyin</string>
 	<string name="invite_message_info">(İsteğe bağlı) Kullanıcıya/Kullanıcılara göndereceğiniz davete 500 karaktere kadar özel bir mesaj ekleyebilirsiniz.</string>
 	<string name="invite_message_remaining_other">%d karakter kaldı</string>
 	<string name="invite_message_remaining_one">1 karakter kaldı</string>
@@ -41,7 +65,6 @@
 	<string name="invite_message_title">Özel Mesaj</string>
 	<string name="invite_already_a_member">\'%s\' kullanıcı adı ile zaten bir üye mevcut</string>
 	<string name="invite_username_not_found">\'%s\' kullanıcı adı için kullanıcı bulunamadı</string>
-	<string name="invite_names_hint">Bir e-posta adresi veya kullanıcı adı yazın...</string>
 	<string name="invite">Davet Et</string>
 	<string name="invite_names_title">Kullanıcı adları ya da e-postalar</string>
 	<string name="signup_succeed_signin_failed">Hesabınız oluşturuldu fakat oturumunuzu açarken bir problem oluştu\n        Yeni oluşturulan hesabınıza kullanıcı adı ve parolanız ile giriş yapmayı deneyin.</string>
@@ -61,8 +84,7 @@
 	<string name="preview_screen_links_disabled">Önizleme ekranında bağlantılar etkisiz durumdadır</string>
 	<string name="draft_explainer">Bu yazı henüz yayınlanmamış bir taslak</string>
 	<string name="send">Gönder</string>
-	<string name="person_removed_general">Kullanıcı başarıyla kaldırıldı</string>
-	<string name="person_remove_confirmation_message">Eğer %1$s kullanıcısını kaldırırsanız, o kullanıcı bu siteye artık erişemez fakat %1$s kullanıcı tarafından oluşturulmuş içerik sitede kalır.\n\nHala bu kullanıcıyı kaldırmak istiyor musunuz?</string>
+	<string name="user_remove_confirmation_message">Eğer %1$s kullanıcısını kaldırırsanız, o kullanıcı bu siteye artık erişemez fakat %1$s kullanıcı tarafından oluşturulmuş içerik sitede kalır.\n\nHala bu kullanıcıyı kaldırmak istiyor musunuz?</string>
 	<string name="person_removed">\@%1$s başarıyla kaldırıldı</string>
 	<string name="person_remove_confirmation_title">%1$s kullanıcısını kaldır</string>
 	<string name="reader_empty_posts_in_custom_list">Bu listedeki siteler yakın zamanda herhangi bir gönderide bulunmadı</string>
@@ -70,8 +92,8 @@
 	<string name="edit_user">Kullanıcı düzenle</string>
 	<string name="role">Rol</string>
 	<string name="error_remove_user">Kullanıcı kaldırılamıyor</string>
-	<string name="error_fetch_people_list">Site kullanıcıları getirilemiyor</string>
 	<string name="error_update_role">Kullanıcı rolü güncellenemiyor</string>
+	<string name="error_fetch_viewers_list">Site izleyicileri getirilemedi</string>
 	<string name="gravatar_camera_and_media_permission_required">Bir fotoğraf seçmek ya da yakalamak için izinler gereklidir</string>
 	<string name="error_updating_gravatar">Gravatar\'ınızı güncellerken hata oluştu</string>
 	<string name="error_locating_image">Kırpılmış görseli konumlandırırken hata oluştu</string>
@@ -103,7 +125,6 @@
 	<string name="plans_post_purchase_text_customize">Artık özel yazı tipleri, özel renkler ve özel CSS düzenleme becerilerine sahipsiniz.</string>
 	<string name="plans_post_purchase_text_intro">Siteniz sevinçten taklalar atıyor! Şimdi gidip sitenizde yeni ne özellikler var inceleyin ve nereden başlayacağınıza karar verin.</string>
 	<string name="plans_post_purchase_title_customize">Yazı tiplerini ve renkleri özelleştir</string>
-	<string name="plan_purchase_now">Şimdi satın al</string>
 	<string name="plans_post_purchase_title_intro">Hepsi sizin, istediğiniz kadar!</string>
 	<string name="export_your_content_message">Yazılarınız, sayfalarınız ve ayarlarınız size %s adresine e-posta ile gönderilecek.</string>
 	<string name="plan">Plan</string>
