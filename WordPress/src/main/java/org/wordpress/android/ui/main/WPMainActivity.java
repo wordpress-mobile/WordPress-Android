@@ -665,6 +665,11 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         AppPrefs.setSelectedSite(selectedSite.getId());
     }
 
+    /**
+     * This should not be moved to a SiteUtils.getSelectedSite() or similar static method. We don't want
+     * this to be used globally like WordPress.getCurrentBlog() was used. The state is maintained by this
+     * Activity and the selected site parameter is passed along to other activities / fragments.
+     */
     public void initSelectedSite() {
         int siteLocalId = AppPrefs.getSelectedSite();
 

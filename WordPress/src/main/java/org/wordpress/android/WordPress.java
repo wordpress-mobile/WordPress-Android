@@ -41,6 +41,7 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -80,7 +81,6 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -106,8 +106,8 @@ public class WordPress extends MultiDexApplication {
     private static RestClientUtils mRestClientUtilsVersion1_3;
     private static RestClientUtils mRestClientUtilsVersion0;
 
-    private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
-    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
+    private static final int SECONDS_BETWEEN_SITE_UPDATE = 60 * 60; // 1 hour
+    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60; // 6 hours
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
@@ -123,14 +123,26 @@ public class WordPress extends MultiDexApplication {
     }
 
     /**
-     *  Update blog list in a background task. Broadcast WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED if the
-     *  list changed.
+     *  Update site list in a background task. (WPCOM site list, and eventually self hosted multisites)
      */
-    public RateLimitedTask mUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
+    public RateLimitedTask mUpdateSiteList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
             if (mAccountStore.hasAccessToken()) {
-                // TODO: STORES: we should only update WPCOM SITES
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+            }
+            return true;
+        }
+    };
+
+    /**
+     *  Update site infos in a background task.
+     */
+    public RateLimitedTask mUpdateSelectedSite = new RateLimitedTask(SECONDS_BETWEEN_SITE_UPDATE) {
+        protected boolean run() {
+            int siteLocalId = AppPrefs.getSelectedSite();
+            SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+            if (selectedSite != null) {
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
             }
             return true;
         }
@@ -734,8 +746,11 @@ public class WordPress extends MultiDexApplication {
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
 
-                // Rate limited WPCom blog list Update
-                mUpdateWordPressComBlogList.runIfNotLimited();
+                // Rate limited WPCom blog list update
+                mUpdateSiteList.runIfNotLimited();
+
+                // Rate limited Site informations and options update
+                mUpdateSelectedSite.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
         }
