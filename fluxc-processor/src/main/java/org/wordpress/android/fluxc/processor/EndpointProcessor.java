@@ -11,6 +11,10 @@ import org.wordpress.android.fluxc.annotations.endpoint.WPComEndpoint;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -25,6 +29,18 @@ import javax.lang.model.element.TypeElement;
 public class EndpointProcessor extends AbstractProcessor {
     private static final String WPCOMREST_ENDPOINT_FILE = "fluxc/src/main/tools/wp-com-endpoints.txt";
     private static final String XMLRPC_ENDPOINT_FILE = "fluxc/src/main/tools/xmlrpc-endpoints.txt";
+
+    private static final Map<String, List<String>> XML_RPC_ALIASES;
+    static {
+        XML_RPC_ALIASES = new HashMap<>();
+        List<String> editPostAliases = new ArrayList<>();
+        editPostAliases.add("EDIT_MEDIA");
+        XML_RPC_ALIASES.put("wp.editPost", editPostAliases);
+
+        List<String> deletePostAliases = new ArrayList<>();
+        deletePostAliases.add("DELETE_MEDIA");
+        XML_RPC_ALIASES.put("wp.deletePost", deletePostAliases);
+    }
 
     private Filer mFiler;
 
@@ -56,7 +72,7 @@ public class EndpointProcessor extends AbstractProcessor {
     private void generateXMLRPCEndpointFile() throws IOException {
         File file = new File(XMLRPC_ENDPOINT_FILE);
 
-        TypeSpec endpointClass = XMLRPCPoet.generate(file, "XMLRPC");
+        TypeSpec endpointClass = XMLRPCPoet.generate(file, "XMLRPC", XML_RPC_ALIASES);
         writeEndpointClassToFile(endpointClass);
     }
 

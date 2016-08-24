@@ -129,12 +129,20 @@ public class RESTPoet {
                     .addStatement("super($L, $L)", "previousEndpoint", endpointName + "Id")
                     .build();
 
-            TypeSpec.Builder endpointClassBuilder = TypeSpec.classBuilder(capitalize(endpointName) + "Endpoint")
+            String innerClassName;
+            if (endpointNode.getParent().getCleanEndpointName().equals(endpointName)) {
+                // Special rule for situations like '.../media/$media_ID/` where the inner class needs to be renamed
+                innerClassName = capitalize(endpointName) + "Item" + "Endpoint";
+            } else {
+                innerClassName = capitalize(endpointName) + "Endpoint";
+            }
+
+            TypeSpec.Builder endpointClassBuilder = TypeSpec.classBuilder(innerClassName)
                     .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                     .superclass(sBaseEndpointClass)
                     .addMethod(endpointConstructor);
 
-            TypeName endpointClassName = ClassName.get("", capitalize(endpointName) + "Endpoint");
+            TypeName endpointClassName = ClassName.get("", innerClassName);
 
             // Build annotated accessor method for variable endpoint
             MethodSpec endpointMethod = generateEndpointMethodForClass(endpointNode, endpointClassName);
@@ -151,7 +159,13 @@ public class RESTPoet {
     private static MethodSpec generateEndpointMethodForClass(EndpointNode endpointNode, TypeName endpointClassName) {
         String endpointName = endpointNode.getCleanEndpointName();
 
-        MethodSpec.Builder endpointMethodBuilder = MethodSpec.methodBuilder(endpointName)
+        String methodName = endpointName;
+        if (endpointNode.getParent().getCleanEndpointName().equals(endpointName)) {
+            // Special rule for situations like '.../media/$media_ID/`
+            methodName = "item";
+        }
+
+        MethodSpec.Builder endpointMethodBuilder = MethodSpec.methodBuilder(methodName)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(endpointClassName)
                 .addParameter(long.class, endpointName + "Id")
