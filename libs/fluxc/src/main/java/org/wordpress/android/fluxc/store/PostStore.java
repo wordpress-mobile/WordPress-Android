@@ -292,64 +292,12 @@ public class PostStore extends Store {
         IAction actionType = action.getType();
         if (actionType == PostAction.FETCH_POSTS) {
             FetchPostsPayload payload = (FetchPostsPayload) action.getPayload();
-
-            int offset = 0;
-            if (payload.loadMore) {
-                offset = getUploadedPostsCountForSite(payload.site);
-            }
-
-            if (payload.site.isWPCom()) {
-                mPostRestClient.fetchPosts(payload.site, false, offset);
-            } else {
-                // TODO: check for WP-REST-API plugin and use it here
-                mPostXMLRPCClient.fetchPosts(payload.site, false, offset);
-            }
+            fetchPosts(payload, false);
         } else if (actionType == PostAction.FETCH_PAGES) {
             FetchPostsPayload payload = (FetchPostsPayload) action.getPayload();
-
-            int offset = 0;
-            if (payload.loadMore) {
-                offset = getUploadedPostsCountForSite(payload.site);
-            }
-
-            if (payload.site.isWPCom()) {
-                mPostRestClient.fetchPosts(payload.site, true, offset);
-            } else {
-                // TODO: check for WP-REST-API plugin and use it here
-                mPostXMLRPCClient.fetchPosts(payload.site, true, offset);
-            }
+            fetchPosts(payload, true);
         } else if (actionType == PostAction.FETCHED_POSTS) {
-            FetchPostsResponsePayload postsResponsePayload = (FetchPostsResponsePayload) action.getPayload();
-            OnPostChanged onPostChanged;
-
-            if (postsResponsePayload.isError()) {
-                onPostChanged = new OnPostChanged(0);
-
-                onPostChanged.error = postsResponsePayload.error;
-            } else {
-
-                // Clear existing uploading posts if this is a fresh fetch (loadMore = false in the original request)
-                // This is the simplest way of keeping our local posts in sync with remote posts (in case of deletions,
-                // or if the user manual changed some post IDs)
-                if (!postsResponsePayload.loadedMore) {
-                    PostSqlUtils.deleteUploadedPostsForSite(postsResponsePayload.site, postsResponsePayload.isPages);
-                }
-
-                int rowsAffected = 0;
-                for (PostModel post : postsResponsePayload.posts.getPosts()) {
-                    rowsAffected += PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
-                }
-
-                onPostChanged = new OnPostChanged(rowsAffected, postsResponsePayload.canLoadMore);
-            }
-
-            if (postsResponsePayload.isPages) {
-                onPostChanged.causeOfChange = PostAction.FETCH_PAGES;
-            } else {
-                onPostChanged.causeOfChange = PostAction.FETCH_POSTS;
-            }
-
-            emitChange(onPostChanged);
+            handleFetchPostsCompleted((FetchPostsResponsePayload) action.getPayload());
         } else if (actionType == PostAction.FETCH_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
             if (payload.site.isWPCom()) {
@@ -359,33 +307,9 @@ public class PostStore extends Store {
                 mPostXMLRPCClient.fetchPost(payload.post, payload.site);
             }
         } else if (actionType == PostAction.FETCHED_POST) {
-            OnPostChanged event;
-            RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.isError()) {
-                event = new OnPostChanged(0);
-                event.error = payload.error;
-            } else {
-                int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
-                event = new OnPostChanged(rowsAffected);
-            }
-            event.causeOfChange = PostAction.UPDATE_POST;
-            emitChange(event);
+            handleFetchSinglePostCompleted((RemotePostPayload) action.getPayload());
         } else if (actionType == PostAction.INSTANTIATE_POST) {
-            InstantiatePostPayload payload = (InstantiatePostPayload) action.getPayload();
-
-            PostModel newPost = new PostModel();
-            newPost.setLocalSiteId(payload.site.getId());
-            newPost.setIsLocalDraft(true);
-            newPost.setIsPage(payload.isPage);
-            if (payload.categoryIds != null && !payload.categoryIds.isEmpty()) {
-                newPost.setCategoryIdList(payload.categoryIds);
-            }
-            newPost.setPostFormat(payload.postFormat);
-
-            // Insert the post into the db, updating the object to include the local ID
-            newPost = PostSqlUtils.insertPostForResult(newPost);
-
-            emitChange(new OnPostInstantiated(newPost));
+            instantiatePost((InstantiatePostPayload) action.getPayload());
         } else if (actionType == PostAction.PUSH_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
             if (payload.site.isWPCom()) {
@@ -395,34 +319,9 @@ public class PostStore extends Store {
                 mPostXMLRPCClient.pushPost(payload.post, payload.site);
             }
         } else if (actionType == PostAction.PUSHED_POST) {
-            RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.isError()) {
-                OnPostChanged onPostChanged = new OnPostChanged(0);
-                onPostChanged.error = payload.error;
-                onPostChanged.causeOfChange = PostAction.PUSH_POST;
-                emitChange(onPostChanged);
-            } else {
-                int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
-
-                emitChange(new OnPostUploaded(payload.post));
-
-                if (payload.site.isWPCom()) {
-                    // The WP.COM REST API response contains the modified post, so we're already in sync with the server
-                    OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
-                    onPostChanged.causeOfChange = PostAction.UPDATE_POST;
-                    emitChange(onPostChanged);
-                } else {
-                    // XML-RPC does not respond to new/edit post calls with the modified post
-                    // Request a fresh copy of the uploaded post from the server to ensure local copy matches server
-                    mPostXMLRPCClient.fetchPost(payload.post, payload.site);
-                }
-            }
+            handlePushPostCompleted((RemotePostPayload) action.getPayload());
         } else if (actionType == PostAction.UPDATE_POST) {
-            int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges((PostModel) action.getPayload());
-
-            OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
-            onPostChanged.causeOfChange = PostAction.UPDATE_POST;
-            emitChange(onPostChanged);
+            updatePost((PostModel) action.getPayload());
         } else if (actionType == PostAction.DELETE_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
             if (payload.site.isWPCom()) {
@@ -432,18 +331,126 @@ public class PostStore extends Store {
                 mPostXMLRPCClient.deletePost(payload.post, payload.site);
             }
         } else if (actionType == PostAction.DELETED_POST) {
-            // Handle any necessary changes to post status in the db here
-            RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            OnPostChanged event = new OnPostChanged(0);
-            event.causeOfChange = PostAction.DELETE_POST;
-
-            if (payload.isError()) {
-                event.error = payload.error;
-            }
-
-            emitChange(event);
+            handleDeletePostCompleted((RemotePostPayload) action.getPayload());
         } else if (actionType == PostAction.REMOVE_POST) {
             PostSqlUtils.deletePost((PostModel) action.getPayload());
         }
+    }
+
+    private void fetchPosts(FetchPostsPayload payload, boolean pages) {
+        int offset = 0;
+        if (payload.loadMore) {
+            offset = getUploadedPostsCountForSite(payload.site);
+        }
+
+        if (payload.site.isWPCom()) {
+            mPostRestClient.fetchPosts(payload.site, pages, offset);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
+        }
+    }
+
+    private void handleDeletePostCompleted(RemotePostPayload payload) {
+        // TODO: Handle any necessary changes to post status in the db here
+        OnPostChanged event = new OnPostChanged(0);
+        event.causeOfChange = PostAction.DELETE_POST;
+
+        if (payload.isError()) {
+            event.error = payload.error;
+        }
+
+        emitChange(event);
+    }
+
+    private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
+        OnPostChanged onPostChanged;
+
+        if (payload.isError()) {
+            onPostChanged = new OnPostChanged(0);
+            onPostChanged.error = payload.error;
+        } else {
+            // Clear existing uploading posts if this is a fresh fetch (loadMore = false in the original request)
+            // This is the simplest way of keeping our local posts in sync with remote posts (in case of deletions,
+            // or if the user manual changed some post IDs)
+            if (!payload.loadedMore) {
+                PostSqlUtils.deleteUploadedPostsForSite(payload.site, payload.isPages);
+            }
+
+            int rowsAffected = 0;
+            for (PostModel post : payload.posts.getPosts()) {
+                rowsAffected += PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
+            }
+
+            onPostChanged = new OnPostChanged(rowsAffected, payload.canLoadMore);
+        }
+
+        if (payload.isPages) {
+            onPostChanged.causeOfChange = PostAction.FETCH_PAGES;
+        } else {
+            onPostChanged.causeOfChange = PostAction.FETCH_POSTS;
+        }
+
+        emitChange(onPostChanged);
+    }
+
+    private void handleFetchSinglePostCompleted(RemotePostPayload payload) {
+        OnPostChanged event;
+
+        if (payload.isError()) {
+            event = new OnPostChanged(0);
+            event.error = payload.error;
+            event.causeOfChange = PostAction.UPDATE_POST;
+            emitChange(event);
+        } else {
+            updatePost(payload.post);
+        }
+    }
+
+    private void handlePushPostCompleted(RemotePostPayload payload) {
+        if (payload.isError()) {
+            OnPostChanged onPostChanged = new OnPostChanged(0);
+            onPostChanged.error = payload.error;
+            onPostChanged.causeOfChange = PostAction.PUSH_POST;
+            emitChange(onPostChanged);
+        } else {
+            emitChange(new OnPostUploaded(payload.post));
+
+            if (payload.site.isWPCom()) {
+                // The WP.COM REST API response contains the modified post, so we're already in sync with the server
+                // All we need to do is store it and emit OnPostChanged
+                updatePost(payload.post);
+            } else {
+                // XML-RPC does not respond to new/edit post calls with the modified post
+                // Update the post locally to reflect its uploaded status, but also request a fresh copy
+                // from the server to ensure local copy matches server
+                PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
+                mPostXMLRPCClient.fetchPost(payload.post, payload.site);
+            }
+        }
+    }
+
+    private void instantiatePost(InstantiatePostPayload payload) {
+        PostModel newPost = new PostModel();
+        newPost.setLocalSiteId(payload.site.getId());
+        newPost.setIsLocalDraft(true);
+        newPost.setIsPage(payload.isPage);
+        if (payload.categoryIds != null && !payload.categoryIds.isEmpty()) {
+            newPost.setCategoryIdList(payload.categoryIds);
+        }
+        newPost.setPostFormat(payload.postFormat);
+
+        // Insert the post into the db, updating the object to include the local ID
+        newPost = PostSqlUtils.insertPostForResult(newPost);
+
+        emitChange(new OnPostInstantiated(newPost));
+    }
+
+    private void updatePost(PostModel post) {
+        int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
+
+        OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
+        onPostChanged.causeOfChange = PostAction.UPDATE_POST;
+        emitChange(onPostChanged);
     }
 }
