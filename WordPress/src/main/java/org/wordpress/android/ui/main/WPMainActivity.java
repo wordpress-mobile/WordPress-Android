@@ -663,7 +663,10 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         if (siteLocalId != -1) {
             // Site previously selected, use it
             mSelectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-            return;
+            // If saved site exist, then return, else (site has been removed?) try to select another site
+            if (mSelectedSite != null) {
+                return;
+            }
         }
 
         // Try to select the primary wpcom site
