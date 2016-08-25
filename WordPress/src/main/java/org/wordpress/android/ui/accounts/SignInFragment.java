@@ -941,26 +941,45 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
         AppLog.e(T.API, "Discover error: " + error);
         endProgress();
-        if (error == DiscoveryError.WORDPRESS_COM_SITE) {
-            signInAndFetchBlogListWPCom();
-        } else if (error == DiscoveryError.HTTP_AUTH_REQUIRED) {
-            askForHttpAuthCredentials(failedEndpoint);
-        } else if (error == DiscoveryError.ERRONEOUS_SSL_CERTIFICATE) {
-            mSelfhostedPayload.url = failedEndpoint;
-            if (isAdded()) {
-                SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
-                        new Callback() {
-                    @Override
-                    public void certificateTrusted() {
-                        if (mSelfhostedPayload == null) {
-                            return;
-                        }
-                        // retry login with the same parameters
-                        startProgress(getString(R.string.signing_in));
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
-                    }
-                });
-            }
+        if (!isAdded()) {
+            return;
+        }
+        switch (error) {
+            case ERRONEOUS_SSL_CERTIFICATE:
+                mSelfhostedPayload.url = failedEndpoint;
+                    SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
+                            new Callback() {
+                                @Override
+                                public void certificateTrusted() {
+                                    if (mSelfhostedPayload == null) {
+                                        return;
+                                    }
+                                    // retry login with the same parameters
+                                    startProgress(getString(R.string.signing_in));
+                                    mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
+                                }
+                            });
+
+                break;
+            case HTTP_AUTH_REQUIRED:
+                askForHttpAuthCredentials(failedEndpoint);
+                break;
+            case WORDPRESS_COM_SITE:
+                signInAndFetchBlogListWPCom();
+                break;
+            case NO_SITE_ERROR:
+                showGenericErrorDialog(getResources().getString(R.string.no_site_error));
+                break;
+            case SITE_URL_CANNOT_BE_EMPTY:
+            case INVALID_URL:
+                showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message));
+                break;
+            case MISSING_XMLRPC_METHOD:
+                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error));
+                break;
+            case GENERIC_ERROR:
+                showGenericErrorDialog(getResources().getString(R.string.login_failed_message));
+                break;
         }
     }
 }
