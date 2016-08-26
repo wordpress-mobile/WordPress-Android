@@ -59,13 +59,12 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
         }
 
         for (ReaderBlog blogInfo: blogs) {
-            int index;
-            if (blogInfo.feedId != 0) {
-                index = indexOfFeedId(blogInfo.feedId);
-            } else {
-                index = indexOfBlogId(blogInfo.blogId);
+            int index = indexOfBlogId(blogInfo.blogId);
+            if (index == -1) {
+                return false;
             }
-            if (index == -1 || !this.get(index).isSameAs(blogInfo)) {
+            ReaderBlog thisInfo = this.get(index);
+            if (!thisInfo.isSameAs(blogInfo)) {
                 return false;
             }
         }

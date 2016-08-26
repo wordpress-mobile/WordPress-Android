@@ -269,9 +269,7 @@ public class ReaderUpdateService extends Service {
                 ReaderBlogList serverBlogs = ReaderBlogList.fromJson(jsonObject);
                 ReaderBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
 
-                boolean followedBlogsChanged = !localBlogs.isSameList(serverBlogs);
-
-                if (followedBlogsChanged) {
+                if (!localBlogs.isSameList(serverBlogs)) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
                     AppLog.d(AppLog.T.READER, "reader blogs service > followed blogs changed");
                     EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
