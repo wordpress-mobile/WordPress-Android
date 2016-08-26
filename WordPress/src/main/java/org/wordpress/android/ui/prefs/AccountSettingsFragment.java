@@ -15,24 +15,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PostAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -122,7 +123,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             mEmailPreference.setEnabled(false);
             return false;
         } else if (preference == mPrimarySitePreference) {
-            changePrimaryBlogPreference(newValue.toString());
+            changePrimaryBlogPreference(Long.parseLong(newValue.toString()));
             updatePrimaryBlog(newValue.toString());
             return false;
         } else if (preference == mWebAddressPreference) {
@@ -147,10 +148,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mUsernamePreference.setSummary(account.getUserName());
         mEmailPreference.setSummary(account.getEmail());
         mWebAddressPreference.setSummary(account.getWebAddress());
-
-        String blogId = String.valueOf(account.getPrimarySiteId());
-        changePrimaryBlogPreference(blogId);
-
+        changePrimaryBlogPreference(account.getPrimarySiteId());
         checkIfEmailChangeIsPending();
     }
 
@@ -189,11 +187,11 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         }
     }
 
-    private void changePrimaryBlogPreference(String blogId) {
-        mPrimarySitePreference.setValue(blogId);
-        Blog primaryBlog = WordPress.wpDB.getBlogForDotComBlogId(blogId);
-        if (primaryBlog != null) {
-            mPrimarySitePreference.setSummary(StringUtils.unescapeHTML(primaryBlog.getNameOrHostUrl()));
+    private void changePrimaryBlogPreference(long siteRemoteId) {
+        mPrimarySitePreference.setValue(String.valueOf(siteRemoteId));
+        SiteModel site = mSiteStore.getSiteBySiteId(siteRemoteId);
+        if (site != null) {
+            mPrimarySitePreference.setSummary(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(site)));
             mPrimarySitePreference.refreshAdapter();
         }
     }
@@ -230,7 +228,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     }
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         if (!isAdded()) return;
 
@@ -250,10 +248,33 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         }
     }
 
+    public static String[] getSiteNamesFromSites(List<SiteModel> sites) {
+        List<String> blogNames = new ArrayList<>();
+        for (SiteModel site : sites) {
+            blogNames.add(SiteUtils.getSiteNameOrHomeURL(site));
+        }
+        return blogNames.toArray(new String[blogNames.size()]);
+    }
+
+    public static String[] getHomeURLOrHostNamesFromSites(List<SiteModel> sites) {
+        List<String> urls = new ArrayList<>();
+        for (SiteModel site : sites) {
+            urls.add(SiteUtils.getHomeURLOrHostName(site));
+        }
+        return urls.toArray(new String[urls.size()]);
+    }
+
+    public static String[] getSiteIdsFromSites(List<SiteModel> sites) {
+        List<String> ids = new ArrayList<>();
+        for (SiteModel site : sites) {
+            ids.add(String.valueOf(site.getSiteId()));
+        }
+        return ids.toArray(new String[ids.size()]);
+    }
+
     /*
      * AsyncTask which loads sites from database for primary site preference
      */
-    // TODO: STORES: class below will be replaced by a store call
     private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -267,11 +288,10 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Map<String, Object>> blogList = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"homeURL"});
-            mPrimarySitePreference.setEntries(BlogUtils.getBlogNamesFromAccountMapList(blogList));
-            mPrimarySitePreference.setEntryValues(BlogUtils.getBlogIdsFromAccountMapList(blogList));
-            mPrimarySitePreference.setDetails(BlogUtils.getHomeURLOrHostNamesFromAccountMapList(blogList));
-
+            List<SiteModel> sites = mSiteStore.getDotComSites();
+            mPrimarySitePreference.setEntries(getSiteNamesFromSites(sites));
+            mPrimarySitePreference.setEntryValues(getSiteIdsFromSites(sites));
+            mPrimarySitePreference.setDetails(getHomeURLOrHostNamesFromSites(sites));
             return null;
         }
 

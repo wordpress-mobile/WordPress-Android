@@ -16,12 +16,11 @@ import android.widget.ImageView;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.mediapicker.MediaItem;
-import org.wordpress.mediapicker.source.MediaSource;
 import org.wordpress.mediapicker.MediaUtils.LimitedBackgroundOperation;
+import org.wordpress.mediapicker.source.MediaSource;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -34,26 +33,29 @@ public class MediaSourceWPImages implements MediaSource {
     private final List<MediaItem> mMediaItems = new ArrayList<>();
 
     private OnMediaChange mListener;
+    private SiteModel mSite;
 
-    public MediaSourceWPImages() {
+    public MediaSourceWPImages(SiteModel site) {
+        mSite = site;
+    }
+
+    public MediaSourceWPImages(Parcel parcel) {
+        mSite = (SiteModel) parcel.readSerializable();
     }
 
     @Override
     public void gather(Context context) {
         mMediaItems.clear();
-
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog != null) {
-            Cursor imageCursor = WordPressMediaUtils.getWordPressMediaImages(String.valueOf(blog.getLocalTableBlogId()));
+        if (mSite != null) {
+            Cursor imageCursor = WordPressMediaUtils.getWordPressMediaImages(String.valueOf(mSite.getId()));
 
             if (imageCursor != null) {
                 addWordPressImagesFromCursor(imageCursor);
                 imageCursor.close();
-            } else if (mListener != null){
+            } else if (mListener != null) {
                 mListener.onMediaLoaded(false);
             }
-        } else if (mListener != null){
+        } else if (mListener != null) {
             mListener.onMediaLoaded(false);
         }
     }
@@ -245,7 +247,7 @@ public class MediaSourceWPImages implements MediaSource {
     public static final Creator<MediaSourceWPImages> CREATOR =
             new Creator<MediaSourceWPImages>() {
                 public MediaSourceWPImages createFromParcel(Parcel in) {
-                    return new MediaSourceWPImages();
+                    return new MediaSourceWPImages(in);
                 }
 
                 public MediaSourceWPImages[] newArray(int size) {
@@ -260,5 +262,6 @@ public class MediaSourceWPImages implements MediaSource {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSerializable(mSite);
     }
 }

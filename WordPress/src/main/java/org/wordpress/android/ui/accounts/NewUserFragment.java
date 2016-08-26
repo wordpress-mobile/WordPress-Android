@@ -20,7 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
-import org.wordpress.android.Constants;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -422,7 +422,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         termsOfServiceTextView.setOnClickListener(new OnClickListener() {
                                                       @Override
                                                       public void onClick(View v) {
-                                                          Uri uri = Uri.parse(Constants.URL_TOS);
+                                                          Uri uri = Uri.parse(getString(R.string.wordpresscom_tos_url));
                                                           startActivity(new Intent(Intent.ACTION_VIEW, uri));
                                                       }
                                                   }
@@ -459,8 +459,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                BlogUtils.convertToLowercase(s);
+            public void afterTextChanged(Editable editable) {
+                lowerCaseEditable(editable);
             }
         });
 
@@ -479,8 +479,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                BlogUtils.convertToLowercase(s);
+            public void afterTextChanged(Editable editable) {
+                lowerCaseEditable(editable);
             }
         });
         mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -548,7 +548,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
     // OnChanged events
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
@@ -569,7 +569,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewUserCreated(OnNewUserCreated event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
@@ -588,7 +588,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
@@ -608,7 +608,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         fetchSiteAndAccount();
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         AppLog.i(T.NUX, event.toString());
         mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
@@ -619,7 +619,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
         mSitesFetched = true;

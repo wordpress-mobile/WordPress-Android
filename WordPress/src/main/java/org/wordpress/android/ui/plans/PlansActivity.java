@@ -23,14 +23,15 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -44,10 +45,9 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class PlansActivity extends AppCompatActivity {
-    public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
 
-    private int mLocalBlogID = -1;
+    private SiteModel mSelectedSite;
     private Plan[] mAvailablePlans;
 
     private WPViewPager mViewPager;
@@ -56,6 +56,7 @@ public class PlansActivity extends AppCompatActivity {
     private ViewGroup mManageBar;
 
     @Inject AccountStore mAccountStore;
+    @Inject AccountStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,17 +66,17 @@ public class PlansActivity extends AppCompatActivity {
         setContentView(R.layout.plans_activity);
 
         if (savedInstanceState != null) {
-            mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mSelectedSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             Serializable serializable = savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
             if (serializable instanceof Plan[]) {
                 mAvailablePlans = (Plan[]) serializable;
             }
-        } else if (getIntent() != null) {
-            mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
+        } else if (getIntent() != null && getIntent().getExtras() != null) {
+            mSelectedSite = (SiteModel) getIntent().getExtras().getSerializable(WordPress.SITE);
         }
 
-        if (WordPress.getBlog(mLocalBlogID) == null) {
-            AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+        if (mSelectedSite == null) {
+            AppLog.e(T.PLANS, "Selected site is null");
             Toast.makeText(this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
             finish();
             return;
@@ -109,7 +110,7 @@ public class PlansActivity extends AppCompatActivity {
                 return;
             }
             showProgress();
-            PlanUpdateService.startService(this, mLocalBlogID);
+            PlanUpdateService.startService(this, mSelectedSite);
         } else {
             setupPlansUI();
         }
@@ -118,9 +119,7 @@ public class PlansActivity extends AppCompatActivity {
         mManageBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Blog blog = WordPress.getBlog(mLocalBlogID);
-                if (blog == null) return;
-                String domain = UrlUtils.getHost(blog.getUrl());
+                String domain = UrlUtils.getHost(mSelectedSite.getUrl());
                 String managePlansUrl = "https://wordpress.com/plans/" + domain;
                 ReaderActivityLauncher.openUrl(view.getContext(), managePlansUrl, OpenUrlType.EXTERNAL,
                         mAccountStore.getAccount().getUserName());
@@ -249,7 +248,7 @@ public class PlansActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
+        outState.putSerializable(WordPress.SITE, mSelectedSite);
         outState.putSerializable(ARG_LOCAL_AVAILABLE_PLANS, mAvailablePlans);
         super.onSaveInstanceState(outState);
     }
@@ -283,7 +282,7 @@ public class PlansActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     public void onEventMainThread(PlanEvents.PlansUpdated event) {
         // make sure the update is for this blog
-        if (event.getLocalBlogId() != this.mLocalBlogID) {
+        if (event.getSite().getId() != mSelectedSite.getId()) {
             AppLog.w(AppLog.T.PLANS, "plans updated for different blog");
             return;
         }

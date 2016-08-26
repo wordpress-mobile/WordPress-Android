@@ -12,7 +12,9 @@ import android.webkit.WebView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPWebViewClient;
@@ -20,15 +22,16 @@ import org.wordpress.android.util.WPWebViewClient;
 import javax.inject.Inject;
 
 public class PostPreviewFragment extends Fragment {
-    private int mLocalBlogId;
+    private SiteModel mSite;
     private long mLocalPostId;
     private WebView mWebView;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
-    public static PostPreviewFragment newInstance(int localBlogId, long localPostId) {
+    public static PostPreviewFragment newInstance(SiteModel site, long localPostId) {
         Bundle args = new Bundle();
-        args.putInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID, localBlogId);
+        args.putSerializable(WordPress.SITE, site);
         args.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, localPostId);
         PostPreviewFragment fragment = new PostPreviewFragment();
         fragment.setArguments(args);
@@ -38,7 +41,7 @@ public class PostPreviewFragment extends Fragment {
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
-        mLocalBlogId = args.getInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID);
+        mSite = (SiteModel) args.getSerializable(WordPress.SITE);
         mLocalPostId = args.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
     }
 
@@ -48,14 +51,14 @@ public class PostPreviewFragment extends Fragment {
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
-            mLocalBlogId = savedInstanceState.getInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mLocalPostId = savedInstanceState.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID, mLocalBlogId);
+        outState.putSerializable(WordPress.SITE, mSite);
         outState.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, mLocalPostId);
         super.onSaveInstanceState(outState);
     }
@@ -65,8 +68,7 @@ public class PostPreviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.post_preview_fragment, container, false);
 
         mWebView = (WebView) view.findViewById(R.id.webView);
-        WPWebViewClient client = new WPWebViewClient(WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId),
-                mAccountStore.getAccessToken());
+        WPWebViewClient client = new WPWebViewClient(mSite, mAccountStore.getAccessToken());
         mWebView.setWebViewClient(client);
 
         return view;

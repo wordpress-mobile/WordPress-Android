@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.services;
 
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.ApiHelper;
 
@@ -40,19 +41,19 @@ public class PostEvents {
     }
 
     public static class RequestPosts {
-        private final int mBlogId;
+        private final SiteModel mSite;
         private final boolean mIsPage;
         private boolean mCanLoadMore;
         private boolean mFailed;
         private ApiHelper.ErrorType mErrorType = null;
 
-        RequestPosts(int blogId, boolean isPage) {
-            mBlogId = blogId;
+        RequestPosts(SiteModel site, boolean isPage) {
+            mSite = site;
             mIsPage = isPage;
             mFailed = false;
         }
-        public int getBlogId() {
-            return mBlogId;
+        public SiteModel getSite() {
+            return mSite;
         }
         public boolean isPage() {
             return mIsPage;

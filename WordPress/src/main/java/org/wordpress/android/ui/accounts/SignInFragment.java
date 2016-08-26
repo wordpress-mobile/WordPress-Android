@@ -42,6 +42,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
@@ -53,7 +54,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -111,7 +111,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected String mTwoStepCode;
     protected String mHttpUsername;
     protected String mHttpPassword;
-    protected Blog mJetpackBlog;
+    protected SiteModel mJetpackSite;
 
     protected WPTextView mSignInButton;
     protected WPTextView mCreateAccountButton;
@@ -409,12 +409,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private boolean isJetpackAuth() {
-        return mJetpackBlog != null;
+        return mJetpackSite != null;
     }
 
     // Set blog for Jetpack auth
-    public void setBlogAndCustomMessageForJetpackAuth(Blog blog, String customAuthMessage) {
-        mJetpackBlog = blog;
+    public void setBlogAndCustomMessageForJetpackAuth(SiteModel site, String customAuthMessage) {
+        mJetpackSite = site;
         if(customAuthMessage != null && mJetpackAuthLabel != null) {
             mJetpackAuthLabel.setText(customAuthMessage);
         }
@@ -917,7 +917,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
-        // Sites updated, login step is successful. Note: the user can have zero sites.
 
         // Login Successful
         trackAnalyticsSignIn();
@@ -942,26 +941,45 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
         AppLog.e(T.API, "Discover error: " + error);
         endProgress();
-        if (error == DiscoveryError.WORDPRESS_COM_SITE) {
-            signInAndFetchBlogListWPCom();
-        } else if (error == DiscoveryError.HTTP_AUTH_REQUIRED) {
-            askForHttpAuthCredentials(failedEndpoint);
-        } else if (error == DiscoveryError.ERRONEOUS_SSL_CERTIFICATE) {
-            mSelfhostedPayload.url = failedEndpoint;
-            if (isAdded()) {
-                SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
-                        new Callback() {
-                    @Override
-                    public void certificateTrusted() {
-                        if (mSelfhostedPayload == null) {
-                            return;
-                        }
-                        // retry login with the same parameters
-                        startProgress(getString(R.string.signing_in));
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
-                    }
-                });
-            }
+        if (!isAdded()) {
+            return;
+        }
+        switch (error) {
+            case ERRONEOUS_SSL_CERTIFICATE:
+                mSelfhostedPayload.url = failedEndpoint;
+                    SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
+                            new Callback() {
+                                @Override
+                                public void certificateTrusted() {
+                                    if (mSelfhostedPayload == null) {
+                                        return;
+                                    }
+                                    // retry login with the same parameters
+                                    startProgress(getString(R.string.signing_in));
+                                    mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
+                                }
+                            });
+
+                break;
+            case HTTP_AUTH_REQUIRED:
+                askForHttpAuthCredentials(failedEndpoint);
+                break;
+            case WORDPRESS_COM_SITE:
+                signInAndFetchBlogListWPCom();
+                break;
+            case NO_SITE_ERROR:
+                showGenericErrorDialog(getResources().getString(R.string.no_site_error));
+                break;
+            case SITE_URL_CANNOT_BE_EMPTY:
+            case INVALID_URL:
+                showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message));
+                break;
+            case MISSING_XMLRPC_METHOD:
+                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error));
+                break;
+            case GENERIC_ERROR:
+                showGenericErrorDialog(getResources().getString(R.string.login_failed_message));
+                break;
         }
     }
 }

@@ -10,9 +10,9 @@ import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.SiteSettingsTable;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
@@ -22,6 +22,7 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +60,7 @@ import java.util.Map;
  * This class is marked abstract. This is due to the fact that .org (self-hosted) and .com sites
  * expose different API's to query and edit their respective settings (even though the options
  * offered by each is roughly the same). To get an instance of this interface class use the
- * {@link SiteSettingsInterface#getInterface(Activity, Blog, SiteSettingsListener)} method. It will
+ * {@link SiteSettingsInterface#getInterface(Activity, SiteModel, SiteSettingsListener)} method. It will
  * determine which interface ({@link SelfHostedSiteSettings} or {@link DotComSiteSettings}) is
  * appropriate for the given blog.
  */
@@ -119,13 +120,13 @@ public abstract class SiteSettingsInterface {
     /**
      * Instantiates the appropriate (self-hosted or .com) SiteSettingsInterface.
      */
-    public static SiteSettingsInterface getInterface(Activity host, Blog blog, SiteSettingsListener listener) {
-        if (host == null || blog == null) return null;
+    public static SiteSettingsInterface getInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
+        if (host == null || site == null) return null;
 
-        if (blog.isDotcomFlag()) {
-            return new DotComSiteSettings(host, blog, listener);
+        if (site.isWPCom()) {
+            return new DotComSiteSettings(host, site, listener);
         } else {
-            return new SelfHostedSiteSettings(host, blog, listener);
+            return new SelfHostedSiteSettings(host, site, listener);
         }
     }
 
@@ -209,16 +210,16 @@ public abstract class SiteSettingsInterface {
     protected abstract void fetchRemoteData();
 
     protected final Activity mActivity;
-    protected final Blog mBlog;
+    protected final SiteModel mSite;
     protected final SiteSettingsListener mListener;
     protected final SiteSettingsModel mSettings;
     protected final SiteSettingsModel mRemoteSettings;
 
     private final Map<String, String> mLanguageCodes;
 
-    protected SiteSettingsInterface(Activity host, Blog blog, SiteSettingsListener listener) {
+    protected SiteSettingsInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
         mActivity = host;
-        mBlog = blog;
+        mSite = site;
         mListener = listener;
         mSettings = new SiteSettingsModel();
         mRemoteSettings = new SiteSettingsModel();
@@ -699,9 +700,7 @@ public abstract class SiteSettingsInterface {
      * Needed so that subclasses can be created before initializing. The final member variables
      * are null until object has been created so XML-RPC callbacks will not run.
      *
-     * @return
-     * returns itself for the convenience of
-     * {@link SiteSettingsInterface#getInterface(Activity, Blog, SiteSettingsListener)}
+     * @return itself
      */
     public SiteSettingsInterface init(boolean fetchRemote) {
         loadCachedSettings();
@@ -727,8 +726,8 @@ public abstract class SiteSettingsInterface {
      * Helper method to create an XML-RPC interface for the current blog.
      */
     protected XMLRPCClientInterface instantiateInterface() {
-        if (mBlog == null) return null;
-        return XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(), mBlog.getHttppassword());
+        if (mSite == null || mSite.getXmlRpcUrl() == null) return null;
+        return XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
     }
 
     /**
@@ -755,7 +754,7 @@ public abstract class SiteSettingsInterface {
      * Need to defer loading the cached settings to a thread so it completes after initialization.
      */
     private void loadCachedSettings() {
-        Cursor localSettings = SiteSettingsTable.getSettings(mBlog.getRemoteBlogId());
+        Cursor localSettings = SiteSettingsTable.getSettings(mSite.getSiteId());
 
         if (localSettings != null) {
             Map<Integer, CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
@@ -771,10 +770,10 @@ public abstract class SiteSettingsInterface {
             notifyUpdatedOnUiThread(null);
         } else {
             mSettings.isInLocalTable = false;
-            setAddress(mBlog.getHomeURL());
-            setUsername(mBlog.getUsername());
-            setPassword(mBlog.getPassword());
-            setTitle(mBlog.getBlogName());
+            setAddress(mSite.getUrl());
+            setUsername(mSite.getUsername());
+            setPassword(mSite.getPassword());
+            setTitle(mSite.getName());
         }
     }
 
@@ -788,8 +787,11 @@ public abstract class SiteSettingsInterface {
 
         Map<String, String> args = new HashMap<>();
         args.put(Param.SHOW_SUPPORTED_POST_FORMATS, "true");
-        Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                mBlog.getPassword(), args};
+        Object[] params = {
+                String.valueOf(mSite.getSiteId()),
+                StringUtils.notNullStr(mSite.getUsername()),
+                StringUtils.notNullStr(mSite.getPassword()),
+                args};
         client.callAsync(new XMLRPCCallback() {
             @Override
             public void onSuccess(long id, Object result) {

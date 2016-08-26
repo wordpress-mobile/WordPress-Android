@@ -29,6 +29,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
@@ -66,8 +67,9 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
-import javax.inject.Inject;
 import java.util.EnumSet;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -110,6 +112,7 @@ public class ReaderPostDetailFragment extends Fragment
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, false, null);
@@ -361,9 +364,9 @@ public class ReaderPostDetailFragment extends Fragment
         refreshIconCounts();
 
         if (isAskingToLike) {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mBlogId);
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mBlogId);
         } else {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mBlogId);
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mBlogId);
         }
     }
 
@@ -1035,9 +1038,9 @@ public class ReaderPostDetailFragment extends Fragment
         // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
         // used for Discover posts that highlight a blog
         if (ReaderUtils.isBlogPreviewUrl(url)) {
-            long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
-            if (blogId != 0) {
-                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
+            long siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
+            if (siteId != 0) {
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), siteId);
             }
             return true;
         }

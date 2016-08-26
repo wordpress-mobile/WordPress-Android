@@ -26,15 +26,17 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.xmlpull.v1.XmlPullParserException;
@@ -44,8 +46,11 @@ import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 public class EditCommentActivity extends AppCompatActivity {
     static final String ARG_LOCAL_BLOG_ID = "blog_id";
@@ -59,9 +64,12 @@ public class EditCommentActivity extends AppCompatActivity {
     private Comment mComment;
     private Note mNote;
 
+    @Inject SiteStore mSiteStore;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.comment_edit_activity);
         setTitle(getString(R.string.edit_comment));
@@ -288,9 +296,8 @@ public class EditCommentActivity extends AppCompatActivity {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            final Blog blog;
-            blog = WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId);
-            if (blog == null) {
+            SiteModel site = mSiteStore.getSiteByLocalId(mLocalBlogId);
+            if (site == null) {
                 AppLog.e(AppLog.T.COMMENTS, "Invalid local blog id:" + mLocalBlogId);
                 return false;
             }
@@ -310,10 +317,14 @@ public class EditCommentActivity extends AppCompatActivity {
             postHash.put("author_url",   authorUrl);
             postHash.put("author_email", authorEmail);
 
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
-            Object[] xmlParams = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), Long.toString(
-                    mCommentId), postHash};
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
+            Object[] xmlParams = {
+                    String.valueOf(site.getSiteId()),
+                    StringUtils.notNullStr(site.getUsername()),
+                    StringUtils.notNullStr(site.getPassword()),
+                    Long.toString(mCommentId),
+                    postHash
+            };
 
             try {
                 Object result = client.call(Method.EDIT_COMMENT, xmlParams);

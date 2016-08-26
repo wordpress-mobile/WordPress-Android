@@ -13,12 +13,12 @@ import java.util.List;
 public class ReferrersModel extends BaseStatsModel {
     private String mPeriod;
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private int mOtherViews;
     private int mTotalViews;
     private List<ReferrerGroupModel> mGroups;
 
-    public ReferrersModel(String blogID, JSONObject response) throws JSONException {
+    public ReferrersModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mPeriod = response.getString("period");
         this.mDate = response.getString("date");
@@ -52,11 +52,11 @@ public class ReferrersModel extends BaseStatsModel {
         }
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    public void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

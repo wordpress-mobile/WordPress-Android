@@ -17,11 +17,11 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An activity where the user can add new images to their media gallery or where the user
@@ -51,6 +51,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
 
     private int mOldMediaSyncOffset = 0;
+    private SiteModel mSite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +72,25 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
         }
 
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.media_gallery_picker_layout);
         mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
         mGridView.setMultiChoiceModeListener(this);
         mGridView.setOnItemClickListener(this);
-        mGridAdapter = new MediaGridAdapter(this, null, 0, MediaImageLoader.getInstance());
+        // TODO: We want to inject the image loader in this class instead of using a static field.
+        mGridAdapter = new MediaGridAdapter(this, mSite, null, 0, WordPress.imageLoader);
         mGridAdapter.setSelectedItems(selectedItems);
         mGridAdapter.setCallback(this);
         mGridView.setAdapter(mGridAdapter);
@@ -107,10 +122,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     private void refreshViews() {
-        if (WordPress.getCurrentBlog() == null)
-            return;
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
+        final String localBlogId = String.valueOf(mSite.getId());
+        Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(localBlogId, mFilteredItems);
         if (cursor.getCount() == 0) {
             refreshMediaFromServer(0);
         } else {
@@ -207,9 +220,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             mIsRefreshing = true;
             mGridAdapter.setRefreshing(true);
 
-            List<Object> apiArgs = new ArrayList<Object>();
-            apiArgs.add(WordPress.getCurrentBlog());
-
             ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
                 // refersh db from server. If returned count is 0, we've retrieved all the media.
                 // stop retrieving until the user manually refreshes
@@ -219,7 +229,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                     mHasRetrievedAllMedia = (count == 0);
                     adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
-                    String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+                    String blogId = String.valueOf(mSite.getId());
                     if (WordPress.wpDB.getMediaCountAll(blogId) == 0 && count == 0) {
                         // There is no media at all
                         noMediaFinish();
@@ -233,7 +243,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                             public void run() {
                                 //mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+                                String blogId = String.valueOf(mSite.getId());
                                 Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
                                 mGridAdapter.swapCursor(cursor);
 
@@ -267,9 +277,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
                 }
             };
-
-            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, MediaGridFragment.Filter.ALL, callback);
-            getMediaTask.execute(apiArgs);
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset,
+                    MediaGridFragment.Filter.ALL, callback, mSite);
+            getMediaTask.execute();
         }
     }
 }

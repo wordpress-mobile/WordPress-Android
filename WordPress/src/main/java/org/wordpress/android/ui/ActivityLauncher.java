@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -12,9 +14,9 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SSLCertsViewActivity;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -22,6 +24,8 @@ import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.MediaGalleryActivity;
+import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
@@ -44,12 +48,16 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.passcodelock.AppLockManager;
 
+import java.util.ArrayList;
+
 public class ActivityLauncher {
-    public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
+
+    public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
-        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, blogLocalTableId);
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.activity_slide_in_from_left,
@@ -57,77 +65,82 @@ public class ActivityLauncher {
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
     }
 
-    public static void viewBlogStats(Context context, int blogLocalTableId) {
-        if (blogLocalTableId == 0) return;
-
+    public static void viewBlogStats(Context context, SiteModel site) {
+        if (site == null) return;
         Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }
 
-    public static void viewBlogPlans(Context context, int blogLocalTableId) {
+    public static void viewBlogPlans(Context context, SiteModel site) {
         Intent intent = new Intent(context, PlansActivity.class);
-        intent.putExtra(PlansActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }
 
-    public static void viewCurrentBlogPosts(Context context) {
+    public static void viewCurrentBlogPosts(Context context, SiteModel site) {
         Intent intent = new Intent(context, PostsListActivity.class);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
     }
 
-    public static void viewCurrentBlogMedia(Context context) {
+    public static void viewCurrentBlogMedia(Context context, SiteModel site) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
 
-    public static void viewCurrentBlogPages(Context context) {
+    public static void viewCurrentBlogPages(Context context, SiteModel site) {
         Intent intent = new Intent(context, PostsListActivity.class);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
         context.startActivity(intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PAGES);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
-    public static void viewCurrentBlogComments(Context context) {
+    public static void viewCurrentBlogComments(Context context, SiteModel site) {
         Intent intent = new Intent(context, CommentsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_COMMENTS);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
-    public static void viewCurrentBlogThemes(Context context) {
-        if (ThemeBrowserActivity.isAccessible()) {
+    public static void viewCurrentBlogThemes(Context context, SiteModel site) {
+        if (ThemeBrowserActivity.isAccessible(site)) {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
+            intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
         }
     }
 
-    public static void viewCurrentBlogPeople(Context context) {
+    public static void viewCurrentBlogPeople(Context context, SiteModel site) {
         Intent intent = new Intent(context, PeopleManagementActivity.class);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT, site);
     }
 
-    public static void viewBlogSettingsForResult(Activity activity, Blog blog) {
-        if (blog == null) return;
+    public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
+        if (site == null) return;
 
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
-        intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, RequestCodes.BLOG_SETTINGS);
-        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, blog);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
     }
 
-    public static void viewCurrentSite(Context context, Blog blog) {
-        if (blog == null) {
+    public static void viewCurrentSite(Context context, SiteModel site) {
+        if (site == null) {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String siteUrl = blog.getAlternativeHomeUrl();
+        String siteUrl = site.getUrl();
         Uri uri = Uri.parse(siteUrl);
 
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE, site);
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
@@ -135,16 +148,16 @@ public class ActivityLauncher {
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
-    public static void viewBlogAdmin(Context context, Blog blog) {
-        if (blog == null) {
+    public static void viewBlogAdmin(Context context, SiteModel site) {
+        if (site == null || site.getAdminUrl() == null) {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String adminUrl = blog.getAdminUrl();
+        String adminUrl = site.getAdminUrl();
         Uri uri = Uri.parse(adminUrl);
 
-        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, blog);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, site);
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
@@ -152,34 +165,56 @@ public class ActivityLauncher {
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
-    public static void viewPostPreviewForResult(Activity activity, Post post, boolean isPage) {
+    public static void viewPostPreviewForResult(Activity activity, SiteModel site, Post post, boolean isPage) {
         if (post == null) return;
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
-        intent.putExtra(PostPreviewActivity.ARG_LOCAL_BLOG_ID, post.getLocalTableBlogId());
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
-        if (blog == null) return;
-
+    public static void newGalleryPost(Activity context, SiteModel site, ArrayList<String> mediaIds) {
+        if (site == null) return;
         // Create a new post object and assign default settings
-        Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
+        Intent intent = new Intent(context, EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, mediaIds);
+        intent.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
+        context.startActivity(intent);
+    }
+
+    public static void newMediaPost(Activity context, SiteModel site, String mediaId) {
+        if (site == null) return;
+        // Create a new post object and assign default settings
+        Intent intent = new Intent(context, EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.setAction(EditPostActivity.NEW_MEDIA_POST);
+        intent.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, mediaId);
+        context.startActivity(intent);
+    }
+
+    public static void addNewBlogPostOrPageForResult(Activity context, SiteModel site, boolean isPage) {
+        if (site == null) return;
+        // Create a new post object and assign default settings
+        Post newPost = new Post(site.getId(), isPage);
         newPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(context) +"]");
         newPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(context));
         WordPress.wpDB.savePost(newPost);
 
         Intent intent = new Intent(context, EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         context.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void editBlogPostOrPageForResult(Activity activity, long postOrPageId, boolean isPage) {
+    public static void editBlogPostOrPageForResult(Activity activity, SiteModel site,
+                                                   long postOrPageId, boolean isPage) {
         Intent intent = new Intent(activity.getApplicationContext(), EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, postOrPageId);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
@@ -188,12 +223,16 @@ public class ActivityLauncher {
     /*
      * Load the post preview as an authenticated URL so stats aren't bumped
      */
-    public static void browsePostOrPage(Context context, Blog blog, Post post) {
-        if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
+    public static void browsePostOrPage(Context context, SiteModel site, Post post) {
+        if (site == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
 
         // always add the preview parameter to avoid bumping stats when viewing posts
         String url = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
-        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
+        if (site.isWPCom()) {
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
+        } else {
+            WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url);
+        }
     }
 
     public static void addMedia(Activity activity) {
@@ -202,19 +241,19 @@ public class ActivityLauncher {
 
     public static void viewMyProfile(Context context) {
         Intent intent = new Intent(context, MyProfileActivity.class);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
         context.startActivity(intent);
     }
 
     public static void viewAccountSettings(Context context) {
         Intent intent = new Intent(context, AccountSettingsActivity.class);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
         context.startActivity(intent);
     }
 
     public static void viewAppSettings(Activity activity) {
         Intent intent = new Intent(activity, AppSettingsActivity.class);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
         activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
     }
 
@@ -251,16 +290,11 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewStatsSinglePostDetails(Context context, Post post, boolean isPage) {
+    public static void viewStatsSinglePostDetails(Context context, SiteModel site, Post post, boolean isPage) {
         if (post == null) return;
 
-        int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(post.getLocalTableBlogId());
-        PostModel postModel = new PostModel(
-                Integer.toString(remoteBlogId),
-                post.getRemotePostId(),
-                post.getTitle(),
-                post.getLink(),
-                isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
+        PostModel postModel = new PostModel(site.getSiteId(), post.getRemotePostId(), post.getTitle(), post
+                .getLink(), isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
         viewStatsSinglePostDetails(context, postModel);
     }
 
@@ -274,6 +308,32 @@ public class ActivityLauncher {
         statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_TITLE, post.getTitle());
         statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_URL, post.getUrl());
         context.startActivity(statsPostViewIntent);
+    }
+
+    public static void viewMediaGalleryPickerForSite(Activity activity, @NonNull SiteModel site) {
+        Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
+        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+    }
+
+    public static void viewMediaGalleryPickerForSiteAndMediaIds(Activity activity, @NonNull SiteModel site,
+                                                     @NonNull ArrayList<String> mediaIds) {
+        Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, mediaIds);
+        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+    }
+
+    public static void viewMediaGalleryForSiteAndGallery(Activity activity, @NonNull SiteModel site,
+                                               @Nullable MediaGallery mediaGallery) {
+        Intent intent = new Intent(activity, MediaGalleryActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
+        if (mediaGallery == null) {
+            intent.putExtra(MediaGalleryActivity.PARAMS_LAUNCH_PICKER, true);
+        }
+        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {

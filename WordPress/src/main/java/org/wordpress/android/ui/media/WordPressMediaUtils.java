@@ -21,13 +21,14 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.helpers.Version;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -213,39 +214,6 @@ public class WordPressMediaUtils {
         }
     }
 
-    /**
-     * This is a workaround for WP3.4.2 that deletes the media from the server when editing media properties
-     * within the app. See: https://github.com/wordpress-mobile/WordPress-Android/issues/204
-     */
-    public static boolean isWordPressVersionWithMediaEditingCapabilities() {
-        if (WordPress.currentBlog == null) {
-            return false;
-        }
-
-        if (WordPress.currentBlog.getWpVersion() == null) {
-            return true;
-        }
-
-        if (WordPress.currentBlog.isDotcomFlag()) {
-            return true;
-        }
-
-        Version minVersion;
-        Version currentVersion;
-        try {
-            minVersion = new Version("3.5.2");
-            currentVersion = new Version(WordPress.currentBlog.getWpVersion());
-
-            if (currentVersion.compareTo(minVersion) == -1) {
-                return false;
-            }
-        } catch (IllegalArgumentException e) {
-            AppLog.e(T.POSTS, e);
-        }
-
-        return true;
-    }
-
     public static boolean canDeleteMedia(String blogId, String mediaID) {
         Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaID);
         if (!cursor.moveToFirst()) {
@@ -310,11 +278,11 @@ public class WordPressMediaUtils {
      * @param cursor the media file cursor
      * @param width width to use for photon request (if applicable)
      */
-    public static String getNetworkThumbnailUrl(Cursor cursor, int width) {
+    public static String getNetworkThumbnailUrl(Cursor cursor, SiteModel site, int width) {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
 
         // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
-        if ((WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable())) {
+        if (SiteUtils.isPhotonCapable(site)) {
             String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
             if (imageURL != null) {
                 thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, width, 0);

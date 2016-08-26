@@ -17,20 +17,19 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPStoreUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -53,7 +52,8 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
     private Spinner mBlogSpinner;
     private Spinner mActionSpinner;
-    private int mAccountIDs[];
+    private int mSiteIds[];
+    private int mSelectedSiteLocalId;
     private TextView mBlogSpinnerTitle;
     private int mActionIndex;
 
@@ -126,9 +126,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         }
     }
 
-    private int gepPositionByLocalBlogId(long localBlogId) {
-        for (int i = 0; i < mAccountIDs.length; i++) {
-            if (mAccountIDs[i] == localBlogId) {
+    private int getPositionBySiteId(long localBlogId) {
+        for (int i = 0; i < mSiteIds.length; i++) {
+            if (mSiteIds[i] == localBlogId) {
                 return i;
             }
         }
@@ -140,7 +140,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         int localBlogId = settings.getInt(SHARE_LAST_USED_BLOG_ID_KEY, -1);
         int actionPosition = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, -1);
         if (localBlogId != -1) {
-            int position = gepPositionByLocalBlogId(localBlogId);
+            int position = getPositionBySiteId(localBlogId);
             if (position != -1) {
                 mBlogSpinner.setSelection(position);
             }
@@ -155,23 +155,17 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     }
 
     private String[] getBlogNames() {
-        String[] extraFields = {"homeURL"};
-        List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("isHidden = 0", extraFields);
-        if (accounts.size() > 0) {
-            final String blogNames[] = new String[accounts.size()];
-            mAccountIDs = new int[accounts.size()];
-            Blog blog;
-            for (int i = 0; i < accounts.size(); i++) {
-                Map<String, Object> account = accounts.get(i);
-                blogNames[i] = BlogUtils.getBlogNameOrHomeURLFromAccountMap(account);
-                mAccountIDs[i] = (Integer) account.get("id");
-                blog = WordPress.wpDB.instantiateBlogByLocalId(mAccountIDs[i]);
-                if (blog == null) {
-                    ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-                    return null;
-                }
+        List<SiteModel> sites = mSiteStore.getVisibleSites();
+        if (sites.size() > 0) {
+            final String siteNames[] = new String[sites.size()];
+            mSiteIds = new int[sites.size()];
+            int i = 0;
+            for (SiteModel site : sites) {
+                siteNames[i] = SiteUtils.getSiteNameOrHomeURL(site);
+                mSiteIds[i] = site.getId();
+                i += 1;
             }
-            return blogNames;
+            return siteNames;
         }
         return null;
     }
@@ -179,22 +173,10 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent.getId() == R.id.blog_spinner) {
-            if (!selectBlog(mAccountIDs[position])) {
-                ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-                finish();
-            }
+            mSelectedSiteLocalId = mSiteIds[position];
         } else if (parent.getId() == R.id.action_spinner) {
             mActionIndex = position;
         }
-    }
-
-    private boolean selectBlog(int blogId) {
-        WordPress.currentBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
-        if (WordPress.currentBlog == null || WordPress.currentBlog.isHidden()) {
-            return false;
-        }
-        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getLocalTableBlogId());
-        return true;
     }
 
     private void startActivityAndFinish(Intent intent) {
@@ -204,6 +186,8 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             intent.setType(getIntent().getType());
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            intent.putExtra(WordPress.SITE, mSiteStore.getSiteByLocalId(mSelectedSiteLocalId));
 
             intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
             intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
@@ -251,15 +235,12 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
     private void savePreferences() {
         // If current blog is not set don't save preferences
-        if (WordPress.currentBlog == null) {
-            return;
-        }
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
 
         // Save last used settings
-        editor.putInt(SHARE_LAST_USED_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
+        editor.putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId);
         editor.putInt(SHARE_LAST_USED_ADDTO_KEY, mActionIndex);
-        editor.commit();
+        editor.apply();
     }
 
     @Override

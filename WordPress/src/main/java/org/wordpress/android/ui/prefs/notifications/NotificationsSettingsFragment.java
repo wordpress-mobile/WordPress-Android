@@ -28,23 +28,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -69,6 +68,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     private final List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -263,20 +263,18 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     }
 
     private void configureBlogsSettings() {
-        if (!isAdded()) return;
-        // Retrieve blogs (including jetpack sites) originally retrieved through FetchBlogListWPCom
-        // They will have an empty (but encrypted) password
-        String args = "password='" + WordPressDB.encryptPassword("") + "'";
+        if (!isAdded())
+            return;
 
-        // Check if user has typed in a search query
-        String trimmedQuery = null;
+        List<SiteModel> sites;
+        String trimmedQuery = "";
         if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
             trimmedQuery = mSearchView.getQuery().toString().trim();
-            args += " AND (url LIKE '%" + trimmedQuery + "%' OR blogName LIKE '%" + trimmedQuery + "%')";
+            sites = mSiteStore.getDotComSiteByNameOrUrlMatching(trimmedQuery);
+        } else {
+            sites = mSiteStore.getDotComSites();
         }
-
-        List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy(args, null, 0, false);
-        mSiteCount = blogs.size();
+        mSiteCount = sites.size();
 
         Context context = getActivity();
 
@@ -284,18 +282,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
                 getString(R.string.pref_notification_blogs));
         blogsCategory.removeAll();
 
-        for (Map blog : blogs) {
+        for (SiteModel site : sites) {
             if (context == null) return;
 
-            String siteUrl = MapUtils.getMapStr(blog, "url");
-            String title = MapUtils.getMapStr(blog, "blogName");
-            long blogId = MapUtils.getMapLong(blog, "blogId");
-
             PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
-            prefScreen.setTitle(title);
-            prefScreen.setSummary(UrlUtils.getHost(siteUrl));
-
-            addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, blogId);
+            prefScreen.setTitle(SiteUtils.getSiteNameOrHomeURL(site));
+            prefScreen.setSummary(SiteUtils.getHomeURLOrHostName(site));
+            addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, site.getSiteId());
             blogsCategory.addPreference(prefScreen);
         }
 

@@ -7,9 +7,9 @@ public class InsightsPopularModel extends BaseStatsModel {
     private final int mHighestDayOfWeek;
     private final Double mHighestDayPercent;
     private final Double mHighestHourPercent;
-    private String mBlogID;
+    private long mBlogID;
 
-    public InsightsPopularModel(String blogID, JSONObject response) {
+    public InsightsPopularModel(long blogID, JSONObject response) {
         this.setBlogID(blogID);
         this.mHighestDayOfWeek = response.optInt("highest_day_of_week");
         this.mHighestHour = response.optInt("highest_hour");
@@ -17,11 +17,11 @@ public class InsightsPopularModel extends BaseStatsModel {
         this.mHighestHourPercent = response.optDouble("highest_hour_percent");
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    private void setBlogID(String blogID) {
+    private void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

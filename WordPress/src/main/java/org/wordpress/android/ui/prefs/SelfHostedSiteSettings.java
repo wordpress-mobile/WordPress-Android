@@ -6,13 +6,14 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
-import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -65,8 +66,8 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
     private static final String OPTION_ALLOWED = "open";
     private static final String OPTION_DISALLOWED = "closed";
 
-    SelfHostedSiteSettings(Activity host, Blog blog, SiteSettingsListener listener) {
-        super(host, blog, listener);
+    SelfHostedSiteSettings(Activity host, SiteModel site, SiteSettingsListener listener) {
+        super(host, site, listener);
     }
 
     @Override
@@ -109,8 +110,8 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                             }
                         }
                     }
-                    AnalyticsUtils.trackWithCurrentBlogDetails(
-                            AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, properties);
+                    AnalyticsUtils.trackWithSiteDetails(
+                            AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
                 }
             }
 
@@ -120,7 +121,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
             }
         };
         final Object[] callParams = {
-                mBlog.getRemoteBlogId(), mSettings.username, mSettings.password, params
+                String.valueOf(mSite.getSiteId()), mSettings.username, mSettings.password, params
         };
 
         XMLRPCClientInterface xmlrpcInterface = instantiateInterface();
@@ -136,7 +137,11 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         new Thread() {
             @Override
             public void run() {
-                Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
+                Object[] params = {
+                        String.valueOf(mSite.getSiteId()),
+                        StringUtils.notNullStr(mSite.getUsername()),
+                        StringUtils.notNullStr(mSite.getPassword()),
+                };
 
                 // Need two interfaces or the first call gets aborted
                 instantiateInterface().callAsync(mOptionsCallback, Method.GET_OPTIONS, params);
@@ -155,7 +160,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 AppLog.d(AppLog.T.API, "Received Categories XML-RPC response.");
                 credentialsVerified(true);
 
-                mRemoteSettings.localTableId = mBlog.getRemoteBlogId();
+                mRemoteSettings.localTableId = mSite.getId();
                 deserializeCategoriesResponse(mRemoteSettings, (Object[]) result);
                 mSettings.categories = mRemoteSettings.categories;
                 SiteSettingsTable.saveCategories(mSettings.categories);
@@ -329,10 +334,10 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
      * Sets values from a self-hosted XML-RPC response object.
      */
     private void deserializeOptionsResponse(SiteSettingsModel model, Map response) {
-        if (mBlog == null || response == null) return;
+        if (mSite == null || response == null) return;
 
-        model.username = mBlog.getUsername();
-        model.password = mBlog.getPassword();
+        model.username = mSite.getUsername();
+        model.password = mSite.getPassword();
         model.address = getNestedMapValue(response, BLOG_URL_KEY);
         model.title = getNestedMapValue(response, BLOG_TITLE_KEY);
         model.tagline = getNestedMapValue(response, BLOG_TAGLINE_KEY);

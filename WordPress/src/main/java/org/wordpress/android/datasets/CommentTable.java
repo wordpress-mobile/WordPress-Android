@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
@@ -54,31 +53,6 @@ public class CommentTable {
     }
     private static SQLiteDatabase getWritableDb() {
         return WordPress.wpDB.getDatabase();
-    }
-
-    /*
-     * purge comments attached to blogs that no longer exist, and remove older comments
-     * TODO: call after hiding or deleting blogs
-     */
-    private static final int MAX_COMMENTS = 1000;
-    public static int purge(SQLiteDatabase db) {
-        int numDeleted = 0;
-
-        // get rid of comments on blogs that don't exist or are hidden
-        String sql = " blog_id NOT IN (SELECT DISTINCT id FROM " + WordPressDB.BLOGS_TABLE
-                   + " WHERE isHidden = 0)";
-        numDeleted += db.delete(COMMENTS_TABLE, sql, null);
-
-        // get rid of older comments if we've reached the max
-        int numExisting = (int)SqlUtils.getRowCount(db, COMMENTS_TABLE);
-        if (numExisting > MAX_COMMENTS) {
-            int numToPurge = numExisting - MAX_COMMENTS;
-            sql = " comment_id IN (SELECT DISTINCT comment_id FROM " + COMMENTS_TABLE
-                + " ORDER BY published LIMIT " + Integer.toString(numToPurge) + ")";
-            numDeleted += db.delete(COMMENTS_TABLE, sql, null);
-        }
-
-        return numDeleted;
     }
 
     /**

@@ -7,27 +7,35 @@ import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseStoreModule;
-import org.wordpress.android.networking.WPDelayedHurlStack;
+import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogFragment;
 import org.wordpress.android.ui.accounts.NewUserFragment;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
+import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.PostPreviewFragment;
+import org.wordpress.android.ui.posts.SelectCategoriesActivity;
+import org.wordpress.android.ui.posts.services.PostMediaService;
+import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -38,6 +46,7 @@ import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragmen
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -48,6 +57,11 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
+import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
+import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.ui.themes.ThemeWebActivity;
+import org.wordpress.android.util.WPWebViewClient;
 
 import javax.inject.Singleton;
 
@@ -64,23 +78,29 @@ import dagger.Component;
 public interface AppComponent {
     void inject(WordPress application);
     void inject(WPMainActivity object);
+    void inject(SignInActivity object);
     void inject(SignInFragment object);
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);
     void inject(NewUserFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
+    void inject(StatsWidgetConfigureAdapter object);
     void inject(StatsActivity object);
     void inject(StatsAbstractFragment object);
+    void inject(StatsService object);
+    void inject(StatsWidgetProvider object);
 
     void inject(GCMMessageService object);
     void inject(GCMRegistrationIntentService object);
     void inject(DeepLinkingIntentReceiverActivity object);
     void inject(ShareIntentReceiverActivity object);
+    void inject(AddQuickPressShortcutActivity object);
 
     void inject(HelpActivity object);
 
     void inject(CommentDetailFragment object);
+    void inject(EditCommentActivity object);
 
     void inject(MeFragment object);
     void inject(MyProfileActivity object);
@@ -93,9 +113,11 @@ public interface AppComponent {
     void inject(BlogPreferencesActivity object);
     void inject(AppSettingsFragment object);
     void inject(PeopleManagementActivity object);
+    void inject(PersonDetailFragment object);
     void inject(PlansActivity object);
 
     void inject(EditPostActivity object);
+    void inject(EditPostSettingsFragment object);
 
     void inject(NotificationsListFragment object);
     void inject(NotificationsSettingsFragment object);
@@ -111,10 +133,17 @@ public interface AppComponent {
     void inject(ReaderTagHeaderView object);
     void inject(ReaderLikingUsersView object);
     void inject(ReaderWebView object);
+    void inject(ReaderPostPagerActivity object);
 
     void inject(WPWebViewActivity object);
+    void inject(WPWebViewClient object);
     void inject(PostPreviewFragment object);
+    void inject(PostUploadService object);
 
-    // WPDelayedHurlStack will burn in hell as soon as we have all the XMLRPC based stores ready.
-    void inject(WPDelayedHurlStack object);
+    void inject(ThemeWebActivity object);
+
+    void inject(MediaDeleteService object);
+    void inject(PostMediaService object);
+
+    void inject(SelectCategoriesActivity object);
 }

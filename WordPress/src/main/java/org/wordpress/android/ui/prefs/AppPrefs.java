@@ -63,6 +63,9 @@ public class AppPrefs {
 
         // index of the last active people list filter in People Management activity
         PEOPLE_LIST_FILTER_INDEX,
+
+        // selected site in the main activity
+        SELECTED_SITE_LOCAL_ID,
     }
 
     /**
@@ -127,13 +130,20 @@ public class AppPrefs {
         setString(key, Long.toString(value));
     }
 
-    private static int getInt(PrefKey key) {
+    private static int getInt(PrefKey key, int def) {
         try {
             String value = getString(key);
+            if (value.isEmpty()) {
+                return def;
+            }
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            return 0;
+            return def;
         }
+    }
+
+    private static int getInt(PrefKey key) {
+        return getInt(key, 0);
     }
 
     private static void setInt(PrefKey key, int value) {
@@ -394,6 +404,7 @@ public class AppPrefs {
             remove(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES);
         }
     }
+
     public static String getGlobalPlansFeatures() {
         return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
     }
@@ -401,7 +412,16 @@ public class AppPrefs {
     public static boolean isInAppPurchaseRefreshRequired() {
         return getBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, false);
     }
+
     public static void setInAppPurchaseRefreshRequired(boolean required) {
         setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
+    }
+
+    public static int getSelectedSite() {
+        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, -1);
+    }
+
+    public static void setSelectedSite(int selectedSite) {
+        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, selectedSite);
     }
 }

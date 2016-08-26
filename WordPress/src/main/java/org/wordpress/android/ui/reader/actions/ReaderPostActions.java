@@ -16,10 +16,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
@@ -271,17 +273,19 @@ public class ReaderPostActions {
                 + "&t="    + mRandom.nextInt();
     }
 
-    public static void bumpPageViewForPost(long blogId, long postId) {
-        bumpPageViewForPost(ReaderPostTable.getPost(blogId, postId, true));
+    public static void bumpPageViewForPost(SiteStore siteStore, long blogId, long postId) {
+        bumpPageViewForPost(siteStore, ReaderPostTable.getPost(blogId, postId, true));
     }
-    public static void bumpPageViewForPost(ReaderPost post) {
+    public static void bumpPageViewForPost(SiteStore siteStore, ReaderPost post) {
         if (post == null) {
             return;
         }
 
         // don't bump stats for posts in blogs the current user is an admin of, unless
         // this is a private post since we count views for private posts from admins
-        if (!post.isPrivate && WordPress.wpDB.isCurrentUserAdminOfRemoteBlogId(post.blogId)) {
+        SiteModel site = siteStore.getSiteBySiteId(post.blogId);
+        // site will be null here if the user is not the owner or a member of the site
+        if (site != null && !post.isPrivate && site.isAdmin()) {
             AppLog.d(T.READER, "skipped bump page view - user is admin");
             return;
         }

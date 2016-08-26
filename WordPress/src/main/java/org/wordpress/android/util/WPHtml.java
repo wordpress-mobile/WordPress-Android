@@ -51,11 +51,10 @@ import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.helpers.MediaFile;
-import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.helpers.MediaFile;
+import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.helpers.WPUnderlineSpan;
@@ -447,17 +446,6 @@ public class WPHtml {
             int width = mediaFile.getWidth();
 
             String inlineCSS = " ";
-            String localBlogID = imageSpan.getMediaFile().getBlogId();
-            Blog currentBlog = WordPress.wpDB.instantiateBlogByLocalId(Integer.parseInt(localBlogID));
-            // If it's not a gif and blog don't keep original size, there is a chance we need to resize
-            if (currentBlog != null && !mediaFile.getMimeType().equals("image/gif")
-                    && MediaUtils.getImageWidthSettingFromString(currentBlog.getMaxImageWidth()) != Integer.MAX_VALUE) {
-                width = MediaUtils.getMaximumImageWidth(width, currentBlog.getMaxImageWidth());
-                // Use inline CSS on self-hosted blogs to enforce picture resize settings
-                if (!currentBlog.isDotcomFlag()) {
-                    inlineCSS = String.format(Locale.US, " style=\"width:%dpx;max-width:%dpx;\" ", width, width);
-                }
-            }
             content = content + "<a href=\"" + url + "\"><img" + inlineCSS + "title=\"" + title + "\" "
                     + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width +"\" /></a>";
 
