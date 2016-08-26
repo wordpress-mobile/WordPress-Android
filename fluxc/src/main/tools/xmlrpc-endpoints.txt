@@ -3,6 +3,9 @@ wp.getPostFormats
 wp.getUsersBlogs
 wp.getMediaLibrary
 wp.getMediaItem
+wp.getPost
+wp.getPosts
+wp.newPost
 wp.editPost
 wp.deletePost
 wp.uploadFile
