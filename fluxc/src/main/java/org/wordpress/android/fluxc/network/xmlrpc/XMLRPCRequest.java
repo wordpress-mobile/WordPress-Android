@@ -104,6 +104,8 @@ public class XMLRPCRequest extends BaseRequest<Object> {
             } else if (xmlrpcFault.getFaultCode() == 403) {
                 error.type = GenericErrorType.NOT_AUTHENTICATED; // Augmented error
                 payload.error.type = AuthenticationErrorType.NOT_AUTHENTICATED;
+            } else if (xmlrpcFault.getFaultCode() == 404) {
+                error.type = GenericErrorType.NOT_FOUND; // Augmented error
             }
             error.message = xmlrpcFault.getMessage();
         }

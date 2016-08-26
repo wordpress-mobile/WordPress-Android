@@ -7,6 +7,7 @@ import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import org.wordpress.android.fluxc.network.BaseRequest;
@@ -18,7 +19,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
-    private final Gson mGson = new Gson();
+    private final Gson mGson;
     private final Class<T> mClass;
     private final Listener<T> mListener;
     private final Map<String, String> mParams;
@@ -28,6 +29,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
         super(method, addParamsToUrlIfGet(method, url, params), errorListener);
         mClass = clazz;
         mListener = listener;
+        mGson = setupGsonBuilder().create();
         mParams = params;
     }
 
@@ -56,6 +58,12 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
         } catch (JsonSyntaxException e) {
             return Response.error(new ParseError(e));
         }
+    }
+
+    private GsonBuilder setupGsonBuilder() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrFalse.class, new JsonObjectOrFalseDeserializer());
+        return gsonBuilder;
     }
 
     public static String addParamsToUrlIfGet(int method, String url, Map<String, String> params) {
