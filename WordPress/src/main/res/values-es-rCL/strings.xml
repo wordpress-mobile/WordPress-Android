@@ -26,13 +26,8 @@
 	<string name="alert_action_while_uploading">Actualmente estás subiendo archivos. Por favor, espera hasta que termine.</string>
 	<string name="alert_insert_image_html_mode">No se puede insertar medios directamente en modo HTML. Por favor, cambia al modo visual.</string>
 	<string name="uploading_gallery_placeholder">Cargando Galería...</string>
-	<string name="invite_error_some_failed">¡Se envió la invitación pero sucedió un error!</string>
 	<string name="invite_sent">Invitación enviada exitosamente</string>
 	<string name="tap_to_try_again">¡Toca para volver a intentarlo!</string>
-	<string name="invite_error_sending">¡Se ha produjo un error al intentar enviar la invitación!</string>
-	<string name="invite_error_invalid_usenames_multiple">No se puede enviar: hay nombres de usuario o correos no válidos</string>
-	<string name="invite_error_invalid_usenames_one">No se puede enviar: un nombre de usuario o dirección de correo electrónico no es válido</string>
-	<string name="invite_error_no_usenames">Por favor agrega al menos un nombre de usuario</string>
 	<string name="invite_message_info">(Opcional) Puedes escribir un mensaje personalizado de hasta 500 caracteres que serán incluidos en la invitación a lo(s) usuario(s).</string>
 	<string name="invite_message_remaining_other">%d caracteres restantes</string>
 	<string name="invite_message_remaining_one">1 caracter restantes</string>
@@ -41,7 +36,6 @@
 	<string name="invite_message_title">Mensaje Personalizado</string>
 	<string name="invite_already_a_member">Ya hay un miembro con nombre de usuario \'%s\'</string>
 	<string name="invite_username_not_found">No se encontró ningún usuario para el nombre de usuario \'%s\'</string>
-	<string name="invite_names_hint">Escribe una dirección de correo electrónico o nombre de usuario...</string>
 	<string name="invite">Invitar</string>
 	<string name="invite_names_title">Nombres de usuario o correo electrónico</string>
 	<string name="interface_language">Idioma de la interfaz</string>

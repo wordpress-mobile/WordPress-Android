@@ -26,13 +26,8 @@
 	<string name="alert_action_while_uploading">미디어를 업로드 중입니다. 완료될 때까지 기다려 주세요.</string>
 	<string name="alert_insert_image_html_mode">HTML 모드에서 직접 미디어를 삽입할 수 없습니다. 비주얼 모드로 전환하세요.</string>
 	<string name="uploading_gallery_placeholder">갤러리 업데이트 중...</string>
-	<string name="invite_error_some_failed">초대를 전송했으나 오류가 발생했습니다!</string>
 	<string name="invite_sent">초대를 전송했습니다.</string>
 	<string name="tap_to_try_again">눌러서 다시 시도하세요!</string>
-	<string name="invite_error_sending">초대를 전송하는 동안 오류가 발생했습니다!</string>
-	<string name="invite_error_invalid_usenames_multiple">전송하지 못한 항목: 유효하지 않은 사용자명 또는 이메일이 있습니다.</string>
-	<string name="invite_error_invalid_usenames_one">전송하지 못한 항목: 유효하지 않은 사용자명 또는 이메일입니다.</string>
-	<string name="invite_error_no_usenames">하나 이상의 사용자명을 추가하세요.</string>
 	<string name="invite_message_info">(선택사항) 사용자 초대에 포함될 사용자 정의 메시지를 500자까지 입력할 수 있습니다.</string>
 	<string name="invite_message_remaining_other">%d자 남음</string>
 	<string name="invite_message_remaining_one">1자 남음</string>
@@ -41,7 +36,6 @@
 	<string name="invite_message_title">사용자 정의 메시지</string>
 	<string name="invite_already_a_member">사용자명이 \'%s\'인 회원이 이미 있습니다.</string>
 	<string name="invite_username_not_found">사용자명이 \'%s\'인 사용자를 찾을 수 없습니다.</string>
-	<string name="invite_names_hint">이메일 주소 또는 사용자명을 입력하세요...</string>
 	<string name="invite">초대</string>
 	<string name="invite_names_title">사용자명 또는 이메일</string>
 	<string name="signup_succeed_signin_failed">회원님의 계정이 생성되었으나 로그인하는 동안 오류가\n 발생했습니다. 새로 만든 사용자명 및 비밀번호로 로그인해 보세요.</string>
@@ -61,16 +55,12 @@
 	<string name="preview_screen_links_disabled">미리보기 화면에서 링크가 비활성화되어 있습니다.</string>
 	<string name="draft_explainer">이 글은 아직 발행되지 않은 임시글입니다.</string>
 	<string name="send">보내기</string>
-	<string name="person_removed_general">사용자가 성공적으로 제거됨</string>
-	<string name="person_remove_confirmation_message">%1$s을(를) 제거하면 해당 사용자는 이 사이트에 더 이상 액세스할 수 없지만 %1$s 님이 작성한 콘텐츠는 사이트에 남습니다.\n\n그래도 이 사용자를 제거하시겠습니까?</string>
-	<string name="person_removed">\@%1$s이(가) 성공적으로 제거됨</string>
 	<string name="person_remove_confirmation_title">%1$s 제거</string>
 	<string name="reader_empty_posts_in_custom_list">이 목록에 있는 사이트에서 최근 게시된 글이 없습니다.</string>
 	<string name="people">사람</string>
 	<string name="edit_user">사용자 편집</string>
 	<string name="role">역할</string>
 	<string name="error_remove_user">사용자를 제거할 수 없습니다.</string>
-	<string name="error_fetch_people_list">사이트 사용자를 가져올 수 없습니다.</string>
 	<string name="error_update_role">사용자 역할을 업데이트할 수 없습니다.</string>
 	<string name="gravatar_camera_and_media_permission_required">사진을 선택하거나 캡처하려면 권한이 필요합니다.</string>
 	<string name="error_updating_gravatar">Gravatar를 업데이트하는 중 오류가 발생했습니다.</string>
@@ -103,7 +93,6 @@
 	<string name="plans_post_purchase_text_customize">이제 사용자 정의 글꼴, 사용자 정의 색상 및 사용자 정의 CSS 편집 기능에 액세스할 수 있습니다.</string>
 	<string name="plans_post_purchase_title_customize">글꼴과 색상 수정하기</string>
 	<string name="plans_post_purchase_text_intro">사이트를 마음껏 이용하세요! 이제 사이트의 새로운 기능을 살펴보고 시작하려는 위치를 선택하세요.</string>
-	<string name="plan_purchase_now">지금 구매하기</string>
 	<string name="plans_post_purchase_title_intro">구매하셨습니다. 지금 사용해보세요.</string>
 	<string name="export_your_content_message">글, 페이지, 설정을 %s로 발송할 것입니다.</string>
 	<string name="plan">계획</string>

@@ -191,6 +191,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.show();
