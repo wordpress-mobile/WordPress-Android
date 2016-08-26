@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.1.3'
     }
 }
 
@@ -18,19 +18,19 @@ repositories {
 dependencies {
     compile 'com.automattic:tracks:1.1.0'
     compile 'com.mixpanel.android:mixpanel-android:4.6.4'
-    compile 'org.wordpress:utils:1.10.0'
+    compile 'org.wordpress:utils:1.11.0'
 }
 
 android {
     publishNonDefault true
 
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         versionName "1.2.0"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
     }
 }
 

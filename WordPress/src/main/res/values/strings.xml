@@ -585,6 +585,7 @@
     <string name="site_settings_list_editor_summary_one">1 item</string>
     <string name="site_settings_list_editor_summary_other">%d items</string>
 
+    <string name="site_settings_list_editor_action_mode_title">Selected %1$s</string>
     <string name="site_settings_list_editor_no_items_text">No items</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
@@ -957,15 +958,23 @@
     <!-- Image Alignment -->
     <string name="image_alignment">Alignment</string>
 
-    <string name="align_none">None</string>
-    <string name="align_left">Left</string>
-    <string name="align_center">Center</string>
-    <string name="align_right">Right</string>
+    <string name="alignment_none">None</string>
+    <string name="alignment_left">Left</string>
+    <string name="alignment_center">Center</string>
+    <string name="alignment_right">Right</string>
+
+    <string-array name="alignment_key_array" translatable="false">
+        <item>none</item>
+        <item>left</item>
+        <item>center</item>
+        <item>right</item>
+    </string-array>
+
     <string-array name="alignment_array" translatable="false">
-        <item>@string/align_none</item>
-        <item>@string/align_left</item>
-        <item>@string/align_center</item>
-        <item>@string/align_right</item>
+        <item>@string/alignment_none</item>
+        <item>@string/alignment_left</item>
+        <item>@string/alignment_center</item>
+        <item>@string/alignment_right</item>
     </string-array>
 
     <!-- About View -->
@@ -1013,6 +1022,7 @@
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
     <string name="error_post_my_profile">Couldn\'t save your profile</string>
+    <string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
     <string name="error_post_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
@@ -1125,8 +1135,6 @@
     <string name="reader_label_comment_count_single">One comment</string>
     <string name="reader_label_comment_count_multi">%,d comments</string>
     <string name="reader_label_view_original">View original article</string>
-    <string name="reader_label_word_count">%,d words</string>
-    <string name="reader_label_reading_time_in_minutes">%,d min</string>
     <string name="reader_label_follow_count">%,d followers</string>
     <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
@@ -1143,6 +1151,7 @@
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
+    <string name="reader_label_liked_by">Liked By</string>
 
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_short_like_count_one">1 Like</string>
@@ -1428,9 +1437,16 @@
     <string name="people_empty_list_filtered_followers">You don\'t have any followers yet.</string>
     <string name="people_empty_list_filtered_email_followers">You don\'t have any email followers yet.</string>
     <string name="people_empty_list_filtered_viewers">You don\'t have any viewers yet.</string>
-    <string name="people_fetching">Fetching users..</string>
+    <string name="people_fetching">Fetching users…</string>
     <string name="title_follower">Follower</string>
     <string name="title_email_follower">Email Follower</string>
+
+    <string name="role_admin">Administrator</string>
+    <string name="role_editor">Editor</string>
+    <string name="role_author">Author</string>
+    <string name="role_contributor">Contributor</string>
+    <string name="role_follower">Follower</string>
+    <string name="role_viewer">Viewer</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
