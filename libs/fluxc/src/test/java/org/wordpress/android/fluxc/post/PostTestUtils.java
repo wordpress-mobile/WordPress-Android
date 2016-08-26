@@ -1,6 +1,10 @@
 package org.wordpress.android.fluxc.post;
 
+import com.yarolegovich.wellsql.WellSql;
+
 import org.wordpress.android.fluxc.model.PostModel;
+
+import java.util.List;
 
 public class PostTestUtils {
     public static PostModel generateSampleUploadedPost() {
@@ -29,5 +33,13 @@ public class PostTestUtils {
         example.setContent("Bunch of content here");
         example.setIsLocallyChanged(true);
         return example;
+    }
+
+    public static List<PostModel> getPosts() {
+        return WellSql.select(PostModel.class).getAsModel();
+    }
+
+    public static int getPostsCount() {
+        return getPosts().size();
     }
 }
