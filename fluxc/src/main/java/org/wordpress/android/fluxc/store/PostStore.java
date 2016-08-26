@@ -345,7 +345,6 @@ public class PostStore extends Store {
     }
 
     private void handleDeletePostCompleted(RemotePostPayload payload) {
-        // TODO: Handle any necessary changes to post status in the db here
         OnPostChanged event = new OnPostChanged(0);
         event.causeOfChange = PostAction.DELETE_POST;
 
