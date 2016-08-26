@@ -958,15 +958,23 @@
     <!-- Image Alignment -->
     <string name="image_alignment">Alignment</string>
 
-    <string name="align_none">None</string>
-    <string name="align_left">Left</string>
-    <string name="align_center">Center</string>
-    <string name="align_right">Right</string>
+    <string name="alignment_none">None</string>
+    <string name="alignment_left">Left</string>
+    <string name="alignment_center">Center</string>
+    <string name="alignment_right">Right</string>
+
+    <string-array name="alignment_key_array" translatable="false">
+        <item>none</item>
+        <item>left</item>
+        <item>center</item>
+        <item>right</item>
+    </string-array>
+
     <string-array name="alignment_array" translatable="false">
-        <item>@string/align_none</item>
-        <item>@string/align_left</item>
-        <item>@string/align_center</item>
-        <item>@string/align_right</item>
+        <item>@string/alignment_none</item>
+        <item>@string/alignment_left</item>
+        <item>@string/alignment_center</item>
+        <item>@string/alignment_right</item>
     </string-array>
 
     <!-- About View -->
