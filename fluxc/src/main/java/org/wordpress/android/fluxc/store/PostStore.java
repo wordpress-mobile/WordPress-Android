@@ -290,50 +290,65 @@ public class PostStore extends Store {
     @Override
     public void onAction(Action action) {
         IAction actionType = action.getType();
-        if (actionType == PostAction.FETCH_POSTS) {
-            FetchPostsPayload payload = (FetchPostsPayload) action.getPayload();
-            fetchPosts(payload, false);
-        } else if (actionType == PostAction.FETCH_PAGES) {
-            FetchPostsPayload payload = (FetchPostsPayload) action.getPayload();
-            fetchPosts(payload, true);
-        } else if (actionType == PostAction.FETCHED_POSTS) {
-            handleFetchPostsCompleted((FetchPostsResponsePayload) action.getPayload());
-        } else if (actionType == PostAction.FETCH_POST) {
-            RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.site.isWPCom()) {
-                mPostRestClient.fetchPost(payload.post, payload.site);
-            } else {
-                // TODO: check for WP-REST-API plugin and use it here
-                mPostXMLRPCClient.fetchPost(payload.post, payload.site);
-            }
-        } else if (actionType == PostAction.FETCHED_POST) {
-            handleFetchSinglePostCompleted((RemotePostPayload) action.getPayload());
-        } else if (actionType == PostAction.INSTANTIATE_POST) {
-            instantiatePost((InstantiatePostPayload) action.getPayload());
-        } else if (actionType == PostAction.PUSH_POST) {
-            RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.site.isWPCom()) {
-                mPostRestClient.pushPost(payload.post, payload.site);
-            } else {
-                // TODO: check for WP-REST-API plugin and use it here
-                mPostXMLRPCClient.pushPost(payload.post, payload.site);
-            }
-        } else if (actionType == PostAction.PUSHED_POST) {
-            handlePushPostCompleted((RemotePostPayload) action.getPayload());
-        } else if (actionType == PostAction.UPDATE_POST) {
-            updatePost((PostModel) action.getPayload());
-        } else if (actionType == PostAction.DELETE_POST) {
-            RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.site.isWPCom()) {
-                mPostRestClient.deletePost(payload.post, payload.site);
-            } else {
-                // TODO: check for WP-REST-API plugin and use it here
-                mPostXMLRPCClient.deletePost(payload.post, payload.site);
-            }
-        } else if (actionType == PostAction.DELETED_POST) {
-            handleDeletePostCompleted((RemotePostPayload) action.getPayload());
-        } else if (actionType == PostAction.REMOVE_POST) {
-            PostSqlUtils.deletePost((PostModel) action.getPayload());
+        if (!(actionType instanceof PostAction)) {
+            return;
+        }
+
+        switch((PostAction) actionType) {
+            case FETCH_POSTS:
+                fetchPosts((FetchPostsPayload) action.getPayload(), false);
+                break;
+            case FETCH_PAGES:
+                fetchPosts((FetchPostsPayload) action.getPayload(), true);
+                break;
+            case FETCHED_POSTS:
+                handleFetchPostsCompleted((FetchPostsResponsePayload) action.getPayload());
+                break;
+            case FETCH_POST:
+                fetchPost((RemotePostPayload) action.getPayload());
+                break;
+            case FETCHED_POST:
+                handleFetchSinglePostCompleted((RemotePostPayload) action.getPayload());
+                break;
+            case INSTANTIATE_POST:
+                instantiatePost((InstantiatePostPayload) action.getPayload());
+                break;
+            case PUSH_POST:
+                pushPost((RemotePostPayload) action.getPayload());
+                break;
+            case PUSHED_POST:
+                handlePushPostCompleted((RemotePostPayload) action.getPayload());
+                break;
+            case UPDATE_POST:
+                updatePost((PostModel) action.getPayload());
+                break;
+            case DELETE_POST:
+                deletePost((RemotePostPayload) action.getPayload());
+                break;
+            case DELETED_POST:
+                handleDeletePostCompleted((RemotePostPayload) action.getPayload());
+                break;
+            case REMOVE_POST:
+                PostSqlUtils.deletePost((PostModel) action.getPayload());
+                break;
+        }
+    }
+
+    private void deletePost(RemotePostPayload payload) {
+        if (payload.site.isWPCom()) {
+            mPostRestClient.deletePost(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.deletePost(payload.post, payload.site);
+        }
+    }
+
+    private void fetchPost(RemotePostPayload payload) {
+        if (payload.site.isWPCom()) {
+            mPostRestClient.fetchPost(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.fetchPost(payload.post, payload.site);
         }
     }
 
@@ -444,6 +459,15 @@ public class PostStore extends Store {
         newPost = PostSqlUtils.insertPostForResult(newPost);
 
         emitChange(new OnPostInstantiated(newPost));
+    }
+
+    private void pushPost(RemotePostPayload payload) {
+        if (payload.site.isWPCom()) {
+            mPostRestClient.pushPost(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.pushPost(payload.post, payload.site);
+        }
     }
 
     private void updatePost(PostModel post) {
