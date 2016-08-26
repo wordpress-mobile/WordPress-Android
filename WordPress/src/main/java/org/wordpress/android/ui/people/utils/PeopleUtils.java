@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.android.volley.Request.Method.HEAD;
-
 public class PeopleUtils {
     // We limit followers we display to 1000 to avoid API performance issues
     public static int FOLLOWER_PAGE_LIMIT = 50;
