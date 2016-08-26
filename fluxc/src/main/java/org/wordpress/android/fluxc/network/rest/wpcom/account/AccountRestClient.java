@@ -47,8 +47,8 @@ public class AccountRestClient extends BaseWPComRestClient {
         public AccountModel account;
     }
 
-    public static class AccountPostSettingsResponsePayload extends Payload {
-        public AccountPostSettingsResponsePayload(BaseNetworkError error) {
+    public static class AccountPushSettingsResponsePayload extends Payload {
+        public AccountPushSettingsResponsePayload(BaseNetworkError error) {
             this.error = error;
         }
         public boolean isError() {
@@ -126,9 +126,9 @@ public class AccountRestClient extends BaseWPComRestClient {
 
     /**
      * Performs an HTTP POST call to the v1.1 /me/settings/ endpoint. Upon receiving
-     * a response (success or error) a {@link AccountAction#POSTED_SETTINGS} action is dispatched
-     * with a payload of type {@link AccountPostSettingsResponsePayload}.
-     * {@link AccountPostSettingsResponsePayload#isError()} can be used to determine the result of the request.
+     * a response (success or error) a {@link AccountAction#PUSHED_SETTINGS} action is dispatched
+     * with a payload of type {@link AccountPushSettingsResponsePayload}.
+     * {@link AccountPushSettingsResponsePayload#isError()} can be used to determine the result of the request.
      *
      * No HTTP POST call is made if the given parameter map is null or contains no entries.
      */
@@ -141,16 +141,16 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<HashMap>() {
                     @Override
                     public void onResponse(HashMap response) {
-                        AccountPostSettingsResponsePayload payload = new AccountPostSettingsResponsePayload(null);
+                        AccountPushSettingsResponsePayload payload = new AccountPushSettingsResponsePayload(null);
                         payload.settings = response;
-                        mDispatcher.dispatch(AccountActionBuilder.newPostedSettingsAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSettingsAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountPostSettingsResponsePayload payload = new AccountPostSettingsResponsePayload(error);
-                        mDispatcher.dispatch(AccountActionBuilder.newPostedSettingsAction(payload));
+                        AccountPushSettingsResponsePayload payload = new AccountPushSettingsResponsePayload(error);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSettingsAction(payload));
                     }
                 }
         ));
@@ -238,7 +238,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         return account;
     }
 
-    public static boolean updateAccountModelFromPostSettingsResponse(AccountModel accountModel,
+    public static boolean updateAccountModelFromPushSettingsResponse(AccountModel accountModel,
                 Map<String, Object> from) {
         AccountModel old = new AccountModel();
         old.copyAccountAttributes(accountModel);

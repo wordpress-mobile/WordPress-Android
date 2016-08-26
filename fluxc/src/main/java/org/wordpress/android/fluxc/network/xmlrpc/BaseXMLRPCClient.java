@@ -51,7 +51,6 @@ public class BaseXMLRPCClient {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
-
     private BaseRequest setRequestAuthParams(BaseRequest request) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
         request.setUserAgent(mUserAgent.getUserAgent());
