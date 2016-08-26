@@ -351,6 +351,8 @@ public class PostStore extends Store {
 
         if (payload.isError()) {
             event.error = payload.error;
+        } else {
+            PostSqlUtils.deletePost(payload.post);
         }
 
         emitChange(event);
