@@ -6,6 +6,7 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.utils.MediaUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 
@@ -33,6 +34,7 @@ public class MediaModel implements Identifiable, Serializable {
     @Column private int mId;
 
     // Associated IDs
+    @Column private long mBlogId;
     @Column private long mMediaId;
     @Column private long mPostId;
     @Column private long mAuthorId;
@@ -74,7 +76,6 @@ public class MediaModel implements Identifiable, Serializable {
     //
     // Legacy
     //
-    @Column private long mBlogId;
     @Column private int mHorizontalAlignment;
     @Column private boolean mVerticalAlignment;
     @Column private boolean mFeatured;
@@ -82,6 +83,42 @@ public class MediaModel implements Identifiable, Serializable {
 
     // Set to true on a successful response to delete via WP.com REST API, not stored locally
     private boolean mDeleted;
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || !(other instanceof MediaModel)) return false;
+
+        MediaModel otherMedia = (MediaModel) other;
+
+        return getId() == otherMedia.getId() &&
+                getBlogId() == otherMedia.getBlogId() &&
+                getMediaId() == otherMedia.getMediaId() &&
+                getPostId() == otherMedia.getPostId() &&
+                getAuthorId() == otherMedia.getAuthorId() &&
+                getWidth() == otherMedia.getWidth() &&
+                getHeight() == otherMedia.getHeight() &&
+                getLength() == otherMedia.getLength() &&
+                getHorizontalAlignment() == otherMedia.getHorizontalAlignment() &&
+                getVerticalAlignment() == otherMedia.getVerticalAlignment() &&
+                getVideoPressProcessingDone() == otherMedia.getVideoPressProcessingDone() &&
+                getFeatured() == otherMedia.getFeatured() &&
+                getFeaturedInPost() == otherMedia.getFeaturedInPost() &&
+                StringUtils.equals(getGuid(), otherMedia.getGuid()) &&
+                StringUtils.equals(getUploadDate(), otherMedia.getUploadDate()) &&
+                StringUtils.equals(getUrl(), otherMedia.getUrl()) &&
+                StringUtils.equals(getThumbnailUrl(), otherMedia.getThumbnailUrl()) &&
+                StringUtils.equals(getFileName(), otherMedia.getFileName()) &&
+                StringUtils.equals(getFilePath(), otherMedia.getFilePath()) &&
+                StringUtils.equals(getFileExtension(), otherMedia.getFileExtension()) &&
+                StringUtils.equals(getMimeType(), otherMedia.getMimeType()) &&
+                StringUtils.equals(getTitle(), otherMedia.getTitle()) &&
+                StringUtils.equals(getDescription(), otherMedia.getDescription()) &&
+                StringUtils.equals(getCaption(), otherMedia.getCaption()) &&
+                StringUtils.equals(getAlt(), otherMedia.getAlt()) &&
+                StringUtils.equals(getVideoPressGuid(), otherMedia.getVideoPressGuid()) &&
+                StringUtils.equals(getUploadState(), otherMedia.getUploadState());
+    }
 
     @Override
     public void setId(int id) {
