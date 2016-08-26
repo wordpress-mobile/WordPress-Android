@@ -77,8 +77,10 @@ public class MediaSqlUtils {
         if (media == null) return 0;
 
         List<MediaModel> existingMedia = WellSql.select(MediaModel.class)
-                .where().equals(MediaModelTable.MEDIA_ID, media.getMediaId()).endWhere()
-                .getAsModel();
+                .where().beginGroup()
+                .equals(MediaModelTable.BLOG_ID, media.getBlogId())
+                .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
+                .endGroup().endWhere().getAsModel();
 
         if (existingMedia.isEmpty()) {
             // insert, media item does not exist
