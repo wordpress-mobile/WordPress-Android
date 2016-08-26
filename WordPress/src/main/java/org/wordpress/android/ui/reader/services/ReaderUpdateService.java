@@ -274,11 +274,6 @@ public class ReaderUpdateService extends Service {
                 if (followedBlogsChanged) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
                     AppLog.d(AppLog.T.READER, "reader blogs service > followed blogs changed");
-                }
-
-                int numberOfDeletedPosts = ReaderPostTable.deletePostsFromUnfollowedBlogs();
-
-                if (followedBlogsChanged || numberOfDeletedPosts > 0) {
                     EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
                 }
 
