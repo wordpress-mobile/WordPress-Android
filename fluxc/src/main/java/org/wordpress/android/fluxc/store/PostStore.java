@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store;
 
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.wellsql.generated.PostModelTable;
@@ -192,27 +191,6 @@ public class PostStore extends Store {
     @Override
     public void onRegister() {
         AppLog.d(AppLog.T.API, "PostStore onRegister");
-    }
-
-    /**
-     * Returns all posts and pages in the store as a {@link PostModel} list.
-     */
-    public List<PostModel> getPosts() {
-        return WellSql.select(PostModel.class).getAsModel();
-    }
-
-    /**
-     * Returns all posts and pages in the store as a {@link Cursor}.
-     */
-    public Cursor getPostsCursor() {
-        return WellSql.select(PostModel.class).getAsCursor();
-    }
-
-    /**
-     * Returns the number of posts and pages in the store.
-     */
-    public int getPostsCount() {
-        return getPostsCursor().getCount();
     }
 
     /**
