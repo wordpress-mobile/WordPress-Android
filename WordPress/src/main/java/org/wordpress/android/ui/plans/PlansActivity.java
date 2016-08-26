@@ -17,6 +17,7 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -157,12 +158,33 @@ public class PlansActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(getPageAdapter());
 
-        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-
         int normalColor = ContextCompat.getColor(this, R.color.blue_light);
         int selectedColor = ContextCompat.getColor(this, R.color.white);
         mTabLayout.setTabTextColors(normalColor, selectedColor);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        // tabMode is set to scrollable in layout, set to fixed if there's enough space to show them all
+        mTabLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mTabLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                if (mTabLayout.getChildCount() > 0) {
+                    int tabLayoutWidth = 0;
+                    LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
+                    for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+                        LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
+                        tabLayoutWidth += (tabView.getMeasuredWidth() + tabView.getPaddingLeft() + tabView.getPaddingRight());
+                    }
+
+                    int displayWidth = DisplayUtils.getDisplayPixelWidth(PlansActivity.this);
+                    if (tabLayoutWidth < displayWidth) {
+                        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+                        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                    }
+                }
+            }
+        });
 
         if (mViewPager.getVisibility() != View.VISIBLE) {
             // use a circular reveal on API 21+
