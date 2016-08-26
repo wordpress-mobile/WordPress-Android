@@ -510,7 +510,7 @@ public class NotificationsListFragment extends Fragment
     public SiteModel getSelectedSite() {
         if (getActivity() instanceof WPMainActivity) {
             WPMainActivity mainActivity = (WPMainActivity) getActivity();
-            mainActivity.getSelectedSite();
+            return mainActivity.getSelectedSite();
         }
         return null;
     }
