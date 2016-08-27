@@ -217,10 +217,44 @@ public class MediaStoreTest {
 
     @Test
     public void testGetUnattachedSiteMedia() {
+        final long testSiteId = 1000101110;
+        final int testPoolSize = 10;
+        final List<MediaModel> unattachedMedia = new ArrayList<>(testPoolSize);
+        for (int i = 0; i < testPoolSize; ++i) {
+            MediaModel attached = generateRandomizedMedia(testSiteId);
+            MediaModel unattached = generateRandomizedMedia(testSiteId);
+            attached.setMediaId(i);
+            unattached.setMediaId(i + testPoolSize);
+            attached.setPostId(i + testPoolSize);
+            unattached.setPostId(0);
+            insertMediaIntoDatabase(attached);
+            insertMediaIntoDatabase(unattached);
+            unattachedMedia.add(unattached);
+        }
+
+        final List<MediaModel> storeMedia = mMediaStore.getUnattachedSiteMedia(testSiteId);
+        assertNotNull(storeMedia);
+        assertTrue(storeMedia.size() == unattachedMedia.size());
+        for (int i = 0; i < storeMedia.size(); ++i) {
+            assertTrue(storeMedia.contains(unattachedMedia.get(i)));
+        }
     }
 
     @Test
     public void testGetUnattachedSiteMediaCount() {
+        final long testSiteId = 1000101110;
+        final int testPoolSize = 10;
+        for (int i = 0; i < testPoolSize; ++i) {
+            MediaModel attached = generateRandomizedMedia(testSiteId);
+            MediaModel unattached = generateRandomizedMedia(testSiteId);
+            attached.setMediaId(i);
+            unattached.setMediaId(i + testPoolSize);
+            attached.setPostId(i + testPoolSize);
+            unattached.setPostId(0);
+            insertMediaIntoDatabase(attached);
+            insertMediaIntoDatabase(unattached);
+        }
+        assertTrue(mMediaStore.getUnattachedSiteMediaCount(testSiteId) == testPoolSize);
     }
 
     @Test
