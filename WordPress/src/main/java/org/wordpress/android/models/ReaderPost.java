@@ -122,9 +122,9 @@ public class ReaderPost {
             post.sortIndex = json.optDouble("score");
         } else if (json.has("date_liked")) {
             String likeDate = JSONUtils.getString(json, "date_liked");
-            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(likeDate);
+            post.sortIndex = DateTimeUtils.timestampFromIso8601(likeDate);
         } else {
-            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(post.published);
+            post.sortIndex = DateTimeUtils.timestampFromIso8601(post.published);
         }
 
         // if the post is untitled, make up a title from the excerpt
@@ -640,7 +640,7 @@ public class ReaderPost {
     private transient java.util.Date dtPublished;
     public java.util.Date getDatePublished() {
         if (dtPublished == null) {
-            dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
+            dtPublished = DateTimeUtils.dateFromIso8601(published);
         }
         return dtPublished;
     }

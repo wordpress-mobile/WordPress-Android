@@ -224,7 +224,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         CommentHolder commentHolder = (CommentHolder) holder;
         commentHolder.txtAuthor.setText(comment.getAuthorName());
 
-        java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
+        java.util.Date dtPublished = DateTimeUtils.dateFromIso8601(comment.getPublished());
         commentHolder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
 
         if (comment.hasAuthorAvatar()) {

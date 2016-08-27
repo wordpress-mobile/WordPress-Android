@@ -17,9 +17,7 @@ public class DateTimeUtils {
         throw new AssertionError();
     }
 
-    /*
-     * see http://drdobbs.com/java/184405382
-     */
+    // See http://drdobbs.com/java/184405382
     private static final ThreadLocal<DateFormat> ISO8601Format = new ThreadLocal<DateFormat>() {
         @Override
         protected DateFormat initialValue() {
@@ -27,49 +25,56 @@ public class DateTimeUtils {
         }
     };
 
-    /*
-     * converts a date to a relative time span ("8h", "3d", etc.) - similar to
+    /**
+     * Converts a date to a relative time span ("8h", "3d", etc.) - similar to
      * DateUtils.getRelativeTimeSpanString but returns shorter result
      */
     public static String javaDateToTimeSpan(final Date date) {
-        if (date == null)
+        if (date == null) {
             return "";
+        }
 
         long passedTime = date.getTime();
         long currentTime = System.currentTimeMillis();
 
         // return "now" if less than a minute has elapsed
         long secondsSince = (currentTime - passedTime) / 1000;
-        if (secondsSince < 60)
+        if (secondsSince < 60) {
             return WordPress.getContext().getString(R.string.reader_timespan_now);
+        }
 
         // less than an hour (ex: 12m)
         long minutesSince = secondsSince / 60;
-        if (minutesSince < 60)
+        if (minutesSince < 60) {
             return Long.toString(minutesSince) + "m";
+        }
 
         // less than a day (ex: 17h)
         long hoursSince = minutesSince / 60;
-        if (hoursSince < 24)
+        if (hoursSince < 24) {
             return Long.toString(hoursSince) + "h";
+        }
 
         // less than a week (ex: 5d)
         long daysSince = hoursSince / 24;
-        if (daysSince < 7)
+        if (daysSince < 7) {
             return Long.toString(daysSince) + "d";
+        }
 
         // less than a year old, so return day/month without year (ex: Jan 30)
-        if (daysSince < 365)
-            return DateUtils.formatDateTime(WordPress.getContext(), passedTime, DateUtils.FORMAT_NO_YEAR | DateUtils.FORMAT_ABBREV_ALL);
+        if (daysSince < 365) {
+            return DateUtils.formatDateTime(WordPress.getContext(), passedTime, DateUtils.FORMAT_NO_YEAR |
+                    DateUtils.FORMAT_ABBREV_ALL);
+        }
 
         // date is older, so include year (ex: Jan 30, 2013)
         return DateUtils.formatDateTime(WordPress.getContext(), passedTime, DateUtils.FORMAT_ABBREV_ALL);
     }
 
-    /*
-     * converts an ISO8601 date to a Java date
+    /**
+     * Converts an ISO 8601 date to a Java date
      */
-    public static Date iso8601ToJavaDate(final String strDate) {
+    public static Date dateFromIso8601(final String strDate) {
         try {
             DateFormat formatter = ISO8601Format.get();
             return formatter.parse(strDate);
@@ -78,18 +83,50 @@ public class DateTimeUtils {
         }
     }
 
-    /*
-     * converts a Java date to ISO8601
+    /**
+     * Converts an ISO 8601 date to a Java date
      */
-    public static String javaDateToIso8601(Date date) {
-        if (date==null)
+    public static Date dateUTCFromIso8601(String iso8601date) {
+        try {
+            iso8601date = iso8601date.replace("Z", "+0000").replace("+00:00", "+0000");
+            DateFormat formatter = ISO8601Format.get();
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return formatter.parse(iso8601date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Converts a Java date to ISO 8601
+     */
+    public static String iso8601FromDate(Date date) {
+        if (date == null) {
             return "";
+        }
         DateFormat formatter = ISO8601Format.get();
         return formatter.format(date);
     }
 
-    /*
-     * returns the current UTC date
+    /**
+     * Converts a Java date to ISO 8601, in UTC
+     */
+    public static String iso8601UTCFromDate(Date date) {
+        if (date == null) {
+            return "";
+        }
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat formatter = ISO8601Format.get();
+        formatter.setTimeZone(tz);
+
+        String iso8601date = formatter.format(date);
+
+        // Use "+00:00" notation rather than "+0000" to be consistent with the WP.COM API
+        return iso8601date.replace("+0000", "+00:00");
+    }
+
+    /**
+     * Returns the current UTC date
      */
     public static Date nowUTC() {
         Date dateTimeNow = new Date();
@@ -97,16 +134,16 @@ public class DateTimeUtils {
     }
 
     public static Date localDateToUTC(Date dtLocal) {
-        if (dtLocal==null)
+        if (dtLocal == null) {
             return null;
+        }
         TimeZone tz = TimeZone.getDefault();
         int currentOffsetFromUTC = tz.getRawOffset() + (tz.inDaylightTime(dtLocal) ? tz.getDSTSavings() : 0);
         return new Date(dtLocal.getTime() - currentOffsetFromUTC);
     }
 
-    /*
-     * routines to return a diff between two dates - always return a positive number
-     */
+    // Routines to return a diff between two dates - always return a positive number
+
     public static int daysBetween(Date dt1, Date dt2) {
         long hrDiff = hoursBetween(dt1, dt2);
         if (hrDiff == 0) {
@@ -122,29 +159,28 @@ public class DateTimeUtils {
         }
         return (int) (minDiff / 60);
     }
+
     public static int minutesBetween(Date dt1, Date dt2) {
         long msDiff = millisecondsBetween(dt1, dt2);
-        if (msDiff==0)
+        if (msDiff == 0) {
             return 0;
-        return (int)(msDiff / 60000);
+        }
+        return (int) (msDiff / 60000);
     }
+
     public static int secondsBetween(Date dt1, Date dt2) {
-    	long msDiff = millisecondsBetween(dt1, dt2);
-    	if (msDiff == 0) {
-    		return 0;
-    	}
-    	return (int)(msDiff / 1000);
+        long msDiff = millisecondsBetween(dt1, dt2);
+        if (msDiff == 0) {
+            return 0;
+        }
+        return (int) (msDiff / 1000);
     }
+
     public static long millisecondsBetween(Date dt1, Date dt2) {
-        if (dt1==null || dt2==null)
+        if (dt1 == null || dt2 == null) {
             return 0;
+        }
         return Math.abs(dt1.getTime() - dt2.getTime());
-    }
-    public static long iso8601ToTimestamp(final String strDate) {
-        Date date = iso8601ToJavaDate(strDate);
-        if (date==null)
-            return 0;
-        return (date.getTime() / 1000);
     }
 
     public static boolean isSameYear(Date dt1, Date dt2) {
@@ -158,21 +194,29 @@ public class DateTimeUtils {
         if (dt1 == null || dt2 == null) {
             return false;
         }
-        return dt1.getYear() == dt2.getYear()
-                && dt1.getMonth() == dt2.getMonth();
+        return dt1.getYear() == dt2.getYear() && dt1.getMonth() == dt2.getMonth();
     }
 
-    /*
-     * routines involving Unix timestamps (GMT assumed)
-     */
-    public static Date timestampToDate(long timeStamp) {
-        return new java.util.Date(timeStamp*1000);
+    // Routines involving Unix timestamps (GMT assumed)
+
+    public static long timestampFromIso8601(final String strDate) {
+        Date date = dateFromIso8601(strDate);
+        if (date == null) {
+            return 0;
+        }
+        return (date.getTime() / 1000);
     }
-    public static String timestampToIso8601Str(long timestamp) {
-        return javaDateToIso8601(timestampToDate(timestamp));
+
+    public static Date dateFromTimestamp(long timeStamp) {
+        return new java.util.Date(timeStamp * 1000);
     }
-    public static String timestampToTimeSpan(long timeStamp) {
-        Date dtGmt = timestampToDate(timeStamp);
+
+    public static String iso8601FromTimestamp(long timestamp) {
+        return iso8601FromDate(dateFromTimestamp(timestamp));
+    }
+
+    public static String timeSpanFromIso8601(long timeStamp) {
+        Date dtGmt = dateFromTimestamp(timeStamp);
         return javaDateToTimeSpan(dtGmt);
     }
 }

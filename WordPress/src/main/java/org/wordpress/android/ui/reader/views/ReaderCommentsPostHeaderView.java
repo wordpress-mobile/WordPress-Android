@@ -51,7 +51,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
             txtBlogName.setText(R.string.reader_untitled_post);
         }
 
-        java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(post.getPublished());
+        java.util.Date dtPublished = DateTimeUtils.dateFromIso8601(post.getPublished());
         String dateLine = DateTimeUtils.javaDateToTimeSpan(dtPublished);
         if (post.isCommentsOpen || post.numReplies > 0) {
             dateLine += "  \u2022  " + ReaderUtils.getShortCommentLabelText(getContext(), post.numReplies);

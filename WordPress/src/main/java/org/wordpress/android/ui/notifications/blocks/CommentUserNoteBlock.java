@@ -56,7 +56,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder)view.getTag();
 
         noteBlockHolder.nameTextView.setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
-        noteBlockHolder.agoTextView.setText(DateTimeUtils.timestampToTimeSpan(getTimestamp()));
+        noteBlockHolder.agoTextView.setText(DateTimeUtils.timeSpanFromIso8601(getTimestamp()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
             noteBlockHolder.bulletTextView.setVisibility(View.VISIBLE);
             noteBlockHolder.siteTextView.setVisibility(View.VISIBLE);
