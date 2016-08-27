@@ -709,7 +709,8 @@ public class ReaderPostTable {
 
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "tbl_posts.*");
         String sql = "SELECT " + columns + " FROM tbl_posts, tbl_post_tags"
-                   + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
+                   + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
+                   + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
                    + " AND tbl_post_tags.tag_name=?"
                    + " AND tbl_post_tags.tag_type=?";
 
