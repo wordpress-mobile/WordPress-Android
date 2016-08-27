@@ -156,6 +156,8 @@ public class ReaderPostTable {
                 + "   has_gap_marker    INTEGER DEFAULT 0,"
                 + "   PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                 + ")");
+
+        db.execSQL("CREATE INDEX idx_post_tags_tag_name ON tbl_post_tags(tag_name)");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
