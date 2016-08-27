@@ -414,7 +414,7 @@ public class ReaderPostTable {
 
         if (numDeleted > 0)
             ReaderDatabase.getWritableDb().delete("tbl_posts",
-                    "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_post_tags)",
+                    "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)",
                     null);
 
         return numDeleted;
