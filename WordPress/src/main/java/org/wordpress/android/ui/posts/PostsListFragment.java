@@ -17,18 +17,23 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
-import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -40,9 +45,8 @@ import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.DeleteSinglePostTask;
-import org.xmlrpc.android.ApiHelper.ErrorType;
 
-import de.greenrobot.event.EventBus;
+import javax.inject.Inject;
 
 public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
@@ -70,6 +74,9 @@ public class PostsListFragment extends Fragment
 
     private SiteModel mSite;
 
+    @Inject PostStore mPostStore;
+    @Inject Dispatcher mDispatcher;
+
     public static PostsListFragment newInstance(SiteModel site) {
         PostsListFragment fragment = new PostsListFragment();
         Bundle bundle = new Bundle();
@@ -81,6 +88,8 @@ public class PostsListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+
         updateSiteOrFinishActivity(savedInstanceState);
 
         setRetainInstance(true);
@@ -251,7 +260,14 @@ public class PostsListFragment extends Fragment
         if (loadMore) {
             showLoadMoreProgress();
         }
-        PostUpdateService.startServiceForBlog(getActivity(), mSite, mIsPage, loadMore);
+
+        FetchPostsPayload payload = new FetchPostsPayload(mSite, loadMore);
+
+        if (mIsPage) {
+            mDispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload));
+        } else {
+            mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(payload));
+        }
     }
 
     private void showLoadMoreProgress() {
@@ -297,34 +313,6 @@ public class PostsListFragment extends Fragment
         }
     }
 
-    /*
-     * PostUpdateService finished a request to retrieve new posts
-     */
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.RequestPosts event) {
-        mIsFetchingPosts = false;
-        if (isAdded() && event.getSite().getId() == mSite.getId()) {
-            setRefreshing(false);
-            hideLoadMoreProgress();
-            if (!event.getFailed()) {
-                mCanLoadMorePosts = event.canLoadMore();
-                loadPosts();
-            } else {
-                ApiHelper.ErrorType errorType = event.getErrorType();
-                if (errorType != null && errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
-                    switch (errorType) {
-                        case UNAUTHORIZED:
-                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                            break;
-                        default:
-                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                            break;
-                    }
-                }
-            }
-        }
-    }
-
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         int stringId;
         switch (emptyViewMessageType) {
@@ -349,7 +337,8 @@ public class PostsListFragment extends Fragment
         }
 
         mEmptyViewTitle.setText(getText(stringId));
-        mEmptyViewImage.setVisibility(emptyViewMessageType == EmptyViewMessageType.NO_CONTENT ? View.VISIBLE : View.GONE);
+        mEmptyViewImage.setVisibility(emptyViewMessageType == EmptyViewMessageType.NO_CONTENT ? View.VISIBLE :
+                View.GONE);
         mEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
     }
 
@@ -363,11 +352,13 @@ public class PostsListFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
         super.onStop();
     }
 
@@ -405,7 +396,7 @@ public class PostsListFragment extends Fragment
      * called by the adapter when the user clicks a post
      */
     @Override
-    public void onPostSelected(PostsListPost post) {
+    public void onPostSelected(PostModel post) {
         onPostButtonClicked(PostListButton.BUTTON_PREVIEW, post);
     }
 
@@ -413,10 +404,10 @@ public class PostsListFragment extends Fragment
      * called by the adapter when the user clicks the edit/view/stats/trash button for a post
      */
     @Override
-    public void onPostButtonClicked(int buttonType, PostsListPost post) {
+    public void onPostButtonClicked(int buttonType, PostModel post) {
         if (!isAdded()) return;
 
-        Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
+        Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getId());
         if (fullPost == null) {
             ToastUtils.showToast(getActivity(), R.string.post_not_found);
             return;
@@ -424,7 +415,7 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
-                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), mSite, post.getPostId(),
+                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), mSite, post.getId(),
                         mIsPage);
                 break;
             case PostListButton.BUTTON_PUBLISH:
@@ -442,7 +433,7 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 // prevent deleting post while it's being uploaded
-                if (!post.isUploading()) {
+                if (!PostUploadService.isPostUploading(post)) {
                     trashPost(post);
                 }
                 break;
@@ -473,14 +464,14 @@ public class PostsListFragment extends Fragment
     /*
      * send the passed post to the trash with undo
      */
-    private void trashPost(final PostsListPost post) {
+    private void trashPost(final PostModel post) {
         //only check if network is available in case this is not a local draft - local drafts have not yet
         //been posted to the server so they can be trashed w/o further care
         if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))) {
             return;
         }
 
-        final Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
+        final Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getId());
         if (fullPost == null) {
             ToastUtils.showToast(getActivity(), R.string.post_not_found);
             return;
@@ -544,5 +535,33 @@ public class PostsListFragment extends Fragment
         });
 
         snackbar.show();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostChanged(PostStore.OnPostChanged event) {
+        switch (event.causeOfChange) {
+            case FETCH_POSTS:
+            case FETCH_PAGES:
+                mIsFetchingPosts = false;
+                // TODO: This used to validate that mSite was the same as the site reported by the EventBus event
+                if (isAdded()) {
+                    setRefreshing(false);
+                    hideLoadMoreProgress();
+                    if (!event.isError()) {
+                        mCanLoadMorePosts = event.canLoadMore;
+                        loadPosts();
+                    } else {
+                        PostStore.PostError error = event.error;
+                        switch (error.type) {
+                            // TODO: Handle permission error ->updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR)
+                            default:
+                                updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                                break;
+                        }
+                    }
+                }
+                break;
+        }
     }
 }

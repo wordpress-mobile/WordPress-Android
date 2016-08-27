@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Post;
@@ -93,6 +94,25 @@ public class PostUploadService extends Service {
     /*
      * returns true if the passed post is either uploading or waiting to be uploaded
      */
+    public static boolean isPostUploading(PostModel post) {
+        // first check the currently uploading post
+        if (mCurrentUploadingPost != null && mCurrentUploadingPost.getLocalTablePostId() == post.getId()) {
+            return true;
+        }
+        // then check the list of posts waiting to be uploaded
+        if (mPostsList.size() > 0) {
+            synchronized (mPostsList) {
+                for (Post queuedPost : mPostsList) {
+                    if (queuedPost.getLocalTablePostId() == post.getId()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    // TODO: Delete when PostModel migration is done
     public static boolean isPostUploading(long localPostId) {
         // first check the currently uploading post
         if (mCurrentUploadingPost != null && mCurrentUploadingPost.getLocalTablePostId() == localPostId) {

@@ -18,8 +18,6 @@ import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
-import org.wordpress.android.models.PostsListPost;
-import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -524,24 +522,6 @@ public class WordPressDB {
             } finally {
                 db.endTransaction();
             }
-        }
-    }
-
-    /*
-     * returns list of posts for use in the post list fragment
-     */
-    public PostsListPostList getPostsListPosts(int localBlogId, boolean loadPages) {
-        PostsListPostList listPosts = new PostsListPostList();
-
-        String[] args = {Integer.toString(localBlogId), Integer.toString(loadPages ? 1 : 0)};
-        Cursor c = db.query(POSTS_TABLE, null, "blogID=? AND isPage=?", args, null, null, "localDraft DESC, date_created_gmt DESC");
-        try {
-            while (c.moveToNext()) {
-                listPosts.add(new PostsListPost(getPostFromCursor(c)));
-            }
-            return listPosts;
-        } finally {
-            SqlUtils.closeCursor(c);
         }
     }
 

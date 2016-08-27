@@ -1,12 +1,21 @@
 package org.wordpress.android.ui.posts;
 
+import android.text.TextUtils;
+import android.text.format.DateUtils;
+
+import org.apache.commons.lang.StringUtils;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.HtmlUtils;
 
+import java.text.BreakIterator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PostUtils {
+    private static final int MAX_EXCERPT_LEN = 150;
 
     private static final HashSet<String> mShortcodeTable = new HashSet<>();
 
@@ -88,8 +98,8 @@ public class PostUtils {
         return mShortcodeTable.contains(shortCode);
     }
 
-    public static void trackSavePostAnalytics(Post post, SiteModel site) {
-        PostStatus status = post.getStatusEnum();
+    public static void trackSavePostAnalytics(PostModel post, SiteModel site) {
+        PostStatus status = PostStatus.fromPost(post);
         switch (status) {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
@@ -113,6 +123,74 @@ public class PostUtils {
                 break;
             default:
                 // No-op
+        }
+    }
+
+    // TODO: Delete when PostModel migration is done
+    public static void trackSavePostAnalytics(Post post, SiteModel site) {
+        PostModel postModel = new PostModel();
+        postModel.setStatus(post.getPostStatus());
+        trackSavePostAnalytics(postModel, site);
+    }
+
+    public static String getPostListExcerptFromPost(PostModel post) {
+        if (StringUtils.isEmpty(post.getExcerpt())) {
+            return makeExcerpt(post.getContent());
+        } else {
+            return makeExcerpt(post.getExcerpt());
+        }
+    }
+
+
+    /*
+     * Java's string.trim() doesn't handle non-breaking space chars (#160), which may appear at the
+     * end of post content - work around this by converting them to standard spaces before trimming
+     */
+    private static final String NBSP = String.valueOf((char) 160);
+
+    private static String trimEx(final String s) {
+        return s.replace(NBSP, " ").trim();
+    }
+
+    private static String makeExcerpt(String description) {
+        if (TextUtils.isEmpty(description)) {
+            return null;
+        }
+
+        String s = HtmlUtils.fastStripHtml(description);
+        if (s.length() < MAX_EXCERPT_LEN) {
+            return trimEx(s);
+        }
+
+        StringBuilder result = new StringBuilder();
+        BreakIterator wordIterator = BreakIterator.getWordInstance();
+        wordIterator.setText(s);
+        int start = wordIterator.first();
+        int end = wordIterator.next();
+        int totalLen = 0;
+        while (end != BreakIterator.DONE) {
+            String word = s.substring(start, end);
+            result.append(word);
+            totalLen += word.length();
+            if (totalLen >= MAX_EXCERPT_LEN) {
+                break;
+            }
+            start = end;
+            end = wordIterator.next();
+        }
+
+        if (totalLen == 0) {
+            return null;
+        }
+        return trimEx(result.toString()) + "...";
+    }
+
+    public static String getFormattedDate(PostModel post) {
+        if (PostStatus.fromPost(post) == PostStatus.SCHEDULED) {
+            return DateUtils.formatDateTime(WordPress.getContext(),
+                    DateTimeUtils.timestampFromIso8601(post.getDateCreated()), DateUtils.FORMAT_ABBREV_ALL);
+        } else {
+            return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateUTCFromIso8601(post.getDateCreated()));
         }
     }
 }

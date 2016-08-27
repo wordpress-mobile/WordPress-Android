@@ -43,12 +43,6 @@ public enum PostStatus {
         return fromStringAndDateGMT(value, dateCreatedGMT);
     }
 
-    public synchronized static PostStatus fromPostsListPost(PostsListPost post) {
-        String value = post.getOriginalStatus();
-        long dateCreatedGMT = post.getDateCreatedGmt();
-        return fromStringAndDateGMT(value, dateCreatedGMT);
-    }
-
     public static String toString(PostStatus status) {
         switch (status) {
             case PUBLISHED:

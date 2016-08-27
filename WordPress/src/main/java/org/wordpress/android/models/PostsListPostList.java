@@ -1,45 +1,54 @@
 package org.wordpress.android.models;
 
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.ui.posts.services.PostUploadService;
+
 import java.util.ArrayList;
+import java.util.List;
 
-public class PostsListPostList extends ArrayList<PostsListPost> {
+public class PostsListPostList extends ArrayList<PostModel> {
 
+    // TODO: Delete when PostsListPostList is phased out
     public boolean isSameList(PostsListPostList newPostsList) {
+        return isSameList((List<PostModel>) newPostsList);
+    }
+
+    public boolean isSameList(List<PostModel> newPostsList) {
         if (newPostsList == null || this.size() != newPostsList.size()) {
             return false;
         }
 
         for (int i = 0; i < newPostsList.size(); i++) {
-            PostsListPost newPost = newPostsList.get(i);
-            PostsListPost currentPost = this.get(i);
+            PostModel newPost = newPostsList.get(i);
+            PostModel currentPost = this.get(i);
 
-            if (newPost.getPostId() != currentPost.getPostId())
+            if (newPost.getId() != currentPost.getId())
                 return false;
             if (!newPost.getTitle().equals(currentPost.getTitle()))
                 return false;
-            if (newPost.getDateCreatedGmt() != currentPost.getDateCreatedGmt())
+            if (!newPost.getDateCreated().equals(currentPost.getDateCreated()))
                 return false;
-            if (!newPost.getOriginalStatus().equals(currentPost.getOriginalStatus()))
+            if (!newPost.getStatus().equals(currentPost.getStatus()))
                 return false;
-            if (newPost.isUploading() != currentPost.isUploading())
+            if (PostUploadService.isPostUploading(newPost) != PostUploadService.isPostUploading(currentPost))
                 return false;
             if (newPost.isLocalDraft() != currentPost.isLocalDraft())
                 return false;
-            if (newPost.hasLocalChanges() != currentPost.hasLocalChanges())
+            if (newPost.isLocallyChanged() != currentPost.isLocallyChanged())
                 return false;
-            if (!newPost.getDescription().equals(currentPost.getDescription()))
+            if (!newPost.getContent().equals(currentPost.getContent()))
                 return false;
         }
 
         return true;
     }
 
-    public int indexOfPost(PostsListPost post) {
+    public int indexOfPost(PostModel post) {
         if (post == null) {
             return -1;
         }
         for (int i = 0; i < size(); i++) {
-            if (this.get(i).getPostId() == post.getPostId() && this.get(i).getBlogId() == post.getBlogId()) {
+            if (this.get(i).getId() == post.getId() && this.get(i).getLocalSiteId() == post.getLocalSiteId()) {
                 return i;
             }
         }
