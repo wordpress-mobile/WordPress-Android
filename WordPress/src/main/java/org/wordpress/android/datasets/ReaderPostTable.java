@@ -426,13 +426,17 @@ public class ReaderPostTable {
      * set to true
      */
     public static void updateFollowedStatus() {
-        String sql = "UPDATE tbl_posts SET is_followed = 0"
-                  + " WHERE is_followed != 0"
-                  + " AND blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE is_followed != 0)";
+        SQLiteStatement statement = ReaderDatabase.getWritableDb().compileStatement(
+                  "UPDATE tbl_posts SET is_followed = 0"
+                + " WHERE is_followed != 0"
+                + " AND blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE is_followed != 0)");
         try {
-            ReaderDatabase.getWritableDb().execSQL(sql);
-        } catch (Exception e) {
-            AppLog.e(AppLog.T.READER, e);
+            int count = statement.executeUpdateDelete();
+            if (count > 0) {
+                AppLog.d(AppLog.T.READER, String.format("reader post table > marked %d posts unfollowed", count));
+            }
+        } finally {
+            statement.close();
         }
     }
 
