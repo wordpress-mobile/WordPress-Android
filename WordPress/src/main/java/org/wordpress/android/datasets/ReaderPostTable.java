@@ -140,8 +140,10 @@ public class ReaderPostTable {
                 + " discover_json       TEXT,"
                 + "	xpost_post_id		INTEGER DEFAULT 0,"
                 + " xpost_blog_id       INTEGER DEFAULT 0,"
-                + " PRIMARY KEY (post_id, blog_id)"
+                + " PRIMARY KEY (pseudo_id)"
                 + ")");
+
+        db.execSQL("CREATE UNIQUE INDEX idx_posts_post_id_blog_id ON tbl_posts(post_id, blog_id)");
         db.execSQL("CREATE INDEX idx_posts_sort_index ON tbl_posts(sort_index)");
 
         db.execSQL("CREATE TABLE tbl_post_tags ("
