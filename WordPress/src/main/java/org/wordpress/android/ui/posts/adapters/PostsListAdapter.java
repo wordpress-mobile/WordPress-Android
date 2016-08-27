@@ -28,7 +28,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.services.PostMediaService;
@@ -54,6 +53,10 @@ import javax.inject.Inject;
  * Adapter for Posts/Pages list
  */
 public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final long ROW_ANIM_DURATION = 150;
+
+    private static final int VIEW_TYPE_POST_OR_PAGE = 0;
+    private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
 
     public interface OnPostButtonClickListener {
         void onPostButtonClicked(int buttonId, PostModel post);
@@ -75,16 +78,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private boolean mIsLoadingPosts;
 
-    private final PostsListPostList mPosts = new PostsListPostList();
-    private final Map<Integer, String> mFeaturedImageUrls = new HashMap<>();
-    private final LayoutInflater mLayoutInflater;
-
+    private final List<PostModel> mPosts = new ArrayList<>();
     private final List<PostModel> mHiddenPosts = new ArrayList<>();
+    private final Map<Integer, String> mFeaturedImageUrls = new HashMap<>();
 
-    private static final long ROW_ANIM_DURATION = 150;
-
-    private static final int VIEW_TYPE_POST_OR_PAGE = 0;
-    private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
+    private final LayoutInflater mLayoutInflater;
 
     @Inject protected PostStore mPostStore;
 
@@ -527,7 +525,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void hidePost(PostModel post) {
         mHiddenPosts.add(post);
 
-        int position = mPosts.indexOfPost(post);
+        int position = indexOfPostInList(post, mPosts);
         if (position > -1) {
             mPosts.remove(position);
             if (mPosts.size() > 0) {
@@ -640,7 +638,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * and set its featured image url to the passed url
      */
     public void mediaUpdated(long mediaId, String mediaUrl) {
-        int position = mPosts.indexOfFeaturedMediaId(mediaId);
+        int position = indexOfFeaturedMediaIdInList(mediaId, mPosts);
         if (isValidPostPosition(position)) {
             int postId = mPosts.get(position).getId();
             mFeaturedImageUrls.put(postId, mediaUrl);
@@ -678,7 +676,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             // go no further if existing post list is the same
-            if (mPosts.isSameList(tmpPosts)) {
+            if (postListsAreEqual(mPosts, tmpPosts)) {
                 return false;
             }
 
@@ -729,5 +727,59 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 mOnPostsLoadedListener.onPostsLoaded(mPosts.size());
             }
         }
+    }
+
+    private static boolean postListsAreEqual(List<PostModel> lhs, List<PostModel> rhs) {
+        if (lhs == null || rhs == null || lhs.size() != rhs.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < rhs.size(); i++) {
+            PostModel newPost = rhs.get(i);
+            PostModel currentPost = lhs.get(i);
+
+            if (newPost.getId() != currentPost.getId())
+                return false;
+            if (!newPost.getTitle().equals(currentPost.getTitle()))
+                return false;
+            if (!newPost.getDateCreated().equals(currentPost.getDateCreated()))
+                return false;
+            if (!newPost.getStatus().equals(currentPost.getStatus()))
+                return false;
+            if (PostUploadService.isPostUploading(newPost) != PostUploadService.isPostUploading(currentPost))
+                return false;
+            if (newPost.isLocalDraft() != currentPost.isLocalDraft())
+                return false;
+            if (newPost.isLocallyChanged() != currentPost.isLocallyChanged())
+                return false;
+            if (!newPost.getContent().equals(currentPost.getContent()))
+                return false;
+        }
+        return true;
+    }
+
+    private static int indexOfPostInList(final PostModel post, final List<PostModel> posts) {
+        if (post == null) {
+            return -1;
+        }
+        for (int i = 0; i < posts.size(); i++) {
+            if (posts.get(i).getId() == post.getId() &&
+                    posts.get(i).getLocalSiteId() == post.getLocalSiteId()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static int indexOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
+        if (mediaId == 0) {
+            return -1;
+        }
+        for (int i = 0; i < posts.size(); i++) {
+            if (posts.get(i).getFeaturedImageId() == mediaId) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
@@ -46,7 +45,12 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.DeleteSinglePostTask;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
@@ -70,7 +74,7 @@ public class PostsListFragment extends Fragment
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
 
-    private final PostsListPostList mTrashedPosts = new PostsListPostList();
+    private final List<PostModel> mTrashedPosts = new ArrayList<>();
 
     private SiteModel mSite;
 
