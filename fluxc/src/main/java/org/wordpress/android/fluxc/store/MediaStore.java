@@ -235,7 +235,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
     public String getUrlForSiteVideoWithVideoPressGuid(long siteId, String videoPressGuid) {
         List<MediaModel> media =
                 MediaSqlUtils.matchSiteMedia(siteId, MediaModelTable.VIDEO_PRESS_GUID, videoPressGuid);
-        return media.size() > 0 ? media.get(0).getVideoPressGuid() : null;
+        return media.size() > 0 ? media.get(0).getUrl() : null;
     }
 
     public String getThumbnailUrlForSiteMediaWithId(long siteId, long mediaId) {
