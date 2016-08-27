@@ -154,7 +154,7 @@ public class ReaderPostTable {
                 + "   tag_name          TEXT NOT NULL COLLATE NOCASE,"
                 + "   tag_type          INTEGER DEFAULT 0,"
                 + "   has_gap_marker    INTEGER DEFAULT 0,"
-                + "   PRIMARY KEY (post_id, blog_id, tag_name, tag_type)"
+                + "   PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                 + ")");
     }
 
