@@ -775,8 +775,7 @@ public class ReaderPostTable {
         }
 
         String sql = "SELECT tbl_posts.blog_id, tbl_posts.post_id FROM tbl_posts, tbl_post_tags"
-                + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
-                + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                 + " AND tbl_post_tags.tag_name=?"
                 + " AND tbl_post_tags.tag_type=?";
 
