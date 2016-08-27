@@ -422,6 +422,21 @@ public class ReaderPostTable {
     }
 
     /*
+     * ensure that posts in blogs that are no longer followed don't have their followed status
+     * set to true
+     */
+    public static void updateFollowedStatus() {
+        String sql = "UPDATE tbl_posts SET is_followed = 0"
+                  + " WHERE is_followed != 0"
+                  + " AND blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE is_followed != 0)";
+        try {
+            ReaderDatabase.getWritableDb().execSQL(sql);
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.READER, e);
+        }
+    }
+
+    /*
      * returns the iso8601 published date of the oldest post with the passed tag
      */
     public static String getOldestPubDateWithTag(final ReaderTag tag) {
