@@ -45,8 +45,9 @@ public class MediaUtils {
      * Creates a {@link MediaModel} list from a WP.com REST response to a request for all media.
      */
     public static List<MediaModel> mediaListFromRestResponse(MultipleMediaResponse from) {
+        if (from == null || from.media == null) return null;
         List<MediaModel> media = new ArrayList<>();
-        for (int i = 0; i < from.found; ++i) {
+        for (int i = 0; i < from.media.size(); ++i) {
             media.add(i, mediaFromRestResponse(from.media.get(i)));
         }
         return media;
