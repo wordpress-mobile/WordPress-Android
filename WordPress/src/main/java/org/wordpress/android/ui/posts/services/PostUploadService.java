@@ -842,7 +842,9 @@ public class PostUploadService extends Service {
 
             // Get the sharableUrl
             SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalTableBlogId());
-            String sharableUrl = WPMeShortlinks.getPostShortlink(site, post);
+            // TODO: Restore
+            //String sharableUrl = WPMeShortlinks.getPostShortlink(site, post);
+            String sharableUrl = "";
             if (sharableUrl == null && !TextUtils.isEmpty(post.getPermaLink())) {
                     sharableUrl = post.getPermaLink();
             }

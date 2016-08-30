@@ -14,9 +14,10 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SSLCertsViewActivity;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -41,7 +42,6 @@ import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivit
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
-import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -165,11 +165,11 @@ public class ActivityLauncher {
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
-    public static void viewPostPreviewForResult(Activity activity, SiteModel site, Post post, boolean isPage) {
+    public static void viewPostPreviewForResult(Activity activity, SiteModel site, PostModel post, boolean isPage) {
         if (post == null) return;
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
-        intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
+        intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getId());
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
@@ -223,11 +223,11 @@ public class ActivityLauncher {
     /*
      * Load the post preview as an authenticated URL so stats aren't bumped
      */
-    public static void browsePostOrPage(Context context, SiteModel site, Post post) {
-        if (site == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
+    public static void browsePostOrPage(Context context, SiteModel site, PostModel post) {
+        if (site == null || post == null || TextUtils.isEmpty(post.getLink())) return;
 
         // always add the preview parameter to avoid bumping stats when viewing posts
-        String url = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
+        String url = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
         if (site.isWPCom()) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
         } else {
@@ -290,15 +290,17 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewStatsSinglePostDetails(Context context, SiteModel site, Post post, boolean isPage) {
+    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
         if (post == null) return;
 
-        PostModel postModel = new PostModel(site.getSiteId(), post.getRemotePostId(), post.getTitle(), post
-                .getLink(), isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
+        org.wordpress.android.ui.stats.models.PostModel postModel =
+                new org.wordpress.android.ui.stats.models.PostModel(site.getSiteId(),
+                String.valueOf(post.getRemotePostId()), post.getTitle(), post.getLink(),
+                isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
         viewStatsSinglePostDetails(context, postModel);
     }
 
-    public static void viewStatsSinglePostDetails(Context context, PostModel post) {
+    public static void viewStatsSinglePostDetails(Context context, org.wordpress.android.ui.stats.models.PostModel post) {
         if (post == null) return;
 
         Intent statsPostViewIntent = new Intent(context, StatsSingleItemDetailsActivity.class);
