@@ -17,7 +17,7 @@ public class SiteUtils {
 
     public static SiteModel generateSelfHostedNonJPSite() {
         SiteModel example = new SiteModel();
-        example.setDotOrgSiteId(6);
+        example.setSelfHostedSiteId(6);
         example.setIsWPCom(false);
         example.setIsJetpack(false);
         example.setIsVisible(true);
@@ -28,7 +28,7 @@ public class SiteUtils {
     public static SiteModel generateJetpackSite() {
         SiteModel example = new SiteModel();
         example.setSiteId(982);
-        example.setDotOrgSiteId(8);
+        example.setSelfHostedSiteId(8);
         example.setIsWPCom(false);
         example.setIsJetpack(true);
         example.setIsVisible(true);
