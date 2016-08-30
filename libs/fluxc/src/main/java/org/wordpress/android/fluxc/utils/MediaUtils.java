@@ -45,8 +45,9 @@ public class MediaUtils {
      * Creates a {@link MediaModel} list from a WP.com REST response to a request for all media.
      */
     public static List<MediaModel> mediaListFromRestResponse(MultipleMediaResponse from) {
+        if (from == null || from.media == null) return null;
         List<MediaModel> media = new ArrayList<>();
-        for (int i = 0; i < from.found; ++i) {
+        for (int i = 0; i < from.media.size(); ++i) {
             media.add(i, mediaFromRestResponse(from.media.get(i)));
         }
         return media;
@@ -103,21 +104,6 @@ public class MediaUtils {
         }
         if (media.getPostId() > 0) {
             params.put(MEDIA_PARENT_KEY, String.valueOf(media.getPostId()));
-        }
-        return params;
-    }
-
-    public static @NonNull Map<String, String> getMediaXmlRpcParams(@NonNull MediaModel media) {
-        final Map<String, String> params = new HashMap<>();
-        if (!TextUtils.isEmpty(media.getTitle())) {
-            params.put("name", media.getTitle());
-        } else {
-            params.put("name", "tempname");
-        }
-        if (!TextUtils.isEmpty(media.getMimeType())) {
-            params.put("type", media.getMimeType());
-        } else {
-            params.put("type", "image/png");
         }
         return params;
     }
