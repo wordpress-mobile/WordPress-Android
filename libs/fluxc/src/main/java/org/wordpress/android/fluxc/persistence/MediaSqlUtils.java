@@ -11,13 +11,13 @@ import java.util.List;
 public class MediaSqlUtils {
     public static List<MediaModel> getAllSiteMedia(long siteId) {
         return WellSql.select(MediaModel.class)
-                .where().equals(MediaModelTable.BLOG_ID, siteId).endWhere()
+                .where().equals(MediaModelTable.SITE_ID, siteId).endWhere()
                 .getAsModel();
     }
 
     public static List<MediaModel> getSiteMediaWithId(long siteId, long mediaId) {
         return WellSql.select(MediaModel.class).where().beginGroup()
-                .equals(MediaModelTable.BLOG_ID, siteId)
+                .equals(MediaModelTable.SITE_ID, siteId)
                 .equals(MediaModelTable.MEDIA_ID, mediaId)
                 .endGroup().endWhere().getAsModel();
     }
@@ -25,7 +25,7 @@ public class MediaSqlUtils {
     public static List<MediaModel> getSiteMediaWithIds(long siteId, List<Long> mediaIds) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.BLOG_ID, siteId)
+                .equals(MediaModelTable.SITE_ID, siteId)
                 .isIn(MediaModelTable.MEDIA_ID, mediaIds)
                 .endGroup().endWhere().getAsModel();
     }
@@ -33,7 +33,7 @@ public class MediaSqlUtils {
     public static List<MediaModel> searchSiteMedia(long siteId, String column, String searchTerm) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.BLOG_ID, siteId)
+                .equals(MediaModelTable.SITE_ID, siteId)
                 .contains(column, searchTerm)
                 .endGroup().endWhere().getAsModel();
     }
@@ -41,7 +41,7 @@ public class MediaSqlUtils {
     public static List<MediaModel> getSiteImages(long siteId) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.BLOG_ID, siteId)
+                .equals(MediaModelTable.SITE_ID, siteId)
                 .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
                 .endGroup().endWhere()
                 .getAsModel();
@@ -50,7 +50,7 @@ public class MediaSqlUtils {
     public static List<MediaModel> getSiteImagesExcluding(long siteId, List<Long> filter) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.BLOG_ID, siteId)
+                .equals(MediaModelTable.SITE_ID, siteId)
                 .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
                 .isNotIn(MediaModelTable.MEDIA_ID, filter)
                 .endGroup().endWhere()
@@ -60,7 +60,7 @@ public class MediaSqlUtils {
     public static List<MediaModel> getSiteMediaExcluding(long siteId, String column, Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.BLOG_ID, siteId)
+                .equals(MediaModelTable.SITE_ID, siteId)
                 .notContains(column, value)
                 .endGroup().endWhere().getAsModel();
     }
@@ -68,7 +68,7 @@ public class MediaSqlUtils {
     public static List<MediaModel> matchSiteMedia(long siteId, String column, Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.BLOG_ID, siteId)
+                .equals(MediaModelTable.SITE_ID, siteId)
                 .equals(column, value)
                 .endGroup().endWhere().getAsModel();
     }
@@ -86,7 +86,7 @@ public class MediaSqlUtils {
 
         List<MediaModel> existingMedia = WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.BLOG_ID, media.getBlogId())
+                .equals(MediaModelTable.SITE_ID, media.getSiteId())
                 .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
                 .endGroup().endWhere().getAsModel();
 
@@ -110,7 +110,7 @@ public class MediaSqlUtils {
     public static int deleteMatchingSiteMedia(long siteId, String column, Object value) {
         return WellSql.delete(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.BLOG_ID, siteId)
+                .equals(MediaModelTable.SITE_ID, siteId)
                 .equals(column, value)
                 .endGroup().endWhere().execute();
     }
