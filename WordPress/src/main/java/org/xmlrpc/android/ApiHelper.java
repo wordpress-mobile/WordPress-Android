@@ -184,38 +184,6 @@ public class ApiHelper {
         return comments;
     }
 
-    /**
-     * Delete a single post or page via XML-RPC API parameters follow those of FetchSinglePostTask
-     */
-    public static class DeleteSinglePostTask extends HelperAsyncTask<Object, Boolean, Boolean> {
-        SiteModel mSite;
-        String mPostId;
-        boolean mIsPage;
-
-        public DeleteSinglePostTask(SiteModel site, String postId, boolean isPage) {
-            mSite = site;
-            mPostId = postId;
-            mIsPage = isPage;
-        }
-
-        @Override
-        protected Boolean doInBackground(Object... arguments) {
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
-            Object[] params = {
-                    String.valueOf(mSite.getSiteId()),
-                    StringUtils.notNullStr(mSite.getUsername()),
-                    StringUtils.notNullStr(mSite.getPassword()),
-                    mPostId};
-            try {
-                client.call(mIsPage ? Method.DELETE_PAGE : Method.DELETE_POST, params);
-                return true;
-            } catch (XMLRPCException | IOException | XmlPullParserException e) {
-                mErrorMessage = e.getMessage();
-                return false;
-            }
-        }
-    }
-
     public static class SyncMediaLibraryTask extends HelperAsyncTask<Void, Void, Integer> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(int results);

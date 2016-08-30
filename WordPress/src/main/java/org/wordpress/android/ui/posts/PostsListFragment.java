@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -42,8 +43,6 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.DeleteSinglePostTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -475,12 +474,6 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        final Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getId());
-        if (fullPost == null) {
-            ToastUtils.showToast(getActivity(), R.string.post_not_found);
-            return;
-        }
-
         // remove post from the list and add it to the list of trashed posts
         getPostListAdapter().hidePost(post);
         mTrashedPosts.add(post);
@@ -528,13 +521,8 @@ public class PostsListFragment extends Fragment
                 // https://code.google.com/p/android/issues/detail?id=190529
                 mTrashedPosts.remove(post);
 
-                WordPress.wpDB.deletePost(fullPost);
-
-                if (!post.isLocalDraft()) {
-                    DeleteSinglePostTask task = new ApiHelper.DeleteSinglePostTask(mSite,
-                            fullPost.getRemotePostId(), mIsPage);
-                    task.execute();
-                }
+                RemotePostPayload payload = new RemotePostPayload(post, mSite);
+                mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload));
             }
         });
 
@@ -549,21 +537,28 @@ public class PostsListFragment extends Fragment
             case FETCH_PAGES:
                 mIsFetchingPosts = false;
                 // TODO: This used to validate that mSite was the same as the site reported by the EventBus event
-                if (isAdded()) {
-                    setRefreshing(false);
-                    hideLoadMoreProgress();
-                    if (!event.isError()) {
-                        mCanLoadMorePosts = event.canLoadMore;
-                        loadPosts();
-                    } else {
-                        PostStore.PostError error = event.error;
-                        switch (error.type) {
-                            // TODO: Handle permission error ->updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR)
-                            default:
-                                updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                                break;
-                        }
+                if (!isAdded()) {
+                    return;
+                }
+
+                setRefreshing(false);
+                hideLoadMoreProgress();
+                if (!event.isError()) {
+                    mCanLoadMorePosts = event.canLoadMore;
+                    loadPosts();
+                } else {
+                    PostStore.PostError error = event.error;
+                    switch (error.type) {
+                        // TODO: Handle permission error ->updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR)
+                        default:
+                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                            break;
                     }
+                }
+                break;
+            case DELETE_POST:
+                if (event.isError()) {
+                    // TODO: Report post deletion error
                 }
                 break;
         }
