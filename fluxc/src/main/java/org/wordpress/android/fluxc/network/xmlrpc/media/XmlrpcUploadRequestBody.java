@@ -30,7 +30,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
      */
     private static final String PREPEND_XML_FORMAT =
             "<?xml version=\"1.0\"?><methodCall><methodName>wp.uploadFile</methodName><params>" +
-            "<param><value><int>%d</int></value></param>" + // blogId
+            "<param><value><int>%d</int></value></param>" + // siteId
             "<param><value><string>%s</string></value></param>" + // username
             "<param><value><string>%s</string></value></param>" + // password
             "<param><value><struct>" + // data
