@@ -25,6 +25,7 @@ public class MediaModel implements Identifiable, Serializable {
             mDescriptor = descriptor;
         }
 
+        @Override
         public String toString() {
             return mDescriptor;
         }
