@@ -16,12 +16,13 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Table
-public class PostModel extends Payload implements Identifiable {
+public class PostModel extends Payload implements Identifiable, Serializable {
     private static final long FEATURED_IMAGE_INIT_VALUE = -2;
 
     @PrimaryKey
