@@ -19,25 +19,25 @@ import javax.lang.model.element.Modifier;
 public class XMLRPCPoet {
     public static TypeSpec generate(File endpointFile, String fileName, Map<String, List<String>> aliases)
             throws IOException {
-        TypeSpec.Builder XMLRPCBuilder = TypeSpec.enumBuilder(fileName)
+        TypeSpec.Builder xmlrpcBuilder = TypeSpec.enumBuilder(fileName)
                 .addModifiers(Modifier.PUBLIC)
                 .addField(String.class, "mEndpoint", Modifier.PRIVATE, Modifier.FINAL);
 
-        MethodSpec XMLRPConstructor = MethodSpec.constructorBuilder()
+        MethodSpec xmlrpcConstructor = MethodSpec.constructorBuilder()
                 .addParameter(String.class, "endpoint")
                 .addStatement("mEndpoint = endpoint")
                 .build();
 
-        XMLRPCBuilder.addMethod(XMLRPConstructor);
+        xmlrpcBuilder.addMethod(xmlrpcConstructor);
 
-        MethodSpec XMLRPCToString = MethodSpec.methodBuilder("toString")
+        MethodSpec xmlrpcToString = MethodSpec.methodBuilder("toString")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(String.class)
                 .addStatement("return $L", "mEndpoint")
                 .addAnnotation(Override.class)
                 .build();
 
-        XMLRPCBuilder.addMethod(XMLRPCToString);
+        xmlrpcBuilder.addMethod(xmlrpcToString);
 
         BufferedReader in = new BufferedReader(new FileReader(endpointFile));
 
@@ -49,7 +49,7 @@ public class XMLRPCPoet {
             String endpointName = fullEndpoint.split("\\.")[1];
             String enumName = endpointName.replaceAll("([a-z])([A-Z]+)", "$1_$2").toUpperCase(Locale.US);
 
-            XMLRPCBuilder.addEnumConstant(enumName, TypeSpec.anonymousClassBuilder("$S", fullEndpoint)
+            xmlrpcBuilder.addEnumConstant(enumName, TypeSpec.anonymousClassBuilder("$S", fullEndpoint)
                     .addAnnotation(AnnotationSpec.builder(Endpoint.class)
                             .addMember("value", "$S", fullEndpoint)
                             .build())
@@ -59,7 +59,7 @@ public class XMLRPCPoet {
         // Add endpoint aliases
         for (String endpoint : aliases.keySet()) {
             for (String alias : aliases.get(endpoint)) {
-                XMLRPCBuilder.addEnumConstant(alias, TypeSpec.anonymousClassBuilder("$S", endpoint)
+                xmlrpcBuilder.addEnumConstant(alias, TypeSpec.anonymousClassBuilder("$S", endpoint)
                         .addAnnotation(AnnotationSpec.builder(Endpoint.class)
                                 .addMember("value", "$S", endpoint)
                                 .build())
@@ -69,6 +69,6 @@ public class XMLRPCPoet {
 
         in.close();
 
-        return XMLRPCBuilder.build();
+        return xmlrpcBuilder.build();
     }
 }

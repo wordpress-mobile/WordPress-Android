@@ -157,16 +157,18 @@ public class SiteStore extends Store {
     }
 
     public enum SiteVisibility {
-        PRIVATE (-1),
-        BLOCK_SEARCH_ENGINE (0),
-        PUBLIC (1);
+        PRIVATE(-1),
+        BLOCK_SEARCH_ENGINE(0),
+        PUBLIC(1);
 
-        private final int value;
+        private final int mValue;
+
         SiteVisibility(int value) {
-            this.value = value;
+            this.mValue = value;
         }
+
         public int value() {
-            return value;
+            return mValue;
         }
     }
 
@@ -248,14 +250,16 @@ public class SiteStore extends Store {
     /**
      * Returns sites with a name or url matching the search string.
      */
-    public @NonNull List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
+    @NonNull
+    public List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
         return SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(SiteModelTable.IS_WPCOM, true, searchString);
     }
 
     /**
      * Returns .COM sites with a name or url matching the search string.
      */
-    public @NonNull List<SiteModel> getDotComSiteByNameOrUrlMatching(@NonNull String searchString) {
+    @NonNull
+    public List<SiteModel> getDotComSiteByNameOrUrlMatching(@NonNull String searchString) {
         return SiteSqlUtils.getAllSitesMatchingUrlOrName(searchString);
     }
 
@@ -442,7 +446,8 @@ public class SiteStore extends Store {
                     public SiteModel convert(Cursor cursor) {
                         SiteModel siteModel = new SiteModel();
                         siteModel.setSiteId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)));
-                        siteModel.setDotOrgSiteId(cursor.getLong(cursor.getColumnIndex(SiteModelTable.DOT_ORG_SITE_ID)));
+                        siteModel.setDotOrgSiteId(cursor.getLong(
+                                cursor.getColumnIndex(SiteModelTable.DOT_ORG_SITE_ID)));
                         return siteModel;
                     }
                 });
