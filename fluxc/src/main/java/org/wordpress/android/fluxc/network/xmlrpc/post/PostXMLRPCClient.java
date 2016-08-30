@@ -48,7 +48,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPost(final PostModel post, final SiteModel site) {
         List<Object> params = new ArrayList<>(4);
-        params.add(site.getDotOrgSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(post.getRemotePostId());
@@ -95,7 +95,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
 
         List<Object> params = new ArrayList<>(4);
-        params.add(site.getDotOrgSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(contentStruct);
@@ -146,7 +146,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         Map<String, Object> contentStruct = postModelToContentStruct(post);
 
         List<Object> params = new ArrayList<>(5);
-        params.add(site.getDotOrgSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         if (!post.isLocalDraft()) {
@@ -191,7 +191,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void deletePost(final PostModel post, final SiteModel site) {
         List<Object> params = new ArrayList<>(4);
-        params.add(site.getDotOrgSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(post.getRemotePostId());
@@ -279,34 +279,33 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             }
             Map<?, ?> termMap = (Map<?, ?>) term;
             String taxonomy = MapUtils.getMapStr(termMap, "taxonomy");
-            switch (taxonomy) {
-                case "category":
-                    categoryIds.add(MapUtils.getMapLong(termMap, "term_id"));
-                    break;
-                case "post_tag":
-                    tagIds.add(MapUtils.getMapLong(termMap, "term_id"));
-                    break;
+            if (taxonomy.equals("category")) {
+                categoryIds.add(MapUtils.getMapLong(termMap, "term_id"));
+            } else if (taxonomy.equals("post_tag")) {
+                tagIds.add(MapUtils.getMapLong(termMap, "term_id"));
             }
         }
         post.setCategoryIdList(categoryIds);
         post.setTagIdList(tagIds);
 
-        Object[] custom_fields = (Object[]) postMap.get("custom_fields");
+        Object[] customFields = (Object[]) postMap.get("custom_fields");
         JSONArray jsonCustomFieldsArray = new JSONArray();
-        if (custom_fields != null) {
+        if (customFields != null) {
             PostLocation postLocation = new PostLocation();
-            for (Object custom_field : custom_fields) {
-                jsonCustomFieldsArray.put(custom_field.toString());
+            for (Object customField : customFields) {
+                jsonCustomFieldsArray.put(customField.toString());
                 // Update geo_long and geo_lat from custom fields
-                if (!(custom_field instanceof Map)) {
+                if (!(customField instanceof Map)) {
                     continue;
                 }
-                Map<?, ?> customField = (Map<?, ?>) custom_field;
-                if (customField.get("key") != null && customField.get("value") != null) {
-                    if (customField.get("key").equals("geo_longitude"))
-                        postLocation.setLongitude(Long.valueOf(customField.get("value").toString()));
-                    if (customField.get("key").equals("geo_latitude"))
-                        postLocation.setLatitude(Long.valueOf(customField.get("value").toString()));
+                Map<?, ?> customFieldMap = (Map<?, ?>) customField;
+                if (customFieldMap.get("key") != null && customFieldMap.get("value") != null) {
+                    if (customFieldMap.get("key").equals("geo_longitude")) {
+                        postLocation.setLongitude(Long.valueOf(customFieldMap.get("value").toString()));
+                    }
+                    if (customFieldMap.get("key").equals("geo_latitude")) {
+                        postLocation.setLatitude(Long.valueOf(customFieldMap.get("value").toString()));
+                    }
                 }
             }
             if (postLocation.isValid()) {

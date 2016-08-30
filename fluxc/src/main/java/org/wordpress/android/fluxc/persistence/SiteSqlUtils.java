@@ -121,7 +121,7 @@ public class SiteSqlUtils {
                 .or()
                 .beginGroup()
                 .equals(SiteModelTable.IS_JETPACK, true)
-                .equals(SiteModelTable.DOT_ORG_SITE_ID, false)
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, false)
                 .endGroup()
                 .endGroup().endWhere()
                 .getAsModel();

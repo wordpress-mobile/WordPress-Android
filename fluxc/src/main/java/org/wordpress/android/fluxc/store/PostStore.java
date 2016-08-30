@@ -272,7 +272,7 @@ public class PostStore extends Store {
             return;
         }
 
-        switch((PostAction) actionType) {
+        switch ((PostAction) actionType) {
             case FETCH_POSTS:
                 fetchPosts((FetchPostsPayload) action.getPayload(), false);
                 break;

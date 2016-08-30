@@ -85,8 +85,8 @@ public class DiscoveryUtils {
             }
 
             if (!match) {
-                AppLog.e(AppLog.T.NUX, "The following XML-RPC method: " + currentRequiredMethod + " is missing on the" +
-                        " server.");
+                AppLog.e(AppLog.T.NUX, "The following XML-RPC method: " + currentRequiredMethod + " is missing on the"
+                                       + " server.");
                 return false;
             }
         }

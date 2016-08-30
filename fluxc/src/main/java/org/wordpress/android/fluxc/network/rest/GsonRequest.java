@@ -72,8 +72,8 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry<String, String> entry : params.entrySet()){
-            if (stringBuilder.length() == 0){
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (stringBuilder.length() == 0) {
                 stringBuilder.append('?');
             } else {
                 stringBuilder.append('&');
