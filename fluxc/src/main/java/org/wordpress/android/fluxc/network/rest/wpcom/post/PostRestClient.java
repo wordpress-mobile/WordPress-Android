@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -74,15 +75,22 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
+    public void fetchPosts(final SiteModel site, final boolean getPages, final List<PostStatus> statusList,
+                           final int offset) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
 
         params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
+
         if (getPages) {
             params.put("type", "page");
         }
+
+        if (statusList.size() > 0) {
+            params.put("status", PostStatus.postStatusListToString(statusList));
+        }
+
         if (offset > 0) {
             params.put("offset", String.valueOf(offset));
         }
