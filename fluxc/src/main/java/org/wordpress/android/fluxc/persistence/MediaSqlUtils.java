@@ -57,6 +57,14 @@ public class MediaSqlUtils {
                 .getAsModel();
     }
 
+    public static List<MediaModel> getSiteMediaExcluding(long siteId, String column, Object value) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.BLOG_ID, siteId)
+                .notContains(column, value)
+                .endGroup().endWhere().getAsModel();
+    }
+
     public static List<MediaModel> matchSiteMedia(long siteId, String column, Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
