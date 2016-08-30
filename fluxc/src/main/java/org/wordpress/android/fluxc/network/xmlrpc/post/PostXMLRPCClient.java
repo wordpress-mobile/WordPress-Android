@@ -48,7 +48,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPost(final PostModel post, final SiteModel site) {
         List<Object> params = new ArrayList<>(4);
-        params.add(site.getDotOrgSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(post.getRemotePostId());
@@ -95,7 +95,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
 
         List<Object> params = new ArrayList<>(4);
-        params.add(site.getDotOrgSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(contentStruct);
@@ -146,7 +146,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         Map<String, Object> contentStruct = postModelToContentStruct(post);
 
         List<Object> params = new ArrayList<>(5);
-        params.add(site.getDotOrgSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         if (!post.isLocalDraft()) {
@@ -191,7 +191,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void deletePost(final PostModel post, final SiteModel site) {
         List<Object> params = new ArrayList<>(4);
-        params.add(site.getDotOrgSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(post.getRemotePostId());
