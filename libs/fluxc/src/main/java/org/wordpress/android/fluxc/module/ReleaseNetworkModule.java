@@ -98,7 +98,8 @@ public class ReleaseNetworkModule {
     @Singleton
     @Named("custom-ssl")
     @Provides
-    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkUrlFactory okUrlFactory, Context appContext) {
+    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkUrlFactory okUrlFactory,
+                                                     Context appContext) {
         return newRequestQueue(okUrlFactory, appContext);
     }
 
