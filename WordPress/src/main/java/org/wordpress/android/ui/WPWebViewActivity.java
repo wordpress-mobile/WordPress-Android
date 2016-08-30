@@ -335,9 +335,7 @@ public class WPWebViewActivity extends WebViewActivity {
      * @return URL of the login page.
      */
     public static String getSiteLoginUrl(SiteModel site) {
-        String loginURL = null;
-        // TODO: STORES: missing with getLoginUrl() in SiteStore
-        // String loginURL = site.getLoginUrl();
+        String loginURL = site.getLoginUrl();
 
         // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
         if (loginURL == null) {
