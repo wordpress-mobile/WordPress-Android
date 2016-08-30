@@ -19,7 +19,6 @@ import java.net.URISyntaxException;
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
 public class SiteModel extends Payload implements Identifiable, Serializable {
-
     @PrimaryKey
     @Column private int mId;
     // Only given a value for .COM and Jetpack sites - self-hosted sites use mDotOrgSiteId
@@ -134,8 +133,8 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
         return mIsWPCom;
     }
 
-    public void setIsWPCom(boolean WPCom) {
-        mIsWPCom = WPCom;
+    public void setIsWPCom(boolean wpCom) {
+        mIsWPCom = wpCom;
     }
 
     public String getUsername() {

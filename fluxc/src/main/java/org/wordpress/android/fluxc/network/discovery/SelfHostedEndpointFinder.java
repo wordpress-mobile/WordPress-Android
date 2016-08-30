@@ -38,7 +38,7 @@ import javax.inject.Inject;
 import javax.net.ssl.SSLHandshakeException;
 
 public class SelfHostedEndpointFinder {
-    private final static int TIMEOUT_MS = 60000;
+    public static final int TIMEOUT_MS = 60000;
 
     private final Dispatcher mDispatcher;
     private final BaseXMLRPCClient mClient;
@@ -58,7 +58,7 @@ public class SelfHostedEndpointFinder {
         public final DiscoveryError discoveryError;
         public final String failedUrl;
 
-        public DiscoveryException(DiscoveryError failureType, String failedUrl) {
+        DiscoveryException(DiscoveryError failureType, String failedUrl) {
             this.discoveryError = failureType;
             this.failedUrl = failedUrl;
         }
@@ -126,8 +126,8 @@ public class SelfHostedEndpointFinder {
         String xmlrpcUrl = verifyXMLRPCUrl(siteUrl, httpUsername, httpPassword);
 
         if (xmlrpcUrl == null) {
-            AppLog.w(T.NUX, "The XML-RPC endpoint was not found by using our 'smart' cleaning approach. " +
-                    "Time to start the Endpoint discovery process");
+            AppLog.w(T.NUX, "The XML-RPC endpoint was not found by using our 'smart' cleaning approach. "
+                            + "Time to start the Endpoint discovery process");
             xmlrpcUrl = discoverXMLRPCEndpoint(siteUrl, httpUsername, httpPassword);
         }
 
@@ -140,11 +140,8 @@ public class SelfHostedEndpointFinder {
         return xmlrpcUrl;
     }
 
-    private  String verifyXMLRPCUrl(@NonNull final String siteUrl, final String httpUsername, final String httpPassword)
-            throws DiscoveryException {
-        // Ordered set of Strings that contains the URLs we want to try
-        final Set<String> urlsToTry = new LinkedHashSet<>();
-
+    private LinkedHashSet<String> getOrderedVerifyUrlsToTry(String siteUrl) throws DiscoveryException {
+        LinkedHashSet<String> urlsToTry = new LinkedHashSet<>();
         final String sanitizedSiteUrlHttps = sanitizeSiteUrl(siteUrl, true);
         final String sanitizedSiteUrlHttp = sanitizeSiteUrl(siteUrl, false);
 
@@ -170,6 +167,13 @@ public class SelfHostedEndpointFinder {
 
         // Add the user provided URL as well
         urlsToTry.add(siteUrl);
+        return urlsToTry;
+    }
+
+    private String verifyXMLRPCUrl(@NonNull final String siteUrl, final String httpUsername, final String httpPassword)
+            throws DiscoveryException {
+        // Ordered set of Strings that contains the URLs we want to try
+        final LinkedHashSet<String> urlsToTry = getOrderedVerifyUrlsToTry(siteUrl);
 
         AppLog.i(T.NUX, "The app will call system.listMethods on the following URLs: " + urlsToTry);
         for (String url : urlsToTry) {
@@ -180,9 +184,9 @@ public class SelfHostedEndpointFinder {
                 }
             } catch (DiscoveryException e) {
                 // Stop execution for errors requiring user interaction
-                if (e.discoveryError == DiscoveryError.ERRONEOUS_SSL_CERTIFICATE ||
-                        e.discoveryError == DiscoveryError.HTTP_AUTH_REQUIRED ||
-                        e.discoveryError == DiscoveryError.MISSING_XMLRPC_METHOD) {
+                if (e.discoveryError == DiscoveryError.ERRONEOUS_SSL_CERTIFICATE
+                    || e.discoveryError == DiscoveryError.HTTP_AUTH_REQUIRED
+                    || e.discoveryError == DiscoveryError.MISSING_XMLRPC_METHOD) {
                     throw e;
                 }
                 // Otherwise. swallow the error since we are just verifying various URLs
@@ -241,8 +245,8 @@ public class SelfHostedEndpointFinder {
             // If the RSD URL is empty here, try to see if the pingback or Apilink are in the doc, as the user
             // could have inserted a direct link to the XML-RPC endpoint
             if (rsdUrl == null) {
-                AppLog.i(AppLog.T.NUX, "Can't find the RSD endpoint in the HTML document. Try to check the " +
-                        "pingback tag, and the apiLink tag.");
+                AppLog.i(AppLog.T.NUX, "Can't find the RSD endpoint in the HTML document. Try to check the "
+                                       + "pingback tag, and the apiLink tag.");
                 xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(DiscoveryUtils.getXMLRPCPingback(responseHTML), false);
                 if (xmlrpcUrl == null) {
                     xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(DiscoveryUtils.getXMLRPCApiLink(responseHTML), false);
@@ -252,8 +256,8 @@ public class SelfHostedEndpointFinder {
                 AppLog.i(AppLog.T.NUX, "Downloading the RSD document...");
                 String rsdEndpointDocument = getResponse(rsdUrl);
                 if (TextUtils.isEmpty(rsdEndpointDocument)) {
-                    AppLog.w(AppLog.T.NUX, "Content downloaded but it's empty or null. Skipping this RSD document" +
-                            " URL.");
+                    AppLog.w(AppLog.T.NUX, "Content downloaded but it's empty or null. Skipping this RSD document"
+                                           + " URL.");
                     continue;
                 }
                 AppLog.i(AppLog.T.NUX, "Extracting the XML-RPC Endpoint address from the RSD document");
@@ -287,7 +291,7 @@ public class SelfHostedEndpointFinder {
     /**
      * Regex pattern for matching the RSD link found in most WordPress sites.
      */
-    private static final Pattern rsdLink = Pattern.compile(
+    private static final Pattern RSD_LINK = Pattern.compile(
             "<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
@@ -297,7 +301,7 @@ public class SelfHostedEndpointFinder {
     private String getRSDMetaTagHrefRegEx(String urlString) throws DiscoveryException {
         String html = getResponse(urlString);
         if (html != null) {
-            Matcher matcher = rsdLink.matcher(html);
+            Matcher matcher = RSD_LINK.matcher(html);
             if (matcher.find()) {
                 return matcher.group(1);
             }
@@ -325,31 +329,25 @@ public class SelfHostedEndpointFinder {
                     String rel = "";
                     String type = "";
                     String href = "";
-                    switch (eventType) {
-                        case XmlPullParser.START_TAG:
-                            name = parser.getName();
-                            if (name.equalsIgnoreCase("link")) {
-                                for (int i = 0; i < parser.getAttributeCount(); i++) {
-                                    String attrName = parser.getAttributeName(i);
-                                    String attrValue = parser.getAttributeValue(i);
-                                    switch (attrName) {
-                                        case "rel":
-                                            rel = attrValue;
-                                            break;
-                                        case "type":
-                                            type = attrValue;
-                                            break;
-                                        case "href":
-                                            href = attrValue;
-                                            break;
-                                    }
-                                }
-
-                                if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
-                                    return href;
+                    if (eventType == XmlPullParser.START_TAG) {
+                        name = parser.getName();
+                        if (name.equalsIgnoreCase("link")) {
+                            for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                String attrName = parser.getAttributeName(i);
+                                String attrValue = parser.getAttributeValue(i);
+                                if (attrName.equals("rel")) {
+                                    rel = attrValue;
+                                } else if (attrName.equals("type")) {
+                                    type = attrValue;
+                                } else if (attrName.equals("href")) {
+                                    href = attrValue;
                                 }
                             }
-                            break;
+
+                            if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
+                                return href;
+                            }
+                        }
                     }
                     eventType = parser.next();
                 }
@@ -378,8 +376,8 @@ public class SelfHostedEndpointFinder {
         } catch (ExecutionException e) {
             if (e.getCause() instanceof AuthFailureError) {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
-            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null &&
-                    e.getCause().getCause() instanceof SSLHandshakeException) {
+            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
+                       && e.getCause().getCause() instanceof SSLHandshakeException) {
                 // In the event of an SSL error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             }
@@ -428,13 +426,14 @@ public class SelfHostedEndpointFinder {
                 return true;
             } else {
                 // Endpoint found, but it has problem.
-                AppLog.w(T.NUX, "Validation ended with errors! Endpoint found but doesn't contain all the " +
-                        "required methods.");
+                AppLog.w(T.NUX, "Validation ended with errors! Endpoint found but doesn't contain all the "
+                                + "required methods.");
                 throw new DiscoveryException(DiscoveryError.MISSING_XMLRPC_METHOD, url);
             }
         } catch (DiscoveryException e) {
             AppLog.e(T.NUX, "system.listMethods failed on: " + url, e);
-            if (DiscoveryUtils.isHTTPAuthErrorMessage(e) || e.discoveryError.equals(DiscoveryError.HTTP_AUTH_REQUIRED)) {
+            if (DiscoveryUtils.isHTTPAuthErrorMessage(e)
+                || e.discoveryError.equals(DiscoveryError.HTTP_AUTH_REQUIRED)) {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
             } else if (e.discoveryError.equals(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE)) {
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
@@ -470,8 +469,8 @@ public class SelfHostedEndpointFinder {
         } catch (ExecutionException e) {
             if (e.getCause() instanceof AuthFailureError) {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
-            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null &&
-                    e.getCause().getCause() instanceof SSLHandshakeException) {
+            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
+                       && e.getCause().getCause() instanceof SSLHandshakeException) {
                 // In the event of an SSL error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             }

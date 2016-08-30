@@ -66,7 +66,6 @@ public class PostSqlUtils {
                 .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
                 .equals(PostModelTable.IS_PAGE, getPages)
                 .endGroup().endWhere().getAsModel();
-
     }
 
     public static List<PostModel> getUploadedPostsForSite(SiteModel site, boolean getPages) {

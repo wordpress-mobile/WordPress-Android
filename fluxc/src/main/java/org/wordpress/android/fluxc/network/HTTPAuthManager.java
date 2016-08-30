@@ -21,7 +21,8 @@ public class HTTPAuthManager {
      * @param url to test
      * @return null if url is not matching any known HTTP auth credentials
      */
-    public @Nullable HTTPAuthModel getHTTPAuthModel(String url) {
+    @Nullable
+    public HTTPAuthModel getHTTPAuthModel(String url) {
         List<HTTPAuthModel> authModels = WellSql.selectUnique(HTTPAuthModel.class).where()
                 .equals(HTTPAuthModelTable.ROOT_URL, normalizeURL(url))
                 .endWhere().getAsModel();

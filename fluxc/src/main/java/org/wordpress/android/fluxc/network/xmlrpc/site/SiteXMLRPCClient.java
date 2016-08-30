@@ -64,18 +64,18 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();
+    public static final Map<String, String> XMLRPC_BLOG_OPTIONS = new HashMap<String, String>();
 
     static {
-        blogOptionsXMLRPCParameters.put("software_version", "software_version");
-        blogOptionsXMLRPCParameters.put("post_thumbnail", "post_thumbnail");
-        blogOptionsXMLRPCParameters.put("jetpack_client_id", "jetpack_client_id");
-        blogOptionsXMLRPCParameters.put("blog_public", "blog_public");
-        blogOptionsXMLRPCParameters.put("home_url", "home_url");
-        blogOptionsXMLRPCParameters.put("admin_url", "admin_url");
-        blogOptionsXMLRPCParameters.put("login_url", "login_url");
-        blogOptionsXMLRPCParameters.put("blog_title", "blog_title");
-        blogOptionsXMLRPCParameters.put("time_zone", "time_zone");
+        XMLRPC_BLOG_OPTIONS.put("software_version", "software_version");
+        XMLRPC_BLOG_OPTIONS.put("post_thumbnail", "post_thumbnail");
+        XMLRPC_BLOG_OPTIONS.put("jetpack_client_id", "jetpack_client_id");
+        XMLRPC_BLOG_OPTIONS.put("blog_public", "blog_public");
+        XMLRPC_BLOG_OPTIONS.put("home_url", "home_url");
+        XMLRPC_BLOG_OPTIONS.put("admin_url", "admin_url");
+        XMLRPC_BLOG_OPTIONS.put("login_url", "login_url");
+        XMLRPC_BLOG_OPTIONS.put("blog_title", "blog_title");
+        XMLRPC_BLOG_OPTIONS.put("time_zone", "time_zone");
     }
 
     public void pullSite(final SiteModel site) {
@@ -83,7 +83,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
-        params.add(blogOptionsXMLRPCParameters);
+        params.add(XMLRPC_BLOG_OPTIONS);
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_OPTIONS, params,
                 new Listener<Object>() {
@@ -182,8 +182,8 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         // TODO: set a canonical URL here
         oldModel.setUrl(getOption(blogOptions, "home_url", String.class));
         oldModel.setSoftwareVersion(getOption(blogOptions, "software_version", String.class));
-        Boolean post_thumbnail = getOption(blogOptions, "post_thumbnail", Boolean.class);
-        oldModel.setIsFeaturedImageSupported((post_thumbnail != null) && post_thumbnail);
+        Boolean postThumbnail = getOption(blogOptions, "post_thumbnail", Boolean.class);
+        oldModel.setIsFeaturedImageSupported((postThumbnail != null) && postThumbnail);
         oldModel.setTimezone(getOption(blogOptions, "time_zone", String.class));
         oldModel.setLoginUrl(getOption(blogOptions, "login_url", String.class));
         oldModel.setAdminUrl(getOption(blogOptions, "admin_url", String.class));
