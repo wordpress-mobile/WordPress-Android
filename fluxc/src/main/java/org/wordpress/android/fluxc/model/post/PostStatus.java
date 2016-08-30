@@ -12,9 +12,9 @@ public enum PostStatus {
     PRIVATE,
     PENDING,
     TRASHED,
-    SCHEDULED; //NOTE: Only used locally, WP has a 'future' status but it is not returned from the metaWeblog API
+    SCHEDULED; // NOTE: Only used locally, WP has a 'future' status but it is not returned from the metaWeblog API
 
-    private synchronized static PostStatus fromStringAndDateGMT(String value, long dateCreatedGMT) {
+    private static synchronized PostStatus fromStringAndDateGMT(String value, long dateCreatedGMT) {
         if (value == null) {
             return UNKNOWN;
         } else if (value.equals("publish")) {
@@ -40,7 +40,7 @@ public enum PostStatus {
         }
     }
 
-    public synchronized static PostStatus fromPost(PostModel post) {
+    public static synchronized PostStatus fromPost(PostModel post) {
         String value = post.getStatus();
         long dateCreatedGMT = 0;
         if (post.getDateCreated() != null) {

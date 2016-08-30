@@ -23,7 +23,7 @@ import java.util.List;
 
 @Table
 public class PostModel extends Payload implements Identifiable, Serializable {
-    private static long FEATURED_IMAGE_INIT_VALUE = -2;
+    private static final long FEATURED_IMAGE_INIT_VALUE = -2;
 
     @PrimaryKey
     @Column private int mId;
@@ -335,53 +335,42 @@ public class PostModel extends Payload implements Identifiable, Serializable {
 
     @Override
     public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-
-        if (other == null || getClass() != other.getClass()) {
-            return false;
-        }
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
 
         PostModel otherPost = (PostModel) other;
 
-        return getId() == otherPost.getId() &&
-                getLocalSiteId() == otherPost.getLocalSiteId() &&
-                getRemoteSiteId() == otherPost.getRemoteSiteId() &&
-                getRemotePostId() == otherPost.getRemotePostId() &&
-                getFeaturedImageId() == otherPost.getFeaturedImageId() &&
-                Double.compare(otherPost.getLatitude(), getLatitude()) == 0 &&
-                Double.compare(otherPost.getLongitude(), getLongitude()) == 0 &&
-                isPage() == otherPost.isPage() &&
-                isLocalDraft() == otherPost.isLocalDraft() &&
-                isLocallyChanged() == otherPost.isLocallyChanged() &&
-                getLastKnownRemoteFeaturedImageId() == otherPost.getLastKnownRemoteFeaturedImageId() &&
-                getHasCapabilityPublishPost() == otherPost.getHasCapabilityPublishPost() &&
-                getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost() &&
-                getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost() &&
-                getParentId() == otherPost.getParentId() &&
-                (getTitle() != null ? getTitle().equals(otherPost.getTitle()) : otherPost.getTitle() == null) &&
-                (getContent() != null ? getContent().equals(otherPost.getContent()) :
-                        otherPost.getContent() == null) &&
-                (getDateCreated() != null ? getDateCreated().equals(otherPost.getDateCreated()) :
-                        otherPost.getDateCreated() == null) &&
-                (getCategoryIds() != null ? getCategoryIds().equals(otherPost.getCategoryIds()) :
-                        otherPost.getCategoryIds() == null) &&
-                (getCustomFields() != null ? getCustomFields().equals(otherPost.getCustomFields()) :
-                        otherPost.getCustomFields() == null) &&
-                (getLink() != null ? getLink().equals(otherPost.getLink()) : otherPost.getLink() == null) &&
-                (getExcerpt() != null ? getExcerpt().equals(otherPost.getExcerpt()) :
-                        otherPost.getExcerpt() == null) &&
-                (getTagIds() != null ? getTagIds().equals(otherPost.getTagIds()) :
-                        otherPost.getTagIds() == null) &&
-                (getStatus() != null ? getStatus().equals(otherPost.getStatus()) : otherPost.getStatus() == null) &&
-                (getPassword() != null ? getPassword().equals(otherPost.getPassword()) :
-                        otherPost.getPassword() == null) &&
-                (getPostFormat() != null ? getPostFormat().equals(otherPost.getPostFormat()) :
-                        otherPost.getPostFormat() == null) &&
-                (getSlug() != null ? getSlug().equals(otherPost.getSlug()) : otherPost.getSlug() == null) &&
-                (getParentTitle() != null ? getParentTitle().equals(otherPost.getParentTitle()) :
-                        otherPost.getParentTitle() == null);
+        return getId() == otherPost.getId() && getLocalSiteId() == otherPost.getLocalSiteId()
+               && getRemoteSiteId() == otherPost.getRemoteSiteId() && getRemotePostId() == otherPost.getRemotePostId()
+               && getFeaturedImageId() == otherPost.getFeaturedImageId()
+               && Double.compare(otherPost.getLatitude(), getLatitude()) == 0
+               && Double.compare(otherPost.getLongitude(), getLongitude()) == 0
+               && isPage() == otherPost.isPage()
+               && isLocalDraft() == otherPost.isLocalDraft() && isLocallyChanged() == otherPost.isLocallyChanged()
+               && getLastKnownRemoteFeaturedImageId() == otherPost.getLastKnownRemoteFeaturedImageId()
+               && getHasCapabilityPublishPost() == otherPost.getHasCapabilityPublishPost()
+               && getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost()
+               && getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost()
+               && getParentId() == otherPost.getParentId()
+               && (getTitle() != null ? getTitle().equals(otherPost.getTitle()) : otherPost.getTitle() == null)
+               && (getContent() != null ? getContent().equals(otherPost.getContent()) : otherPost.getContent() == null)
+               && (getDateCreated() != null
+                ? getDateCreated().equals(otherPost.getDateCreated()) : otherPost.getDateCreated() == null)
+               && (getCategoryIds() != null
+                ? getCategoryIds().equals(otherPost.getCategoryIds()) : otherPost.getCategoryIds() == null)
+               && (getCustomFields() != null
+                ? getCustomFields().equals(otherPost.getCustomFields()) : otherPost.getCustomFields() == null)
+               && (getLink() != null ? getLink().equals(otherPost.getLink()) : otherPost.getLink() == null)
+               && (getExcerpt() != null ? getExcerpt().equals(otherPost.getExcerpt()) : otherPost.getExcerpt() == null)
+               && (getTagIds() != null ? getTagIds().equals(otherPost.getTagIds()) : otherPost.getTagIds() == null)
+               && (getStatus() != null ? getStatus().equals(otherPost.getStatus()) : otherPost.getStatus() == null)
+               && (getPassword() != null
+                ? getPassword().equals(otherPost.getPassword()) : otherPost.getPassword() == null)
+               && (getPostFormat() != null
+                ? getPostFormat().equals(otherPost.getPostFormat()) : otherPost.getPostFormat() == null)
+               && (getSlug() != null ? getSlug().equals(otherPost.getSlug()) : otherPost.getSlug() == null)
+               && (getParentTitle() != null
+                ? getParentTitle().equals(otherPost.getParentTitle()) : otherPost.getParentTitle() == null);
     }
 
     public JSONArray getJSONCustomFields() {

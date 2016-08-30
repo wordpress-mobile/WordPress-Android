@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class DateTimeUtils {
-    private static final ThreadLocal<DateFormat> ISO8601Format = new ThreadLocal<DateFormat>() {
+    private static final ThreadLocal<DateFormat> ISO8601_FORMAT = new ThreadLocal<DateFormat>() {
         @Override
         protected DateFormat initialValue() {
             return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
@@ -21,7 +21,7 @@ public class DateTimeUtils {
     public static Date dateFromIso8601(String iso8601date) {
         try {
             iso8601date = iso8601date.replace("Z", "+0000").replace("+00:00", "+0000");
-            DateFormat formatter = ISO8601Format.get();
+            DateFormat formatter = ISO8601_FORMAT.get();
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             return formatter.parse(iso8601date);
         } catch (ParseException e) {
@@ -37,7 +37,7 @@ public class DateTimeUtils {
             return "";
         }
         TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat formatter = ISO8601Format.get();
+        DateFormat formatter = ISO8601_FORMAT.get();
         formatter.setTimeZone(tz);
 
         String iso8601date = formatter.format(date);

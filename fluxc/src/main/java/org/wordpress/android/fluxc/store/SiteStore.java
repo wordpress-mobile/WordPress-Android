@@ -157,16 +157,18 @@ public class SiteStore extends Store {
     }
 
     public enum SiteVisibility {
-        PRIVATE (-1),
-        BLOCK_SEARCH_ENGINE (0),
-        PUBLIC (1);
+        PRIVATE(-1),
+        BLOCK_SEARCH_ENGINE(0),
+        PUBLIC(1);
 
-        private final int value;
+        private final int mValue;
+
         SiteVisibility(int value) {
-            this.value = value;
+            this.mValue = value;
         }
+
         public int value() {
-            return value;
+            return mValue;
         }
     }
 
@@ -234,57 +236,59 @@ public class SiteStore extends Store {
     /**
      * Returns all .COM sites in the store.
      */
-    public List<SiteModel> getDotComSites() {
+    public List<SiteModel> getWPComSites() {
         return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, true);
     }
 
     /**
      * Returns the number of .COM sites in the store.
      */
-    public int getDotComSitesCount() {
+    public int getWPComSitesCount() {
         return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, true);
     }
 
     /**
      * Returns sites with a name or url matching the search string.
      */
-    public @NonNull List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
+    @NonNull
+    public List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
         return SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(SiteModelTable.IS_WPCOM, true, searchString);
     }
 
     /**
      * Returns .COM sites with a name or url matching the search string.
      */
-    public @NonNull List<SiteModel> getDotComSiteByNameOrUrlMatching(@NonNull String searchString) {
+    @NonNull
+    public List<SiteModel> getWPComSiteByNameOrUrlMatching(@NonNull String searchString) {
         return SiteSqlUtils.getAllSitesMatchingUrlOrName(searchString);
     }
 
     /**
      * Checks whether the store contains at least one .COM site.
      */
-    public boolean hasDotComSite() {
-        return getDotComSitesCount() != 0;
+    public boolean hasWPComSite() {
+        return getWPComSitesCount() != 0;
     }
 
     /**
      * Returns all self-hosted sites in the store.
      */
-    public List<SiteModel> getDotOrgSites() {
+    public List<SiteModel> getSelfHostedSites() {
         return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, false);
     }
 
     /**
      * Returns the number of self-hosted sites (can be Jetpack) in the store.
      */
-    public int getDotOrgSitesCount() {
+    public int getSelfHostedSitesCount() {
         return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, false);
     }
 
     /**
      * Checks whether the store contains at least one self-hosted site (can be Jetpack).
      */
-    public boolean hasDotOrgSite() {
-        return getDotOrgSitesCount() != 0;
+    public boolean hasSelfHostedSite() {
+        return getSelfHostedSitesCount() != 0;
     }
 
     /**
@@ -311,10 +315,10 @@ public class SiteStore extends Store {
     /**
      * Checks whether the store contains a self-hosted site matching the given (remote) site id and XML-RPC URL.
      */
-    public boolean hasDotOrgSiteWithSiteIdAndXmlRpcUrl(long dotOrgSiteId, String xmlRpcUrl) {
+    public boolean hasSelfHostedSiteWithSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.DOT_ORG_SITE_ID, dotOrgSiteId)
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
                 .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
@@ -337,7 +341,7 @@ public class SiteStore extends Store {
     /**
      * Returns all visible .COM sites as {@link SiteModel}s.
      */
-    public List<SiteModel> getVisibleDotComSites() {
+    public List<SiteModel> getVisibleWPComSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
@@ -349,14 +353,14 @@ public class SiteStore extends Store {
     /**
      * Returns the number of visible .COM sites.
      */
-    public int getVisibleDotComSitesCount() {
-        return getVisibleDotComSites().size();
+    public int getVisibleWPComSitesCount() {
+        return getVisibleWPComSites().size();
     }
 
     /**
      * Checks whether the .COM site with the given (local) id is visible.
      */
-    public boolean isDotComSiteVisibleByLocalId(int id) {
+    public boolean isWPComSiteVisibleByLocalId(int id) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.ID, id)
@@ -374,7 +378,7 @@ public class SiteStore extends Store {
                 .where().beginGroup().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
                 .or()
-                .equals(SiteModelTable.DOT_ORG_SITE_ID, siteId)
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
                 .endGroup()
                 .equals(SiteModelTable.IS_ADMIN, true)
                 .endGroup().endWhere()
@@ -389,7 +393,7 @@ public class SiteStore extends Store {
                 .where().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
                 .or()
-                .equals(SiteModelTable.DOT_ORG_SITE_ID, siteId)
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
                 .endGroup().endWhere()
                 .getAsModel(new SelectMapper<SiteModel>() {
                     @Override
@@ -408,10 +412,10 @@ public class SiteStore extends Store {
     /**
      * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
      */
-    public int getLocalIdForDotOrgSiteIdAndXmlRpcUrl(long dotOrgSiteId, String xmlRpcUrl) {
+    public int getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
         List<SiteModel> sites =  WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.DOT_ORG_SITE_ID, dotOrgSiteId)
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
                 .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
                 .endGroup().endWhere()
                 .getAsModel(new SelectMapper<SiteModel>() {
@@ -442,7 +446,8 @@ public class SiteStore extends Store {
                     public SiteModel convert(Cursor cursor) {
                         SiteModel siteModel = new SiteModel();
                         siteModel.setSiteId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)));
-                        siteModel.setDotOrgSiteId(cursor.getLong(cursor.getColumnIndex(SiteModelTable.DOT_ORG_SITE_ID)));
+                        siteModel.setSelfHostedSiteId(cursor.getLong(
+                                cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)));
                         return siteModel;
                     }
                 });
@@ -453,7 +458,7 @@ public class SiteStore extends Store {
         if (result.get(0).getSiteId() > 0) {
             return result.get(0).getSiteId();
         } else {
-            return result.get(0).getDotOrgSiteId();
+            return result.get(0).getSelfHostedSiteId();
         }
     }
 
@@ -461,7 +466,7 @@ public class SiteStore extends Store {
      * Given a (remote) site id, returns true if the given site is WP.com or Jetpack-enabled
      * (returns false for non-Jetpack self-hosted sites).
      */
-    public boolean hasDotComOrJetpackSiteWithSiteId(long siteId) {
+    public boolean hasWPComOrJetpackSiteWithSiteId(long siteId) {
         int localId = getLocalIdForRemoteSiteId(siteId);
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
