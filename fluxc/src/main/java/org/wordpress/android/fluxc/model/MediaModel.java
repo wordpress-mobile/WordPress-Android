@@ -35,7 +35,7 @@ public class MediaModel implements Identifiable, Serializable {
     @Column private int mId;
 
     // Associated IDs
-    @Column private long mBlogId;
+    @Column private long mSiteId;
     @Column private long mMediaId;
     @Column private long mPostId;
     @Column private long mAuthorId;
@@ -93,7 +93,7 @@ public class MediaModel implements Identifiable, Serializable {
         MediaModel otherMedia = (MediaModel) other;
 
         return getId() == otherMedia.getId() &&
-                getBlogId() == otherMedia.getBlogId() &&
+                getSiteId() == otherMedia.getSiteId() &&
                 getMediaId() == otherMedia.getMediaId() &&
                 getPostId() == otherMedia.getPostId() &&
                 getAuthorId() == otherMedia.getAuthorId() &&
@@ -307,12 +307,12 @@ public class MediaModel implements Identifiable, Serializable {
         return MediaUtils.isVideoMimeType(getMimeType());
     }
 
-    public void setBlogId(long blogId) {
-        mBlogId = blogId;
+    public void setSiteId(long siteId) {
+        mSiteId = siteId;
     }
 
-    public long getBlogId() {
-        return mBlogId;
+    public long getSiteId() {
+        return mSiteId;
     }
 
     public void setHorizontalAlignment(int horizontalAlignment) {

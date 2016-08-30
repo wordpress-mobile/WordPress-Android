@@ -34,7 +34,7 @@ public class MediaTestUtils {
 
     public static MediaModel generateMediaFromPath(long siteId, long mediaId, String filePath) {
         MediaModel media = new MediaModel();
-        media.setBlogId(siteId);
+        media.setSiteId(siteId);
         media.setMediaId(mediaId);
         media.setFilePath(filePath);
         media.setFileName(MediaUtils.getFileName(filePath));
@@ -46,7 +46,7 @@ public class MediaTestUtils {
 
     public static MediaModel generateRandomizedMedia(long siteId) {
         MediaModel media = generateMedia(randomStr(5), randomStr(5), randomStr(5), randomStr(5));
-        media.setBlogId(siteId);
+        media.setSiteId(siteId);
         return media;
     }
 

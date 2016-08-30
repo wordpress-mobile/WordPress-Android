@@ -51,7 +51,7 @@ public class MediaStoreTest {
 
         // verify media
         for (MediaModel media : storeMedia) {
-            assertEquals(testSiteId, media.getBlogId());
+            assertEquals(testSiteId, media.getSiteId());
             assertTrue(testMedia.contains(media));
         }
     }
@@ -82,7 +82,7 @@ public class MediaStoreTest {
 
         // add test media
         MediaModel testMedia = getBasicMedia();
-        testMedia.setBlogId(testSiteId);
+        testMedia.setSiteId(testSiteId);
         testMedia.setMediaId(testMediaId);
         assertTrue(insertMediaIntoDatabase(testMedia) == 0);
 
@@ -99,7 +99,7 @@ public class MediaStoreTest {
 
         // add test media
         MediaModel testMedia = getBasicMedia();
-        testMedia.setBlogId(testSiteId);
+        testMedia.setSiteId(testSiteId);
         testMedia.setMediaId(testMediaId);
         assertTrue(insertMediaIntoDatabase(testMedia) == 0);
 
@@ -261,14 +261,14 @@ public class MediaStoreTest {
 
         // add local media to site
         final MediaModel localMedia = getBasicMedia();
-        localMedia.setBlogId(testSiteId);
+        localMedia.setSiteId(testSiteId);
         localMedia.setMediaId(localMediaId);
         localMedia.setUploadState(MediaModel.UPLOAD_STATE.UPLOADING.toString());
         insertMediaIntoDatabase(localMedia);
 
         // add remote media
         final MediaModel remoteMedia = getBasicMedia();
-        remoteMedia.setBlogId(testSiteId);
+        remoteMedia.setSiteId(testSiteId);
         remoteMedia.setMediaId(remoteMediaId);
         // remote media has a defined upload date, simulated here
         remoteMedia.setUploadState(MediaModel.UPLOAD_STATE.UPLOADED.toString());
@@ -330,7 +330,7 @@ public class MediaStoreTest {
         for (int i = 0; i < testPoolSize; ++i) {
             testTitles[i] = baseString;
             MediaModel testMedia = generateMedia(baseString, null, null, null);
-            testMedia.setBlogId(testSiteId);
+            testMedia.setSiteId(testSiteId);
             testMedia.setMediaId(i);
             assertTrue(insertMediaIntoDatabase(testMedia) == 0);
             baseString += String.valueOf(i);
@@ -354,7 +354,7 @@ public class MediaStoreTest {
 
         // add post media with test path
         final MediaModel postMedia = getBasicMedia();
-        postMedia.setBlogId(testSiteId);
+        postMedia.setSiteId(testSiteId);
         postMedia.setPostId(testPostId);
         postMedia.setMediaId(postMediaId);
         postMedia.setFilePath(testPath);
@@ -362,7 +362,7 @@ public class MediaStoreTest {
 
         // add unattached media with test path
         final MediaModel unattachedMedia = getBasicMedia();
-        unattachedMedia.setBlogId(testSiteId);
+        unattachedMedia.setSiteId(testSiteId);
         unattachedMedia.setPostId(testPostId);
         unattachedMedia.setFilePath(testPath);
         unattachedMedia.setMediaId(unattachedMediaId);
@@ -370,7 +370,7 @@ public class MediaStoreTest {
 
         // add post media with different file path
         final MediaModel otherPathMedia = getBasicMedia();
-        otherPathMedia.setBlogId(testSiteId);
+        otherPathMedia.setSiteId(testSiteId);
         otherPathMedia.setPostId(testPostId);
         otherPathMedia.setMediaId(otherMediaId);
         otherPathMedia.setFilePath("appended/" + testPath);
