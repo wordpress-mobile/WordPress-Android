@@ -7,9 +7,9 @@ import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -112,7 +112,7 @@ public class PostUtils {
                 if (!post.isLocalDraft()) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site);
                 } else {
-                    Map<String, Object> properties = new HashMap<String, Object>();
+                    Map<String, Object> properties = new HashMap<>();
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
                             properties);
@@ -124,6 +124,10 @@ public class PostUtils {
             default:
                 // No-op
         }
+    }
+
+    public static boolean isPublishable(PostModel post) {
+        return !(post.getContent().isEmpty() && post.getExcerpt().isEmpty() && post.getTitle().isEmpty());
     }
 
     // TODO: Delete when PostModel migration is done

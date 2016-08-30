@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,11 +24,10 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
@@ -410,28 +408,22 @@ public class PostsListFragment extends Fragment
     public void onPostButtonClicked(int buttonType, PostModel post) {
         if (!isAdded()) return;
 
-        Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getId());
-        if (fullPost == null) {
-            ToastUtils.showToast(getActivity(), R.string.post_not_found);
-            return;
-        }
-
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
                 ActivityLauncher.editBlogPostOrPageForResult(getActivity(), mSite, post.getId(),
                         mIsPage);
                 break;
             case PostListButton.BUTTON_PUBLISH:
-                publishPost(fullPost);
+                publishPost(post);
                 break;
             case PostListButton.BUTTON_VIEW:
                 ActivityLauncher.browsePostOrPage(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_PREVIEW:
-                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, fullPost, mIsPage);
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
-                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, fullPost, mIsPage);
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mIsPage);
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
@@ -443,23 +435,24 @@ public class PostsListFragment extends Fragment
         }
     }
 
-    private void publishPost(final Post post) {
+    private void publishPost(final PostModel post) {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             ToastUtils.showToast(getActivity(), R.string.error_publish_no_network, ToastUtils.Duration.SHORT);
             return;
         }
 
         // If the post is empty, don't publish
-        if (!post.isPublishable()) {
+        if (!PostUtils.isPublishable(post)) {
             ToastUtils.showToast(getActivity(), R.string.error_publish_empty_post, ToastUtils.Duration.SHORT);
             return;
         }
 
-        post.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
-        post.setChangedFromDraftToPublished(true);
+        // TODO: The status change should happen later, since we're dropping post.setChangedFromDraftToPublished(true)
+        post.setStatus(PostStatus.toString(PostStatus.PUBLISHED));
 
-        PostUploadService.addPostToUpload(post);
-        getActivity().startService(new Intent(getActivity(), PostUploadService.class));
+        // TODO: Uploading disabled
+//        PostUploadService.addPostToUpload(post);
+//        getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
         PostUtils.trackSavePostAnalytics(post, mSite);
     }
