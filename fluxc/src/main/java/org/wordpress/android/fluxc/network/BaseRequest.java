@@ -48,7 +48,8 @@ public abstract class BaseRequest<T> extends Request<T> {
             this.volleyError = error.volleyError;
         }
 
-        public BaseNetworkError(@NonNull GenericErrorType error, @NonNull String message, @NonNull VolleyError volleyError) {
+        public BaseNetworkError(@NonNull GenericErrorType error, @NonNull String message,
+                                @NonNull VolleyError volleyError) {
             this.message = message;
             this.type = error;
             this.volleyError = volleyError;
@@ -135,7 +136,8 @@ public abstract class BaseRequest<T> extends Request<T> {
         setRetryPolicy(new DefaultRetryPolicy(DEFAULT_REQUEST_TIMEOUT, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
-    private @NonNull BaseNetworkError getBaseNetworkError(VolleyError volleyError) {
+    @NonNull
+    private BaseNetworkError getBaseNetworkError(VolleyError volleyError) {
         // No connection
         if (volleyError.getCause() instanceof NoConnectionError) {
             return new BaseNetworkError(GenericErrorType.NO_CONNECTION, volleyError);
@@ -179,6 +181,8 @@ public abstract class BaseRequest<T> extends Request<T> {
                 return new BaseNetworkError(GenericErrorType.CENSORED, volleyError.getMessage(), volleyError);
             case 500:
                 return new BaseNetworkError(GenericErrorType.SERVER_ERROR, volleyError.getMessage(), volleyError);
+            default:
+                break;
         }
 
         // Nothing found

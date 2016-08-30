@@ -22,7 +22,7 @@ public class WellSqlConfig extends DefaultWellConfig {
         super(context);
     }
 
-    private static Class[] TABLES = {
+    private static final Class[] TABLES = {
             AccountModel.class,
             SiteModel.class,
             PostFormatModel.class,
