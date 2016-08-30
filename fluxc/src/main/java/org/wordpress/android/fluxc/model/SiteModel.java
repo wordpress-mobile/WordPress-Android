@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 public class SiteModel extends Payload implements Identifiable, Serializable {
     @PrimaryKey
     @Column private int mId;
-    // Only given a value for .COM and Jetpack sites - self-hosted sites use mDotOrgSiteId
+    // Only given a value for wpcom and Jetpack sites - self-hosted sites use mSelfHostedSiteId
     @Column private long mSiteId;
     @Column private String mUrl;
     @Column private String mAdminUrl;
@@ -35,8 +35,8 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
 
 
     // Self hosted specifics
-    // The siteId for .org sites. Jetpack sites will also have a mSiteId, which is their id on .COM
-    @Column private long mDotOrgSiteId;
+    // The siteId for self hosted sites. Jetpack sites will also have a mSiteId, which is their id on wpcom
+    @Column private long mSelfHostedSiteId;
     @Column private String mUsername;
     @Column private String mPassword;
     @Column(name = "XMLRPC_URL") private String mXmlRpcUrl;
@@ -161,12 +161,12 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
         mXmlRpcUrl = xmlRpcUrl;
     }
 
-    public long getDotOrgSiteId() {
-        return mDotOrgSiteId;
+    public long getSelfHostedSiteId() {
+        return mSelfHostedSiteId;
     }
 
-    public void setDotOrgSiteId(long dotOrgSiteId) {
-        mDotOrgSiteId = dotOrgSiteId;
+    public void setSelfHostedSiteId(long selfHostedSiteId) {
+        mSelfHostedSiteId = selfHostedSiteId;
     }
 
     public boolean isAdmin() {
