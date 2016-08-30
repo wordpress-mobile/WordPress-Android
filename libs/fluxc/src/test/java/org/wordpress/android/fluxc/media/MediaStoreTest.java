@@ -27,12 +27,7 @@ import static org.wordpress.android.fluxc.media.MediaTestUtils.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class MediaStoreTest {
-    private final String TEST_TITLE = "Test Title";
-    private final String TEST_DESCRIPTION = "Test Description";
-    private final String TEST_CAPTION = "Test Caption";
-    private final String TEST_ALT = "Test Alt";
-
-    MediaStore mMediaStore = new MediaStore(new Dispatcher(),
+    private MediaStore mMediaStore = new MediaStore(new Dispatcher(),
             Mockito.mock(MediaRestClient.class), Mockito.mock(MediaXMLRPCClient.class));
 
     @Before
@@ -85,7 +80,7 @@ public class MediaStoreTest {
         assertFalse(mMediaStore.hasSiteMediaWithId(testSiteId, testMediaId));
 
         // add test media
-        MediaModel testMedia = generateMedia(TEST_TITLE, TEST_DESCRIPTION, TEST_CAPTION, TEST_ALT);
+        MediaModel testMedia = getBasicMedia();
         testMedia.setBlogId(testSiteId);
         testMedia.setMediaId(testMediaId);
         assertTrue(insertMediaIntoDatabase(testMedia) == 0);
@@ -102,7 +97,7 @@ public class MediaStoreTest {
         assertFalse(mMediaStore.hasSiteMediaWithId(testSiteId, testMediaId));
 
         // add test media
-        MediaModel testMedia = generateMedia(TEST_TITLE, TEST_DESCRIPTION, TEST_CAPTION, TEST_ALT);
+        MediaModel testMedia = getBasicMedia();
         testMedia.setBlogId(testSiteId);
         testMedia.setMediaId(testMediaId);
         assertTrue(insertMediaIntoDatabase(testMedia) == 0);
@@ -330,5 +325,9 @@ public class MediaStoreTest {
 
     @Test
     public void testHasSiteMediaToDelete() {
+    }
+
+    private MediaModel getBasicMedia() {
+        return generateMedia("Test Title", "Test Description", "Test Caption", "Test Alt");
     }
 }
