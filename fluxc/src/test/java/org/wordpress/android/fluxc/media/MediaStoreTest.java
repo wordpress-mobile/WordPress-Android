@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
+import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.utils.MediaUtils;
@@ -254,6 +255,33 @@ public class MediaStoreTest {
 
     @Test
     public void testGetLocalSiteMedia() {
+        final long testSiteId = 9;
+        final long localMediaId = 2468;
+        final long remoteMediaId = 1357;
+
+        // add local media to site
+        final MediaModel localMedia = getBasicMedia();
+        localMedia.setBlogId(testSiteId);
+        localMedia.setMediaId(localMediaId);
+        localMedia.setUploadState(MediaModel.UPLOAD_STATE.UPLOADING.toString());
+        insertMediaIntoDatabase(localMedia);
+
+        // add remote media
+        final MediaModel remoteMedia = getBasicMedia();
+        remoteMedia.setBlogId(testSiteId);
+        remoteMedia.setMediaId(remoteMediaId);
+        // remote media has a defined upload date, simulated here
+        remoteMedia.setUploadState(MediaModel.UPLOAD_STATE.UPLOADED.toString());
+        insertMediaIntoDatabase(remoteMedia);
+
+        assertEquals(2, mMediaStore.getSiteMediaCount(testSiteId));
+
+        // verify local store media
+        final List<MediaModel> storeMedia = mMediaStore.getLocalSiteMedia(testSiteId);
+        assertNotNull(storeMedia);
+        assertEquals(1, storeMedia.size());
+        assertNotNull(storeMedia.get(0));
+        assertEquals(localMediaId, storeMedia.get(0).getMediaId());
     }
 
     @Test
@@ -317,14 +345,111 @@ public class MediaStoreTest {
 
     @Test
     public void testGetPostMedia() {
+        final long testSiteId = 11235813;
+        final long testPostId = 213253;
+        final long postMediaId = 13;
+        final long unattachedMediaId = 57;
+        final long otherMediaId = 911;
+        final String testPath = "this/is/only/a/test.png";
+
+        // add post media with test path
+        final MediaModel postMedia = getBasicMedia();
+        postMedia.setBlogId(testSiteId);
+        postMedia.setPostId(testPostId);
+        postMedia.setMediaId(postMediaId);
+        postMedia.setFilePath(testPath);
+        insertMediaIntoDatabase(postMedia);
+
+        // add unattached media with test path
+        final MediaModel unattachedMedia = getBasicMedia();
+        unattachedMedia.setBlogId(testSiteId);
+        unattachedMedia.setPostId(testPostId);
+        unattachedMedia.setFilePath(testPath);
+        unattachedMedia.setMediaId(unattachedMediaId);
+        insertMediaIntoDatabase(unattachedMedia);
+
+        // add post media with different file path
+        final MediaModel otherPathMedia = getBasicMedia();
+        otherPathMedia.setBlogId(testSiteId);
+        otherPathMedia.setPostId(testPostId);
+        otherPathMedia.setMediaId(otherMediaId);
+        otherPathMedia.setFilePath("appended/" + testPath);
+        insertMediaIntoDatabase(otherPathMedia);
+
+        // verify the correct media is in the store
+        final MediaModel storeMedia = mMediaStore.getPostMediaWithPath(testPostId, testPath);
+        assertNotNull(storeMedia);
+        assertEquals(testPath, storeMedia.getFilePath());
+        assertEquals(postMediaId, storeMedia.getMediaId());
+        assertEquals(3, mMediaStore.getSiteMediaCount(testSiteId));
     }
 
     @Test
     public void testGetNextSiteMediaToDelete() {
+        final long testSiteId = 30984;
+        final int count = 10;
+
+        // add media with varying upload states
+        final List<MediaModel> pendingDelete = generateRandomizedMediaList(count, testSiteId);
+        final List<MediaModel> other = generateRandomizedMediaList(count, testSiteId);
+        for (int i = 0; i < count; ++i) {
+            pendingDelete.get(i).setUploadState(MediaModel.UPLOAD_STATE.DELETE.toString());
+            pendingDelete.get(i).setMediaId(i + (count * 2));
+            other.get(i).setUploadState(MediaModel.UPLOAD_STATE.UPLOADED.toString());
+            other.get(i).setMediaId(i + count);
+            insertMediaIntoDatabase(pendingDelete.get(i));
+            insertMediaIntoDatabase(other.get(i));
+        }
+
+        assertEquals(count * 2, mMediaStore.getSiteMediaCount(testSiteId));
+
+        // verify store media updates as media is deleted
+        for (int i = 0; i < count; ++i) {
+            MediaModel next = mMediaStore.getNextSiteMediaToDelete(testSiteId);
+            assertNotNull(next);
+            assertEquals(MediaModel.UPLOAD_STATE.DELETE.toString(), next.getUploadState());
+            assertTrue(pendingDelete.contains(next));
+            MediaSqlUtils.deleteMedia(next);
+            assertEquals(count * 2 - i - 1, mMediaStore.getSiteMediaCount(testSiteId));
+            pendingDelete.remove(next);
+        }
     }
 
     @Test
     public void testHasSiteMediaToDelete() {
+        final long testSiteId = 30984;
+        final int count = 10;
+
+        // add media with varying upload states
+        final List<MediaModel> pendingDelete = generateRandomizedMediaList(count, testSiteId);
+        final List<MediaModel> other = generateRandomizedMediaList(count, testSiteId);
+        for (int i = 0; i < count; ++i) {
+            pendingDelete.get(i).setUploadState(MediaModel.UPLOAD_STATE.DELETE.toString());
+            pendingDelete.get(i).setMediaId(i + (count * 2));
+            other.get(i).setUploadState(MediaModel.UPLOAD_STATE.DELETED.toString());
+            other.get(i).setMediaId(i + count);
+            insertMediaIntoDatabase(pendingDelete.get(i));
+            insertMediaIntoDatabase(other.get(i));
+        }
+
+        assertEquals(count * 2, mMediaStore.getSiteMediaCount(testSiteId));
+
+        // verify store still has media to delete after deleting one
+        assertTrue(mMediaStore.hasSiteMediaToDelete(testSiteId));
+        MediaModel next = mMediaStore.getNextSiteMediaToDelete(testSiteId);
+        assertNotNull(next);
+        assertTrue(pendingDelete.contains(next));
+        MediaSqlUtils.deleteMedia(next);
+        pendingDelete.remove(next);
+        assertEquals(count * 2 - 1, mMediaStore.getSiteMediaCount(testSiteId));
+        assertTrue(mMediaStore.hasSiteMediaToDelete(testSiteId));
+
+        // verify store has no media to delete after removing all
+        for (MediaModel pending : pendingDelete) {
+            MediaSqlUtils.deleteMedia(pending);
+        }
+        assertEquals(count, mMediaStore.getSiteMediaCount(testSiteId));
+        assertFalse(mMediaStore.hasSiteMediaToDelete(testSiteId));
     }
 
     private MediaModel getBasicMedia() {
