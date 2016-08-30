@@ -229,7 +229,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
     }
 
     public List<MediaModel> getLocalSiteMedia(long siteId) {
-        return MediaSqlUtils.matchSiteMedia(siteId, MediaModelTable.UPLOAD_DATE, null);
+        return MediaSqlUtils.getSiteMediaExcluding(siteId, MediaModelTable.UPLOAD_STATE, MediaModel.UPLOAD_STATE.UPLOADED);
     }
 
     public String getUrlForSiteVideoWithVideoPressGuid(long siteId, String videoPressGuid) {
