@@ -132,7 +132,7 @@ public class SitePickerActivity extends AppCompatActivity
             mMenuAdd.setVisible(false);
         } else {
             // don't allow editing visibility unless there are multiple wp.com blogs
-            mMenuEdit.setVisible(mSiteStore.getDotComSitesCount() > 1);
+            mMenuEdit.setVisible(mSiteStore.getWPComSitesCount() > 1);
             mMenuAdd.setVisible(true);
         }
 
@@ -247,7 +247,7 @@ public class SitePickerActivity extends AppCompatActivity
     private void saveHiddenSites() {
         // TODO: STORES: This is super inefficient
         // Mark all sites visible
-        List<SiteModel> sites = mSiteStore.getDotComSites();
+        List<SiteModel> sites = mSiteStore.getWPComSites();
         for (SiteModel site : sites) {
             site.setIsVisible(true);
             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));

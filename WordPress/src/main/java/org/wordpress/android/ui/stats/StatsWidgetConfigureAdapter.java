@@ -215,17 +215,17 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
                     return mSiteStore.getSites();
                 } else {
                     // only wp.com sites
-                    return mSiteStore.getDotComSites();
+                    return mSiteStore.getWPComSites();
                 }
             } else {
                 if (mShowSelfHostedSites) {
                     // all self-hosted sites plus visible wp.com sites
-                    List<SiteModel> out = mSiteStore.getVisibleDotComSites();
-                    out.addAll(mSiteStore.getDotOrgSites());
+                    List<SiteModel> out = mSiteStore.getVisibleWPComSites();
+                    out.addAll(mSiteStore.getSelfHostedSites());
                     return out;
                 } else {
                     // only visible wp.com blogs
-                    return mSiteStore.getVisibleDotComSites();
+                    return mSiteStore.getVisibleWPComSites();
                 }
             }
         }
