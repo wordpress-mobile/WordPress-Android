@@ -7,13 +7,14 @@ import android.webkit.URLUtil;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
-import com.android.volley.toolbox.RequestFuture;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
+import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
+import org.wordpress.android.fluxc.network.BaseRequestFuture;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
-import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
+import org.wordpress.android.fluxc.store.Store.OnChangedError;
 import org.wordpress.android.fluxc.utils.WPUrlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -42,14 +43,15 @@ public class SelfHostedEndpointFinder {
     private final Dispatcher mDispatcher;
     private final BaseXMLRPCClient mClient;
 
-    public enum DiscoveryError {
+    public enum DiscoveryError implements OnChangedError {
         SITE_URL_CANNOT_BE_EMPTY,
         INVALID_URL,
         MISSING_XMLRPC_METHOD,
         ERRONEOUS_SSL_CERTIFICATE,
         HTTP_AUTH_REQUIRED,
         NO_SITE_ERROR,
-        WORDPRESS_COM_SITE
+        WORDPRESS_COM_SITE,
+        GENERIC_ERROR
     }
 
     static class DiscoveryException extends Exception {
@@ -62,11 +64,10 @@ public class SelfHostedEndpointFinder {
         }
     }
 
-    public static class DiscoveryResultPayload implements Payload {
+    public static class DiscoveryResultPayload extends Payload {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
-        public boolean isError;
-        public DiscoveryError error;
+        public DiscoveryError discoveryError;
         public String failedEndpoint;
 
         public DiscoveryResultPayload(String xmlRpcEndpoint, String wpRestEndpoint) {
@@ -74,10 +75,13 @@ public class SelfHostedEndpointFinder {
             this.wpRestEndpoint = wpRestEndpoint;
         }
 
-        public DiscoveryResultPayload(DiscoveryError error, String failedEndpoint) {
-            this.isError = true;
-            this.error = error;
+        public DiscoveryResultPayload(DiscoveryError discoveryError, String failedEndpoint) {
+            this.discoveryError = discoveryError;
             this.failedEndpoint = failedEndpoint;
+        }
+
+        public boolean isDiscoveryError() {
+            return discoveryError != null;
         }
     }
 
@@ -364,7 +368,7 @@ public class SelfHostedEndpointFinder {
      * Obtain the HTML response from a GET request for the given URL.
      */
     private String getResponse(String url) throws DiscoveryException {
-        RequestFuture<String> future = RequestFuture.newFuture();
+        BaseRequestFuture<String> future = BaseRequestFuture.newFuture();
         DiscoveryRequest request = new DiscoveryRequest(url, future, future);
         mClient.add(request);
         try {
@@ -456,7 +460,7 @@ public class SelfHostedEndpointFinder {
         params.add(httpUsername);
         params.add(httpPassword);
 
-        RequestFuture<Object[]> future = RequestFuture.newFuture();
+        BaseRequestFuture<Object[]> future = BaseRequestFuture.newFuture();
         DiscoveryXMLRPCRequest request = new DiscoveryXMLRPCRequest(url, XMLRPC.LIST_METHODS, params, future, future);
         mClient.add(request);
         try {

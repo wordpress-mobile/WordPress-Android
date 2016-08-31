@@ -12,7 +12,16 @@ public abstract class Store {
         mDispatcher = dispatcher;
         mDispatcher.register(this);
     }
-    public class OnChanged {}
+
+    public interface OnChangedError {}
+
+    public class OnChanged<T extends OnChangedError> {
+        public T error = null;
+
+        public boolean isError() {
+            return error != null;
+        }
+    }
 
     /**
      * onAction should {@link Subscribe} with ASYNC {@link ThreadMode}.

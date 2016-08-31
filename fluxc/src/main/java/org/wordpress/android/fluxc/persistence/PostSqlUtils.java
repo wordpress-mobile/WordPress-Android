@@ -15,12 +15,23 @@ public class PostSqlUtils {
             return 0;
         }
 
-        List<PostModel> postResult = WellSql.select(PostModel.class)
-                .where().beginGroup()
-                .equals(PostModelTable.REMOTE_POST_ID, post.getRemotePostId())
-                .equals(PostModelTable.LOCAL_SITE_ID, post.getLocalSiteId())
-                .equals(PostModelTable.IS_PAGE, post.isPage())
-                .endGroup().endWhere().getAsModel();
+        List<PostModel> postResult;
+        if (post.isLocalDraft()) {
+            postResult = WellSql.select(PostModel.class)
+                    .where()
+                    .equals(PostModelTable.ID, post.getId())
+                    .endWhere().getAsModel();
+        } else {
+            postResult = WellSql.select(PostModel.class)
+                    .where().beginGroup()
+                    .equals(PostModelTable.ID, post.getId())
+                    .or()
+                    .beginGroup()
+                    .equals(PostModelTable.REMOTE_POST_ID, post.getRemotePostId())
+                    .equals(PostModelTable.LOCAL_SITE_ID, post.getLocalSiteId())
+                    .endGroup()
+                    .endGroup().endWhere().getAsModel();
+        }
 
         if (postResult.isEmpty()) {
             // insert

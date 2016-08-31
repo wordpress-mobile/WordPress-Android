@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
@@ -11,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
@@ -20,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Table
-public class PostModel implements Identifiable, Payload {
+public class PostModel extends Payload implements Identifiable {
     private static long FEATURED_IMAGE_INIT_VALUE = -2;
 
     @PrimaryKey
@@ -444,15 +446,6 @@ public class PostModel implements Identifiable, Payload {
         if (ids == null || ids.isEmpty()) {
             return "";
         }
-        StringBuilder strbul  = new StringBuilder();
-        Iterator<Long> iter = ids.iterator();
-        while(iter.hasNext())
-        {
-            strbul.append(iter.next());
-            if(iter.hasNext()){
-                strbul.append(",");
-            }
-        }
-       return strbul.toString();
+        return TextUtils.join(",", ids);
     }
 }

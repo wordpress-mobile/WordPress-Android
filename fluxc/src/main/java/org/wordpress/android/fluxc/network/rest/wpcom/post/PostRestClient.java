@@ -1,25 +1,31 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.post;
 
-import com.android.volley.Request;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+
+import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.Response.Listener;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
-import org.wordpress.android.fluxc.utils.NetworkUtils;
-import org.wordpress.android.util.AppLog;
+import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,8 +43,39 @@ public class PostRestClient extends BaseWPComRestClient {
         super(dispatcher, requestQueue, accessToken, userAgent);
     }
 
+    public void fetchPost(final PostModel post, final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
+
+        final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
+                url, null, PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        PostModel fetchedPost = postResponseToPostModel(response);
+                        fetchedPost.setId(post.getId());
+                        fetchedPost.setLocalSiteId(site.getId());
+
+                        RemotePostPayload payload = new RemotePostPayload();
+                        payload.post = fetchedPost;
+
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
     public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
-        String url = WPCOMREST.POSTS.getUrlV1WithSiteId(site.getSiteId());
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
 
@@ -49,36 +86,112 @@ public class PostRestClient extends BaseWPComRestClient {
         if (offset > 0) {
             params.put("offset", String.valueOf(offset));
         }
-        // TODO: Drop this when we add support for GET params to GsonRequest
-        url = NetworkUtils.addParamsToUrl(url, params);
 
-        final WPComGsonRequest<PostsResponse> request = new WPComGsonRequest<>(Request.Method.GET,
-                url, null, PostsResponse.class,
-                new Response.Listener<PostsResponse>() {
+        final WPComGsonRequest<PostsResponse> request = new WPComGsonRequest<>(Method.GET,
+                url, params, PostsResponse.class,
+                new Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
-                        PostsModel posts = new PostsModel();
+                        List<PostModel> postArray = new ArrayList<>();
+                        PostModel post;
                         for (PostWPComRestResponse postResponse : response.posts) {
-                            PostModel post = postResponseToPostModel(postResponse);
+                            post = postResponseToPostModel(postResponse);
                             post.setLocalSiteId(site.getId());
-                            posts.add(post);
+                            postArray.add(post);
                         }
 
-                        boolean canLoadMore = posts.size() == PostStore.NUM_POSTS_PER_FETCH;
+                        boolean canLoadMore = postArray.size() == PostStore.NUM_POSTS_PER_FETCH;
 
-                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(posts, site, getPages,
-                                offset > 0, canLoadMore);
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(new PostsModel(postArray),
+                                site, getPages, offset > 0, canLoadMore);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 },
-                new Response.ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.API, "Volley error", error);
-                        // TODO: Error, dispatch network error
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // Possible non-generic errors: 404 unknown_post_type (invalid post type, shouldn't happen)
+                        PostError postError = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 }
         );
+        add(request);
+    }
+
+    public void pushPost(final PostModel post, final SiteModel site) {
+        final String url;
+
+        if (post.isLocalDraft()) {
+            url = WPCOMREST.sites.site(site.getSiteId()).posts.new_.getUrlV1_1();
+        } else {
+            url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
+        }
+
+        Map<String, String> params = postModelToParams(post);
+
+        final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
+                url, params, PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        PostModel uploadedPost = postResponseToPostModel(response);
+
+                        uploadedPost.setIsLocalDraft(false);
+                        uploadedPost.setIsLocallyChanged(false);
+                        uploadedPost.setId(post.getId());
+                        uploadedPost.setLocalSiteId(site.getId());
+
+                        RemotePostPayload payload = new RemotePostPayload(uploadedPost, site);
+                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        // Note: Unlike XML-RPC, if an invalid term (category or tag) ID is specified, the server just
+                        // ignores it and creates/updates the post normally
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
+                    }
+                }
+        );
+
+        request.disableRetries();
+        add(request);
+    }
+
+    public void deletePost(final PostModel post, final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).delete.getUrlV1_1();
+
+        final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
+                url, null, PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        PostModel deletedPost = postResponseToPostModel(response);
+                        deletedPost.setId(post.getId());
+                        deletedPost.setLocalSiteId(post.getLocalSiteId());
+
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
+                    }
+                }
+        );
+
+        request.disableRetries();
         add(request);
     }
 
@@ -133,5 +246,43 @@ public class PostRestClient extends BaseWPComRestClient {
         }
 
         return post;
+    }
+
+    private Map<String, String> postModelToParams(PostModel post) {
+        Map<String, String> params = new HashMap<>();
+
+        params.put("status", StringUtils.notNullStr(post.getStatus()));
+        params.put("title", StringUtils.notNullStr(post.getTitle()));
+        params.put("content", StringUtils.notNullStr(post.getContent()));
+        params.put("excerpt", StringUtils.notNullStr(post.getExcerpt()));
+
+        if (post.isLocalDraft() && !TextUtils.isEmpty(post.getDateCreated())) {
+            params.put("date", post.getDateCreated());
+        }
+
+        if (!post.isPage()) {
+            if (!TextUtils.isEmpty(post.getPostFormat())) {
+                params.put("format", post.getPostFormat());
+            }
+        } else {
+            params.put("type", "page");
+        }
+
+        params.put("password", StringUtils.notNullStr(post.getPassword()));
+
+        params.put("categories", TextUtils.join(",", post.getCategoryIdList()));
+        params.put("tags", TextUtils.join(",", post.getTagIdList()));
+
+        // Will remove any existing featured image if the empty string is sent
+        if (post.featuredImageHasChanged()) {
+            if (post.getFeaturedImageId() < 1 && !post.isLocalDraft()) {
+                // The featured image was removed from a live post
+                params.put("post_thumbnail", "");
+            } else {
+                params.put("post_thumbnail", String.valueOf(post.getFeaturedImageId()));
+            }
+        }
+
+        return params;
     }
 }

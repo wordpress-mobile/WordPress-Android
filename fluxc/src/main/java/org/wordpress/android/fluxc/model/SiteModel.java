@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
+import android.support.annotation.NonNull;
+
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -7,12 +9,16 @@ import com.yarolegovich.wellsql.core.annotation.RawConstraints;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.Serializable;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
-public class SiteModel implements Identifiable, Payload, Serializable {
+public class SiteModel extends Payload implements Identifiable, Serializable {
 
     @PrimaryKey
     @Column private int mId;
@@ -40,6 +46,7 @@ public class SiteModel implements Identifiable, Payload, Serializable {
     // WPCom specifics
     @Column private boolean mIsJetpack;
     @Column private boolean mIsVisible;
+    @Column private boolean mIsPrivate;
     @Column private boolean mIsVideoPressSupported;
     @Column private long mPlanId;
     @Column private String mPlanShortName;
@@ -89,8 +96,14 @@ public class SiteModel implements Identifiable, Payload, Serializable {
         return mUrl;
     }
 
-    public void setUrl(String url) {
-        mUrl = url;
+    public void setUrl(@NonNull String url) {
+        try {
+            // Normalize the URL, because it can be used as an identifier.
+            mUrl = (new URI(url)).normalize().toString();
+        } catch (URISyntaxException e) {
+            // Don't set the URL
+            AppLog.e(T.API, "Trying to set an invalid url: " + url);
+        }
     }
 
     public String getLoginUrl() {
@@ -179,6 +192,14 @@ public class SiteModel implements Identifiable, Payload, Serializable {
 
     public void setIsVisible(boolean visible) {
         mIsVisible = visible;
+    }
+
+    public boolean isPrivate() {
+        return mIsPrivate;
+    }
+
+    public void setIsPrivate(boolean isPrivate) {
+        mIsPrivate = isPrivate;
     }
 
     public boolean isFeaturedImageSupported() {

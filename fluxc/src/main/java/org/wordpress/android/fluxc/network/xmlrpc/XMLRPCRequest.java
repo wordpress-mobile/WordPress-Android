@@ -1,19 +1,19 @@
 package org.wordpress.android.fluxc.network.xmlrpc;
 
+import android.support.annotation.NonNull;
 import android.util.Xml;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
-import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
+import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.network.BaseRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlpull.v1.XmlPullParserException;
@@ -27,8 +27,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import javax.net.ssl.SSLHandshakeException;
-
 // TODO: Would be great to use generics / return POJO or model direclty (see GSON code?)
 public class XMLRPCRequest extends BaseRequest<Object> {
     private static final String PROTOCOL_CHARSET = "utf-8";
@@ -40,7 +38,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     private final XmlSerializer mSerializer = Xml.newSerializer();
 
     public XMLRPCRequest(String url, XMLRPC method, List<Object> params, Listener listener,
-                         ErrorListener errorListener) {
+                         BaseErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         mListener = listener;
         mMethod = method;
@@ -58,9 +56,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
         try {
             String data = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
-            // TODO: Clean up response here (WordPress can output junk before the xml response (php warnings for
-            // example)
-            Object obj = XMLSerializerUtils.deserialize(is);
+            Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             return Response.success(obj, HttpHeaderParser.parseCacheHeaders(response));
         } catch (XMLRPCFault e) {
             return Response.error(new ParseError(e));
@@ -97,28 +93,38 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     }
 
     @Override
-    public void deliverError(VolleyError error) {
-        super.deliverError(error);
-        // XMLRPC Error
-        AuthenticateErrorPayload payload = new AuthenticateErrorPayload();
-        if (error.getCause() instanceof XMLRPCFault) {
-            XMLRPCFault xmlrpcFault = (XMLRPCFault) error.getCause();
+    public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
+        AuthenticateErrorPayload payload = new AuthenticateErrorPayload(AuthenticationErrorType.GENERIC_ERROR);
+        // XMLRPC errors are not managed in the layer below (BaseRequest), so check them here:
+        if (error.hasVolleyError() && error.volleyError.getCause() instanceof XMLRPCFault) {
+            XMLRPCFault xmlrpcFault = (XMLRPCFault) error.volleyError.getCause();
             if (xmlrpcFault.getFaultCode() == 401) {
-                // Unauthorized
-                payload.errorType = AuthenticationError.AUTHORIZATION_REQUIRED;
+                error.type = GenericErrorType.AUTHORIZATION_REQUIRED; // Augmented error
+                payload.error.type = AuthenticationErrorType.AUTHORIZATION_REQUIRED;
             } else if (xmlrpcFault.getFaultCode() == 403) {
-                // Not authenticated
-                payload.errorType = AuthenticationError.NOT_AUTHENTICATED;
+                error.type = GenericErrorType.NOT_AUTHENTICATED; // Augmented error
+                payload.error.type = AuthenticationErrorType.NOT_AUTHENTICATED;
+            } else if (xmlrpcFault.getFaultCode() == 404) {
+                error.type = GenericErrorType.NOT_FOUND; // Augmented error
             }
+            error.message = xmlrpcFault.getMessage();
         }
-        // Invalid SSL Handshake
-        if (error.getCause() instanceof SSLHandshakeException) {
-            payload.errorType = AuthenticationError.INVALID_SSL_CERTIFICATE;
+
+        // TODO: mOnAuthFailedListener should not be called here and the class/callback should de renamed to something
+        // like "onLowNetworkLevelError"
+        switch (error.type) {
+            case HTTP_AUTH_ERROR:
+                payload.error.type = AuthenticationErrorType.HTTP_AUTH_ERROR;
+                break;
+            case INVALID_SSL_CERTIFICATE:
+                payload.error.type = AuthenticationErrorType.INVALID_SSL_CERTIFICATE;
+                break;
         }
-        // Invalid HTTP Auth
-        if (error instanceof AuthFailureError) {
-            payload.errorType = AuthenticationError.HTTP_AUTH_ERROR;
+
+        if (payload.error.type != AuthenticationErrorType.GENERIC_ERROR) {
+            mOnAuthFailedListener.onAuthFailed(payload);
         }
-        mOnAuthFailedListener.onAuthFailed(payload);
+
+        return error;
     }
 }

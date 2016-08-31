@@ -41,7 +41,7 @@ public class AccountStoreTest {
     @Test
     public void testLoadAccount() {
         AccountModel testAccount = new AccountModel();
-        testAccount.setPrimaryBlogId(100);
+        testAccount.setPrimarySiteId(100);
         testAccount.setAboutMe("testAboutMe");
         AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),

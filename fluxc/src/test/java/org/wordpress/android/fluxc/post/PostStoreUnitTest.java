@@ -41,62 +41,62 @@ public class PostStoreUnitTest {
     public void testInsertNullPost() {
         assertEquals(0, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(null));
 
-        assertEquals(0, mPostStore.getPostsCount());
+        assertEquals(0, PostTestUtils.getPostsCount());
     }
 
     @Test
     public void testSimpleInsertionAndRetrieval() {
         PostModel postModel = new PostModel();
         postModel.setRemotePostId(42);
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
+        PostModel result = PostSqlUtils.insertPostForResult(postModel);
 
-        assertEquals(1, mPostStore.getPostsCount());
-
-        assertEquals(42, mPostStore.getPosts().get(0).getRemotePostId());
+        assertEquals(1, PostTestUtils.getPostsCount());
+        assertEquals(42, PostTestUtils.getPosts().get(0).getRemotePostId());
+        assertEquals(postModel, result);
     }
 
     @Test
     public void testInsertWithLocalChanges() {
         PostModel postModel = PostTestUtils.generateSampleUploadedPost();
         postModel.setIsLocallyChanged(true);
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
+        PostSqlUtils.insertPostForResult(postModel);
 
         String newTitle = "A different title";
         postModel.setTitle(newTitle);
 
         assertEquals(0, PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(postModel));
-        assertEquals("A test post", mPostStore.getPosts().get(0).getTitle());
+        assertEquals("A test post", PostTestUtils.getPosts().get(0).getTitle());
 
         assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel));
-        assertEquals(newTitle, mPostStore.getPosts().get(0).getTitle());
+        assertEquals(newTitle, PostTestUtils.getPosts().get(0).getTitle());
     }
 
     @Test
     public void testInsertWithoutLocalChanges() {
         PostModel postModel = PostTestUtils.generateSampleUploadedPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
+        PostSqlUtils.insertPostForResult(postModel);
 
         String newTitle = "A different title";
         postModel.setTitle(newTitle);
 
         assertEquals(1, PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(postModel));
-        assertEquals(newTitle, mPostStore.getPosts().get(0).getTitle());
+        assertEquals(newTitle, PostTestUtils.getPosts().get(0).getTitle());
 
         newTitle = "Another different title";
         postModel.setTitle(newTitle);
 
         assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel));
-        assertEquals(newTitle, mPostStore.getPosts().get(0).getTitle());
+        assertEquals(newTitle, PostTestUtils.getPosts().get(0).getTitle());
     }
 
     @Test
     public void testGetPostsForSite() {
         PostModel uploadedPost1 = PostTestUtils.generateSampleUploadedPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost1);
+        PostSqlUtils.insertPostForResult(uploadedPost1);
 
         PostModel uploadedPost2 = PostTestUtils.generateSampleUploadedPost();
         uploadedPost2.setLocalSiteId(8);
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
+        PostSqlUtils.insertPostForResult(uploadedPost2);
 
         SiteModel site1 = new SiteModel();
         site1.setId(uploadedPost1.getLocalSiteId());
@@ -104,7 +104,7 @@ public class PostStoreUnitTest {
         SiteModel site2 = new SiteModel();
         site2.setId(uploadedPost2.getLocalSiteId());
 
-        assertEquals(2, mPostStore.getPostsCount());
+        assertEquals(2, PostTestUtils.getPostsCount());
 
         assertEquals(1, mPostStore.getPostsCountForSite(site1));
         assertEquals(1, mPostStore.getPostsCountForSite(site2));
@@ -116,12 +116,12 @@ public class PostStoreUnitTest {
         site.setId(6);
 
         PostModel uploadedPost = PostTestUtils.generateSampleUploadedPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost);
+        PostSqlUtils.insertPostForResult(uploadedPost);
 
         PostModel localDraft = PostTestUtils.generateSampleLocalDraftPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(localDraft);
+        PostSqlUtils.insertPostForResult(localDraft);
 
-        assertEquals(2, mPostStore.getPostsCount());
+        assertEquals(2, PostTestUtils.getPostsCount());
         assertEquals(2, mPostStore.getPostsCountForSite(site));
 
         assertEquals(1, mPostStore.getUploadedPostsCountForSite(site));
@@ -130,7 +130,7 @@ public class PostStoreUnitTest {
     @Test
     public void testGetPostByLocalId() {
         PostModel post = PostTestUtils.generateSampleLocalDraftPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
+        PostSqlUtils.insertPostForResult(post);
 
         assertEquals(post, mPostStore.getPostByLocalPostId(post.getId()));
     }
@@ -141,18 +141,17 @@ public class PostStoreUnitTest {
         site.setId(6);
 
         PostModel uploadedPost1 = PostTestUtils.generateSampleUploadedPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost1);
+        PostSqlUtils.insertPostForResult(uploadedPost1);
 
         PostModel uploadedPost2 = PostTestUtils.generateSampleUploadedPost();
-        uploadedPost2.setId(4);
         uploadedPost2.setRemotePostId(9);
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
+        PostSqlUtils.insertPostForResult(uploadedPost2);
 
         PostModel localDraft = PostTestUtils.generateSampleLocalDraftPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(localDraft);
+        PostSqlUtils.insertPostForResult(localDraft);
 
         PostModel locallyChangedPost = PostTestUtils.generateSampleLocallyChangedPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(locallyChangedPost);
+        PostSqlUtils.insertPostForResult(locallyChangedPost);
 
         assertEquals(4, mPostStore.getPostsCountForSite(site));
 
@@ -167,18 +166,17 @@ public class PostStoreUnitTest {
         site.setId(6);
 
         PostModel uploadedPost1 = PostTestUtils.generateSampleUploadedPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost1);
+        PostSqlUtils.insertPostForResult(uploadedPost1);
 
         PostModel uploadedPost2 = PostTestUtils.generateSampleUploadedPost();
-        uploadedPost2.setId(4);
         uploadedPost2.setRemotePostId(9);
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
+        PostSqlUtils.insertPostForResult(uploadedPost2);
 
         PostModel localDraft = PostTestUtils.generateSampleLocalDraftPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(localDraft);
+        PostSqlUtils.insertPostForResult(localDraft);
 
         PostModel locallyChangedPost = PostTestUtils.generateSampleLocallyChangedPost();
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(locallyChangedPost);
+        PostSqlUtils.insertPostForResult(locallyChangedPost);
 
         assertEquals(4, mPostStore.getPostsCountForSite(site));
 
@@ -197,7 +195,7 @@ public class PostStoreUnitTest {
 
         assertEquals(null, mPostStore.getPostByLocalPostId(locallyChangedPost.getId()));
         assertEquals(0, mPostStore.getPostsCountForSite(site));
-        assertEquals(0, mPostStore.getPostsCount());
+        assertEquals(0, PostTestUtils.getPostsCount());
     }
 
     @Test
@@ -208,20 +206,23 @@ public class PostStoreUnitTest {
         PostModel post = new PostModel();
         post.setLocalSiteId(6);
         post.setRemotePostId(42);
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
+        PostSqlUtils.insertPostForResult(post);
 
         PostModel page = new PostModel();
         page.setIsPage(true);
         page.setLocalSiteId(6);
         page.setRemotePostId(43);
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(page);
+        PostSqlUtils.insertPostForResult(page);
 
-        assertEquals(2, mPostStore.getPostsCount());
+        assertEquals(2, PostTestUtils.getPostsCount());
 
         assertEquals(1, mPostStore.getPostsCountForSite(site));
         assertEquals(1, mPostStore.getPagesCountForSite(site));
 
-        assertEquals(false, mPostStore.getPosts().get(0).isPage());
-        assertEquals(true, mPostStore.getPosts().get(1).isPage());
+        assertEquals(false, PostTestUtils.getPosts().get(0).isPage());
+        assertEquals(true, PostTestUtils.getPosts().get(1).isPage());
+
+        assertEquals(1, mPostStore.getUploadedPostsCountForSite(site));
+        assertEquals(1, mPostStore.getUploadedPagesCountForSite(site));
     }
 }
