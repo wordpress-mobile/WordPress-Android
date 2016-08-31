@@ -807,7 +807,7 @@ public class WordPress extends MultiDexApplication {
     private String getAccessTokenFromTable(String tableName) {
         String token = null;
         try {
-            SQLiteDatabase db = SQLiteDatabase.openDatabase(DEPRECATED_DATABASE_NAME, null, SQLiteDatabase.OPEN_READONLY);
+            SQLiteDatabase db = getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
             Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN + " FROM " + tableName + " WHERE local_id=0", null);
             if (c.moveToFirst() && c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN) != -1) {
                 token = c.getString(c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN));
