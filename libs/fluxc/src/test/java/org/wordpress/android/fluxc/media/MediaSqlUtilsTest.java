@@ -191,7 +191,7 @@ public class MediaSqlUtilsTest {
         long testPostId = 10;
         long testAuthorId = 100;
         String testGuid = "testGuid";
-        long testBlogId = 1000;
+        long testSiteId = 1000;
         String testUploadDate = "testUploadDate";
         String testTitle = "testTitle";
         String testDescription = "testDescription";
@@ -235,7 +235,7 @@ public class MediaSqlUtilsTest {
         testModel.setVideoPressGuid(testVideoPressGuid);
         testModel.setVideoPressProcessingDone(testVideoPressProcessing);
         testModel.setUploadState(testUploadState);
-        testModel.setBlogId(testBlogId);
+        testModel.setSiteId(testSiteId);
         testModel.setHorizontalAlignment(testHorizontalAlign);
         testModel.setVerticalAlignment(testVerticalAlign);
         testModel.setFeatured(testFeatured);
@@ -266,7 +266,7 @@ public class MediaSqlUtilsTest {
         testModel.setFeatured(!testFeatured);
         testModel.setFeaturedInPost(!testFeaturedInPost);
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testModel));
-        List<MediaModel> media = MediaSqlUtils.getAllSiteMedia(testBlogId);
+        List<MediaModel> media = MediaSqlUtils.getAllSiteMedia(testSiteId);
         Assert.assertEquals(1, media.size());
         MediaModel testMedia = media.get(0);
         Assert.assertEquals(testId, testMedia.getMediaId());
@@ -333,7 +333,7 @@ public class MediaSqlUtilsTest {
     private MediaModel getTestMedia(long mediaId) {
         MediaModel media = new MediaModel();
         media.setId(1);
-        media.setBlogId(TEST_SITE_ID);
+        media.setSiteId(TEST_SITE_ID);
         media.setMediaId(mediaId);
         return media;
     }
@@ -341,7 +341,7 @@ public class MediaSqlUtilsTest {
     private MediaModel getTestMedia(long mediaId, String title, String description, String caption) {
         MediaModel media = new MediaModel();
         media.setId(1);
-        media.setBlogId(TEST_SITE_ID);
+        media.setSiteId(TEST_SITE_ID);
         media.setMediaId(mediaId);
         media.setTitle(title);
         media.setDescription(description);

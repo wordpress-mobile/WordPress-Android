@@ -1,11 +1,14 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
+import android.support.annotation.NonNull;
 
+import com.wellsql.generated.PostFormatModelTable;
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
 
+import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.List;
@@ -21,6 +24,23 @@ public class SiteSqlUtils {
         return WellSql.select(SiteModel.class)
                 .where().equals(field, value).endWhere()
                 .getAsModel();
+    }
+
+    public static List<SiteModel> getAllSitesMatchingUrlOrNameWith(String field, boolean value, String searchString) {
+        // Note: by default SQLite "LIKE" operator is case insensitive, and that's what we're looking for.
+        return WellSql.select(SiteModel.class).where()
+                .equals(field, value)
+                .beginGroup() // AND ( x OR x )
+                .contains(SiteModelTable.URL, searchString)
+                .or().contains(SiteModelTable.NAME, searchString)
+                .endGroup().endWhere().getAsModel();
+    }
+
+    public static List<SiteModel> getAllSitesMatchingUrlOrName(String searchString) {
+        return WellSql.select(SiteModel.class).where()
+                .contains(SiteModelTable.URL, searchString)
+                .or().contains(SiteModelTable.NAME, searchString)
+                .endWhere().getAsModel();
     }
 
     public static int getNumberOfSitesWith(String field, Object value) {
@@ -39,19 +59,29 @@ public class SiteSqlUtils {
         if (site == null) {
             return 0;
         }
-        // TODO: Check if the URL is not enough, we could get surprise with the site id with .org sites becoming
-        // jetpack sites
+
+        // If the site already exist and has an id, we want to update it.
         List<SiteModel> siteResult = WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.SITE_ID, site.getSiteId())
-                .equals(SiteModelTable.URL, site.getUrl())
+                .equals(SiteModelTable.ID, site.getId())
                 .endGroup().endWhere().getAsModel();
+
+        // Looks like a new site, make sure we don't already have it.
         if (siteResult.isEmpty()) {
-            // insert
+            // TODO: Make the URL enough, we could get surprise with the site id with .org sites becoming jetpack sites
+            siteResult = WellSql.select(SiteModel.class)
+                    .where().beginGroup()
+                    .equals(SiteModelTable.SITE_ID, site.getSiteId())
+                    .equals(SiteModelTable.URL, site.getUrl())
+                    .endGroup().endWhere().getAsModel();
+        }
+
+        if (siteResult.isEmpty()) {
+            // No site with this local ID, or REMOTE_ID + URL, then insert it
             WellSql.insert(site).asSingleTransaction(true).execute();
             return 0;
         } else {
-            // update
+            // Update old site
             int oldId = siteResult.get(0).getId();
             return WellSql.update(SiteModel.class).whereId(oldId)
                     .put(site, new UpdateAllExceptId<SiteModel>()).execute();
@@ -95,5 +125,25 @@ public class SiteSqlUtils {
                 .endGroup()
                 .endGroup().endWhere()
                 .getAsModel();
+    }
+
+    public static List<PostFormatModel> getPostFormats(@NonNull SiteModel site) {
+        return WellSql.select(PostFormatModel.class)
+                .where()
+                .equals(PostFormatModelTable.SITE_ID, site.getId())
+                .endWhere().getAsModel();
+    }
+
+    public static void insertOrReplacePostFormats(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
+        // Remove previous post formats for this site
+        WellSql.delete(PostFormatModel.class)
+                .where()
+                .equals(PostFormatModelTable.SITE_ID, site.getId())
+                .endWhere().execute();
+        // Insert new post formats for this site
+        for (PostFormatModel postFormat : postFormats) {
+            postFormat.setSiteId(site.getId());
+        }
+        WellSql.insert(postFormats).execute();
     }
 }

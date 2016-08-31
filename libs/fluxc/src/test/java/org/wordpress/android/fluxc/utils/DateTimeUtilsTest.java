@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc;
+package org.wordpress.android.fluxc.utils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +15,7 @@ public class DateTimeUtilsTest {
     @Test
     public void test8601DateStringToDateObject() {
         String iso8601date = "1955-11-05T06:15:00-0800";
-        String iso8601dateUTC = "1955-11-05T14:15:00Z";
+        String iso8601dateUTC = "1955-11-05T14:15:00+00:00";
 
         // A UTC ISO 8601 date converted to Date and back should be unaltered
         Date result = DateTimeUtils.dateFromIso8601(iso8601dateUTC);

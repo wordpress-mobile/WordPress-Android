@@ -1,7 +1,8 @@
-package org.wordpress.android.fluxc;
+package org.wordpress.android.fluxc.site;
 
 import android.content.Context;
 
+import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.junit.Before;
@@ -10,11 +11,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.model.PostFormatModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.util.List;
@@ -25,6 +28,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.wordpress.android.fluxc.utils.SiteUtils.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteStoreUnitTest {
@@ -35,7 +39,7 @@ public class SiteStoreUnitTest {
     public void setUp() {
         Context appContext = RuntimeEnvironment.application.getApplicationContext();
 
-        WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, SiteModel.class);
+        WellSqlConfig config = new WellSqlConfig(appContext);
         WellSql.init(config);
         config.reset();
     }
@@ -289,46 +293,81 @@ public class SiteStoreUnitTest {
         }
     }
 
-    public SiteModel generateDotComSite() {
-        SiteModel example = new SiteModel();
-        example.setId(1);
-        example.setSiteId(556);
-        example.setIsWPCom(true);
-        example.setIsVisible(true);
-        return example;
+    @Test
+    public void testGetPostFormats() {
+        SiteModel site = generateDotComSite();
+        SiteSqlUtils.insertOrUpdateSite(site);
+
+        // Set 3 post formats
+        SiteSqlUtils.insertOrReplacePostFormats(site, generatePostFormats("Video", "Image", "Standard"));
+        List<PostFormatModel> postFormats = mSiteStore.getPostFormats(site);
+        assertEquals(3, postFormats.size());
+
+        // Set 1 post format
+        SiteSqlUtils.insertOrReplacePostFormats(site, generatePostFormats("Standard"));
+        postFormats = mSiteStore.getPostFormats(site);
+        assertEquals("Standard", postFormats.get(0).getDisplayName());
     }
 
-    public SiteModel generateSelfHostedNonJPSite() {
-        SiteModel example = new SiteModel();
-        example.setId(2);
-        example.setDotOrgSiteId(6);
-        example.setIsWPCom(false);
-        example.setIsJetpack(false);
-        example.setIsVisible(true);
-        example.setXmlRpcUrl("http://some.url/xmlrpc.php");
-        return example;
+    @Test
+    public void testSearchSitesByNameMatching() {
+        SiteModel dotComSite1 = generateDotComSite();
+        dotComSite1.setName("Doctor Emmet Brown Homepage");
+        SiteModel dotComSite2 = generateDotComSite();
+        dotComSite2.setName("Shield Eyes from light");
+        SiteModel dotComSite3 = generateDotComSite();
+        dotComSite3.setName("I remember when this was all farmland as far as the eye could see");
+
+        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite3);
+
+        List<SiteModel> matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrName("eye");
+        assertEquals(2, matchingSites.size());
+
+        matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrName("EYE");
+        assertEquals(2, matchingSites.size());
     }
 
-    public SiteModel generateJetpackSite() {
-        SiteModel example = new SiteModel();
-        example.setId(3);
-        example.setSiteId(982);
-        example.setDotOrgSiteId(8);
-        example.setIsWPCom(false);
-        example.setIsJetpack(true);
-        example.setIsVisible(true);
-        example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
-        return example;
+    @Test
+    public void testSearchSitesByNameOrUrlMatching() {
+        SiteModel dotComSite1 = generateDotComSite();
+        dotComSite1.setName("Doctor Emmet Brown Homepage");
+        SiteModel dotComSite2 = generateDotComSite();
+        dotComSite2.setUrl("shieldeyesfromlight.wordpress.com");
+        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
+        dotOrgSite.setName("I remember when this was all farmland as far as the eye could see.");
+
+        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
+        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
+
+        List<SiteModel> matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrName("eye");
+        assertEquals(2, matchingSites.size());
+
+        matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrName("EYE");
+        assertEquals(2, matchingSites.size());
     }
 
-    public SiteModel generateJetpackSiteOverRestOnly() {
-        SiteModel example = new SiteModel();
-        example.setId(4);
-        example.setSiteId(5623);
-        example.setIsWPCom(false);
-        example.setIsJetpack(true);
-        example.setIsVisible(true);
-        example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
-        return example;
+    @Test
+    public void testSearchDotComSitesByNameOrUrlMatching() {
+        SiteModel dotComSite1 = generateDotComSite();
+        dotComSite1.setName("Doctor Emmet Brown Homepage");
+        SiteModel dotComSite2 = generateDotComSite();
+        dotComSite2.setUrl("shieldeyesfromlight.wordpress.com");
+        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
+        dotOrgSite.setName("I remember when this was all farmland as far as the eye could see.");
+
+        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
+        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
+
+        List<SiteModel> matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(
+                SiteModelTable.IS_WPCOM, true, "eye");
+        assertEquals(1, matchingSites.size());
+
+        matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(
+                SiteModelTable.IS_WPCOM, true, "EYE");
+        assertEquals(1, matchingSites.size());
     }
 }
