@@ -1317,7 +1317,7 @@ public class ReaderPostListFragment extends Fragment
 
     /*
      * swipe-to-refresh isn't supported for search results since they're really brief snapshots
-     * and are unlikely to show new posts due to the way they're sorted by score
+     * and are unlikely to show new posts due to the way they're sorted
      */
     private boolean isSwipeToRefreshSupported() {
         return getPostListType() != ReaderPostListType.SEARCH_RESULTS;

@@ -22,13 +22,13 @@ This project also has unit tests for the JS part of the editor using [Mocha](htt
 
 To be able to run the tests, [npm](https://www.npmjs.com/) and Mocha (`npm install -g mocha`) are required.
 
-With npm and Mocha installed, from within `WordPressEditor/src/test/js`, run:
+With npm and Mocha installed, from within `example/src/test/js`, run:
 
     npm install chai
 
 And then run `mocha` inside the same folder:
 
-    cd WordPressEditor/src/test/js; mocha test*; cd -
+    cd example/src/test/js; mocha test*; cd -
 
 ## LICENSE ##
 

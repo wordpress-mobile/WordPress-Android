@@ -46,7 +46,7 @@ public class ReaderPostTable {
           + "featured_image,"       // 17
           + "featured_video,"       // 18
           + "post_avatar,"          // 19
-          + "sort_index,"           // 20 - this is a score for search results, otherwise it's a timestamp
+          + "sort_index,"           // 20
           + "published,"            // 21
           + "num_replies,"          // 22
           + "num_likes,"            // 23
@@ -140,8 +140,10 @@ public class ReaderPostTable {
                 + " discover_json       TEXT,"
                 + "	xpost_post_id		INTEGER DEFAULT 0,"
                 + " xpost_blog_id       INTEGER DEFAULT 0,"
-                + " PRIMARY KEY (post_id, blog_id)"
+                + " PRIMARY KEY (pseudo_id)"
                 + ")");
+
+        db.execSQL("CREATE UNIQUE INDEX idx_posts_post_id_blog_id ON tbl_posts(post_id, blog_id)");
         db.execSQL("CREATE INDEX idx_posts_sort_index ON tbl_posts(sort_index)");
 
         db.execSQL("CREATE TABLE tbl_post_tags ("
@@ -152,8 +154,10 @@ public class ReaderPostTable {
                 + "   tag_name          TEXT NOT NULL COLLATE NOCASE,"
                 + "   tag_type          INTEGER DEFAULT 0,"
                 + "   has_gap_marker    INTEGER DEFAULT 0,"
-                + "   PRIMARY KEY (post_id, blog_id, tag_name, tag_type)"
+                + "   PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                 + ")");
+
+        db.execSQL("CREATE INDEX idx_post_tags_tag_name ON tbl_post_tags(tag_name)");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
@@ -410,23 +414,34 @@ public class ReaderPostTable {
 
         if (numDeleted > 0)
             ReaderDatabase.getWritableDb().delete("tbl_posts",
-                    "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_post_tags)",
+                    "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)",
                     null);
 
         return numDeleted;
     }
 
-    /*
-    * delete all the posts from the blogs we no longer follow
-    */
-    public static int deletePostsFromUnfollowedBlogs() {
-       return ReaderDatabase.getWritableDb().delete("tbl_posts",
-                "blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE tbl_blog_info.is_following != 0)", null);
-    }
-
     public static int deletePostsInBlog(long blogId) {
         String[] args = {Long.toString(blogId)};
         return ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id = ?", args);
+    }
+
+    /*
+     * ensure that posts in blogs that are no longer followed don't have their followed status
+     * set to true
+     */
+    public static void updateFollowedStatus() {
+        SQLiteStatement statement = ReaderDatabase.getWritableDb().compileStatement(
+                  "UPDATE tbl_posts SET is_followed = 0"
+                + " WHERE is_followed != 0"
+                + " AND blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE is_followed != 0)");
+        try {
+            int count = statement.executeUpdateDelete();
+            if (count > 0) {
+                AppLog.d(AppLog.T.READER, String.format("reader post table > marked %d posts unfollowed", count));
+            }
+        } finally {
+            statement.close();
+        }
     }
 
     /*
@@ -438,7 +453,7 @@ public class ReaderPostTable {
         }
 
         String sql = "SELECT tbl_posts.published FROM tbl_posts, tbl_post_tags"
-                   + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                   + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                    + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
                    + " ORDER BY published LIMIT 1";
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
@@ -702,8 +717,7 @@ public class ReaderPostTable {
 
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "tbl_posts.*");
         String sql = "SELECT " + columns + " FROM tbl_posts, tbl_post_tags"
-                   + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
-                   + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                   + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                    + " AND tbl_post_tags.tag_name=?"
                    + " AND tbl_post_tags.tag_type=?";
 
@@ -774,8 +788,7 @@ public class ReaderPostTable {
         }
 
         String sql = "SELECT tbl_posts.blog_id, tbl_posts.post_id FROM tbl_posts, tbl_post_tags"
-                + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
-                + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                 + " AND tbl_post_tags.tag_name=?"
                 + " AND tbl_post_tags.tag_type=?";
 
