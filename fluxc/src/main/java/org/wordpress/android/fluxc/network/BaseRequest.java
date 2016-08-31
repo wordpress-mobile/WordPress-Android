@@ -102,9 +102,13 @@ public abstract class BaseRequest<T> extends Request<T> {
         UNKNOWN,
     }
 
-    public BaseRequest(int method, String url, BaseErrorListener errorListener) {
+    public BaseRequest(int method, @NonNull String url, BaseErrorListener errorListener) {
         super(method, url, null);
-        mUri = Uri.parse(url);
+        if (url != null) {
+            mUri = Uri.parse(url);
+        } else {
+            mUri = Uri.EMPTY;
+        }
         mErrorListener = errorListener;
         // Make sure all our custom Requests are never cached.
         setShouldCache(false);
