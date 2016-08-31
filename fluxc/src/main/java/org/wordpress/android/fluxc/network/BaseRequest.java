@@ -122,8 +122,7 @@ public abstract class BaseRequest<T> extends Request<T> {
     }
 
     public void addQueryParameters(Map<String, String> parameters) {
-        if (parameters == null)
-            return;
+        if (parameters == null) return;
         Builder builder = mUri.buildUpon();
         for (String key : parameters.keySet()) {
             builder.appendQueryParameter(key, parameters.get(key));
