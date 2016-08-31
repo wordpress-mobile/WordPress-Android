@@ -32,6 +32,14 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
     public WPComGsonRequest(int method, String url, Map<String, String> params, Class<T> clazz,
                             Listener<T> listener, BaseErrorListener errorListener) {
         super(method, params, url, clazz, listener, errorListener);
+        // If it's a GET request, then add the parameters as query Parameters
+        if (method == Request.Method.GET) {
+            addQueryParameters(params);
+        }
+    }
+
+    private String addDefaultParameters(String url) {
+        return url;
     }
 
     public void removeAccessToken() {
