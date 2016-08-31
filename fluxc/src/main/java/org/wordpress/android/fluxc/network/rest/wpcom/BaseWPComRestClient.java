@@ -38,6 +38,14 @@ public class BaseWPComRestClient {
     }
 
     public Request add(WPComGsonRequest request) {
+        // Add "locale=xx_XX" query parameter to all request by default
+        return add(request, true);
+    }
+
+    public Request add(WPComGsonRequest request, boolean addLocaleParameter) {
+        if (addLocaleParameter) {
+            request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
+        }
         // TODO: If !mAccountToken.exists() then trigger the mOnAuthFailedListener
         return mRequestQueue.add(setRequestAuthParams(request));
     }
