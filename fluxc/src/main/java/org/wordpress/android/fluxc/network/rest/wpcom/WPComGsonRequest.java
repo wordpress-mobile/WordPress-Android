@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.android.volley.Request;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 
