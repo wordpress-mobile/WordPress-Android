@@ -42,22 +42,6 @@ public class WPStoreUtils {
         return token;
     }
 
-    private static String getAccessTokenFromTable(Context context, String tableName) {
-        String token = null;
-        try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
-            Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN + " FROM " + tableName + " WHERE local_id=0", null);
-            if (c.moveToFirst() && c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN) != -1) {
-                token = c.getString(c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN));
-            }
-            c.close();
-            db.close();
-        } catch (SQLException e) {
-            // DB doesn't exist
-        }
-        return token;
-    }
-
     private static String getDeprecatedPreferencesAccessTokenThenDelete(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String token = prefs.getString(DEPRECATED_ACCESS_TOKEN_PREFERENCE, null);
@@ -76,5 +60,21 @@ public class WPStoreUtils {
             latestToken = getDeprecatedPreferencesAccessTokenThenDelete(context);
         }
         return latestToken;
+    }
+
+    private static String getAccessTokenFromTable(Context context, String tableName) {
+        String token = null;
+        try {
+            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN + " FROM " + tableName + " WHERE local_id=0", null);
+            if (c.moveToFirst() && c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN) != -1) {
+                token = c.getString(c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN));
+            }
+            c.close();
+            db.close();
+        } catch (SQLException e) {
+            // DB doesn't exist
+        }
+        return token;
     }
 }

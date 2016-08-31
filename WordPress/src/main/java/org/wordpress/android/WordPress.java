@@ -187,13 +187,15 @@ public class WordPress extends MultiDexApplication {
                 .build();
         component().inject(this);
 
-        // it will take some time to update the access token in the AccountStore if it was migrated
-        // so it will be set to the migrated token or the store token if no migration was performed
-        String migratedToken = WPStoreUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
-        if (TextUtils.isEmpty(migratedToken)) {
+        if (mAccountStore.hasAccessToken()) {
             OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
         } else {
-            OAuthAuthenticator.sAccessToken = migratedToken;
+            // it will take some time to update the access token in the AccountStore if it was migrated
+            // so it will be set to the migrated token
+            String migratedToken = WPStoreUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
+            if (!TextUtils.isEmpty(migratedToken)) {
+                OAuthAuthenticator.sAccessToken = migratedToken;
+            }
         }
 
         mContext = this;
