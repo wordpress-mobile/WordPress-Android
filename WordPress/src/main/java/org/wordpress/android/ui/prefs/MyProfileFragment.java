@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
-import org.wordpress.android.fluxc.store.AccountStore.PostAccountSettingsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -162,10 +162,10 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
     }
 
     private void updateMyProfileForLabel(TextView textView) {
-        PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put(restParamForTextView(textView), textView.getText().toString());
-        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
     }
 
     @Override

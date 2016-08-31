@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
-import org.wordpress.android.fluxc.store.AccountStore.PostAccountSettingsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -197,34 +197,34 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     }
 
     private void cancelPendingEmailChange() {
-        PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put("user_email_change_pending", "false");
-        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
             mEmailSnackbar.dismiss();
         }
     }
 
     private void updateEmail(String newEmail) {
-        PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put("user_email", newEmail);
-        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
     }
 
     private void updatePrimaryBlog(String blogId) {
-        PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put("primary_site_ID", blogId);
-        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
     }
 
     public void updateWebAddress(String newWebAddress) {
-        PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put("user_URL", newWebAddress);
-        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
     }
 
     @SuppressWarnings("unused")
@@ -288,7 +288,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<SiteModel> sites = mSiteStore.getDotComSites();
+            List<SiteModel> sites = mSiteStore.getWPComSites();
             mPrimarySitePreference.setEntries(getSiteNamesFromSites(sites));
             mPrimarySitePreference.setEntryValues(getSiteIdsFromSites(sites));
             mPrimarySitePreference.setDetails(getHomeURLOrHostNamesFromSites(sites));
