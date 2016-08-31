@@ -33,8 +33,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentActionResult;
@@ -42,10 +40,8 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationFailed;
 import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationStatusChanged;
 import org.wordpress.android.ui.notifications.NotificationEvents.NoteVisibilityChanged;
-import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -329,60 +325,6 @@ public class NotificationsUtils {
 
                 indexAdjustment += imagePlaceholder.length();
             }
-        }
-    }
-
-    public static void handleNoteBlockSpanClick(NotificationsDetailActivity activity, NoteBlockClickableSpan clickedSpan) {
-        switch (clickedSpan.getRangeType()) {
-            case SITE:
-                // Show blog preview
-                activity.showBlogPreviewActivity(clickedSpan.getId());
-                break;
-            case USER:
-                // Show blog preview
-                activity.showBlogPreviewActivity(clickedSpan.getSiteId());
-                break;
-            case POST:
-                // Show post detail
-                activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
-                break;
-            case COMMENT:
-                // Load the comment in the reader list if it exists, otherwise show a webview
-                if (ReaderUtils.postAndCommentExists(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId())) {
-                    activity.showReaderCommentsList(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId());
-                } else {
-                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
-                }
-                break;
-            case STAT:
-            case FOLLOW:
-                // We can open native stats if the site is a wpcom or Jetpack + stored in the app locally.
-                // Note that for Jetpack sites we need the options already synced. That happens when the user
-                // selects the site in the sites picker. So adding it to the app doesn't always populate options.
-
-               // Do not load Jetpack shadow sites here. They've empty options and Stats can't be loaded for them.
-                Blog blog = WordPress.wpDB.getBlogForDotComBlogId(
-                        String.valueOf(clickedSpan.getSiteId())
-                );
-                // Make sure blog is not null, and it's either JP or dotcom. Better safe than sorry.
-                if (blog == null ||  blog.getLocalTableBlogId() <= 0 || (!blog.isDotcomFlag() && !blog.isJetpackPowered())) {
-                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
-                    break;
-                }
-                activity.showStatsActivityForSite(blog.getLocalTableBlogId(), clickedSpan.getRangeType());
-                break;
-            case LIKE:
-                if (ReaderPostTable.postExists(clickedSpan.getSiteId(), clickedSpan.getId())) {
-                    activity.showReaderPostLikeUsers(clickedSpan.getSiteId(), clickedSpan.getId());
-                } else {
-                    activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
-                }
-                break;
-            default:
-                // We don't know what type of id this is, let's see if it has a URL and push a webview
-                if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
-                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
-                }
         }
     }
 

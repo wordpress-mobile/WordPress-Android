@@ -17,11 +17,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+
+import javax.inject.Inject;
 
 public class SignInActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener {
     public static final int SIGN_IN_REQUEST = 1;
@@ -38,9 +41,13 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
 
     private SmartLockHelper mSmartLockHelper;
 
+    @Inject SiteStore mSiteStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_activity);
 
@@ -85,10 +92,10 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         if (extras != null) {
             actionMode = extras.getInt(EXTRA_START_FRAGMENT, -1);
             if (extras.containsKey(EXTRA_JETPACK_SITE_AUTH)) {
-                Blog jetpackBlog = WordPress.getBlog(extras.getInt(EXTRA_JETPACK_SITE_AUTH));
-                if (jetpackBlog != null) {
+                SiteModel jetpackSite = mSiteStore.getSiteByLocalId(extras.getInt(EXTRA_JETPACK_SITE_AUTH));
+                if (jetpackSite != null) {
                     String customMessage = extras.getString(EXTRA_JETPACK_MESSAGE_AUTH, null);
-                    getSignInFragment().setBlogAndCustomMessageForJetpackAuth(jetpackBlog, customMessage);
+                    getSignInFragment().setBlogAndCustomMessageForJetpackAuth(jetpackSite, customMessage);
                 }
             } else if (extras.containsKey(EXTRA_IS_AUTH_ERROR)) {
                 getSignInFragment().showAuthErrorMessage();

@@ -21,6 +21,7 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
@@ -68,6 +69,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int NUM_HEADERS = 1;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -237,10 +239,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(
-                            view.getContext(),
-                            comment.authorBlogId
-                    );
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), comment.authorBlogId);
                 }
             };
             commentHolder.imgAvatar.setOnClickListener(authorListener);

@@ -23,8 +23,8 @@ import de.greenrobot.event.EventBus;
 
 public class SuggestionService extends Service {
     private final IBinder mBinder = new SuggestionBinder();
-    private final List<Integer> mCurrentlyRequestingSuggestionsSiteIds = new ArrayList<Integer>();
-    private final List<Integer> mCurrentlyRequestingTagsSiteIds = new ArrayList<Integer>();
+    private final List<Long> mCurrentlyRequestingSuggestionsSiteIds = new ArrayList<>();
+    private final List<Long> mCurrentlyRequestingTagsSiteIds = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -48,7 +48,7 @@ public class SuggestionService extends Service {
         return mBinder;
     }
 
-    public void updateSuggestions(final int remoteBlogId) {
+    public void updateSuggestions(final long remoteBlogId) {
         if (mCurrentlyRequestingSuggestionsSiteIds.contains(remoteBlogId)) {
             return;
         }
@@ -73,7 +73,7 @@ public class SuggestionService extends Service {
         WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
 
-    private void handleSuggestionsUpdatedResponse(final int remoteBlogId, final JSONObject jsonObject) {
+    private void handleSuggestionsUpdatedResponse(final long remoteBlogId, final JSONObject jsonObject) {
         new Thread() {
             @Override
             public void run() {
@@ -91,7 +91,7 @@ public class SuggestionService extends Service {
         }.start();
     }
 
-    private void removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(Integer remoteBlogId) {
+    private void removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(long remoteBlogId) {
         mCurrentlyRequestingSuggestionsSiteIds.remove(remoteBlogId);
 
         // if there are no requests being made, we want to stop the service
@@ -101,7 +101,7 @@ public class SuggestionService extends Service {
         }
     }
 
-    public void updateTags(final int remoteBlogId) {
+    public void updateTags(final long remoteBlogId) {
         if (mCurrentlyRequestingTagsSiteIds.contains(remoteBlogId)) {
             return;
         }
@@ -126,7 +126,7 @@ public class SuggestionService extends Service {
         WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
 
-    private void handleTagsUpdatedResponse(final int remoteBlogId, final JSONObject jsonObject) {
+    private void handleTagsUpdatedResponse(final long remoteBlogId, final JSONObject jsonObject) {
         new Thread() {
             @Override
             public void run() {
@@ -144,7 +144,7 @@ public class SuggestionService extends Service {
         }.start();
     }
 
-    private void removeSiteIdFromTagRequestsAndStopServiceIfNecessary(Integer remoteBlogId) {
+    private void removeSiteIdFromTagRequestsAndStopServiceIfNecessary(long remoteBlogId) {
         mCurrentlyRequestingTagsSiteIds.remove(remoteBlogId);
 
         // if there are no requests being made, we want to stop the service

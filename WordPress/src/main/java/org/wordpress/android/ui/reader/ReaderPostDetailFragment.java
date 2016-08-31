@@ -29,6 +29,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
@@ -66,8 +67,9 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
-import javax.inject.Inject;
 import java.util.EnumSet;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -92,6 +94,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
     private View mLikingUsersDivider;
+    private View mLikingUsersLabel;
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
@@ -109,6 +112,7 @@ public class ReaderPostDetailFragment extends Fragment
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, false, null);
@@ -195,6 +199,7 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutFooter = (ViewGroup) view.findViewById(R.id.layout_post_detail_footer);
         mLikingUsersView = (ReaderLikingUsersView) view.findViewById(R.id.layout_liking_users_view);
         mLikingUsersDivider = view.findViewById(R.id.layout_liking_users_divider);
+        mLikingUsersLabel = view.findViewById(R.id.text_liking_users_label);
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
@@ -359,9 +364,9 @@ public class ReaderPostDetailFragment extends Fragment
         refreshIconCounts();
 
         if (isAskingToLike) {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mBlogId);
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mBlogId);
         } else {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mBlogId);
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mBlogId);
         }
     }
 
@@ -449,8 +454,10 @@ public class ReaderPostDetailFragment extends Fragment
         // with the correct info once the new post loads
         getView().findViewById(R.id.container_related_posts).setVisibility(View.GONE);
         getView().findViewById(R.id.text_related_posts_label).setVisibility(View.GONE);
+
         mLikingUsersView.setVisibility(View.GONE);
         mLikingUsersDivider.setVisibility(View.GONE);
+        mLikingUsersLabel.setVisibility(View.GONE);
 
         // clear the webView - otherwise it will remain scrolled to where the user scrolled to
         mReaderWebView.clearContent();
@@ -634,6 +641,7 @@ public class ReaderPostDetailFragment extends Fragment
             if (mPost.numLikes > 0 && mLikingUsersView.getVisibility() == View.GONE) {
                 mLikingUsersView.setVisibility(View.INVISIBLE);
                 mLikingUsersDivider.setVisibility(View.INVISIBLE);
+                mLikingUsersLabel.setVisibility(View.INVISIBLE);
             }
         } else {
             countLikes.setVisibility(View.INVISIBLE);
@@ -653,6 +661,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost.numLikes == 0) {
             mLikingUsersView.setVisibility(View.GONE);
             mLikingUsersDivider.setVisibility(View.GONE);
+            mLikingUsersLabel.setVisibility(View.GONE);
             return;
         }
 
@@ -665,6 +674,7 @@ public class ReaderPostDetailFragment extends Fragment
         });
 
         mLikingUsersDivider.setVisibility(View.VISIBLE);
+        mLikingUsersLabel.setVisibility(View.VISIBLE);
         mLikingUsersView.setVisibility(View.VISIBLE);
         mLikingUsersView.showLikingUsers(mPost);
     }
@@ -1028,9 +1038,9 @@ public class ReaderPostDetailFragment extends Fragment
         // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
         // used for Discover posts that highlight a blog
         if (ReaderUtils.isBlogPreviewUrl(url)) {
-            long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
-            if (blogId != 0) {
-                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
+            long siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
+            if (siteId != 0) {
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), siteId);
             }
             return true;
         }

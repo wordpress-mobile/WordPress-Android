@@ -12,14 +12,12 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -31,7 +29,6 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,7 +60,7 @@ import javax.inject.Inject;
  *
  * 3. Load a WordPress.org URL with authentication
  * - URL_TO_LOAD: target URL to load in the webview.
- * - AUTHENTICATION_URL: The address of the authentication endpoint. Please use the value of getBlogLoginUrl()
+ * - AUTHENTICATION_URL: The address of the authentication endpoint. Please use the value of getSiteLoginUrl()
  * to retrieve the correct address of the authentication endpoint.
  * - AUTHENTICATION_USER: username.
  * - AUTHENTICATION_PASSWD: password.
@@ -73,8 +70,6 @@ import javax.inject.Inject;
  *
  */
 public class WPWebViewActivity extends WebViewActivity {
-    @Inject AccountStore mAccountStore;
-
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -88,10 +83,13 @@ public class WPWebViewActivity extends WebViewActivity {
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        super.onCreate(savedInstanceState);
     }
 
     public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
@@ -102,15 +100,15 @@ public class WPWebViewActivity extends WebViewActivity {
         openWPCOMURL(context, url);
     }
 
-    // Note: The webview has links disabled!!
-    public static void openUrlByUsingBlogCredentials(Context context, Blog blog, Post post, String url) {
+    // Note: The webview has links disabled
+    public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, Post post, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
         }
 
-        if (blog == null) {
-            AppLog.e(AppLog.T.UTILS, "Blog obj is null");
+        if (site == null) {
+            AppLog.e(AppLog.T.UTILS, "Site is null");
             return;
         }
 
@@ -121,16 +119,16 @@ public class WPWebViewActivity extends WebViewActivity {
             return;
         }
 
-        String authURL = WPWebViewActivity.getBlogLoginUrl(blog);
+        String authURL = WPWebViewActivity.getSiteLoginUrl(site);
         Intent intent = new Intent(context, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, blog.getUsername());
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, blog.getPassword());
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-        intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
         if (post != null) {
-            intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(blog, post));
+            intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(site, post));
         }
         context.startActivity(intent);
     }
@@ -228,12 +226,12 @@ public class WPWebViewActivity extends WebViewActivity {
         }
 
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
-            Blog blog = WordPress.getBlog(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
-            if (blog == null) {
+            SiteModel site = mSiteStore.getSiteByLocalId(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
+            if (site == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            webViewClient = new WPWebViewClient(blog, allowedURL, mAccountStore.getAccessToken());
+            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else {
             webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
@@ -336,24 +334,17 @@ public class WPWebViewActivity extends WebViewActivity {
      *
      * @return URL of the login page.
      */
-    public static String getBlogLoginUrl(Blog blog) {
+    public static String getSiteLoginUrl(SiteModel site) {
         String loginURL = null;
-        Gson gson = new Gson();
-        Type type = new TypeToken<Map<?, ?>>() {}.getType();
-        Map<?, ?> blogOptions = gson.fromJson(blog.getBlogOptions(), type);
-        if (blogOptions != null) {
-            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("login_url");
-            if (homeURLMap != null) {
-                loginURL = homeURLMap.get("value").toString();
-            }
-        }
+        // TODO: STORES: missing with getLoginUrl() in SiteStore
+        // String loginURL = site.getLoginUrl();
+
         // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
         if (loginURL == null) {
-            if (blog.getUrl().lastIndexOf("/") != -1) {
-                return blog.getUrl().substring(0, blog.getUrl().lastIndexOf("/"))
-                        + "/wp-login.php";
+            if (site.getUrl() != null) {
+                return site.getUrl() + "/wp-login.php";
             } else {
-                return blog.getUrl().replace("xmlrpc.php", "wp-login.php");
+                return site.getXmlRpcUrl().replace("xmlrpc.php", "wp-login.php");
             }
         }
 

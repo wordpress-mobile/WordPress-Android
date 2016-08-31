@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PostAccountSettingsPayload;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
@@ -171,12 +173,17 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
         View rootView = getView();
         if (rootView == null) return;
 
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            ToastUtils.showToast(getActivity(), R.string.error_post_my_profile_no_connection);
+            return;
+        }
+
         WPTextView textView = (WPTextView) rootView.findViewById(callbackId);
         updateLabel(textView, input);
         updateMyProfileForLabel(textView);
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         // TODO: STORES: manage errors
         refreshDetails();

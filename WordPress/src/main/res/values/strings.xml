@@ -974,6 +974,7 @@
     <string name="publisher">Publisher:</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="automattic_url" translatable="false">automattic.com</string>
+    <string name="wordpresscom_tos_url" translatable="false">https://en.wordpress.com/tos</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -1014,6 +1015,7 @@
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
     <string name="error_post_my_profile">Couldn\'t save your profile</string>
+    <string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
     <string name="error_post_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
@@ -1142,6 +1144,7 @@
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
+    <string name="reader_label_liked_by">Liked By</string>
 
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_short_like_count_one">1 Like</string>
@@ -1430,6 +1433,13 @@
     <string name="people_fetching">Fetching users…</string>
     <string name="title_follower">Follower</string>
     <string name="title_email_follower">Email Follower</string>
+
+    <string name="role_admin">Administrator</string>
+    <string name="role_editor">Editor</string>
+    <string name="role_author">Author</string>
+    <string name="role_contributor">Contributor</string>
+    <string name="role_follower">Follower</string>
+    <string name="role_viewer">Viewer</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>

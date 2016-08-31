@@ -29,7 +29,6 @@ import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -42,6 +41,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
@@ -87,8 +87,18 @@ import de.greenrobot.event.EventBus;
  * prior to this there were separate comment detail screens for each list
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
+    private static final String KEY_MODE = "KEY_MODE";
+    private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
+    private static final String KEY_COMMENT_ID = "comment_id";
+    private static final String KEY_NOTE_ID = "note_id";
+
+    private static final int INTENT_COMMENT_EDITOR     = 1010;
+    private static final int FROM_BLOG_COMMENT = 1;
+    private static final int FROM_NOTE = 2;
+    private static final int FROM_NOTE_REMOTE = 3;
+
     private int mLocalBlogId;
-    private int mRemoteBlogId;
+    private long mRemoteBlogId;
 
     private Comment mComment;
     private Note mNote;
@@ -138,10 +148,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private OnCommentActionListener mOnCommentActionListener;
     private OnNoteCommentActionListener mOnNoteCommentActionListener;
 
-    private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
-    private static final String KEY_COMMENT_ID = "comment_id";
-    private static final String KEY_NOTE_ID = "note_id";
-
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
      * for this comment - all actions are enabled when opened from the comment list, only
@@ -154,7 +160,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     static CommentDetailFragment newInstance(int localBlogId, long commentId) {
         CommentDetailFragment fragment = new CommentDetailFragment();
-        fragment.setComment(localBlogId, commentId);
+        Bundle args = new Bundle();
+        args.putInt(KEY_MODE, FROM_BLOG_COMMENT);
+        args.putInt(KEY_LOCAL_BLOG_ID, localBlogId);
+        args.putLong(KEY_COMMENT_ID, commentId);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -163,7 +173,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     public static CommentDetailFragment newInstance(final String noteId) {
         CommentDetailFragment fragment = new CommentDetailFragment();
-        fragment.setNoteWithNoteId(noteId);
+        Bundle args = new Bundle();
+        args.putInt(KEY_MODE, FROM_NOTE);
+        args.putString(KEY_NOTE_ID, noteId);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -171,8 +184,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * used when called from notifications to load a comment that doesn't already exist in the note
      */
     public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId);
-        fragment.enableShouldRequestCommentFromNote();
+        CommentDetailFragment fragment = new CommentDetailFragment();
+        Bundle args = new Bundle();
+        args.putInt(KEY_MODE, FROM_NOTE_REMOTE);
+        args.putString(KEY_NOTE_ID, noteId);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -180,6 +196,20 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+
+        switch (getArguments().getInt(KEY_MODE)) {
+            case FROM_BLOG_COMMENT:
+                setComment(getArguments().getInt(KEY_LOCAL_BLOG_ID), getArguments().getLong(KEY_COMMENT_ID));
+                break;
+            case FROM_NOTE:
+                setNoteWithNoteId(getArguments().getString(KEY_NOTE_ID));
+                break;
+            default:
+            case FROM_NOTE_REMOTE:
+                setNoteWithNoteId(getArguments().getString(KEY_NOTE_ID));
+                enableShouldRequestCommentFromNote();
+                break;
+        }
 
         if (savedInstanceState != null) {
             if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
@@ -343,10 +373,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setupSuggestionServiceAndAdapter() {
-        if (!isAdded()) return;
-
+        if (!isAdded() || mSiteStore.hasDotComOrJetpackSiteWithSiteId(mRemoteBlogId)) return;
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mRemoteBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mRemoteBlogId, getActivity(), mSuggestionServiceConnectionManager);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mSiteStore.getSiteBySiteId(mRemoteBlogId), getActivity(),
+                mSuggestionServiceConnectionManager);
         if (mSuggestionAdapter != null) {
             mEditReply.setAdapter(mSuggestionAdapter);
         }
@@ -362,13 +392,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // is this comment on one of the user's blogs? it won't be if this was displayed from a
         // notification about a reply to a comment this user posted on someone else's blog
-        mIsUsersBlog = (comment != null && WordPress.wpDB.isLocalBlogIdInDatabase(mLocalBlogId));
+        mIsUsersBlog = (comment != null && mSiteStore.hasSiteWithLocalId(localBlogId));
 
-        if (mIsUsersBlog)
-            mRemoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
+        if (mIsUsersBlog) {
+            mRemoteBlogId = mSiteStore.getSiteByLocalId(localBlogId).getSiteId();
+        }
 
-        if (isAdded())
+        if (isAdded()) {
             showComment();
+        }
     }
 
     private void disableShouldFocusReplyField() {
@@ -453,7 +485,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
+        if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
             if (mNote == null) {
                 reloadComment();
             }
@@ -495,7 +527,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return mLocalBlogId;
     }
 
-    private int getRemoteBlogId() {
+    private long getRemoteBlogId() {
         return mRemoteBlogId;
     }
 
@@ -524,7 +556,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNote != null) {
             intent.putExtra(EditCommentActivity.ARG_NOTE_ID, mNote.getId());
         }
-        startActivityForResult(intent, Constants.INTENT_COMMENT_EDITOR);
+        startActivityForResult(intent, INTENT_COMMENT_EDITOR);
     }
 
     /*
@@ -546,7 +578,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (mNote != null && mShouldRequestCommentFromNote) {
                 // If a remote comment was requested, check if we have the comment for display.
                 // Otherwise request the comment via the REST API
-                int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mNote.getSiteId());
+                int localTableBlogId = mSiteStore.getLocalIdForRemoteSiteId(mNote.getSiteId());
                 if (localTableBlogId > 0) {
                     Comment comment = CommentTable.getComment(localTableBlogId, mNote.getParentCommentId());
                     if (comment != null) {
@@ -659,7 +691,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * ensure the post associated with this comment is available to the reader and show its
      * title above the comment
      */
-    private void showPostTitle(final int blogId, final long postId) {
+    private void showPostTitle(final long blogId, final long postId) {
         if (!isAdded())
             return;
 
@@ -668,7 +700,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // the post this comment is on can only be requested if this is a .com blog or a
         // jetpack-enabled self-hosted blog, and we have valid .com credentials
-        boolean isDotComOrJetpack = WordPress.wpDB.isRemoteBlogIdDotComOrJetpack(mRemoteBlogId);
+        SiteModel site = mSiteStore.getSiteBySiteId(mRemoteBlogId);
+        boolean isDotComOrJetpack = site.isWPCom();
         boolean canRequestPost = isDotComOrJetpack && mAccountStore.hasAccessToken();
 
         final String title;
@@ -767,7 +800,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             trackModerationFromNotification(newStatus);
             return;
         } else if (mOnCommentActionListener != null) {
-            mOnCommentActionListener.onModerateComment(mLocalBlogId, mComment, newStatus);
+            SiteModel site = mSiteStore.getSiteByLocalId(mLocalBlogId);
+            mOnCommentActionListener.onModerateComment(site, mComment, newStatus);
             return;
         }
 
@@ -853,7 +887,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 CommentActions.submitReplyToCommentNote(mNote, replyText, actionListener);
             }
         } else {
-            CommentActions.submitReplyToComment(mLocalBlogId, mComment, replyText, actionListener);
+            SiteModel site = mSiteStore.getSiteByLocalId(mLocalBlogId);
+            CommentActions.submitReplyToComment(site, mComment, replyText, actionListener);
         }
     }
 
@@ -1052,10 +1087,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // note that the local blog id won't be found if the comment is from someone else's blog
-        int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
-
+        int localBlogId = mSiteStore.getLocalIdForRemoteSiteId(mRemoteBlogId);
         setComment(localBlogId, note.buildComment());
-
         getFragmentManager().invalidateOptionsMenu();
     }
 
@@ -1083,7 +1116,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         final boolean commentStatusShouldRevert = commentWasUnapproved;
-        WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
+        WordPress.getRestClientUtils().likeComment(mNote.getSiteId(),
                 String.valueOf(mNote.getCommentId()),
                 mBtnLikeComment.isActivated(),
                 new RestRequest.Listener() {

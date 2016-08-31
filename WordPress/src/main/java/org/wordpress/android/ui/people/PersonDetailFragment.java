@@ -14,15 +14,18 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.Role;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.SimpleDateFormat;
+
+import javax.inject.Inject;
 
 public class PersonDetailFragment extends Fragment {
     private static String ARG_CURRENT_USER_ID = "current_user_id";
@@ -44,6 +47,8 @@ public class PersonDetailFragment extends Fragment {
     private TextView mSubscribedDateTitleView;
     private TextView mSubscribedDateTextView;
 
+    @Inject SiteStore mSiteStore;
+
     public static PersonDetailFragment newInstance(long currentUserId, long personId, int localTableBlogId,
                                                    Person.PersonType personType) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
@@ -54,6 +59,12 @@ public class PersonDetailFragment extends Fragment {
         bundle.putSerializable(ARG_PERSON_TYPE, personType);
         personDetailFragment.setArguments(bundle);
         return personDetailFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
     }
 
     @Override
@@ -81,8 +92,8 @@ public class PersonDetailFragment extends Fragment {
         mSubscribedDateTextView = (TextView) rootView.findViewById(R.id.subscribed_date_text);
 
         boolean isCurrentUser = mCurrentUserId == mPersonId;
-        Blog blog = WordPress.getBlog(mLocalTableBlogId);
-        if (!isCurrentUser && blog != null && blog.hasCapability(Capability.REMOVE_USERS)) {
+        SiteModel site = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
+        if (!isCurrentUser && site != null && site.getHasCapabilityRemoveUsers()) {
             setHasOptionsMenu(true);
         }
 
@@ -106,7 +117,9 @@ public class PersonDetailFragment extends Fragment {
 
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             mDisplayNameTextView.setText(StringUtils.unescapeHTML(person.getDisplayName()));
-            mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
+            if (person.getRole() != null) {
+                mRoleTextView.setText(StringUtils.capitalize(person.getRole().toDisplayString()));
+            }
 
             if (!TextUtils.isEmpty(person.getUsername())) {
                 mUsernameTextView.setText(String.format("@%s", person.getUsername()));
@@ -151,9 +164,9 @@ public class PersonDetailFragment extends Fragment {
 
     // Checks current user's capabilities to decide whether she can change the role or not
     private void setupRoleContainerForCapability() {
-        Blog blog = WordPress.getBlog(mLocalTableBlogId);
+        SiteModel site = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
         boolean isCurrentUser = mCurrentUserId == mPersonId;
-        boolean canChangeRole = (blog != null) && !isCurrentUser && blog.hasCapability(Capability.PROMOTE_USERS);
+        boolean canChangeRole = (site != null) && !isCurrentUser && site.getHasCapabilityPromoteUsers();
         if (canChangeRole) {
             mRoleContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -171,7 +184,7 @@ public class PersonDetailFragment extends Fragment {
 
     private void showRoleChangeDialog() {
         Person person = loadPerson();
-        if (person == null) {
+        if (person == null || person.getRole() == null) {
             return;
         }
 
@@ -181,8 +194,8 @@ public class PersonDetailFragment extends Fragment {
     }
 
     // used to optimistically update the role
-    public void changeRole(String newRole) {
-        mRoleTextView.setText(newRole);
+    public void changeRole(Role newRole) {
+        mRoleTextView.setText(newRole.toDisplayString());
     }
 
     @SuppressWarnings("deprecation")

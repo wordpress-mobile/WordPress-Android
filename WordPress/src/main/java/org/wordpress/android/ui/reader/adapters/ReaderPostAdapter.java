@@ -21,6 +21,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -89,6 +90,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     /*
      * cross-post
@@ -516,9 +518,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         if (discoverData.getBlogId() != 0) {
-                            ReaderActivityLauncher.showReaderBlogPreview(
-                                    v.getContext(),
-                                    discoverData.getBlogId());
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
                         } else if (discoverData.hasBlogUrl()) {
                             ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl(),
                                     mAccountStore.getAccount().getUserName());
@@ -779,12 +779,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (isAskingToLike) {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mCurrentBlogId != 0 ? mCurrentBlogId : null);
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mCurrentBlogId != 0 ? mCurrentBlogId : null);
             // Consider a like to be enough to push a page view - solves a long-standing question
             // from folks who ask 'why do I have more likes than page views?'.
-            ReaderPostActions.bumpPageViewForPost(post);
+            ReaderPostActions.bumpPageViewForPost(mSiteStore, post);
         } else {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mCurrentBlogId != 0 ? mCurrentBlogId : null);
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mCurrentBlogId);
         }
 
         // update post in array and on screen

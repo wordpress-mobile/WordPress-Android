@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
@@ -29,6 +29,7 @@ import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CommentsListFragment extends Fragment {
+    public static final int COMMENTS_PER_PAGE = 30;
 
     interface OnCommentSelectedListener {
         void onCommentSelected(long commentId);
@@ -61,7 +63,30 @@ public class CommentsListFragment extends Fragment {
 
     private UpdateCommentsTask mUpdateCommentsTask;
 
-    public static final int COMMENTS_PER_PAGE = 30;
+    private SiteModel mSite;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        updateSiteOrFinishActivity(savedInstanceState);
+    }
+
+    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+    }
 
     private CommentAdapter getAdapter() {
         if (mAdapter == null) {
@@ -140,7 +165,7 @@ public class CommentsListFragment extends Fragment {
                 }
             };
 
-            mAdapter = new CommentAdapter(getActivity(), WordPress.getCurrentLocalTableBlogId());
+            mAdapter = new CommentAdapter(getActivity(), mSite.getId());
             mAdapter.setOnCommentPressedListener(pressedListener);
             mAdapter.setOnDataLoadedListener(dataLoadedListener);
             mAdapter.setOnLoadMoreListener(loadMoreListener);
@@ -363,11 +388,7 @@ public class CommentsListFragment extends Fragment {
             }
         };
 
-        CommentActions.moderateComments(
-                WordPress.getCurrentLocalTableBlogId(),
-                updateComments,
-                newStatus,
-                listener);
+        CommentActions.moderateComments(mSite, updateComments, newStatus, listener);
     }
 
     private void confirmDeleteComments() {
@@ -439,8 +460,7 @@ public class CommentsListFragment extends Fragment {
         if (deletePermanently){
             newStatus = CommentStatus.DELETE;
         }
-        CommentActions.moderateComments(
-                WordPress.getCurrentLocalTableBlogId(), selectedComments, newStatus, listener);
+        CommentActions.moderateComments(mSite, selectedComments, newStatus, listener);
     }
 
     void loadComments() {
@@ -537,12 +557,6 @@ public class CommentsListFragment extends Fragment {
                 return null;
             }
 
-            final Blog blog = WordPress.getCurrentBlog();
-            if (blog == null) {
-                mErrorType = ErrorType.INVALID_CURRENT_BLOG;
-                return null;
-            }
-
             Map<String, Object> hPost = new HashMap<>();
             if (mIsLoadingMore) {
                 int numExisting = getAdapter().getItemCount();
@@ -559,15 +573,16 @@ public class CommentsListFragment extends Fragment {
                 }
             }
 
-            Object[] params = { blog.getRemoteBlogId(),
-                                blog.getUsername(),
-                                blog.getPassword(),
-                                hPost };
+            Object[] params = {
+                    String.valueOf(mSite.getSiteId()),
+                    StringUtils.notNullStr(mSite.getUsername()),
+                    StringUtils.notNullStr(mSite.getPassword()),
+                    hPost};
             try {
-                return ApiHelper.refreshComments(blog, params, new ApiHelper.DatabasePersistCallback() {
+                return ApiHelper.refreshComments(mSite, params, new ApiHelper.DatabasePersistCallback() {
                     @Override
                     public void onDataReadyToSave(List list) {
-                        int localBlogId = blog.getLocalTableBlogId();
+                        int localBlogId = mSite.getId();
                         CommentTable.deleteCommentsForBlogWithFilter(localBlogId, mStatusFilter);
                         CommentTable.saveComments(localBlogId, (CommentList)list);
                     }
@@ -632,9 +647,7 @@ public class CommentsListFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (outState.isEmpty()) {
-            outState.putBoolean("bug_19917_fix", true);
-        }
+        outState.putSerializable(WordPress.SITE, mSite);
         super.onSaveInstanceState(outState);
     }
 
@@ -738,5 +751,4 @@ public class CommentsListFragment extends Fragment {
             mActionMode = null;
         }
     }
-
 }

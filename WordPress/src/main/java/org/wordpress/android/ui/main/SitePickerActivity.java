@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
@@ -24,23 +23,29 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.xmlrpc.android.ApiHelper;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 
 public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
@@ -62,6 +67,8 @@ public class SitePickerActivity extends AppCompatActivity
     private boolean mDidUserSelectSite;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,12 +132,12 @@ public class SitePickerActivity extends AppCompatActivity
             mMenuAdd.setVisible(false);
         } else {
             // don't allow editing visibility unless there are multiple wp.com blogs
-            mMenuEdit.setVisible(WordPress.wpDB.getNumDotComBlogs() > 1);
+            mMenuEdit.setVisible(mSiteStore.getDotComSitesCount() > 1);
             mMenuAdd.setVisible(true);
         }
 
         // no point showing search if there aren't multiple blogs
-        mMenuSearch.setVisible(WordPress.wpDB.getNumBlogs() > 1);
+        mMenuSearch.setVisible(mSiteStore.getSitesCount() > 1);
     }
 
     @Override
@@ -171,18 +178,17 @@ public class SitePickerActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.BlogListChanged event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
         if (!isFinishing()) {
             getAdapter().loadSites();
         }
@@ -239,36 +245,38 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void saveHiddenSites() {
-        WordPress.wpDB.getDatabase().beginTransaction();
-        try {
-            // make all sites visible...
-            WordPress.wpDB.setAllDotComBlogsVisibility(true);
+        // TODO: STORES: This is super inefficient
+        // Mark all sites visible
+        List<SiteModel> sites = mSiteStore.getDotComSites();
+        for (SiteModel site : sites) {
+            site.setIsVisible(true);
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
+        }
 
-            // ...then update ones marked hidden in the adapter, but don't hide the current site
-            boolean skippedCurrentSite = false;
-            String currentSiteName = null;
-            SiteList hiddenSites = getAdapter().getHiddenSites();
-            for (SiteRecord site : hiddenSites) {
-                if (site.localId == mCurrentLocalId) {
-                    skippedCurrentSite = true;
-                    currentSiteName = site.getBlogNameOrHomeURL();
-                } else {
-                    WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
-                    StatsTable.deleteStatsForBlog(this, site.localId); // Remove stats data for hidden sites
-                }
+        // Update sites marked hidden in the adapter, but don't hide the current site
+        boolean skippedCurrentSite = false;
+        String currentSiteName = null;
+        SiteList hiddenSites = getAdapter().getHiddenSites();
+        for (SiteRecord site : hiddenSites) {
+            if (site.localId == mCurrentLocalId) {
+                skippedCurrentSite = true;
+                currentSiteName = site.getBlogNameOrHomeURL();
+            } else {
+                SiteModel siteModel = mSiteStore.getSiteByLocalId(site.localId);
+                siteModel.setIsVisible(false);
+                // Save the site
+                mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
+                // Remove stats data for hidden sites
+                StatsTable.deleteStatsForBlog(this, site.localId);
             }
+        }
 
-            // let user know the current site wasn't hidden
-            if (skippedCurrentSite) {
-                String cantHideCurrentSite = getString(R.string.site_picker_cant_hide_current_site);
-                ToastUtils.showToast(this,
-                        String.format(cantHideCurrentSite, currentSiteName),
-                        ToastUtils.Duration.LONG);
-            }
-
-            WordPress.wpDB.getDatabase().setTransactionSuccessful();
-        } finally {
-            WordPress.wpDB.getDatabase().endTransaction();
+        // let user know the current site wasn't hidden
+        if (skippedCurrentSite) {
+            String cantHideCurrentSite = getString(R.string.site_picker_cant_hide_current_site);
+            ToastUtils.showToast(this,
+                    String.format(cantHideCurrentSite, currentSiteName),
+                    ToastUtils.Duration.LONG);
         }
     }
 
@@ -348,16 +356,12 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSiteClick(SiteRecord site) {
+    public void onSiteClick(SiteRecord siteRecord) {
         if (mActionMode == null) {
             hideSoftKeyboard();
-            WordPress.setCurrentBlogAndSetVisible(site.localId);
-            WordPress.wpDB.updateLastBlogId(site.localId);
-            setResult(RESULT_OK);
+            setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.localId));
             mDidUserSelectSite = true;
-            new ApiHelper.RefreshBlogContentTask(WordPress.getCurrentBlog(), null).executeOnExecutor(
-                    AsyncTask.THREAD_POOL_EXECUTOR, false);
-
+            SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.localId);
             finish();
         }
     }

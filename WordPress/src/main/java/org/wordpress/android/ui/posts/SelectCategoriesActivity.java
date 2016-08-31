@@ -13,12 +13,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -35,27 +37,44 @@ import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class SelectCategoriesActivity extends AppCompatActivity {
     String finalResult = "";
     private final Handler mHandler = new Handler();
-    private Blog blog;
     private ListView mListView;
+    private TextView mEmptyView;
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private HashSet<String> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
     private Map<String, Integer> mCategoryNames = new HashMap<String, Integer>();
-    XMLRPCClientInterface mClient;
+    private SiteModel mSite;
+
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
 
         setContentView(R.layout.select_categories);
         setTitle(getResources().getString(R.string.select_categories));
@@ -70,6 +89,9 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         mListScrollPositionManager = new ListScrollPositionManager(mListView, false);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
+
+        mEmptyView = (TextView) findViewById(R.id.empty_view);
+        mListView.setEmptyView(mEmptyView);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -90,8 +112,8 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int blogId = extras.getInt("id");
-            blog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
-            if (blog == null) {
+            SiteModel site = mSiteStore.getSiteByLocalId(blogId);
+            if (site == null) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -118,14 +140,26 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         populateCategoryList();
 
-        // Refresh blog list if network is available and activity really starts
-        if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
-            refreshCategories();
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            mEmptyView.setText(R.string.empty_list_default);
+            if (isCategoryListEmpty()) {
+                refreshCategories();
+            }
+        } else {
+            mEmptyView.setText(R.string.no_network_title);
+        }
+    }
+
+    private boolean isCategoryListEmpty() {
+        if (mListView.getAdapter() != null) {
+            return mListView.getAdapter().isEmpty();
+        } else {
+            return true;
         }
     }
 
     private void populateCategoryList() {
-        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getLocalTableBlogId());
+        mCategories = CategoryNode.createCategoryTreeFromDB(mSite.getId());
         mCategoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(mCategories);
         for (int i = 0; i < mCategoryLevels.size(); i++) {
             mCategoryNames.put(StringUtils.unescapeHTML(mCategoryLevels.get(i).getName()), i);
@@ -172,11 +206,15 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     public String fetchCategories() {
         String returnMessage;
         Object result[] = null;
-        Object[] params = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),};
-        mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
+        Object[] params = {
+                String.valueOf(mSite.getSiteId()),
+                StringUtils.notNullStr(mSite.getUsername()),
+                StringUtils.notNullStr(mSite.getPassword())
+        };
+        XMLRPCClientInterface client  = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
         boolean success = false;
         try {
-            result = (Object[]) mClient.call(Method.GET_CATEGORIES, params);
+            result = (Object[]) client.call(Method.GET_CATEGORIES, params);
             success = true;
         } catch (XMLRPCException e) {
             AppLog.e(AppLog.T.POSTS, e);
@@ -188,7 +226,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         if (success) {
             // wipe out the categories table
-            WordPress.wpDB.clearCategories(blog.getLocalTableBlogId());
+            WordPress.wpDB.clearCategories(mSite.getId());
 
             for (Object aResult : result) {
                 Map<?, ?> curHash = (Map<?, ?>) aResult;
@@ -197,7 +235,8 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                 String categoryParentID = curHash.get("parentId").toString();
                 int convertedCategoryID = Integer.parseInt(categoryID);
                 int convertedCategoryParentID = Integer.parseInt(categoryParentID);
-                WordPress.wpDB.insertCategory(blog.getLocalTableBlogId(), convertedCategoryID, convertedCategoryParentID, categoryName);
+                WordPress.wpDB.insertCategory(mSite.getId(), convertedCategoryID,
+                        convertedCategoryParentID, categoryName);
             }
             returnMessage = "gotCategories";
         } else {
@@ -220,12 +259,15 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         struct.put("slug", category_slug);
         struct.put("description", category_desc);
         struct.put("parent_id", parent_id);
-        mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
-        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), struct };
-
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
+        Object[] params = {
+                String.valueOf(mSite.getSiteId()),
+                StringUtils.notNullStr(mSite.getUsername()),
+                StringUtils.notNullStr(mSite.getPassword()),
+                struct};
         Object result = null;
         try {
-            result = mClient.call(Method.NEW_CATEGORY, params);
+            result = client.call(Method.NEW_CATEGORY, params);
         } catch (XMLRPCException e) {
             AppLog.e(AppLog.T.POSTS, e);
         } catch (IOException e) {
@@ -258,7 +300,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
             }
 
             // Insert the new category into database
-            WordPress.wpDB.insertCategory(blog.getLocalTableBlogId(), category_id, parent_id, new_category_name);
+            WordPress.wpDB.insertCategory(mSite.getId(), category_id, parent_id, new_category_name);
             returnString = "addCategory_success";
             // auto select new category
             mSelectedCategories.add(new_category_name);
@@ -301,6 +343,12 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
@@ -312,11 +360,13 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_new_category) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", blog.getLocalTableBlogId());
-            Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
-            i.putExtras(bundle);
-            startActivityForResult(i, 0);
+            if (NetworkUtils.checkConnection(this)) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", mSite.getId());
+                Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
+                i.putExtras(bundle);
+                startActivityForResult(i, 0);
+            }
             return true;
         } else if (itemId == android.R.id.home) {
             saveAndFinish();
@@ -329,10 +379,15 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private String getCanonicalCategoryName(int category_id) {
         String new_category_name = null;
         Map<?, ?> result = null;
-        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), "category", category_id };
-        mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
+        Object[] params = {
+                String.valueOf(mSite.getSiteId()),
+                StringUtils.notNullStr(mSite.getUsername()),
+                StringUtils.notNullStr(mSite.getPassword()),
+                "category", category_id
+        };
         try {
-            result = (Map<?, ?>) mClient.call(Method.GET_TERM, params);
+            result = (Map<?, ?>) client.call(Method.GET_TERM, params);
         } catch (XMLRPCException e) {
             AppLog.e(AppLog.T.POSTS, e);
         } catch (IOException e) {

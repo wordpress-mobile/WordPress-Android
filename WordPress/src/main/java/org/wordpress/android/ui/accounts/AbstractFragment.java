@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
 import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
 import android.view.View;
@@ -301,6 +302,14 @@ public abstract class AbstractFragment extends Fragment {
             } else {
                 showError(messageId);
             }
+
         }
     }
+
+    protected void lowerCaseEditable(Editable editable) {
+        // Convert editable content to lowercase
+        String lowerCase = editable.toString().toLowerCase();
+        editable.replace(0, editable.length(), lowerCase);
+    }
+
 }

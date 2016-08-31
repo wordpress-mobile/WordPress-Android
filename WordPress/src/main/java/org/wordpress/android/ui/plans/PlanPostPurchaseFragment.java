@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeWebActivity;
 import org.wordpress.android.util.AppLog;
@@ -129,13 +128,16 @@ public class PlanPostPurchaseFragment extends Fragment {
     private void handleButtonClick() {
         switch (mPageNumber) {
             case PlanPostPurchaseActivity.PAGE_NUMBER_CUSTOMIZE:
-                ThemeWebActivity.openCurrentTheme(getActivity(), ThemeWebActivity.ThemeWebActivityType.PREVIEW);
+                // TODO: Stores: used null site here but this fragment activity
+                ThemeWebActivity.openCurrentTheme(getActivity(), null, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_THEMES:
-                ActivityLauncher.viewCurrentBlogThemes(getActivity());
+                // TODO: Stores: used null site here
+                ActivityLauncher.viewCurrentBlogThemes(getActivity(), null);
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_VIDEO:
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.currentBlog, false);
+                // TODO: Stores: used null site here
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), null, false);
                 break;
         }
 

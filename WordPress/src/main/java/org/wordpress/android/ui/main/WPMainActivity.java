@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,18 +20,21 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -52,16 +56,15 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
-import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.android.widgets.WPViewPager;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -71,18 +74,20 @@ import de.greenrobot.event.EventBus;
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends AppCompatActivity implements Bucket.Listener<Note> {
+    public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
+
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
-    private int  mAppBarElevation;
+    private int mAppBarElevation;
+
+    private SiteModel mSelectedSite;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
     @Inject MemorizingTrustManager mMemorizingTrustManager;
-
-    public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -320,6 +325,9 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     protected void onResume() {
         super.onResume();
 
+        // Load selected site
+        initSelectedSite();
+
         // Start listening to Simperium Note bucket
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
@@ -371,7 +379,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
-                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED);
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
+                            getSelectedSite());
                 }
                 break;
             case WPMainTabAdapter.TAB_READER:
@@ -528,53 +537,21 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     // Events
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.InvalidCredentialsDetected event) {
-        AuthenticationDialogUtils.showAuthErrorView(this);
-    }
-
-    // TODO: STORES: remove this when we drop legacy REST clients
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.RestApiUnauthorized event) {
-        AuthenticationDialogUtils.showAuthErrorView(this);
-    }
-
-    // TODO: STORES: remove this when we drop legacy REST clients
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.TwoFactorAuthenticationDetected event) {
-        AuthenticationDialogUtils.showAuthErrorView(this);
-    }
-
-    // TODO: STORES: this must be replaced by onAuthenticationChanged
-    @SuppressWarnings("unused")
-    public void onEventMainThread(UserSignedOutWordPressCom event) {
-        resetFragments();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError) {
-            AuthenticationDialogUtils.showAuthErrorView(this);
+        if (event.isError()) {
+            AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
         }
     }
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed out
+            resetFragments();
             ActivityLauncher.showSignInForResult(this);
         }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.InvalidSslCertificateDetected event) {
-        SelfSignedSSLUtils.showSSLWarningDialog(this, mMemorizingTrustManager, null);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.LoginLimitDetected event) {
-        ToastUtils.showToast(this, R.string.limit_reached, ToastUtils.Duration.LONG);
     }
 
     @SuppressWarnings("unused")
@@ -603,15 +580,9 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ActivityLauncher.showSignInForResult(this);
         } else {
-            Blog blog = WordPress.getCurrentBlog();
-            MySiteFragment mySiteFragment = getMySiteFragment();
-            if (mySiteFragment != null) {
-                mySiteFragment.setBlog(blog);
-            }
-
-            if (blog != null) {
-                int blogId = blog.getLocalTableBlogId();
-                ActivityLauncher.showSitePickerForResult(this, blogId);
+            SiteModel site = getSelectedSite();
+            if (site != null) {
+                ActivityLauncher.showSitePickerForResult(this, site);
             }
         }
     }
@@ -654,5 +625,82 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @Override
     public void onSaveObject(Bucket<Note> noteBucket, Note note) {
         // noop
+    }
+
+    /**
+     * @return null if there is no site or if there is no selected site
+     */
+    public @Nullable SiteModel getSelectedSite() {
+        return mSelectedSite;
+    }
+
+    public void setSelectedSite(int localSiteId) {
+        setSelectedSite(mSiteStore.getSiteByLocalId(localSiteId));
+    }
+
+    public void setSelectedSite(@Nullable SiteModel selectedSite) {
+        mSelectedSite = selectedSite;
+        if (selectedSite == null) {
+            AppPrefs.setSelectedSite(-1);
+            return;
+        }
+        // When we select a site, we want to update its informations or options
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
+
+        // Make selected site visible
+        selectedSite.setIsVisible(true);
+        AppPrefs.setSelectedSite(selectedSite.getId());
+    }
+
+    /**
+     * This should not be moved to a SiteUtils.getSelectedSite() or similar static method. We don't want
+     * this to be used globally like WordPress.getCurrentBlog() was used. The state is maintained by this
+     * Activity and the selected site parameter is passed along to other activities / fragments.
+     */
+    public void initSelectedSite() {
+        int siteLocalId = AppPrefs.getSelectedSite();
+
+        if (siteLocalId != -1) {
+            // Site previously selected, use it
+            mSelectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+            // If saved site exist, then return, else (site has been removed?) try to select another site
+            if (mSelectedSite != null) {
+                return;
+            }
+        }
+
+        // Try to select the primary wpcom site
+        long siteId = mAccountStore.getAccount().getPrimarySiteId();
+        SiteModel primarySite = mSiteStore.getSiteBySiteId(siteId);
+        // Primary site found, select it
+        if (primarySite != null) {
+            setSelectedSite(primarySite);
+            return;
+        }
+
+        // Else select the first visible site in the list
+        List<SiteModel> sites = mSiteStore.getVisibleSites();
+        if (sites.size() != 0) {
+            setSelectedSite(sites.get(0));
+            return;
+        }
+
+        // Else select the first in the list
+        sites = mSiteStore.getSites();
+        if (sites.size() != 0) {
+            setSelectedSite(sites.get(0));
+        }
+
+        // Else no site selected
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        // "Reload" selected site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
+        if (site != null) {
+            mSelectedSite = site;
+        }
     }
 }

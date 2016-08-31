@@ -9,10 +9,13 @@ import android.os.IBinder;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaUploadState;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.ApiHelper;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Inject;
 
 /**
  * A service for deleting media files from the media browser.
@@ -25,6 +28,9 @@ public class MediaDeleteService extends Service {
     private Context mContext;
     private Handler mHandler = new Handler();
     private boolean mDeleteInProgress;
+    private SiteModel mSite;
+
+    @Inject SiteStore mSiteStore;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -34,6 +40,7 @@ public class MediaDeleteService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
 
         mContext = this.getApplicationContext();
         mDeleteInProgress = false;
@@ -41,6 +48,11 @@ public class MediaDeleteService extends Service {
 
     @Override
     public void onStart(Intent intent, int startId) {
+        mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+        if (mSite == null) {
+            AppLog.e(T.API, "Site is null");
+            return ;
+        }
         mHandler.post(mFetchQueueTask);
     }
 
@@ -68,11 +80,7 @@ public class MediaDeleteService extends Service {
     };
 
     private Cursor getQueueItem() {
-        if (WordPress.getCurrentBlog() == null)
-            return null;
-
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        return WordPress.wpDB.getMediaDeleteQueueItem(blogId);
+        return WordPress.wpDB.getMediaDeleteQueueItem(String.valueOf(mSite.getId()));
     }
 
     private void deleteMediaFile(Cursor cursor) {
@@ -81,16 +89,17 @@ public class MediaDeleteService extends Service {
 
         mDeleteInProgress = true;
 
-        final String blogId = cursor.getString((cursor.getColumnIndex("blogId")));
+        final String localSiteId = cursor.getString((cursor.getColumnIndex("blogId")));
         final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
 
-        ApiHelper.DeleteMediaTask task = new ApiHelper.DeleteMediaTask(mediaId,
+        SiteModel site = mSiteStore.getSiteByLocalId(Integer.parseInt(localSiteId));
+        ApiHelper.DeleteMediaTask task = new ApiHelper.DeleteMediaTask(site, mediaId,
                 new ApiHelper.GenericCallback() {
             @Override
             public void onSuccess() {
                 // only delete them once we get an ok from the server
-                if (WordPress.getCurrentBlog() != null && mediaId != null) {
-                    WordPress.wpDB.deleteMediaFile(blogId, mediaId);
+                if (mediaId != null) {
+                    WordPress.wpDB.deleteMediaFile(localSiteId, mediaId);
                 }
 
                 mDeleteInProgress = false;
@@ -105,17 +114,13 @@ public class MediaDeleteService extends Service {
                 // Instead we'll just set them as "deleted" so they don't show up in the delete queue.
                 // Otherwise the service will continuously try to delete an item they can't delete.
 
-                WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.DELETED);
+                WordPress.wpDB.updateMediaUploadState(localSiteId, mediaId, MediaUploadState.DELETED);
 
                 mDeleteInProgress = false;
                 mHandler.post(mFetchQueueTask);
             }
         });
-
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        task.execute(apiArgs) ;
-
+        task.execute();
         mHandler.post(mFetchQueueTask);
     }
 }

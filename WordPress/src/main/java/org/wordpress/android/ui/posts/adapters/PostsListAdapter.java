@@ -23,10 +23,10 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.services.PostMediaService;
@@ -57,13 +57,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnPostButtonClickListener mOnPostButtonClickListener;
 
-    private final int mLocalTableBlogId;
+    private final SiteModel mSite;
     private final int mPhotonWidth;
     private final int mPhotonHeight;
     private final int mEndlistIndicatorHeight;
 
     private final boolean mIsPage;
-    private final boolean mIsPrivateBlog;
     private final boolean mIsStatsSupported;
     private final boolean mAlwaysShowAllButtons;
 
@@ -79,13 +78,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int VIEW_TYPE_POST_OR_PAGE = 0;
     private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
 
-    public PostsListAdapter(Context context, @NonNull Blog blog, boolean isPage) {
+    public PostsListAdapter(Context context, @NonNull SiteModel site, boolean isPage) {
         mIsPage = isPage;
         mLayoutInflater = LayoutInflater.from(context);
 
-        mLocalTableBlogId = blog.getLocalTableBlogId();
-        mIsPrivateBlog = blog.isPrivate();
-        mIsStatsSupported = blog.isDotcomFlag() || blog.isJetpackPowered();
+        mSite = site;
+        mIsStatsSupported = site.isWPCom() || site.isJetpack();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int contentSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
@@ -651,7 +649,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            tmpPosts = WordPress.wpDB.getPostsListPosts(mLocalTableBlogId, mIsPage);
+            // TODO: STORES: PostStore should replace this
+            tmpPosts = WordPress.wpDB.getPostsListPosts(mSite.getId(), mIsPage);
 
             // make sure we don't return any hidden posts
             for (PostsListPost hiddenPost : mHiddenPosts) {
@@ -669,26 +668,22 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 if (post.isLocalDraft()) {
                     imageUrl = null;
                 } else if (post.getFeaturedImageId() != 0) {
-                    imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mLocalTableBlogId, post.getFeaturedImageId());
+                    imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mSite.getId(), post.getFeaturedImageId());
                     // if the imageUrl isn't found it means the featured image info hasn't been added to
                     // the local media library yet, so add to the list of media IDs to request info for
                     if (TextUtils.isEmpty(imageUrl)) {
                         mediaIdsToUpdate.add(post.getFeaturedImageId());
                     }
                 } else if (post.hasDescription()) {
-                    ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), mIsPrivateBlog);
+                    ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), mSite.isPrivate());
                     imageUrl = scanner.getLargestImage();
                 } else {
                     imageUrl = null;
                 }
 
                 if (!TextUtils.isEmpty(imageUrl)) {
-                    post.setFeaturedImageUrl(
-                            ReaderUtils.getResizedImageUrl(
-                                    imageUrl,
-                                    mPhotonWidth,
-                                    mPhotonHeight,
-                                    mIsPrivateBlog));
+                    post.setFeaturedImageUrl(ReaderUtils.getResizedImageUrl(imageUrl, mPhotonWidth, mPhotonHeight,
+                            mSite.isPrivate()));
                 }
             }
 
@@ -703,7 +698,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 notifyDataSetChanged();
 
                 if (mediaIdsToUpdate.size() > 0) {
-                    PostMediaService.startService(WordPress.getContext(), mLocalTableBlogId, mediaIdsToUpdate);
+                    PostMediaService.startService(WordPress.getContext(), mSite.getId(), mediaIdsToUpdate);
                 }
             }
 

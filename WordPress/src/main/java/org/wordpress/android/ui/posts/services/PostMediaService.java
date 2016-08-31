@@ -7,8 +7,10 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper.Method;
@@ -18,10 +20,13 @@ import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -31,12 +36,12 @@ import de.greenrobot.event.EventBus;
  */
 
 public class PostMediaService extends Service {
-
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_MEDIA_IDS = "media_ids";
 
     private final ConcurrentLinkedQueue<Long> mMediaIdQueue = new ConcurrentLinkedQueue<>();
-    private Blog mBlog;
+    private SiteModel mSite;
+    @Inject SiteStore mSiteStore;
 
     public static void startService(Context context, int blogId, ArrayList<Long> mediaIds) {
         if (context == null || mediaIds == null || mediaIds.size() == 0) {
@@ -52,6 +57,7 @@ public class PostMediaService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.POSTS, "PostMediaService > created");
     }
 
@@ -72,7 +78,7 @@ public class PostMediaService extends Service {
         if (intent == null) return START_NOT_STICKY;
 
         int blogId = intent.getIntExtra(ARG_BLOG_ID, 0);
-        mBlog = WordPress.getBlog(blogId);
+        mSite = mSiteStore.getSiteByLocalId(blogId);
 
         Serializable serializable = intent.getSerializableExtra(ARG_MEDIA_IDS);
         if (serializable != null && serializable instanceof List) {
@@ -84,7 +90,7 @@ public class PostMediaService extends Service {
             }
         }
 
-        if (mMediaIdQueue.size() > 0 && mBlog != null) {
+        if (mMediaIdQueue.size() > 0 && mSite != null) {
             new Thread() {
                 @Override
                 public void run() {
@@ -101,21 +107,19 @@ public class PostMediaService extends Service {
 
     private void downloadMediaItem(long mediaId) {
         Object[] apiParams = {
-                mBlog.getRemoteBlogId(),
-                mBlog.getUsername(),
-                mBlog.getPassword(),
-                mediaId};
+                String.valueOf(mSite.getSiteId()),
+                StringUtils.notNullStr(mSite.getUsername()),
+                StringUtils.notNullStr(mSite.getPassword()),
+                mediaId
+        };
 
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(
-                mBlog.getUri(),
-                mBlog.getHttpuser(),
-                mBlog.getHttppassword());
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
 
         try {
             Map<?, ?> results = (Map<?, ?>) client.call(Method.GET_MEDIA_ITEM, apiParams);
             if (results != null) {
-                String strBlogId = Integer.toString(mBlog.getLocalTableBlogId());
-                MediaFile mediaFile = new MediaFile(strBlogId, results, mBlog.isDotcomFlag());
+                String strBlogId = Integer.toString(mSite.getId());
+                MediaFile mediaFile = new MediaFile(strBlogId, results, mSite.isWPCom());
                 WordPress.wpDB.saveMediaFile(mediaFile);
                 AppLog.d(AppLog.T.POSTS, "PostMediaService > downloaded " + mediaFile.getFileURL());
                 EventBus.getDefault().post(new PostEvents.PostMediaInfoUpdated(mediaId, mediaFile.getFileURL()));

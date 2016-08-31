@@ -13,10 +13,10 @@ import java.util.List;
 public class TopPostsAndPagesModel extends BaseStatsModel {
     private String mPeriod;
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private List<PostModel> mTopPostsAndPages;
 
-    public TopPostsAndPagesModel(String blogID, JSONObject response) throws JSONException {
+    public TopPostsAndPagesModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mPeriod = response.getString("period");
         this.mDate = response.getString("date");
@@ -59,11 +59,11 @@ public class TopPostsAndPagesModel extends BaseStatsModel {
         this.mTopPostsAndPages = list;
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    public void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

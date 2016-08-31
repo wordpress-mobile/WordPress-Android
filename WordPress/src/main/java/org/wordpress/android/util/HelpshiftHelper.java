@@ -12,9 +12,10 @@ import com.helpshift.support.Support.Delegate;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.io.File;
 import java.util.HashMap;
@@ -124,7 +125,7 @@ public class HelpshiftHelper {
      * Show conversation activity
      * Automatically add default metadata to this conversation
      */
-    public void showConversation(Activity activity, Tag origin, String wpComUsername) {
+    public void showConversation(Activity activity, SiteStore siteStore, Tag origin, String wpComUsername) {
         if (origin == null) {
             origin = Tag.ORIGIN_UNKNOWN;
         }
@@ -135,7 +136,7 @@ public class HelpshiftHelper {
         AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN, properties);
         // Add tags to Helpshift metadata
         addTags(new Tag[]{origin});
-        HashMap config = getHelpshiftConfig(activity, wpComUsername);
+        HashMap config = getHelpshiftConfig(activity, siteStore, wpComUsername);
         Support.showConversation(activity, config);
     }
 
@@ -143,7 +144,7 @@ public class HelpshiftHelper {
      * Show FAQ activity
      * Automatically add default metadata to this conversation (users can start a conversation from FAQ screen).
      */
-    public void showFAQ(Activity activity, Tag origin, String wpComUsername) {
+    public void showFAQ(Activity activity, SiteStore siteStore, Tag origin, String wpComUsername) {
         if (origin == null) {
             origin = Tag.ORIGIN_UNKNOWN;
         }
@@ -154,7 +155,7 @@ public class HelpshiftHelper {
         AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN, properties);
         // Add tags to Helpshift metadata
         addTags(new Tag[]{origin});
-        HashMap config = getHelpshiftConfig(activity, wpComUsername);
+        HashMap config = getHelpshiftConfig(activity, siteStore, wpComUsername);
         Support.showFAQs(activity, config);
     }
 
@@ -201,15 +202,15 @@ public class HelpshiftHelper {
         return mMetadata.get(key.toString());
     }
 
-    private void addDefaultMetaData(Context context, String wpComUsername) {
+    private void addDefaultMetaData(Context context, SiteStore siteStore, String wpComUsername) {
         // Use plain text log (unfortunately Helpshift can't display this correctly)
         mMetadata.put("log", AppLog.toPlainText(context));
 
         // List blogs name and url
         int counter = 1;
-        for (Map<String, Object> account : WordPress.wpDB.getAllBlogs()) {
-            mMetadata.put("blog-name-" + counter, MapUtils.getMapStr(account, "blogName"));
-            mMetadata.put("blog-url-" + counter, MapUtils.getMapStr(account, "url"));
+        for (SiteModel site: siteStore.getSites()) {
+            mMetadata.put("blog-name-" + counter, site.getName());
+            mMetadata.put("blog-url-" + counter, site.getUrl());
             counter += 1;
         }
 
@@ -217,7 +218,7 @@ public class HelpshiftHelper {
         mMetadata.put("wpcom-username", wpComUsername);
     }
 
-    private HashMap getHelpshiftConfig(Context context, String wpComUsername) {
+    private HashMap getHelpshiftConfig(Context context, SiteStore siteStore, String wpComUsername) {
         String emailAddress = UserEmailUtils.getPrimaryEmail(context);
         // Use the user entered username to pre-fill name
         String name = (String) getMetaData(MetadataKey.USER_ENTERED_USERNAME);
@@ -229,7 +230,7 @@ public class HelpshiftHelper {
             }
         }
         Core.setNameAndEmail(name, emailAddress);
-        addDefaultMetaData(context, wpComUsername);
+        addDefaultMetaData(context, siteStore, wpComUsername);
         HashMap config = new HashMap ();
         config.put(Support.CustomMetadataKey, mMetadata);
         return config;

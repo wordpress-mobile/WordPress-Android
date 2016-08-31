@@ -4,8 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class InsightsAllTimeModel extends BaseStatsModel {
-
-    private String mBlogID;
+    private long mBlogID;
     private String mDate;
     private int mVisitors;
     private int mViews;
@@ -14,7 +13,7 @@ public class InsightsAllTimeModel extends BaseStatsModel {
     private int mViewsBestDayTotal;
 
 
-    public InsightsAllTimeModel(String blogID, JSONObject response) throws JSONException {
+    public InsightsAllTimeModel(long blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
         this.mDate = response.getString("date");
         JSONObject stats = response.getJSONObject("stats");
@@ -25,11 +24,11 @@ public class InsightsAllTimeModel extends BaseStatsModel {
         this.mViewsBestDayTotal = stats.optInt("views_best_day_total");
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    private void setBlogID(String blogID) {
+    private void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

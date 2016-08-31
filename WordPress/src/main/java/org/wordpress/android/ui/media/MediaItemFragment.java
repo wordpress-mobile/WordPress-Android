@@ -28,7 +28,7 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
@@ -36,6 +36,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -64,18 +65,19 @@ public class MediaItemFragment extends Fragment {
     private boolean mIsLocal;
     private String mImageUri;
 
+    private SiteModel mSite;
+
     public interface MediaItemFragmentCallback {
         void onResume(Fragment fragment);
         void onPause(Fragment fragment);
     }
 
-    public static MediaItemFragment newInstance(String mediaId) {
+    public static MediaItemFragment newInstance(SiteModel site, String mediaId) {
         MediaItemFragment fragment = new MediaItemFragment();
-
         Bundle args = new Bundle();
         args.putString(ARGS_MEDIA_ID, mediaId);
+        args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -83,6 +85,27 @@ public class MediaItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
@@ -137,23 +160,21 @@ public class MediaItemFragment extends Fragment {
     }
 
     public void loadMedia(String mediaId) {
-        Blog blog = WordPress.getCurrentBlog();
+        if (mSite == null)
+            return;
+        String blogId = String.valueOf(mSite.getId());
 
-        if (blog != null) {
-            String blogId = String.valueOf(blog.getLocalTableBlogId());
-
-            Cursor cursor = null;
-            try {
-                // if the id is null, get the first media item in the database
-                if (mediaId == null) {
-                    cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
-                } else {
-                    cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
-                }
-                refreshViews(cursor);
-            } finally {
-                SqlUtils.closeCursor(cursor);
+        Cursor cursor = null;
+        try {
+            // if the id is null, get the first media item in the database
+            if (mediaId == null) {
+                cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
+            } else {
+                cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
             }
+            refreshViews(cursor);
+        } finally {
+            SqlUtils.closeCursor(cursor);
         }
     }
 
@@ -247,7 +268,7 @@ public class MediaItemFragment extends Fragment {
             } else {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
                 String thumbnailURL;
-                if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
+                if (SiteUtils.isPhotonCapable(mSite)) {
                     thumbnailURL = StringUtils.getPhotonUrl(mImageUri, imageWidth);
                 } else {
                     thumbnailURL = UrlUtils.removeQuery(mImageUri) + "?w=" + imageWidth;
@@ -283,10 +304,8 @@ public class MediaItemFragment extends Fragment {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Blog blog = WordPress.getCurrentBlog();
-                    boolean isPrivate = blog != null && blog.isPrivate();
                     EnumSet<PhotoViewerOption> imageOptions = EnumSet.noneOf(PhotoViewerOption.class);
-                    if (isPrivate) {
+                    if (mSite.isPrivate()) {
                         imageOptions.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
                     }
                     ReaderActivityLauncher.showReaderPhotoViewer(
@@ -325,10 +344,7 @@ public class MediaItemFragment extends Fragment {
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_new_media).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
-
-        menu.findItem(R.id.menu_edit_media).setVisible(
-                !mIsLocal && WordPressMediaUtils.isWordPressVersionWithMediaEditingCapabilities());
-
+        menu.findItem(R.id.menu_edit_media).setVisible(!mIsLocal);
         menu.findItem(R.id.menu_copy_media_url).setVisible(!mIsLocal && !TextUtils.isEmpty(mImageUri));
     }
 
@@ -337,7 +353,7 @@ public class MediaItemFragment extends Fragment {
         int itemId = item.getItemId();
 
         if (itemId == R.id.menu_delete) {
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+            String blogId = String.valueOf(mSite.getId());
             boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(blogId, getMediaId());
             if (!canDeleteMedia) {
                 Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();

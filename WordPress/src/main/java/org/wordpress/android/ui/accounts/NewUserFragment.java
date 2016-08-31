@@ -20,11 +20,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
-import org.wordpress.android.Constants;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -33,7 +32,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.NewAccountPayload;
-import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
+import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnNewUserCreated;
@@ -42,6 +41,7 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -256,7 +256,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         showSiteUrlError(message);
     }
 
-    private void showUserError(NewUserError newUserError, String message) {
+    private void showUserError(NewUserErrorType newUserError, String message) {
         if (!isAdded()) {
             return;
         }
@@ -422,7 +422,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         termsOfServiceTextView.setOnClickListener(new OnClickListener() {
                                                       @Override
                                                       public void onClick(View v) {
-                                                          Uri uri = Uri.parse(Constants.URL_TOS);
+                                                          Uri uri = Uri.parse(getString(R.string.wordpresscom_tos_url));
                                                           startActivity(new Intent(Intent.ACTION_VIEW, uri));
                                                       }
                                                   }
@@ -459,8 +459,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                BlogUtils.convertToLowercase(s);
+            public void afterTextChanged(Editable editable) {
+                lowerCaseEditable(editable);
             }
         });
 
@@ -479,8 +479,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                BlogUtils.convertToLowercase(s);
+            public void afterTextChanged(Editable editable) {
+                lowerCaseEditable(editable);
             }
         });
         mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -548,10 +548,10 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
     // OnChanged events
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         AppLog.i(T.NUX, event.toString());
-        if (event.isError) {
+        if (event.isError()) {
             endProgress();
             finishAndShowSignInScreen();
             return;
@@ -569,12 +569,12 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewUserCreated(OnNewUserCreated event) {
         AppLog.i(T.NUX, event.toString());
-        if (event.isError) {
+        if (event.isError()) {
             endProgress();
-            showUserError(event.errorType, event.errorMessage);
+            showUserError(event.error.type, event.error.message);
             return;
         }
         if (event.dryRun) {
@@ -588,12 +588,12 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
-        if (event.isError) {
+        if (event.isError()) {
             endProgress();
-            showSiteError(event.errorMessage);
+            showSiteError(event.error.message);
             return;
         }
         if (event.dryRun) {
@@ -608,7 +608,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         fetchSiteAndAccount();
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         AppLog.i(T.NUX, event.toString());
         mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
@@ -619,7 +619,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
         mSitesFetched = true;

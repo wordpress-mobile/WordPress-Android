@@ -11,7 +11,7 @@ import org.wordpress.android.models.Note;
 
 public interface NotificationFragment {
     public static interface OnPostClickListener {
-        public void onPostClicked(Note note, int remoteBlogId, int postId);
+        public void onPostClicked(Note note, long remoteBlogId, int postId);
     }
 
     public Note getNote();

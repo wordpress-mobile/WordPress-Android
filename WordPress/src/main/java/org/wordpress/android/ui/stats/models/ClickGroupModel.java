@@ -16,7 +16,7 @@ import java.util.List;
  * A model to represent a click group stat
  */
 public class ClickGroupModel implements Serializable {
-    private String mBlogId;
+    private long mBlogId;
     private long mDate;
 
     private String mGroupId;
@@ -26,7 +26,7 @@ public class ClickGroupModel implements Serializable {
     private String mUrl;
     private List<SingleItemModel> mClicks;
 
-    public ClickGroupModel(String blogId, String date, JSONObject clickGroupJSON) throws JSONException {
+    public ClickGroupModel(long blogId, String date, JSONObject clickGroupJSON) throws JSONException {
         setBlogId(blogId);
         setDate(StatsUtils.toMs(date));
 
@@ -53,12 +53,12 @@ public class ClickGroupModel implements Serializable {
         }
     }
 
-    public String getBlogId() {
+    public long getBlogId() {
         return mBlogId;
     }
 
-    private void setBlogId(String blogId) {
-        this.mBlogId = blogId;
+    public void setBlogId(long blogId) {
+        mBlogId = blogId;
     }
 
     public long getDate() {

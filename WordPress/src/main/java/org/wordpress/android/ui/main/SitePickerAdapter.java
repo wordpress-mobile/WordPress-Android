@@ -14,12 +14,12 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -381,25 +380,23 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Map<String, Object>> blogs;
-            String[] extraFields = {"isHidden", "dotcomFlag", "homeURL"};
-
+            List<SiteModel> siteModels;
             if (mIsInSearchMode) {
-                blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
+                siteModels = mSiteStore.getSites();
             } else {
-                blogs = getBlogsForCurrentView(extraFields);
+                siteModels = getBlogsForCurrentView();
             }
 
-            SiteList sites = new SiteList(blogs);
+            SiteList sites = new SiteList(siteModels);
 
             // sort by blog/host
-            final long primaryBlogId = mAccountStore.getAccount().getPrimaryBlogId();
+            final long primaryBlogId = mAccountStore.getAccount().getPrimarySiteId();
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
                     if (primaryBlogId > 0) {
-                        if (site1.blogId == primaryBlogId) {
+                        if (site1.siteId == primaryBlogId) {
                             return -1;
-                        } else if (site2.blogId == primaryBlogId) {
+                        } else if (site2.siteId == primaryBlogId) {
                             return 1;
                         }
                     }
@@ -421,22 +418,24 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
             mIsTaskRunning = false;
         }
 
-        private List<Map<String, Object>> getBlogsForCurrentView(String[] extraFields) {
+        private List<SiteModel> getBlogsForCurrentView() {
             if (mShowHiddenSites) {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted blogs and all wp.com blogs
-                    return WordPress.wpDB.getBlogsBy(null, extraFields);
+                    // all self-hosted sites and all wp.com sites
+                    return mSiteStore.getSites();
                 } else {
-                    // only wp.com blogs
-                    return WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
+                    // only wp.com sites
+                    return mSiteStore.getDotComSites();
                 }
             } else {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted blogs plus visible wp.com blogs
-                    return WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1) ", extraFields);
+                    // all self-hosted sites plus visible wp.com sites
+                    List<SiteModel> out = mSiteStore.getVisibleDotComSites();
+                    out.addAll(mSiteStore.getDotOrgSites());
+                    return out;
                 } else {
                     // only visible wp.com blogs
-                    return WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
+                    return mSiteStore.getVisibleDotComSites();
                 }
             }
         }
@@ -447,7 +446,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
      */
      static class SiteRecord {
         final int localId;
-        final int blogId;
+        final long siteId;
         final String blogName;
         final String homeURL;
         final String url;
@@ -455,15 +454,15 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         final boolean isDotCom;
         boolean isHidden;
 
-        SiteRecord(Map<String, Object> account) {
-            localId = MapUtils.getMapInt(account, "id");
-            blogId = MapUtils.getMapInt(account, "blogId");
-            blogName = BlogUtils.getBlogNameOrHomeURLFromAccountMap(account);
-            homeURL = BlogUtils.getHomeURLOrHostNameFromAccountMap(account);
-            url = MapUtils.getMapStr(account, "url");
+        SiteRecord(SiteModel siteModel) {
+            localId = siteModel.getId();
+            siteId = siteModel.getSiteId();
+            blogName = SiteUtils.getSiteNameOrHomeURL(siteModel);
+            homeURL = SiteUtils.getHomeURLOrHostName(siteModel);
+            url = siteModel.getUrl();
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
-            isDotCom = MapUtils.getMapBool(account, "dotcomFlag");
-            isHidden = MapUtils.getMapBool(account, "isHidden");
+            isDotCom = siteModel.isWPCom();
+            isHidden = !siteModel.isVisible();
         }
 
         String getBlogNameOrHomeURL() {
@@ -476,10 +475,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
 
    static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
-        SiteList(List<Map<String, Object>> accounts) {
-            if (accounts != null) {
-                for (Map<String, Object> account : accounts) {
-                    add(new SiteRecord(account));
+        SiteList(List<SiteModel> siteModels) {
+            if (siteModels != null) {
+                for (SiteModel siteModel : siteModels) {
+                    add(new SiteRecord(siteModel));
                 }
             }
         }
@@ -499,9 +498,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         }
 
         int indexOfSite(SiteRecord site) {
-            if (site != null && site.blogId > 0) {
+            if (site != null && site.siteId > 0) {
                 for (int i = 0; i < size(); i++) {
-                    if (site.blogId == this.get(i).blogId) {
+                    if (site.siteId == this.get(i).siteId) {
                         return i;
                     }
                 }

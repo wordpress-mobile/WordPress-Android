@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
@@ -30,6 +30,7 @@ import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
@@ -45,6 +46,28 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
     private String mMediaCapturePath = "";
 
+    private SiteModel mSite;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // This view doesn't really matter as this fragment is invisible
@@ -58,8 +81,10 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mMediaCapturePath != null && !mMediaCapturePath.equals(""))
+        if (mMediaCapturePath != null && !mMediaCapturePath.equals("")) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
+        }
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
@@ -181,8 +206,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             return;
         }
 
-        Blog blog = WordPress.getCurrentBlog();
-
         File file = new File(path);
         if (!file.exists()) {
             return;
@@ -192,7 +215,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
 
         MediaFile mediaFile = new MediaFile();
-        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
+        mediaFile.setBlogId(String.valueOf(mSite.getId()));
         mediaFile.setFileName(fileName);
         mediaFile.setFilePath(path);
         mediaFile.setUploadState("queued");
@@ -211,13 +234,15 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             mediaFile.setMimeType(mimeType);
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
-        EventBus.getDefault().post(new MediaChanged(String.valueOf(blog.getLocalTableBlogId()), mediaFile.getMediaId()));
+        EventBus.getDefault().post(new MediaChanged(String.valueOf(mSite.getId()), mediaFile.getMediaId()));
         startMediaUploadService();
     }
 
     private void startMediaUploadService() {
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            getActivity().startService(new Intent(getActivity(), MediaUploadService.class));
+            Intent intent = new Intent(getActivity(), MediaUploadService.class);
+            intent.putExtra(WordPress.SITE, mSite);
+            getActivity().startService(intent);
         }
     }
 
@@ -247,7 +272,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     public void addToQueue(String mediaId) {
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        String blogId = String.valueOf(mSite.getId());
         WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.QUEUED);
         startMediaUploadService();
     }
