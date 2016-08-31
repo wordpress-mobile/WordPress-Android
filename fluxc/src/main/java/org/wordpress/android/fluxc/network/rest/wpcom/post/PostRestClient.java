@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.post;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -38,9 +39,9 @@ import javax.inject.Singleton;
 @Singleton
 public class PostRestClient extends BaseWPComRestClient {
     @Inject
-    public PostRestClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
+    public PostRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
                           UserAgent userAgent) {
-        super(dispatcher, requestQueue, accessToken, userAgent);
+        super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
     public void fetchPost(final PostModel post, final SiteModel site) {
