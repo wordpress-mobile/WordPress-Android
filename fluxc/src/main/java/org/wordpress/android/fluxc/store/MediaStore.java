@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
-import com.android.volley.VolleyError;
+import android.support.annotation.NonNull;
+
 import com.wellsql.generated.MediaModelTable;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -10,8 +11,12 @@ import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
+import org.wordpress.android.fluxc.network.MediaNetworkListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
+import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
+import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +25,25 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class MediaStore extends Store implements MediaRestClient.MediaRestListener {
+public class MediaStore extends Store implements MediaNetworkListener {
+    public enum MediaError {
+        NONE,
+        NULL_MEDIA_ARG,
+        MALFORMED_MEDIA_ARG,
+        MEDIA_NOT_FOUND
+    }
+
     //
     // Payloads
     //
 
     /**
-     * Used for FETCH_ALL_MEDIA and FETCH_MEDIA actions
+     * Used for PULL_ALL_MEDIA and PULL_MEDIA actions
      */
-    public static class FetchMediaPayload implements Payload {
+    public static class PullMediaPayload extends Payload {
         public SiteModel site;
         public List<Long> mediaIds;
-        public FetchMediaPayload(SiteModel site, List<Long> mediaIds) {
+        public PullMediaPayload(SiteModel site, List<Long> mediaIds) {
             this.site = site;
             this.mediaIds = mediaIds;
         }
@@ -40,7 +52,7 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
     /**
      * Used for DELETE_MEDIA, REMOVE_MEDIA, PUSH_MEDIA, and UPDATE_MEDIA actions
      */
-    public static class ChangeMediaPayload implements Payload {
+    public static class ChangeMediaPayload extends Payload {
         public SiteModel site;
         public List<MediaModel> media;
         public ChangeMediaPayload(SiteModel site, List<MediaModel> media) {
@@ -49,7 +61,7 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
         }
     }
 
-    public static class ChangedMediaPayload implements Payload {
+    public static class ChangedMediaPayload extends Payload {
         public List<MediaModel> media;
         public List<Exception> errors;
         public Exception error;
@@ -81,63 +93,85 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
         }
     }
 
+    public class OnMediaProgress extends OnChanged {
+        public MediaModel media;
+        public float progress;
+        public OnMediaProgress(MediaModel media, float progress) {
+            this.media = media;
+            this.progress = progress;
+        }
+    }
+
     public class OnMediaError extends OnChanged {
+        public MediaError mediaError;
         public MediaAction causeOfError;
         public Exception error;
-        public OnMediaError(MediaAction cause, Exception error) {
+        public OnMediaError(MediaError mediaError, MediaAction cause, Exception error) {
+            this.mediaError = mediaError;
             this.causeOfError = cause;
             this.error = error;
         }
     }
 
     private MediaRestClient mMediaRestClient;
+    private MediaXMLRPCClient mMediaXmlrpcClient;
 
     @Inject
-    public MediaStore(Dispatcher dispatcher, MediaRestClient mediaRestClient) {
+    public MediaStore(Dispatcher dispatcher, MediaRestClient restClient, MediaXMLRPCClient xmlrpcClient) {
         super(dispatcher);
-        mMediaRestClient = mediaRestClient;
+        mMediaRestClient = restClient;
+        mMediaRestClient.setListener(this);
+        mMediaXmlrpcClient = xmlrpcClient;
+        mMediaXmlrpcClient.setListener(this);
     }
 
     @Subscribe
     @Override
     public void onAction(Action action) {
-        if (action.getType() == MediaAction.FETCH_ALL_MEDIA) {
-            FetchMediaPayload payload = (FetchMediaPayload) action.getPayload();
-            mMediaRestClient.fetchAllMedia(payload.site.getSiteId());
-        } else if (action.getType() == MediaAction.FETCH_MEDIA) {
-            FetchMediaPayload payload = (FetchMediaPayload) action.getPayload();
-            mMediaRestClient.fetchMedia(payload.site.getSiteId(), payload.mediaIds);
-        } else if (action.getType() == MediaAction.PUSH_MEDIA) {
-            ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
-//            mMediaRestClient.updateMedia(payload.site.getSiteId(), payload.media);
+        if (action.getType() == MediaAction.PUSH_MEDIA) {
+            performPushMedia((ChangeMediaPayload) action.getPayload());
+        } else if (action.getType() == MediaAction.UPLOAD_MEDIA) {
+            performUploadMedia((ChangeMediaPayload) action.getPayload());
+        } else if (action.getType() == MediaAction.PULL_ALL_MEDIA) {
+            performPullAllMedia((PullMediaPayload) action.getPayload());
+        } else if (action.getType() == MediaAction.PULL_MEDIA) {
+            performPullMedia((PullMediaPayload) action.getPayload());
         } else if (action.getType() == MediaAction.DELETE_MEDIA) {
+            performDeleteMedia((ChangeMediaPayload) action.getPayload());
+        } else if (action.getType() == MediaAction.UPDATE_MEDIA) {
             ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
-            mMediaRestClient.deleteMedia(payload.site.getSiteId(), payload.media);
-        }else if (action.getType() == MediaAction.UPDATE_MEDIA) {
-            ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
-            updateMedia(payload.media);
+            updateMedia(payload.media, true);
         } else if (action.getType() == MediaAction.REMOVE_MEDIA) {
             ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
             removeMedia(payload.media);
-        } else if (action.getType() == MediaAction.UPLOAD_MEDIA) {
-            ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
         }
     }
 
     @Override
     public void onRegister() {
-        mMediaRestClient.setListener(this);
+    }
+
+    @Override
+    public void onMediaError(MediaAction cause, MediaModel media, MediaNetworkError error) {
+        AppLog.d(AppLog.T.MEDIA, cause + " caused exception: " + error);
+
+        if (error == MediaNetworkError.MEDIA_NOT_FOUND) {
+            notifyMediaError(MediaError.MEDIA_NOT_FOUND, cause, error.exception);
+        }
     }
 
     @Override
     public void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia) {
-        if (cause == MediaAction.FETCH_ALL_MEDIA || cause == MediaAction.FETCH_MEDIA) {
+        if (cause == MediaAction.PULL_ALL_MEDIA || cause == MediaAction.PULL_MEDIA) {
+            updateMedia(pulledMedia, false);
             emitChange(new OnMediaChanged(cause, pulledMedia));
         }
     }
 
     @Override
     public void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia) {
+        updateMedia(pushedMedia, false);
+        emitChange(new OnMediaChanged(cause, pushedMedia));
     }
 
     @Override
@@ -148,7 +182,9 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
     }
 
     @Override
-    public void onMediaError(MediaAction cause, VolleyError error) {
+    public void onMediaUploadProgress(MediaAction cause, MediaModel media, float progress) {
+        AppLog.v(AppLog.T.MEDIA, "Progress update on upload of " + media.getTitle() + ": " + progress);
+        emitChange(new OnMediaProgress(media, progress));
     }
 
     public List<MediaModel> getAllSiteMedia(long siteId) {
@@ -193,13 +229,13 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
     }
 
     public List<MediaModel> getLocalSiteMedia(long siteId) {
-        return MediaSqlUtils.matchSiteMedia(siteId, MediaModelTable.UPLOAD_DATE, null);
+        return MediaSqlUtils.getSiteMediaExcluding(siteId, MediaModelTable.UPLOAD_STATE, MediaModel.UPLOAD_STATE.UPLOADED);
     }
 
     public String getUrlForSiteVideoWithVideoPressGuid(long siteId, String videoPressGuid) {
         List<MediaModel> media =
                 MediaSqlUtils.matchSiteMedia(siteId, MediaModelTable.VIDEO_PRESS_GUID, videoPressGuid);
-        return media.size() > 0 ? media.get(0).getVideoPressGuid() : null;
+        return media.size() > 0 ? media.get(0).getUrl() : null;
     }
 
     public String getThumbnailUrlForSiteMediaWithId(long siteId, long mediaId) {
@@ -226,34 +262,113 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
         return getNextSiteMediaToDelete(siteId) != null;
     }
 
-    private void updateMedia(List<MediaModel> media) {
+    //
+    // Action implementations
+    //
+
+    private void updateMedia(List<MediaModel> media, boolean emit) {
         if (media == null || media.isEmpty()) return;
 
-        ChangedMediaPayload payload = new ChangedMediaPayload(new ArrayList<MediaModel>(), new ArrayList<Exception>(), null);
+        OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA, new ArrayList<MediaModel>());
         for (MediaModel mediaItem : media) {
             if (MediaSqlUtils.insertOrUpdateMedia(mediaItem) > 0) {
-                payload.media.add(mediaItem);
+                event.media.add(mediaItem);
             }
         }
-
-        // TODO: emit OnMediaChanged
+        if (emit) emitChange(event);
     }
 
     private void removeMedia(List<MediaModel> media) {
         if (media == null || media.isEmpty()) return;
 
-        ChangedMediaPayload payload = new ChangedMediaPayload(new ArrayList<MediaModel>(), new ArrayList<Exception>(), null);
+        OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_MEDIA, new ArrayList<MediaModel>());
         for (MediaModel mediaItem : media) {
             if (MediaSqlUtils.deleteMedia(mediaItem) > 0) {
-                payload.media.add(mediaItem);
+                event.media.add(mediaItem);
             }
         }
-
-        // TODO: emit OnMediaChanged
+        emitChange(event);
     }
 
-    private OnChanged getErrorOrChangedEvent(MediaAction cause, ChangedMediaPayload payload) {
-        return payload.isError() ? new OnMediaError(cause, payload.error) :
-                                   new OnMediaChanged(cause, payload.media);
+    //
+    // Helper methods that choose the appropriate network client to perform an action
+    //
+
+    private void notifyMediaError(MediaError error, MediaAction cause, Exception exception) {
+        emitChange(new OnMediaError(error, cause, exception));
+    }
+
+    private void performPushMedia(ChangeMediaPayload payload) {
+        if (payload.media == null || payload.media.isEmpty() || payload.media.contains(null)) {
+            // null or empty media list -or- list contains a null value
+            notifyMediaError(MediaError.NULL_MEDIA_ARG, MediaAction.PUSH_MEDIA, null);
+            return;
+        }
+
+        if (payload.site.isWPCom()) {
+            mMediaRestClient.pushMedia(payload.site.getSiteId(), payload.media);
+        } else {
+            mMediaXmlrpcClient.pushMedia(payload.site, payload.media);
+        }
+    }
+
+    private void performUploadMedia(ChangeMediaPayload payload) {
+        if (payload.media == null || payload.media.isEmpty() || payload.media.contains(null)) {
+            // null or empty media list -or- list contains a null value
+            notifyMediaError(MediaError.NULL_MEDIA_ARG, MediaAction.UPLOAD_MEDIA, null);
+            return;
+        } else if (!isWellFormedForUpload(payload.media)) {
+            // list contained media items with insufficient data
+            notifyMediaError(MediaError.MALFORMED_MEDIA_ARG, MediaAction.UPLOAD_MEDIA, null);
+            return;
+        }
+
+        if (payload.site.isWPCom()) {
+            mMediaRestClient.uploadMedia(payload.site.getSiteId(), payload.media.get(0));
+        } else {
+            mMediaXmlrpcClient.uploadMedia(payload.site, payload.media.get(0));
+        }
+    }
+
+    private void performPullAllMedia(PullMediaPayload payload) {
+        if (payload.site.isWPCom()) {
+            mMediaRestClient.pullAllMedia(payload.site.getSiteId());
+        } else {
+            mMediaXmlrpcClient.pullAllMedia(payload.site);
+        }
+    }
+
+    private void performPullMedia(PullMediaPayload payload) {
+        if (payload.mediaIds == null || payload.mediaIds.isEmpty() || payload.mediaIds.contains(null)) {
+            // null or empty media list -or- list contains a null value
+            notifyMediaError(MediaError.NULL_MEDIA_ARG, MediaAction.PULL_MEDIA, null);
+            return;
+        }
+
+        if (payload.site.isWPCom()) {
+            mMediaRestClient.pullMedia(payload.site.getSiteId(), payload.mediaIds);
+        } else {
+            mMediaXmlrpcClient.pullMedia(payload.site, payload.mediaIds);
+        }
+    }
+
+    private void performDeleteMedia(ChangeMediaPayload payload) {
+        if (payload.media == null || payload.media.isEmpty() || payload.media.contains(null)) {
+            notifyMediaError(MediaError.NULL_MEDIA_ARG, MediaAction.DELETE_MEDIA, null);
+            return;
+        }
+
+        if (payload.site.isWPCom()) {
+            mMediaRestClient.deleteMedia(payload.site.getSiteId(), payload.media);
+        } else {
+            mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
+        }
+    }
+
+    private boolean isWellFormedForUpload(@NonNull List<MediaModel> mediaList) {
+        for (MediaModel media : mediaList) {
+            if (media == null || BaseUploadRequestBody.hasRequiredData(media) != null) return false;
+        }
+        return true;
     }
 }

@@ -1,10 +1,10 @@
 package org.wordpress.android.fluxc.action;
 
-import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPostSettingsResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
 import org.wordpress.android.fluxc.store.AccountStore.NewAccountPayload;
-import org.wordpress.android.fluxc.store.AccountStore.PostAccountSettingsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
@@ -20,9 +20,9 @@ public enum AccountAction implements org.wordpress.android.fluxc.annotations.act
     FETCH_SETTINGS,         // request fetch of Account Settings
     @Action(payloadType = AccountRestPayload.class)
     FETCHED_SETTINGS,       // response received from Account Settings fetch
-    @Action(payloadType = PostAccountSettingsPayload.class)
+    @Action(payloadType = PushAccountSettingsPayload.class)
     PUSH_SETTINGS,          // request saving Account Settings remotely
-    @Action(payloadType = AccountPostSettingsResponsePayload.class)
+    @Action(payloadType = AccountPushSettingsResponsePayload.class)
     PUSHED_SETTINGS,        // response received from Account Settings post
     @Action(payloadType = AccountModel.class)
     UPDATE_ACCOUNT,                 // update in-memory and persisted Account in AccountStore

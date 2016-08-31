@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
+import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.util.AppLog;
@@ -147,8 +148,19 @@ public class ReleaseNetworkModule {
     @Provides
     public MediaRestClient provideMediaRestClient(Dispatcher dispatcher,
                                                   @Named("regular") RequestQueue requestQueue,
+                                                  @Named("regular") OkHttpClient okHttpClient,
                                                   AccessToken token, UserAgent userAgent) {
-        return new MediaRestClient(dispatcher, requestQueue, token, userAgent);
+        return new MediaRestClient(dispatcher, requestQueue, okHttpClient, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public MediaXMLRPCClient provideMediaXMLRPCClient(Dispatcher dispatcher,
+                                                      @Named("regular") RequestQueue requestQueue,
+                                                      @Named("regular") OkHttpClient okClient,
+                                                      AccessToken token, UserAgent userAgent,
+                                                      HTTPAuthManager httpAuthManager) {
+        return new MediaXMLRPCClient(dispatcher, requestQueue, okClient, token, userAgent, httpAuthManager);
     }
 
     @Singleton

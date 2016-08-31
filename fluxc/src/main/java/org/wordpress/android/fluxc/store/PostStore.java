@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.store;
 
-import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 public class PostStore extends Store {
     public static final int NUM_POSTS_PER_FETCH = 20;
 
-    public static class FetchPostsPayload implements Payload {
+    public static class FetchPostsPayload extends Payload {
         public SiteModel site;
         public boolean loadMore;
 
@@ -43,7 +43,8 @@ public class PostStore extends Store {
         }
     }
 
-    public static class FetchPostsResponsePayload implements Payload {
+    public static class FetchPostsResponsePayload extends Payload {
+        public PostError error;
         public PostsModel posts;
         public SiteModel site;
         public boolean isPages;
@@ -58,19 +59,36 @@ public class PostStore extends Store {
             this.loadedMore = loadedMore;
             this.canLoadMore = canLoadMore;
         }
+
+        public FetchPostsResponsePayload(PostError error) {
+            this.error = error;
+        }
+
+        @Override
+        public boolean isError() {
+            return error != null;
+        }
     }
 
-    public static class RemotePostPayload implements Payload {
+    public static class RemotePostPayload extends Payload {
+        public PostError error;
         public PostModel post;
         public SiteModel site;
+
+        public RemotePostPayload() {}
 
         public RemotePostPayload(PostModel post, SiteModel site) {
             this.post = post;
             this.site = site;
         }
+
+        @Override
+        public boolean isError() {
+            return error != null;
+        }
     }
 
-    public static class InstantiatePostPayload implements Payload {
+    public static class InstantiatePostPayload extends Payload {
         public SiteModel site;
         public boolean isPage;
         public List<Long> categoryIds;
@@ -92,8 +110,26 @@ public class PostStore extends Store {
         }
     }
 
+    public static class PostError implements OnChangedError {
+        public PostErrorType type;
+        public String message;
+        public PostError(PostErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+
+        public PostError(@NonNull String type, @NonNull String message) {
+            this.type = PostErrorType.fromString(type);
+            this.message = message;
+        }
+
+        public PostError(PostErrorType type) {
+            this(type, "");
+        }
+    }
+
     // OnChanged events
-    public class OnPostChanged extends OnChanged {
+    public class OnPostChanged extends OnChanged<PostError> {
         public int rowsAffected;
         public boolean canLoadMore;
         public PostAction causeOfChange;
@@ -108,7 +144,7 @@ public class PostStore extends Store {
         }
     }
 
-    public class OnPostInstantiated extends OnChanged {
+    public class OnPostInstantiated extends OnChanged<PostError> {
         public PostModel post;
 
         public OnPostInstantiated(PostModel post) {
@@ -116,7 +152,7 @@ public class PostStore extends Store {
         }
     }
 
-    public class OnPostUploaded extends OnChanged {
+    public class OnPostUploaded extends OnChanged<PostError> {
         public PostModel post;
 
         public OnPostUploaded(PostModel post) {
@@ -124,8 +160,26 @@ public class PostStore extends Store {
         }
     }
 
-    private PostRestClient mPostRestClient;
-    private PostXMLRPCClient mPostXMLRPCClient;
+    public enum PostErrorType {
+        UNKNOWN_POST,
+        UNKNOWN_POST_TYPE,
+        INVALID_RESPONSE,
+        GENERIC_ERROR;
+
+        public static PostErrorType fromString(String string) {
+            if (string != null) {
+                for (PostErrorType v : PostErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+    }
+
+    private final PostRestClient mPostRestClient;
+    private final PostXMLRPCClient mPostXMLRPCClient;
 
     @Inject
     public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient) {
@@ -140,82 +194,64 @@ public class PostStore extends Store {
     }
 
     /**
-     * Returns all posts in the store as a {@link PostModel} list.
-     */
-    public List<PostModel> getPosts() {
-        return WellSql.select(PostModel.class).getAsModel();
-    }
-
-    /**
-     * Returns all posts in the store as a {@link Cursor}.
-     */
-    public Cursor getPostsCursor() {
-        return WellSql.select(PostModel.class).getAsCursor();
-    }
-
-    /**
-     * Returns the number of posts in the store.
-     */
-    public int getPostsCount() {
-        return getPostsCursor().getCount();
-    }
-
-    /**
-     * Returns all posts in the store as a {@link PostModel} list.
+     * Returns all posts in the store for the given site as a {@link PostModel} list.
      */
     public List<PostModel> getPostsForSite(SiteModel site) {
         return PostSqlUtils.getPostsForSite(site, false);
     }
 
     /**
-     * Returns all posts in the store as a {@link PostModel} list.
+     * Returns all pages in the store for the given site as a {@link PostModel} list.
      */
     public List<PostModel> getPagesForSite(SiteModel site) {
         return PostSqlUtils.getPostsForSite(site, true);
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns the number of posts in the store for the given site.
      */
     public int getPostsCountForSite(SiteModel site) {
         return getPostsForSite(site).size();
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns the number of pages in the store for the given site.
      */
     public int getPagesCountForSite(SiteModel site) {
         return getPagesForSite(site).size();
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns all uploaded posts in the store for the given site.
      */
     public List<PostModel> getUploadedPostsForSite(SiteModel site) {
         return PostSqlUtils.getUploadedPostsForSite(site, false);
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns all uploaded pages in the store for the given site.
      */
     public List<PostModel> getUploadedPagesForSite(SiteModel site) {
         return PostSqlUtils.getUploadedPostsForSite(site, true);
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns the number of uploaded posts in the store for the given site.
      */
     public int getUploadedPostsCountForSite(SiteModel site) {
         return getUploadedPostsForSite(site).size();
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns the number of uploaded pages in the store for the given site.
      */
     public int getUploadedPagesCountForSite(SiteModel site) {
         return getUploadedPagesForSite(site).size();
     }
 
+    /**
+     * Given a local ID for a post, returns that post as a {@link PostModel}.
+     */
     public PostModel getPostByLocalPostId(long localId) {
         List<PostModel> result = WellSql.select(PostModel.class)
                 .where().equals(PostModelTable.ID, localId).endWhere()
@@ -232,119 +268,192 @@ public class PostStore extends Store {
     @Override
     public void onAction(Action action) {
         IAction actionType = action.getType();
-        if (actionType == PostAction.FETCH_POSTS) {
-            FetchPostsPayload payload = (FetchPostsPayload) action.getPayload();
+        if (!(actionType instanceof PostAction)) {
+            return;
+        }
 
-            int offset = 0;
-            if (payload.loadMore) {
-                offset = getUploadedPostsCountForSite(payload.site);
-            }
+        switch((PostAction) actionType) {
+            case FETCH_POSTS:
+                fetchPosts((FetchPostsPayload) action.getPayload(), false);
+                break;
+            case FETCH_PAGES:
+                fetchPosts((FetchPostsPayload) action.getPayload(), true);
+                break;
+            case FETCHED_POSTS:
+                handleFetchPostsCompleted((FetchPostsResponsePayload) action.getPayload());
+                break;
+            case FETCH_POST:
+                fetchPost((RemotePostPayload) action.getPayload());
+                break;
+            case FETCHED_POST:
+                handleFetchSinglePostCompleted((RemotePostPayload) action.getPayload());
+                break;
+            case INSTANTIATE_POST:
+                instantiatePost((InstantiatePostPayload) action.getPayload());
+                break;
+            case PUSH_POST:
+                pushPost((RemotePostPayload) action.getPayload());
+                break;
+            case PUSHED_POST:
+                handlePushPostCompleted((RemotePostPayload) action.getPayload());
+                break;
+            case UPDATE_POST:
+                updatePost((PostModel) action.getPayload());
+                break;
+            case DELETE_POST:
+                deletePost((RemotePostPayload) action.getPayload());
+                break;
+            case DELETED_POST:
+                handleDeletePostCompleted((RemotePostPayload) action.getPayload());
+                break;
+            case REMOVE_POST:
+                PostSqlUtils.deletePost((PostModel) action.getPayload());
+                break;
+        }
+    }
 
-            if (payload.site.isWPCom() || payload.site.isJetpack()) {
-                mPostRestClient.fetchPosts(payload.site, false, offset);
-            } else {
-                // TODO: check for WP-REST-API plugin and use it here
-                mPostXMLRPCClient.fetchPosts(payload.site, false, offset);
-            }
-        } else if (actionType == PostAction.FETCH_PAGES) {
-            FetchPostsPayload payload = (FetchPostsPayload) action.getPayload();
+    private void deletePost(RemotePostPayload payload) {
+        if (payload.site.isWPCom()) {
+            mPostRestClient.deletePost(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.deletePost(payload.post, payload.site);
+        }
+    }
 
-            int offset = 0;
-            if (payload.loadMore) {
-                offset = getUploadedPostsCountForSite(payload.site);
-            }
+    private void fetchPost(RemotePostPayload payload) {
+        if (payload.site.isWPCom()) {
+            mPostRestClient.fetchPost(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.fetchPost(payload.post, payload.site);
+        }
+    }
 
-            if (payload.site.isWPCom() || payload.site.isJetpack()) {
-                mPostRestClient.fetchPosts(payload.site, true, offset);
-            } else {
-                // TODO: check for WP-REST-API plugin and use it here
-                mPostXMLRPCClient.fetchPosts(payload.site, true, offset);
-            }
-        } else if (actionType == PostAction.FETCHED_POSTS) {
-            FetchPostsResponsePayload postsResponsePayload = (FetchPostsResponsePayload) action.getPayload();
+    private void fetchPosts(FetchPostsPayload payload, boolean pages) {
+        int offset = 0;
+        if (payload.loadMore) {
+            offset = getUploadedPostsCountForSite(payload.site);
+        }
 
+        if (payload.site.isWPCom()) {
+            mPostRestClient.fetchPosts(payload.site, pages, offset);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
+        }
+    }
+
+    private void handleDeletePostCompleted(RemotePostPayload payload) {
+        OnPostChanged event = new OnPostChanged(0);
+        event.causeOfChange = PostAction.DELETE_POST;
+
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            PostSqlUtils.deletePost(payload.post);
+        }
+
+        emitChange(event);
+    }
+
+    private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
+        OnPostChanged onPostChanged;
+
+        if (payload.isError()) {
+            onPostChanged = new OnPostChanged(0);
+            onPostChanged.error = payload.error;
+        } else {
             // Clear existing uploading posts if this is a fresh fetch (loadMore = false in the original request)
             // This is the simplest way of keeping our local posts in sync with remote posts (in case of deletions,
             // or if the user manual changed some post IDs)
-            if (!postsResponsePayload.loadedMore) {
-                PostSqlUtils.deleteUploadedPostsForSite(postsResponsePayload.site, postsResponsePayload.isPages);
+            if (!payload.loadedMore) {
+                PostSqlUtils.deleteUploadedPostsForSite(payload.site, payload.isPages);
             }
 
             int rowsAffected = 0;
-            for (PostModel post : postsResponsePayload.posts) {
+            for (PostModel post : payload.posts.getPosts()) {
                 rowsAffected += PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
             }
 
-            OnPostChanged onPostChanged = new OnPostChanged(rowsAffected, postsResponsePayload.canLoadMore);
-            if (postsResponsePayload.isPages) {
-                onPostChanged.causeOfChange = PostAction.FETCH_PAGES;
-            } else {
-                onPostChanged.causeOfChange = PostAction.FETCH_POSTS;
-            }
+            onPostChanged = new OnPostChanged(rowsAffected, payload.canLoadMore);
+        }
 
+        if (payload.isPages) {
+            onPostChanged.causeOfChange = PostAction.FETCH_PAGES;
+        } else {
+            onPostChanged.causeOfChange = PostAction.FETCH_POSTS;
+        }
+
+        emitChange(onPostChanged);
+    }
+
+    private void handleFetchSinglePostCompleted(RemotePostPayload payload) {
+        OnPostChanged event;
+
+        if (payload.isError()) {
+            event = new OnPostChanged(0);
+            event.error = payload.error;
+            event.causeOfChange = PostAction.UPDATE_POST;
+            emitChange(event);
+        } else {
+            updatePost(payload.post);
+        }
+    }
+
+    private void handlePushPostCompleted(RemotePostPayload payload) {
+        if (payload.isError()) {
+            OnPostChanged onPostChanged = new OnPostChanged(0);
+            onPostChanged.error = payload.error;
+            onPostChanged.causeOfChange = PostAction.PUSH_POST;
             emitChange(onPostChanged);
-        } else if (actionType == PostAction.FETCH_POST) {
-            RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.site.isWPCom() || payload.site.isJetpack()) {
-                // TODO: Implement REST API pages fetch
-            } else {
-                // TODO: check for WP-REST-API plugin and use it here
-                mPostXMLRPCClient.fetchPost(payload.post, payload.site);
-            }
-        } else if (actionType == PostAction.INSTANTIATE_POST) {
-            InstantiatePostPayload payload = (InstantiatePostPayload) action.getPayload();
-
-            PostModel newPost = new PostModel();
-            newPost.setLocalSiteId(payload.site.getId());
-            newPost.setIsLocalDraft(true);
-            newPost.setIsPage(payload.isPage);
-            if (payload.categoryIds != null && !payload.categoryIds.isEmpty()) {
-                newPost.setCategoryIdList(payload.categoryIds);
-            }
-            newPost.setPostFormat(payload.postFormat);
-
-            // Insert the post into the db, updating the object to include the local ID
-            newPost = PostSqlUtils.insertPostForResult(newPost);
-
-            emitChange(new OnPostInstantiated(newPost));
-        } else if (actionType == PostAction.PUSH_POST) {
-            RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.site.isWPCom() || payload.site.isJetpack()) {
-                // TODO: Implement REST API post push
-            } else {
-                // TODO: check for WP-REST-API plugin and use it here
-                mPostXMLRPCClient.pushPost(payload.post, payload.site);
-            }
-            // TODO: Should call UPDATE_POST at this point, probably
-        } else if (actionType == PostAction.PUSHED_POST) {
-            RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
-
+        } else {
             emitChange(new OnPostUploaded(payload.post));
 
-            // Request a fresh copy of the uploaded post from the server to ensure local copy matches server
-            mPostXMLRPCClient.fetchPost(payload.post, payload.site);
-        } else if (actionType == PostAction.UPDATE_POST) {
-            int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges((PostModel) action.getPayload());
-
-            OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
-            onPostChanged.causeOfChange = PostAction.UPDATE_POST;
-            emitChange(onPostChanged);
-        } else if (actionType == PostAction.DELETE_POST) {
-            RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.site.isWPCom() || payload.site.isJetpack()) {
-                // TODO: Implement REST API post delete
+            if (payload.site.isWPCom()) {
+                // The WP.COM REST API response contains the modified post, so we're already in sync with the server
+                // All we need to do is store it and emit OnPostChanged
+                updatePost(payload.post);
             } else {
-                // TODO: check for WP-REST-API plugin and use it here
-                mPostXMLRPCClient.deletePost(payload.post, payload.site);
+                // XML-RPC does not respond to new/edit post calls with the modified post
+                // Update the post locally to reflect its uploaded status, but also request a fresh copy
+                // from the server to ensure local copy matches server
+                PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
+                mPostXMLRPCClient.fetchPost(payload.post, payload.site);
             }
-        } else if (actionType == PostAction.DELETED_POST) {
-            // Handle any necessary changes to post status in the db here
-            OnPostChanged onPostChanged = new OnPostChanged(0);
-            onPostChanged.causeOfChange = PostAction.DELETE_POST;
-            emitChange(onPostChanged);
-        } else if (actionType == PostAction.REMOVE_POST) {
-            PostSqlUtils.deletePost((PostModel) action.getPayload());
         }
+    }
+
+    private void instantiatePost(InstantiatePostPayload payload) {
+        PostModel newPost = new PostModel();
+        newPost.setLocalSiteId(payload.site.getId());
+        newPost.setIsLocalDraft(true);
+        newPost.setIsPage(payload.isPage);
+        if (payload.categoryIds != null && !payload.categoryIds.isEmpty()) {
+            newPost.setCategoryIdList(payload.categoryIds);
+        }
+        newPost.setPostFormat(payload.postFormat);
+
+        // Insert the post into the db, updating the object to include the local ID
+        newPost = PostSqlUtils.insertPostForResult(newPost);
+
+        emitChange(new OnPostInstantiated(newPost));
+    }
+
+    private void pushPost(RemotePostPayload payload) {
+        if (payload.site.isWPCom()) {
+            mPostRestClient.pushPost(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.pushPost(payload.post, payload.site);
+        }
+    }
+
+    private void updatePost(PostModel post) {
+        int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
+
+        OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
+        onPostChanged.causeOfChange = PostAction.UPDATE_POST;
+        emitChange(onPostChanged);
     }
 }

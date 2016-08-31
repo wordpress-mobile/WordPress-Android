@@ -9,15 +9,17 @@ import com.yarolegovich.wellsql.mapper.SelectMapper;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
+import org.wordpress.android.fluxc.annotations.action.Action;
+import org.wordpress.android.fluxc.model.PostFormatModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -32,14 +34,14 @@ import javax.inject.Singleton;
 @Singleton
 public class SiteStore extends Store {
     // Payloads
-    public static class RefreshSitesXMLRPCPayload implements Payload {
+    public static class RefreshSitesXMLRPCPayload extends Payload {
         public RefreshSitesXMLRPCPayload() {}
         public String username;
         public String password;
         public String url;
     }
 
-    public static class NewSitePayload implements Payload {
+    public static class NewSitePayload extends Payload {
         public String siteName;
         public String siteTitle;
         public String language;
@@ -55,31 +57,78 @@ public class SiteStore extends Store {
         }
     }
 
-    // OnChanged Events
-    public class OnSiteChanged extends OnChanged {
-        public int mRowsAffected;
-
-        public OnSiteChanged(int rowsAffected) {
-            mRowsAffected = rowsAffected;
+    public static class FetchedPostFormatsPayload extends Payload {
+        public SiteModel site;
+        public List<PostFormatModel> postFormats;
+        public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
+            this.site = site;
+            this.postFormats = postFormats;
         }
     }
 
-    public class OnSiteRemoved extends OnChanged {
-        public int mRowsAffected;
+    public static class SiteError implements OnChangedError {
+        public SiteErrorType type;
 
+        public SiteError(SiteErrorType type) {
+            this.type = type;
+        }
+    }
+
+    public static class PostFormatsError implements OnChangedError {
+        public PostFormatsErrorType type;
+
+        public PostFormatsError(PostFormatsErrorType type) {
+            this.type = type;
+        }
+    }
+
+    public static class NewSiteError implements OnChangedError {
+        public NewSiteErrorType type;
+        public String message;
+        public NewSiteError(NewSiteErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    // OnChanged Events
+    public class OnSiteChanged extends OnChanged<SiteError> {
+        public int rowsAffected;
+        public OnSiteChanged(int rowsAffected) {
+            this.rowsAffected = rowsAffected;
+        }
+    }
+
+    public class OnSiteRemoved extends OnChanged<SiteError> {
+        public int mRowsAffected;
         public OnSiteRemoved(int rowsAffected) {
             mRowsAffected = rowsAffected;
         }
     }
 
-    public class OnNewSiteCreated extends OnChanged {
-        public boolean isError;
-        public NewSiteError errorType;
-        public String errorMessage;
+    public class OnNewSiteCreated extends OnChanged<NewSiteError> {
         public boolean dryRun;
     }
+
+    public class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
+        public SiteModel site;
+        public OnPostFormatsChanged(SiteModel site) {
+            this.site = site;
+        }
+    }
+
+    public enum SiteErrorType {
+        INVALID_SITE,
+        GENERIC_ERROR
+    }
+
+    public enum PostFormatsErrorType {
+        INVALID_SITE,
+        GENERIC_ERROR
+    }
+
     // Enums
-    public enum NewSiteError {
+    public enum NewSiteErrorType {
         BLOG_NAME_REQUIRED,
         BLOG_NAME_NOT_ALLOWED,
         BLOG_NAME_MUST_BE_AT_LEAST_FOUR_CHARACTERS,
@@ -95,9 +144,9 @@ public class SiteStore extends Store {
         BLOG_TITLE_INVALID,
         GENERIC_ERROR;
 
-        public static NewSiteError fromString(String string) {
+        public static NewSiteErrorType fromString(String string) {
             if (string != null) {
-                for (NewSiteError v : NewSiteError.values()) {
+                for (NewSiteErrorType v : NewSiteErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -194,6 +243,20 @@ public class SiteStore extends Store {
      */
     public int getDotComSitesCount() {
         return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, true);
+    }
+
+    /**
+     * Returns sites with a name or url matching the search string.
+     */
+    public @NonNull List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
+        return SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(SiteModelTable.IS_WPCOM, true, searchString);
+    }
+
+    /**
+     * Returns .COM sites with a name or url matching the search string.
+     */
+    public @NonNull List<SiteModel> getDotComSiteByNameOrUrlMatching(@NonNull String searchString) {
+        return SiteSqlUtils.getAllSitesMatchingUrlOrName(searchString);
     }
 
     /**
@@ -427,18 +490,18 @@ public class SiteStore extends Store {
         }
     }
 
+    public List<PostFormatModel> getPostFormats(SiteModel site) {
+        return SiteSqlUtils.getPostFormats(site);
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
-    public void onAction(org.wordpress.android.fluxc.annotations.action.Action action) {
+    public void onAction(Action action) {
         org.wordpress.android.fluxc.annotations.action.IAction actionType = action.getType();
         if (actionType == SiteAction.UPDATE_SITE) {
-            int rowsAffected = SiteSqlUtils.insertOrUpdateSite((SiteModel) action.getPayload());
-            // Would be great to send an event only if the site actually changed.
-            emitChange(new OnSiteChanged(rowsAffected));
+            updateSite((SiteModel) action.getPayload());
         } else if (actionType == SiteAction.UPDATE_SITES) {
-            int rowsAffected = createOrUpdateSites((SitesModel) action.getPayload());
-            // Would be great to send an event only if a site actually changed.
-            emitChange(new OnSiteChanged(rowsAffected));
+            updateSites((SitesModel) action.getPayload());
         } else if (actionType == SiteAction.FETCH_SITES) {
             mSiteRestClient.pullSites();
         } else if (actionType == SiteAction.FETCH_SITES_XML_RPC) {
@@ -446,10 +509,9 @@ public class SiteStore extends Store {
             mSiteXMLRPCClient.pullSites(payload.url, payload.username, payload.password);
         } else if (actionType == SiteAction.FETCH_SITE) {
             SiteModel site = (SiteModel) action.getPayload();
-            if (site.isWPCom() || site.isJetpack()) {
+            if (site.isWPCom()) {
                 mSiteRestClient.pullSite(site);
             } else {
-                // TODO: check for WP-REST-API plugin and use it here
                 mSiteXMLRPCClient.pullSite(site);
             }
         } else if (actionType == SiteAction.REMOVE_SITE) {
@@ -476,17 +538,64 @@ public class SiteStore extends Store {
         } else if (actionType == SiteAction.CREATED_NEW_SITE) {
             NewSiteResponsePayload payload = (NewSiteResponsePayload) action.getPayload();
             OnNewSiteCreated onNewSiteCreated = new OnNewSiteCreated();
-            onNewSiteCreated.isError = payload.isError;
-            onNewSiteCreated.errorType = payload.errorType;
-            onNewSiteCreated.errorMessage = payload.errorMessage;
+            onNewSiteCreated.error = payload.error;
             onNewSiteCreated.dryRun = payload.dryRun;
             emitChange(onNewSiteCreated);
+        } else if (actionType == SiteAction.FETCH_POST_FORMATS) {
+            fetchPostFormats((SiteModel) action.getPayload());
+        } else if (actionType == SiteAction.FETCHED_POST_FORMATS) {
+            updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
         }
+    }
+
+    private void fetchPostFormats(SiteModel site) {
+        if (site.isWPCom()) {
+            mSiteRestClient.pullPostFormats(site);
+        } else {
+            mSiteXMLRPCClient.pullPostFormats(site);
+        }
+    }
+
+    private void updateSite(SiteModel siteModel) {
+        OnSiteChanged event;
+        if (siteModel.isError()) {
+            event = new OnSiteChanged(0);
+            // TODO: what kind of error could we get here?
+            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+        } else {
+            int rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
+            event = new OnSiteChanged(rowsAffected);
+        }
+        emitChange(event);
+    }
+
+    private void updateSites(SitesModel sitesModel) {
+        OnSiteChanged event;
+        if (sitesModel.isError()) {
+            event = new OnSiteChanged(0);
+            // TODO: what kind of error could we get here?
+            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+        } else {
+            int rowsAffected = createOrUpdateSites(sitesModel);
+            event = new OnSiteChanged(rowsAffected);
+        }
+        emitChange(event);
+    }
+
+    private void updatePostFormats(FetchedPostFormatsPayload payload) {
+        OnPostFormatsChanged event = new OnPostFormatsChanged(payload.site);
+        if (payload.isError()) {
+            // TODO: what kind of error could we get here?
+            event.error = new PostFormatsError(PostFormatsErrorType.GENERIC_ERROR);
+        } else {
+            SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats);
+        }
+        emitChange(event);
     }
 
     private int createOrUpdateSites(SitesModel sites) {
         int rowsAffected = 0;
-        for (SiteModel site : sites) {
+        for (SiteModel site : sites.getSites()) {
             rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
         }
         return rowsAffected;
@@ -502,7 +611,7 @@ public class SiteStore extends Store {
 
     private int toggleSitesVisibility(SitesModel sites, boolean visible) {
         int rowsAffected = 0;
-        for (SiteModel site : sites) {
+        for (SiteModel site : sites.getSites()) {
             rowsAffected += SiteSqlUtils.setSiteVisibility(site, visible);
         }
         return rowsAffected;

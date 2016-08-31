@@ -23,6 +23,7 @@ import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -32,6 +33,8 @@ import javax.tools.Diagnostic;
 import static java.util.Collections.singleton;
 import static javax.lang.model.SourceVersion.latestSupported;
 
+@SuppressWarnings("unused")
+@SupportedAnnotationTypes("org.wordpress.android.fluxc.annotations.ActionEnum")
 @AutoService(Processor.class)
 public class ActionProcessor extends AbstractProcessor {
     private Filer mFiler;

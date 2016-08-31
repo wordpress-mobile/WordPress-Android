@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.Payload;
 
 import java.util.List;
 
-public class SiteWPComRestResponse implements Payload, Response {
+public class SiteWPComRestResponse extends Payload implements Response {
     public class SitesResponse {
         public List<SiteWPComRestResponse> sites;
     }
@@ -59,6 +59,7 @@ public class SiteWPComRestResponse implements Payload, Response {
     public String description;
     public boolean jetpack;
     public boolean visible;
+    public boolean is_private;
     public Options options;
     public Capabilities capabilities;
     public Plan plan;
