@@ -6,17 +6,12 @@ import android.app.Dialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
@@ -194,7 +189,7 @@ public class WordPress extends MultiDexApplication {
 
         // it will take some time to update the access token in the AccountStore if it was migrated
         // so it will be set to the migrated token or the store token if no migration was performed
-        String migratedToken = migrateAccessTokenToAccountStore();
+        String migratedToken = WPStoreUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
         if (TextUtils.isEmpty(migratedToken)) {
             OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
         } else {
@@ -782,61 +777,5 @@ public class WordPress extends MultiDexApplication {
         @Override
         public void onActivityStopped(Activity arg0) {
         }
-    }
-
-    //
-    // WPStores Access Token migration
-    //
-    private static final String DEPRECATED_DATABASE_NAME = "wordpress";
-    private static final String DEPRECATED_ACCOUNT_TABLE = "tbl_accounts";
-    private static final String DEPRECATED_ACCOUNTS_TABLE = "accounts";
-    private static final String DEPRECATED_ACCESS_TOKEN_COLUMN = "access_token";
-    private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
-
-    private String migrateAccessTokenToAccountStore() {
-        String token = getLatestDeprecatedAccessToken();
-
-        // updating from previous app version
-        if (!TextUtils.isEmpty(token)) {
-            AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(token);
-            mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
-        }
-        return token;
-    }
-
-    private String getAccessTokenFromTable(String tableName) {
-        String token = null;
-        try {
-            SQLiteDatabase db = getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
-            Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN + " FROM " + tableName + " WHERE local_id=0", null);
-            if (c.moveToFirst() && c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN) != -1) {
-                token = c.getString(c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN));
-            }
-            c.close();
-            db.close();
-        } catch (SQLException e) {
-            // DB doesn't exist
-        }
-        return token;
-    }
-
-    private String getDeprecatedPreferencesAccessTokenThenDelete() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String token = prefs.getString(DEPRECATED_ACCESS_TOKEN_PREFERENCE, null);
-        if (!TextUtils.isEmpty(token)) {
-            prefs.edit().remove(DEPRECATED_ACCESS_TOKEN_PREFERENCE).apply();
-        }
-        return token;
-    }
-
-    private String getLatestDeprecatedAccessToken() {
-        String latestToken = getAccessTokenFromTable(DEPRECATED_ACCOUNT_TABLE);
-        if (TextUtils.isEmpty(latestToken)) {
-            latestToken = getAccessTokenFromTable(DEPRECATED_ACCOUNTS_TABLE);
-        }
-        if (TextUtils.isEmpty(latestToken)) {
-            latestToken = getDeprecatedPreferencesAccessTokenThenDelete();
-        }
-        return latestToken;
     }
 }
