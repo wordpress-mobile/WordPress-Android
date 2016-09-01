@@ -116,7 +116,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         AppLog.e(T.MEDIA, "Error response from XMLRPC.EDIT_MEDIA: media does not exist");
                         notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.MEDIA_NOT_FOUND);
                     } else {
-                        AppLog.e(T.MEDIA, "Error response from XMLRPC.EDIT_MEDIA: unhandled XMLRPC.EDIT_MEDIA response: " + error);
+                        AppLog.e(T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA response: " + error);
                         notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.UNKNOWN);
                     }
                 }
@@ -260,7 +260,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     private List<Object> getBasicParams(SiteModel site) {
         List<Object> params = new ArrayList<>();
-        params.add(site.getDotOrgSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         return params;
@@ -331,7 +331,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     private boolean is404Response(BaseRequest.BaseNetworkError error) {
         if (error.hasVolleyError() && error.volleyError != null) {
             VolleyError volleyError = error.volleyError;
-            if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
+            if (volleyError.networkResponse != null
+            && volleyError.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
                 return true;
             }
 

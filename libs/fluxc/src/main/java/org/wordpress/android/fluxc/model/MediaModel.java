@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 @Table
 public class MediaModel implements Identifiable, Serializable {
-    public enum UPLOAD_STATE {
+    public enum UploadState {
         QUEUED("queued"),
         UPLOADING("uploading"),
         DELETE("delete"),
@@ -21,7 +21,7 @@ public class MediaModel implements Identifiable, Serializable {
         UPLOADED("uploaded");
 
         private String mDescriptor;
-        UPLOAD_STATE(String descriptor) {
+        UploadState(String descriptor) {
             mDescriptor = descriptor;
         }
 
@@ -92,33 +92,29 @@ public class MediaModel implements Identifiable, Serializable {
 
         MediaModel otherMedia = (MediaModel) other;
 
-        return getId() == otherMedia.getId() &&
-                getSiteId() == otherMedia.getSiteId() &&
-                getMediaId() == otherMedia.getMediaId() &&
-                getPostId() == otherMedia.getPostId() &&
-                getAuthorId() == otherMedia.getAuthorId() &&
-                getWidth() == otherMedia.getWidth() &&
-                getHeight() == otherMedia.getHeight() &&
-                getLength() == otherMedia.getLength() &&
-                getHorizontalAlignment() == otherMedia.getHorizontalAlignment() &&
-                getVerticalAlignment() == otherMedia.getVerticalAlignment() &&
-                getVideoPressProcessingDone() == otherMedia.getVideoPressProcessingDone() &&
-                getFeatured() == otherMedia.getFeatured() &&
-                getFeaturedInPost() == otherMedia.getFeaturedInPost() &&
-                StringUtils.equals(getGuid(), otherMedia.getGuid()) &&
-                StringUtils.equals(getUploadDate(), otherMedia.getUploadDate()) &&
-                StringUtils.equals(getUrl(), otherMedia.getUrl()) &&
-                StringUtils.equals(getThumbnailUrl(), otherMedia.getThumbnailUrl()) &&
-                StringUtils.equals(getFileName(), otherMedia.getFileName()) &&
-                StringUtils.equals(getFilePath(), otherMedia.getFilePath()) &&
-                StringUtils.equals(getFileExtension(), otherMedia.getFileExtension()) &&
-                StringUtils.equals(getMimeType(), otherMedia.getMimeType()) &&
-                StringUtils.equals(getTitle(), otherMedia.getTitle()) &&
-                StringUtils.equals(getDescription(), otherMedia.getDescription()) &&
-                StringUtils.equals(getCaption(), otherMedia.getCaption()) &&
-                StringUtils.equals(getAlt(), otherMedia.getAlt()) &&
-                StringUtils.equals(getVideoPressGuid(), otherMedia.getVideoPressGuid()) &&
-                StringUtils.equals(getUploadState(), otherMedia.getUploadState());
+        return getId() == otherMedia.getId() && getSiteId() == otherMedia.getSiteId()
+                && getMediaId() == otherMedia.getMediaId() && getPostId() == otherMedia.getPostId()
+                && getAuthorId() == otherMedia.getAuthorId() && getWidth() == otherMedia.getWidth()
+                && getHeight() == otherMedia.getHeight() && getLength() == otherMedia.getLength()
+                && getHorizontalAlignment() == otherMedia.getHorizontalAlignment()
+                && getVerticalAlignment() == otherMedia.getVerticalAlignment()
+                && getVideoPressProcessingDone() == otherMedia.getVideoPressProcessingDone()
+                && getFeatured() == otherMedia.getFeatured()
+                && getFeaturedInPost() == otherMedia.getFeaturedInPost()
+                && StringUtils.equals(getGuid(), otherMedia.getGuid())
+                && StringUtils.equals(getUploadDate(), otherMedia.getUploadDate())
+                && StringUtils.equals(getUrl(), otherMedia.getUrl())
+                && StringUtils.equals(getThumbnailUrl(), otherMedia.getThumbnailUrl())
+                && StringUtils.equals(getFileName(), otherMedia.getFileName())
+                && StringUtils.equals(getFilePath(), otherMedia.getFilePath())
+                && StringUtils.equals(getFileExtension(), otherMedia.getFileExtension())
+                && StringUtils.equals(getMimeType(), otherMedia.getMimeType())
+                && StringUtils.equals(getTitle(), otherMedia.getTitle())
+                && StringUtils.equals(getDescription(), otherMedia.getDescription())
+                && StringUtils.equals(getCaption(), otherMedia.getCaption())
+                && StringUtils.equals(getAlt(), otherMedia.getAlt())
+                && StringUtils.equals(getVideoPressGuid(), otherMedia.getVideoPressGuid())
+                && StringUtils.equals(getUploadState(), otherMedia.getUploadState());
     }
 
     @Override
