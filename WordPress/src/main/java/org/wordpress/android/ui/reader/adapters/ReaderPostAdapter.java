@@ -164,10 +164,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
             followButton = (ReaderFollowButton) layoutPostHeader.findViewById(R.id.follow_button);
 
-            // post header isn't shown when there's a site header
+            // post header isn't shown when there's a site header, so add a bit more
+            // padding above the title
             if (hasSiteHeader()) {
-                layoutPostHeader.setVisibility(View.GONE);
-                // add a bit more padding above the title
                 int extraPadding = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
                 txtTitle.setPadding(
                         txtTitle.getPaddingLeft(),
@@ -321,7 +320,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.imgAvatar.showDefaultGravatarImage();
         }
 
-        if (!hasSiteHeader()) {
+        // post header isn't show when there's a site header
+        if (hasSiteHeader()) {
+            holder.layoutPostHeader.setVisibility(View.GONE);
+        } else {
+            holder.layoutPostHeader.setVisibility(View.VISIBLE);
             // show blog preview when post header is tapped
             holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
