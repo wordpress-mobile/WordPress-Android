@@ -81,6 +81,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     @Override
     public void onProgress(MediaModel media, float progress) {
+        if (progress >= 1.0f) progress = 0.99f;
         notifyMediaProgress(media, progress);
     }
 
@@ -146,8 +147,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }));
     }
 
-    public void pullMedia(SiteModel site, List<Long> mediaIds) {
-        if (site == null || mediaIds == null || mediaIds.isEmpty()) return;
+    public void pullMedia(SiteModel site, List<MediaModel> mediaToPull) {
+        if (site == null || mediaToPull == null || mediaToPull.isEmpty()) return;
 
         for (Long mediaId : mediaIds) {
             List<Object> params = getBasicParams(site);
@@ -238,19 +239,20 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 .build();
 
         mOkHttpClient.newCall(request).enqueue(new Callback() {
-            @Override public void onResponse(Call call, okhttp3.Response response) throws IOException {
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     AppLog.d(T.MEDIA, "media upload successful: " + media.getTitle());
-                    List<MediaModel> resultList = new ArrayList<>();
-                    resultList.add(responseXmlToMediaModel(response));
-                    notifyMediaPushed(MediaAction.UPLOAD_MEDIA, resultList);
+                    MediaModel responseMedia = responseXmlToMediaModel(response);
+                    notifyMediaProgress(responseMedia, 1.f);
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
                     notifyMediaError(MediaAction.UPLOAD_MEDIA, media, MediaNetworkError.UNKNOWN, null);
                 }
             }
 
-            @Override public void onFailure(Call call, IOException e) {
+            @Override
+            public void onFailure(Call call, IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 notifyMediaError(MediaAction.UPLOAD_MEDIA, media, MediaNetworkError.UNKNOWN, e);
             }

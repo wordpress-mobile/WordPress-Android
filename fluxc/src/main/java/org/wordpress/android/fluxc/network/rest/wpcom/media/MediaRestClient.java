@@ -60,8 +60,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
     @Override
     public void onProgress(MediaModel media, float progress) {
+        if (progress >= 1.0f) progress = 0.99f;
         notifyMediaProgress(media, progress);
     }
+
     /**
      * Pushes updates to existing media items on a WP.com site, creating (and uploading) new
      * media files as necessary.
@@ -200,22 +202,21 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 .build();
 
         mOkHttpClient.newCall(request).enqueue(new Callback() {
-            @Override public void onResponse(Call call, okhttp3.Response response) throws IOException {
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     AppLog.d(AppLog.T.MEDIA, "media upload successful: " + response);
                     // TODO: serialize MediaModel from response and add to resultList
-//                    MediaModel responseMedia = resToMediaModel
-                    List<MediaModel> resultList = new ArrayList<>();
-//                    resultList.add(responseMedia);
-                    notifyMediaPushed(MediaAction.UPLOAD_MEDIA, new ChangedMediaPayload(
-                            resultList, null, null));
+                    MediaModel responseMedia = media;
+                    notifyMediaProgress(responseMedia, 1.f);
                 } else {
                     AppLog.w(AppLog.T.MEDIA, "error uploading media: " + response);
                     notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, new Exception(response.toString()));
                 }
             }
 
-            @Override public void onFailure(Call call, IOException e) {
+            @Override
+            public void onFailure(Call call, IOException e) {
                 AppLog.w(AppLog.T.MEDIA, "media upload failed: " + e);
                 notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, e);
             }
