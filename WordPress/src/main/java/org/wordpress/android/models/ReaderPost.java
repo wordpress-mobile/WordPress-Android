@@ -39,9 +39,9 @@ public class ReaderPost {
     private String primaryTag;    // most popular tag on this post based on usage in blog
     private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
-    public double sortIndex;
-    private String date;
-    private String pubDate;
+    public double sortIndex;      // determines how posts are sorted for display
+    private String date;          // generic date - depends on the stream the post is from
+    private String pubDate;       // date the post was actually published
 
     private String url;
     private String shortUrl;
