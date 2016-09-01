@@ -306,7 +306,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
         }
 
         if (payload.site.isWPCom()) {
-            mMediaRestClient.pushMedia(payload.site.getSiteId(), payload.media);
+            mMediaRestClient.pushMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.pushMedia(payload.site, payload.media);
         }
@@ -332,7 +332,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
 
     private void performPullAllMedia(PullMediaPayload payload) {
         if (payload.site.isWPCom()) {
-            mMediaRestClient.pullAllMedia(payload.site.getSiteId());
+            mMediaRestClient.pullAllMedia(payload.site);
         } else {
             mMediaXmlrpcClient.pullAllMedia(payload.site);
         }
@@ -346,7 +346,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
         }
 
         if (payload.site.isWPCom()) {
-            mMediaRestClient.pullMedia(payload.site.getSiteId(), payload.mediaIds);
+            mMediaRestClient.pullMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.pullMedia(payload.site, payload.mediaIds);
         }
@@ -359,7 +359,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
         }
 
         if (payload.site.isWPCom()) {
-            mMediaRestClient.deleteMedia(payload.site.getSiteId(), payload.media);
+            mMediaRestClient.deleteMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
         }

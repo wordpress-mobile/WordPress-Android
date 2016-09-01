@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.MediaNetworkListener;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -39,13 +40,13 @@ import okhttp3.OkHttpClient;
  *
  * <ul>
  *     <li>Pull existing media from a WP.com site
- *     (via {@link #pullAllMedia(long)} and {@link #pullMedia(long, List)}</li>
+ *     (via {@link #pullAllMedia(SiteModel)} and {@link #pullMedia(SiteModel, List)}</li>
  *     <li>Push new media to a WP.com site
- *     (via {@link #uploadMedia(long, MediaModel)})</li>
+ *     (via {@link #uploadMedia(SiteModel, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
- *     (via {@link #pushMedia(long, List)})</li>
+ *     (via {@link #pushMedia(SiteModel, List)})</li>
  *     <li>Delete existing media from a WP.com site
- *     (via {@link #deleteMedia(long, List)})</li>
+ *     (via {@link #deleteMedia(SiteModel, List)})</li>
  * </ul>
  */
 public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
@@ -68,9 +69,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * Pushes updates to existing media items on a WP.com site, creating (and uploading) new
      * media files as necessary.
      */
-    public void pushMedia(final long siteId, List<MediaModel> mediaList) {
-        for (final MediaModel media : mediaList) {
-            String url = WPCOMREST.sites.site(siteId).media.item(media.getMediaId()).getUrlV1_1();
+    public void pushMedia(final SiteModel site, final List<MediaModel> mediaToPush) {
+        for (final MediaModel media : mediaToPush) {
+            String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).getUrlV1_1();
             add(new WPComGsonRequest<>(Method.POST, url, MediaUtils.getMediaRestParams(media),
                     MediaWPComRestResponse.class, new Listener<MediaWPComRestResponse>() {
                 @Override
@@ -99,8 +100,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Uploads a single media item to a WP.com site.
      */
-    public void uploadMedia(long siteId, MediaModel media) {
-        performUpload(media, siteId);
+    public void uploadMedia(final SiteModel site, final MediaModel mediaToUpload) {
+        performUpload(mediaToUpload, site.getSiteId());
     }
 
     /**
@@ -109,8 +110,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void pullAllMedia(long siteId) {
-        String url = WPCOMREST.sites.site(siteId).media.getUrlV1_1();
+    public void pullAllMedia(final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         add(new WPComGsonRequest<>(Method.GET, url, null, MultipleMediaResponse.class,
                 new Listener<MultipleMediaResponse>() {
                     @Override
@@ -131,14 +132,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Gets a list of media items whose media IDs match the provided list.
      */
-    public void pullMedia(long siteId, List<Long> mediaIds) {
-        if (mediaIds == null || mediaIds.isEmpty()) return;
+    public void pullMedia(final SiteModel site, final List<MediaModel> mediaToPull) {
+        if (mediaToPull == null || mediaToPull.isEmpty()) return;
 
-        final int requestCount = mediaIds.size();
-        final MediaStore.ChangedMediaPayload payload = new MediaStore.ChangedMediaPayload(
-                new ArrayList<MediaModel>(), new ArrayList<Exception>(), null);
-        for (final Long mediaId : mediaIds) {
-            String url = WPCOMREST.sites.site(siteId).media.item(mediaId).getUrlV1_1();
+        for (final MediaModel media: mediaToPull) {
+            String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).getUrlV1_1();
             add(new WPComGsonRequest<>(Method.GET, url, null, MediaWPComRestResponse.class,
                     new Listener<MediaWPComRestResponse>() {
                         @Override
@@ -160,11 +158,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Deletes media from a WP.com site whose media ID is in the provided list.
      */
-    public void deleteMedia(long siteId, List<MediaModel> media) {
-        if (media == null || media.isEmpty()) return;
+    public void deleteMedia(final SiteModel site, final List<MediaModel> mediaToDelete) {
+        if (mediaToDelete == null || mediaToDelete.isEmpty()) return;
 
-        for (final MediaModel toDelete : media) {
-            String url = WPCOMREST.sites.site(siteId).media.item(toDelete.getMediaId()).delete.getUrlV1_1();
+        for (final MediaModel media : mediaToDelete) {
+            String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).delete.getUrlV1_1();
             add(new WPComGsonRequest<>(Method.GET, url, null, MediaWPComRestResponse.class,
                     new Listener<MediaWPComRestResponse>() {
                         @Override
@@ -190,7 +188,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     // Used in both uploadMedia and pushMedia methods
-    private void performUpload(MediaModel media, long siteId) {
+    private void performUpload(final MediaModel media, long siteId) {
         String url = WPCOMREST.sites.site(siteId).media.new_.getUrlV1_1();
         final RestUploadRequestBody body = new RestUploadRequestBody(media, this);
         String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
