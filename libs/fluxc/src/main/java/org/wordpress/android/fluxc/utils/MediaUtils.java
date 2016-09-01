@@ -44,11 +44,11 @@ public class MediaUtils {
     /**
      * Creates a {@link MediaModel} list from a WP.com REST response to a request for all media.
      */
-    public static List<MediaModel> mediaListFromRestResponse(MultipleMediaResponse from) {
+    public static List<MediaModel> mediaListFromRestResponse(MultipleMediaResponse from, long siteId) {
         if (from == null || from.media == null) return null;
         List<MediaModel> media = new ArrayList<>();
         for (int i = 0; i < from.media.size(); ++i) {
-            media.add(i, mediaFromRestResponse(from.media.get(i)));
+            media.add(i, mediaFromRestResponse(from.media.get(i), siteId));
         }
         return media;
     }
@@ -56,8 +56,9 @@ public class MediaUtils {
     /**
      * Creates a {@link MediaModel} from a WP.com REST response to a fetch request.
      */
-    public static MediaModel mediaFromRestResponse(MediaWPComRestResponse from) {
+    public static MediaModel mediaFromRestResponse(MediaWPComRestResponse from, long siteId) {
         MediaModel media = new MediaModel();
+        media.setSiteId(siteId);
         media.setMediaId(from.ID);
         media.setUploadDate(from.date);
         media.setPostId(from.post_ID);

@@ -127,6 +127,14 @@ public class MediaModel implements Identifiable, Serializable {
         return mId;
     }
 
+    public void setSiteId(long siteId) {
+        mSiteId = siteId;
+    }
+
+    public long getSiteId() {
+        return mSiteId;
+    }
+
     public void setMediaId(long mediaId) {
         mMediaId = mediaId;
     }
@@ -301,14 +309,6 @@ public class MediaModel implements Identifiable, Serializable {
 
     public boolean isVideo() {
         return MediaUtils.isVideoMimeType(getMimeType());
-    }
-
-    public void setSiteId(long siteId) {
-        mSiteId = siteId;
-    }
-
-    public long getSiteId() {
-        return mSiteId;
     }
 
     public void setHorizontalAlignment(int horizontalAlignment) {
