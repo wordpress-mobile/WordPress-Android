@@ -25,16 +25,16 @@ public class RequestQueryParametersTest {
 
         Map<String, String> params = new HashMap<>();
         params.put("offset", "20");
-        params.put("favorite_pet", "poney");
+        params.put("favorite_pet", "pony");
         wpComGsonRequest.addQueryParameters(params);
-        assertEquals(baseUrl + "?type=post&offset=20&favorite_pet=poney", wpComGsonRequest.getUrl());
+        assertEquals(baseUrl + "?type=post&offset=20&favorite_pet=pony", wpComGsonRequest.getUrl());
 
         // No change to URL if params are null or empty
         wpComGsonRequest.addQueryParameters(null);
-        assertEquals(baseUrl + "?type=post&offset=20&favorite_pet=poney", wpComGsonRequest.getUrl());
+        assertEquals(baseUrl + "?type=post&offset=20&favorite_pet=pony", wpComGsonRequest.getUrl());
 
         wpComGsonRequest.addQueryParameters(new HashMap<String, String>());
-        assertEquals(baseUrl + "?type=post&offset=20&favorite_pet=poney", wpComGsonRequest.getUrl());
+        assertEquals(baseUrl + "?type=post&offset=20&favorite_pet=pony", wpComGsonRequest.getUrl());
     }
 
     @Test
@@ -43,10 +43,10 @@ public class RequestQueryParametersTest {
 
         Map<String, String> params = new HashMap<>();
         params.put("offset", "20");
-        params.put("favorite_pet", "poney");
+        params.put("favorite_pet", "pony");
 
         WPComGsonRequest wpComGsonRequest = new WPComGsonRequest<>(Method.GET, baseUrl, params, null, null, null);
-        assertEquals(baseUrl + "?offset=20&favorite_pet=poney", wpComGsonRequest.getUrl());
+        assertEquals(baseUrl + "?offset=20&favorite_pet=pony", wpComGsonRequest.getUrl());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class RequestQueryParametersTest {
 
         Map<String, String> params = new HashMap<>();
         params.put("offset", "20");
-        params.put("favorite_pet", "poney");
+        params.put("favorite_pet", "pony");
 
         WPComGsonRequest wpComGsonRequest = new WPComGsonRequest<>(Method.POST, baseUrl, params, null, null, null);
         // No change if the request != GET
