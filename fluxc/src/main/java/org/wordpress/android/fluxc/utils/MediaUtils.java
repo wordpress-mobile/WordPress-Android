@@ -88,7 +88,8 @@ public class MediaUtils {
      *
      * ref https://developer.wordpress.com/docs/api/1.1/post/sites/%24site/media/new/
      */
-    public static @NonNull Map<String, String> getMediaRestParams(@NonNull MediaModel media) {
+    @NonNull
+    public static Map<String, String> getMediaRestParams(@NonNull MediaModel media) {
         final Map<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(media.getTitle())) {
             params.put(MEDIA_TITLE_KEY, media.getTitle());
@@ -164,10 +165,10 @@ public class MediaUtils {
     }
 
     public static boolean isSupportedMimeType(String type) {
-        return isSupportedImageMimeType(type) ||
-               isSupportedVideoMimeType(type) ||
-               isSupportedAudioMimeType(type) ||
-               isSupportedApplicationMimeType(type);
+        return isSupportedImageMimeType(type)
+                || isSupportedVideoMimeType(type)
+                || isSupportedAudioMimeType(type)
+                || isSupportedApplicationMimeType(type);
     }
 
     public static String getMimeTypeForExtension(String extension) {

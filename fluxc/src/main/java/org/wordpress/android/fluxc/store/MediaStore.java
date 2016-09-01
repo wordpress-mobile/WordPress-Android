@@ -225,7 +225,8 @@ public class MediaStore extends Store implements MediaNetworkListener {
     }
 
     public List<MediaModel> getLocalSiteMedia(long siteId) {
-        return MediaSqlUtils.getSiteMediaExcluding(siteId, MediaModelTable.UPLOAD_STATE, MediaModel.UPLOAD_STATE.UPLOADED);
+        MediaModel.UploadState expectedState = MediaModel.UploadState.UPLOADED;
+        return MediaSqlUtils.getSiteMediaExcluding(siteId, MediaModelTable.UPLOAD_STATE, expectedState);
     }
 
     public String getUrlForSiteVideoWithVideoPressGuid(long siteId, String videoPressGuid) {
@@ -250,7 +251,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
 
     public MediaModel getNextSiteMediaToDelete(long siteId) {
         List<MediaModel> media = MediaSqlUtils.matchSiteMedia(siteId,
-                MediaModelTable.UPLOAD_STATE, MediaModel.UPLOAD_STATE.DELETE.toString());
+                MediaModelTable.UPLOAD_STATE, MediaModel.UploadState.DELETE.toString());
         return media.size() > 0 ? media.get(0) : null;
     }
 

@@ -206,7 +206,7 @@ public class MediaSqlUtilsTest {
         int testLength = 60;
         String testVideoPressGuid = "testVideoPressGuid";
         boolean testVideoPressProcessing = false;
-        String testUploadState = MediaModel.UPLOAD_STATE.UPLOADING.toString();
+        String testUploadState = MediaModel.UploadState.UPLOADING.toString();
         int testHorizontalAlign = 500;
         boolean testVerticalAlign = false;
         boolean testFeatured = false;

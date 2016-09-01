@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -39,7 +40,7 @@ import okhttp3.OkHttpClient;
  *
  * <ul>
  *     <li>Fetch existing media from a WP.com site
- *     (via {@link #FetchAllMedia(SiteModel)} and {@link #FetchMedia(SiteModel, List)}</li>
+ *     (via {@link #fetchAllMedia(SiteModel)} and {@link #fetchMedia(SiteModel, List)}</li>
  *     <li>Push new media to a WP.com site
  *     (via {@link #uploadMedia(SiteModel, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
@@ -77,12 +78,12 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 public void onResponse(MediaWPComRestResponse response) {
                     MediaModel responseMedia = MediaUtils.mediaFromRestResponse(response);
                     if (responseMedia != null) {
-                        AppLog.v(AppLog.T.MEDIA, "media pushed to site: " + responseMedia.getUrl());
+                        AppLog.v(T.MEDIA, "media pushed to site: " + responseMedia.getUrl());
                         List<MediaModel> mediaList = new ArrayList<>();
                         mediaList.add(responseMedia);
                         notifyMediaPushed(MediaAction.PUSH_MEDIA, mediaList);
                     } else {
-                        AppLog.w(AppLog.T.MEDIA, "could not parse push media response, ID: " + media.getMediaId());
+                        AppLog.w(T.MEDIA, "could not parse push media response, ID: " + media.getMediaId());
                         notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.RESPONSE_PARSE_ERROR);
                     }
                 }
@@ -90,10 +91,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                     if (error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
-                        AppLog.i(AppLog.T.MEDIA, "media does not exist, uploading");
+                        AppLog.i(T.MEDIA, "media does not exist, uploading");
                         notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.MEDIA_NOT_FOUND);
                     } else {
-                        AppLog.e(AppLog.T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA error: " + error);
+                        AppLog.e(T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA error: " + error);
                         notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.UNKNOWN);
                     }
                 }
@@ -122,17 +123,17 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onResponse(MultipleMediaResponse response) {
                         List<MediaModel> media = MediaUtils.mediaListFromRestResponse(response);
                         if (media != null) {
-                            AppLog.v(AppLog.T.MEDIA, "Fetched all media for site");
+                            AppLog.v(T.MEDIA, "Fetched all media for site");
                             notifyMediaFetched(MediaAction.FETCH_ALL_MEDIA, media);
                         } else {
-                            AppLog.w(AppLog.T.MEDIA, "could not parse Fetch all media response: " + response);
+                            AppLog.w(T.MEDIA, "could not parse Fetch all media response: " + response);
                             notifyMediaError(MediaAction.FETCH_ALL_MEDIA, null, MediaNetworkError.RESPONSE_PARSE_ERROR);
                         }
                     }
                 }, new BaseRequest.BaseErrorListener() {
             @Override
             public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                AppLog.v(AppLog.T.MEDIA, "VolleyError Fetching media: " + error);
+                AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
                 notifyMediaError(MediaAction.FETCH_ALL_MEDIA, null, MediaNetworkError.UNKNOWN);
             }
         }));
@@ -152,17 +153,18 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         public void onResponse(MediaWPComRestResponse response) {
                             MediaModel responseMedia = MediaUtils.mediaFromRestResponse(response);
                             if (responseMedia != null) {
-                                AppLog.v(AppLog.T.MEDIA, "Fetched media with ID: " + media.getMediaId());
+                                AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
                                 notifyMediaFetched(MediaAction.FETCH_MEDIA, responseMedia);
                             } else {
-                                AppLog.w(AppLog.T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
-                                notifyMediaError(MediaAction.FETCH_MEDIA, media, MediaNetworkError.RESPONSE_PARSE_ERROR);
+                                AppLog.w(T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
+                                MediaNetworkError error = MediaNetworkError.RESPONSE_PARSE_ERROR;
+                                notifyMediaError(MediaAction.FETCH_MEDIA, media, error);
                             }
                         }
                     }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                    AppLog.v(AppLog.T.MEDIA, "VolleyError Fetching media: " + error);
+                    AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
                     notifyMediaError(MediaAction.FETCH_MEDIA, media, MediaNetworkError.UNKNOWN);
                 }
             }));
@@ -183,19 +185,20 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         public void onResponse(MediaWPComRestResponse response) {
                             MediaModel deletedMedia = MediaUtils.mediaFromRestResponse(response);
                             if (deletedMedia != null) {
-                                AppLog.v(AppLog.T.MEDIA, "deleted media with ID: " + media.getMediaId());
+                                AppLog.v(T.MEDIA, "deleted media with ID: " + media.getMediaId());
                                 notifyMediaDeleted(MediaAction.DELETE_MEDIA, deletedMedia);
                             } else {
-                                AppLog.w(AppLog.T.MEDIA, "could not parse delete media response, ID: " + media.getMediaId());
-                                notifyMediaError(MediaAction.DELETE_MEDIA, media, MediaNetworkError.RESPONSE_PARSE_ERROR);
+                                AppLog.w(T.MEDIA, "could not parse delete media response, ID: " + media.getMediaId());
+                                MediaNetworkError error = MediaNetworkError.RESPONSE_PARSE_ERROR;
+                                notifyMediaError(MediaAction.DELETE_MEDIA, media, error);
                             }
                         }
                     }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                    AppLog.v(AppLog.T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
+                    AppLog.v(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
                     if (error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
-                        AppLog.i(AppLog.T.MEDIA, "Attempted to delete media that does not exist remotely. Emitting successful delete");
+                        AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
                         notifyMediaDeleted(MediaAction.DELETE_MEDIA, media);
                     } else {
                         notifyMediaError(MediaAction.DELETE_MEDIA, media, MediaNetworkError.UNKNOWN);
@@ -225,19 +228,19 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                    AppLog.d(AppLog.T.MEDIA, "media upload successful: " + response);
+                    AppLog.d(T.MEDIA, "media upload successful: " + response);
                     // TODO: serialize MediaModel from response and add to resultList
                     MediaModel responseMedia = media;
                     notifyMediaProgress(responseMedia, 1.f);
                 } else {
-                    AppLog.w(AppLog.T.MEDIA, "error uploading media: " + response);
+                    AppLog.w(T.MEDIA, "error uploading media: " + response);
                     notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkError.UNKNOWN);
                 }
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
-                AppLog.w(AppLog.T.MEDIA, "media upload failed: " + e);
+                AppLog.w(T.MEDIA, "media upload failed: " + e);
                 notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkError.UNKNOWN);
             }
         });

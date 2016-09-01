@@ -8,16 +8,15 @@ import org.wordpress.android.fluxc.utils.MediaUtils;
 import java.io.File;
 import java.io.IOException;
 
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okio.Buffer;
 import okio.ForwardingSink;
 import okio.Sink;
 
 /**
- * Wrapper for {@link MultipartBody} that reports upload progress as body data is written.
+ * Wrapper for {@link okhttp3.MultipartBody} that reports upload progress as body data is written.
  *
- * A {@link ProgressListener} is required, use {@link MultipartBody} if progress is not needed.
+ * A {@link ProgressListener} is required, use {@link okhttp3.MultipartBody} if progress is not needed.
  *
  * ref http://stackoverflow.com/questions/35528751/okhttp-3-tracking-multipart-upload-progress
  */
