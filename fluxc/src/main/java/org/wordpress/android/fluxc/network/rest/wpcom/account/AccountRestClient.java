@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.account;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.android.volley.Request.Method;
@@ -67,9 +68,9 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     @Inject
-    public AccountRestClient(Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
-                             AccessToken accessToken, UserAgent userAgent) {
-        super(dispatcher, requestQueue, accessToken, userAgent);
+    public AccountRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
+                             AppSecrets appSecrets, AccessToken accessToken, UserAgent userAgent) {
+        super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mAppSecrets = appSecrets;
     }
 

@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.network.rest;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
@@ -26,7 +25,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
 
     public GsonRequest(int method, Map<String, String> params, String url, Class<T> clazz, Listener<T> listener,
                        BaseErrorListener errorListener) {
-        super(method, addParamsToUrlIfGet(method, url, params), errorListener);
+        super(method, url, errorListener);
         mClass = clazz;
         mListener = listener;
         mGson = setupGsonBuilder().create();
@@ -64,23 +63,5 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrFalse.class, new JsonObjectOrFalseDeserializer());
         return gsonBuilder;
-    }
-
-    public static String addParamsToUrlIfGet(int method, String url, Map<String, String> params) {
-        if (method != Request.Method.GET || params == null || params.isEmpty()) {
-            return url;
-        }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            if (stringBuilder.length() == 0) {
-                stringBuilder.append('?');
-            } else {
-                stringBuilder.append('&');
-            }
-            stringBuilder.append(entry.getKey()).append('=').append(entry.getValue());
-        }
-
-        return url + stringBuilder.toString();
     }
 }
