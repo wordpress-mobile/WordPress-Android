@@ -90,6 +90,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                     return;
                 }
             }
+
+            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);//clearNotifications();
+
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
         }
@@ -99,7 +102,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
 
-        GCMMessageService.clearNotifications();
     }
 
     @Override

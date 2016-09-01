@@ -282,7 +282,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             GCMMessageService.bumpPushNotificationsTappedAllAnalytics();
         }
 
-        GCMMessageService.clearNotifications();
+        GCMMessageService.removeAllNotifications(this);
     }
 
     @Override

@@ -468,7 +468,7 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        removeNotificationWithNoteIdFromSystemBar(this, data);
+        removeNotificationWithNoteIdFromSystemBar(this, data.getString(PUSH_ARG_NOTE_ID, ""));
         //now that we cleared the specific notif, we can check and make any visual updates
         if (sActiveNotificationsMap.size() > 0) {
             rebuildAndUpdateNotificationsOnSystemBar(data);
@@ -596,13 +596,8 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     // Removes a specific notification from the system bar
-    public static synchronized void removeNotificationWithNoteIdFromSystemBar(Context context, Bundle data) {
-        if (context == null || data == null || !hasNotifications()) {
-            return;
-        }
-
-        String noteID = data.getString(PUSH_ARG_NOTE_ID, "");
-        if (TextUtils.isEmpty(noteID)) {
+    public static synchronized void removeNotificationWithNoteIdFromSystemBar(Context context, String noteID) {
+        if (context == null || TextUtils.isEmpty(noteID) || !hasNotifications()) {
             return;
         }
 

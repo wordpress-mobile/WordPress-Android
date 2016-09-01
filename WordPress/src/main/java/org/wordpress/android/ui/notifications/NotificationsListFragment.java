@@ -180,9 +180,6 @@ public class NotificationsListFragment extends Fragment
         }
     };
 
-    /**
-     * Open a note fragment based on the type of note
-     */
     private static Intent getOpenNoteIntent(Activity activity,
                                 String noteId) {
         Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
