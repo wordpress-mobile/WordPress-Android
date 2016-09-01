@@ -71,6 +71,7 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPLegacyMigrationUtils;
 import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
@@ -192,7 +193,7 @@ public class WordPress extends MultiDexApplication {
         } else {
             // it will take some time to update the access token in the AccountStore if it was migrated
             // so it will be set to the migrated token
-            String migratedToken = WPStoreUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
+            String migratedToken = WPLegacyMigrationUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
             if (!TextUtils.isEmpty(migratedToken)) {
                 OAuthAuthenticator.sAccessToken = migratedToken;
             }
