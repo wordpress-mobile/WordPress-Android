@@ -14,14 +14,13 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.MediaNetworkListener;
+import org.wordpress.android.fluxc.network.MediaNetworkListener.MediaNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
-import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.ChangedMediaPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 
@@ -77,20 +76,25 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 @Override
                 public void onResponse(MediaWPComRestResponse response) {
                     MediaModel responseMedia = MediaUtils.mediaFromRestResponse(response);
-                    AppLog.v(AppLog.T.MEDIA, "media pushed to site: " + responseMedia.getUrl());
-                    List<MediaModel> mediaList = new ArrayList<>();
-                    mediaList.add(responseMedia);
-                    notifyMediaPushed(MediaAction.PUSH_MEDIA,
-                            new ChangedMediaPayload(mediaList, null, null));
+                    if (responseMedia != null) {
+                        AppLog.v(AppLog.T.MEDIA, "media pushed to site: " + responseMedia.getUrl());
+                        List<MediaModel> mediaList = new ArrayList<>();
+                        mediaList.add(responseMedia);
+                        notifyMediaPushed(MediaAction.PUSH_MEDIA, mediaList);
+                    } else {
+                        AppLog.w(AppLog.T.MEDIA, "could not parse push media response, ID: " + media.getMediaId());
+                        notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.RESPONSE_PARSE_ERROR);
+                    }
                 }
             }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                     if (error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
                         AppLog.i(AppLog.T.MEDIA, "media does not exist, uploading");
-                        performUpload(media, siteId);
+                        notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.MEDIA_NOT_FOUND);
                     } else {
                         AppLog.e(AppLog.T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA error: " + error);
+                        notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.UNKNOWN);
                     }
                 }
             }));
@@ -116,15 +120,20 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 new Listener<MultipleMediaResponse>() {
                     @Override
                     public void onResponse(MultipleMediaResponse response) {
-                        AppLog.v(AppLog.T.MEDIA, "pulled all media for site");
-                        notifyMediaPulled(MediaAction.PULL_ALL_MEDIA, new ChangedMediaPayload(
-                                MediaUtils.mediaListFromRestResponse(response), null, null));
+                        List<MediaModel> media = MediaUtils.mediaListFromRestResponse(response);
+                        if (media != null) {
+                            AppLog.v(AppLog.T.MEDIA, "pulled all media for site");
+                            notifyMediaPulled(MediaAction.PULL_ALL_MEDIA, media);
+                        } else {
+                            AppLog.w(AppLog.T.MEDIA, "could not parse pull all media response: " + response);
+                            notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkError.RESPONSE_PARSE_ERROR);
+                        }
                     }
                 }, new BaseRequest.BaseErrorListener() {
             @Override
             public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                 AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
-                notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, error.volleyError);
+                notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkError.UNKNOWN);
             }
         }));
     }
@@ -141,15 +150,20 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     new Listener<MediaWPComRestResponse>() {
                         @Override
                         public void onResponse(MediaWPComRestResponse response) {
-                            MediaModel media = MediaUtils.mediaFromRestResponse(response);
-                            AppLog.v(AppLog.T.MEDIA, "pulled media with ID: " + media.getMediaId());
-                            onPullMediaResponse(payload, media, null, requestCount);
+                            MediaModel responseMedia = MediaUtils.mediaFromRestResponse(response);
+                            if (responseMedia != null) {
+                                AppLog.v(AppLog.T.MEDIA, "pulled media with ID: " + media.getMediaId());
+                                notifyMediaPulled(MediaAction.PULL_MEDIA, responseMedia);
+                            } else {
+                                AppLog.w(AppLog.T.MEDIA, "could not parse pull media response, ID: " + media.getMediaId());
+                                notifyMediaError(MediaAction.PULL_MEDIA, media, MediaNetworkError.RESPONSE_PARSE_ERROR);
+                            }
                         }
                     }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                     AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
-                    onPullMediaResponse(payload, null, error, requestCount);
+                    notifyMediaError(MediaAction.PULL_MEDIA, media, MediaNetworkError.UNKNOWN);
                 }
             }));
         }
@@ -167,17 +181,25 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     new Listener<MediaWPComRestResponse>() {
                         @Override
                         public void onResponse(MediaWPComRestResponse response) {
-                            AppLog.v(AppLog.T.MEDIA, "deleted media with ID: " + toDelete.getMediaId());
-                            List<MediaModel> mediaList = new ArrayList<>();
-                            mediaList.add(MediaUtils.mediaFromRestResponse(response));
-                            notifyMediaDeleted(MediaAction.DELETE_MEDIA,
-                                    new ChangedMediaPayload(mediaList, null, null));
+                            MediaModel deletedMedia = MediaUtils.mediaFromRestResponse(response);
+                            if (deletedMedia != null) {
+                                AppLog.v(AppLog.T.MEDIA, "deleted media with ID: " + media.getMediaId());
+                                notifyMediaDeleted(MediaAction.DELETE_MEDIA, deletedMedia);
+                            } else {
+                                AppLog.w(AppLog.T.MEDIA, "could not parse delete media response, ID: " + media.getMediaId());
+                                notifyMediaError(MediaAction.DELETE_MEDIA, media, MediaNetworkError.RESPONSE_PARSE_ERROR);
+                            }
                         }
                     }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                    AppLog.v(AppLog.T.MEDIA, "VolleyError deleting media: " + error);
-                    notifyMediaError(MediaAction.DELETE_MEDIA, toDelete, MediaNetworkListener.MediaNetworkError.UNKNOWN, error.volleyError);
+                    AppLog.v(AppLog.T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
+                    if (error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
+                        AppLog.i(AppLog.T.MEDIA, "Attempted to delete media that does not exist remotely. Emitting successful delete");
+                        notifyMediaDeleted(MediaAction.DELETE_MEDIA, media);
+                    } else {
+                        notifyMediaError(MediaAction.DELETE_MEDIA, media, MediaNetworkError.UNKNOWN);
+                    }
                 }
             }));
         }
@@ -209,59 +231,55 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     notifyMediaProgress(responseMedia, 1.f);
                 } else {
                     AppLog.w(AppLog.T.MEDIA, "error uploading media: " + response);
-                    notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, new Exception(response.toString()));
+                    notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkError.UNKNOWN);
                 }
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
                 AppLog.w(AppLog.T.MEDIA, "media upload failed: " + e);
-                notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkListener.MediaNetworkError.UNKNOWN, e);
+                notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkError.UNKNOWN);
             }
         });
     }
 
-    /**
-     * Helper method used by pullMedia to track response progress
-     */
-    private void onPullMediaResponse(ChangedMediaPayload payload, MediaModel media, BaseRequest.BaseNetworkError error, int count) {
-        payload.media.add(media);
-        if (error != null) {
-            payload.errors.add(error.volleyError);
+    private void notifyMediaPulled(MediaAction cause, MediaModel media) {
+        if (mListener != null && media != null) {
+            List<MediaModel> mediaList = new ArrayList<>();
+            mediaList.add(media);
+            mListener.onMediaPulled(cause, mediaList);
         }
-        if (payload.media.size() == count) {
-            mListener.onMediaPulled(MediaAction.PULL_MEDIA, payload.media);
+    }
+
+    private void notifyMediaPulled(MediaAction cause, List<MediaModel> media) {
+        if (mListener != null) {
+            mListener.onMediaPulled(cause, media);
+        }
+    }
+
+    private void notifyMediaPushed(MediaAction cause, List<MediaModel> media) {
+        if (mListener != null) {
+            mListener.onMediaPushed(cause, media);
+        }
+    }
+
+    private void notifyMediaDeleted(MediaAction cause, MediaModel media) {
+        if (mListener != null && media != null) {
+            List<MediaModel> mediaList = new ArrayList<>();
+            mediaList.add(media);
+            mListener.onMediaDeleted(cause, mediaList);
+        }
+    }
+
+    private void notifyMediaError(MediaAction cause, MediaModel media, MediaNetworkError error) {
+        if (mListener != null) {
+            mListener.onMediaError(cause, media, error);
         }
     }
 
     private void notifyMediaProgress(MediaModel media, float progress) {
         if (mListener != null) {
             mListener.onMediaUploadProgress(MediaAction.UPLOAD_MEDIA, media, progress);
-        }
-    }
-
-    private void notifyMediaPulled(MediaAction cause, ChangedMediaPayload payload) {
-        if (mListener != null) {
-            mListener.onMediaPulled(cause, payload.media);
-        }
-    }
-
-    private void notifyMediaPushed(MediaAction cause, ChangedMediaPayload payload) {
-        if (mListener != null) {
-            mListener.onMediaPushed(cause, payload.media);
-        }
-    }
-
-    private void notifyMediaDeleted(MediaAction cause, ChangedMediaPayload payload) {
-        if (mListener != null) {
-            mListener.onMediaDeleted(cause, payload.media);
-        }
-    }
-
-    private void notifyMediaError(MediaAction cause, MediaModel media, MediaNetworkListener.MediaNetworkError error, Exception exception) {
-        if (mListener != null) {
-            error.exception = exception;
-            mListener.onMediaError(cause, media, error);
         }
     }
 }
