@@ -75,80 +75,80 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(dotComSite);
 
         assertTrue(mSiteStore.hasSite());
-        assertTrue(mSiteStore.hasDotComSite());
-        assertFalse(mSiteStore.hasDotOrgSite());
+        assertTrue(mSiteStore.hasWPComSite());
+        assertFalse(mSiteStore.hasSelfHostedSite());
         assertFalse(mSiteStore.hasJetpackSite());
 
         assertEquals(1, mSiteStore.getSitesCount());
-        assertEquals(1, mSiteStore.getDotComSitesCount());
+        assertEquals(1, mSiteStore.getWPComSitesCount());
 
         // Test counts with one .COM and one self-hosted site
         SiteModel dotOrgSite = generateSelfHostedNonJPSite();
         SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
 
         assertTrue(mSiteStore.hasSite());
-        assertTrue(mSiteStore.hasDotComSite());
-        assertTrue(mSiteStore.hasDotOrgSite());
+        assertTrue(mSiteStore.hasWPComSite());
+        assertTrue(mSiteStore.hasSelfHostedSite());
         assertFalse(mSiteStore.hasJetpackSite());
 
         assertEquals(2, mSiteStore.getSitesCount());
-        assertEquals(1, mSiteStore.getDotComSitesCount());
-        assertEquals(1, mSiteStore.getDotOrgSitesCount());
+        assertEquals(1, mSiteStore.getWPComSitesCount());
+        assertEquals(1, mSiteStore.getSelfHostedSitesCount());
 
         // Test counts with one .COM, one self-hosted and one Jetpack site
         SiteModel jetpackSite = generateJetpackSite();
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
         assertTrue(mSiteStore.hasSite());
-        assertTrue(mSiteStore.hasDotComSite());
-        assertTrue(mSiteStore.hasDotOrgSite());
+        assertTrue(mSiteStore.hasWPComSite());
+        assertTrue(mSiteStore.hasSelfHostedSite());
         assertTrue(mSiteStore.hasJetpackSite());
 
         assertEquals(3, mSiteStore.getSitesCount());
-        assertEquals(1, mSiteStore.getDotComSitesCount());
-        assertEquals(2, mSiteStore.getDotOrgSitesCount());
+        assertEquals(1, mSiteStore.getWPComSitesCount());
+        assertEquals(2, mSiteStore.getSelfHostedSitesCount());
         assertEquals(1, mSiteStore.getJetpackSitesCount());
     }
 
     @Test
     public void testHasSiteWithSiteIdAndXmlRpcUrl() {
-        assertFalse(mSiteStore.hasDotOrgSiteWithSiteIdAndXmlRpcUrl(124, ""));
+        assertFalse(mSiteStore.hasSelfHostedSiteWithSiteIdAndXmlRpcUrl(124, ""));
 
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
         SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
-        assertTrue(mSiteStore.hasDotOrgSiteWithSiteIdAndXmlRpcUrl(selfHostedSite.getDotOrgSiteId(),
+        assertTrue(mSiteStore.hasSelfHostedSiteWithSiteIdAndXmlRpcUrl(selfHostedSite.getSelfHostedSiteId(),
                 selfHostedSite.getXmlRpcUrl()));
 
         SiteModel jetpackSite = generateJetpackSite();
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
-        assertTrue(mSiteStore.hasDotOrgSiteWithSiteIdAndXmlRpcUrl(jetpackSite.getDotOrgSiteId(),
+        assertTrue(mSiteStore.hasSelfHostedSiteWithSiteIdAndXmlRpcUrl(jetpackSite.getSelfHostedSiteId(),
                 jetpackSite.getXmlRpcUrl()));
     }
 
     @Test
     public void testHasDotComOrJetpackSiteWithSiteId() {
-        assertFalse(mSiteStore.hasDotComOrJetpackSiteWithSiteId(673));
+        assertFalse(mSiteStore.hasWPComOrJetpackSiteWithSiteId(673));
 
         SiteModel dotComSite = generateDotComSite();
         SiteSqlUtils.insertOrUpdateSite(dotComSite);
 
-        assertTrue(mSiteStore.hasDotComOrJetpackSiteWithSiteId(dotComSite.getSiteId()));
+        assertTrue(mSiteStore.hasWPComOrJetpackSiteWithSiteId(dotComSite.getSiteId()));
 
         SiteModel jetpackSite = generateJetpackSite();
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
-        // hasDotComOrJetpackSiteWithSiteId() should be able to locate a Jetpack site with either the site id or the
+        // hasWPComOrJetpackSiteWithSiteId() should be able to locate a Jetpack site with either the site id or the
         // .COM site id
-        assertTrue(mSiteStore.hasDotComOrJetpackSiteWithSiteId(jetpackSite.getSiteId()));
-        assertTrue(mSiteStore.hasDotComOrJetpackSiteWithSiteId(jetpackSite.getDotOrgSiteId()));
+        assertTrue(mSiteStore.hasWPComOrJetpackSiteWithSiteId(jetpackSite.getSiteId()));
+        assertTrue(mSiteStore.hasWPComOrJetpackSiteWithSiteId(jetpackSite.getSelfHostedSiteId()));
     }
 
     @Test
     public void testDotComSiteVisibility() {
         // Should not cause any errors
-        mSiteStore.isDotComSiteVisibleByLocalId(45);
+        mSiteStore.isWPComSiteVisibleByLocalId(45);
         SiteSqlUtils.setSiteVisibility(null, true);
 
         SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
@@ -166,7 +166,7 @@ public class SiteStoreUnitTest {
         // Attempt to use with legitimate .com site
         SiteSqlUtils.setSiteVisibility(selfHostedNonJPSite, false);
         assertFalse(mSiteStore.getSiteByLocalId(dotComSite.getId()).isVisible());
-        assertFalse(mSiteStore.isDotComSiteVisibleByLocalId(dotComSite.getId()));
+        assertFalse(mSiteStore.isWPComSiteVisibleByLocalId(dotComSite.getId()));
     }
 
     @Test
@@ -175,7 +175,7 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
 
         // Attempt to use with id of self-hosted site
-        for (SiteModel site : mSiteStore.getDotComSites()) {
+        for (SiteModel site : mSiteStore.getWPComSites()) {
             SiteSqlUtils.setSiteVisibility(site, false);
         }
         // The self-hosted site should not be affected
@@ -190,7 +190,7 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(dotComSite2);
 
         // Attempt to use with legitimate .com site
-        for (SiteModel site : mSiteStore.getDotComSites()) {
+        for (SiteModel site : mSiteStore.getWPComSites()) {
             SiteSqlUtils.setSiteVisibility(site, false);
         }
         assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
@@ -218,7 +218,7 @@ public class SiteStoreUnitTest {
     @Test
     public void testGetIdForIdMethods() {
         assertEquals(0, mSiteStore.getLocalIdForRemoteSiteId(555));
-        assertEquals(0, mSiteStore.getLocalIdForDotOrgSiteIdAndXmlRpcUrl(2626, ""));
+        assertEquals(0, mSiteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(2626, ""));
         assertEquals(0, mSiteStore.getSiteIdForLocalId(5577));
 
         SiteModel dotOrgSite = generateSelfHostedNonJPSite();
@@ -228,19 +228,19 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(dotComSite);
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
-        assertEquals(dotOrgSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(dotOrgSite.getDotOrgSiteId()));
+        assertEquals(dotOrgSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(dotOrgSite.getSelfHostedSiteId()));
         assertEquals(dotComSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(dotComSite.getSiteId()));
 
         // Should be able to look up a Jetpack site by .com and by .org id (assuming it's been set)
         assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(jetpackSite.getSiteId()));
-        assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(jetpackSite.getDotOrgSiteId()));
+        assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(jetpackSite.getSelfHostedSiteId()));
 
-        assertEquals(dotOrgSite.getId(), mSiteStore.getLocalIdForDotOrgSiteIdAndXmlRpcUrl(
-                dotOrgSite.getDotOrgSiteId(), dotOrgSite.getXmlRpcUrl()));
-        assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForDotOrgSiteIdAndXmlRpcUrl(
-                jetpackSite.getDotOrgSiteId(), jetpackSite.getXmlRpcUrl()));
+        assertEquals(dotOrgSite.getId(), mSiteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(
+                dotOrgSite.getSelfHostedSiteId(), dotOrgSite.getXmlRpcUrl()));
+        assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(
+                jetpackSite.getSelfHostedSiteId(), jetpackSite.getXmlRpcUrl()));
 
-        assertEquals(dotOrgSite.getDotOrgSiteId(), mSiteStore.getSiteIdForLocalId(dotOrgSite.getId()));
+        assertEquals(dotOrgSite.getSelfHostedSiteId(), mSiteStore.getSiteIdForLocalId(dotOrgSite.getId()));
         assertEquals(dotComSite.getSiteId(), mSiteStore.getSiteIdForLocalId(dotComSite.getId()));
         assertEquals(jetpackSite.getSiteId(), mSiteStore.getSiteIdForLocalId(jetpackSite.getId()));
     }
