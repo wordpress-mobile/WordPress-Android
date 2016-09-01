@@ -40,7 +40,7 @@ public class ReaderPost {
     private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
     public double sortIndex;
-    private String published;
+    private String date;
 
     private String url;
     private String shortUrl;
@@ -114,7 +114,7 @@ public class ReaderPost {
 
         post.featuredImage = JSONUtils.getString(json, "featured_image");
         post.blogName = JSONUtils.getStringDecoded(json, "site_name");
-        post.published = JSONUtils.getString(json, "date");
+        post.date = JSONUtils.getString(json, "date");
 
         // sort index determines how posts are sorted - this is a liked date for liked
         // posts, tagged date for tag streams, and published date for all others
@@ -125,7 +125,7 @@ public class ReaderPost {
             String taggedDate = JSONUtils.getString(json, "tagged_on");
             post.sortIndex = DateTimeUtils.iso8601ToTimestamp(taggedDate);
         } else {
-            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(post.published);
+            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(post.date);
         }
 
         // if the post is untitled, make up a title from the excerpt
@@ -427,11 +427,11 @@ public class ReaderPost {
         this.pseudoId = StringUtils.notNullStr(pseudoId);
     }
 
-    public String getPublished() {
-        return StringUtils.notNullStr(published);
+    public String getDate() {
+        return StringUtils.notNullStr(date);
     }
-    public void setPublished(String published) {
-        this.published = StringUtils.notNullStr(published);
+    public void setDate(String dateStr) {
+        this.date = StringUtils.notNullStr(dateStr);
     }
 
     public String getPrimaryTag() {
@@ -636,14 +636,14 @@ public class ReaderPost {
     }
 
     /*
-     * converts iso8601 published date to an actual java date
+     * converts iso8601 date to an actual java date
      */
-    private transient java.util.Date dtPublished;
-    public java.util.Date getDatePublished() {
-        if (dtPublished == null) {
-            dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
+    private transient java.util.Date dtJava;
+    public java.util.Date getJavaDate() {
+        if (dtJava == null) {
+            dtJava = DateTimeUtils.iso8601ToJavaDate(this.date);
         }
-        return dtPublished;
+        return dtJava;
     }
 
     /*

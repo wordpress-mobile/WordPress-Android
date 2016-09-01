@@ -667,7 +667,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(18, post.getFeaturedVideo());
                 stmtPosts.bindString(19, post.getPostAvatar());
                 stmtPosts.bindDouble(20, post.sortIndex);
-                stmtPosts.bindString(21, post.getPublished());
+                stmtPosts.bindString(21, post.getDate());
                 stmtPosts.bindLong  (22, post.numReplies);
                 stmtPosts.bindLong  (23, post.numLikes);
                 stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isLikedByCurrentUser));
@@ -880,7 +880,7 @@ public class ReaderPostTable {
         post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
         post.sortIndex = c.getDouble(c.getColumnIndex("sort_index"));
-        post.setPublished(c.getString(c.getColumnIndex("published")));
+        post.setDate(c.getString(c.getColumnIndex("published")));
 
         post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
         post.numLikes = c.getInt(c.getColumnIndex("num_likes"));
