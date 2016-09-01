@@ -10,6 +10,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
@@ -116,6 +117,7 @@ public class ReaderPost {
         post.featuredImage = JSONUtils.getString(json, "featured_image");
         post.blogName = JSONUtils.getStringDecoded(json, "site_name");
         post.pubDate = JSONUtils.getString(json, "date");
+        AppLog.w(AppLog.T.READER, post.pubDate);
 
         // a post's date is the liked date for liked posts, tagged date for tag streams, and
         // published date for all others
@@ -439,8 +441,8 @@ public class ReaderPost {
     public String getPubDate() {
         return StringUtils.notNullStr(pubDate);
     }
-    public void setPubDate(String dateStr) {
-        this.pubDate = StringUtils.notNullStr(pubDate);
+    public void setPubDate(String published) {
+        this.pubDate = StringUtils.notNullStr(published);
     }
 
     public String getPrimaryTag() {
