@@ -645,14 +645,14 @@ public class ReaderPost {
     }
 
     /*
-     * converts iso8601 pubDate to an actual java date
+     * converts iso8601 pubDate to a java date for display - this is the date that appears on posts
      */
-    private transient java.util.Date dtPublished;
-    public java.util.Date getDatePublished() {
-        if (dtPublished == null) {
-            dtPublished = DateTimeUtils.iso8601ToJavaDate(this.pubDate);
+    private transient java.util.Date dtDisplay;
+    public java.util.Date getDisplayDate() {
+        if (dtDisplay == null) {
+            dtDisplay = DateTimeUtils.iso8601ToJavaDate(this.pubDate);
         }
-        return dtPublished;
+        return dtDisplay;
     }
 
     /*
