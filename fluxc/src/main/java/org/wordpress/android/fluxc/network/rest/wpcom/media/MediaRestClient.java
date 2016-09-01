@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
+import com.google.gson.Gson;
 
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 
@@ -216,7 +217,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     // Used in both uploadMedia and pushMedia methods
     private void performUpload(final MediaModel media, long siteId) {
         String url = WPCOMREST.sites.site(siteId).media.new_.getUrlV1_1();
-        final RestUploadRequestBody body = new RestUploadRequestBody(media, this);
+        RestUploadRequestBody body = new RestUploadRequestBody(media, this);
         String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
 
         okhttp3.Request request = new okhttp3.Request.Builder()
@@ -230,9 +231,13 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     AppLog.d(T.MEDIA, "media upload successful: " + response);
-                    // TODO: serialize MediaModel from response and add to resultList
-                    MediaModel responseMedia = media;
-                    notifyMediaProgress(responseMedia, 1.f);
+                    String jsonBody = response.body().string();
+                    MultipleMediaResponse mediaResponse =
+                            new Gson().fromJson(jsonBody, MultipleMediaResponse.class);
+                    List<MediaModel> responseMedia = MediaUtils.mediaListFromRestResponse(mediaResponse);
+                    if (responseMedia != null && !responseMedia.isEmpty()) {
+                        notifyMediaProgress(responseMedia.get(0), 1.f);
+                    }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
                     notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkError.UNKNOWN);
