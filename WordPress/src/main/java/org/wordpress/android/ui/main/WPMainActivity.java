@@ -270,7 +270,12 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
                 GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
-                NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard);
+                boolean doLikeNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
+                if (doLikeNote) {
+                    NotificationsListFragment.openNoteForLike(this, noteId);
+                } else {
+                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard);
+                }
             }
         } else {
           // mark all tapped here

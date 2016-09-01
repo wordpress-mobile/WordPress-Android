@@ -117,6 +117,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
+    private boolean mShouldLikeInstantly;
 
     /*
          * Used to request a comment from a note using its site and comment ids, rather than build
@@ -159,6 +160,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public static CommentDetailFragment newInstance(final String noteId) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         fragment.setNoteWithNoteId(noteId);
+        return fragment;
+    }
+
+    /*
+     * used when called from a comment notification 'like' action
+     */
+    public static CommentDetailFragment newInstanceForInstantLike(final String noteId) {
+        CommentDetailFragment fragment = newInstance(noteId);
+        //here tell the fragment to trigger the Like action when ready
+        fragment.setLikeCommentWhenReady();
         return fragment;
     }
 
@@ -325,7 +336,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnLikeComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                likeComment();
+                likeComment(false);
             }
         });
 
@@ -343,6 +354,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!TextUtils.isEmpty(mRestoredNoteId)) {
             setNoteWithNoteId(mRestoredNoteId);
             mRestoredNoteId = null;
+        }
+
+        if (mShouldLikeInstantly) {
+            mShouldLikeInstantly = false;
+            likeComment(true);
         }
     }
 
@@ -1062,9 +1078,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         getFragmentManager().invalidateOptionsMenu();
     }
 
+    private void setLikeCommentWhenReady() {
+        mShouldLikeInstantly = true;
+    }
+
     // Like or unlike a comment via the REST API
-    private void likeComment() {
+    private void likeComment(boolean forceLike) {
         if (mNote == null) return;
+        if (!isAdded()) return;
+        if (forceLike && mBtnLikeComment.isActivated()) return;
 
         toggleLikeButton(!mBtnLikeComment.isActivated());
 

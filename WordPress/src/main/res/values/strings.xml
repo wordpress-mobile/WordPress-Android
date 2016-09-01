@@ -324,6 +324,7 @@
     <!-- comment actions -->
     <string name="reply">Reply</string>
     <string name="trash">Trash</string>
+    <string name="like">Like</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>

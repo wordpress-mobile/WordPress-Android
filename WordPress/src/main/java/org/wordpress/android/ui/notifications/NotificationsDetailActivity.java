@@ -138,7 +138,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            fragment = CommentDetailFragment.newInstance(note.getId());
+            boolean isInstantLike = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
+            fragment = isInstantLike ?
+                    CommentDetailFragment.newInstanceForInstantLike(note.getId()) :
+                    CommentDetailFragment.newInstance(note.getId());
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above

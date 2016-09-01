@@ -207,6 +207,12 @@ public class GCMMessageService extends GcmListenerService {
 
     private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // Add some actions if this is a comment notification
+        addCommentReplyActionForCommentNotification(builder, noteId);
+        addCommentLikeActionForCommentNotification(builder, noteId);
+    }
+
+    private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+        // adding comment reply action
         Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
         commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
         commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -222,6 +228,26 @@ public class GCMMessageService extends GcmListenerService {
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
+    }
+
+    private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+        // adding comment like action
+        Intent commentLikeIntent = new Intent(this, WPMainActivity.class);
+        commentLikeIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+        commentLikeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        commentLikeIntent.setAction("android.intent.action.MAIN");
+        commentLikeIntent.addCategory("android.intent.category.LAUNCHER");
+        commentLikeIntent.addCategory("comment-like");
+        commentLikeIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, true);
+        if (noteId != null) {
+            commentLikeIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+        }
+        PendingIntent commentLikePendingIntent = PendingIntent.getActivity(this, 0, commentLikeIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
+                commentLikePendingIntent);
+
     }
 
     private Bitmap getLargeIconBitmap(String iconUrl, boolean shouldCircularizeIcon){
