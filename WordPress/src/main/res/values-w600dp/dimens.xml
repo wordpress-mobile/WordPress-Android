@@ -1,0 +1,3 @@
+<resources>
+    <dimen name="content_margin">@dimen/content_margin_tablet</dimen>
+</resources>

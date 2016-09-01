@@ -49,7 +49,7 @@
     <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
     <dimen name="content_margin_normal_landscape">48dp</dimen>
     <dimen name="content_margin_tablet">48dp</dimen>
-    <dimen name="content_margin_tablet_landscape">96dp</dimen>
+    <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
 
     <!-- spacing between icons in main tab strip -->
