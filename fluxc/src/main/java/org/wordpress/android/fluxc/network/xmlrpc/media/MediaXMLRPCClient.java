@@ -101,7 +101,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     if (response == null || !(response instanceof Boolean) || !(Boolean) response) {
                         String msg = "Unknown response to XMLRPC.EDIT_MEDIA: " + response;
                         AppLog.w(T.MEDIA, msg);
-                        notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.UNKNOWN, new Exception(msg));
+                        notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.UNKNOWN);
                         return;
                     }
 
@@ -112,14 +112,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                    String msg = "Error response from XMLRPC.EDIT_MEDIA: ";
                     if (is404Response(error)) {
-                        msg += "media does not exist";
+                        AppLog.e(T.MEDIA, "Error response from XMLRPC.EDIT_MEDIA: media does not exist");
+                        notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.MEDIA_NOT_FOUND);
                     } else {
-                        msg += "unhandled XMLRPC.EDIT_MEDIA response: " + error;
+                        AppLog.e(T.MEDIA, "Error response from XMLRPC.EDIT_MEDIA: unhandled XMLRPC.EDIT_MEDIA response: " + error);
+                        notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.UNKNOWN);
                     }
-                    AppLog.e(T.MEDIA, msg);
-                    notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.UNKNOWN, new Exception(msg));
                 }
             }));
         }
@@ -142,7 +141,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             @Override
             public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                 AppLog.e(T.MEDIA, "Volley error", error.volleyError);
-                notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkError.UNKNOWN, error.volleyError);
+                notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkError.UNKNOWN);
             }
         }));
     }
@@ -166,9 +165,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     String msg = "Error response from XMLRPC.GET_MEDIA_ITEM: " + error;
                     AppLog.v(T.MEDIA, msg);
                     if (is404Response(error)) {
-                        notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND, error.volleyError);
+                        notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND);
                     } else {
-                        notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.UNKNOWN, error.volleyError);
+                        notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.UNKNOWN);
                     }
                 }
             }));
@@ -188,7 +187,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     if (response == null || !(response instanceof Boolean) || !(Boolean) response) {
                         String msg = "Unknown response to XMLRPC.DELETE_MEDIA: " + response;
                         AppLog.w(T.MEDIA, msg);
-                        notifyMediaError(MediaAction.PUSH_MEDIA, mediaItem, MediaNetworkError.UNKNOWN, new Exception(msg));
+                        notifyMediaError(MediaAction.PUSH_MEDIA, mediaItem, MediaNetworkError.UNKNOWN);
                         return;
                     }
 
@@ -205,7 +204,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     String msg = "Error response from XMLRPC.DELETE_MEDIA: " + error;
                     AppLog.v(T.MEDIA, msg);
                     if (is404Response(error)) {
-                        notifyMediaError(MediaAction.DELETE_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND, error.volleyError);
+                        notifyMediaError(MediaAction.DELETE_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND);
                     }
                 }
             }));
@@ -247,14 +246,14 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     notifyMediaProgress(responseMedia, 1.f);
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
-                    notifyMediaError(MediaAction.UPLOAD_MEDIA, media, MediaNetworkError.UNKNOWN, null);
+                    notifyMediaError(MediaAction.UPLOAD_MEDIA, media, MediaNetworkError.UNKNOWN);
                 }
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
-                notifyMediaError(MediaAction.UPLOAD_MEDIA, media, MediaNetworkError.UNKNOWN, e);
+                notifyMediaError(MediaAction.UPLOAD_MEDIA, media, MediaNetworkError.UNKNOWN);
             }
         });
     }
@@ -380,9 +379,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
     }
 
-    private void notifyMediaError(MediaAction cause, MediaModel media, MediaNetworkError error, Exception exception) {
+    private void notifyMediaError(MediaAction cause, MediaModel media, MediaNetworkError error) {
         if (mListener != null) {
-            error.exception = exception;
             mListener.onMediaError(cause, media, error);
         }
     }

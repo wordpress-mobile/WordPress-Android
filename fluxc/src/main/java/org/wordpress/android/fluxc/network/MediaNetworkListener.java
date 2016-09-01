@@ -9,8 +9,8 @@ public interface MediaNetworkListener {
     enum MediaNetworkError {
         NONE,
         MEDIA_NOT_FOUND,
-        UNKNOWN;
-        public Exception exception;
+        RESPONSE_PARSE_ERROR,
+        UNKNOWN
     }
 
     /**
