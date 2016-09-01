@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
+import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
@@ -502,55 +503,93 @@ public class SiteStore extends Store {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
-        org.wordpress.android.fluxc.annotations.action.IAction actionType = action.getType();
-        if (actionType == SiteAction.UPDATE_SITE) {
-            updateSite((SiteModel) action.getPayload());
-        } else if (actionType == SiteAction.UPDATE_SITES) {
-            updateSites((SitesModel) action.getPayload());
-        } else if (actionType == SiteAction.FETCH_SITES) {
-            mSiteRestClient.pullSites();
-        } else if (actionType == SiteAction.FETCH_SITES_XML_RPC) {
-            RefreshSitesXMLRPCPayload payload = (RefreshSitesXMLRPCPayload) action.getPayload();
-            mSiteXMLRPCClient.pullSites(payload.url, payload.username, payload.password);
-        } else if (actionType == SiteAction.FETCH_SITE) {
-            SiteModel site = (SiteModel) action.getPayload();
-            if (site.isWPCom()) {
-                mSiteRestClient.pullSite(site);
-            } else {
-                mSiteXMLRPCClient.pullSite(site);
-            }
-        } else if (actionType == SiteAction.REMOVE_SITE) {
-            int rowsAffected = SiteSqlUtils.deleteSite((SiteModel) action.getPayload());
-            // TODO: This should be captured by 'QuickPressShortcutsStore' so it can handle deleting any QP shortcuts
-            // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
-            // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
-            emitChange(new OnSiteRemoved(rowsAffected));
-        } else if (actionType == SiteAction.REMOVE_WPCOM_SITES) {
-            // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were pulled over the WP.com
-            // REST API only (they don't have a .org site id)
-            List<SiteModel> wpcomSites = SiteSqlUtils.getAllWPComSites();
-            int rowsAffected = removeSites(wpcomSites);
-            // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
-            emitChange(new OnSiteRemoved(rowsAffected));
-        } else if (actionType == SiteAction.SHOW_SITES) {
-            toggleSitesVisibility((SitesModel) action.getPayload(), true);
-        } else if (actionType == SiteAction.HIDE_SITES) {
-            toggleSitesVisibility((SitesModel) action.getPayload(), false);
-        } else if (actionType == SiteAction.CREATE_NEW_SITE) {
-            NewSitePayload payload = (NewSitePayload) action.getPayload();
-            mSiteRestClient.newSite(payload.siteName, payload.siteTitle, payload.language, payload.visibility,
-                    payload.dryRun);
-        } else if (actionType == SiteAction.CREATED_NEW_SITE) {
-            NewSiteResponsePayload payload = (NewSiteResponsePayload) action.getPayload();
-            OnNewSiteCreated onNewSiteCreated = new OnNewSiteCreated();
-            onNewSiteCreated.error = payload.error;
-            onNewSiteCreated.dryRun = payload.dryRun;
-            emitChange(onNewSiteCreated);
-        } else if (actionType == SiteAction.FETCH_POST_FORMATS) {
-            fetchPostFormats((SiteModel) action.getPayload());
-        } else if (actionType == SiteAction.FETCHED_POST_FORMATS) {
-            updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
+        IAction actionType = action.getType();
+        if (!(actionType instanceof SiteAction)) {
+            return;
         }
+
+        switch ((SiteAction) actionType) {
+            case FETCH_SITE:
+                fetchSite((SiteModel) action.getPayload());
+                break;
+            case FETCH_SITES:
+                mSiteRestClient.pullSites();
+                break;
+            case FETCH_SITES_XML_RPC:
+                fetchSitesXmlRpc((RefreshSitesXMLRPCPayload) action.getPayload());
+                break;
+            case UPDATE_SITE:
+                updateSite((SiteModel) action.getPayload());
+                break;
+            case UPDATE_SITES:
+                updateSites((SitesModel) action.getPayload());
+                break;
+            case REMOVE_SITE:
+                removeSite((SiteModel) action.getPayload());
+                break;
+            case REMOVE_WPCOM_SITES:
+                removeWPComSites();
+                break;
+            case SHOW_SITES:
+                toggleSitesVisibility((SitesModel) action.getPayload(), true);
+                break;
+            case HIDE_SITES:
+                toggleSitesVisibility((SitesModel) action.getPayload(), false);
+                break;
+            case CREATE_NEW_SITE:
+                createNewSite((NewSitePayload) action.getPayload());
+                break;
+            case CREATED_NEW_SITE:
+                handleCreateNewSiteCompleted((NewSiteResponsePayload) action.getPayload());
+                break;
+            case FETCH_POST_FORMATS:
+                fetchPostFormats((SiteModel) action.getPayload());
+                break;
+            case FETCHED_POST_FORMATS:
+                updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
+                break;
+        }
+    }
+
+    private void removeSite(SiteModel site) {
+        int rowsAffected = SiteSqlUtils.deleteSite(site);
+        // TODO: This should be captured by 'QuickPressShortcutsStore' so it can handle deleting any QP shortcuts
+        // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
+        // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
+        emitChange(new OnSiteRemoved(rowsAffected));
+    }
+
+    private void removeWPComSites() {
+        // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were pulled over the WP.com
+        // REST API only (they don't have a .org site id)
+        List<SiteModel> wpcomSites = SiteSqlUtils.getAllWPComSites();
+        int rowsAffected = removeSites(wpcomSites);
+        // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
+        emitChange(new OnSiteRemoved(rowsAffected));
+    }
+
+    private void createNewSite(NewSitePayload payload) {
+        mSiteRestClient.newSite(payload.siteName, payload.siteTitle, payload.language, payload.visibility,
+                payload.dryRun);
+    }
+
+    private void handleCreateNewSiteCompleted(NewSiteResponsePayload payload) {
+        OnNewSiteCreated onNewSiteCreated = new OnNewSiteCreated();
+        onNewSiteCreated.error = payload.error;
+        onNewSiteCreated.dryRun = payload.dryRun;
+        emitChange(onNewSiteCreated);
+    }
+
+    private void fetchSite(SiteModel site) {
+        if (site.isWPCom()) {
+            mSiteRestClient.pullSite(site);
+        } else {
+            mSiteXMLRPCClient.pullSite(site);
+        }
+    }
+
+    private void fetchSitesXmlRpc(RefreshSitesXMLRPCPayload payload) {
+        mSiteXMLRPCClient.pullSites(payload.url, payload.username, payload.password);
     }
 
     private void fetchPostFormats(SiteModel site) {
