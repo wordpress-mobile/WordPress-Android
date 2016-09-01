@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.android.volley.Request.Method;
@@ -50,9 +51,9 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     @Inject
-    public SiteRestClient(Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
+    public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
                           AccessToken accessToken, UserAgent userAgent) {
-        super(dispatcher, requestQueue, accessToken, userAgent);
+        super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mAppSecrets = appSecrets;
     }
 

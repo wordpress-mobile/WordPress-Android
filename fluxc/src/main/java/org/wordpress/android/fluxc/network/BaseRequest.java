@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network;
 
+import android.net.Uri;
+import android.net.Uri.Builder;
 import android.support.annotation.NonNull;
 import android.util.Base64;
 
@@ -23,6 +25,8 @@ import javax.net.ssl.SSLHandshakeException;
 import static org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN;
 
 public abstract class BaseRequest<T> extends Request<T> {
+    public Uri mUri;
+
     public interface OnAuthFailedListener {
         void onAuthFailed(AuthenticateErrorPayload errorType);
     }
@@ -98,13 +102,36 @@ public abstract class BaseRequest<T> extends Request<T> {
         UNKNOWN,
     }
 
-    public BaseRequest(int method, String url, BaseErrorListener errorListener) {
+    public BaseRequest(int method, @NonNull String url, BaseErrorListener errorListener) {
         super(method, url, null);
+        if (url != null) {
+            mUri = Uri.parse(url);
+        } else {
+            mUri = Uri.EMPTY;
+        }
         mErrorListener = errorListener;
         // Make sure all our custom Requests are never cached.
         setShouldCache(false);
         setRetryPolicy(new DefaultRetryPolicy(DEFAULT_REQUEST_TIMEOUT,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
+
+    @Override
+    public String getUrl() {
+        return mUri.toString();
+    }
+
+    public void addQueryParameter(String key, String value) {
+        mUri = mUri.buildUpon().appendQueryParameter(key, value).build();
+    }
+
+    public void addQueryParameters(Map<String, String> parameters) {
+        if (parameters == null) return;
+        Builder builder = mUri.buildUpon();
+        for (String key : parameters.keySet()) {
+            builder.appendQueryParameter(key, parameters.get(key));
+        }
+        mUri = builder.build();
     }
 
     @Override
