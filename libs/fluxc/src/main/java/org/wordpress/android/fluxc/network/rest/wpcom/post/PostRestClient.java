@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.post;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -13,6 +14,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -38,9 +40,9 @@ import javax.inject.Singleton;
 @Singleton
 public class PostRestClient extends BaseWPComRestClient {
     @Inject
-    public PostRestClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
+    public PostRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
                           UserAgent userAgent) {
-        super(dispatcher, requestQueue, accessToken, userAgent);
+        super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
     public void fetchPost(final PostModel post, final SiteModel site) {
@@ -78,7 +80,8 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
+    public void fetchPosts(final SiteModel site, final boolean getPages, final List<PostStatus> statusList,
+                           final int offset) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
@@ -88,6 +91,10 @@ public class PostRestClient extends BaseWPComRestClient {
 
         if (getPages) {
             params.put("type", "page");
+        }
+
+        if (statusList.size() > 0) {
+            params.put("status", PostStatus.postStatusListToString(statusList));
         }
 
         if (offset > 0) {
