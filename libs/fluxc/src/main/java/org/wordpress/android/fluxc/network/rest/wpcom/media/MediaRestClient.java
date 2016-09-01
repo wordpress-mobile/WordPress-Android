@@ -38,8 +38,8 @@ import okhttp3.OkHttpClient;
  * methods to:
  *
  * <ul>
- *     <li>Pull existing media from a WP.com site
- *     (via {@link #pullAllMedia(SiteModel)} and {@link #pullMedia(SiteModel, List)}</li>
+ *     <li>Fetch existing media from a WP.com site
+ *     (via {@link #FetchAllMedia(SiteModel)} and {@link #FetchMedia(SiteModel, List)}</li>
  *     <li>Push new media to a WP.com site
  *     (via {@link #uploadMedia(SiteModel, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
@@ -114,7 +114,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void pullAllMedia(final SiteModel site) {
+    public void fetchAllMedia(final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         add(new WPComGsonRequest<>(Method.GET, url, null, MultipleMediaResponse.class,
                 new Listener<MultipleMediaResponse>() {
@@ -122,18 +122,18 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onResponse(MultipleMediaResponse response) {
                         List<MediaModel> media = MediaUtils.mediaListFromRestResponse(response);
                         if (media != null) {
-                            AppLog.v(AppLog.T.MEDIA, "pulled all media for site");
-                            notifyMediaPulled(MediaAction.PULL_ALL_MEDIA, media);
+                            AppLog.v(AppLog.T.MEDIA, "Fetched all media for site");
+                            notifyMediaFetched(MediaAction.FETCH_ALL_MEDIA, media);
                         } else {
-                            AppLog.w(AppLog.T.MEDIA, "could not parse pull all media response: " + response);
-                            notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkError.RESPONSE_PARSE_ERROR);
+                            AppLog.w(AppLog.T.MEDIA, "could not parse Fetch all media response: " + response);
+                            notifyMediaError(MediaAction.FETCH_ALL_MEDIA, null, MediaNetworkError.RESPONSE_PARSE_ERROR);
                         }
                     }
                 }, new BaseRequest.BaseErrorListener() {
             @Override
             public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
-                notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkError.UNKNOWN);
+                AppLog.v(AppLog.T.MEDIA, "VolleyError Fetching media: " + error);
+                notifyMediaError(MediaAction.FETCH_ALL_MEDIA, null, MediaNetworkError.UNKNOWN);
             }
         }));
     }
@@ -141,10 +141,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Gets a list of media items whose media IDs match the provided list.
      */
-    public void pullMedia(final SiteModel site, final List<MediaModel> mediaToPull) {
-        if (mediaToPull == null || mediaToPull.isEmpty()) return;
+    public void fetchMedia(final SiteModel site, final List<MediaModel> mediaToFetch) {
+        if (mediaToFetch == null || mediaToFetch.isEmpty()) return;
 
-        for (final MediaModel media: mediaToPull) {
+        for (final MediaModel media: mediaToFetch) {
             String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).getUrlV1_1();
             add(new WPComGsonRequest<>(Method.GET, url, null, MediaWPComRestResponse.class,
                     new Listener<MediaWPComRestResponse>() {
@@ -152,18 +152,18 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         public void onResponse(MediaWPComRestResponse response) {
                             MediaModel responseMedia = MediaUtils.mediaFromRestResponse(response);
                             if (responseMedia != null) {
-                                AppLog.v(AppLog.T.MEDIA, "pulled media with ID: " + media.getMediaId());
-                                notifyMediaPulled(MediaAction.PULL_MEDIA, responseMedia);
+                                AppLog.v(AppLog.T.MEDIA, "Fetched media with ID: " + media.getMediaId());
+                                notifyMediaFetched(MediaAction.FETCH_MEDIA, responseMedia);
                             } else {
-                                AppLog.w(AppLog.T.MEDIA, "could not parse pull media response, ID: " + media.getMediaId());
-                                notifyMediaError(MediaAction.PULL_MEDIA, media, MediaNetworkError.RESPONSE_PARSE_ERROR);
+                                AppLog.w(AppLog.T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
+                                notifyMediaError(MediaAction.FETCH_MEDIA, media, MediaNetworkError.RESPONSE_PARSE_ERROR);
                             }
                         }
                     }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                    AppLog.v(AppLog.T.MEDIA, "VolleyError pulling media: " + error);
-                    notifyMediaError(MediaAction.PULL_MEDIA, media, MediaNetworkError.UNKNOWN);
+                    AppLog.v(AppLog.T.MEDIA, "VolleyError Fetching media: " + error);
+                    notifyMediaError(MediaAction.FETCH_MEDIA, media, MediaNetworkError.UNKNOWN);
                 }
             }));
         }
@@ -243,17 +243,17 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         });
     }
 
-    private void notifyMediaPulled(MediaAction cause, MediaModel media) {
+    private void notifyMediaFetched(MediaAction cause, MediaModel media) {
         if (mListener != null && media != null) {
             List<MediaModel> mediaList = new ArrayList<>();
             mediaList.add(media);
-            mListener.onMediaPulled(cause, mediaList);
+            mListener.onMediaFetched(cause, mediaList);
         }
     }
 
-    private void notifyMediaPulled(MediaAction cause, List<MediaModel> media) {
+    private void notifyMediaFetched(MediaAction cause, List<MediaModel> media) {
         if (mListener != null) {
-            mListener.onMediaPulled(cause, media);
+            mListener.onMediaFetched(cause, media);
         }
     }
 

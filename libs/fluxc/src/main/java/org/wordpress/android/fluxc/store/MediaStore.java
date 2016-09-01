@@ -31,12 +31,12 @@ public class MediaStore extends Store implements MediaNetworkListener {
     //
 
     /**
-     * Used for PULL_ALL_MEDIA and PULL_MEDIA actions
+     * Used for FETCH_ALL_MEDIA and FETCH_MEDIA actions
      */
-    public static class PullMediaPayload extends Payload {
+    public static class FetchMediaPayload extends Payload {
         public SiteModel site;
         public List<MediaModel> media;
-        public PullMediaPayload(SiteModel site, List<MediaModel> media) {
+        public FetchMediaPayload(SiteModel site, List<MediaModel> media) {
             this.site = site;
             this.media = media;
         }
@@ -126,10 +126,10 @@ public class MediaStore extends Store implements MediaNetworkListener {
             performPushMedia((ChangeMediaPayload) action.getPayload());
         } else if (action.getType() == MediaAction.UPLOAD_MEDIA) {
             performUploadMedia((UploadMediaPayload) action.getPayload());
-        } else if (action.getType() == MediaAction.PULL_ALL_MEDIA) {
-            performPullAllMedia((PullMediaPayload) action.getPayload());
-        } else if (action.getType() == MediaAction.PULL_MEDIA) {
-            performPullMedia((PullMediaPayload) action.getPayload());
+        } else if (action.getType() == MediaAction.FETCH_ALL_MEDIA) {
+            performFetchAllMedia((FetchMediaPayload) action.getPayload());
+        } else if (action.getType() == MediaAction.FETCH_MEDIA) {
+            performFetchMedia((FetchMediaPayload) action.getPayload());
         } else if (action.getType() == MediaAction.DELETE_MEDIA) {
             performDeleteMedia((ChangeMediaPayload) action.getPayload());
         } else if (action.getType() == MediaAction.UPDATE_MEDIA) {
@@ -157,10 +157,10 @@ public class MediaStore extends Store implements MediaNetworkListener {
     }
 
     @Override
-    public void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia) {
-        if (cause == MediaAction.PULL_ALL_MEDIA || cause == MediaAction.PULL_MEDIA) {
-            updateMedia(pulledMedia, false);
-            emitChange(new OnMediaChanged(cause, pulledMedia));
+    public void onMediaFetched(MediaAction cause, List<MediaModel> fetchedMedia) {
+        if (cause == MediaAction.FETCH_ALL_MEDIA || cause == MediaAction.FETCH_MEDIA) {
+            updateMedia(fetchedMedia, false);
+            emitChange(new OnMediaChanged(cause, fetchedMedia));
         }
     }
 
@@ -322,25 +322,25 @@ public class MediaStore extends Store implements MediaNetworkListener {
         }
     }
 
-    private void performPullAllMedia(PullMediaPayload payload) {
+    private void performFetchAllMedia(FetchMediaPayload payload) {
         if (payload.site.isWPCom()) {
-            mMediaRestClient.pullAllMedia(payload.site);
+            mMediaRestClient.fetchAllMedia(payload.site);
         } else {
-            mMediaXmlrpcClient.pullAllMedia(payload.site);
+            mMediaXmlrpcClient.fetchAllMedia(payload.site);
         }
     }
 
-    private void performPullMedia(PullMediaPayload payload) {
+    private void performFetchMedia(FetchMediaPayload payload) {
         if (payload.media == null || payload.media.isEmpty() || payload.media.contains(null)) {
             // null or empty media list -or- list contains a null value
-            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.PULL_MEDIA, payload.media);
+            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.FETCH_MEDIA, payload.media);
             return;
         }
 
         if (payload.site.isWPCom()) {
-            mMediaRestClient.pullMedia(payload.site, payload.media);
+            mMediaRestClient.fetchMedia(payload.site, payload.media);
         } else {
-            mMediaXmlrpcClient.pullMedia(payload.site, payload.media);
+            mMediaXmlrpcClient.fetchMedia(payload.site, payload.media);
         }
     }
 

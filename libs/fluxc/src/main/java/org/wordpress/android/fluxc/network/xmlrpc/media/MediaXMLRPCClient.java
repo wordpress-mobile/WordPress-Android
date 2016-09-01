@@ -26,9 +26,9 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
-import org.xmlpull.v1.XmlPullParserException;
 
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -128,28 +128,28 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         performUpload(site, media);
     }
 
-    public void pullAllMedia(SiteModel site) {
+    public void fetchAllMedia(SiteModel site) {
         List<Object> params = getBasicParams(site);
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params, new Listener() {
             @Override
             public void onResponse(Object response) {
                 AppLog.v(T.MEDIA, "Successful response from XMLRPC.GET_MEDIA_LIBRARY");
                 List<MediaModel> media = allMediaResponseToMediaModelList(response);
-                notifyMediaPulled(MediaAction.PULL_ALL_MEDIA, media);
+                notifyMediaFetched(MediaAction.FETCH_ALL_MEDIA, media);
             }
         }, new BaseRequest.BaseErrorListener() {
             @Override
             public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                 AppLog.e(T.MEDIA, "Volley error", error.volleyError);
-                notifyMediaError(MediaAction.PULL_ALL_MEDIA, null, MediaNetworkError.UNKNOWN);
+                notifyMediaError(MediaAction.FETCH_ALL_MEDIA, null, MediaNetworkError.UNKNOWN);
             }
         }));
     }
 
-    public void pullMedia(SiteModel site, List<MediaModel> mediaToPull) {
-        if (site == null || mediaToPull == null || mediaToPull.isEmpty()) return;
+    public void fetchMedia(SiteModel site, List<MediaModel> mediaToFetch) {
+        if (site == null || mediaToFetch == null || mediaToFetch.isEmpty()) return;
 
-        for (MediaModel media : mediaToPull) {
+        for (MediaModel media : mediaToFetch) {
             List<Object> params = getBasicParams(site);
             params.add(media.getMediaId());
             add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_ITEM, params, new Listener() {
@@ -157,7 +157,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 public void onResponse(Object response) {
                     AppLog.v(T.MEDIA, "Successful response from XMLRPC.GET_MEDIA_ITEM");
                     MediaModel media = responseMapToMediaModel((HashMap) response);
-                    notifyMediaPulled(MediaAction.PULL_MEDIA, media);
+                    notifyMediaFetched(MediaAction.FETCH_MEDIA, media);
                 }
             }, new BaseRequest.BaseErrorListener() {
                 @Override
@@ -165,9 +165,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     String msg = "Error response from XMLRPC.GET_MEDIA_ITEM: " + error;
                     AppLog.v(T.MEDIA, msg);
                     if (is404Response(error)) {
-                        notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND);
+                        notifyMediaError(MediaAction.FETCH_MEDIA, null, MediaNetworkError.MEDIA_NOT_FOUND);
                     } else {
-                        notifyMediaError(MediaAction.PULL_MEDIA, null, MediaNetworkError.UNKNOWN);
+                        notifyMediaError(MediaAction.FETCH_MEDIA, null, MediaNetworkError.UNKNOWN);
                     }
                 }
             }));
@@ -355,15 +355,15 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
     }
 
-    private void notifyMediaPulled(MediaAction cause, MediaModel media) {
+    private void notifyMediaFetched(MediaAction cause, MediaModel media) {
         List<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
-        notifyMediaPulled(cause, mediaList);
+        notifyMediaFetched(cause, mediaList);
     }
 
-    private void notifyMediaPulled(MediaAction cause, List<MediaModel> media) {
+    private void notifyMediaFetched(MediaAction cause, List<MediaModel> media) {
         if (mListener != null) {
-            mListener.onMediaPulled(cause, media);
+            mListener.onMediaFetched(cause, media);
         }
     }
 
