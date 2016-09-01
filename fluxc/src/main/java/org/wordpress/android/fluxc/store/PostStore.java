@@ -15,11 +15,14 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.util.AppLog;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,6 +31,13 @@ import javax.inject.Singleton;
 @Singleton
 public class PostStore extends Store {
     public static final int NUM_POSTS_PER_FETCH = 20;
+
+    public static final List<PostStatus> DEFAULT_POST_STATUS_LIST = Collections.unmodifiableList(Arrays.asList(
+            PostStatus.DRAFT,
+            PostStatus.PENDING,
+            PostStatus.PRIVATE,
+            PostStatus.PUBLISHED,
+            PostStatus.SCHEDULED));
 
     public static class FetchPostsPayload extends Payload {
         public SiteModel site;
@@ -52,7 +62,7 @@ public class PostStore extends Store {
         public boolean canLoadMore;
 
         public FetchPostsResponsePayload(PostsModel posts, SiteModel site, boolean isPages, boolean loadedMore,
-                boolean canLoadMore) {
+                                         boolean canLoadMore) {
             this.posts = posts;
             this.site = site;
             this.isPages = isPages;
@@ -113,6 +123,7 @@ public class PostStore extends Store {
     public static class PostError implements OnChangedError {
         public PostErrorType type;
         public String message;
+
         public PostError(PostErrorType type, @NonNull String message) {
             this.type = type;
             this.message = message;
@@ -337,7 +348,7 @@ public class PostStore extends Store {
         }
 
         if (payload.site.isWPCom()) {
-            mPostRestClient.fetchPosts(payload.site, pages, offset);
+            mPostRestClient.fetchPosts(payload.site, pages, DEFAULT_POST_STATUS_LIST, offset);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
