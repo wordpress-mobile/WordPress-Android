@@ -18,5 +18,4 @@ public enum AuthenticationAction implements IAction {
     DISCOVER_ENDPOINT,
     @Action(payloadType = DiscoveryResultPayload.class)
     DISCOVERY_RESULT,
-    UNAUTHORIZED,
 }

@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.android.volley.Request.Method;
@@ -53,9 +54,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     private MediaNetworkListener mListener;
     private OkHttpClient mOkHttpClient;
 
-    public MediaRestClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okClient,
-                           AccessToken accessToken, UserAgent userAgent) {
-        super(dispatcher, requestQueue, accessToken, userAgent);
+    public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
+                           OkHttpClient okClient, AccessToken accessToken, UserAgent userAgent) {
+        super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mOkHttpClient = okClient;
     }
 
