@@ -127,11 +127,11 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public SiteRestClient provideSiteRestClient(Dispatcher dispatcher,
+    public SiteRestClient provideSiteRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
                                                 AppSecrets appSecrets,
                                                 AccessToken token, UserAgent userAgent) {
-        return new SiteRestClient(dispatcher, requestQueue, appSecrets, token, userAgent);
+        return new SiteRestClient(appContext, dispatcher, requestQueue, appSecrets, token, userAgent);
     }
 
     @Singleton
@@ -145,20 +145,20 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public AccountRestClient provideAccountRestClient(Dispatcher dispatcher,
+    public AccountRestClient provideAccountRestClient(Context appContext, Dispatcher dispatcher,
                                                       @Named("regular") RequestQueue requestQueue,
                                                       AppSecrets appSecrets,
                                                       AccessToken token, UserAgent userAgent) {
-        return new AccountRestClient(dispatcher, requestQueue, appSecrets, token, userAgent);
+        return new AccountRestClient(appContext, dispatcher, requestQueue, appSecrets, token, userAgent);
     }
 
     @Singleton
     @Provides
-    public PostRestClient providePostRestClient(Dispatcher dispatcher,
+    public PostRestClient providePostRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
                                                 AppSecrets appSecrets,
                                                 AccessToken token, UserAgent userAgent) {
-        return new PostRestClient(dispatcher, requestQueue, token, userAgent);
+        return new PostRestClient(appContext, dispatcher, requestQueue, token, userAgent);
     }
 
     @Singleton
