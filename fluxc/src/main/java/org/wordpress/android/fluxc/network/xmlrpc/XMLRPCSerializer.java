@@ -53,12 +53,12 @@ public class XMLRPCSerializer {
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
     static Calendar cal = Calendar.getInstance(new SimpleTimeZone(0, "GMT"));
 
-    private static final XmlSerializer serializeTester;
+    private static final XmlSerializer SERIALIZE_TESTER;
 
     static {
-        serializeTester = Xml.newSerializer();
+        SERIALIZE_TESTER = Xml.newSerializer();
         try {
-            serializeTester.setOutput(new NullOutputStream(), "UTF-8");
+            SERIALIZE_TESTER.setOutput(new NullOutputStream(), "UTF-8");
         } catch (IllegalArgumentException e) {
             AppLog.e(T.API, "IllegalArgumentException setting test serializer output stream", e);
         } catch (IllegalStateException e) {
@@ -89,9 +89,9 @@ public class XMLRPCSerializer {
                     .endTag(null, TYPE_STRING);
         } else if (object instanceof Date || object instanceof Calendar) {
             Date date = (Date) object;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
-            dateFormat.setCalendar(cal);
-            String sDate = dateFormat.format(date);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+            simpleDateFormat.setCalendar(cal);
+            String sDate = simpleDateFormat.format(date);
             serializer.startTag(null, TYPE_DATE_TIME_ISO8601).text(sDate).endTag(null, TYPE_DATE_TIME_ISO8601);
         } else if (object instanceof byte[]) {
             String value;
@@ -102,7 +102,7 @@ public class XMLRPCSerializer {
                 throw new IOException("Out of memory");
             }
 //        } else if (object instanceof MediaFile) {
-//            //convert media file binary to base64
+//            // convert media file binary to base64
 //            serializer.startTag(null, "base64");
 //            MediaFile mediaFile = (MediaFile) object;
 //            InputStream inStream = new DataInputStream(new FileInputStream(mediaFile.getFilePath()));
@@ -163,13 +163,13 @@ public class XMLRPCSerializer {
             return "";
         }
 
-        if (serializeTester == null) {
+        if (SERIALIZE_TESTER == null) {
             return input;
         }
 
         try {
             // try to encode the string as-is, 99.9% of the time it's OK
-            serializeTester.text(input);
+            SERIALIZE_TESTER.text(input);
             return input;
         } catch (IllegalArgumentException e) {
             // There are characters outside the XML unicode charset as specified by the XML 1.0 standard
@@ -188,16 +188,17 @@ public class XMLRPCSerializer {
         // TODO: do that...
 //        final String noEmojiString = StringUtils.replaceUnicodeSurrogateBlocksWithHTMLEntities(input);
 //        try {
-//            serializeTester.text(noEmojiString);
+//            SERIALIZE_TESTER.text(noEmojiString);
 //            return noEmojiString;
 //        } catch (IllegalArgumentException e) {
-//            AppLog.e(T.API, e. "noEmojiString still contains characters outside the XML unicode charset as specified by the
-// XML 1.0 standard");
+//            AppLog.e(T.API, e. "noEmojiString still contains characters outside the XML unicode"
+//                               + "charset as specified by the XML 1.0 standard");
 //            return StringUtils.stripNonValidXMLCharacters(noEmojiString);
 //        }
     }
 
-    public static Object deserialize(XmlPullParser parser) throws XmlPullParserException, IOException, NumberFormatException {
+    public static Object deserialize(XmlPullParser parser) throws XmlPullParserException, IOException,
+            NumberFormatException {
         parser.require(XmlPullParser.START_TAG, null, TAG_VALUE);
 
         parser.nextTag();

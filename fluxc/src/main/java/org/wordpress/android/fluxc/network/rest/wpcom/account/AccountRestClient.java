@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
-import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -42,7 +41,11 @@ public class AccountRestClient extends BaseWPComRestClient {
             this.account = account;
             this.error = error;
         }
-        public boolean isError() { return error != null; }
+
+        public boolean isError() {
+            return error != null;
+        }
+
         public BaseNetworkError error;
         public AccountModel account;
     }
@@ -249,12 +252,14 @@ public class AccountRestClient extends BaseWPComRestClient {
         if (from.containsKey("last_name")) accountModel.setLastName((String) from.get("last_name"));
         if (from.containsKey("description")) accountModel.setAboutMe((String) from.get("description"));
         if (from.containsKey("user_email")) accountModel.setEmail((String) from.get("user_email"));
-        if (from.containsKey("user_email_change_pending")) accountModel.setPendingEmailChange((Boolean) from.get
-                ("user_email_change_pending"));
+        if (from.containsKey("user_email_change_pending")) {
+            accountModel.setPendingEmailChange((Boolean) from.get("user_email_change_pending"));
+        }
         if (from.containsKey("new_user_email")) accountModel.setEmail((String) from.get("new_user_email"));
         if (from.containsKey("user_URL")) accountModel.setWebAddress((String) from.get("user_URL"));
-        if (from.containsKey("primary_site_ID")) accountModel.setPrimarySiteId(
-                ((Double) from.get("primary_site_ID")).longValue());
+        if (from.containsKey("primary_site_ID")) {
+            accountModel.setPrimarySiteId(((Double) from.get("primary_site_ID")).longValue());
+        }
         return !old.equals(accountModel);
     }
 }

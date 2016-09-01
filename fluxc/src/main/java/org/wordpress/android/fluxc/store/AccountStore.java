@@ -72,7 +72,10 @@ public class AccountStore extends Store {
     }
 
     public static class UpdateTokenPayload extends Payload {
-        public UpdateTokenPayload(String token) { this.token = token; }
+        public UpdateTokenPayload(String token) {
+            this.token = token;
+        }
+
         public String token;
     }
 

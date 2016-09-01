@@ -75,7 +75,8 @@ public class Authenticator {
 
     public void authenticate(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
                              Listener listener, ErrorListener errorListener) {
-        TokenRequest tokenRequest = makeRequest(username, password, twoStepCode, shouldSendTwoStepSMS, listener, errorListener);
+        TokenRequest tokenRequest = makeRequest(username, password, twoStepCode, shouldSendTwoStepSMS, listener,
+                errorListener);
         mRequestQueue.add(tokenRequest);
     }
 
