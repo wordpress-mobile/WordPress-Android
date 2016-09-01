@@ -16,7 +16,8 @@ import javax.lang.model.element.Modifier;
 
 public class RESTPoet {
     // TODO: Need to support "/sites/$site/posts/slug:$post_slug"-type endpoints
-    private static final String[] JAVA_KEYWORDS = { "new", "abstract", "assert", "boolean",
+    private static final String[] JAVA_KEYWORDS = {
+            "new", "abstract", "assert", "boolean",
             "break", "byte", "case", "catch", "char", "class", "const",
             "continue", "default", "do", "double", "else", "extends", "false",
             "final", "finally", "float", "for", "goto", "if", "implements",
@@ -24,21 +25,22 @@ public class RESTPoet {
             "null", "package", "private", "protected", "public",
             "return", "short", "static", "strictfp", "super", "switch",
             "synchronized", "this", "throw", "throws", "transient", "true",
-            "try", "void", "volatile", "while" };
+            "try", "void", "volatile", "while"
+    };
 
     private static TypeName sBaseEndpointClass;
 
     public static TypeSpec generate(EndpointNode rootNode, String fileName, Class baseEndpointClass) {
         sBaseEndpointClass = ClassName.get(baseEndpointClass);
 
-        TypeSpec.Builder WPCOMRESTBuilder = TypeSpec.classBuilder(fileName)
+        TypeSpec.Builder wpcomRestBuilder = TypeSpec.classBuilder(fileName)
                 .addModifiers(Modifier.PUBLIC);
 
         for (EndpointNode endpoint : rootNode.getChildren()) {
-            addEndpointToBuilder(endpoint, WPCOMRESTBuilder);
+            addEndpointToBuilder(endpoint, wpcomRestBuilder);
         }
 
-        return WPCOMRESTBuilder.build();
+        return wpcomRestBuilder.build();
     }
 
     private static void addEndpointToBuilder(EndpointNode endpointNode, TypeSpec.Builder classBuilder) {

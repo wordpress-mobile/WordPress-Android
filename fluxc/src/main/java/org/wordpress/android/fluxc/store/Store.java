@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.store;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.annotations.action.Action;
 

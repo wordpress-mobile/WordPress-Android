@@ -15,7 +15,6 @@ import java.net.URL;
  * TODO: move to wputils
  */
 public class WPUrlUtils {
-
     public static boolean safeToAddWordPressComAuthToken(String url) {
         return UrlUtils.isHttps(url) && isWordPressCom(url);
     }
