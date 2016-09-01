@@ -150,9 +150,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     public void pullMedia(SiteModel site, List<MediaModel> mediaToPull) {
         if (site == null || mediaToPull == null || mediaToPull.isEmpty()) return;
 
-        for (Long mediaId : mediaIds) {
+        for (MediaModel media : mediaToPull) {
             List<Object> params = getBasicParams(site);
-            params.add(mediaId);
+            params.add(media.getMediaId());
             add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_ITEM, params, new Listener() {
                 @Override
                 public void onResponse(Object response) {
