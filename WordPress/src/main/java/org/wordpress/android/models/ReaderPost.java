@@ -114,19 +114,19 @@ public class ReaderPost {
 
         post.featuredImage = JSONUtils.getString(json, "featured_image");
         post.blogName = JSONUtils.getStringDecoded(json, "site_name");
-        post.date = JSONUtils.getString(json, "date");
 
-        // sort index determines how posts are sorted - this is a liked date for liked
-        // posts, tagged date for tag streams, and published date for all others
+        // a post's date is the liked date for liked posts, tagged date for tag streams, and
+        // published date for all others
         if (json.has("date_liked")) {
-            String likeDate = JSONUtils.getString(json, "date_liked");
-            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(likeDate);
+            post.date = JSONUtils.getString(json, "date_liked");
         } else if (json.has("tagged_on")) {
-            String taggedDate = JSONUtils.getString(json, "tagged_on");
-            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(taggedDate);
+            post.date = JSONUtils.getString(json, "tagged_on");
         } else {
-            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(post.date);
+            post.date = JSONUtils.getString(json, "date");
         }
+
+        // sort index determines how posts are sorted
+        post.sortIndex = DateTimeUtils.iso8601ToTimestamp(post.date);
 
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt()) {
