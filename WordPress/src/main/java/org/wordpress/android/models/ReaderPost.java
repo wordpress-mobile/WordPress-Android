@@ -117,7 +117,6 @@ public class ReaderPost {
         post.featuredImage = JSONUtils.getString(json, "featured_image");
         post.blogName = JSONUtils.getStringDecoded(json, "site_name");
         post.pubDate = JSONUtils.getString(json, "date");
-        AppLog.w(AppLog.T.READER, post.pubDate);
 
         // a post's date is the liked date for liked posts, tagged date for tag streams, and
         // published date for all others
