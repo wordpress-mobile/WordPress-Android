@@ -117,10 +117,13 @@ public class ReaderPost {
         post.published = JSONUtils.getString(json, "date");
 
         // sort index determines how posts are sorted - this is a liked date for liked
-        // posts, and published date for all others
+        // posts, tagged date for tag streams, and published date for all others
         if (json.has("date_liked")) {
             String likeDate = JSONUtils.getString(json, "date_liked");
             post.sortIndex = DateTimeUtils.iso8601ToTimestamp(likeDate);
+        } else if (json.has("tagged_on")) {
+            String taggedDate = JSONUtils.getString(json, "tagged_on");
+            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(taggedDate);
         } else {
             post.sortIndex = DateTimeUtils.iso8601ToTimestamp(post.published);
         }
