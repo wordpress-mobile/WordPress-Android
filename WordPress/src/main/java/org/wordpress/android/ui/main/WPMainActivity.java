@@ -265,7 +265,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
-        boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
         if (GCMMessageService.getNotificationsCount() == 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
@@ -274,7 +273,13 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 if (doLikeNote) {
                     NotificationsListFragment.openNoteForLike(this, noteId);
                 } else {
-                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard);
+                    boolean doApproveNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
+                    if (doApproveNote) {
+                        NotificationsListFragment.openNoteForApprove(this, noteId);
+                    } else {
+                        boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard);
+                    }
                 }
             }
         } else {

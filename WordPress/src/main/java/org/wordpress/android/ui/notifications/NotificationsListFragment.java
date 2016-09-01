@@ -41,6 +41,7 @@ public class NotificationsListFragment extends Fragment
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_INSTANT_LIKE_EXTRA = "instantLike";
+    public static final String NOTE_INSTANT_APPROVE_EXTRA = "instantApprove";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
 
@@ -221,6 +222,24 @@ public class NotificationsListFragment extends Fragment
 
         Intent detailIntent = getOpenNoteIntent(activity, noteId);
         detailIntent.putExtra(NOTE_INSTANT_LIKE_EXTRA, true);
+        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
+    }
+
+    /**
+     * Open a note fragment based on the type of note, signaling to issue a moderate:approve action immediately
+     */
+    public static void openNoteForApprove(Activity activity,
+                                       String noteId) {
+        if (noteId == null || activity == null) {
+            return;
+        }
+
+        if (activity.isFinishing()) {
+            return;
+        }
+
+        Intent detailIntent = getOpenNoteIntent(activity, noteId);
+        detailIntent.putExtra(NOTE_INSTANT_APPROVE_EXTRA, true);
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 

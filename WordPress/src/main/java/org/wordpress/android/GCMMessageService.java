@@ -209,16 +209,12 @@ public class GCMMessageService extends GcmListenerService {
         // Add some actions if this is a comment notification
         addCommentReplyActionForCommentNotification(builder, noteId);
         addCommentLikeActionForCommentNotification(builder, noteId);
+        addCommentApproveActionForCommentNotification(builder, noteId);
     }
 
     private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // adding comment reply action
-        Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
-        commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-        commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        commentReplyIntent.setAction("android.intent.action.MAIN");
-        commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
+        Intent commentReplyIntent = getCommentActionIntent();
         commentReplyIntent.addCategory("comment-reply");
         commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
         if (noteId != null) {
@@ -232,12 +228,7 @@ public class GCMMessageService extends GcmListenerService {
 
     private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // adding comment like action
-        Intent commentLikeIntent = new Intent(this, WPMainActivity.class);
-        commentLikeIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-        commentLikeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        commentLikeIntent.setAction("android.intent.action.MAIN");
-        commentLikeIntent.addCategory("android.intent.category.LAUNCHER");
+        Intent commentLikeIntent = getCommentActionIntent();
         commentLikeIntent.addCategory("comment-like");
         commentLikeIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, true);
         if (noteId != null) {
@@ -247,7 +238,30 @@ public class GCMMessageService extends GcmListenerService {
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                 commentLikePendingIntent);
+    }
 
+    private void addCommentApproveActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+        // adding comment approve action
+        Intent commentApproveIntent = getCommentActionIntent();
+        commentApproveIntent.addCategory("comment-moderate");
+        commentApproveIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, true);
+        if (noteId != null) {
+            commentApproveIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+        }
+        PendingIntent commentApprovePendingIntent = PendingIntent.getActivity(this, 0, commentApproveIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
+                commentApprovePendingIntent);
+    }
+
+    private Intent getCommentActionIntent(){
+        Intent intent = new Intent(this, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setAction("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.LAUNCHER");
+        return intent;
     }
 
     private Bitmap getLargeIconBitmap(String iconUrl, boolean shouldCircularizeIcon){
