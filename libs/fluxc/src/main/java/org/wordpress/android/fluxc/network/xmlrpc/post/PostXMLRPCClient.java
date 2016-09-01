@@ -140,7 +140,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void pushPost(final PostModel post, final SiteModel site) {
         if (TextUtils.isEmpty(post.getStatus())) {
-            post.setStatus(PostStatus.toString(PostStatus.PUBLISHED));
+            post.setStatus(PostStatus.PUBLISHED.toString());
         }
 
         Map<String, Object> contentStruct = postModelToContentStruct(post);

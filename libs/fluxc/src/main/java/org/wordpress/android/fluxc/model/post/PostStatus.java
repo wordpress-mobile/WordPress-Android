@@ -15,6 +15,25 @@ public enum PostStatus {
     TRASHED,
     SCHEDULED; // NOTE: Only recognized for .com REST posts - XML-RPC returns scheduled posts with status 'publish'
 
+    public String toString() {
+        switch (this) {
+            case PUBLISHED:
+                return "publish";
+            case DRAFT:
+                return "draft";
+            case PRIVATE:
+                return "private";
+            case PENDING:
+                return "pending";
+            case TRASHED:
+                return "trash";
+            case SCHEDULED:
+                return "future";
+            default:
+                return "";
+        }
+    }
+
     private static synchronized PostStatus fromStringAndDateGMT(String value, long dateCreatedGMT) {
         if (value == null) {
             return UNKNOWN;
@@ -51,25 +70,6 @@ public enum PostStatus {
             }
         }
         return fromStringAndDateGMT(value, dateCreatedGMT);
-    }
-
-    public static String toString(PostStatus status) {
-        switch (status) {
-            case PUBLISHED:
-                return "publish";
-            case DRAFT:
-                return "draft";
-            case PRIVATE:
-                return "private";
-            case PENDING:
-                return "pending";
-            case TRASHED:
-                return "trash";
-            case SCHEDULED:
-                return "future";
-            default:
-                return "";
-        }
     }
 
     public static String postStatusListToString(List<PostStatus> statusList) {
