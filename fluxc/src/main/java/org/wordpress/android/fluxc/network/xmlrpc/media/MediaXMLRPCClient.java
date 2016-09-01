@@ -128,13 +128,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         performUpload(site, media);
     }
 
-    public void fetchAllMedia(SiteModel site) {
+    public void fetchAllMedia(final SiteModel site) {
         List<Object> params = getBasicParams(site);
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params, new Listener() {
             @Override
             public void onResponse(Object response) {
                 AppLog.v(T.MEDIA, "Successful response from XMLRPC.GET_MEDIA_LIBRARY");
-                List<MediaModel> media = allMediaResponseToMediaModelList(response);
+                List<MediaModel> media = allMediaResponseToMediaModelList(response, site.getSiteId());
                 notifyMediaFetched(MediaAction.FETCH_ALL_MEDIA, media);
             }
         }, new BaseRequest.BaseErrorListener() {
@@ -146,7 +146,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }));
     }
 
-    public void fetchMedia(SiteModel site, List<MediaModel> mediaToFetch) {
+    public void fetchMedia(final SiteModel site, List<MediaModel> mediaToFetch) {
         if (site == null || mediaToFetch == null || mediaToFetch.isEmpty()) return;
 
         for (MediaModel media : mediaToFetch) {
@@ -156,7 +156,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 @Override
                 public void onResponse(Object response) {
                     AppLog.v(T.MEDIA, "Successful response from XMLRPC.GET_MEDIA_ITEM");
-                    MediaModel media = responseMapToMediaModel((HashMap) response);
+                    MediaModel media = responseMapToMediaModel((HashMap) response, site.getSiteId());
                     notifyMediaFetched(MediaAction.FETCH_MEDIA, media);
                 }
             }, new BaseRequest.BaseErrorListener() {
@@ -266,17 +266,14 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return params;
     }
 
-    private List<MediaModel> allMediaResponseToMediaModelList(Object response) {
-        if (!(response instanceof Object[])) {
-            return null;
-        }
+    private List<MediaModel> allMediaResponseToMediaModelList(Object response, long siteId) {
+        if (!(response instanceof Object[])) return null;
 
         Object[] responseArray = (Object[]) response;
         List<MediaModel> responseMedia = new ArrayList<>();
-
         for (Object mediaObject : responseArray) {
             if (!(mediaObject instanceof HashMap)) continue;
-            MediaModel media = responseMapToMediaModel((HashMap) mediaObject);
+            MediaModel media = responseMapToMediaModel((HashMap) mediaObject, siteId);
             if (media != null) responseMedia.add(media);
         }
 
@@ -298,13 +295,14 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return media;
     }
 
-    private MediaModel responseMapToMediaModel(HashMap<String, ?> responseMap) {
+    private MediaModel responseMapToMediaModel(HashMap<String, ?> responseMap, long siteId) {
         if (responseMap == null || responseMap.isEmpty()) return null;
 
         String link = MapUtils.getMapStr(responseMap, LINK_KEY);
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(link);
 
         MediaModel mediaModel = new MediaModel();
+        mediaModel.setSiteId(siteId);
         mediaModel.setMediaId(MapUtils.getMapLong(responseMap, MEDIA_ID_KEY));
         mediaModel.setPostId(MapUtils.getMapLong(responseMap, POST_ID_KEY));
         mediaModel.setTitle(MapUtils.getMapStr(responseMap, TITLE_KEY));

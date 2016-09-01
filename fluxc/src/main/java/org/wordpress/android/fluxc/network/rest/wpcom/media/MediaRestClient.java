@@ -78,9 +78,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     MediaWPComRestResponse.class, new Listener<MediaWPComRestResponse>() {
                 @Override
                 public void onResponse(MediaWPComRestResponse response) {
-                    MediaModel responseMedia = MediaUtils.mediaFromRestResponse(response);
+                    MediaModel responseMedia = MediaUtils.mediaFromRestResponse(response, site.getSiteId());
                     if (responseMedia != null) {
-                        AppLog.v(T.MEDIA, "media pushed to site: " + responseMedia.getUrl());
+                        responseMedia.setSiteId(site.getSiteId());
+                        AppLog.v(T.MEDIA, "media pushed to site: " + responseMedia);
                         List<MediaModel> mediaList = new ArrayList<>();
                         mediaList.add(responseMedia);
                         notifyMediaPushed(MediaAction.PUSH_MEDIA, mediaList);
@@ -123,7 +124,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 new Listener<MultipleMediaResponse>() {
                     @Override
                     public void onResponse(MultipleMediaResponse response) {
-                        List<MediaModel> media = MediaUtils.mediaListFromRestResponse(response);
+                        List<MediaModel> media = MediaUtils.mediaListFromRestResponse(response, site.getSiteId());
                         if (media != null) {
                             AppLog.v(T.MEDIA, "Fetched all media for site");
                             notifyMediaFetched(MediaAction.FETCH_ALL_MEDIA, media);
@@ -153,7 +154,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     new Listener<MediaWPComRestResponse>() {
                         @Override
                         public void onResponse(MediaWPComRestResponse response) {
-                            MediaModel responseMedia = MediaUtils.mediaFromRestResponse(response);
+                            MediaModel responseMedia = MediaUtils.mediaFromRestResponse(response, site.getSiteId());
                             if (responseMedia != null) {
                                 AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
                                 notifyMediaFetched(MediaAction.FETCH_MEDIA, responseMedia);
@@ -185,7 +186,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     new Listener<MediaWPComRestResponse>() {
                         @Override
                         public void onResponse(MediaWPComRestResponse response) {
-                            MediaModel deletedMedia = MediaUtils.mediaFromRestResponse(response);
+                            MediaModel deletedMedia = MediaUtils.mediaFromRestResponse(response, site.getSiteId());
                             if (deletedMedia != null) {
                                 AppLog.v(T.MEDIA, "deleted media with ID: " + media.getMediaId());
                                 notifyMediaDeleted(MediaAction.DELETE_MEDIA, deletedMedia);
@@ -215,7 +216,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     // Used in both uploadMedia and pushMedia methods
-    private void performUpload(final MediaModel media, long siteId) {
+    private void performUpload(final MediaModel media, final long siteId) {
         String url = WPCOMREST.sites.site(siteId).media.new_.getUrlV1_1();
         RestUploadRequestBody body = new RestUploadRequestBody(media, this);
         String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
@@ -234,7 +235,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     String jsonBody = response.body().string();
                     MultipleMediaResponse mediaResponse =
                             new Gson().fromJson(jsonBody, MultipleMediaResponse.class);
-                    List<MediaModel> responseMedia = MediaUtils.mediaListFromRestResponse(mediaResponse);
+                    List<MediaModel> responseMedia = MediaUtils.mediaListFromRestResponse(mediaResponse, siteId);
                     if (responseMedia != null && !responseMedia.isEmpty()) {
                         notifyMediaProgress(responseMedia.get(0), 1.f);
                     }
