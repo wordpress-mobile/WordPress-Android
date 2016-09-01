@@ -47,7 +47,7 @@ public class ReaderPostTable {
           + "featured_video,"       // 18
           + "post_avatar,"          // 19
           + "sort_index,"           // 20
-          + "published,"            // 21
+          + "date,"                 // 21
           + "num_replies,"          // 22
           + "num_likes,"            // 23
           + "is_liked,"             // 24
@@ -85,7 +85,7 @@ public class ReaderPostTable {
           + "tbl_posts.short_url,"            // 17
           + "tbl_posts.post_avatar,"          // 18
           + "tbl_posts.sort_index,"           // 19
-          + "tbl_posts.published,"            // 20
+          + "tbl_posts.date,"                 // 20
           + "tbl_posts.num_replies,"          // 21
           + "tbl_posts.num_likes,"            // 22
           + "tbl_posts.is_liked,"             // 23
@@ -124,7 +124,7 @@ public class ReaderPostTable {
                 + " featured_video      TEXT,"
                 + " post_avatar         TEXT,"
                 + " sort_index          REAL DEFAULT 0,"
-                + " published           TEXT,"
+                + " date                TEXT,"
                 + " num_replies         INTEGER DEFAULT 0,"
                 + " num_likes           INTEGER DEFAULT 0,"
                 + " is_liked            INTEGER DEFAULT 0,"
@@ -445,35 +445,35 @@ public class ReaderPostTable {
     }
 
     /*
-     * returns the iso8601 published date of the oldest post with the passed tag
+     * returns the iso8601 date of the oldest post with the passed tag
      */
-    public static String getOldestPubDateWithTag(final ReaderTag tag) {
+    public static String getOldestDateWithTag(final ReaderTag tag) {
         if (tag == null) {
             return "";
         }
 
-        String sql = "SELECT tbl_posts.published FROM tbl_posts, tbl_post_tags"
+        String sql = "SELECT tbl_posts.date FROM tbl_posts, tbl_post_tags"
                    + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                    + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
-                   + " ORDER BY published LIMIT 1";
+                   + " ORDER BY date LIMIT 1";
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     /*
-     * returns the iso8601 published date of the oldest post in the passed blog
+     * returns the iso8601 date of the oldest post in the passed blog
      */
-    public static String getOldestPubDateInBlog(long blogId) {
-        String sql = "SELECT published FROM tbl_posts"
+    public static String getOldestDateInBlog(long blogId) {
+        String sql = "SELECT date FROM tbl_posts"
                   + " WHERE blog_id = ?"
-                  + " ORDER BY published LIMIT 1";
+                  + " ORDER BY date LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(blogId)});
     }
 
-    public static String getOldestPubDateInFeed(long feedId) {
-        String sql = "SELECT published FROM tbl_posts"
+    public static String getOldestDateInFeed(long feedId) {
+        String sql = "SELECT date FROM tbl_posts"
                   + " WHERE feed_id = ?"
-                  + " ORDER BY published LIMIT 1";
+                  + " ORDER BY date LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
     }
 
@@ -522,13 +522,13 @@ public class ReaderPostTable {
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
 
-    public static String getGapMarkerPubDateForTag(ReaderTag tag) {
+    public static String getGapMarkerDateForTag(ReaderTag tag) {
         ReaderBlogIdPostId ids = getGapMarkerIdsForTag(tag);
         if (ids == null) {
             return null;
         }
         String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
-        String sql = "SELECT published FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        String sql = "SELECT date FROM tbl_posts WHERE blog_id=? AND post_id=?";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
@@ -880,7 +880,7 @@ public class ReaderPostTable {
         post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
         post.sortIndex = c.getDouble(c.getColumnIndex("sort_index"));
-        post.setDate(c.getString(c.getColumnIndex("published")));
+        post.setDate(c.getString(c.getColumnIndex("date")));
 
         post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
         post.numLikes = c.getInt(c.getColumnIndex("num_likes"));
