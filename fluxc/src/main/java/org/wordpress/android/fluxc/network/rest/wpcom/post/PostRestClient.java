@@ -143,8 +143,6 @@ public class PostRestClient extends BaseWPComRestClient {
             url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
         }
 
-        url += "?context=edit";
-
         Map<String, String> params = postModelToParams(post);
 
         final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
@@ -176,14 +174,14 @@ public class PostRestClient extends BaseWPComRestClient {
                 }
         );
 
+        request.addQueryParameter("context", "edit");
+
         request.disableRetries();
         add(request);
     }
 
     public void deletePost(final PostModel post, final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).delete.getUrlV1_1();
-
-        url += "?context=edit";
 
         final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
                 url, null, PostWPComRestResponse.class,
@@ -208,6 +206,8 @@ public class PostRestClient extends BaseWPComRestClient {
                     }
                 }
         );
+
+        request.addQueryParameter("context", "edit");
 
         request.disableRetries();
         add(request);
