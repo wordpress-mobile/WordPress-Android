@@ -43,9 +43,9 @@ public class WPLegacyMigrationUtils {
     }
 
     private static String getLatestDeprecatedAccessToken(Context context) {
-        String latestToken = getAccessTokenFromTable(context, DEPRECATED_ACCOUNT_TABLE);
+        String latestToken = getAccessTokenFromTableThenDelete(context, DEPRECATED_ACCOUNT_TABLE);
         if (TextUtils.isEmpty(latestToken)) {
-            latestToken = getAccessTokenFromTable(context, DEPRECATED_ACCOUNTS_TABLE);
+            latestToken = getAccessTokenFromTableThenDelete(context, DEPRECATED_ACCOUNTS_TABLE);
         }
         if (TextUtils.isEmpty(latestToken)) {
             latestToken = getDeprecatedPreferencesAccessTokenThenDelete(context);
@@ -53,15 +53,19 @@ public class WPLegacyMigrationUtils {
         return latestToken;
     }
 
-    private static String getAccessTokenFromTable(Context context, String tableName) {
+    private static String getAccessTokenFromTableThenDelete(Context context, String tableName) {
         String token = null;
         try {
             SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
-            Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN + " FROM " + tableName + " WHERE local_id=0", null);
+            Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN
+                    + " FROM " + tableName + " WHERE local_id=0", null);
             if (c.moveToFirst() && c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN) != -1) {
                 token = c.getString(c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN));
             }
             c.close();
+            if (!TextUtils.isEmpty(token)) {
+                db.delete(tableName, "local_id=0", null);
+            }
             db.close();
         } catch (SQLException e) {
             // DB doesn't exist
