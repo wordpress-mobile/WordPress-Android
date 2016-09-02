@@ -196,6 +196,9 @@ public class WordPress extends MultiDexApplication {
             String migratedToken = WPLegacyMigrationUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
             if (!TextUtils.isEmpty(migratedToken)) {
                 OAuthAuthenticator.sAccessToken = migratedToken;
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+                mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
             }
         }
 
