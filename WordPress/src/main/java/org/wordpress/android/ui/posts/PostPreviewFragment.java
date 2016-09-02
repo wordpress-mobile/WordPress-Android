@@ -11,9 +11,10 @@ import android.webkit.WebView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Post;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -28,6 +29,7 @@ public class PostPreviewFragment extends Fragment {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
 
     public static PostPreviewFragment newInstance(SiteModel site, long localPostId) {
         Bundle args = new Bundle();
@@ -86,7 +88,7 @@ public class PostPreviewFragment extends Fragment {
         new Thread() {
             @Override
             public void run() {
-                Post post = WordPress.wpDB.getPostForLocalTablePostId(mLocalPostId);
+                PostModel post = mPostStore.getPostByLocalPostId(mLocalPostId);
                 final String htmlContent = formatPostContentForWebView(getActivity(), post);
 
                 getActivity().runOnUiThread(new Runnable() {
@@ -110,7 +112,7 @@ public class PostPreviewFragment extends Fragment {
         }.start();
     }
 
-    private String formatPostContentForWebView(Context context, Post post) {
+    private String formatPostContentForWebView(Context context, PostModel post) {
         if (context == null || post == null) {
             return null;
         }
@@ -119,10 +121,7 @@ public class PostPreviewFragment extends Fragment {
                 ? "(" + getResources().getText(R.string.untitled) + ")"
                 : StringUtils.unescapeHTML(post.getTitle()));
 
-        String postContent = PostUtils.collapseShortcodes(post.getDescription());
-        if (!TextUtils.isEmpty(post.getMoreText())) {
-            postContent += "\n\n" + post.getMoreText();
-        }
+        String postContent = PostUtils.collapseShortcodes(post.getContent());
 
         // if this is a local draft, remove src="null" from image tags then replace the "android-uri"
         // tag added for local image with a valid "src" tag so local images can be viewed
