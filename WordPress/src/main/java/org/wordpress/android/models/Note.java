@@ -148,6 +148,37 @@ public class Note extends Syncable {
         return isLikeType() || isCommentLikeType() || isFollowType() || isReblogType();
     }
 
+    /*
+     * does user have permission to moderate/reply/spam this comment?
+     */
+    public boolean canModerate() {
+        EnumSet<EnabledActions> enabledActions = getEnabledActions();
+        return enabledActions != null && (enabledActions.contains(EnabledActions.ACTION_APPROVE) || enabledActions.contains(EnabledActions.ACTION_UNAPPROVE));
+    }
+
+    public boolean canMarkAsSpam() {
+        EnumSet<EnabledActions> enabledActions = getEnabledActions();
+        return (enabledActions != null && enabledActions.contains(EnabledActions.ACTION_SPAM));
+    }
+
+    public boolean canReply() {
+        EnumSet<EnabledActions> enabledActions = getEnabledActions();
+        return (enabledActions != null && enabledActions.contains(EnabledActions.ACTION_REPLY));
+    }
+
+    public boolean canTrash() {
+        return canModerate();
+    }
+
+    public boolean canEdit(int localBlogId) {
+        return (localBlogId > 0 && canModerate());
+    }
+
+    public boolean canLike() {
+        EnumSet<EnabledActions> enabledActions = getEnabledActions();
+        return (enabledActions != null && enabledActions.contains(EnabledActions.ACTION_LIKE));
+    }
+
     private String getLocalStatus() {
         return StringUtils.notNullStr(mLocalStatus);
     }

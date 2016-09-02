@@ -16,12 +16,15 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.simperium.client.BucketObjectMissingException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -37,6 +40,7 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -207,9 +211,41 @@ public class GCMMessageService extends GcmListenerService {
 
     private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // Add some actions if this is a comment notification
-        addCommentReplyActionForCommentNotification(builder, noteId);
-        addCommentLikeActionForCommentNotification(builder, noteId);
-        addCommentApproveActionForCommentNotification(builder, noteId);
+
+        boolean bActionsSet = false;
+
+        if (SimperiumUtils.getNotesBucket() != null) {
+            try {
+                Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                if (note != null) {
+                    //if note can be replied to, we'll always add this action first
+                    if (note.canReply()) {
+                        addCommentReplyActionForCommentNotification(builder, noteId);
+                    }
+
+                    // if the comment is lacking approval, offer moderation actions
+                    if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
+                        if (note.canModerate()) {
+                            addCommentApproveActionForCommentNotification(builder, noteId);
+                        }
+                    } else {
+                        //else offer REPLY / LIKE actions
+                        if (note.canLike()) {
+                            addCommentLikeActionForCommentNotification(builder, noteId);
+                        }
+                    }
+                }
+                bActionsSet = true;
+            } catch (BucketObjectMissingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // if we could not set the actions, set the default ones REPLY / LIKE
+        if (!bActionsSet) {
+            addCommentReplyActionForCommentNotification(builder, noteId);
+            addCommentLikeActionForCommentNotification(builder, noteId);
+        }
     }
 
     private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
