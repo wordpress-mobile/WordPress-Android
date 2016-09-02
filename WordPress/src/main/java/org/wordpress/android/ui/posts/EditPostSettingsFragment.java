@@ -112,7 +112,7 @@ public class EditPostSettingsFragment extends Fragment
     private LocationHelper mLocationHelper;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private long mCustomPubDate = 0;
+    private String mCustomPubDate = "";
     private boolean mIsCustomPubDate;
 
     private String[] mPostFormats;
@@ -595,8 +595,8 @@ public class EditPostSettingsFragment extends Fragment
                         mHour = timePicker.getCurrentHour();
                         mMinute = timePicker.getCurrentMinute();
 
-                        Date d = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
-                        long timestamp = d.getTime();
+                        Date javaDate = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
+                        long javaTimestamp = javaDate.getTime();
 
                         try {
                             int flags = 0;
@@ -604,8 +604,8 @@ public class EditPostSettingsFragment extends Fragment
                             flags |= DateUtils.FORMAT_ABBREV_MONTH;
                             flags |= DateUtils.FORMAT_SHOW_YEAR;
                             flags |= DateUtils.FORMAT_SHOW_TIME;
-                            String formattedDate = DateUtils.formatDateTime(getActivity(), timestamp, flags);
-                            mCustomPubDate = timestamp;
+                            String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, flags);
+                            mCustomPubDate = DateTimeUtils.iso8601FromDate(javaDate);
                             mPubDateText.setText(formattedDate);
                             mIsCustomPubDate = true;
 
@@ -633,22 +633,21 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         String password = EditTextUtils.getText(mPasswordEditText);
-        String pubDate = EditTextUtils.getText(mPubDateText);
         String excerpt = EditTextUtils.getText(mExcerptEditText);
+        boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
-        long pubDateTimestamp = 0;
-        if (mIsCustomPubDate && pubDate.equals(getText(R.string.immediately)) && !mPost.isLocalDraft()) {
-            Date d = new Date();
-            pubDateTimestamp = d.getTime();
-        } else if (!pubDate.equals(getText(R.string.immediately))) {
+        String publicationDateIso8601 = "";
+        if (mIsCustomPubDate && publishImmediately && !mPost.isLocalDraft()) {
+            publicationDateIso8601 = DateTimeUtils.iso8601FromDate(new Date());
+        } else if (!publishImmediately) {
             if (mIsCustomPubDate) {
-                pubDateTimestamp = mCustomPubDate;
+                publicationDateIso8601 = mCustomPubDate;
             } else if (StringUtils.isNotEmpty(mPost.getDateCreated())) {
-                pubDateTimestamp = DateTimeUtils.timestampFromIso8601(mPost.getDateCreated());
+                publicationDateIso8601 = mPost.getDateCreated();
             }
-        } else if (pubDate.equals(getText(R.string.immediately)) && mPost.isLocalDraft()) {
-            mPost.setDateCreated(DateTimeUtils.iso8601UTCFromDate(new Date()));
         }
+
+        mPost.setDateCreated(publicationDateIso8601);
 
         String tags = "", postFormat = "";
         if (!mPost.isPage()) {
@@ -690,7 +689,6 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         mPost.setExcerpt(excerpt);
-        mPost.setDateCreated(DateTimeUtils.iso8601UTCFromTimestamp(pubDateTimestamp));
         // TODO: Implement when we have TaxonomyStore
         //mPost.setKeywords(tags);
         mPost.setStatus(status);
