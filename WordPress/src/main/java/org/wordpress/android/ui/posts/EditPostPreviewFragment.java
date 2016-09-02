@@ -14,15 +14,13 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
 
 public class EditPostPreviewFragment extends Fragment {
-    // TODO: remove mActivity and rely on getActivity()
-    private EditPostActivity mActivity;
     private WebView mWebView;
     private TextView mTextView;
     private LoadPostPreviewTask mLoadTask;
@@ -67,10 +65,7 @@ public class EditPostPreviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mActivity = (EditPostActivity)getActivity();
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.edit_post_preview_fragment, container, false);
         mWebView = (WebView) rootView.findViewById(R.id.post_preview_webview);
@@ -78,7 +73,7 @@ public class EditPostPreviewFragment extends Fragment {
         mTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (mActivity != null) {
+                if (getActivity() != null) {
                     loadPost();
                 }
                 mTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
@@ -92,7 +87,7 @@ public class EditPostPreviewFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (mActivity != null && !mTextView.isLayoutRequested()) {
+        if (getActivity() != null && !mTextView.isLayoutRequested()) {
             loadPost();
         }
     }
@@ -120,19 +115,23 @@ public class EditPostPreviewFragment extends Fragment {
         protected Spanned doInBackground(Void... params) {
             Spanned contentSpannable;
 
-            if (mActivity == null || mActivity.getPost() == null) {
+            if (getActivity() == null) {
                 return null;
             }
 
-            Post post = mActivity.getPost();
+            PostModel post = ((EditPostActivity) getActivity()).getPost();
+
+            if (post == null) {
+                return null;
+            }
 
             String postTitle = "<h1>" + post.getTitle() + "</h1>";
-            String postContent = postTitle + post.getDescription() + "\n\n" + post.getMoreText();
+            String postContent = postTitle + post.getContent();
 
             if (post.isLocalDraft()) {
                 contentSpannable = WPHtml.fromHtml(
                         postContent.replaceAll("\uFFFC", ""),
-                        mActivity,
+                        getActivity(),
                         post,
                         Math.min(mTextView.getWidth(), mTextView.getHeight())
                 );
@@ -147,8 +146,8 @@ public class EditPostPreviewFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Spanned spanned) {
-            if (mActivity != null && mActivity.getPost() != null && spanned != null) {
-                if (mActivity.getPost().isLocalDraft()) {
+            if (getActivity() != null && ((EditPostActivity) getActivity()).getPost() != null && spanned != null) {
+                if (((EditPostActivity) getActivity()).getPost().isLocalDraft()) {
                     mTextView.setVisibility(View.VISIBLE);
                     mWebView.setVisibility(View.GONE);
                     mTextView.setText(spanned);

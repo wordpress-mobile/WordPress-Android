@@ -8,6 +8,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -128,6 +129,33 @@ public class PostUtils {
 
     public static boolean isPublishable(PostModel post) {
         return !(post.getContent().isEmpty() && post.getExcerpt().isEmpty() && post.getTitle().isEmpty());
+    }
+
+    public static boolean hasEmptyContentFields(PostModel post) {
+        return TextUtils.isEmpty(post.getTitle()) && TextUtils.isEmpty(post.getContent());
+    }
+
+    /**
+     * Checks if two posts have differing data
+     */
+    public static boolean postHasEdits(PostModel oldPost, PostModel newPost) {
+        if (oldPost == null) {
+            return newPost != null;
+        }
+
+        return newPost == null || !(StringUtils.equals(oldPost.getTitle(), newPost.getTitle())
+                && StringUtils.equals(oldPost.getContent(), newPost.getContent())
+                && StringUtils.equals(oldPost.getExcerpt(), newPost.getExcerpt())
+                && StringUtils.equals(oldPost.getStatus(), newPost.getStatus())
+                && StringUtils.equals(oldPost.getPassword(), newPost.getPassword())
+                && StringUtils.equals(oldPost.getPostFormat(), newPost.getPostFormat())
+                && StringUtils.equals(oldPost.getDateCreated(), newPost.getDateCreated())
+                && oldPost.getTagIdList().containsAll(newPost.getTagIdList())
+                && newPost.getTagIdList().containsAll(oldPost.getTagIdList())
+                && oldPost.getCategoryIdList().containsAll(newPost.getCategoryIdList())
+                && newPost.getCategoryIdList().containsAll(oldPost.getCategoryIdList())
+                && PostLocation.equals(oldPost.getPostLocation(), newPost.getPostLocation())
+        );
     }
 
     // TODO: Delete when PostModel migration is done

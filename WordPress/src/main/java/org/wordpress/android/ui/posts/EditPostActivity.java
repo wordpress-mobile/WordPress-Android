@@ -47,6 +47,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -65,11 +67,15 @@ import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -82,7 +88,6 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
-import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -186,8 +191,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
     WPViewPager mViewPager;
 
-    private Post mPost;
-    private Post mOriginalPost;
+    private PostModel mPost;
+    private PostModel mOriginalPost;
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
@@ -202,8 +207,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
 
+    @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
 
     private SiteModel mSite;
 
@@ -269,18 +276,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
 
                 // Create a new post for share intents and QuickPress
-                mPost = new Post(mSite.getId(), false);
-                mPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(this) + "]");
-                mPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(this));
-                WordPress.wpDB.savePost(mPost);
+                // TODO: Implement
                 mIsNewPost = true;
             } else if (extras != null) {
                 // Load post from the postId passed in extras
-                long localTablePostId = extras.getLong(EXTRA_POSTID, -1);
+                long localPostId = extras.getLong(EXTRA_POSTID, -1);
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
-                mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
-                mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
+                mPost = mPostStore.getPostByLocalPostId(localPostId);
+                mOriginalPost = mPostStore.getPostByLocalPostId(localPostId);
             } else {
                 // A postId extra must be passed to this activity
                 showErrorAndFinish(R.string.post_not_found);
@@ -291,8 +295,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
                 try {
-                    mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
-                    mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
+                    mPost = (PostModel) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
+                    mOriginalPost = (PostModel) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
                 } catch (ClassCastException e) {
                     mPost = null;
                 }
@@ -475,7 +479,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mPost != null) {
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
             if (saveMenuItem != null) {
-                switch (mPost.getStatusEnum()) {
+                switch (PostStatus.fromPost(mPost)) {
                     case SCHEDULED:
                         saveMenuItem.setTitle(getString(R.string.schedule_verb));
                         break;
@@ -655,7 +659,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 savePostToDb();
 
                 // If the post is empty, don't publish
-                if (!mPost.isPublishable()) {
+                if (!PostUtils.isPublishable(mPost)) {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -665,12 +669,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     return;
                 }
 
-                PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalTableBlogId()));
+                PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
-                PostUploadService.addPostToUpload(mPost);
-                PostUploadService.setLegacyMode(!mShowNewEditor);
-                startService(new Intent(EditPostActivity.this, PostUploadService.class));
-                setResult(RESULT_OK);
+                // TODO: Uploading disabled
+//                PostUploadService.addPostToUpload(mPost);
+//                PostUploadService.setLegacyMode(!mShowNewEditor);
+//                startService(new Intent(EditPostActivity.this, PostUploadService.class));
+//                setResult(RESULT_OK);
                 finish();
             }
         }).start();
@@ -751,7 +756,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         finish();
     }
 
-    public Post getPost() {
+    public PostModel getPost() {
         return mPost;
     }
 
@@ -779,7 +784,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         properties.put("created_post_source", normalizedSourceName);
         AnalyticsUtils.trackWithSiteDetails(
                 AnalyticsTracker.Stat.EDITOR_CREATED_POST,
-                mSiteStore.getSiteByLocalId(mPost.getLocalTableBlogId()),
+                mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()),
                 properties
         );
     }
@@ -824,7 +829,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private synchronized void savePostToDb() {
-        WordPress.wpDB.updatePost(mPost);
+        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
     }
 
     @Override
@@ -861,18 +866,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // Fetch post title and content from editor fields and update the Post object
             updatePostObject(false);
 
-            if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
-                // new and empty post? delete it
+            if (mEditorFragment != null && PostUtils.hasEmptyContentFields(mPost)) {
+                // New and empty post? delete it
                 if (mIsNewPost) {
-                    WordPress.wpDB.deletePost(mPost);
+                    mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                     return false;
                 }
-            } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
-                // if no changes have been made to the post, set it back to the original don't save it
-                WordPress.wpDB.updatePost(mOriginalPost);
+            } else if (mOriginalPost != null && !PostUtils.postHasEdits(mOriginalPost, mPost)) {
+                // If no changes have been made to the post, set it back to the original - don't save it
+                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mOriginalPost));
                 return false;
             } else {
-                // changes have been made, save the post and ask for the post list to refresh.
+                // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
                 if (mShowNewEditor) {
@@ -1187,7 +1192,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 R.string.editor_post_title_placeholder));
 
         // Set post title and content
-        Post post = getPost();
+        PostModel post = getPost();
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
@@ -1300,7 +1305,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Updates post object with content of this fragment
      */
     public void updatePostContent(boolean isAutoSave) {
-        Post post = getPost();
+        PostModel post = getPost();
 
         if (post == null) {
             return;
@@ -1381,20 +1386,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             content = postContent.toString();
         }
 
-        String moreTag = "<!--more-->";
-
         post.setTitle(title);
-        // split up the post content if there's a more tag
-        if (post.isLocalDraft() && content.contains(moreTag)) {
-            post.setDescription(content.substring(0, content.indexOf(moreTag)));
-            post.setMoreText(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
-        } else {
-            post.setDescription(content);
-            post.setMoreText("");
-        }
+        post.setContent(content);
 
         if (!post.isLocalDraft()) {
-            post.setLocalChange(true);
+            post.setIsLocallyChanged(true);
         }
     }
 
@@ -1402,7 +1398,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Updates post object with given title and content
      */
     public void updatePostContentNewEditor(boolean isAutoSave, String title, String content) {
-        Post post = getPost();
+        PostModel post = getPost();
 
         if (post == null) {
             return;
@@ -1412,20 +1408,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // TODO: Shortcode handling, media handling
         }
 
-        String moreTag = "<!--more-->";
-
         post.setTitle(title);
-        // split up the post content if there's a more tag
-        if (post.isLocalDraft() && content.contains(moreTag)) {
-            post.setDescription(content.substring(0, content.indexOf(moreTag)));
-            post.setMoreText(content.substring(content.indexOf(moreTag) + moreTag.length(), content.length()));
-        } else {
-            post.setDescription(content);
-            post.setMoreText("");
-        }
+        post.setContent(content);
 
         if (!post.isLocalDraft()) {
-            post.setLocalChange(true);
+            post.setIsLocallyChanged(true);
         }
     }
 
@@ -1561,7 +1548,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         MediaFile mediaFile = new MediaFile();
-        mediaFile.setPostID(getPost().getLocalTablePostId());
+        mediaFile.setPostID(getPost().getId());
         mediaFile.setTitle(mediaTitle);
         mediaFile.setFilePath(mediaUri.toString());
         if (mediaUri.getEncodedPath() != null) {
@@ -1618,7 +1605,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
                         // TODO: check if it was mQuickMediaType > -1
                         // Quick Photo was cancelled, delete post and finish activity
-                        WordPress.wpDB.deletePost(getPost());
+                        mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(getPost()));
                         finish();
                     }
                     break;
@@ -1635,7 +1622,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
                         // TODO: check if it was mQuickMediaType > -1
                         // Quick Photo was cancelled, delete post and finish activity
-                        WordPress.wpDB.deletePost(getPost());
+                        mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(getPost()));
                         finish();
                     }
                     break;
@@ -1832,7 +1819,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // Notify visual editor that a normal media item has finished uploading (not part of a gallery)
         if (mEditorMediaUploadListener != null) {
             MediaFile mediaFile = new MediaFile();
-            mediaFile.setPostID(getPost().getLocalTablePostId());
+            mediaFile.setPostID(getPost().getId());
             mediaFile.setMediaId(event.mRemoteMediaId);
             mediaFile.setFileURL(event.mRemoteMediaUrl);
             mediaFile.setVideoPressShortCode(event.mSecondaryRemoteMediaId);

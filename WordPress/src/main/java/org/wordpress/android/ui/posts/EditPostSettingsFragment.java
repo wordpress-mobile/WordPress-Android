@@ -42,17 +42,17 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.json.JSONArray;
+import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostLocation;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostLocation;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
@@ -64,10 +64,10 @@ import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManag
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
@@ -89,7 +89,7 @@ public class EditPostSettingsFragment extends Fragment
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
     private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
 
-    private Post mPost;
+    private PostModel mPost;
 
     private Spinner mStatusSpinner, mPostFormatSpinner;
     private EditText mPasswordEditText, mExcerptEditText;
@@ -105,6 +105,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private long mFeaturedImageId;
 
+    // TODO: Should be List<TaxonomyModel>
     private ArrayList<String> mCategories;
 
     private PostLocation mPostLocation;
@@ -191,7 +192,7 @@ public class EditPostSettingsFragment extends Fragment
         mDay = c.get(Calendar.DAY_OF_MONTH);
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
-        mCategories = new ArrayList<String>();
+        //mCategories = new ArrayList<String>();
 
         mExcerptEditText = (EditText) mRootView.findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) mRootView.findViewById(R.id.post_password);
@@ -345,7 +346,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        mExcerptEditText.setText(mPost.getPostExcerpt());
+        mExcerptEditText.setText(mPost.getExcerpt());
 
         String[] items = new String[]{ getResources().getString(R.string.publish_post),
                                        getResources().getString(R.string.draft),
@@ -364,16 +365,16 @@ public class EditPostSettingsFragment extends Fragment
                 }
         );
 
-        long pubDate = mPost.getDate_created_gmt();
-        if (pubDate != 0) {
+        String pubDate = mPost.getDateCreated();
+        if (StringUtils.isNotEmpty(pubDate)) {
             try {
                 int flags = 0;
                 flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
                 flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
                 flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
                 flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-                String formattedDate = DateUtils.formatDateTime(getActivity(), pubDate,
-                        flags);
+                String formattedDate = DateUtils.formatDateTime(getActivity(),
+                        DateTimeUtils.timestampFromIso8601Millis(pubDate), flags);
                 mPubDateText.setText(formattedDate);
             } catch (RuntimeException e) {
                 AppLog.e(T.POSTS, e);
@@ -384,7 +385,7 @@ public class EditPostSettingsFragment extends Fragment
             mPasswordEditText.setText(mPost.getPassword());
         }
 
-        switch (mPost.getStatusEnum()) {
+        switch (PostStatus.fromPost(mPost)) {
             case PUBLISHED:
             case SCHEDULED:
             case UNKNOWN:
@@ -401,15 +402,14 @@ public class EditPostSettingsFragment extends Fragment
                 break;
         }
 
-        if (!mPost.isPage()) {
-            if (mPost.getJSONCategories() != null) {
-                mCategories = JSONUtils.fromJSONArrayToStringList(mPost.getJSONCategories());
-            }
-        }
-        String tags = mPost.getKeywords();
-        if (!tags.equals("")) {
-            mTagsEditText.setText(tags);
-        }
+        // TODO: Re-implement when we can have access to category names from IDs via TaxonomyStore
+//        if (!mPost.isPage()) {
+//            mCategories = mPost.getCategoryIdList();
+//        }
+//        String tags = mPost.getKeywords();
+//        if (!tags.equals("")) {
+//            mTagsEditText.setText(tags);
+//        }
 
         if (AppPrefs.isVisualEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
@@ -453,18 +453,18 @@ public class EditPostSettingsFragment extends Fragment
         ActivityLauncher.viewMediaGalleryPickerForSite(getActivity(), mSite);
     }
 
-    private String getPostStatusForSpinnerPosition(int position) {
+    private PostStatus getPostStatusForSpinnerPosition(int position) {
         switch (position) {
             case 0:
-                return PostStatus.toString(PostStatus.PUBLISHED);
+                return PostStatus.PUBLISHED;
             case 1:
-                return PostStatus.toString(PostStatus.DRAFT);
+                return PostStatus.DRAFT;
             case 2:
-                return PostStatus.toString(PostStatus.PENDING);
+                return PostStatus.PENDING;
             case 3:
-                return PostStatus.toString(PostStatus.PRIVATE);
+                return PostStatus.PRIVATE;
             default:
-                return PostStatus.toString(PostStatus.UNKNOWN);
+                return PostStatus.UNKNOWN;
         }
     }
 
@@ -641,13 +641,13 @@ public class EditPostSettingsFragment extends Fragment
             Date d = new Date();
             pubDateTimestamp = d.getTime();
         } else if (!pubDate.equals(getText(R.string.immediately))) {
-            if (mIsCustomPubDate)
+            if (mIsCustomPubDate) {
                 pubDateTimestamp = mCustomPubDate;
-            else if (mPost.getDate_created_gmt() > 0)
-                pubDateTimestamp = mPost.getDate_created_gmt();
+            } else if (StringUtils.isNotEmpty(mPost.getDateCreated())) {
+                pubDateTimestamp = DateTimeUtils.timestampFromIso8601(mPost.getDateCreated());
+            }
         } else if (pubDate.equals(getText(R.string.immediately)) && mPost.isLocalDraft()) {
-            mPost.setDate_created_gmt(0);
-            mPost.setDateCreated(0);
+            mPost.setDateCreated(DateTimeUtils.iso8601UTCFromDate(new Date()));
         }
 
         String tags = "", postFormat = "";
@@ -663,34 +663,37 @@ public class EditPostSettingsFragment extends Fragment
 
         String status;
         if (mStatusSpinner != null) {
-            status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
+            status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition()).toString();
         } else {
-            status = mPost.getPostStatus();
+            status = mPost.getStatus();
         }
 
+        // TODO: Handle tracking this elsewhere
         // We want to flag this post as having changed statuses from draft to published so that we
         // properly track stats we care about for when users first publish posts.
-        if (!mPost.isLocalDraft() && mPost.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
-                && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
-            mPost.setChangedFromDraftToPublished(true);
-        }
+//        if (!mPost.isLocalDraft() && mPost.getStatus().equals(PostStatus.DRAFT.toString())
+//                && status.equals(PostStatus.PUBLISHED.toString())) {
+//            mPost.setChangedFromDraftToPublished(true);
+//        }
 
         if (mPost.supportsLocation()) {
-            mPost.setLocation(mPostLocation);
+            mPost.setPostLocation(mPostLocation);
         }
 
-        if (mCategories != null) {
-            mPost.setJSONCategories(new JSONArray(mCategories));
-        }
+        // TODO: Implement when we have TaxonomyStore
+//        if (mCategories != null) {
+//            mPost.setJSONCategories(new JSONArray(mCategories));
+//        }
 
         if (AppPrefs.isVisualEditorEnabled()) {
             mPost.setFeaturedImageId(mFeaturedImageId);
         }
 
-        mPost.setPostExcerpt(excerpt);
-        mPost.setDate_created_gmt(pubDateTimestamp);
-        mPost.setKeywords(tags);
-        mPost.setPostStatus(status);
+        mPost.setExcerpt(excerpt);
+        mPost.setDateCreated(DateTimeUtils.iso8601UTCFromTimestamp(pubDateTimestamp));
+        // TODO: Implement when we have TaxonomyStore
+        //mPost.setKeywords(tags);
+        mPost.setStatus(status);
         mPost.setPassword(password);
         mPost.setPostFormat(postFormat);
     }
@@ -857,7 +860,7 @@ public class EditPostSettingsFragment extends Fragment
         // if this post has location attached to it, look up the location address
         if (mPost.hasLocation()) {
             showLocationView();
-            PostLocation location = mPost.getLocation();
+            PostLocation location = mPost.getPostLocation();
             setLocation(location.getLatitude(), location.getLongitude());
         } else {
             // Search for current location to geotag post if preferences allow
@@ -952,7 +955,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void removeLocation() {
         mPostLocation = null;
-        mPost.unsetLocation();
+        mPost.setPostLocation(null);
 
         updateLocationText("");
         setLocationStatus(LocationStatus.NONE);

@@ -50,8 +50,7 @@ import android.text.style.URLSpan;
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Post;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -117,7 +116,7 @@ public class WPHtml {
      * This uses TagSoup to handle real HTML, including all of the brokenness
      * found in the wild.
      */
-    public static Spanned fromHtml(String source, Context ctx, Post post, int maxImageWidth) {
+    public static Spanned fromHtml(String source, Context ctx, PostModel post, int maxImageWidth) {
         return fromHtml(source, null, null, ctx, post, maxImageWidth);
     }
 
@@ -141,7 +140,7 @@ public class WPHtml {
      * found in the wild.
      */
     public static Spanned fromHtml(String source, ImageGetter imageGetter,
-            TagHandler tagHandler, Context ctx, Post post, int maxImageWidth) {
+            TagHandler tagHandler, Context ctx, PostModel post, int maxImageWidth) {
         Parser parser = new Parser();
         try {
             parser.setProperty(Parser.schemaProperty, HtmlParser.schema);
@@ -514,13 +513,13 @@ class HtmlToSpannedConverter implements ContentHandler {
     private boolean mysteryTagFound;
     private int mMaxImageWidth;
     private Context mContext;
-    private Post mPost;
+    private PostModel mPost;
 
     private String mysteryTagName;
 
     public HtmlToSpannedConverter(String source,
             WPHtml.ImageGetter imageGetter, WPHtml.TagHandler tagHandler,
-            Parser parser, Context context, Post p, int maxImageWidth) {
+            Parser parser, Context context, PostModel p, int maxImageWidth) {
         mSource = source;
         mSpannableStringBuilder = new SpannableStringBuilder();
         mImageGetter = imageGetter;
@@ -815,7 +814,9 @@ class HtmlToSpannedConverter implements ContentHandler {
             WPImageSpan is = new WPImageSpan(mContext, resizedBitmap, curStream);
 
             // get the MediaFile data from db
-            MediaFile mf = WordPress.wpDB.getMediaFile(src, mPost);
+            // TODO: Use MediaStore
+            //MediaFile mf = WordPress.wpDB.getMediaFile(src, mPost);
+            MediaFile mf = null;
             if (mf != null) {
                 is.setMediaFile(mf);
                 is.setImageSource(curStream);
