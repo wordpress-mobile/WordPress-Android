@@ -2,14 +2,21 @@ package org.wordpress.android.editor;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.DragEvent;
 import android.widget.LinearLayout;
 
+import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.util.helpers.MediaFile;
 
-public class MockEditorActivity extends AppCompatActivity implements EditorFragmentAbstract.EditorFragmentListener {
+import java.util.ArrayList;
+
+public class MockEditorActivity extends AppCompatActivity implements EditorFragmentListener,
+        EditorDragAndDropListener {
     public static final int LAYOUT_ID = 999;
 
     EditorFragment mEditorFragment;
@@ -34,7 +41,7 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
     @Override
     public void onEditorFragmentInitialized() {
         mEditorFragment.setTitle("A title");
-        mEditorFragment.setContent(Utils.getHtmlFromFile(this, "example/example-content.html"));
+        mEditorFragment.setContent("<p>Example <strong>content</strong></p>");
     }
 
     @Override
@@ -79,6 +86,16 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
 
     @Override
     public void onTrackableEvent(TrackableEvent event) {
+
+    }
+
+    @Override
+    public void onMediaDropped(ArrayList<Uri> mediaUri) {
+
+    }
+
+    @Override
+    public void onRequestDragAndDropPermissions(DragEvent dragEvent) {
 
     }
 }

@@ -116,11 +116,9 @@ public class ReaderPost {
         post.blogName = JSONUtils.getStringDecoded(json, "site_name");
         post.published = JSONUtils.getString(json, "date");
 
-        // sort index determines how posts are sorted - this is a "score" for search results,
-        // liked date for liked posts, and published date for all others
-        if (json.has("score")) {
-            post.sortIndex = json.optDouble("score");
-        } else if (json.has("date_liked")) {
+        // sort index determines how posts are sorted - this is a liked date for liked
+        // posts, and published date for all others
+        if (json.has("date_liked")) {
             String likeDate = JSONUtils.getString(json, "date_liked");
             post.sortIndex = DateTimeUtils.timestampFromIso8601(likeDate);
         } else {

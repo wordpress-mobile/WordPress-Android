@@ -373,7 +373,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setupSuggestionServiceAndAdapter() {
-        if (!isAdded() || mSiteStore.hasDotComOrJetpackSiteWithSiteId(mRemoteBlogId)) return;
+        if (!isAdded() || mSiteStore.hasWPComOrJetpackSiteWithSiteId(mRemoteBlogId)) return;
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mRemoteBlogId);
         mSuggestionAdapter = SuggestionUtils.setupSuggestions(mSiteStore.getSiteBySiteId(mRemoteBlogId), getActivity(),
                 mSuggestionServiceConnectionManager);

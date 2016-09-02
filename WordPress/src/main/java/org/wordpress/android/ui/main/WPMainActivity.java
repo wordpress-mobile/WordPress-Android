@@ -698,6 +698,9 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         // "Reload" selected site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        if (getSelectedSite() == null) {
+            return;
+        }
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
             mSelectedSite = site;

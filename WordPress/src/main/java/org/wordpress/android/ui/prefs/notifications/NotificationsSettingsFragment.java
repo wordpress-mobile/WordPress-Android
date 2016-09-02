@@ -270,9 +270,9 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         String trimmedQuery = "";
         if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
             trimmedQuery = mSearchView.getQuery().toString().trim();
-            sites = mSiteStore.getDotComSiteByNameOrUrlMatching(trimmedQuery);
+            sites = mSiteStore.getWPComSiteByNameOrUrlMatching(trimmedQuery);
         } else {
-            sites = mSiteStore.getDotComSites();
+            sites = mSiteStore.getWPComSites();
         }
         mSiteCount = sites.size();
 

@@ -9,6 +9,6 @@ public class WPStoreUtils {
      * @return true if the user is signed in a WordPress.com account or if he has a .org site.
      */
     public static boolean isSignedInWPComOrHasWPOrgSite(AccountStore accountStore, SiteStore siteStore) {
-        return accountStore.hasAccessToken() || siteStore.hasDotOrgSite();
+        return accountStore.hasAccessToken() || siteStore.hasSelfHostedSite();
     }
 }

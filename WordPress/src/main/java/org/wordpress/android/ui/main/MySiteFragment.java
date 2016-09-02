@@ -92,7 +92,7 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    public SiteModel getSelectedSite() {
+    public @Nullable SiteModel getSelectedSite() {
         if (getActivity() instanceof WPMainActivity) {
             WPMainActivity mainActivity = (WPMainActivity) getActivity();
             return mainActivity.getSelectedSite();
