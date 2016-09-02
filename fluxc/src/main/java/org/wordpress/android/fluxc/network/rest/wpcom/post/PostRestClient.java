@@ -48,8 +48,12 @@ public class PostRestClient extends BaseWPComRestClient {
     public void fetchPost(final PostModel post, final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
 
+        Map<String, String> params = new HashMap<>();
+
+        params.put("context", "edit");
+
         final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
-                url, null, PostWPComRestResponse.class,
+                url, params, PostWPComRestResponse.class,
                 new Listener<PostWPComRestResponse>() {
                     @Override
                     public void onResponse(PostWPComRestResponse response) {
@@ -82,6 +86,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         Map<String, String> params = new HashMap<>();
 
+        params.put("context", "edit");
         params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
 
         if (getPages) {
@@ -130,7 +135,7 @@ public class PostRestClient extends BaseWPComRestClient {
     }
 
     public void pushPost(final PostModel post, final SiteModel site) {
-        final String url;
+        String url;
 
         if (post.isLocalDraft()) {
             url = WPCOMREST.sites.site(site.getSiteId()).posts.new_.getUrlV1_1();
@@ -169,6 +174,8 @@ public class PostRestClient extends BaseWPComRestClient {
                 }
         );
 
+        request.addQueryParameter("context", "edit");
+
         request.disableRetries();
         add(request);
     }
@@ -199,6 +206,8 @@ public class PostRestClient extends BaseWPComRestClient {
                     }
                 }
         );
+
+        request.addQueryParameter("context", "edit");
 
         request.disableRetries();
         add(request);
