@@ -304,7 +304,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (page.isLocalDraft()) {
             return context.getString(R.string.local_draft);
         } else if (PostStatus.fromPost(page) == PostStatus.SCHEDULED) {
-            return DateUtils.formatDateTime(context, DateTimeUtils.timestampFromIso8601(page.getDateCreated()),
+            return DateUtils.formatDateTime(context, DateTimeUtils.timestampFromIso8601Millis(page.getDateCreated()),
                     DateUtils.FORMAT_ABBREV_ALL);
         } else {
             Date dtCreated = DateTimeUtils.dateUTCFromIso8601(page.getDateCreated());

@@ -448,7 +448,7 @@ public class PostsListFragment extends Fragment
         }
 
         // TODO: The status change should happen later, since we're dropping post.setChangedFromDraftToPublished(true)
-        post.setStatus(PostStatus.toString(PostStatus.PUBLISHED));
+        post.setStatus(PostStatus.PUBLISHED.toString());
 
         // TODO: Uploading disabled
 //        PostUploadService.addPostToUpload(post);

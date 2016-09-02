@@ -199,12 +199,22 @@ public class DateTimeUtils {
 
     // Routines involving Unix timestamps (GMT assumed)
 
+    /**
+     * Given an ISO 8601-formatted date as a String, returns the corresponding UNIX timestamp.
+     */
     public static long timestampFromIso8601(final String strDate) {
+        return (timestampFromIso8601Millis(strDate) / 1000);
+    }
+
+    /**
+     * Given an ISO 8601-formatted date as a String, returns the corresponding timestamp in milliseconds.
+     */
+    public static long timestampFromIso8601Millis(final String strDate) {
         Date date = dateFromIso8601(strDate);
         if (date == null) {
             return 0;
         }
-        return (date.getTime() / 1000);
+        return (date.getTime());
     }
 
     public static Date dateFromTimestamp(long timeStamp) {
@@ -213,6 +223,10 @@ public class DateTimeUtils {
 
     public static String iso8601FromTimestamp(long timestamp) {
         return iso8601FromDate(dateFromTimestamp(timestamp));
+    }
+
+    public static String iso8601UTCFromTimestamp(long timestamp) {
+        return iso8601UTCFromDate(dateFromTimestamp(timestamp));
     }
 
     public static String timeSpanFromIso8601(long timeStamp) {

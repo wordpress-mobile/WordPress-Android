@@ -192,7 +192,7 @@ public class PostUtils {
     public static String getFormattedDate(PostModel post) {
         if (PostStatus.fromPost(post) == PostStatus.SCHEDULED) {
             return DateUtils.formatDateTime(WordPress.getContext(),
-                    DateTimeUtils.timestampFromIso8601(post.getDateCreated()), DateUtils.FORMAT_ABBREV_ALL);
+                    DateTimeUtils.timestampFromIso8601Millis(post.getDateCreated()), DateUtils.FORMAT_ABBREV_ALL);
         } else {
             return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateUTCFromIso8601(post.getDateCreated()));
         }
