@@ -189,7 +189,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         oldModel.setAdminUrl(getOption(blogOptions, "admin_url", String.class));
         long wpComIdForJetpack = string2Long(getOption(blogOptions, "jetpack_client_id", String.class), -1);
         oldModel.setSiteId(wpComIdForJetpack);
-        // If the blog is not public, it's private. Note: this field doesn't always exist.
+        // If the site is not public, it's private. Note: this field doesn't always exist.
         oldModel.setIsPrivate(false);
         if (blogOptions.containsKey("blog_public")) {
             Boolean isPublic = getOption(blogOptions, "blog_public", Boolean.class);
