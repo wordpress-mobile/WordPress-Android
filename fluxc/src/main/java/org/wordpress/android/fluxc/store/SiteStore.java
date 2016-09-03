@@ -555,7 +555,7 @@ public class SiteStore extends Store {
         int rowsAffected = SiteSqlUtils.deleteSite(site);
         // TODO: This should be captured by 'QuickPressShortcutsStore' so it can handle deleting any QP shortcuts
         // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
-        // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
+        // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int siteId)
         emitChange(new OnSiteRemoved(rowsAffected));
     }
 
