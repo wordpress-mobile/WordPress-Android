@@ -74,16 +74,14 @@
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
-    <dimen name="reader_card_margin_normal_landscape">48dp</dimen>
     <dimen name="reader_card_margin_tablet">48dp</dimen>
-    <dimen name="reader_card_margin_tablet_landscape">96dp</dimen>
+    <dimen name="reader_card_margin_tablet_big">96dp</dimen>
     <dimen name="reader_card_margin">@dimen/reader_card_margin_normal</dimen>
 
     <!-- left/right margin for reader detail -->
     <dimen name="reader_detail_margin_normal">24dp</dimen>
-    <dimen name="reader_detail_margin_normal_landscape">48dp</dimen>
     <dimen name="reader_detail_margin_tablet">48dp</dimen>
-    <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
+    <dimen name="reader_detail_margin_tablet_big">96dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
     <dimen name="reader_related_post_margin">@dimen/margin_extra_large</dimen>
