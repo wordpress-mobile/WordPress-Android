@@ -40,9 +40,17 @@ public class ReaderPost {
     private String primaryTag;    // most popular tag on this post based on usage in blog
     private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
-    public double sortIndex;      // determines how posts are sorted for display
-    private String date;          // generic date - depends on the stream the post is from
-    private String pubDate;       // date the post was actually published
+    /*
+     * the "date" field is a generic date which depends on the stream the post is from:
+     *   - for tagged posts, this is the date the post was tagged
+     *   - for liked posts, this is the date the post was liked
+     *   - for other posts, this is the date the post was published
+     * this date is used when requesting older posts from the backend, and is also used
+     * to generate the sortIndex below (which determines how posts are sorted for display)
+     */
+    private String date;
+    private String pubDate;
+    public double sortIndex;
 
     private String url;
     private String shortUrl;
