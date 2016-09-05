@@ -88,10 +88,14 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
                 @Override
                 public void onClick(View view) {
                     int clickedPosition = getAdapterPosition();
-                    if (mIsMultiSelectEnabled) {
-                        toggleSelection(clickedPosition);
-                    } else if (mSiteSelectedListener != null) {
-                        mSiteSelectedListener.onSiteClick(getItem(clickedPosition));
+                    if (isValidPosition(clickedPosition)) {
+                        if (mIsMultiSelectEnabled) {
+                            toggleSelection(clickedPosition);
+                        } else if (mSiteSelectedListener != null) {
+                            mSiteSelectedListener.onSiteClick(getItem(clickedPosition));
+                        }
+                    } else {
+                        AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
                     }
                 }
             });
