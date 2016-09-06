@@ -461,7 +461,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         // as rendered and record the TrainTracks render event
         if (!post.isRendered && post.hasRailcar()) {
             post.isRendered = true;
-            AnalyticsUtils.trackWithRailcar(AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER, post.getRailcarJson());
+            AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
         }
     }
 

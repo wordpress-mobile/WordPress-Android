@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.TextUtils;
 
@@ -11,6 +12,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.ReaderPost;
@@ -18,6 +20,9 @@ import org.wordpress.android.models.ReaderPost;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER;
 
 public class AnalyticsUtils {
     private static String BLOG_ID_KEY = "blog_id";
@@ -195,19 +200,37 @@ public class AnalyticsUtils {
     }
 
     /**
-     * Bump Analytics for a railcar - used with the TRAIN_TRACKS_RENDER and TRAIN_TRACKS_INTERACT
-     * events
+     * Track when a railcar item has been rendered
      *
-     * @param stat The Stat to bump
      * @param post The JSON string of the railcar
      *
      */
-    public static void trackWithRailcar(AnalyticsTracker.Stat stat, String railcarJson) {
+    public static void trackRailcarRender(String railcarJson) {
         if (TextUtils.isEmpty(railcarJson)) return;
 
-        Map<String, Object> properties = new HashMap<>();
+        AnalyticsTracker.track(TRAIN_TRACKS_RENDER, railcarJsonToProperties(railcarJson));
+    }
 
-        // this simply writes the railcar json to the properties using the existing json key names
+    /**
+     * Track when a railcar item has been interacted with
+     *
+     * @param stat The event that caused the interaction
+     * @param post The JSON string of the railcar
+     *
+     */
+    public static void trackRailcarInteract(AnalyticsTracker.Stat stat, String railcarJson) {
+        if (TextUtils.isEmpty(railcarJson)) return;
+
+        Map<String, Object> properties = railcarJsonToProperties(railcarJson);
+        properties.put("action", AnalyticsTrackerNosara.getEventNameForStat(stat));
+        AnalyticsTracker.track(TRAIN_TRACKS_INTERACT, properties);
+    }
+
+    /*
+     *  Converts the JSON string of a railcar to a properties list using the existing json key names
+     */
+    private static Map<String, Object> railcarJsonToProperties(@NonNull String railcarJson) {
+        Map<String, Object> properties = new HashMap<>();
         try {
             JSONObject jsonRailcar = new JSONObject(railcarJson);
             Iterator<String> iter = jsonRailcar.keys();
@@ -220,7 +243,7 @@ public class AnalyticsUtils {
             AppLog.e(AppLog.T.READER, e);
         }
 
-        AnalyticsTracker.track(stat, properties);
+        return properties;
     }
 
 }
