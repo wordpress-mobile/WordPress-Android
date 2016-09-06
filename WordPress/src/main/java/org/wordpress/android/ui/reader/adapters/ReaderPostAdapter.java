@@ -46,6 +46,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.HashSet;
+
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -64,6 +66,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
+    private final HashSet<String> mRenderedIds = new HashSet<>();
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
@@ -457,10 +460,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         checkLoadMore(position);
 
-        // if we haven't already rendered this post and it has a "railcar" attached to it, set it
-        // as rendered and record the TrainTracks render event
-        if (!post.isRendered && post.hasRailcar()) {
-            post.isRendered = true;
+        // if we haven't already rendered this post and it has a "railcar" attached to it, add it
+        // to the rendered list and record the TrainTracks render event
+        if (post.hasRailcar() && !mRenderedIds.contains(post.getPseudoId())) {
+            mRenderedIds.add(post.getPseudoId());
             AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
         }
     }
@@ -611,6 +614,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void setCurrentTag(ReaderTag tag) {
         if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
             mCurrentTag = tag;
+            mRenderedIds.clear();
             reload();
         }
     }
@@ -624,6 +628,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (blogId != mCurrentBlogId || feedId != mCurrentFeedId) {
             mCurrentBlogId = blogId;
             mCurrentFeedId = feedId;
+            mRenderedIds.clear();
             reload();
         }
     }

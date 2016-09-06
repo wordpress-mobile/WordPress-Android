@@ -67,9 +67,6 @@ public class ReaderPost {
     public boolean isVideoPress;
     public boolean isJetpack;
 
-    // not recorded in the db - used to determine if this post has already been shown in a stream
-    public boolean isRendered;
-
     private String attachmentsJson;
     private String discoverJson;
     private String format;
