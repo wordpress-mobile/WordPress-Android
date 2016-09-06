@@ -91,7 +91,8 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
-        params.add(new String[] { SOFTWARE_VERSION_KEY, POST_THUMBNAIL_KEY, JETPACK_CLIENT_ID_KEY, SITE_PUBLIC_KEY,
+        params.add(new String[] {
+                SOFTWARE_VERSION_KEY, POST_THUMBNAIL_KEY, JETPACK_CLIENT_ID_KEY, SITE_PUBLIC_KEY,
                 HOME_URL_KEY, ADMIN_URL_KEY, LOGIN_URL_KEY, SITE_TITLE_KEY, TIME_ZONE_KEY });
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_OPTIONS, params,
