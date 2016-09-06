@@ -190,9 +190,10 @@ public class AnalyticsUtils {
         properties.put(FEED_ITEM_ID_KEY, post.feedItemId);
         properties.put(IS_JETPACK_KEY, post.isJetpack);
 
-        // add the TrainTracks railcar if it exists - this simply writes the railcar json
-        // to the properties using the existing json key names
-        if (post.hasRailcar()) {
+        // add the TrainTracks railcar if it exists and this is a train tracks event - this simply
+        // writes the railcar json to the properties using the existing json key names
+        if (post.hasRailcar()
+                && (stat == AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT || stat == AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER)) {
             try {
                 JSONObject jsonRailcar = new JSONObject(post.getRailcarJson());
                 Iterator<String> iter = jsonRailcar.keys();
