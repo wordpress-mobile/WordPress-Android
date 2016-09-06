@@ -161,10 +161,6 @@ public class AnalyticsUtils {
             properties.put(BLOG_ID_KEY, blogID);
         }
         AnalyticsTracker.track(stat, properties);
-
-        if (canTrackRailcarInteract(stat)) {
-
-        }
     }
 
     /**
