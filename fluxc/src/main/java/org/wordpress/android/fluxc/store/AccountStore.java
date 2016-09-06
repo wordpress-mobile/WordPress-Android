@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.action.AuthenticationAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
+import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
@@ -72,7 +73,10 @@ public class AccountStore extends Store {
     }
 
     public static class UpdateTokenPayload extends Payload {
-        public UpdateTokenPayload(String token) { this.token = token; }
+        public UpdateTokenPayload(String token) {
+            this.token = token;
+        }
+
         public String token;
     }
 
@@ -224,89 +228,133 @@ public class AccountStore extends Store {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
-        org.wordpress.android.fluxc.annotations.action.IAction actionType = action.getType();
-        if (actionType == AuthenticationAction.AUTHENTICATE_ERROR) {
-            OnAuthenticationChanged event = new OnAuthenticationChanged();
-            AuthenticateErrorPayload payload = (AuthenticateErrorPayload) action.getPayload();
-            event.error = payload.error;
-            emitChange(event);
-        } else if (actionType == AuthenticationAction.AUTHENTICATE) {
-            AuthenticatePayload payload = (AuthenticatePayload) action.getPayload();
-            authenticate(payload);
-        } else if (actionType == AuthenticationAction.DISCOVER_ENDPOINT) {
-            RefreshSitesXMLRPCPayload payload = (RefreshSitesXMLRPCPayload) action.getPayload();
-            mSelfHostedEndpointFinder.findEndpoint(payload.url, payload.username, payload.password);
-        } else if (actionType == AuthenticationAction.DISCOVERY_RESULT) {
-            DiscoveryResultPayload payload = (DiscoveryResultPayload) action.getPayload();
-            OnDiscoveryResponse discoveryResponse = new OnDiscoveryResponse();
-            if (payload.isError()) {
-                discoveryResponse.error = DiscoveryError.GENERIC_ERROR;
-                discoveryResponse.failedEndpoint = payload.failedEndpoint;
-            } else if (payload.isDiscoveryError()) {
-                discoveryResponse.error = payload.discoveryError;
-                discoveryResponse.failedEndpoint = payload.failedEndpoint;
-            } else {
-                discoveryResponse.xmlRpcEndpoint = payload.xmlRpcEndpoint;
-                discoveryResponse.wpRestEndpoint = payload.wpRestEndpoint;
-            }
-            emitChange(discoveryResponse);
-        } else if (actionType == AccountAction.FETCH_ACCOUNT) {
-            // fetch only Account
-            mAccountRestClient.fetchAccount();
-        } else if (actionType == AccountAction.FETCH_SETTINGS) {
-            // fetch only Account Settings
-            mAccountRestClient.fetchAccountSettings();
-        } else if (actionType == AccountAction.PUSH_SETTINGS) {
-            PushAccountSettingsPayload payload = (PushAccountSettingsPayload) action.getPayload();
-            mAccountRestClient.postAccountSettings(payload.params);
-        } else if (actionType == AccountAction.FETCHED_ACCOUNT) {
-            AccountRestPayload data = (AccountRestPayload) action.getPayload();
-            if (!checkError(data, "Error fetching Account via REST API (/me)")) {
-                mAccount.copyAccountAttributes(data.account);
-                updateDefaultAccount(mAccount, AccountAction.FETCH_ACCOUNT);
-            } else {
-                emitAccountChangeError(AccountErrorType.ACCOUNT_FETCH_ERROR);
-            }
-        } else if (actionType == AccountAction.FETCHED_SETTINGS) {
-            AccountRestPayload data = (AccountRestPayload) action.getPayload();
-            if (!checkError(data, "Error fetching Account Settings via REST API (/me/settings)")) {
-                mAccount.copyAccountSettingsAttributes(data.account);
-                updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
-            } else {
-                emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
-            }
-        } else if (actionType == AccountAction.PUSHED_SETTINGS) {
-            AccountPushSettingsResponsePayload data = (AccountPushSettingsResponsePayload) action.getPayload();
-            if (!data.isError()) {
-                boolean updated = AccountRestClient.updateAccountModelFromPushSettingsResponse(mAccount, data.settings);
-                if (updated) {
-                    updateDefaultAccount(mAccount, AccountAction.PUSH_SETTINGS);
-                } else {
-                    OnAccountChanged accountChanged = new OnAccountChanged();
-                    accountChanged.causeOfChange = AccountAction.PUSH_SETTINGS;
-                    accountChanged.accountInfosChanged = false;
-                    emitChange(accountChanged);
-                }
-            } else {
-                emitAccountChangeError(AccountErrorType.SETTINGS_POST_ERROR);
-            }
-        } else if (actionType == AccountAction.UPDATE_ACCOUNT) {
-            AccountModel accountModel = (AccountModel) action.getPayload();
-            updateDefaultAccount(accountModel, AccountAction.UPDATE_ACCOUNT);
-        } else if (actionType == AccountAction.UPDATE_ACCESS_TOKEN) {
-            UpdateTokenPayload updateTokenPayload = (UpdateTokenPayload) action.getPayload();
-            updateToken(updateTokenPayload);
-        } else if (actionType == AccountAction.SIGN_OUT) {
-            signOut();
-        } else if (actionType == AccountAction.CREATE_NEW_ACCOUNT) {
-            newAccount((NewAccountPayload) action.getPayload());
-        } else if (actionType == AccountAction.CREATED_NEW_ACCOUNT) {
-            NewAccountResponsePayload payload = (NewAccountResponsePayload) action.getPayload();
-            OnNewUserCreated onNewUserCreated = new OnNewUserCreated();
-            onNewUserCreated.error = payload.error;
-            onNewUserCreated.dryRun = payload.dryRun;
-            emitChange(onNewUserCreated);
+        IAction actionType = action.getType();
+        if (actionType instanceof AccountAction) {
+            onAccountAction((AccountAction) actionType, action.getPayload());
         }
+        if (actionType instanceof AuthenticationAction) {
+            onAuthenticationAction((AuthenticationAction) actionType, action.getPayload());
+        }
+    }
+
+    private void onAccountAction(AccountAction actionType, Object payload) {
+        switch (actionType) {
+            case FETCH_ACCOUNT:
+                mAccountRestClient.fetchAccount();
+                break;
+            case FETCH_SETTINGS:
+                mAccountRestClient.fetchAccountSettings();
+                break;
+            case PUSH_SETTINGS:
+                mAccountRestClient.postAccountSettings(((PushAccountSettingsPayload) payload).params);
+                break;
+            case UPDATE_ACCOUNT:
+                updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);
+                break;
+            case UPDATE_ACCESS_TOKEN:
+                updateToken((UpdateTokenPayload) payload);
+                break;
+            case SIGN_OUT:
+                signOut();
+                break;
+            case CREATE_NEW_ACCOUNT:
+                createNewAccount((NewAccountPayload) payload);
+                break;
+            case CREATED_NEW_ACCOUNT:
+                handleNewAccountCreated((NewAccountResponsePayload) payload);
+                break;
+            case PUSHED_SETTINGS:
+                handlePushSettingsCompleted((AccountPushSettingsResponsePayload) payload);
+                break;
+            case FETCHED_SETTINGS:
+                handleFetchSettingsCompleted((AccountRestPayload) payload);
+                break;
+            case FETCHED_ACCOUNT:
+                handleFetchAccountCompleted((AccountRestPayload) payload);
+                break;
+        }
+    }
+
+    private void onAuthenticationAction(AuthenticationAction actionType, Object payload) {
+        switch (actionType) {
+            case AUTHENTICATE:
+                authenticate((AuthenticatePayload) payload);
+                break;
+            case AUTHENTICATE_ERROR:
+                handleAuthenticateError((AuthenticateErrorPayload) payload);
+                break;
+            case DISCOVER_ENDPOINT:
+                discoverEndPoint((RefreshSitesXMLRPCPayload) payload);
+                break;
+            case DISCOVERY_RESULT:
+                discoveryResult((DiscoveryResultPayload) payload);
+                break;
+        }
+    }
+
+    private void handleAuthenticateError(AuthenticateErrorPayload payload) {
+        OnAuthenticationChanged event = new OnAuthenticationChanged();
+        event.error = payload.error;
+        emitChange(event);
+    }
+    private void discoverEndPoint(RefreshSitesXMLRPCPayload payload) {
+        mSelfHostedEndpointFinder.findEndpoint(payload.url, payload.username, payload.password);
+    }
+
+    private void discoveryResult(DiscoveryResultPayload payload) {
+        OnDiscoveryResponse discoveryResponse = new OnDiscoveryResponse();
+        if (payload.isError()) {
+            discoveryResponse.error = DiscoveryError.GENERIC_ERROR;
+            discoveryResponse.failedEndpoint = payload.failedEndpoint;
+        } else if (payload.isDiscoveryError()) {
+            discoveryResponse.error = payload.discoveryError;
+            discoveryResponse.failedEndpoint = payload.failedEndpoint;
+        } else {
+            discoveryResponse.xmlRpcEndpoint = payload.xmlRpcEndpoint;
+            discoveryResponse.wpRestEndpoint = payload.wpRestEndpoint;
+        }
+        emitChange(discoveryResponse);
+    }
+
+    private void handleFetchAccountCompleted(AccountRestPayload payload) {
+        if (!checkError(payload, "Error fetching Account via REST API (/me)")) {
+            mAccount.copyAccountAttributes(payload.account);
+            updateDefaultAccount(mAccount, AccountAction.FETCH_ACCOUNT);
+        } else {
+            emitAccountChangeError(AccountErrorType.ACCOUNT_FETCH_ERROR);
+        }
+    }
+
+    private void handleFetchSettingsCompleted(AccountRestPayload payload) {
+        if (!checkError(payload, "Error fetching Account Settings via REST API (/me/settings)")) {
+            mAccount.copyAccountSettingsAttributes(payload.account);
+            updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
+        } else {
+            emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
+        }
+    }
+
+    private void handlePushSettingsCompleted(AccountPushSettingsResponsePayload payload) {
+        if (!payload.isError()) {
+            boolean updated = AccountRestClient.updateAccountModelFromPushSettingsResponse(mAccount, payload.settings);
+            if (updated) {
+                updateDefaultAccount(mAccount, AccountAction.PUSH_SETTINGS);
+            } else {
+                OnAccountChanged accountChanged = new OnAccountChanged();
+                accountChanged.causeOfChange = AccountAction.PUSH_SETTINGS;
+                accountChanged.accountInfosChanged = false;
+                emitChange(accountChanged);
+            }
+        } else {
+            emitAccountChangeError(AccountErrorType.SETTINGS_POST_ERROR);
+        }
+    }
+
+    private void handleNewAccountCreated(NewAccountResponsePayload payload) {
+        OnNewUserCreated onNewUserCreated = new OnNewUserCreated();
+        onNewUserCreated.error = payload.error;
+        onNewUserCreated.dryRun = payload.dryRun;
+        emitChange(onNewUserCreated);
     }
 
     private void emitAccountChangeError(AccountErrorType errorType) {
@@ -315,7 +363,7 @@ public class AccountStore extends Store {
         emitChange(event);
     }
 
-    private void newAccount(NewAccountPayload payload) {
+    private void createNewAccount(NewAccountPayload payload) {
         mAccountRestClient.newAccount(payload.username, payload.password, payload.email, payload.dryRun);
     }
 

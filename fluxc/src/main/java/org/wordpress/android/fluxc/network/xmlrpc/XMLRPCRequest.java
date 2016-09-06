@@ -119,6 +119,8 @@ public class XMLRPCRequest extends BaseRequest<Object> {
             case INVALID_SSL_CERTIFICATE:
                 payload.error.type = AuthenticationErrorType.INVALID_SSL_CERTIFICATE;
                 break;
+            default:
+                break;
         }
 
         if (payload.error.type != AuthenticationErrorType.GENERIC_ERROR) {

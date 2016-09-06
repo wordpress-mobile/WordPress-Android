@@ -51,22 +51,22 @@ public class AccountModel extends Payload implements Identifiable {
     public boolean equals(Object other) {
         if (other == null || !(other instanceof AccountModel)) return false;
         AccountModel otherAccount = (AccountModel) other;
-        return getId() == otherAccount.getId() &&
-                StringUtils.equals(getUserName(), otherAccount.getUserName()) &&
-                getUserId() == otherAccount.getUserId() &&
-                StringUtils.equals(getDisplayName(), otherAccount.getDisplayName()) &&
-                StringUtils.equals(getProfileUrl(), otherAccount.getProfileUrl()) &&
-                StringUtils.equals(getAvatarUrl(), otherAccount.getAvatarUrl()) &&
-                getPrimarySiteId() == otherAccount.getPrimarySiteId() &&
-                getSiteCount() == otherAccount.getSiteCount() &&
-                getVisibleSiteCount() == otherAccount.getVisibleSiteCount() &&
-                StringUtils.equals(getFirstName(), otherAccount.getFirstName()) &&
-                StringUtils.equals(getLastName(), otherAccount.getLastName()) &&
-                StringUtils.equals(getAboutMe(), otherAccount.getAboutMe()) &&
-                StringUtils.equals(getDate(), otherAccount.getDate()) &&
-                StringUtils.equals(getNewEmail(), otherAccount.getNewEmail()) &&
-                getPendingEmailChange() == otherAccount.getPendingEmailChange() &&
-                StringUtils.equals(getWebAddress(), otherAccount.getWebAddress());
+        return getId() == otherAccount.getId()
+               && StringUtils.equals(getUserName(), otherAccount.getUserName())
+               && getUserId() == otherAccount.getUserId()
+               && StringUtils.equals(getDisplayName(), otherAccount.getDisplayName())
+               && StringUtils.equals(getProfileUrl(), otherAccount.getProfileUrl())
+               && StringUtils.equals(getAvatarUrl(), otherAccount.getAvatarUrl())
+               && getPrimarySiteId() == otherAccount.getPrimarySiteId()
+               && getSiteCount() == otherAccount.getSiteCount()
+               && getVisibleSiteCount() == otherAccount.getVisibleSiteCount()
+               && StringUtils.equals(getFirstName(), otherAccount.getFirstName())
+               && StringUtils.equals(getLastName(), otherAccount.getLastName())
+               && StringUtils.equals(getAboutMe(), otherAccount.getAboutMe())
+               && StringUtils.equals(getDate(), otherAccount.getDate())
+               && StringUtils.equals(getNewEmail(), otherAccount.getNewEmail())
+               && getPendingEmailChange() == otherAccount.getPendingEmailChange()
+               && StringUtils.equals(getWebAddress(), otherAccount.getWebAddress());
     }
 
     public void init() {
