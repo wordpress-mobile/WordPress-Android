@@ -137,7 +137,7 @@ public class PlanPostPurchaseFragment extends Fragment {
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_VIDEO:
                 // TODO: Stores: used null site here
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), null, false);
+                ActivityLauncher.addNewPostOrPageForResult(getActivity(), null, false);
                 break;
         }
 

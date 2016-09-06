@@ -74,6 +74,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
+import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
@@ -126,6 +128,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -135,9 +139,8 @@ import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
-    public static final String EXTRA_POSTID = "postId";
+    public static final String EXTRA_POST = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
-    public static final String EXTRA_IS_NEW_POST = "isNewPost";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
@@ -203,6 +206,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+    private CountDownLatch mNewPostLatch;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -233,6 +237,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -255,7 +260,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
-            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
+            if (!getIntent().hasExtra(EXTRA_POST)
+                    ||Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_GALLERY.equals(action)
                     || NEW_MEDIA_POST.equals(action)
                     || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
@@ -275,16 +281,32 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     mSite = site;
                 }
 
-                // Create a new post for share intents and QuickPress
-                // TODO: Implement
+                mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = true;
+                mNewPostLatch = new CountDownLatch(1);
+
+                // Create a new post
+                List<Long> categories = new ArrayList<>();
+                // TODO: Use TaxonomyStore in SiteSettingsInterface and get default category remote id
+                String postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
+                InstantiatePostPayload payload = new InstantiatePostPayload(mSite, mIsPage, categories, postFormat);
+                mDispatcher.dispatch(PostActionBuilder.newInstantiatePostAction(payload));
+
+                // Wait for the OnPostInstantiated event to initialize the post
+                try {
+                    mNewPostLatch.await(1000, TimeUnit.MILLISECONDS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (mPost == null) {
+                    throw new RuntimeException("No callback received from INSTANTIATE_POST action");
+                }
             } else if (extras != null) {
                 // Load post from the postId passed in extras
-                long localPostId = extras.getLong(EXTRA_POSTID, -1);
-                mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
-                mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
-                mPost = mPostStore.getPostByLocalPostId(localPostId);
-                mOriginalPost = mPostStore.getPostByLocalPostId(localPostId);
+                mPost = (PostModel) extras.getSerializable(EXTRA_POST);
+                mOriginalPost = (PostModel) extras.getSerializable(EXTRA_POST);
+                mIsPage = mPost.isPage();
             } else {
                 // A postId extra must be passed to this activity
                 showErrorAndFinish(R.string.post_not_found);
@@ -425,6 +447,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     protected void onDestroy() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+        mDispatcher.unregister(this);
         super.onDestroy();
     }
 
@@ -2194,5 +2217,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
                 break;
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void onPostInstantiated(OnPostInstantiated event) {
+        mPost = event.post;
+        mNewPostLatch.countDown();
     }
 }

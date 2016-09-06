@@ -213,7 +213,7 @@ public class PostsListFragment extends Fragment
 
     private void newPost() {
         if (!isAdded()) return;
-        ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mSite, mIsPage);
+        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage);
     }
 
     public void onResume() {
@@ -411,8 +411,7 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
-                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), mSite, post.getId(),
-                        mIsPage);
+                ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_PUBLISH:
                 publishPost(post);
