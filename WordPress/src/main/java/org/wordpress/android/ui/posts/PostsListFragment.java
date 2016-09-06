@@ -515,8 +515,12 @@ public class PostsListFragment extends Fragment
                 // https://code.google.com/p/android/issues/detail?id=190529
                 mTrashedPosts.remove(post);
 
-                RemotePostPayload payload = new RemotePostPayload(post, mSite);
-                mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload));
+                if (post.isLocalDraft()) {
+                    mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(post));
+                } else {
+                    RemotePostPayload payload = new RemotePostPayload(post, mSite);
+                    mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload));
+                }
             }
         });
 
