@@ -44,11 +44,11 @@ public class MediaUtils {
     /**
      * Creates a {@link MediaModel} list from a WP.com REST response to a request for all media.
      */
-    public static List<MediaModel> mediaListFromRestResponse(MultipleMediaResponse from) {
+    public static List<MediaModel> mediaListFromRestResponse(MultipleMediaResponse from, long siteId) {
         if (from == null || from.media == null) return null;
         List<MediaModel> media = new ArrayList<>();
         for (int i = 0; i < from.media.size(); ++i) {
-            media.add(i, mediaFromRestResponse(from.media.get(i)));
+            media.add(i, mediaFromRestResponse(from.media.get(i), siteId));
         }
         return media;
     }
@@ -56,8 +56,9 @@ public class MediaUtils {
     /**
      * Creates a {@link MediaModel} from a WP.com REST response to a fetch request.
      */
-    public static MediaModel mediaFromRestResponse(MediaWPComRestResponse from) {
+    public static MediaModel mediaFromRestResponse(MediaWPComRestResponse from, long siteId) {
         MediaModel media = new MediaModel();
+        media.setSiteId(siteId);
         media.setMediaId(from.ID);
         media.setUploadDate(from.date);
         media.setPostId(from.post_ID);
@@ -88,7 +89,8 @@ public class MediaUtils {
      *
      * ref https://developer.wordpress.com/docs/api/1.1/post/sites/%24site/media/new/
      */
-    public static @NonNull Map<String, String> getMediaRestParams(@NonNull MediaModel media) {
+    @NonNull
+    public static Map<String, String> getMediaRestParams(@NonNull MediaModel media) {
         final Map<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(media.getTitle())) {
             params.put(MEDIA_TITLE_KEY, media.getTitle());
@@ -164,10 +166,10 @@ public class MediaUtils {
     }
 
     public static boolean isSupportedMimeType(String type) {
-        return isSupportedImageMimeType(type) ||
-                isSupportedVideoMimeType(type) ||
-                isSupportedAudioMimeType(type) ||
-                isSupportedApplicationMimeType(type);
+        return isSupportedImageMimeType(type)
+                || isSupportedVideoMimeType(type)
+                || isSupportedAudioMimeType(type)
+                || isSupportedApplicationMimeType(type);
     }
 
     public static String getMimeTypeForExtension(String extension) {

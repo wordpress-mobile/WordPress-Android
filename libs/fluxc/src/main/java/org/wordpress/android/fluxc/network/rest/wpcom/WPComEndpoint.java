@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom;
 
+@SuppressWarnings("unused")
 public class WPComEndpoint {
     private static final String WPCOM_REST_PREFIX = "https://public-api.wordpress.com/rest";
     private static final String WPCOM_PREFIX_V1 = WPCOM_REST_PREFIX + "/v1";

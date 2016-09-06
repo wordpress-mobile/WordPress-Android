@@ -263,7 +263,7 @@ public class MediaStoreTest {
         final MediaModel localMedia = getBasicMedia();
         localMedia.setSiteId(testSiteId);
         localMedia.setMediaId(localMediaId);
-        localMedia.setUploadState(MediaModel.UPLOAD_STATE.UPLOADING.toString());
+        localMedia.setUploadState(MediaModel.UploadState.UPLOADING.toString());
         insertMediaIntoDatabase(localMedia);
 
         // add remote media
@@ -271,7 +271,7 @@ public class MediaStoreTest {
         remoteMedia.setSiteId(testSiteId);
         remoteMedia.setMediaId(remoteMediaId);
         // remote media has a defined upload date, simulated here
-        remoteMedia.setUploadState(MediaModel.UPLOAD_STATE.UPLOADED.toString());
+        remoteMedia.setUploadState(MediaModel.UploadState.UPLOADED.toString());
         insertMediaIntoDatabase(remoteMedia);
 
         assertEquals(2, mMediaStore.getSiteMediaCount(testSiteId));
@@ -393,9 +393,9 @@ public class MediaStoreTest {
         final List<MediaModel> pendingDelete = generateRandomizedMediaList(count, testSiteId);
         final List<MediaModel> other = generateRandomizedMediaList(count, testSiteId);
         for (int i = 0; i < count; ++i) {
-            pendingDelete.get(i).setUploadState(MediaModel.UPLOAD_STATE.DELETE.toString());
+            pendingDelete.get(i).setUploadState(MediaModel.UploadState.DELETE.toString());
             pendingDelete.get(i).setMediaId(i + (count * 2));
-            other.get(i).setUploadState(MediaModel.UPLOAD_STATE.UPLOADED.toString());
+            other.get(i).setUploadState(MediaModel.UploadState.UPLOADED.toString());
             other.get(i).setMediaId(i + count);
             insertMediaIntoDatabase(pendingDelete.get(i));
             insertMediaIntoDatabase(other.get(i));
@@ -407,7 +407,7 @@ public class MediaStoreTest {
         for (int i = 0; i < count; ++i) {
             MediaModel next = mMediaStore.getNextSiteMediaToDelete(testSiteId);
             assertNotNull(next);
-            assertEquals(MediaModel.UPLOAD_STATE.DELETE.toString(), next.getUploadState());
+            assertEquals(MediaModel.UploadState.DELETE.toString(), next.getUploadState());
             assertTrue(pendingDelete.contains(next));
             MediaSqlUtils.deleteMedia(next);
             assertEquals(count * 2 - i - 1, mMediaStore.getSiteMediaCount(testSiteId));
@@ -424,9 +424,9 @@ public class MediaStoreTest {
         final List<MediaModel> pendingDelete = generateRandomizedMediaList(count, testSiteId);
         final List<MediaModel> other = generateRandomizedMediaList(count, testSiteId);
         for (int i = 0; i < count; ++i) {
-            pendingDelete.get(i).setUploadState(MediaModel.UPLOAD_STATE.DELETE.toString());
+            pendingDelete.get(i).setUploadState(MediaModel.UploadState.DELETE.toString());
             pendingDelete.get(i).setMediaId(i + (count * 2));
-            other.get(i).setUploadState(MediaModel.UPLOAD_STATE.DELETED.toString());
+            other.get(i).setUploadState(MediaModel.UploadState.DELETED.toString());
             other.get(i).setMediaId(i + count);
             insertMediaIntoDatabase(pendingDelete.get(i));
             insertMediaIntoDatabase(other.get(i));

@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.utils.DateTimeUtils;
 
 import java.util.Date;
+import java.util.List;
 
 public enum PostStatus {
     UNKNOWN,
@@ -12,9 +13,9 @@ public enum PostStatus {
     PRIVATE,
     PENDING,
     TRASHED,
-    SCHEDULED; //NOTE: Only used locally, WP has a 'future' status but it is not returned from the metaWeblog API
+    SCHEDULED; // NOTE: Only recognized for .com REST posts - XML-RPC returns scheduled posts with status 'publish'
 
-    private synchronized static PostStatus fromStringAndDateGMT(String value, long dateCreatedGMT) {
+    private static synchronized PostStatus fromStringAndDateGMT(String value, long dateCreatedGMT) {
         if (value == null) {
             return UNKNOWN;
         } else if (value.equals("publish")) {
@@ -40,7 +41,7 @@ public enum PostStatus {
         }
     }
 
-    public synchronized static PostStatus fromPost(PostModel post) {
+    public static synchronized PostStatus fromPost(PostModel post) {
         String value = post.getStatus();
         long dateCreatedGMT = 0;
         if (post.getDateCreated() != null) {
@@ -69,5 +70,21 @@ public enum PostStatus {
             default:
                 return "";
         }
+    }
+
+    public static String postStatusListToString(List<PostStatus> statusList) {
+        String statusString = "";
+        boolean firstTime = true;
+
+        for (PostStatus postStatus : statusList) {
+            if (firstTime) {
+                firstTime = false;
+            } else {
+                statusString += ",";
+            }
+            statusString += postStatus.toString();
+        }
+
+        return statusString;
     }
 }

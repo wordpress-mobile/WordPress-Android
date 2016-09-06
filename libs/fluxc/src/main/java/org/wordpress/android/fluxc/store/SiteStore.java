@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
+import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
@@ -157,16 +158,18 @@ public class SiteStore extends Store {
     }
 
     public enum SiteVisibility {
-        PRIVATE (-1),
-        BLOCK_SEARCH_ENGINE (0),
-        PUBLIC (1);
+        PRIVATE(-1),
+        BLOCK_SEARCH_ENGINE(0),
+        PUBLIC(1);
 
-        private final int value;
+        private final int mValue;
+
         SiteVisibility(int value) {
-            this.value = value;
+            this.mValue = value;
         }
+
         public int value() {
-            return value;
+            return mValue;
         }
     }
 
@@ -234,57 +237,59 @@ public class SiteStore extends Store {
     /**
      * Returns all .COM sites in the store.
      */
-    public List<SiteModel> getDotComSites() {
+    public List<SiteModel> getWPComSites() {
         return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, true);
     }
 
     /**
      * Returns the number of .COM sites in the store.
      */
-    public int getDotComSitesCount() {
+    public int getWPComSitesCount() {
         return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, true);
     }
 
     /**
      * Returns sites with a name or url matching the search string.
      */
-    public @NonNull List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
+    @NonNull
+    public List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
         return SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(SiteModelTable.IS_WPCOM, true, searchString);
     }
 
     /**
      * Returns .COM sites with a name or url matching the search string.
      */
-    public @NonNull List<SiteModel> getDotComSiteByNameOrUrlMatching(@NonNull String searchString) {
+    @NonNull
+    public List<SiteModel> getWPComSiteByNameOrUrlMatching(@NonNull String searchString) {
         return SiteSqlUtils.getAllSitesMatchingUrlOrName(searchString);
     }
 
     /**
      * Checks whether the store contains at least one .COM site.
      */
-    public boolean hasDotComSite() {
-        return getDotComSitesCount() != 0;
+    public boolean hasWPComSite() {
+        return getWPComSitesCount() != 0;
     }
 
     /**
      * Returns all self-hosted sites in the store.
      */
-    public List<SiteModel> getDotOrgSites() {
+    public List<SiteModel> getSelfHostedSites() {
         return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, false);
     }
 
     /**
      * Returns the number of self-hosted sites (can be Jetpack) in the store.
      */
-    public int getDotOrgSitesCount() {
+    public int getSelfHostedSitesCount() {
         return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, false);
     }
 
     /**
      * Checks whether the store contains at least one self-hosted site (can be Jetpack).
      */
-    public boolean hasDotOrgSite() {
-        return getDotOrgSitesCount() != 0;
+    public boolean hasSelfHostedSite() {
+        return getSelfHostedSitesCount() != 0;
     }
 
     /**
@@ -311,10 +316,10 @@ public class SiteStore extends Store {
     /**
      * Checks whether the store contains a self-hosted site matching the given (remote) site id and XML-RPC URL.
      */
-    public boolean hasDotOrgSiteWithSiteIdAndXmlRpcUrl(long dotOrgSiteId, String xmlRpcUrl) {
+    public boolean hasSelfHostedSiteWithSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.DOT_ORG_SITE_ID, dotOrgSiteId)
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
                 .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
@@ -337,7 +342,7 @@ public class SiteStore extends Store {
     /**
      * Returns all visible .COM sites as {@link SiteModel}s.
      */
-    public List<SiteModel> getVisibleDotComSites() {
+    public List<SiteModel> getVisibleWPComSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
@@ -349,14 +354,14 @@ public class SiteStore extends Store {
     /**
      * Returns the number of visible .COM sites.
      */
-    public int getVisibleDotComSitesCount() {
-        return getVisibleDotComSites().size();
+    public int getVisibleWPComSitesCount() {
+        return getVisibleWPComSites().size();
     }
 
     /**
      * Checks whether the .COM site with the given (local) id is visible.
      */
-    public boolean isDotComSiteVisibleByLocalId(int id) {
+    public boolean isWPComSiteVisibleByLocalId(int id) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.ID, id)
@@ -374,7 +379,7 @@ public class SiteStore extends Store {
                 .where().beginGroup().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
                 .or()
-                .equals(SiteModelTable.DOT_ORG_SITE_ID, siteId)
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
                 .endGroup()
                 .equals(SiteModelTable.IS_ADMIN, true)
                 .endGroup().endWhere()
@@ -389,7 +394,7 @@ public class SiteStore extends Store {
                 .where().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
                 .or()
-                .equals(SiteModelTable.DOT_ORG_SITE_ID, siteId)
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
                 .endGroup().endWhere()
                 .getAsModel(new SelectMapper<SiteModel>() {
                     @Override
@@ -408,10 +413,10 @@ public class SiteStore extends Store {
     /**
      * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
      */
-    public int getLocalIdForDotOrgSiteIdAndXmlRpcUrl(long dotOrgSiteId, String xmlRpcUrl) {
+    public int getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
         List<SiteModel> sites =  WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.DOT_ORG_SITE_ID, dotOrgSiteId)
+                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
                 .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
                 .endGroup().endWhere()
                 .getAsModel(new SelectMapper<SiteModel>() {
@@ -442,7 +447,8 @@ public class SiteStore extends Store {
                     public SiteModel convert(Cursor cursor) {
                         SiteModel siteModel = new SiteModel();
                         siteModel.setSiteId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)));
-                        siteModel.setDotOrgSiteId(cursor.getLong(cursor.getColumnIndex(SiteModelTable.DOT_ORG_SITE_ID)));
+                        siteModel.setSelfHostedSiteId(cursor.getLong(
+                                cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)));
                         return siteModel;
                     }
                 });
@@ -453,7 +459,7 @@ public class SiteStore extends Store {
         if (result.get(0).getSiteId() > 0) {
             return result.get(0).getSiteId();
         } else {
-            return result.get(0).getDotOrgSiteId();
+            return result.get(0).getSelfHostedSiteId();
         }
     }
 
@@ -461,7 +467,7 @@ public class SiteStore extends Store {
      * Given a (remote) site id, returns true if the given site is WP.com or Jetpack-enabled
      * (returns false for non-Jetpack self-hosted sites).
      */
-    public boolean hasDotComOrJetpackSiteWithSiteId(long siteId) {
+    public boolean hasWPComOrJetpackSiteWithSiteId(long siteId) {
         int localId = getLocalIdForRemoteSiteId(siteId);
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
@@ -497,55 +503,93 @@ public class SiteStore extends Store {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
-        org.wordpress.android.fluxc.annotations.action.IAction actionType = action.getType();
-        if (actionType == SiteAction.UPDATE_SITE) {
-            updateSite((SiteModel) action.getPayload());
-        } else if (actionType == SiteAction.UPDATE_SITES) {
-            updateSites((SitesModel) action.getPayload());
-        } else if (actionType == SiteAction.FETCH_SITES) {
-            mSiteRestClient.pullSites();
-        } else if (actionType == SiteAction.FETCH_SITES_XML_RPC) {
-            RefreshSitesXMLRPCPayload payload = (RefreshSitesXMLRPCPayload) action.getPayload();
-            mSiteXMLRPCClient.pullSites(payload.url, payload.username, payload.password);
-        } else if (actionType == SiteAction.FETCH_SITE) {
-            SiteModel site = (SiteModel) action.getPayload();
-            if (site.isWPCom()) {
-                mSiteRestClient.pullSite(site);
-            } else {
-                mSiteXMLRPCClient.pullSite(site);
-            }
-        } else if (actionType == SiteAction.REMOVE_SITE) {
-            int rowsAffected = SiteSqlUtils.deleteSite((SiteModel) action.getPayload());
-            // TODO: This should be captured by 'QuickPressShortcutsStore' so it can handle deleting any QP shortcuts
-            // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
-            // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
-            emitChange(new OnSiteRemoved(rowsAffected));
-        } else if (actionType == SiteAction.REMOVE_WPCOM_SITES) {
-            // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were pulled over the WP.com
-            // REST API only (they don't have a .org site id)
-            List<SiteModel> wpcomSites = SiteSqlUtils.getAllWPComSites();
-            int rowsAffected = removeSites(wpcomSites);
-            // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
-            emitChange(new OnSiteRemoved(rowsAffected));
-        } else if (actionType == SiteAction.SHOW_SITES) {
-            toggleSitesVisibility((SitesModel) action.getPayload(), true);
-        } else if (actionType == SiteAction.HIDE_SITES) {
-            toggleSitesVisibility((SitesModel) action.getPayload(), false);
-        } else if (actionType == SiteAction.CREATE_NEW_SITE) {
-            NewSitePayload payload = (NewSitePayload) action.getPayload();
-            mSiteRestClient.newSite(payload.siteName, payload.siteTitle, payload.language, payload.visibility,
-                    payload.dryRun);
-        } else if (actionType == SiteAction.CREATED_NEW_SITE) {
-            NewSiteResponsePayload payload = (NewSiteResponsePayload) action.getPayload();
-            OnNewSiteCreated onNewSiteCreated = new OnNewSiteCreated();
-            onNewSiteCreated.error = payload.error;
-            onNewSiteCreated.dryRun = payload.dryRun;
-            emitChange(onNewSiteCreated);
-        } else if (actionType == SiteAction.FETCH_POST_FORMATS) {
-            fetchPostFormats((SiteModel) action.getPayload());
-        } else if (actionType == SiteAction.FETCHED_POST_FORMATS) {
-            updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
+        IAction actionType = action.getType();
+        if (!(actionType instanceof SiteAction)) {
+            return;
         }
+
+        switch ((SiteAction) actionType) {
+            case FETCH_SITE:
+                fetchSite((SiteModel) action.getPayload());
+                break;
+            case FETCH_SITES:
+                mSiteRestClient.pullSites();
+                break;
+            case FETCH_SITES_XML_RPC:
+                fetchSitesXmlRpc((RefreshSitesXMLRPCPayload) action.getPayload());
+                break;
+            case UPDATE_SITE:
+                updateSite((SiteModel) action.getPayload());
+                break;
+            case UPDATE_SITES:
+                updateSites((SitesModel) action.getPayload());
+                break;
+            case REMOVE_SITE:
+                removeSite((SiteModel) action.getPayload());
+                break;
+            case REMOVE_WPCOM_SITES:
+                removeWPComSites();
+                break;
+            case SHOW_SITES:
+                toggleSitesVisibility((SitesModel) action.getPayload(), true);
+                break;
+            case HIDE_SITES:
+                toggleSitesVisibility((SitesModel) action.getPayload(), false);
+                break;
+            case CREATE_NEW_SITE:
+                createNewSite((NewSitePayload) action.getPayload());
+                break;
+            case CREATED_NEW_SITE:
+                handleCreateNewSiteCompleted((NewSiteResponsePayload) action.getPayload());
+                break;
+            case FETCH_POST_FORMATS:
+                fetchPostFormats((SiteModel) action.getPayload());
+                break;
+            case FETCHED_POST_FORMATS:
+                updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
+                break;
+        }
+    }
+
+    private void removeSite(SiteModel site) {
+        int rowsAffected = SiteSqlUtils.deleteSite(site);
+        // TODO: This should be captured by 'QuickPressShortcutsStore' so it can handle deleting any QP shortcuts
+        // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
+        // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
+        emitChange(new OnSiteRemoved(rowsAffected));
+    }
+
+    private void removeWPComSites() {
+        // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were pulled over the WP.com
+        // REST API only (they don't have a .org site id)
+        List<SiteModel> wpcomSites = SiteSqlUtils.getAllWPComSites();
+        int rowsAffected = removeSites(wpcomSites);
+        // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
+        emitChange(new OnSiteRemoved(rowsAffected));
+    }
+
+    private void createNewSite(NewSitePayload payload) {
+        mSiteRestClient.newSite(payload.siteName, payload.siteTitle, payload.language, payload.visibility,
+                payload.dryRun);
+    }
+
+    private void handleCreateNewSiteCompleted(NewSiteResponsePayload payload) {
+        OnNewSiteCreated onNewSiteCreated = new OnNewSiteCreated();
+        onNewSiteCreated.error = payload.error;
+        onNewSiteCreated.dryRun = payload.dryRun;
+        emitChange(onNewSiteCreated);
+    }
+
+    private void fetchSite(SiteModel site) {
+        if (site.isWPCom()) {
+            mSiteRestClient.pullSite(site);
+        } else {
+            mSiteXMLRPCClient.pullSite(site);
+        }
+    }
+
+    private void fetchSitesXmlRpc(RefreshSitesXMLRPCPayload payload) {
+        mSiteXMLRPCClient.pullSites(payload.url, payload.username, payload.password);
     }
 
     private void fetchPostFormats(SiteModel site) {
