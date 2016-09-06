@@ -60,7 +60,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(username);
         params.add(password);
         final XMLRPCRequest request = new XMLRPCRequest(
-                xmlrpcUrl, XMLRPC.GET_USERS_BLOGS, params,
+                xmlrpcUrl, XMLRPC.GET_USERS_SITES, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
