@@ -19,16 +19,16 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
     @Column private long mRemotePostId;
 
     // Author
-    @Column private String authorUrl;
-    @Column private String authorName;
-    @Column private String authorEmail;
-    @Column private String authorProfileImageUrl;
+    @Column private String mAuthorUrl;
+    @Column private String mAuthorName;
+    @Column private String mAuthorEmail;
+    @Column private String mAuthorProfileImageUrl;
 
     //
-    @Column private String postTitle;
-    @Column private String status; // FIXME: Replace with enum
-    @Column private String datePublished;
-    @Column private String comment;
+    @Column private String mPostTitle;
+    @Column private String mStatus; // FIXME: Replace with enum
+    @Column private String mDatePublished;
+    @Column private String mComment;
 
     @Override
     public int getId() {
@@ -65,66 +65,66 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
     }
 
     public String getAuthorUrl() {
-        return authorUrl;
+        return mAuthorUrl;
     }
 
     public void setAuthorUrl(String authorUrl) {
-        this.authorUrl = authorUrl;
+        this.mAuthorUrl = authorUrl;
     }
 
     public String getAuthorName() {
-        return authorName;
+        return mAuthorName;
     }
 
     public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+        this.mAuthorName = authorName;
     }
 
     public String getAuthorEmail() {
-        return authorEmail;
+        return mAuthorEmail;
     }
 
     public void setAuthorEmail(String authorEmail) {
-        this.authorEmail = authorEmail;
+        this.mAuthorEmail = authorEmail;
     }
 
     public String getAuthorProfileImageUrl() {
-        return authorProfileImageUrl;
+        return mAuthorProfileImageUrl;
     }
 
     public void setAuthorProfileImageUrl(String authorProfileImageUrl) {
-        this.authorProfileImageUrl = authorProfileImageUrl;
+        this.mAuthorProfileImageUrl = authorProfileImageUrl;
     }
 
     public String getPostTitle() {
-        return postTitle;
+        return mPostTitle;
     }
 
     public void setPostTitle(String postTitle) {
-        this.postTitle = postTitle;
+        this.mPostTitle = postTitle;
     }
 
     public String getStatus() {
-        return status;
+        return mStatus;
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.mStatus = status;
     }
 
     public String getDatePublished() {
-        return datePublished;
+        return mDatePublished;
     }
 
     public void setDatePublished(String datePublished) {
-        this.datePublished = datePublished;
+        this.mDatePublished = datePublished;
     }
 
     public String getComment() {
-        return comment;
+        return mComment;
     }
 
     public void setComment(String comment) {
-        this.comment = comment;
+        this.mComment = comment;
     }
 }
