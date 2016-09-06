@@ -67,6 +67,9 @@ public class ReaderPost {
     public boolean isVideoPress;
     public boolean isJetpack;
 
+    // not recorded in the db - used to determine if this post has already been shown in a stream
+    public boolean isRendered;
+
     private String attachmentsJson;
     private String discoverJson;
     private String format;
@@ -615,8 +618,8 @@ public class ReaderPost {
     public String getRailcarJson() {
         return StringUtils.notNullStr(railcarJson);
     }
-    public void setRailcarJson(String data) {
-        this.railcarJson = StringUtils.notNullStr(railcarJson);
+    public void setRailcarJson(String jsonRailcar) {
+        this.railcarJson = StringUtils.notNullStr(jsonRailcar);
     }
     public boolean hasRailcar() {
         return !TextUtils.isEmpty(railcarJson);

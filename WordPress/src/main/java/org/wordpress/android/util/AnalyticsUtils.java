@@ -3,6 +3,7 @@ package org.wordpress.android.util;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -190,21 +191,33 @@ public class AnalyticsUtils {
         properties.put(FEED_ITEM_ID_KEY, post.feedItemId);
         properties.put(IS_JETPACK_KEY, post.isJetpack);
 
-        // add the TrainTracks railcar if it exists and this is a train tracks event - this simply
-        // writes the railcar json to the properties using the existing json key names
-        if (post.hasRailcar()
-                && (stat == AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT || stat == AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER)) {
-            try {
-                JSONObject jsonRailcar = new JSONObject(post.getRailcarJson());
-                Iterator<String> iter = jsonRailcar.keys();
-                while (iter.hasNext()) {
-                    String key = iter.next();
-                    Object value = jsonRailcar.get(key);
-                    properties.put(key, value);
-                }
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.READER, e);
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
+     * Bump Analytics for a railcar - used with the TRAIN_TRACKS_RENDER and TRAIN_TRACKS_INTERACT
+     * events
+     *
+     * @param stat The Stat to bump
+     * @param post The JSON string of the railcar
+     *
+     */
+    public static void trackWithRailcar(AnalyticsTracker.Stat stat, String railcarJson) {
+        if (TextUtils.isEmpty(railcarJson)) return;
+
+        Map<String, Object> properties = new HashMap<>();
+
+        // this simply writes the railcar json to the properties using the existing json key names
+        try {
+            JSONObject jsonRailcar = new JSONObject(railcarJson);
+            Iterator<String> iter = jsonRailcar.keys();
+            while (iter.hasNext()) {
+                String key = iter.next();
+                Object value = jsonRailcar.get(key);
+                properties.put(key, value);
             }
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.READER, e);
         }
 
         AnalyticsTracker.track(stat, properties);

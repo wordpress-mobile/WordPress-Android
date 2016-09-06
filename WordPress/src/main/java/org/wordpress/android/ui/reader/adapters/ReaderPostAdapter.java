@@ -456,6 +456,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
 
         checkLoadMore(position);
+
+        // if we haven't already rendered this post and it has a "railcar" attached to it, set it
+        // as rendered and record the TrainTracks render event
+        if (!post.isRendered && post.hasRailcar()) {
+            post.isRendered = true;
+            AnalyticsUtils.trackWithRailcar(AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER, post.getRailcarJson());
+        }
     }
 
     /*
