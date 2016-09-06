@@ -910,7 +910,7 @@ public class ReaderPostDetailFragment extends Fragment
                 imgAvatar.showDefaultGravatarImage();
             }
 
-            String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
+            String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate());
             if (mPost.hasAuthorName()) {
                 txtDateline.setText(mPost.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
             } else if (mPost.hasBlogName()) {
