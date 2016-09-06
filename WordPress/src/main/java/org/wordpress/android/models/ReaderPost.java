@@ -10,7 +10,6 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
@@ -74,6 +73,8 @@ public class ReaderPost {
 
     public long xpostPostId;
     public long xpostBlogId;
+
+    private String railcarJson;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -207,6 +208,12 @@ public class ReaderPost {
         if (!post.hasFeaturedImage() && post.hasText() && post.text.contains("<img")) {
             post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
                     .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+        }
+
+        // "railcar" data - currently used in search streams, used by TrainTracks
+        JSONObject jsonRailcar = json.optJSONObject("railcar");
+        if (jsonRailcar != null) {
+            post.setRailcarJson(jsonRailcar.toString());
         }
 
         return post;
@@ -602,6 +609,17 @@ public class ReaderPost {
      */
     public boolean canLikePost() {
         return (isWP() || isJetpack) && (!isDiscoverPost());
+    }
+
+
+    public String getRailcarJson() {
+        return StringUtils.notNullStr(railcarJson);
+    }
+    public void setRailcarJson(String data) {
+        this.railcarJson = StringUtils.notNullStr(railcarJson);
+    }
+    public boolean hasRailcar() {
+        return !TextUtils.isEmpty(railcarJson);
     }
 
     /****
