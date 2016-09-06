@@ -1,6 +1,8 @@
 package org.wordpress.android.models;
 
 
+import org.wordpress.android.util.StringUtils;
+
 public class AnalyticsRailcar {
 
     private String railcarId;       // a unique ID that we use for matching render and interaction events
@@ -17,7 +19,7 @@ public class AnalyticsRailcar {
     private long feedItemId;        // the feed item id for this result
 
     public String getRailcarId() {
-        return railcarId;
+        return StringUtils.notNullStr(railcarId);
     }
 
     public void setRailcarId(String railcarId) {
@@ -25,7 +27,7 @@ public class AnalyticsRailcar {
     }
 
     public String getFetchAlg() {
-        return fetchAlg;
+        return StringUtils.notNullStr(fetchAlg);
     }
 
     public void setFetchAlg(String fetchAlg) {
@@ -33,7 +35,7 @@ public class AnalyticsRailcar {
     }
 
     public String getFetchLang() {
-        return fetchLang;
+        return StringUtils.notNullStr(fetchLang);
     }
 
     public void setFetchLang(String fetchLang) {
@@ -41,7 +43,7 @@ public class AnalyticsRailcar {
     }
 
     public String getFetchQuery() {
-        return fetchQuery;
+        return StringUtils.notNullStr(fetchQuery);
     }
 
     public void setFetchQuery(String fetchQuery) {
