@@ -21,6 +21,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_OPENED;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER;
 
@@ -157,6 +161,10 @@ public class AnalyticsUtils {
             properties.put(BLOG_ID_KEY, blogID);
         }
         AnalyticsTracker.track(stat, properties);
+
+        if (canTrackRailcarInteract(stat)) {
+
+        }
     }
 
     /**
@@ -197,6 +205,12 @@ public class AnalyticsUtils {
         properties.put(IS_JETPACK_KEY, post.isJetpack);
 
         AnalyticsTracker.track(stat, properties);
+
+        // record a railcar interact event if the post has a railcar and this can be tracked
+        // as an interaction
+        if (canTrackRailcarInteract(stat) && post.hasRailcar()) {
+            trackRailcarInteract(stat, post.getRailcarJson());
+        }
     }
 
     /**
@@ -224,6 +238,17 @@ public class AnalyticsUtils {
         Map<String, Object> properties = railcarJsonToProperties(railcarJson);
         properties.put("action", AnalyticsTrackerNosara.getEventNameForStat(stat));
         AnalyticsTracker.track(TRAIN_TRACKS_INTERACT, properties);
+    }
+
+    /**
+     * @param stat The event that would cause the interaction
+     * @return True if the passed stat event can be recorded as a railcar interact event
+     */
+    private static boolean canTrackRailcarInteract(AnalyticsTracker.Stat stat) {
+        return stat == READER_ARTICLE_LIKED
+                || stat == READER_ARTICLE_OPENED
+                || stat == READER_SEARCH_RESULT_TAPPED
+                || stat == READER_ARTICLE_COMMENTED_ON;
     }
 
     /*
