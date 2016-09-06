@@ -570,6 +570,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case ABTEST_START:
                 eventName = "abtest_start";
                 break;
+            case TRAIN_TRACKS_RENDER:
+                eventName = "traintracks_render";
+                break;
+            case TRAIN_TRACKS_INTERACT:
+                eventName = "traintracks_interact";
+                break;
             default:
                 eventName = null;
                 break;
