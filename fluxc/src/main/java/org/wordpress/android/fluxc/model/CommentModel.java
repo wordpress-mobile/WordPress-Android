@@ -15,8 +15,9 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
     @PrimaryKey
     @Column private int mId;
     @Column private long mRemoteCommentId;
-    @Column private int mLocalPostId;
     @Column private long mRemotePostId;
+    @Column private int mLocalSiteId;
+    @Column private int mRemoteSiteId;
 
     // Author
     @Column private String mAuthorUrl;
@@ -28,7 +29,7 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
     @Column private String mPostTitle;
     @Column private String mStatus; // FIXME: Replace with enum
     @Column private String mDatePublished;
-    @Column private String mComment;
+    @Column private String mContent;
 
     @Override
     public int getId() {
@@ -46,14 +47,6 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
 
     public void setRemoteCommentId(long remoteCommentId) {
         mRemoteCommentId = remoteCommentId;
-    }
-
-    public int getLocalPostId() {
-        return mLocalPostId;
-    }
-
-    public void setLocalPostId(int localPostId) {
-        mLocalPostId = localPostId;
     }
 
     public long getRemotePostId() {
@@ -120,11 +113,27 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
         this.mDatePublished = datePublished;
     }
 
-    public String getComment() {
-        return mComment;
+    public String getContent() {
+        return mContent;
     }
 
-    public void setComment(String comment) {
-        this.mComment = comment;
+    public void setContent(String content) {
+        this.mContent = content;
+    }
+
+    public int getLocalSiteId() {
+        return mLocalSiteId;
+    }
+
+    public void setLocalSiteId(int localSiteId) {
+        mLocalSiteId = localSiteId;
+    }
+
+    public int getRemoteSiteId() {
+        return mRemoteSiteId;
+    }
+
+    public void setRemoteSiteId(int remoteSiteId) {
+        mRemoteSiteId = remoteSiteId;
     }
 }
