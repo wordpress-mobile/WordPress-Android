@@ -14,13 +14,9 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okio.BufferedSink;
 import okio.Okio;
 
-/**
- * A {@link ProgressListener} is required, use {@link MultipartBody} if progress is not needed.
- */
 public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
     private static final MediaType MEDIA_TYPE = MediaType.parse("text/xml; charset=utf-8");
 
@@ -29,15 +25,15 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
      * #PREPEND_XML_FORMAT and #APPEND_XML
      */
     private static final String PREPEND_XML_FORMAT =
-            "<?xml version=\"1.0\"?><methodCall><methodName>wp.uploadFile</methodName><params>" +
-            "<param><value><int>%d</int></value></param>" + // siteId
-            "<param><value><string>%s</string></value></param>" + // username
-            "<param><value><string>%s</string></value></param>" + // password
-            "<param><value><struct>" + // data
-            "<member><name>name</name><value><string>%s</string></value></member>" + // name
-            "<member><name>type</name><value><string>%s</string></value></member>" + // type
-            "<member><name>overwrite</name><value><boolean>1</boolean></value></member>" +
-            "<member><name>bits</name><value><base64>"; // bits
+            "<?xml version=\"1.0\"?><methodCall><methodName>wp.uploadFile</methodName><params>"
+            + "<param><value><int>%d</int></value></param>" // siteId
+            + "<param><value><string>%s</string></value></param>" // username
+            + "<param><value><string>%s</string></value></param>" // password
+            + "<param><value><struct>" // data
+            + "<member><name>name</name><value><string>%s</string></value></member>" // name
+            + "<member><name>type</name><value><string>%s</string></value></member>" // type
+            + "<member><name>overwrite</name><value><boolean>1</boolean></value></member>"
+            + "<member><name>bits</name><value><base64>"; // bits
     private static final String APPEND_XML =
             "</base64></value></member></struct></value></param></params></methodCall>";
 
@@ -53,7 +49,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
         mMediaSize = mediaFile.length();
 
         mPrependString = String.format(Locale.ENGLISH, PREPEND_XML_FORMAT,
-                site.getDotOrgSiteId(), site.getUsername(), site.getPassword(),
+                site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(),
                 media.getFileName(), media.getMimeType());
     }
 
@@ -77,7 +73,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
 
         // write file to xml
         InputStream is = new DataInputStream(new FileInputStream(getMedia().getFilePath()));
-        byte[] buffer = new byte[3600];//you must use a 24bit multiple
+        byte[] buffer = new byte[3600]; // you must use a 24bit multiple
         int length;
         String chunk;
         while ((length = is.read(buffer)) > 0) {

@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.android.volley.Response.Listener;
 
-import org.wordpress.android.fluxc.action.AuthenticationAction;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 

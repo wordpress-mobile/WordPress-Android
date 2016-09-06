@@ -9,8 +9,8 @@ public interface MediaNetworkListener {
     enum MediaNetworkError {
         NONE,
         MEDIA_NOT_FOUND,
-        UNKNOWN;
-        public Exception exception;
+        RESPONSE_PARSE_ERROR,
+        UNKNOWN
     }
 
     /**
@@ -21,7 +21,7 @@ public interface MediaNetworkListener {
     /**
      * Media has been pulled successfully from a remote source.
      */
-    void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia);
+    void onMediaFetched(MediaAction cause, List<MediaModel> fetchedMedia);
 
     /**
      * Media changes have been successfully pushed to remote.
