@@ -1,4 +1,4 @@
-package org.wordpress.android.analytics;
+package org.wordpress.android.models;
 
 
 public class AnalyticsRailcar {

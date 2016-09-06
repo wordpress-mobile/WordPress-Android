@@ -5,10 +5,11 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
-import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.AnalyticsRailcar;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.ReaderPost;
 
@@ -21,6 +22,16 @@ public class AnalyticsUtils {
     private static String FEED_ID_KEY = "feed_id";
     private static String FEED_ITEM_ID_KEY = "feed_item_id";
     private static String IS_JETPACK_KEY = "is_jetpack";
+
+    private static String RAILCAR_ID_KEY = "railcar";
+    private static String RAILCAR_FETCH_ALG_KEY = "fetch_alg";
+    private static String RAILCAR_FETCH_POSITION_KEY = "fetch_position";
+    private static String RAILCAR_FETCH_LANG_KEY = "fetch_lang";
+    private static String RAILCAR_FETCH_QUERY_KEY = "fetch_query_key";
+    private static String RAILCAR_BLOG_ID_KEY = "rec_blog_id";
+    private static String RAILCAR_POST_ID_KEY = "rec_post_id";
+    private static String RAILCAR_FEED_ID_KEY = "rec_feed_id";
+    private static String RAILCAR_FEED_ITEM_ID_KEY = "rec_feed_item_id";
 
     /**
      * Utility method to refresh mixpanel metadata.
@@ -186,6 +197,33 @@ public class AnalyticsUtils {
         properties.put(FEED_ID_KEY, post.feedId);
         properties.put(FEED_ITEM_ID_KEY, post.feedItemId);
         properties.put(IS_JETPACK_KEY, post.isJetpack);
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
+     * Bump Analytics with a TrainTracks railcar
+     *
+     * @param stat The Stat to bump
+     * @param railcar The railcar to track
+     *
+     */
+    public static void trackWithRailcar(AnalyticsTracker.Stat stat, AnalyticsRailcar railcar) {
+        if (railcar == null) return;
+
+        Map<String, Object> properties =  new HashMap<>();
+
+        properties.put(RAILCAR_ID_KEY, railcar.getRailcarId());
+
+        properties.put(RAILCAR_FETCH_ALG_KEY, railcar.getFetchAlg());
+        properties.put(RAILCAR_FETCH_POSITION_KEY, railcar.getFetchPosition());
+        properties.put(RAILCAR_FETCH_LANG_KEY, railcar.getFetchLang());
+        properties.put(RAILCAR_FETCH_QUERY_KEY, railcar.getFetchQuery());
+
+        properties.put(RAILCAR_BLOG_ID_KEY, railcar.getBlogId());
+        properties.put(RAILCAR_POST_ID_KEY, railcar.getPostId());
+        properties.put(RAILCAR_FEED_ID_KEY, railcar.getFeedId());
+        properties.put(RAILCAR_FEED_ITEM_ID_KEY, railcar.getFeedItemId());
+
         AnalyticsTracker.track(stat, properties);
     }
 }
