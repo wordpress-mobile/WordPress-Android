@@ -204,8 +204,8 @@ public class AnalyticsUtils {
 
         // record a railcar interact event if the post has a railcar and this can be tracked
         // as an interaction
-        if (canTrackRailcarInteract(stat) && post.hasRailcar()) {
-            trackRailcarInteract(stat, post.getRailcarJson());
+        if (canTrackRailcarInteraction(stat) && post.hasRailcar()) {
+            trackRailcarInteraction(stat, post.getRailcarJson());
         }
     }
 
@@ -228,7 +228,7 @@ public class AnalyticsUtils {
      * @param post The JSON string of the railcar
      *
      */
-    private static void trackRailcarInteract(AnalyticsTracker.Stat stat, String railcarJson) {
+    private static void trackRailcarInteraction(AnalyticsTracker.Stat stat, String railcarJson) {
         if (TextUtils.isEmpty(railcarJson)) return;
 
         Map<String, Object> properties = railcarJsonToProperties(railcarJson);
@@ -238,9 +238,9 @@ public class AnalyticsUtils {
 
     /**
      * @param stat The event that would cause the interaction
-     * @return True if the passed stat event can be recorded as a railcar interact event
+     * @return True if the passed stat event can be recorded as a railcar interaction
      */
-    private static boolean canTrackRailcarInteract(AnalyticsTracker.Stat stat) {
+    private static boolean canTrackRailcarInteraction(AnalyticsTracker.Stat stat) {
         return stat == READER_ARTICLE_LIKED
                 || stat == READER_ARTICLE_OPENED
                 || stat == READER_SEARCH_RESULT_TAPPED
