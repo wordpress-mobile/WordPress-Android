@@ -232,7 +232,7 @@ public class AnalyticsUtils {
      * @param post The JSON string of the railcar
      *
      */
-    public static void trackRailcarInteract(AnalyticsTracker.Stat stat, String railcarJson) {
+    private static void trackRailcarInteract(AnalyticsTracker.Stat stat, String railcarJson) {
         if (TextUtils.isEmpty(railcarJson)) return;
 
         Map<String, Object> properties = railcarJsonToProperties(railcarJson);
