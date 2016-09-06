@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
-import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -19,9 +19,12 @@ import org.wordpress.android.util.HtmlUtils;
 import java.text.BreakIterator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.wordpress.android.util.StringUtils.notNullStr;
 
 public class PostUtils {
     private static final int MAX_EXCERPT_LEN = 150;
@@ -158,13 +161,6 @@ public class PostUtils {
         );
     }
 
-    // TODO: Delete when PostModel migration is done
-    public static void trackSavePostAnalytics(Post post, SiteModel site) {
-        PostModel postModel = new PostModel();
-        postModel.setStatus(post.getPostStatus());
-        trackSavePostAnalytics(postModel, site);
-    }
-
     public static String getPostListExcerptFromPost(PostModel post) {
         if (StringUtils.isEmpty(post.getExcerpt())) {
             return makeExcerpt(post.getContent());
@@ -224,5 +220,55 @@ public class PostUtils {
         } else {
             return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateUTCFromIso8601(post.getDateCreated()));
         }
+    }
+
+    public static boolean postListsAreEqual(List<PostModel> lhs, List<PostModel> rhs) {
+        if (lhs == null || rhs == null || lhs.size() != rhs.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < rhs.size(); i++) {
+            PostModel newPost = rhs.get(i);
+            PostModel currentPost = lhs.get(i);
+
+            boolean postsAreEqual = newPost.getRemotePostId() == currentPost.getRemotePostId()
+                    && PostUploadService.isPostUploading(newPost) == PostUploadService.isPostUploading(currentPost)
+                    && newPost.isLocalDraft() == currentPost.isLocalDraft()
+                    && newPost.isLocallyChanged() == currentPost.isLocallyChanged()
+                    && notNullStr(newPost.getTitle()).equals(notNullStr(currentPost.getTitle()))
+                    && notNullStr(newPost.getContent()).equals(notNullStr(currentPost.getContent()))
+                    && notNullStr(newPost.getDateCreated()).equals(notNullStr(currentPost.getDateCreated()))
+                    && notNullStr(newPost.getStatus()).equals(notNullStr(currentPost.getStatus()));
+
+            if (!postsAreEqual) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static int indexOfPostInList(final PostModel post, final List<PostModel> posts) {
+        if (post == null) {
+            return -1;
+        }
+        for (int i = 0; i < posts.size(); i++) {
+            if (posts.get(i).getId() == post.getId() &&
+                    posts.get(i).getLocalSiteId() == post.getLocalSiteId()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int indexOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
+        if (mediaId == 0) {
+            return -1;
+        }
+        for (int i = 0; i < posts.size(); i++) {
+            if (posts.get(i).getFeaturedImageId() == mediaId) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
