@@ -72,7 +72,7 @@ public class DateTimeUtils {
     }
 
     /**
-     * Converts an ISO 8601 date to a Java date
+     * Given an ISO 8601-formatted date as a String, returns a {@link Date}.
      */
     public static Date dateFromIso8601(final String strDate) {
         try {
@@ -84,7 +84,7 @@ public class DateTimeUtils {
     }
 
     /**
-     * Converts an ISO 8601 date to a Java date
+     * Given an ISO 8601-formatted date as a String, returns a {@link Date} in UTC.
      */
     public static Date dateUTCFromIso8601(String iso8601date) {
         try {
@@ -98,7 +98,7 @@ public class DateTimeUtils {
     }
 
     /**
-     * Converts a Java date to ISO 8601
+     * Given a {@link Date}, returns an ISO 8601-formatted String.
      */
     public static String iso8601FromDate(Date date) {
         if (date == null) {
@@ -109,7 +109,7 @@ public class DateTimeUtils {
     }
 
     /**
-     * Converts a Java date to ISO 8601, in UTC
+     * Given a {@link Date}, returns an ISO 8601-formatted String in UTC.
      */
     public static String iso8601UTCFromDate(Date date) {
         if (date == null) {
@@ -217,20 +217,32 @@ public class DateTimeUtils {
         return (date.getTime());
     }
 
-    public static Date dateFromTimestamp(long timeStamp) {
-        return new java.util.Date(timeStamp * 1000);
+    /**
+     * Given a UNIX timestamp, returns the corresponding {@link Date}.
+     */
+    public static Date dateFromTimestamp(long timestamp) {
+        return new java.util.Date(timestamp * 1000);
     }
 
+    /**
+     * Given a UNIX timestamp, returns an ISO 8601-formatted date as a String.
+     */
     public static String iso8601FromTimestamp(long timestamp) {
         return iso8601FromDate(dateFromTimestamp(timestamp));
     }
 
+    /**
+     * Given a UNIX timestamp, returns an ISO 8601-formatted date in UTC as a String.
+     */
     public static String iso8601UTCFromTimestamp(long timestamp) {
         return iso8601UTCFromDate(dateFromTimestamp(timestamp));
     }
 
-    public static String timeSpanFromIso8601(long timeStamp) {
-        Date dtGmt = dateFromTimestamp(timeStamp);
+    /**
+     * Given a UNIX timestamp, returns a relative time span ("8h", "3d", etc.).
+     */
+    public static String timeSpanFromTimestamp(long timestamp) {
+        Date dtGmt = dateFromTimestamp(timestamp);
         return javaDateToTimeSpan(dtGmt);
     }
 }
