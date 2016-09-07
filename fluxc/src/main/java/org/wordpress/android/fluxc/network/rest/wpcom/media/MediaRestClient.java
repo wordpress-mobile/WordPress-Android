@@ -28,7 +28,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,13 +92,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                    if (error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
-                        AppLog.i(T.MEDIA, "media does not exist, uploading");
-                        notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.MEDIA_NOT_FOUND);
-                    } else {
-                        AppLog.e(T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA error: " + error);
-                        notifyMediaError(MediaAction.PUSH_MEDIA, media, MediaNetworkError.UNKNOWN);
-                    }
+                    AppLog.e(T.MEDIA, "XMLRPC.EDIT_MEDIA error: " + error);
+                    notifyMediaError(MediaAction.PUSH_MEDIA, media, getMediaErrorForBaseError(error));
+                    // TODO: should we upload it for them here if the error is NOT_FOUND?
                 }
             }));
         }
@@ -134,11 +129,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         }
                     }
                 }, new BaseRequest.BaseErrorListener() {
-            @Override
-            public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
-                notifyMediaError(MediaAction.FETCH_ALL_MEDIA, null, MediaNetworkError.UNKNOWN);
-            }
+                    @Override
+                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                        AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
+                        notifyMediaError(MediaAction.FETCH_ALL_MEDIA, null, getMediaErrorForBaseError(error));
+                    }
         }));
     }
 
@@ -165,11 +160,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             }
                         }
                     }, new BaseRequest.BaseErrorListener() {
-                @Override
-                public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                    AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
-                    notifyMediaError(MediaAction.FETCH_MEDIA, media, MediaNetworkError.UNKNOWN);
-                }
+                        @Override
+                        public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                            AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
+                            notifyMediaError(MediaAction.FETCH_MEDIA, media, getMediaErrorForBaseError(error));
+                        }
             }));
         }
     }
@@ -197,16 +192,16 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             }
                         }
                     }, new BaseRequest.BaseErrorListener() {
-                @Override
-                public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                    AppLog.v(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
-                    if (error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
-                        AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
-                        notifyMediaDeleted(MediaAction.DELETE_MEDIA, media);
-                    } else {
-                        notifyMediaError(MediaAction.DELETE_MEDIA, media, MediaNetworkError.UNKNOWN);
-                    }
-                }
+                        @Override
+                        public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                            AppLog.v(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
+                            if (error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
+                                AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
+                                notifyMediaDeleted(MediaAction.DELETE_MEDIA, media);
+                            } else {
+                                notifyMediaError(MediaAction.DELETE_MEDIA, media, getMediaErrorForBaseError(error));
+                            }
+                        }
             }));
         }
     }
@@ -230,7 +225,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                if (response.code() == HttpURLConnection.HTTP_OK) {
+                if (response.isSuccessful()) {
                     AppLog.d(T.MEDIA, "media upload successful: " + response);
                     String jsonBody = response.body().string();
                     MultipleMediaResponse mediaResponse =
@@ -241,7 +236,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
-                    notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkError.UNKNOWN);
+                    notifyMediaError(MediaAction.UPLOAD_MEDIA, null, getMediaErrorForStatusCode(response.code()));
                 }
             }
 
@@ -251,6 +246,30 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 notifyMediaError(MediaAction.UPLOAD_MEDIA, null, MediaNetworkError.UNKNOWN);
             }
         });
+    }
+
+    private MediaNetworkError getMediaErrorForStatusCode(int code) {
+        switch (code) {
+            case 404:
+                return MediaNetworkError.MEDIA_NOT_FOUND;
+            case 403:
+                return MediaNetworkError.UNAUTHORIZED;
+            default:
+                return MediaNetworkError.UNKNOWN;
+        }
+    }
+
+    private MediaNetworkError getMediaErrorForBaseError(BaseRequest.BaseNetworkError baseError) {
+        switch (baseError.type) {
+            case NOT_FOUND:
+                return MediaNetworkError.MEDIA_NOT_FOUND;
+            case AUTHORIZATION_REQUIRED:
+                return MediaNetworkError.UNAUTHORIZED;
+            case PARSE_ERROR:
+                return MediaNetworkError.RESPONSE_PARSE_ERROR;
+            default:
+                return MediaNetworkError.UNKNOWN;
+        }
     }
 
     private void notifyMediaFetched(MediaAction cause, MediaModel media) {
