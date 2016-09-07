@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
@@ -301,10 +302,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 Map<?, ?> customFieldMap = (Map<?, ?>) customField;
                 if (customFieldMap.get("key") != null && customFieldMap.get("value") != null) {
                     if (customFieldMap.get("key").equals("geo_longitude")) {
-                        postLocation.setLongitude(Long.valueOf(customFieldMap.get("value").toString()));
+                        postLocation.setLongitude(XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0));
                     }
                     if (customFieldMap.get("key").equals("geo_latitude")) {
-                        postLocation.setLatitude(Long.valueOf(customFieldMap.get("value").toString()));
+                        postLocation.setLatitude(XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0));
                     }
                 }
             }
