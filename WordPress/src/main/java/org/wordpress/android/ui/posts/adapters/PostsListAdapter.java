@@ -670,17 +670,28 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 tmpPosts = mPostStore.getPostsForSite(mSite);
             }
 
-            // make sure we don't return any hidden posts
+            // Make sure we don't return any hidden posts
             for (PostModel hiddenPost : mHiddenPosts) {
                 tmpPosts.remove(hiddenPost);
             }
 
-            // go no further if existing post list is the same
+            // Go no further if existing post list is the same
             if (PostUtils.postListsAreEqual(mPosts, tmpPosts)) {
-                return false;
+                // Always update the list if there are uploading posts
+                boolean postsAreUploading = false;
+                for (PostModel post : tmpPosts) {
+                    if (PostUploadService.isPostUploading(post)) {
+                        postsAreUploading = true;
+                        break;
+                    }
+                }
+
+                if (!postsAreUploading) {
+                    return false;
+                }
             }
 
-            // generate the featured image url for each post
+            // Generate the featured image url for each post
             String imageUrl;
             for (PostModel post : tmpPosts) {
                 if (post.isLocalDraft()) {
@@ -688,7 +699,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 } else if (post.getFeaturedImageId() != 0) {
                     // TODO: Get url from MediaStore
                     imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mSite.getId(), post.getFeaturedImageId());
-                    // if the imageUrl isn't found it means the featured image info hasn't been added to
+                    // If the imageUrl isn't found it means the featured image info hasn't been added to
                     // the local media library yet, so add to the list of media IDs to request info for
                     if (TextUtils.isEmpty(imageUrl)) {
                         mediaIdsToUpdate.add(post.getFeaturedImageId());
@@ -717,6 +728,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 notifyDataSetChanged();
 
                 if (mediaIdsToUpdate.size() > 0) {
+                    // TODO: MediaStore
                     PostMediaService.startService(WordPress.getContext(), mSite.getId(), mediaIdsToUpdate);
                 }
             }

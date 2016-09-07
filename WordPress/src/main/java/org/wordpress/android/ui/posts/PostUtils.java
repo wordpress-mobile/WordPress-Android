@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
-import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -232,7 +231,6 @@ public class PostUtils {
             PostModel currentPost = lhs.get(i);
 
             boolean postsAreEqual = newPost.getRemotePostId() == currentPost.getRemotePostId()
-                    && PostUploadService.isPostUploading(newPost) == PostUploadService.isPostUploading(currentPost)
                     && newPost.isLocalDraft() == currentPost.isLocalDraft()
                     && newPost.isLocallyChanged() == currentPost.isLocallyChanged()
                     && notNullStr(newPost.getTitle()).equals(notNullStr(currentPost.getTitle()))
