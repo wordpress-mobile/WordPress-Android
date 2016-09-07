@@ -308,7 +308,7 @@ public class MediaStore extends Store implements MediaNetworkListener {
     private void performUploadMedia(UploadMediaPayload payload) {
         if (payload.media == null) {
             // null or empty media list -or- list contains a null value
-            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.UPLOAD_MEDIA, payload.media);
+            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.UPLOAD_MEDIA, (MediaModel) null);
             return;
         } else if (!isWellFormedForUpload(payload.media)) {
             // list contained media items with insufficient data
