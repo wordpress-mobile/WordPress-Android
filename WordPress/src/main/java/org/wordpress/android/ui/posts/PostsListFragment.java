@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -450,9 +451,8 @@ public class PostsListFragment extends Fragment
         // TODO: The status change should happen later, since we're dropping post.setChangedFromDraftToPublished(true)
         post.setStatus(PostStatus.PUBLISHED.toString());
 
-        // TODO: Uploading disabled
-//        PostUploadService.addPostToUpload(post);
-//        getActivity().startService(new Intent(getActivity(), PostUploadService.class));
+        PostUploadService.addPostToUpload(post);
+        getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
         PostUtils.trackSavePostAnalytics(post, mSite);
     }

@@ -90,6 +90,7 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -694,11 +695,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
-                // TODO: Uploading disabled
-//                PostUploadService.addPostToUpload(mPost);
-//                PostUploadService.setLegacyMode(!mShowNewEditor);
-//                startService(new Intent(EditPostActivity.this, PostUploadService.class));
-//                setResult(RESULT_OK);
+                PostUploadService.addPostToUpload(mPost);
+                PostUploadService.setLegacyMode(!mShowNewEditor);
+                startService(new Intent(EditPostActivity.this, PostUploadService.class));
+                setResult(RESULT_OK);
                 finish();
             }
         }).start();

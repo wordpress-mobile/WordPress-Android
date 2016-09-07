@@ -19,18 +19,19 @@ import android.provider.MediaStore.Video;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostLocation;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadEnded;
@@ -48,7 +49,6 @@ import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -60,7 +60,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,14 +73,15 @@ import de.greenrobot.event.EventBus;
 
 public class PostUploadService extends Service {
     private static Context mContext;
-    private static final ArrayList<Post> mPostsList = new ArrayList<Post>();
-    private static Post mCurrentUploadingPost = null;
+    private static final ArrayList<PostModel> mPostsList = new ArrayList<>();
+    private static PostModel mCurrentUploadingPost = null;
     private static boolean mUseLegacyMode;
     private UploadPostTask mCurrentTask = null;
 
+    @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
 
-    public static void addPostToUpload(Post currentPost) {
+    public static void addPostToUpload(PostModel currentPost) {
         synchronized (mPostsList) {
             mPostsList.add(currentPost);
         }
@@ -96,33 +96,14 @@ public class PostUploadService extends Service {
      */
     public static boolean isPostUploading(PostModel post) {
         // first check the currently uploading post
-        if (mCurrentUploadingPost != null && mCurrentUploadingPost.getLocalTablePostId() == post.getId()) {
+        if (mCurrentUploadingPost != null && mCurrentUploadingPost.getId() == post.getId()) {
             return true;
         }
         // then check the list of posts waiting to be uploaded
         if (mPostsList.size() > 0) {
             synchronized (mPostsList) {
-                for (Post queuedPost : mPostsList) {
-                    if (queuedPost.getLocalTablePostId() == post.getId()) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    // TODO: Delete when PostModel migration is done
-    public static boolean isPostUploading(long localPostId) {
-        // first check the currently uploading post
-        if (mCurrentUploadingPost != null && mCurrentUploadingPost.getLocalTablePostId() == localPostId) {
-            return true;
-        }
-        // then check the list of posts waiting to be uploaded
-        if (mPostsList.size() > 0) {
-            synchronized (mPostsList) {
-                for (Post post : mPostsList) {
-                    if (post.getLocalTablePostId() == localPostId) {
+                for (PostModel queuedPost : mPostsList) {
+                    if (queuedPost.getId() == post.getId()) {
                         return true;
                     }
                 }
@@ -140,6 +121,7 @@ public class PostUploadService extends Service {
     public void onCreate() {
         super.onCreate();
         ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
         mContext = this.getApplicationContext();
     }
 
@@ -151,6 +133,7 @@ public class PostUploadService extends Service {
             AppLog.d(T.POSTS, "cancelling current upload task");
             mCurrentTask.cancel(true);
         }
+        mDispatcher.unregister(this);
     }
 
     @Override
@@ -190,8 +173,8 @@ public class PostUploadService extends Service {
         uploadNextPost();
     }
 
-    private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
-        private Post mPost;
+    private class UploadPostTask extends AsyncTask<PostModel, Boolean, Boolean> {
+        private PostModel mPost;
         private SiteModel mSite;
         private PostUploadNotifier mPostUploadNotifier;
 
@@ -212,7 +195,8 @@ public class PostUploadService extends Service {
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
             if (postUploadedSuccessfully) {
-                WordPress.wpDB.deleteMediaFilesForPost(mPost);
+                // TODO: MediaStore?
+                //WordPress.wpDB.deleteMediaFilesForPost(mPost);
                 mPostUploadNotifier.cancelNotification();
                 mPostUploadNotifier.updateNotificationSuccess(mPost, mLatestIcon, mIsFirstPublishing);
             } else {
@@ -220,7 +204,7 @@ public class PostUploadService extends Service {
             }
 
             postUploaded();
-            EventBus.getDefault().post(new PostUploadEnded(postUploadedSuccessfully, mPost.getLocalTableBlogId()));
+            EventBus.getDefault().post(new PostUploadEnded(postUploadedSuccessfully, mPost.getLocalSiteId()));
         }
 
         @Override
@@ -233,7 +217,7 @@ public class PostUploadService extends Service {
         }
 
         @Override
-        protected Boolean doInBackground(Post... posts) {
+        protected Boolean doInBackground(PostModel... posts) {
             mPost = posts[0];
 
             String postTitle = TextUtils.isEmpty(mPost.getTitle()) ? getString(R.string.untitled) : mPost.getTitle();
@@ -244,7 +228,7 @@ public class PostUploadService extends Service {
             );
             mPostUploadNotifier = new PostUploadNotifier(mPost, uploadingPostTitle, uploadingPostMessage);
 
-            mSite = mSiteStore.getSiteByLocalId(mPost.getLocalTableBlogId());
+            mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
             if (mSite == null) {
                 mErrorMessage = mContext.getString(R.string.blog_not_found);
                 return false;
@@ -252,200 +236,38 @@ public class PostUploadService extends Service {
 
             // Create the XML-RPC client
             XMLRPCClientInterface mClient = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
-            if (TextUtils.isEmpty(mPost.getPostStatus())) {
-                mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
+            if (TextUtils.isEmpty(mPost.getStatus())) {
+                mPost.setStatus(PostStatus.PUBLISHED.toString());
             }
 
-            String descriptionContent = processPostMedia(mPost.getDescription());
-
-            String moreContent = "";
-            if (!TextUtils.isEmpty(mPost.getMoreText())) {
-                moreContent = processPostMedia(mPost.getMoreText());
-            }
+            // TODO: Implement
+            // mPost.setContent(processPostMedia(mPost.getContent()));
 
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError) {
                 return false;
             }
 
-            JSONArray categoriesJsonArray = mPost.getJSONCategories();
-            String[] postCategories = null;
-            if (categoriesJsonArray != null) {
-                if (categoriesJsonArray.length() > 0) {
-                    mHasCategory = true;
-                }
-
-                postCategories = new String[categoriesJsonArray.length()];
-                for (int i = 0; i < categoriesJsonArray.length(); i++) {
-                    try {
-                        postCategories[i] = TextUtils.htmlEncode(categoriesJsonArray.getString(i));
-                    } catch (JSONException e) {
-                        AppLog.e(T.POSTS, e);
-                    }
-                }
+            // Support for legacy editor - images are identified as featured as they're being uploaded with the post
+            if (mUseLegacyMode && featuredImageID != -1) {
+                mPost.setFeaturedImageId(featuredImageID);
             }
 
-            Map<String, Object> contentStruct = new HashMap<String, Object>();
+            EventBus.getDefault().post(new PostUploadStarted(mPost.getLocalSiteId()));
 
-            // Post format
-            if (!mPost.isPage()) {
-                if (!TextUtils.isEmpty(mPost.getPostFormat())) {
-                    contentStruct.put("wp_post_format", mPost.getPostFormat());
-                }
+            RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
+            mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
+
+            // TODO: Fix first publish tracking
+            // Check if it's the first publishing before changing post status.
+            mIsFirstPublishing = mPost.isLocalDraft() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED;
+
+            // Track analytics only if the post is newly published
+            if (mIsFirstPublishing) {
+                trackUploadAnalytics();
             }
 
-            contentStruct.put("post_type", (mPost.isPage()) ? "page" : "post");
-            contentStruct.put("title", mPost.getTitle());
-            long pubDate = mPost.getDate_created_gmt();
-            if (pubDate != 0) {
-                Date date_created_gmt = new Date(pubDate);
-                contentStruct.put("date_created_gmt", date_created_gmt);
-                Date dateCreated = new Date(pubDate + (date_created_gmt.getTimezoneOffset() * 60000));
-                contentStruct.put("dateCreated", dateCreated);
-            }
-
-            if (!TextUtils.isEmpty(moreContent)) {
-                descriptionContent = descriptionContent.trim() + "<!--more-->" + moreContent;
-                mPost.setMoreText("");
-            }
-
-            // get rid of the p and br tags that the editor adds.
-            if (mPost.isLocalDraft()) {
-                descriptionContent = descriptionContent.replace("<p>", "").replace("</p>", "\n").replace("<br>", "");
-            }
-
-            // gets rid of the weird character android inserts after images
-            descriptionContent = descriptionContent.replaceAll("\uFFFC", "");
-
-            contentStruct.put("description", descriptionContent);
-            if (!mPost.isPage()) {
-                contentStruct.put("mt_keywords", mPost.getKeywords());
-
-                if (postCategories != null && postCategories.length > 0) {
-                    contentStruct.put("categories", postCategories);
-                }
-            }
-
-            contentStruct.put("mt_excerpt", mPost.getPostExcerpt());
-            contentStruct.put((mPost.isPage()) ? "page_status" : "post_status", mPost.getPostStatus());
-
-            // Geolocation
-            if (mPost.supportsLocation()) {
-                JSONObject remoteGeoLatitude = mPost.getCustomField("geo_latitude");
-                JSONObject remoteGeoLongitude = mPost.getCustomField("geo_longitude");
-                JSONObject remoteGeoPublic = mPost.getCustomField("geo_public");
-
-                Map<Object, Object> hLatitude = new HashMap<Object, Object>();
-                Map<Object, Object> hLongitude = new HashMap<Object, Object>();
-                Map<Object, Object> hPublic = new HashMap<Object, Object>();
-
-                try {
-                    if (remoteGeoLatitude != null) {
-                        hLatitude.put("id", remoteGeoLatitude.getInt("id"));
-                    }
-
-                    if (remoteGeoLongitude != null) {
-                        hLongitude.put("id", remoteGeoLongitude.getInt("id"));
-                    }
-
-                    if (remoteGeoPublic != null) {
-                        hPublic.put("id", remoteGeoPublic.getInt("id"));
-                    }
-
-                    if (mPost.hasLocation()) {
-                        PostLocation location = mPost.getLocation();
-                        hLatitude.put("key", "geo_latitude");
-                        hLongitude.put("key", "geo_longitude");
-                        hPublic.put("key", "geo_public");
-                        hLatitude.put("value", location.getLatitude());
-                        hLongitude.put("value", location.getLongitude());
-                        hPublic.put("value", 1);
-                    }
-                } catch (JSONException e) {
-                    AppLog.e(T.EDITOR, e);
-                }
-
-                if (!hLatitude.isEmpty() && !hLongitude.isEmpty() && !hPublic.isEmpty()) {
-                    Object[] geo = {hLatitude, hLongitude, hPublic};
-                    contentStruct.put("custom_fields", geo);
-                }
-            }
-
-            // Featured images
-            if (mUseLegacyMode) {
-                // Support for legacy editor - images are identified as featured as they're being uploaded with the post
-                if (featuredImageID != -1) {
-                    contentStruct.put("wp_post_thumbnail", featuredImageID);
-                }
-            } else if (mPost.featuredImageHasChanged()) {
-                if (mPost.getFeaturedImageId() < 1 && !mPost.isLocalDraft()) {
-                    // The featured image was removed from a live post
-                    contentStruct.put("wp_post_thumbnail", "");
-                } else {
-                    contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
-                }
-            }
-
-            if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
-                mClient.addQuickPostHeader(mPost.getQuickPostType());
-            }
-
-            contentStruct.put("wp_password", mPost.getPassword());
-
-            Object[] params;
-            if (mPost.isLocalDraft()) {
-                params = new Object[]{
-                        String.valueOf(mSite.getSiteId()),
-                        StringUtils.notNullStr(mSite.getUsername()),
-                        StringUtils.notNullStr(mSite.getPassword()),
-                        contentStruct, false
-                };
-            } else {
-                params = new Object[]{
-                        mPost.getRemotePostId(),
-                        StringUtils.notNullStr(mSite.getUsername()),
-                        StringUtils.notNullStr(mSite.getPassword()),
-                        contentStruct, false};
-            }
-
-            try {
-                EventBus.getDefault().post(new PostUploadStarted(mPost.getLocalTableBlogId()));
-
-                if (mPost.isLocalDraft()) {
-                    Object object = mClient.call("metaWeblog.newPost", params);
-                    if (object instanceof String) {
-                        mPost.setRemotePostId((String) object);
-                    }
-                } else {
-                    mClient.call("metaWeblog.editPost", params);
-                }
-
-                // Check if it's the first publishing before changing post status.
-                mIsFirstPublishing = mPost.hasChangedFromDraftToPublished()
-                        || (mPost.isLocalDraft() && mPost.getStatusEnum() == PostStatus.PUBLISHED);
-
-                mPost.setLocalDraft(false);
-                mPost.setLocalChange(false);
-                WordPress.wpDB.updatePost(mPost);
-
-                // Track analytics only if the post is newly published
-                if (mIsFirstPublishing) {
-                    trackUploadAnalytics();
-                }
-
-                // request the new/updated post from the server to ensure local copy matches server
-                ApiHelper.updateSinglePost(mSite, mPost.getRemotePostId(), mPost.isPage());
-
-                return true;
-            } catch (final XMLRPCException e) {
-                setUploadPostErrorMessage(e);
-            } catch (IOException e) {
-                setUploadPostErrorMessage(e);
-            } catch (XmlPullParserException e) {
-                setUploadPostErrorMessage(e);
-            }
-
-            return false;
+            return true;
         }
 
         private boolean hasGallery() {
@@ -471,7 +293,7 @@ public class PostUploadService extends Service {
             if (mHasCategory) {
                 properties.put("with_categories", true);
             }
-            if (!TextUtils.isEmpty(mPost.getKeywords())) {
+            if (!mPost.getTagIdList().isEmpty()) {
                 properties.put("with_tags", true);
             }
             properties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
@@ -502,7 +324,9 @@ public class PostUploadService extends Service {
                 if (m.find()) {
                     String imageUri = m.group(1);
                     if (!imageUri.equals("")) {
-                        MediaFile mediaFile = WordPress.wpDB.getMediaFile(imageUri, mPost);
+                        // TODO: MediaStore
+                        //MediaFile mediaFile = WordPress.wpDB.getMediaFile(imageUri, mPost);
+                        MediaFile mediaFile = new MediaFile();
                         if (mediaFile != null) {
                             // Get image thumbnail for notification icon
                             Bitmap imageIcon = ImageUtils.getWPImageSpanThumbnailFromFilePath(
@@ -810,7 +634,7 @@ public class PostUploadService extends Service {
         private int mCurrentMediaItem;
         private float mItemProgressSize;
 
-        public PostUploadNotifier(Post post, String title, String message) {
+        public PostUploadNotifier(PostModel post, String title, String message) {
             // add the uploader to the notification bar
             mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                     Context.NOTIFICATION_SERVICE);
@@ -822,7 +646,7 @@ public class PostUploadService extends Service {
             if (message != null) {
                 mNotificationBuilder.setContentText(message);
             }
-            mNotificationId = (new Random()).nextInt() + post.getLocalTableBlogId();
+            mNotificationId = (new Random()).nextInt() + post.getLocalSiteId();
             startForeground(mNotificationId, mNotificationBuilder.build());
         }
 
@@ -837,16 +661,13 @@ public class PostUploadService extends Service {
             mNotificationManager.cancel(mNotificationId);
         }
 
-        public void updateNotificationSuccess(Post post, Bitmap largeIcon, boolean isFirstPublishing) {
+        public void updateNotificationSuccess(PostModel post, Bitmap largeIcon, boolean isFirstPublishing) {
             AppLog.d(T.POSTS, "updateNotificationSuccess");
 
-            // Get the sharableUrl
-            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalTableBlogId());
-            // TODO: Restore
-            //String sharableUrl = WPMeShortlinks.getPostShortlink(site, post);
-            String sharableUrl = "";
-            if (sharableUrl == null && !TextUtils.isEmpty(post.getPermaLink())) {
-                    sharableUrl = post.getPermaLink();
+            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
+            String shareableUrl = WPMeShortlinks.getPostShortlink(site, post);
+            if (shareableUrl == null && !TextUtils.isEmpty(post.getLink())) {
+                    shareableUrl = post.getLink();
             }
 
             // Notification builder
@@ -872,18 +693,18 @@ public class PostUploadService extends Service {
             Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            notificationIntent.putExtra(PostsListActivity.EXTRA_SELECT_SITE_LOCAL_ID, post.getLocalTableBlogId());
+            notificationIntent.putExtra(PostsListActivity.EXTRA_SELECT_SITE_LOCAL_ID, post.getLocalSiteId());
             notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
             PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext, 0,
                     notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             notificationBuilder.setContentIntent(pendingIntentPost);
 
             // Share intent - started if the user tap the share link button - only if the link exist
-            int notificationId = getNotificationIdForPost(post);
-            if (sharableUrl != null && post.getStatusEnum() == PostStatus.PUBLISHED) {
+            long notificationId = getNotificationIdForPost(post);
+            if (shareableUrl != null && PostStatus.fromPost(post) == PostStatus.PUBLISHED) {
                 Intent shareIntent = new Intent(mContext, ShareAndDismissNotificationReceiver.class);
                 shareIntent.putExtra(ShareAndDismissNotificationReceiver.NOTIFICATION_ID_KEY, notificationId);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, sharableUrl);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareableUrl);
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, shareIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
@@ -893,11 +714,11 @@ public class PostUploadService extends Service {
             doNotify(notificationId, notificationBuilder.build());
         }
 
-        private int getNotificationIdForPost(Post post) {
-            int remotePostId = StringUtils.stringToInt(post.getRemotePostId());
+        private long getNotificationIdForPost(PostModel post) {
+            long remotePostId = post.getRemotePostId();
             // We can't use the local table post id here because it can change between first post (local draft) to
             // first edit (post pulled from the server)
-            return post.getLocalTableBlogId() + remotePostId;
+            return post.getLocalSiteId() + remotePostId;
         }
 
         public void updateNotificationError(String mErrorMessage, boolean isMediaError, boolean isPage) {
@@ -950,9 +771,9 @@ public class PostUploadService extends Service {
             doNotify(mNotificationId, mNotificationBuilder.build());
         }
 
-        private synchronized void doNotify(int id, Notification notification) {
+        private synchronized void doNotify(long id, Notification notification) {
             try {
-                mNotificationManager.notify(id, notification);
+                mNotificationManager.notify((int) id, notification);
             } catch (RuntimeException runtimeException) {
                 CrashlyticsUtils.logException(runtimeException, CrashlyticsUtils.ExceptionType.SPECIFIC,
                         AppLog.T.UTILS, "See issue #2858 / #3966");
@@ -975,5 +796,11 @@ public class PostUploadService extends Service {
             mNotificationBuilder.setContentText(String.format(getString(R.string.uploading_total), mCurrentMediaItem,
                     mTotalMediaItems));
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostUploaded(OnPostUploaded event) {
+        // TODO: Implement
     }
 }

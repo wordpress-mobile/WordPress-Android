@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -189,7 +190,7 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         if (mPost == null
                 || mIsUpdatingPost
-                || PostUploadService.isPostUploading(mPost.getId())
+                || PostUploadService.isPostUploading(mPost)
                 || (!mPost.isLocallyChanged() && !mPost.isLocalDraft())
                 && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
             messageView.setVisibility(View.GONE);
@@ -287,9 +288,8 @@ public class PostPreviewActivity extends AppCompatActivity {
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
             }
 
-            // TODO: Uploading disabled
-//            PostUploadService.addPostToUpload(mPost);
-//            startService(new Intent(this, PostUploadService.class));
+            PostUploadService.addPostToUpload(mPost);
+            startService(new Intent(this, PostUploadService.class));
         }
     }
 
