@@ -9,6 +9,7 @@ public interface MediaNetworkListener {
     enum MediaNetworkError {
         NONE,
         MEDIA_NOT_FOUND,
+        UNAUTHORIZED,
         RESPONSE_PARSE_ERROR,
         UNKNOWN
     }
