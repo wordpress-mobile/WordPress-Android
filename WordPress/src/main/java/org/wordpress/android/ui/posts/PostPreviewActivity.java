@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.services.PostEvents;
@@ -300,14 +301,6 @@ public class PostPreviewActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.PostUploadEnded event) {
-        if (event.mLocalBlogId == mSite.getId()) {
-            hideProgress();
-            refreshPreview();
-        }
-    }
-
     private void showProgress() {
         if (!isFinishing()) {
             findViewById(R.id.progress).setVisibility(View.VISIBLE);
@@ -333,6 +326,15 @@ public class PostPreviewActivity extends AppCompatActivity {
                 } else {
                     refreshPreview();
                 }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostUploaded(OnPostUploaded event) {
+        if (event.post.getLocalSiteId() == mSite.getId()) {
+            hideProgress();
+            refreshPreview();
         }
     }
 }

@@ -34,7 +34,6 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.posts.PostsListActivity;
-import org.wordpress.android.ui.posts.services.PostEvents.PostUploadEnded;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -204,7 +203,6 @@ public class PostUploadService extends Service {
             }
 
             postUploaded();
-            EventBus.getDefault().post(new PostUploadEnded(postUploadedSuccessfully, mPost.getLocalSiteId()));
         }
 
         @Override

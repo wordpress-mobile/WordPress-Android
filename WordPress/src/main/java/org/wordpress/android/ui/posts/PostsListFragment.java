@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
@@ -306,16 +307,6 @@ public class PostsListFragment extends Fragment
         }
     }
 
-    /*
-     * upload ended, reload regardless of success/fail so correct status of uploaded post appears
-     */
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.PostUploadEnded event) {
-        if (isAdded() && mSite.getId() == event.mLocalBlogId) {
-            loadPosts();
-        }
-    }
-
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         int stringId;
         switch (emptyViewMessageType) {
@@ -558,6 +549,14 @@ public class PostsListFragment extends Fragment
                     // TODO: Report post deletion error
                 }
                 break;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostUploaded(OnPostUploaded event) {
+        if (isAdded() && event.post.getLocalSiteId() == mSite.getId()) {
+            loadPosts();
         }
     }
 }

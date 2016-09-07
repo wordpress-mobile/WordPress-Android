@@ -12,16 +12,6 @@ public class PostEvents {
         }
     }
 
-    public static class PostUploadEnded {
-        public final int mLocalBlogId;
-        public final boolean mSucceeded;
-
-        PostUploadEnded(boolean succeeded, int localBlogId) {
-            mSucceeded = succeeded;
-            mLocalBlogId = localBlogId;
-        }
-    }
-
     public static class PostMediaInfoUpdated {
         private long mMediaId;
         private String mMediaUrl;
