@@ -302,10 +302,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 Map<?, ?> customFieldMap = (Map<?, ?>) customField;
                 if (customFieldMap.get("key") != null && customFieldMap.get("value") != null) {
                     if (customFieldMap.get("key").equals("geo_longitude")) {
-                        postLocation.setLongitude(XMLRPCUtils.safeGetMapValue(customFieldMap, Double.class, 0.0));
+                        postLocation.setLongitude(XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0));
                     }
                     if (customFieldMap.get("key").equals("geo_latitude")) {
-                        postLocation.setLatitude(XMLRPCUtils.safeGetMapValue(customFieldMap, Double.class, 0.0));
+                        postLocation.setLatitude(XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0));
                     }
                 }
             }
