@@ -206,6 +206,12 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             return;
         }
 
+        if (!MediaUtils.canReadFile(media.getFilePath())) {
+            MediaStore.MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
+            notifyMediaUploaded(media, error);
+            return;
+        }
+
         XmlrpcUploadRequestBody requestBody = new XmlrpcUploadRequestBody(media, this, site);
         HttpUrl url = new HttpUrl.Builder()
                 .scheme(xmlrpcUrl.getProtocol())

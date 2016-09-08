@@ -14,6 +14,7 @@ import org.wordpress.android.util.MapUtils;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -23,6 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 public class MediaUtils {
+    public static boolean canReadFile(String filePath) {
+        File file = new File(filePath);
+        return file.canRead();
+    }
+
     /**
      * Returns the substring of characters that follow the final '.' in the given string.
      */
