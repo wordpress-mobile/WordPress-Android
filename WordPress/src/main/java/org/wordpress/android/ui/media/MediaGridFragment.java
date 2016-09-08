@@ -32,6 +32,7 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
@@ -51,6 +52,8 @@ import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+
+import javax.inject.Inject;
 
 /**
  * The grid displaying the media items.
@@ -72,6 +75,8 @@ public class MediaGridFragment extends Fragment
     private static final String BUNDLE_DATE_FILTER_END_YEAR = "BUNDLE_DATE_FILTER_END_YEAR";
     private static final String BUNDLE_DATE_FILTER_END_MONTH = "BUNDLE_DATE_FILTER_END_MONTH";
     private static final String BUNDLE_DATE_FILTER_END_DAY = "BUNDLE_DATE_FILTER_END_DAY";
+
+    @Inject Dispatcher mDispatcher;
 
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
@@ -157,6 +162,18 @@ public class MediaGridFragment extends Fragment
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
     }
 
     @Override
