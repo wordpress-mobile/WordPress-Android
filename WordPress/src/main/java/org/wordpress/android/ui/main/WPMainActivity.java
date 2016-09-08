@@ -319,6 +319,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         super.onStart();
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
+
+        showAccessTokenMigrationDialogIfNeeded();
     }
 
     @Override
@@ -704,6 +706,19 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
             mSelectedSite = site;
+        }
+    }
+
+    //
+    // Access token migration to AccountStore
+    //
+
+    private void showAccessTokenMigrationDialogIfNeeded() {
+        if (AppPrefs.wasAccessTokenMigrated()) {
+        }
+    }
+
+    private void hideAccessTokenMigrationDialog() {
         }
     }
 }

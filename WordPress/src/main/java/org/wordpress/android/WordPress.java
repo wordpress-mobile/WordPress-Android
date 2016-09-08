@@ -188,6 +188,7 @@ public class WordPress extends MultiDexApplication {
                 .build();
         component().inject(this);
 
+        // Migrate access token AccountStore
         if (mAccountStore.hasAccessToken()) {
             OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
         } else {
@@ -196,6 +197,7 @@ public class WordPress extends MultiDexApplication {
             String migratedToken = WPLegacyMigrationUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
             if (!TextUtils.isEmpty(migratedToken)) {
                 OAuthAuthenticator.sAccessToken = migratedToken;
+                AppPrefs.setAccessTokenMigrated(true);
                 mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
