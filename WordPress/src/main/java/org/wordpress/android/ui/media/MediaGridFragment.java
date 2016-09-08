@@ -714,10 +714,6 @@ public class MediaGridFragment extends Fragment
         mListener.onRetryUpload(mediaId);
     }
 
-    public boolean hasRetrievedAllMediaFromServer() {
-        return mHasRetrievedAllMedia;
-    }
-
     /*
      * called by activity when blog is changed
      */
