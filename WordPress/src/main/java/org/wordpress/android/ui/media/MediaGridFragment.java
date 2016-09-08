@@ -30,12 +30,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
@@ -857,6 +861,30 @@ public class MediaGridFragment extends Fragment
             ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter,
                     callback, mSite);
             getMediaTask.execute();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        if (event.isError()) {
+            // prependToLog("Media error occurred: " + event.error.type);
+            return;
+        }
+
+        switch (event.cause) {
+            case FETCH_ALL_MEDIA:
+                if (event.media != null) {
+                    for (MediaModel media : event.media) {
+                        if (MediaUtils.isImageMimeType(media.getMimeType())) {
+                            // prependToLog("Image(" + media.getMediaId() + ") - " + media.getTitle());
+                        } else if (MediaUtils.isVideoMimeType(media.getMimeType())) {
+                            // prependToLog("Video(" + media.getMediaId() + ") - " + media.getTitle());
+                        } else {
+                            // prependToLog(media.getTitle());
+                        }
+                    }
+                }
+                break;
         }
     }
 }
