@@ -87,6 +87,7 @@ public class MediaStore extends Store {
 
     public enum MediaErrorType {
         // local errors, occur before sending network requests
+        FS_READ_PERMISSION_DENIED,
         NULL_MEDIA_ARG,
         MALFORMED_MEDIA_ARG,
 
