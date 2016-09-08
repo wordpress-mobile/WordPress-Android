@@ -91,8 +91,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                    AppLog.e(T.MEDIA, "XMLRPC.EDIT_MEDIA error: " + error);
-                    MediaError mediaError = new MediaError(getMediaErrorForBaseError(error));
+                    AppLog.e(T.MEDIA, "error editing remote media: " + error);
+                    MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                     notifyMediaPushed(MediaAction.PUSH_MEDIA, site, media, mediaError);
                     // TODO: should we upload it for them here if the error is NOT_FOUND?
                 }
@@ -133,7 +133,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
-                        MediaError mediaError = new MediaError(getMediaErrorForBaseError(error));
+                        MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaFetched(MediaAction.FETCH_ALL_MEDIA, site, (MediaModel) null, mediaError);
                     }
         }));
@@ -165,7 +165,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         @Override
                         public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                             AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
-                            MediaError mediaError = new MediaError(getMediaErrorForBaseError(error));
+                            MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                             notifyMediaFetched(MediaAction.FETCH_MEDIA, site, media, mediaError);
                         }
             }));
@@ -198,7 +198,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         @Override
                         public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                             AppLog.v(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
-                            MediaErrorType mediaError = getMediaErrorForBaseError(error);
+                            MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
                             if (mediaError == MediaErrorType.MEDIA_NOT_FOUND) {
                                 AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
                                 notifyMediaDeleted(MediaAction.DELETE_MEDIA, site, media, null);
@@ -236,7 +236,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
-                    MediaStore.MediaError error = new MediaError(getMediaErrorForStatusCode(response.code()));
+                    MediaStore.MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
                     notifyMediaUploaded(media, error);
                 }
             }
@@ -248,30 +248,6 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 notifyMediaUploaded(media, error);
             }
         });
-    }
-
-    private MediaErrorType getMediaErrorForStatusCode(int code) {
-        switch (code) {
-            case 404:
-                return MediaErrorType.MEDIA_NOT_FOUND;
-            case 403:
-                return MediaErrorType.UNAUTHORIZED;
-            default:
-                return MediaErrorType.GENERIC_ERROR;
-        }
-    }
-
-    private MediaErrorType getMediaErrorForBaseError(BaseRequest.BaseNetworkError baseError) {
-        switch (baseError.type) {
-            case NOT_FOUND:
-                return MediaErrorType.MEDIA_NOT_FOUND;
-            case AUTHORIZATION_REQUIRED:
-                return MediaErrorType.UNAUTHORIZED;
-            case PARSE_ERROR:
-                return MediaErrorType.PARSE_ERROR;
-            default:
-                return MediaErrorType.GENERIC_ERROR;
-        }
     }
 
     private void notifyMediaFetched(MediaAction cause, SiteModel site, MediaModel media, MediaError error) {

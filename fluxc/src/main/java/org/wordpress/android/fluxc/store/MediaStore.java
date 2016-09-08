@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
@@ -95,7 +96,31 @@ public class MediaStore extends Store {
         PARSE_ERROR,
 
         // unknown/unspecified
-        GENERIC_ERROR
+        GENERIC_ERROR;
+
+        public static MediaErrorType fromBaseNetworkError(BaseRequest.BaseNetworkError baseError) {
+            switch (baseError.type) {
+                case NOT_FOUND:
+                    return MediaErrorType.MEDIA_NOT_FOUND;
+                case AUTHORIZATION_REQUIRED:
+                    return MediaErrorType.UNAUTHORIZED;
+                case PARSE_ERROR:
+                    return MediaErrorType.PARSE_ERROR;
+                default:
+                    return MediaErrorType.GENERIC_ERROR;
+            }
+        }
+
+        public static MediaErrorType fromHttpStatusCode(int code) {
+            switch (code) {
+                case 404:
+                    return MediaErrorType.MEDIA_NOT_FOUND;
+                case 403:
+                    return MediaErrorType.UNAUTHORIZED;
+                default:
+                    return MediaErrorType.GENERIC_ERROR;
+            }
+        }
     }
 
     public static class MediaError implements OnChangedError {
@@ -173,58 +198,9 @@ public class MediaStore extends Store {
         }
     }
 
-    private void handleMediaUploaded(ProgressPayload payload) {
-        OnMediaUploaded onMediaUploaded = new OnMediaUploaded(payload.media, payload.progress, payload.completed);
-        onMediaUploaded.error = payload.error;
-        emitChange(onMediaUploaded);
-    }
-
-    private void handleMediaPushed(MediaListPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.PUSH_MEDIA, payload.media);
-        onMediaChanged.error = payload.error;
-        emitChange(onMediaChanged);
-    }
-
-    private void handleMediaFetched(MediaAction cause, MediaListPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(cause, payload.media);
-        onMediaChanged.error = payload.error;
-        emitChange(onMediaChanged);
-    }
-
-    private void handleMediaDeleted(MediaListPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETED_MEDIA, payload.media);
-        onMediaChanged.error = payload.error;
-        emitChange(onMediaChanged);
-    }
-
     @Override
     public void onRegister() {
     }
-
-//    @Override
-//    public void onMediaError(MediaAction cause, MediaModel media, MediaNetworkError error) {
-//        AppLog.d(AppLog.T.MEDIA, cause + " caused exception: " + error);
-//
-//        if (error == MediaNetworkError.MEDIA_NOT_FOUND) {
-//            notifyMediaError(MediaErrorType.MEDIA_NOT_FOUND, cause, media);
-//        } else {
-//            notifyMediaError(MediaErrorType.GENERIC_ERROR, cause, media);
-//        }
-//    }
-//
-//    @Override
-//    public void onMediaFetched(MediaAction cause, List<MediaModel> fetchedMedia) {
-//        if (cause == MediaAction.FETCH_ALL_MEDIA || cause == MediaAction.FETCH_MEDIA) {
-//            updateMedia(fetchedMedia, false);
-//            emitChange(new OnMediaChanged(cause, fetchedMedia));
-//        }
-//    }
-//
-//    @Override
-//    public void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia) {
-//        updateMedia(pushedMedia, false);
-//        emitChange(new OnMediaChanged(cause, pushedMedia));
-//    }
 
     public List<MediaModel> getAllSiteMedia(long siteId) {
         return MediaSqlUtils.getAllSiteMedia(siteId);
@@ -399,6 +375,30 @@ public class MediaStore extends Store {
         } else {
             mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
         }
+    }
+
+    private void handleMediaUploaded(ProgressPayload payload) {
+        OnMediaUploaded onMediaUploaded = new OnMediaUploaded(payload.media, payload.progress, payload.completed);
+        onMediaUploaded.error = payload.error;
+        emitChange(onMediaUploaded);
+    }
+
+    private void handleMediaPushed(MediaListPayload payload) {
+        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.PUSH_MEDIA, payload.media);
+        onMediaChanged.error = payload.error;
+        emitChange(onMediaChanged);
+    }
+
+    private void handleMediaFetched(MediaAction cause, MediaListPayload payload) {
+        OnMediaChanged onMediaChanged = new OnMediaChanged(cause, payload.media);
+        onMediaChanged.error = payload.error;
+        emitChange(onMediaChanged);
+    }
+
+    private void handleMediaDeleted(MediaListPayload payload) {
+        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETED_MEDIA, payload.media);
+        onMediaChanged.error = payload.error;
+        emitChange(onMediaChanged);
     }
 
     private boolean isWellFormedForUpload(@NonNull MediaModel media) {
