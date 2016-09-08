@@ -33,7 +33,9 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
@@ -77,6 +79,7 @@ public class MediaGridFragment extends Fragment
     private static final String BUNDLE_DATE_FILTER_END_DAY = "BUNDLE_DATE_FILTER_END_DAY";
 
     @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
 
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
@@ -228,7 +231,7 @@ public class MediaGridFragment extends Fragment
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
-                        refreshMediaFromServer(0, false);
+                        fetchAllMedia(0, false);
                     }
                 });
         restoreState(savedInstanceState);
@@ -372,116 +375,11 @@ public class MediaGridFragment extends Fragment
         if (isAdded() && mGridAdapter.getDataCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
-                    refreshMediaFromServer(0, true);
+                    fetchAllMedia(0, true);
                 }
             } else {
                 updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             }
-        }
-    }
-
-    public void refreshMediaFromServer(int offset, final boolean auto) {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            setRefreshing(false);
-            return;
-        }
-
-        // do not refresh if custom date filter is shown
-        if (mFilter == Filter.CUSTOM_DATE) {
-            setRefreshing(false);
-            return;
-        }
-
-        // do not refresh if in search
-        if (mSearchTerm != null && mSearchTerm.length() > 0) {
-            setRefreshing(false);
-            return;
-        }
-
-        if (offset == 0 || !mIsRefreshing) {
-            if (offset == mOldMediaSyncOffset) {
-                // we're pulling the same data again for some reason. Pull from the beginning.
-                offset = 0;
-            }
-            mOldMediaSyncOffset = offset;
-
-            mIsRefreshing = true;
-            updateEmptyView(EmptyViewMessageType.LOADING);
-            mListener.onMediaItemListDownloadStart();
-            mGridAdapter.setRefreshing(true);
-
-            Callback callback = new Callback() {
-                // refresh db from server. If returned count is 0, we've retrieved all the media.
-                // stop retrieving until the user manually refreshes
-
-                @Override
-                public void onSuccess(int count) {
-                    MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-                    mHasRetrievedAllMedia = (count == 0);
-                    adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
-
-                    mIsRefreshing = false;
-
-                    // the activity may be gone by the time this finishes, so check for it
-                    if (getActivity() != null && MediaGridFragment.this.isVisible()) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                refreshSpinnerAdapter();
-                                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                                if (!auto) {
-                                    mGridView.setSelection(0);
-                                }
-                                mListener.onMediaItemListDownloaded();
-                                mGridAdapter.setRefreshing(false);
-                                mSwipeToRefreshHelper.setRefreshing(false);
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    if (errorType != ApiHelper.ErrorType.NO_ERROR) {
-                        if (getActivity() != null) {
-                            if (errorType != ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP) {
-                                ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media),
-                                        Duration.LONG);
-                            } else {
-                                if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
-                                    ToastUtils.showToast(getActivity(), getString(
-                                            R.string.media_error_no_permission));
-                                }
-                            }
-                        }
-                        MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-                        mHasRetrievedAllMedia = true;
-                        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
-                    }
-
-                    // the activity may be cone by the time we get this, so check for it
-                    if (getActivity() != null && MediaGridFragment.this.isVisible()) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mIsRefreshing = false;
-                                mListener.onMediaItemListDownloaded();
-                                mGridAdapter.setRefreshing(false);
-                                mSwipeToRefreshHelper.setRefreshing(false);
-                                if (errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP) {
-                                    updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                                } else {
-                                    updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                                }
-                            }
-                        });
-                    }
-                }
-            };
-            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter,
-                    callback, mSite);
-            getMediaTask.execute();
         }
     }
 
@@ -665,7 +563,7 @@ public class MediaGridFragment extends Fragment
     @Override
     public void fetchMoreData(int offset) {
         if (!mHasRetrievedAllMedia) {
-            refreshMediaFromServer(offset, true);
+            fetchAllMedia(offset, true);
         }
     }
 
@@ -846,6 +744,118 @@ public class MediaGridFragment extends Fragment
                 return;
             }
             ActivityLauncher.newGalleryPost(getActivity(), mSite, mGridAdapter.getSelectedItems());
+        }
+    }
+
+    private void fetchAllMedia(int offset, final boolean auto) {
+        // TODO: paginate media fetch with filter
+        // TODO: figure out how to integrate `auto` to callback
+        MediaStore.FetchMediaPayload payload = new MediaStore.FetchMediaPayload(mSite, null);
+        mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
+    }
+
+    public void refreshMediaFromServer(int offset, final boolean auto) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+            setRefreshing(false);
+            return;
+        }
+
+        // do not refresh if custom date filter is shown
+        if (mFilter == Filter.CUSTOM_DATE) {
+            setRefreshing(false);
+            return;
+        }
+
+        // do not refresh if in search
+        if (mSearchTerm != null && mSearchTerm.length() > 0) {
+            setRefreshing(false);
+            return;
+        }
+
+        if (offset == 0 || !mIsRefreshing) {
+            if (offset == mOldMediaSyncOffset) {
+                // we're pulling the same data again for some reason. Pull from the beginning.
+                offset = 0;
+            }
+            mOldMediaSyncOffset = offset;
+
+            mIsRefreshing = true;
+            updateEmptyView(EmptyViewMessageType.LOADING);
+            mListener.onMediaItemListDownloadStart();
+            mGridAdapter.setRefreshing(true);
+
+            Callback callback = new Callback() {
+                // refresh db from server. If returned count is 0, we've retrieved all the media.
+                // stop retrieving until the user manually refreshes
+
+                @Override
+                public void onSuccess(int count) {
+                    MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+                    mHasRetrievedAllMedia = (count == 0);
+                    adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
+
+                    mIsRefreshing = false;
+
+                    // the activity may be gone by the time this finishes, so check for it
+                    if (getActivity() != null && MediaGridFragment.this.isVisible()) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshSpinnerAdapter();
+                                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                                if (!auto) {
+                                    mGridView.setSelection(0);
+                                }
+                                mListener.onMediaItemListDownloaded();
+                                mGridAdapter.setRefreshing(false);
+                                mSwipeToRefreshHelper.setRefreshing(false);
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    if (errorType != ApiHelper.ErrorType.NO_ERROR) {
+                        if (getActivity() != null) {
+                            if (errorType != ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP) {
+                                ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media),
+                                        Duration.LONG);
+                            } else {
+                                if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
+                                    ToastUtils.showToast(getActivity(), getString(
+                                            R.string.media_error_no_permission));
+                                }
+                            }
+                        }
+                        MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+                        mHasRetrievedAllMedia = true;
+                        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
+                    }
+
+                    // the activity may be cone by the time we get this, so check for it
+                    if (getActivity() != null && MediaGridFragment.this.isVisible()) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mIsRefreshing = false;
+                                mListener.onMediaItemListDownloaded();
+                                mGridAdapter.setRefreshing(false);
+                                mSwipeToRefreshHelper.setRefreshing(false);
+                                if (errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP) {
+                                    updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
+                                } else {
+                                    updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                                }
+                            }
+                        });
+                    }
+                }
+            };
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter,
+                    callback, mSite);
+            getMediaTask.execute();
         }
     }
 }
