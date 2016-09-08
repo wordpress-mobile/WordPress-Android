@@ -66,6 +66,9 @@ public class AppPrefs {
 
         // selected site in the main activity
         SELECTED_SITE_LOCAL_ID,
+
+        // access token migrated to AccountStore, must wait for network calls to return before app access
+        ACCESS_TOKEN_MIGRATED,
     }
 
     /**
@@ -423,5 +426,13 @@ public class AppPrefs {
 
     public static void setSelectedSite(int selectedSite) {
         setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, selectedSite);
+    }
+
+    public static boolean wasAccessTokenMigrated() {
+        return getBoolean(DeletablePrefKey.ACCESS_TOKEN_MIGRATED, false);
+    }
+
+    public static void setAccessTokenMigrated(boolean migrated) {
+        setBoolean(DeletablePrefKey.ACCESS_TOKEN_MIGRATED, migrated);
     }
 }
