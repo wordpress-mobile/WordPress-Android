@@ -2,11 +2,21 @@ package org.wordpress.android.fluxc.utils;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCException;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.MapUtils;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +42,7 @@ public class MediaUtils {
     }
 
     //
-    // MediaModel
+    // WP.com REST API
     //
 
     private static final String MEDIA_TITLE_KEY = "title";
@@ -108,6 +118,85 @@ public class MediaUtils {
             params.put(MEDIA_PARENT_KEY, String.valueOf(media.getPostId()));
         }
         return params;
+    }
+
+    //
+    // Self hosted XMLRPC API
+    //
+
+    public static final String MEDIA_ID_KEY         = "attachment_id";
+    public static final String POST_ID_KEY          = "parent";
+    public static final String TITLE_KEY            = "title";
+    public static final String CAPTION_KEY          = "caption";
+    public static final String DESCRIPTION_KEY      = "description";
+    public static final String VIDEOPRESS_GUID_KEY  = "videopress_shortcode";
+    public static final String THUMBNAIL_URL_KEY    = "thumbnail";
+    public static final String DATE_UPLOADED_KEY    = "date_created_gmt";
+    public static final String LINK_KEY             = "link";
+    public static final String METADATA_KEY         = "metadata";
+    public static final String WIDTH_KEY            = "width";
+    public static final String HEIGHT_KEY           = "height";
+
+    public static List<MediaModel> mediaListFromXmlrpcResponse(Object response, long siteId) {
+        if (!(response instanceof Object[])) return null;
+
+        Object[] responseArray = (Object[]) response;
+        List<MediaModel> responseMedia = new ArrayList<>();
+        for (Object mediaObject : responseArray) {
+            if (!(mediaObject instanceof HashMap)) continue;
+            MediaModel media = mediaFromXmlrpcResponse((HashMap) mediaObject, siteId);
+            if (media != null) responseMedia.add(media);
+        }
+
+        return responseMedia;
+    }
+
+    public static MediaModel mediaFromXmlrpcResponse(HashMap<String, ?> response, long siteId) {
+        if (response == null || response.isEmpty()) return null;
+
+        String link = MapUtils.getMapStr(response, LINK_KEY);
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(link);
+
+        MediaModel media = new MediaModel();
+        media.setSiteId(siteId);
+        media.setMediaId(MapUtils.getMapLong(response, MEDIA_ID_KEY));
+        media.setPostId(MapUtils.getMapLong(response, POST_ID_KEY));
+        media.setTitle(MapUtils.getMapStr(response, TITLE_KEY));
+        media.setCaption(MapUtils.getMapStr(response, CAPTION_KEY));
+        media.setDescription(MapUtils.getMapStr(response, DESCRIPTION_KEY));
+        media.setVideoPressGuid(MapUtils.getMapStr(response, VIDEOPRESS_GUID_KEY));
+        media.setUrl(link);
+        media.setFileName(getFileName(link));
+        media.setFileExtension(fileExtension);
+        media.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension));
+        media.setThumbnailUrl(MapUtils.getMapStr(response, THUMBNAIL_URL_KEY));
+        media.setUploadDate(MapUtils.getMapDate(response, DATE_UPLOADED_KEY).toString());
+
+        Object metadataObject = response.get(METADATA_KEY);
+        if (metadataObject instanceof Map) {
+            Map metadataMap = (Map) metadataObject;
+            media.setWidth(MapUtils.getMapInt(metadataMap, WIDTH_KEY));
+            media.setHeight(MapUtils.getMapInt(metadataMap, HEIGHT_KEY));
+        }
+
+        return media;
+    }
+
+    public static MediaModel mediaFromXmlrpcUploadResponse(okhttp3.Response response) {
+        MediaModel media = new MediaModel();
+        try {
+            String data = new String(response.body().bytes(), "UTF-8");
+            InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
+            Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
+            if (obj instanceof Map) {
+                Map<String, String> map = (Map) obj;
+                media.setMediaId(Long.parseLong(map.get(MEDIA_ID_KEY)));
+            }
+        } catch (IOException | XMLRPCException | XmlPullParserException e) {
+            AppLog.w(AppLog.T.MEDIA, "failed to parse XMLRPC.wpUploadFile response: " + response);
+            return null;
+        }
+        return media;
     }
 
     //
