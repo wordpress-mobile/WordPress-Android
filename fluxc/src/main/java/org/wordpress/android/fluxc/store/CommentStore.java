@@ -2,22 +2,30 @@ package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
+import org.wordpress.android.fluxc.persistence.CommentSqlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 public class CommentStore extends Store {
     CommentRestClient mCommentRestClient;
     CommentXMLRPCClient mCommentXMLRPCClient;
+
+    // Payloads
 
     public static class FetchCommentsPayload extends Payload {
         final public SiteModel site;
@@ -35,6 +43,36 @@ public class CommentStore extends Store {
     }
 
     public static class FetchCommentsResponsePayload extends Payload {
+        final public List<CommentModel> comments;
+
+        public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments) {
+            this.comments = comments;
+        }
+    }
+
+    // Errors
+
+    public enum CommentErrorType {
+        INVALID_SITE,
+        GENERIC_ERROR
+    }
+
+    public static class CommentError implements OnChangedError {
+        public CommentErrorType type;
+
+        public CommentError(CommentErrorType type) {
+            this.type = type;
+        }
+    }
+
+
+    // Actions
+
+    public class OnCommentChanged extends OnChanged<CommentError> {
+        public int rowsAffected;
+        public OnCommentChanged(int rowsAffected) {
+            this.rowsAffected = rowsAffected;
+        }
     }
 
     @Inject
@@ -46,6 +84,7 @@ public class CommentStore extends Store {
     }
 
     @Override
+    @Subscribe
     public void onAction(Action action) {
         IAction actionType = action.getType();
         if (!(actionType instanceof CommentAction)) {
@@ -68,18 +107,30 @@ public class CommentStore extends Store {
             offset = 2; // TODO:
         }
         if (payload.site.isWPCom()) {
-            mCommentRestClient.fetchComments(payload.site, offset);
+            mCommentRestClient.fetchComments(payload.site, offset, CommentStatus.ALL);
         } else {
             // TODO: mCommentXMLRPCClient.fetchComments(payload.site);
         }
     }
 
     private void handleFetchCommentsResponse(FetchCommentsResponsePayload payload) {
-        // TODO:
+        int rowsAffected = 0;
+        for (CommentModel comment : payload.comments) {
+            rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
+        }
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        // FIXME: error management
+        emitChange(event);
     }
 
     @Override
     public void onRegister() {
         AppLog.d(T.API, this.getClass().getName() + ": onRegister");
+    }
+
+    // Getters
+
+    public List<CommentModel> getCommentsForSite(SiteModel site) {
+        return CommentSqlUtils.getCommentsForSite(site);
     }
 }
