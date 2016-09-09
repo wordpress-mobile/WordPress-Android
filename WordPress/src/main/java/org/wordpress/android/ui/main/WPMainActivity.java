@@ -551,12 +551,13 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     public void onAccountChanged(OnAccountChanged event) {
         if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed out
-            hideAccessTokenMigrationDialog();
+            hideAccessTokenMigrationDialog(true);
             resetFragments();
             ActivityLauncher.showSignInForResult(this);
         } else {
             if (mMigrationDialog != null) {
                 mMigrationDialog.setHasAccount(true);
+                hideAccessTokenMigrationDialog(false);
             }
         }
     }
@@ -705,14 +706,19 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         // "Reload" selected site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        if (getSelectedSite() == null && mSiteStore.hasSite()) {
+            setSelectedSite(mSiteStore.getSites().get(0));
+        }
         if (getSelectedSite() == null) {
             return;
         }
+
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
             mSelectedSite = site;
             if (mMigrationDialog != null) {
                 mMigrationDialog.setHasSites(true);
+                hideAccessTokenMigrationDialog(false);
             }
         }
     }
@@ -724,6 +730,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     private TokenMigrationDialog mMigrationDialog;
     private void showAccessTokenMigrationDialogIfNeeded() {
         if (AppPrefs.wasAccessTokenMigrated()) {
+            AppLog.d(T.MAIN, "+show");
             // app is awaiting response to account/site fetches, show progress bar until onSite/AccountChanged
             boolean hasAccount = mAccountStore.getAccount() != null;
             boolean hasSites = getSelectedSite() != null;
@@ -732,9 +739,12 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         }
     }
 
-    private void hideAccessTokenMigrationDialog() {
+    private void hideAccessTokenMigrationDialog(boolean force) {
         if (mMigrationDialog != null && mMigrationDialog.isResumed()) {
-            mMigrationDialog.dismiss();
+            if (force || mMigrationDialog.hasData()) {
+                AppLog.d(T.MAIN, "+dismiss");
+                mMigrationDialog.dismiss();
+            }
         }
     }
 }

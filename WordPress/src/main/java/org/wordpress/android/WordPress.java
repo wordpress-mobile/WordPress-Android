@@ -177,6 +177,7 @@ public class WordPress extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
         // Init WellSql
@@ -204,7 +205,6 @@ public class WordPress extends MultiDexApplication {
             }
         }
 
-        mContext = this;
         ProfilingUtils.start("App Startup");
         // Enable log recording
         AppLog.enableRecording(true);

@@ -11,8 +11,8 @@ import android.view.Window;
 import org.wordpress.android.R;
 
 public class TokenMigrationDialog extends DialogFragment {
-    private static final String HAS_ACCOUNT_KEY  = "has-account";
-    private static final String HAS_SITES_KEY    = "has-sites";
+    private static final String HAS_ACCOUNT_KEY = "has-account";
+    private static final String HAS_SITES_KEY = "has-sites";
 
     private boolean mHasAccount;
     private boolean mHasSites;
@@ -28,7 +28,7 @@ public class TokenMigrationDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog =  super.onCreateDialog(savedInstanceState);
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -49,24 +49,15 @@ public class TokenMigrationDialog extends DialogFragment {
         return inflater.inflate(R.layout.progress_dialog, container);
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
     public void setHasAccount(boolean hasAccount) {
         mHasAccount = hasAccount;
-        dismissIfNeeded();
     }
 
     public void setHasSites(boolean hasSites) {
         mHasSites = hasSites;
-        dismissIfNeeded();
     }
 
-    private void dismissIfNeeded() {
-        if (mHasAccount && mHasSites) {
-            dismiss();
-        }
+    public boolean hasData() {
+        return mHasSites && mHasAccount;
     }
 }
