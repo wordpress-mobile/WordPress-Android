@@ -3,7 +3,6 @@
 	<string name="error_fetch_users_list">Tidak boleh mendapatkan pengguna laman</string>
 	<string name="plans_manage">Urus pelan anda di\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Anda belum mempunyai penonton.</string>
-	<string name="people_fetching">Mengambil pengguna..</string>
 	<string name="title_follower">Pengikut</string>
 	<string name="title_email_follower">Pengikut Emel</string>
 	<string name="people_empty_list_filtered_email_followers">Anda belum mempunyai pengikut emel.</string>
@@ -173,10 +172,6 @@
 	<string name="xmlrpc_missing_method_error">Tidak boleh berhubung. Kaedah XML-RPC yang diperlukan tiada pada pelayan.</string>
 	<string name="post_format_status">Status</string>
 	<string name="post_format_video">Video</string>
-	<string name="align_none">Tiada</string>
-	<string name="align_left">Kiri</string>
-	<string name="align_center">Tengah</string>
-	<string name="align_right">Kanan</string>
 	<string name="theme_free">Percuma</string>
 	<string name="theme_all">Semua</string>
 	<string name="theme_premium">Premium</string>
@@ -460,9 +455,7 @@
 	<string name="reader_short_like_count_one">1 Suka</string>
 	<string name="reader_label_follow_count">%,d pengikut</string>
 	<string name="reader_short_like_count_none">Suka</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Sunting tag dan blog</string>
-	<string name="reader_label_word_count">%,d perkataan</string>
 	<string name="reader_title_post_detail">Kiriman Pembaca</string>
 	<string name="local_draft_explainer">Kiriman ini adalah draf setempat yang belum diterbitkan</string>
 	<string name="local_changes_explainer">Kiriman ini mempunyai penukaran setempat yang belum diterbitkan</string>

@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">Administrateur</string>
+	<string name="role_editor">Éditeur</string>
+	<string name="role_author">Auteur</string>
+	<string name="role_contributor">Contributeur</string>
+	<string name="role_follower">Abonné</string>
+	<string name="role_viewer">Lecteur</string>
+	<string name="error_post_my_profile_no_connection">Aucune connexion, impossible d\'enregistrer le profil</string>
+	<string name="alignment_none">Aucun</string>
+	<string name="alignment_left">Gauche</string>
+	<string name="alignment_right">Droit</string>
+	<string name="site_settings_list_editor_action_mode_title">Sélectionné %1$s</string>
 	<string name="error_fetch_users_list">Impossible de récupérer les utilisateurs du site</string>
 	<string name="plans_manage">Gérez votre plan sur\nWordPress.com/plans</string>
 	<string name="people_fetching">Récupération des utilisateurs...</string>
@@ -173,13 +184,10 @@
 	<string name="xmlrpc_missing_method_error">Impossible de se connecter. Le serveur ne dispose pas des méthodes XML-RPC requises.</string>
 	<string name="post_format_status">État</string>
 	<string name="post_format_video">Vidéo</string>
-	<string name="align_none">Aucun</string>
-	<string name="align_left">Gauche</string>
-	<string name="align_center">Centre</string>
-	<string name="align_right">Droite</string>
 	<string name="theme_free">Gratuit</string>
 	<string name="theme_all">Tous</string>
 	<string name="theme_premium">Premium</string>
+	<string name="alignment_center">Centré</string>
 	<string name="post_format_gallery">Galerie</string>
 	<string name="post_format_image">Image</string>
 	<string name="post_format_link">Lien</string>
@@ -460,8 +468,6 @@
 	<string name="reader_short_like_count_one">1 Like</string>
 	<string name="reader_label_follow_count">%,d abonnés</string>
 	<string name="reader_short_like_count_none">Like</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
-	<string name="reader_label_word_count">%,d mots</string>
 	<string name="reader_menu_tags">Éditer les tags et les blogs</string>
 	<string name="reader_title_post_detail">Article du Reader</string>
 	<string name="local_draft_explainer">Cet article est un brouillon local qui n\'a pas été publié</string>
@@ -699,6 +705,7 @@
 	<string name="reader_label_comment_count_multi">%,d commentaires</string>
 	<string name="reader_label_view_original">Voir l\'article original</string>
 	<string name="reader_label_like">Aime</string>
+	<string name="reader_label_liked_by">Aimé par</string>
 	<string name="reader_label_comment_count_single">Un commentaire</string>
 	<string name="reader_label_comments_closed">Les commentaires sont fermés</string>
 	<string name="reader_label_comments_on">Commentaires sur</string>

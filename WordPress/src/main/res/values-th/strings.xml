@@ -162,9 +162,7 @@
 	<string name="reader_short_like_count_one">1 ไลค์</string>
 	<string name="reader_label_follow_count">%,d ผู้ติดตาม</string>
 	<string name="reader_short_like_count_none">ไลค์</string>
-	<string name="reader_label_reading_time_in_minutes">%,d นาที</string>
 	<string name="reader_menu_tags">แก้ไขป้ายกำกับและบล็อก</string>
-	<string name="reader_label_word_count">%,d คำ</string>
 	<string name="reader_title_post_detail">การอ่านเรื่อง</string>
 	<string name="local_draft_explainer">เรื่องนี้เป็นฉบับร่างบนอุปกรณ์ที่ยังไม่ได้เผยแพร่</string>
 	<string name="local_changes_explainer">เรื่องนี้มีการเปลี่ยนแปลงบนอุปกรณ์ที่ยังไม่ได้เผยแพร่</string>

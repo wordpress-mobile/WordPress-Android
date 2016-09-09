@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_editor">Editör</string>
+	<string name="role_admin">Yönetici</string>
+	<string name="role_author">Yazar</string>
+	<string name="role_follower">Takipçi</string>
+	<string name="role_contributor">Katılımcı</string>
+	<string name="role_viewer">Görüntüleyici</string>
+	<string name="error_post_my_profile_no_connection">Bağlantı yok, profiliniz kaydedilemedi</string>
+	<string name="alignment_none">Hiçbiri</string>
+	<string name="alignment_left">Sol</string>
+	<string name="alignment_right">Sağ</string>
+	<string name="site_settings_list_editor_action_mode_title">%1$s seçildi</string>
 	<string name="error_fetch_users_list">Site kullanıcıları getirilemedi</string>
 	<string name="plans_manage">Planınızı yönetin:\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Henüz hiç izleyiciniz yok.</string>
-	<string name="people_fetching">Kullanıcılar getiriliyor..</string>
 	<string name="title_follower">Takipçi</string>
 	<string name="title_email_follower">E-posta takipçisi</string>
+	<string name="people_fetching">Kullanıcılar getiriliyor...</string>
 	<string name="people_empty_list_filtered_email_followers">Henüz hiç e-posta takipçiniz yok.</string>
 	<string name="people_empty_list_filtered_followers">Henüz hiç takipçiniz yok.</string>
 	<string name="people_empty_list_filtered_users">Henüz hiç kullanıcınız yok.</string>
@@ -173,13 +184,10 @@
 	<string name="xmlrpc_missing_method_error">Bağlanılamadı. Sunucuda gerekli XML-RPC işlevleri eksik.</string>
 	<string name="post_format_status">Durum</string>
 	<string name="post_format_video">Video</string>
-	<string name="align_none">Hiçbiri</string>
-	<string name="align_left">Sol</string>
-	<string name="align_center">Orta</string>
-	<string name="align_right">Sağ</string>
 	<string name="theme_free">Ücretsiz</string>
 	<string name="theme_all">Tümü</string>
 	<string name="theme_premium">Premium</string>
+	<string name="alignment_center">Ortala</string>
 	<string name="post_format_chat">Sohbet</string>
 	<string name="post_format_gallery">Galeri</string>
 	<string name="post_format_image">Görsel</string>
@@ -460,9 +468,7 @@
 	<string name="reader_short_like_count_one">1 Beğeni</string>
 	<string name="reader_short_like_count_none">Beğen</string>
 	<string name="reader_label_follow_count">%,d takipçi</string>
-	<string name="reader_label_reading_time_in_minutes">%,d dak</string>
 	<string name="reader_menu_tags">Etiketleri ve blogları düzenle</string>
-	<string name="reader_label_word_count">%,d kelime</string>
 	<string name="reader_title_post_detail">Okuyucu Gönderisi</string>
 	<string name="local_draft_explainer">Bu gönderi yayımlanmamış bir yerel taslaktır</string>
 	<string name="local_changes_explainer">Bu gönderide yayımlanmamış yerel değişiklikler var</string>
@@ -725,6 +731,7 @@
 	<string name="signing_out">Çıkış yapılıyor…</string>
 	<string name="error_publish_empty_post">Boş bir yazı yayımlanamaz</string>
 	<string name="reader_empty_followed_blogs_title">Henüz herhangi bir site takip etmiyorsunuz.</string>
+	<string name="reader_label_liked_by">Beğenenler</string>
 	<string name="reader_toast_err_block_blog">Bu blog engellenemiyor</string>
 	<string name="reader_toast_blog_blocked">Bu blogdan yazılar artık gösterilmeyecek</string>
 	<string name="reader_toast_err_generic">Bu eylemi gerçekleştirilemiyor</string>
