@@ -61,7 +61,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mView = inflate(context, R.layout.reader_thumbnail_strip, this);
         mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
         mThumbnailSize = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_size);
-        mCountStr = context.getResources().getString(R.string.reader_label_image_count);
+        mCountStr = context.getResources().getString(R.string.reader_label_image_count_multi);
 
         // base max image count on display width
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
