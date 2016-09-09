@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -910,7 +911,7 @@ public class ReaderPostDetailFragment extends Fragment
                 imgAvatar.showDefaultGravatarImage();
             }
 
-            String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate());
+            String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             if (mPost.hasAuthorName()) {
                 txtDateline.setText(mPost.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
             } else if (mPost.hasBlogName()) {

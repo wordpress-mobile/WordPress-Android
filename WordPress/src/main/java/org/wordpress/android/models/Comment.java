@@ -179,7 +179,7 @@ public class Comment {
     private transient java.util.Date dtPublished;
     public java.util.Date getDatePublished() {
         if (dtPublished == null)
-            dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
+            dtPublished = DateTimeUtils.dateFromIso8601(published);
         return dtPublished;
     }
 
