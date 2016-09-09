@@ -551,6 +551,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     public void onAccountChanged(OnAccountChanged event) {
         if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed out
+            hideAccessTokenMigrationDialog();
             resetFragments();
             ActivityLauncher.showSignInForResult(this);
         } else {
