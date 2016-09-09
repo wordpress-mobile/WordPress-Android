@@ -30,9 +30,9 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
-import org.wordpress.android.fluxc.utils.DateTimeUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
@@ -354,7 +354,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         if (post.getDateCreated() != null) {
             String dateCreated = post.getDateCreated();
-            Date date = DateTimeUtils.dateFromIso8601(dateCreated);
+            Date date = DateTimeUtils.dateUTCFromIso8601(dateCreated);
             if (date != null) {
                 contentStruct.put("post_date", date);
                 // Redundant, but left in just in case
