@@ -52,8 +52,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 
 import java.text.DateFormat;
 import java.util.ArrayList;

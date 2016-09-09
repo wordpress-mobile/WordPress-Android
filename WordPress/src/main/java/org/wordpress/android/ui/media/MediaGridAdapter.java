@@ -60,16 +60,16 @@ public class MediaGridAdapter extends CursorAdapter {
     private ArrayList<String> mSelectedItems;
 
     public interface MediaGridAdapterCallback {
-        public void fetchMoreData(int offset);
-        public void onRetryUpload(String mediaId);
-        public boolean isInMultiSelect();
+        void fetchMoreData(int offset);
+        void onRetryUpload(String mediaId);
+        boolean isInMultiSelect();
     }
 
     interface BitmapReadyCallback {
         void onBitmapReady(Bitmap bitmap);
     }
 
-    private static enum ViewTypes {
+    private enum ViewTypes {
         LOCAL, NETWORK, PROGRESS, SPACER
     }
 
@@ -77,10 +77,10 @@ public class MediaGridAdapter extends CursorAdapter {
         super(context, c, flags);
         mContext = context;
         mSite = site;
-        mSelectedItems = new ArrayList<String>();
+        mSelectedItems = new ArrayList<>();
         mLocalImageWidth = context.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
         mInflater = LayoutInflater.from(context);
-        mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
+        mFilePathToCallbackMap = new HashMap<>();
         mHandler = new Handler();
         setImageLoader(imageLoader);
     }
@@ -288,7 +288,7 @@ public class MediaGridAdapter extends CursorAdapter {
                 if (mFilePathToCallbackMap.containsKey(filePath)) {
                     list = mFilePathToCallbackMap.get(filePath);
                 } else {
-                    list = new ArrayList<MediaGridAdapter.BitmapReadyCallback>();
+                    list = new ArrayList<>();
                     shouldFetch = true;
                     mFilePathToCallbackMap.put(filePath, list);
                 }
