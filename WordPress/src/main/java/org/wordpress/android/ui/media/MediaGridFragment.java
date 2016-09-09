@@ -754,10 +754,41 @@ public class MediaGridFragment extends Fragment
     }
 
     private void fetchAllMedia(int offset, final boolean auto) {
-        // TODO: paginate media fetch with filter
-        // TODO: figure out how to integrate `auto` to callback
-        MediaStore.FetchMediaPayload payload = new MediaStore.FetchMediaPayload(mSite, null);
-        mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+            setRefreshing(false);
+            return;
+        }
+
+        // do not refresh if custom date filter is shown
+        if (mFilter == Filter.CUSTOM_DATE) {
+            setRefreshing(false);
+            return;
+        }
+
+        // do not refresh if in search
+        if (mSearchTerm != null && mSearchTerm.length() > 0) {
+            setRefreshing(false);
+            return;
+        }
+
+        if (offset == 0 || !mIsRefreshing) {
+            if (offset == mOldMediaSyncOffset) {
+                // we're pulling the same data again for some reason. Pull from the beginning.
+                offset = 0;
+            }
+            mOldMediaSyncOffset = offset;
+
+            mIsRefreshing = true;
+            updateEmptyView(EmptyViewMessageType.LOADING);
+            mListener.onMediaItemListDownloadStart();
+            mGridAdapter.setRefreshing(true);
+
+            // TODO: paginate media fetch with filter by using `offset, mFilter`
+            // TODO: figure out how to integrate `auto` to callback
+            MediaStore.FetchMediaPayload payload = new MediaStore.FetchMediaPayload(mSite, null);
+            mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
+        }
     }
 
     public void refreshMediaFromServer(int offset, final boolean auto) {
