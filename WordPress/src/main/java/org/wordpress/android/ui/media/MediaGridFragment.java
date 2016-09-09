@@ -45,6 +45,7 @@ import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -867,7 +868,7 @@ public class MediaGridFragment extends Fragment
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
         if (event.isError()) {
-            // prependToLog("Media error occurred: " + event.error.type);
+            handleFetchAllMediaError(event.error.type);
             return;
         }
 
@@ -885,6 +886,46 @@ public class MediaGridFragment extends Fragment
                     }
                 }
                 break;
+        }
+    }
+
+    private void handleFetchAllMediaError(MediaStore.MediaErrorType errorType) {
+        AppLog.e(AppLog.T.MEDIA, "Media error occurred: " + errorType);
+        // TODO: Handle permission error
+        final boolean isPermissionError = false;
+        if (errorType != MediaStore.MediaErrorType.NONE) {
+            if (getActivity() != null) {
+                if (!isPermissionError) {
+                    ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media),
+                            Duration.LONG);
+                } else {
+                    if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
+                        ToastUtils.showToast(getActivity(), getString(
+                                R.string.media_error_no_permission));
+                    }
+                }
+            }
+            MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+            mHasRetrievedAllMedia = true;
+            adapter.setHasRetrievedAll(true);
+        }
+
+        // the activity may be gone by the time we get this, so check for it
+        if (getActivity() != null && MediaGridFragment.this.isVisible()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mIsRefreshing = false;
+                    mListener.onMediaItemListDownloaded();
+                    mGridAdapter.setRefreshing(false);
+                    mSwipeToRefreshHelper.setRefreshing(false);
+                    if (isPermissionError) {
+                        updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
+                    } else {
+                        updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                    }
+                }
+            });
         }
     }
 }
