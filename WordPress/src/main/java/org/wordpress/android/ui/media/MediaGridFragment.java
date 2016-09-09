@@ -39,7 +39,6 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
@@ -59,6 +58,7 @@ import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -875,17 +875,37 @@ public class MediaGridFragment extends Fragment
         switch (event.cause) {
             case FETCH_ALL_MEDIA:
                 if (event.media != null) {
-                    for (MediaModel media : event.media) {
-                        if (MediaUtils.isImageMimeType(media.getMimeType())) {
-                            // prependToLog("Image(" + media.getMediaId() + ") - " + media.getTitle());
-                        } else if (MediaUtils.isVideoMimeType(media.getMimeType())) {
-                            // prependToLog("Video(" + media.getMediaId() + ") - " + media.getTitle());
-                        } else {
-                            // prependToLog(media.getTitle());
-                        }
-                    }
+                    handleFetchAllMediaSuccess(event.media);
                 }
                 break;
+        }
+    }
+
+    private void handleFetchAllMediaSuccess(List<MediaModel> mediaList) {
+        // TODO: Update mHasRetrievedAllMedia once pagination is implemented
+        MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+        mHasRetrievedAllMedia = true;
+        adapter.setHasRetrievedAll(true);
+
+        mIsRefreshing = false;
+
+        // the activity may be gone by the time this finishes, so check for it
+        if (getActivity() != null && MediaGridFragment.this.isVisible()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    refreshSpinnerAdapter();
+                    updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                    // TODO: Keep a reference to auto-refresh flag, so we can use it here
+                    boolean auto = true;
+                    if (!auto) {
+                        mGridView.setSelection(0);
+                    }
+                    mListener.onMediaItemListDownloaded();
+                    mGridAdapter.setRefreshing(false);
+                    mSwipeToRefreshHelper.setRefreshing(false);
+                }
+            });
         }
     }
 
