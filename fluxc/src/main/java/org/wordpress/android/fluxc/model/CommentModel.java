@@ -17,7 +17,7 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
     @Column private long mRemoteCommentId;
     @Column private long mRemotePostId;
     @Column private int mLocalSiteId;
-    @Column private int mRemoteSiteId;
+    @Column private long mRemoteSiteId;
 
     // Author
     @Column private String mAuthorUrl;
@@ -27,7 +27,7 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
 
     //
     @Column private String mPostTitle;
-    @Column private String mStatus; // FIXME: Replace with enum
+    @Column private String mStatus;
     @Column private String mDatePublished;
     @Column private String mContent;
 
@@ -129,11 +129,11 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
         mLocalSiteId = localSiteId;
     }
 
-    public int getRemoteSiteId() {
+    public long getRemoteSiteId() {
         return mRemoteSiteId;
     }
 
-    public void setRemoteSiteId(int remoteSiteId) {
+    public void setRemoteSiteId(long remoteSiteId) {
         mRemoteSiteId = remoteSiteId;
     }
 }

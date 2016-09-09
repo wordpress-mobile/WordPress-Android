@@ -26,5 +26,6 @@ public class CommentWPComRestResponse {
     public Post post;
     public Author author;
     public String date;
+    public String status;
     public String content;
 }
