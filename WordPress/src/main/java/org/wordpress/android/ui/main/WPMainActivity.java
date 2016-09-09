@@ -553,6 +553,10 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             // User signed out
             resetFragments();
             ActivityLauncher.showSignInForResult(this);
+        } else {
+            if (mMigrationDialog != null) {
+                mMigrationDialog.setHasAccount(true);
+            }
         }
     }
 
@@ -706,6 +710,9 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
             mSelectedSite = site;
+            if (mMigrationDialog != null) {
+                mMigrationDialog.setHasSites(true);
+            }
         }
     }
 
@@ -713,12 +720,20 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     // Access token migration to AccountStore
     //
 
+    private TokenMigrationDialog mMigrationDialog;
     private void showAccessTokenMigrationDialogIfNeeded() {
         if (AppPrefs.wasAccessTokenMigrated()) {
+            // app is awaiting response to account/site fetches, show progress bar until onSite/AccountChanged
+            boolean hasAccount = mAccountStore.getAccount() != null;
+            boolean hasSites = getSelectedSite() != null;
+            mMigrationDialog = TokenMigrationDialog.newInstance(hasAccount, hasSites);
+            mMigrationDialog.show(getFragmentManager(), "migration-progress");
         }
     }
 
     private void hideAccessTokenMigrationDialog() {
+        if (mMigrationDialog != null && mMigrationDialog.isResumed()) {
+            mMigrationDialog.dismiss();
         }
     }
 }
