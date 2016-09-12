@@ -365,7 +365,7 @@ public class MediaStore extends Store {
         }
     }
 
-    private void performDeleteMedia(MediaListPayload payload) {
+    private void performDeleteMedia(@NonNull MediaListPayload payload) {
         if (payload.media == null || payload.media.isEmpty() || payload.media.contains(null)) {
             notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.DELETE_MEDIA, payload.media);
             return;
@@ -378,27 +378,43 @@ public class MediaStore extends Store {
         }
     }
 
-    private void handleMediaUploaded(ProgressPayload payload) {
+    private void handleMediaUploaded(@NonNull ProgressPayload payload) {
         OnMediaUploaded onMediaUploaded = new OnMediaUploaded(payload.media, payload.progress, payload.completed);
         onMediaUploaded.error = payload.error;
         emitChange(onMediaUploaded);
     }
 
-    private void handleMediaPushed(MediaListPayload payload) {
+    private void handleMediaPushed(@NonNull MediaListPayload payload) {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.PUSH_MEDIA, payload.media);
         onMediaChanged.error = payload.error;
         emitChange(onMediaChanged);
     }
 
-    private void handleMediaFetched(MediaAction cause, MediaListPayload payload) {
+    private void handleMediaFetched(MediaAction cause, @NonNull MediaListPayload payload) {
         OnMediaChanged onMediaChanged = new OnMediaChanged(cause, payload.media);
-        onMediaChanged.error = payload.error;
+
+        if (payload.isError()) {
+            onMediaChanged.error = payload.error;
+        } else if (payload.media != null && !payload.media.isEmpty()) {
+            for (MediaModel media : payload.media) {
+                MediaSqlUtils.insertOrUpdateMedia(media);
+            }
+        }
+
         emitChange(onMediaChanged);
     }
 
-    private void handleMediaDeleted(MediaListPayload payload) {
+    private void handleMediaDeleted(@NonNull MediaListPayload payload) {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETED_MEDIA, payload.media);
-        onMediaChanged.error = payload.error;
+
+        if (payload.isError()) {
+            onMediaChanged.error = payload.error;
+        } else if (payload.media != null && !payload.media.isEmpty()) {
+            for (MediaModel media : payload.media) {
+                MediaSqlUtils.deleteMedia(media);
+            }
+        }
+
         emitChange(onMediaChanged);
     }
 
