@@ -63,7 +63,8 @@ public class ReaderPostTable {
           + "attachments_json,"     // 34
           + "discover_json,"        // 35
           + "xpost_post_id,"        // 36
-          + "xpost_blog_id";        // 37
+          + "xpost_blog_id,"        // 37
+          + "railcar_json";         // 38
 
     // used when querying multiple rows and skipping tbl_posts.text
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -102,7 +103,8 @@ public class ReaderPostTable {
           + "tbl_posts.attachments_json,"     // 33
           + "tbl_posts.discover_json,"        // 34
           + "tbl_posts.xpost_post_id,"        // 35
-          + "tbl_posts.xpost_blog_id";        // 36
+          + "tbl_posts.xpost_blog_id,"        // 36
+          + "tbl_posts.railcar_json";         // 37
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -143,6 +145,7 @@ public class ReaderPostTable {
                 + " discover_json       TEXT,"
                 + "	xpost_post_id		INTEGER DEFAULT 0,"
                 + " xpost_blog_id       INTEGER DEFAULT 0,"
+                + " railcar_json        TEXT,"
                 + " PRIMARY KEY (pseudo_id)"
                 + ")");
 
@@ -642,7 +645,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, feed_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5,?6)");
 
@@ -687,6 +690,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(35, post.getDiscoverJson());
                 stmtPosts.bindLong  (36, post.xpostPostId);
                 stmtPosts.bindLong  (37, post.xpostBlogId);
+                stmtPosts.bindString(38, post.getRailcarJson());
                 stmtPosts.execute();
             }
 
@@ -906,6 +910,8 @@ public class ReaderPostTable {
 
         post.xpostPostId = c.getLong(c.getColumnIndex("xpost_post_id"));
         post.xpostBlogId = c.getLong(c.getColumnIndex("xpost_blog_id"));
+
+        post.setRailcarJson(c.getString(c.getColumnIndex("railcar_json")));
 
         return post;
     }

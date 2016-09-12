@@ -364,9 +364,9 @@ public class ReaderPostDetailFragment extends Fragment
         refreshIconCounts();
 
         if (isAskingToLike) {
-            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mBlogId);
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mPost);
         } else {
-            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mBlogId);
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mPost);
         }
     }
 
