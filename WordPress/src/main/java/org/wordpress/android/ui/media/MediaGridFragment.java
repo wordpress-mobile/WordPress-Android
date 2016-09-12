@@ -115,10 +115,10 @@ public class MediaGridFragment extends Fragment
     private SiteModel mSite;
 
     public interface MediaGridListener {
-        public void onMediaItemListDownloadStart();
-        public void onMediaItemListDownloaded();
-        public void onMediaItemSelected(String mediaId);
-        public void onRetryUpload(String mediaId);
+        void onMediaItemListDownloadStart();
+        void onMediaItemListDownloaded();
+        void onMediaItemSelected(String mediaId);
+        void onRetryUpload(String mediaId);
     }
 
     public enum Filter {
@@ -251,7 +251,7 @@ public class MediaGridFragment extends Fragment
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
 
         if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
-            ArrayList selectedItems = savedInstanceState.getStringArrayList(BUNDLE_SELECTED_STATES);
+            ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_SELECTED_STATES);
             mGridAdapter.setSelectedItems(selectedItems);
             if (isInMultiSelectMode) {
                 setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
