@@ -18,9 +18,12 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
+import org.wordpress.android.fluxc.utils.DateTimeUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,8 +87,27 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         if (!(commentObject instanceof HashMap)) {
             return null;
         }
-        HashMap<String, ?> commentMap = (HashMap<String, ?>) commentObject;
+        HashMap<?, ?> commentMap = (HashMap<?, ?>) commentObject;
         CommentModel comment = new CommentModel();
+
+        comment.setRemoteCommentId(
+                Long.valueOf(XMLRPCUtils.safeGetMapValue(commentMap, "comment_id", "0")));
+        comment.setLocalSiteId(site.getId());
+        comment.setRemoteSiteId(site.getSiteId());
+        comment.setStatus(XMLRPCUtils.safeGetMapValue(commentMap, "status", "approve"));
+        Date datePublished = XMLRPCUtils.safeGetMapValue(commentMap, "date_created_gmt", new Date());
+        comment.setDatePublished(DateTimeUtils.iso8601UTCFromDate(datePublished));
+        comment.setContent(XMLRPCUtils.safeGetMapValue(commentMap, "content", ""));
+
+        // Author
+        comment.setAuthorUrl(XMLRPCUtils.safeGetMapValue(commentMap, "author_url", ""));
+        comment.setAuthorName(XMLRPCUtils.safeGetMapValue(commentMap, "author", ""));
+        comment.setAuthorEmail(XMLRPCUtils.safeGetMapValue(commentMap, "author_email", ""));
+        // TODO: comment.setAuthorProfileImageUrl(); - get the hash from the email address?
+
+        // Post
+        comment.setRemotePostId(XMLRPCUtils.safeGetMapValue(commentMap, "post_id", 0));
+        comment.setPostTitle(XMLRPCUtils.safeGetMapValue(commentMap, "post_title", ""));
 
         return comment;
     }
