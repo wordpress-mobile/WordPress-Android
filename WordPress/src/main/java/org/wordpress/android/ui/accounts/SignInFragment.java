@@ -240,7 +240,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
 
         // show progress indicator while waiting for network response when migrating access token
-        if (AppPrefs.wasAccessTokenMigrated()) {
+        if (AppPrefs.wasAccessTokenMigrated() && checkNetworkConnectivity()) {
             showProgressDialog();
         }
     }
