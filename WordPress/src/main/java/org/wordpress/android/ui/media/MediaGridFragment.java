@@ -35,6 +35,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -784,7 +785,7 @@ public class MediaGridFragment extends Fragment
 
             // TODO: paginate media fetch with filter by using `offset, mFilter`
             // TODO: figure out how to integrate `auto` to callback
-            MediaStore.FetchMediaPayload payload = new MediaStore.FetchMediaPayload(mSite, null);
+            MediaStore.MediaListPayload payload = new MediaStore.MediaListPayload(MediaAction.FETCH_ALL_MEDIA, mSite, null);
             mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
         }
     }
