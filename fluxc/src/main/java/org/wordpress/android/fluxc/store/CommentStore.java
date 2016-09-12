@@ -109,7 +109,7 @@ public class CommentStore extends Store {
         if (payload.site.isWPCom()) {
             mCommentRestClient.fetchComments(payload.site, offset, CommentStatus.ALL);
         } else {
-            // TODO: mCommentXMLRPCClient.fetchComments(payload.site);
+            mCommentXMLRPCClient.fetchComments(payload.site, offset, CommentStatus.ALL);
         }
     }
 
