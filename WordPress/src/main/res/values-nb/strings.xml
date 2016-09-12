@@ -3,8 +3,6 @@
 	<string name="reader_short_comment_count_multi">%s kommentarer</string>
 	<string name="reader_short_comment_count_one">1 kommentar</string>
 	<string name="reader_label_follow_count">%,d følgere</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min.</string>
-	<string name="reader_label_word_count">%,d ord</string>
 	<string name="local_draft_explainer">Dette innlegget er en lokal kladd som ikke er publisert</string>
 	<string name="local_changes_explainer">Dette innlegget har lokale endringer som ikke er publisert</string>
 	<string name="replies_to_your_comments">Svar på dine kommentarer</string>

@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">Administrador</string>
+	<string name="role_editor">Editor</string>
+	<string name="role_author">Autor</string>
+	<string name="role_contributor">Colaborador</string>
+	<string name="role_follower">Seguidor</string>
+	<string name="role_viewer">Espectador</string>
+	<string name="error_post_my_profile_no_connection">Sin conexión, no se pudo guardar tu perfil</string>
+	<string name="alignment_none">Ninguna</string>
+	<string name="alignment_left">Izquierda</string>
+	<string name="alignment_right">Derecha</string>
+	<string name="site_settings_list_editor_action_mode_title">Elegido %1$s</string>
 	<string name="error_fetch_users_list">No se pudieron recuperar los usuarios del sitio</string>
 	<string name="plans_manage">Gestiona tu plan en\nWordPress.com/plans</string>
 	<string name="title_follower">Seguidor</string>
 	<string name="title_email_follower">Correo electrónico del seguidor</string>
-	<string name="people_fetching">Recuperando usuarios..</string>
 	<string name="people_empty_list_filtered_viewers">Todavía no tienes ningún espectador.</string>
+	<string name="people_fetching">Recuperando usuarios…</string>
 	<string name="people_empty_list_filtered_email_followers">Todavía no tienes el correno electrónico de ningún seguidor.</string>
 	<string name="people_empty_list_filtered_followers">Todavía no tienes ningún seguidor.</string>
 	<string name="people_empty_list_filtered_users">Todavía no tienes ningún usuario.</string>
 	<string name="people_dropdown_item_email_followers">Suscriptores por correo electrónico</string>
-	<string name="people_dropdown_item_viewers">Visitantes</string>
+	<string name="people_dropdown_item_viewers">Espectadores</string>
 	<string name="people_dropdown_item_followers">Seguidores</string>
 	<string name="people_dropdown_item_team">Equipo</string>
 	<string name="invite_message_usernames_limit">Invita como máximo a 10 personas con sus correos electrónicos o nombre de usuarios de WordPress.com. A aquellos que necesiten un nombre de usuario se le enviará instrucciones sobre cómo hacerlo.</string>
@@ -20,7 +31,7 @@
 	<string name="reader_label_view_gallery">Ver galería</string>
 	<string name="reader_label_image_count">%d imágenes</string>
 	<string name="error_remove_follower">No se pudo quitar al seguidor</string>
-	<string name="error_remove_viewer">No se pudo quitar al visitante</string>
+	<string name="error_remove_viewer">No se pudo quitar el espectador</string>
 	<string name="error_fetch_email_followers_list">No se pudieron recuperar los correos electrónicos de los seguidores del sitio</string>
 	<string name="error_fetch_followers_list">No se pudieron recuperar los seguidores del sitio</string>
 	<string name="editor_failed_uploads_switch_html">Algunas subidas de medios han fallado. Puedes cambiar al modo HTML \ncuando esto pasa. ¿Borramos todas las subidas fallidas y seguimos?</string>
@@ -93,7 +104,7 @@
 	<string name="reader_empty_posts_in_custom_list">Los sitios de esta lista no han publicado nada últimamente.</string>
 	<string name="error_remove_user">No se pudo eliminar el usuario</string>
 	<string name="error_update_role">No se ha podido actualizar el rol del usuario</string>
-	<string name="error_fetch_viewers_list">No se pudieron recuperar los visitantes del sitio</string>
+	<string name="error_fetch_viewers_list">No se pudieron recuperar los espectadores del sitio</string>
 	<string name="gravatar_camera_and_media_permission_required">Permisos necesarios para seleccionar o capturar una imagen</string>
 	<string name="error_updating_gravatar">Error al subir tu Gravatar</string>
 	<string name="error_locating_image">Error al localizar la imagen recortada</string>
@@ -173,13 +184,10 @@
 	<string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
 	<string name="post_format_status">Estado</string>
 	<string name="post_format_video">Video</string>
-	<string name="align_none">Ninguno</string>
-	<string name="align_left">Izquierda</string>
-	<string name="align_center">Centrado</string>
-	<string name="align_right">Derecha</string>
 	<string name="theme_all">Todo</string>
 	<string name="theme_premium">Premium</string>
 	<string name="theme_free">Gratis</string>
+	<string name="alignment_center">Centrado</string>
 	<string name="post_format_chat">Chat</string>
 	<string name="post_format_gallery">Galería</string>
 	<string name="post_format_image">Imagen</string>
@@ -460,9 +468,7 @@
 	<string name="reader_short_like_count_one">1 Me gusta</string>
 	<string name="reader_label_follow_count">%,d seguidores</string>
 	<string name="reader_short_like_count_none">Me gusta</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Editar etiquetas y blogs</string>
-	<string name="reader_label_word_count">%,d palabras</string>
 	<string name="reader_title_post_detail">Entrada del lector</string>
 	<string name="local_draft_explainer">Esta entrada tiene un borrador local que no ha sido publicado</string>
 	<string name="local_changes_explainer">Esta entrada tiene cambios en local que no han sido publicados</string>
@@ -725,6 +731,7 @@
 	<string name="sending_content">Cargando el contenido de %s</string>
 	<string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
 	<string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
+	<string name="reader_label_liked_by">Le gusta a</string>
 	<string name="reader_toast_err_generic">No es posible realizar esta acción</string>
 	<string name="reader_toast_err_block_blog">No es posible bloquear este blog</string>
 	<string name="reader_toast_blog_blocked">Las entradas de este blog no volverán a mostrarse</string>

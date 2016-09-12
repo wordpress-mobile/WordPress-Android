@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">Përgjegjës</string>
+	<string name="role_editor">Redaktor</string>
+	<string name="role_author">Autor</string>
+	<string name="role_contributor">Kontribues</string>
+	<string name="role_follower">Ndjekës</string>
+	<string name="role_viewer">Shikues</string>
+	<string name="error_post_my_profile_no_connection">S&amp;#8217;ka lidhje, s&amp;#8217;u ruajt dot profili juaj</string>
+	<string name="alignment_none">Pa drejtim</string>
+	<string name="alignment_left">Majtas</string>
+	<string name="alignment_right">Djathtas</string>
+	<string name="site_settings_list_editor_action_mode_title">U përzgjodh %1$s</string>
 	<string name="error_fetch_users_list">S&amp;#8217;u morën dot përdorues të sajtit</string>
 	<string name="plans_manage">Administroni planin tuaj te\nWordPress.com/plans</string>
 	<string name="people_fetching">Po sillen përdoruesit…</string>
@@ -173,10 +184,7 @@
 	<string name="xmlrpc_missing_method_error">S&amp;#8217;u lidh dot. Metodat e domosdoshme XML-RPC mungojnë te shërbyesi.</string>
 	<string name="post_format_status">Gjendje</string>
 	<string name="post_format_video">Video</string>
-	<string name="align_none">Asnjë</string>
-	<string name="align_left">Majtas</string>
-	<string name="align_center">Në qendër</string>
-	<string name="align_right">Djathtas</string>
+	<string name="alignment_center">Në qendër</string>
 	<string name="theme_free">Falas</string>
 	<string name="theme_all">Krejt</string>
 	<string name="theme_premium">Me pagesë</string>
@@ -460,8 +468,6 @@
 	<string name="reader_short_like_count_one">1 Pëlqim</string>
 	<string name="reader_label_follow_count">%,d ndjekës</string>
 	<string name="reader_short_like_count_none">Pëlqim</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
-	<string name="reader_label_word_count">%,d fjalë</string>
 	<string name="reader_menu_tags">Përpunoni etiketa dhe blogje</string>
 	<string name="reader_title_post_detail">Postim Te Lexuesi</string>
 	<string name="local_draft_explainer">Ky postim ka një skicë lokale që s&amp;#8217;është botuar</string>
@@ -725,6 +731,7 @@
 	<string name="error_refresh_unauthorized_comments">S&amp;#8217;keni leje të shihni ose të përpunoni postime komente</string>
 	<string name="stats_no_blog">S&amp;#8217;u ngarkuan dot statistikat për blogun e kërkuar</string>
 	<string name="media_empty_list_custom_date">S&amp;#8217;ka media në këtë interval kohor</string>
+	<string name="reader_label_liked_by">Pëlqyer Nga</string>
 	<string name="reader_toast_err_generic">I pazoti të kryejë këtë veprim</string>
 	<string name="reader_toast_err_block_blog">I pazoti të bllokojë këtë blog</string>
 	<string name="reader_menu_block_blog">Bllokoje këtë blog</string>

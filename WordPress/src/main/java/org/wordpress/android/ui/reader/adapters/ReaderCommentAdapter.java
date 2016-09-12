@@ -225,7 +225,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         commentHolder.txtAuthor.setText(comment.getAuthorName());
 
         java.util.Date dtPublished = DateTimeUtils.dateFromIso8601(comment.getPublished());
-        commentHolder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
+        commentHolder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished, WordPress.getContext()));
 
         if (comment.hasAuthorAvatar()) {
             String avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorAvatar(), mAvatarSz);

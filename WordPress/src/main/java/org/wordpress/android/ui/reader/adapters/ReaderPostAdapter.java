@@ -51,6 +51,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.inject.Inject;
 
+import java.util.HashSet;
+
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -69,6 +71,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
+    private final HashSet<String> mRenderedIds = new HashSet<>();
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
@@ -172,10 +175,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
             followButton = (ReaderFollowButton) layoutPostHeader.findViewById(R.id.follow_button);
 
-            // post header isn't shown when there's a site header
+            // post header isn't shown when there's a site header, so add a bit more
+            // padding above the title
             if (hasSiteHeader()) {
-                layoutPostHeader.setVisibility(View.GONE);
-                // add a bit more padding above the title
                 int extraPadding = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
                 txtTitle.setPadding(
                         txtTitle.getPaddingLeft(),
@@ -313,7 +315,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         holder.txtTitle.setText(post.getTitle());
 
-        String timestamp = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
+        String timestamp = DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext());
         if (post.hasAuthorName()) {
             holder.txtDateline.setText(post.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
         } else if (post.hasBlogName()) {
@@ -329,7 +331,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.imgAvatar.showDefaultGravatarImage();
         }
 
-        if (!hasSiteHeader()) {
+        // post header isn't show when there's a site header
+        if (hasSiteHeader()) {
+            holder.layoutPostHeader.setVisibility(View.GONE);
+        } else {
+            holder.layoutPostHeader.setVisibility(View.VISIBLE);
             // show blog preview when post header is tapped
             holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -462,6 +468,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
 
         checkLoadMore(position);
+
+        // if we haven't already rendered this post and it has a "railcar" attached to it, add it
+        // to the rendered list and record the TrainTracks render event
+        if (post.hasRailcar() && !mRenderedIds.contains(post.getPseudoId())) {
+            mRenderedIds.add(post.getPseudoId());
+            AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
+        }
     }
 
     /*
@@ -610,6 +623,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void setCurrentTag(ReaderTag tag) {
         if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
             mCurrentTag = tag;
+            mRenderedIds.clear();
             reload();
         }
     }
@@ -623,6 +637,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (blogId != mCurrentBlogId || feedId != mCurrentFeedId) {
             mCurrentBlogId = blogId;
             mCurrentFeedId = feedId;
+            mRenderedIds.clear();
             reload();
         }
     }
@@ -764,7 +779,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * triggered when user taps the like button (textView)
      */
-    private void toggleLike(Context context, ReaderPostViewHolder holder,ReaderPost post) {
+    private void toggleLike(Context context, ReaderPostViewHolder holder, ReaderPost post) {
         if (post == null || !NetworkUtils.checkConnection(context)) {
             return;
         }
@@ -779,12 +794,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (isAskingToLike) {
-            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mCurrentBlogId != 0 ? mCurrentBlogId : null);
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
             // Consider a like to be enough to push a page view - solves a long-standing question
             // from folks who ask 'why do I have more likes than page views?'.
             ReaderPostActions.bumpPageViewForPost(mSiteStore, post);
         } else {
-            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mCurrentBlogId);
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
         }
 
         // update post in array and on screen

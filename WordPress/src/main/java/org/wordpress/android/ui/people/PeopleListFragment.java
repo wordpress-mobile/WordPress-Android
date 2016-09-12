@@ -280,6 +280,7 @@ public class PeopleListFragment extends Fragment {
 
     public interface OnFetchPeopleListener {
         boolean onFetchFirstPage(PeopleListFilter filter);
+
         boolean onFetchMorePeople(PeopleListFilter filter);
     }
 
@@ -342,6 +343,8 @@ public class PeopleListFragment extends Fragment {
                 peopleViewHolder.txtDisplayName.setText(StringUtils.unescapeHTML(person.getDisplayName()));
                 if (person.getRole() != null) {
                     peopleViewHolder.txtRole.setText(StringUtils.capitalize(person.getRole().toDisplayString()));
+                } else {
+                    peopleViewHolder.txtRole.setText("");
                 }
                 if (!person.getUsername().isEmpty()) {
                     peopleViewHolder.txtUsername.setVisibility(View.VISIBLE);

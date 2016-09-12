@@ -217,7 +217,8 @@ public class PostUtils {
             return DateUtils.formatDateTime(WordPress.getContext(),
                     DateTimeUtils.timestampFromIso8601Millis(post.getDateCreated()), DateUtils.FORMAT_ABBREV_ALL);
         } else {
-            return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateUTCFromIso8601(post.getDateCreated()));
+            return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateUTCFromIso8601(post.getDateCreated()),
+                    WordPress.getContext());
         }
     }
 

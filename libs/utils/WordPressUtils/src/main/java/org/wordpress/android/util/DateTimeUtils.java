@@ -1,9 +1,7 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
 import android.text.format.DateUtils;
-
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,7 +16,7 @@ public class DateTimeUtils {
     }
 
     // See http://drdobbs.com/java/184405382
-    private static final ThreadLocal<DateFormat> ISO8601Format = new ThreadLocal<DateFormat>() {
+    private static final ThreadLocal<DateFormat> ISO8601_FORMAT = new ThreadLocal<DateFormat>() {
         @Override
         protected DateFormat initialValue() {
             return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
@@ -29,7 +27,7 @@ public class DateTimeUtils {
      * Converts a date to a relative time span ("8h", "3d", etc.) - similar to
      * DateUtils.getRelativeTimeSpanString but returns shorter result
      */
-    public static String javaDateToTimeSpan(final Date date) {
+    public static String javaDateToTimeSpan(final Date date, Context context) {
         if (date == null) {
             return "";
         }
@@ -40,7 +38,7 @@ public class DateTimeUtils {
         // return "now" if less than a minute has elapsed
         long secondsSince = (currentTime - passedTime) / 1000;
         if (secondsSince < 60) {
-            return WordPress.getContext().getString(R.string.reader_timespan_now);
+            return context.getString(R.string.timespan_now);
         }
 
         // less than an hour (ex: 12m)
@@ -63,12 +61,12 @@ public class DateTimeUtils {
 
         // less than a year old, so return day/month without year (ex: Jan 30)
         if (daysSince < 365) {
-            return DateUtils.formatDateTime(WordPress.getContext(), passedTime, DateUtils.FORMAT_NO_YEAR |
+            return DateUtils.formatDateTime(context, passedTime, DateUtils.FORMAT_NO_YEAR |
                     DateUtils.FORMAT_ABBREV_ALL);
         }
 
         // date is older, so include year (ex: Jan 30, 2013)
-        return DateUtils.formatDateTime(WordPress.getContext(), passedTime, DateUtils.FORMAT_ABBREV_ALL);
+        return DateUtils.formatDateTime(context, passedTime, DateUtils.FORMAT_ABBREV_ALL);
     }
 
     /**
@@ -76,7 +74,7 @@ public class DateTimeUtils {
      */
     public static Date dateFromIso8601(final String strDate) {
         try {
-            DateFormat formatter = ISO8601Format.get();
+            DateFormat formatter = ISO8601_FORMAT.get();
             return formatter.parse(strDate);
         } catch (ParseException e) {
             return null;
@@ -89,7 +87,7 @@ public class DateTimeUtils {
     public static Date dateUTCFromIso8601(String iso8601date) {
         try {
             iso8601date = iso8601date.replace("Z", "+0000").replace("+00:00", "+0000");
-            DateFormat formatter = ISO8601Format.get();
+            DateFormat formatter = ISO8601_FORMAT.get();
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             return formatter.parse(iso8601date);
         } catch (ParseException e) {
@@ -104,7 +102,7 @@ public class DateTimeUtils {
         if (date == null) {
             return "";
         }
-        DateFormat formatter = ISO8601Format.get();
+        DateFormat formatter = ISO8601_FORMAT.get();
         return formatter.format(date);
     }
 
@@ -116,7 +114,7 @@ public class DateTimeUtils {
             return "";
         }
         TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat formatter = ISO8601Format.get();
+        DateFormat formatter = ISO8601_FORMAT.get();
         formatter.setTimeZone(tz);
 
         String iso8601date = formatter.format(date);
@@ -241,8 +239,8 @@ public class DateTimeUtils {
     /**
      * Given a UNIX timestamp, returns a relative time span ("8h", "3d", etc.).
      */
-    public static String timeSpanFromTimestamp(long timestamp) {
-        Date dtGmt = dateFromTimestamp(timestamp);
-        return javaDateToTimeSpan(dtGmt);
+    public static String timeSpanFromTimestamp(long timestamp, Context context) {
+        Date dateGMT = dateFromTimestamp(timestamp);
+        return javaDateToTimeSpan(dateGMT, context);
     }
 }
