@@ -277,7 +277,7 @@ public class ReaderTagTable {
             return;
         }
 
-        String date = DateTimeUtils.javaDateToIso8601(new Date());
+        String date = DateTimeUtils.iso8601FromDate(new Date());
         String sql = "UPDATE tbl_tags SET date_updated=?1 WHERE tag_slug=?2 AND tag_type=?3";
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
@@ -312,7 +312,7 @@ public class ReaderTagTable {
             return NEVER_UPDATED;
         }
 
-        Date dtUpdated = DateTimeUtils.iso8601ToJavaDate(updated);
+        Date dtUpdated = DateTimeUtils.dateFromIso8601(updated);
         if (dtUpdated == null) {
             return 0;
         }
