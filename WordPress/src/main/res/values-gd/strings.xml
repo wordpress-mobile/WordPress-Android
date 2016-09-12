@@ -3,7 +3,6 @@
 	<string name="error_fetch_users_list">Cha b’ urrainn dhuinn cleachdaichean na làraich fhaighinn</string>
 	<string name="plans_manage">Stiùirich am plana agad aig\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Cha dug duine sam bith sùil air dad fhathast.</string>
-	<string name="people_fetching">A’ faighinn nan cleachdaichean...</string>
 	<string name="title_follower">Neach-leantainn</string>
 	<string name="title_email_follower">Neach-leantainn puist-d</string>
 	<string name="people_empty_list_filtered_email_followers">Chan eil duine sam bith ’gad leantainn fhathast slighe puist-d.</string>

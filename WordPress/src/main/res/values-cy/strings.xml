@@ -141,10 +141,6 @@
 	<string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
 	<string name="post_format_status">Statws</string>
 	<string name="post_format_video">Fideo</string>
-	<string name="align_none">Dim</string>
-	<string name="align_left">Chwith</string>
-	<string name="align_center">Canol</string>
-	<string name="align_right">De</string>
 	<string name="theme_free">Rhad ac am Ddim</string>
 	<string name="theme_all">Y Cyfan</string>
 	<string name="theme_premium">Premiwm</string>
@@ -428,9 +424,7 @@
 	<string name="reader_short_like_count_one">1 Hoffi</string>
 	<string name="reader_label_follow_count">%,d dilynnwr</string>
 	<string name="reader_short_like_count_none">Hoffi</string>
-	<string name="reader_label_reading_time_in_minutes">%,d mun</string>
 	<string name="reader_menu_tags">Golygu tagiau a blogiau</string>
-	<string name="reader_label_word_count">%,d gair</string>
 	<string name="reader_title_post_detail">Cofnod Darllennydd</string>
 	<string name="local_draft_explainer">Mae\'r cofnod yn ddrafft lleol sydd heb ei gyhoeddi</string>
 	<string name="local_changes_explainer">Mae gan y cofnod newidiadau lleol sydd heb eu cyhoeddi</string>

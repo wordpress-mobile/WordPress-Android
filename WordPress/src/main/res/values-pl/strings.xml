@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">Administrator</string>
+	<string name="role_editor">Redaktor</string>
+	<string name="role_author">Autor</string>
+	<string name="role_contributor">Współpracownik</string>
+	<string name="role_follower">Subskrybent</string>
+	<string name="role_viewer">Oglądający</string>
+	<string name="error_post_my_profile_no_connection">Brak połączenia, nie można zapisać twojego profilu</string>
+	<string name="alignment_right">Wyrównaj do prawej</string>
+	<string name="alignment_left">Wyrównaj do lewej</string>
+	<string name="alignment_none">Brak wyrównania</string>
+	<string name="site_settings_list_editor_action_mode_title">Wybrano %1$s</string>
 	<string name="error_fetch_users_list">Nie można pobrać użytkowników witryny</string>
 	<string name="plans_manage">Zarządzaj swoim planem na\nWorPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Witryna nie ma jeszcze oglądających</string>
-	<string name="people_fetching">Pobieranie użytkowników...</string>
 	<string name="title_follower">Obserwujący</string>
 	<string name="title_email_follower">Obserwujący przez e-mail</string>
+	<string name="people_fetching">Pobieranie użytkowników...</string>
 	<string name="people_empty_list_filtered_email_followers">Nie masz jeszcze żadnych obserwujących przez e-mail</string>
 	<string name="people_empty_list_filtered_followers">Nie masz jeszcze żadnych obserwujących.</string>
 	<string name="people_empty_list_filtered_users">Nie masz jeszcze żadnych użytkowników</string>
@@ -155,7 +166,7 @@
 	<string name="confirm_delete_site_prompt">Proszę wpisać %1$s w polu poniżej w celu potwierdzenia. Twoja witryna zostanie trwale usunięta.</string>
 	<string name="confirm_delete_site">Potwierdź usunięcie witryny</string>
 	<string name="contact_support">Skontaktuj się ze wsparciem</string>
-	<string name="start_over_text">Jeśli chcesz zachować witrynę ale nie chcesz już mieć wpisów i stron, które masz obecnie, nasz zespół wsparcia może usunąć twoje wpisy, strony, media i komentarze za ciebie.\n\nTwoja witryna i adres URL pozostaną aktywne, ale umożliwi tobie stworzenie witryny na nowo. Po prostu skontaktuj się z nami w celu wyczyszczenia zawartości.</string>
+	<string name="start_over_text">Jeśli chcesz zachować witrynę ale nie potrzebujesz już wpisów i stron, które masz obecnie, nasz zespół wsparcia może usunąć twoje wpisy, strony, media i komentarze za ciebie.\n\nTwoja witryna i adres URL pozostaną aktywne, ale umożliwi tobie stworzenie witryny na nowo. Po prostu skontaktuj się z nami w celu wyczyszczenia zawartości.</string>
 	<string name="site_settings_start_over_hint">Rozpocznij tworzenie witryny od nowa</string>
 	<string name="let_us_help">Daj sobie pomóc</string>
 	<string name="me_btn_app_settings">Ustawienia aplikacji</string>
@@ -175,11 +186,8 @@
 	<string name="theme_all">Wszystkie</string>
 	<string name="theme_premium">Premium</string>
 	<string name="post_format_status">Status</string>
-	<string name="align_left">Wyrównaj do lewej</string>
-	<string name="align_center">Wyrównaj do środka</string>
-	<string name="align_right">Wyrównaj do prawej</string>
-	<string name="align_none">Brak wyrównania</string>
 	<string name="post_format_video">Film</string>
+	<string name="alignment_center">Wyśrodkowany</string>
 	<string name="post_format_chat">Czat</string>
 	<string name="post_format_gallery">Galeria</string>
 	<string name="post_format_image">Obrazek</string>
@@ -190,7 +198,7 @@
 	<string name="post_format_audio">Plik dźwiękowy</string>
 	<string name="post_format_aside">Notatka na marginesie</string>
 	<string name="notif_surveys">Możliwość uczestnictwa w badaniach i ankietach WordPress.com</string>
-	<string name="notif_tips">Wskazówki jak używać WordPress.com.</string>
+	<string name="notif_tips">Wskazówki jak używać WordPress.com</string>
 	<string name="notif_community">Społeczność</string>
 	<string name="replies_to_my_comments">Odpowiedzi do moich komentarzy</string>
 	<string name="notif_suggestions">Propozycje</string>
@@ -205,7 +213,7 @@
 	<string name="site_settings_list_editor_summary_one">1 element</string>
 	<string name="approve_auto_if_previously_approved">Komentarze znanych użytkowników</string>
 	<string name="approve_auto">Wszystkich użytkowników</string>
-	<string name="approve_manual">Nie zatw. koment. automatycz.</string>
+	<string name="approve_manual">Nie zatwierdzaj komentarzy automatycznie</string>
 	<string name="site_settings_paging_summary_other">%d komentarzy na stronie</string>
 	<string name="site_settings_paging_summary_one">1 komentarz na stronie</string>
 	<string name="site_settings_multiple_links_summary_other">Wymagane zatwierdzenie dla więcej niż %d odnośnika/ów</string>
@@ -269,7 +277,7 @@
 	<string name="about_me_hint">Kilka słów o sobie...</string>
 	<string name="about_me">O mnie</string>
 	<string name="public_display_name_hint">Jeśli nie zostanie ustawiona, to nazwa wyświetlana będzie twoją nazwą użytkownika</string>
-	<string name="public_display_name">Pokaż nazwę publiczną</string>
+	<string name="public_display_name">Nazwa wyświetlana publicznie</string>
 	<string name="my_profile">Mój profil</string>
 	<string name="first_name">Imię</string>
 	<string name="last_name">Nazwisko</string>
@@ -347,13 +355,13 @@
 	<string name="site_settings_threading_title">Wątki dyskusji</string>
 	<string name="site_settings_paging_title">Stronicowanie</string>
 	<string name="site_settings_sort_by_title">Sortuj</string>
-	<string name="site_settings_account_required_title">Użytkownicy muszą być zalogowani</string>
-	<string name="site_settings_identity_required_title">Muszą zawierać imię oraz email</string>
+	<string name="site_settings_account_required_title">Użytkow. muszą być zalog.</string>
+	<string name="site_settings_identity_required_title">Muszą zawierać imię i email</string>
 	<string name="site_settings_receive_pingbacks_title">Odbieraj pingbacki</string>
 	<string name="site_settings_send_pingbacks_title">Wysyłaj pingbacki</string>
-	<string name="site_settings_allow_comments_title">Zezwól na dodawanie komentarzy</string>
-	<string name="site_settings_default_format_title">Domyślny format</string>
-	<string name="site_settings_default_category_title">Domyślna kategoria</string>
+	<string name="site_settings_allow_comments_title">Włącz komentowanie</string>
+	<string name="site_settings_default_format_title">Domyślny format wpisów</string>
+	<string name="site_settings_default_category_title">Domyślna kategoria wpisów</string>
 	<string name="site_settings_location_title">Włącz lokalizację</string>
 	<string name="site_settings_address_title">Adres</string>
 	<string name="site_settings_title_title">Tytuł witryny</string>
@@ -460,9 +468,7 @@
 	<string name="reader_short_like_count_one">1 polubienie</string>
 	<string name="reader_label_follow_count">%,d osób śledzi</string>
 	<string name="reader_short_like_count_none">Polubienie</string>
-	<string name="reader_label_reading_time_in_minutes">%,d minut</string>
 	<string name="reader_menu_tags">Edytuj tagi i blogi</string>
-	<string name="reader_label_word_count">%,d słów</string>
 	<string name="reader_title_post_detail">Wpis czytnika</string>
 	<string name="local_draft_explainer">Ten wpis posiada lokalny szkic, który nie został opublikowany</string>
 	<string name="local_changes_explainer">Ten wpis posiada lokalne zmiany, które nie zostały opuplikowane</string>
@@ -691,6 +697,7 @@
 	<string name="reader_empty_posts_in_tag">Brak wpisów z tym tagiem</string>
 	<string name="reader_label_view_original">Zobacz oryginalny artykuł</string>
 	<string name="reader_label_like">Lubię to</string>
+	<string name="reader_label_liked_by">Polubiony przez</string>
 	<string name="reader_label_comment_count_single">Jeden komentarz</string>
 	<string name="more">Więcej</string>
 	<string name="create_new_blog_wpcom">Stwórz blog na WordPress.com</string>
@@ -716,7 +723,6 @@
 	<string name="select_a_blog">Wybierz witrynę WordPressa</string>
 	<string name="sending_content">Wysyłanie %s treści</string>
 	<string name="uploading_total">Wysyłanie %1$d z %2$d</string>
-	<string name="mnu_comment_liked">Polubiany</string>
 	<string name="comment">Komentarz</string>
 	<string name="comment_trashed">Komentarz przeniesiono do kosza</string>
 	<string name="posts_empty_list">Brak wpisów. Może jakiś opublikujesz?</string>
@@ -725,6 +731,7 @@
 	<string name="media_empty_list_custom_date">Brak mediów w tym przedziale czasowym</string>
 	<string name="posting_post">Publikowanie "%s"</string>
 	<string name="reader_empty_followed_blogs_title">Nie obserwujesz jeszcze żadnych blogów</string>
+	<string name="mnu_comment_liked">Polubiony</string>
 	<string name="reader_menu_block_blog">Zablokuj ten blog</string>
 	<string name="reader_toast_err_block_blog">Nie można zablokować tego blogu</string>
 	<string name="reader_toast_blog_blocked">Wpisy z tego blogu nie będą już widoczne</string>
@@ -753,10 +760,10 @@
 	<string name="reader_toast_err_follow_blog">Nie udało się śledzić tego bloga</string>
 	<string name="reader_label_followed_blog">Blog obserwowany</string>
 	<string name="reader_toast_err_unfollow_blog">Nie udało się wyłączyć śledzenia tego blogu</string>
-	<string name="reader_hint_add_tag_or_url">Wpisz adres blogu lub tag, który chcesz obserwować</string>
 	<string name="reader_title_tag_preview">Tag Czytnika</string>
 	<string name="reader_page_followed_blogs">Obserwowane blogi</string>
 	<string name="reader_title_blog_preview">Blog Czytnika</string>
+	<string name="reader_hint_add_tag_or_url">Wpisz adres lub tag aby obserwować</string>
 	<string name="saving">Zapisywanie...</string>
 	<string name="media_empty_list">Brak mediów</string>
 	<string name="ptr_tip_message">Porada: przeciągnij w dół aby odświeżyć</string>
@@ -1110,14 +1117,14 @@
 	<string name="draft">Szkic</string>
 	<string name="post_private">Prywatny</string>
 	<string name="publish_post">Opublikuj</string>
-	<string name="upload_full_size_image">Prześlij i podlinkuj do pełnego obrazu</string>
+	<string name="upload_full_size_image">Prześlij i link.do pełn.obraz.</string>
 	<string name="categories">Kategorie</string>
 	<string name="title">Tytuł</string>
 	<string name="tags_separate_with_commas">Tagi (oddzielone przecinkami)</string>
 	<string name="dlg_deleting_comments">Usuwanie komentarzy</string>
 	<string name="notification_vibrate">Wibracja</string>
-	<string name="notification_blink">Mruganie diody LED przy powiadomieniach</string>
 	<string name="notification_sound">Dźwięk powiadomienia</string>
+	<string name="notification_blink">Mruganie diody LED</string>
 	<string name="status">Status</string>
 	<string name="location">Lokalizacja</string>
 	<string name="sdcard_title">Wymagana karta pamięci SD</string>
@@ -1137,5 +1144,5 @@
 	<string name="reply">Odpisz</string>
 	<string name="preview">Podgląd</string>
 	<string name="notification_settings">Ustawienia powiadomień</string>
-	<string name="on">włączone</string>
+	<string name="on">we wpisie</string>
 </resources>

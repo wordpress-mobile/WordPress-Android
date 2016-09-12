@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">Administratzailea</string>
+	<string name="role_editor">Editorea</string>
+	<string name="role_author">Egilea</string>
+	<string name="role_contributor">Laguntzailea</string>
+	<string name="role_follower">Jarraitzailea</string>
+	<string name="role_viewer">Ikuslea</string>
+	<string name="error_post_my_profile_no_connection">Konexiorik ez, ezin izan da profila gorde</string>
+	<string name="alignment_none">Bat ere ez</string>
+	<string name="alignment_left">Ezkerrera</string>
+	<string name="alignment_right">Eskuinera</string>
 	<string name="error_fetch_users_list">Ezin izan dira guneko erabiltzaileak eskuratu</string>
 	<string name="plans_manage">Kudeatu zure plana\nWordPress.com/plans orrialdean</string>
 	<string name="title_follower">Jarraitzailea</string>
@@ -77,6 +87,8 @@
 	<string name="plans_post_purchase_button_themes">Arakatu itxurak</string>
 	<string name="plans_post_purchase_button_video">Hasi bidalketa berria</string>
 	<string name="plans_loading_error">Ezin izan dira planak kargatu</string>
+	<string name="plan">Plana</string>
+	<string name="plans">Planak</string>
 	<string name="export_your_content">Esportatu zure edukia</string>
 	<string name="exporting_content_progress">Edukia esportatzen...</string>
 	<string name="export_email_sent">Esportazio e-posta bidalita!</string>
@@ -92,8 +104,7 @@
 	<string name="button_done">Eginda</string>
 	<string name="post_format_status">Egoera</string>
 	<string name="post_format_video">Bideoa</string>
-	<string name="align_left">Ezkerrera</string>
-	<string name="align_center">Erdira</string>
+	<string name="alignment_center">Erdira</string>
 	<string name="theme_all">Guztiak</string>
 	<string name="theme_free">Doakoak</string>
 	<string name="theme_premium">Ordainpekoak</string>
@@ -120,6 +131,7 @@
 	<string name="editor_content_placeholder">Partekatu zure istorioa hemen...</string>
 	<string name="editor_page_title_placeholder">Orrialdearen izenburua</string>
 	<string name="editor_post_title_placeholder">Bidalketaren izenburua</string>
+	<string name="email_address">E-posta helbidea</string>
 	<string name="preference_show_visual_editor">Erakutsi editore bisuala</string>
 	<string name="preference_editor">Editorea</string>
 	<string name="mnu_comment_delete_permanently">Ezabatu</string>
@@ -131,6 +143,7 @@
 	<string name="interface_language">Interfazearen hizkuntza</string>
 	<string name="about_the_app">App-ari buruz</string>
 	<string name="error_post_account_settings">Ezin izan dira zure kontu ezarpenak gorde</string>
+	<string name="stats_widget_promo_ok_btn_label">Ados, ulertuta</string>
 	<string name="remove">Kendu</string>
 	<string name="search">Bilatu</string>
 	<string name="add_category">Gehitu kategoria</string>
@@ -166,6 +179,7 @@
 	<string name="site_settings_whitelist_title">Automatikoki onartu</string>
 	<string name="site_settings_threading_title">Hariztaketa</string>
 	<string name="site_settings_paging_title">Orrikatzea</string>
+	<string name="site_settings_allow_comments_title">Baimendu iruzkinak</string>
 	<string name="site_settings_default_format_title">Formatu lehenetsia</string>
 	<string name="site_settings_default_category_title">Kategoria lehenetsia</string>
 	<string name="site_settings_address_title">Helbidea</string>
@@ -185,6 +199,10 @@
 	<string name="reader_err_get_post_not_authorized">Ez daukazu bidalketa hau ikusteko baimenik</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Ez dago bidalketa berririk</string>
 	<string name="media_details_copy_url_toast">URL-a arbelera kopiatu da</string>
+	<string name="edit_media">Editatu media</string>
+	<string name="media_details_copy_url">Kopiatu URL-a</string>
+	<string name="media_details_label_date_uploaded">Igota</string>
+	<string name="media_details_label_date_added">Gehituta</string>
 	<string name="selected_theme">Hautatutako itxura</string>
 	<string name="could_not_load_theme">Ezin da itxura kargatu</string>
 	<string name="theme_activation_error">Zerbait gaizki atera da. Ezin izan da itxura gaitu</string>
@@ -217,6 +235,8 @@
 	<string name="reader_short_comment_count_one">Iruzkin 1</string>
 	<string name="reader_label_submit_comment">BIDALI</string>
 	<string name="reader_hint_comment_on_post">Bidalketari erantzun...</string>
+	<string name="reader_discover_visit_blog">Bisitatu %s</string>
+	<string name="notification_types">Jakinarazpen motak</string>
 	<string name="replies_to_your_comments">Zure iruzkinen erantzunak</string>
 	<string name="app_notifications">App-aren jakinarazpenak</string>
 	<string name="notifications_tab">Jakinarazpenen erlaitza</string>

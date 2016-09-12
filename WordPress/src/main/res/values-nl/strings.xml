@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_viewer">Lezer</string>
+	<string name="site_settings_list_editor_action_mode_title">Geselecteerde %1$s</string>
+	<string name="error_fetch_users_list">Site-gebruikers ophalen mislukt</string>
+	<string name="plans_manage">Beheer je abonnement op\nWordPress.com/plans</string>
+	<string name="people_empty_list_filtered_viewers">Je hebt nog geen volgers.</string>
+	<string name="people_empty_list_filtered_email_followers">Je hebt nog geen e-mailvolgers.</string>
+	<string name="people_empty_list_filtered_followers">Je hebt nog geen volgers.</string>
+	<string name="people_empty_list_filtered_users">Je hebt nog geen gebruikers.</string>
+	<string name="people_dropdown_item_viewers">Lezers</string>
+	<string name="invite_message_usernames_limit">Nodig tot wel 10 e-mailadressen en/of WordPress.com-gebruikersnamen uit. Naar degenen die een gebruikersnaam nodig hebben, worden instructies gestuurd over hoe ze er een aanmaken.</string>
+	<string name="viewer_remove_confirmation_message">Als je deze lezer verwijdert, kan hij of zij deze site niet bezoeken.\n\nWil je deze lezer toch verwijderen?</string>
+	<string name="follower_remove_confirmation_message">Als deze volger wordt verwijderd, kan hij of zij geen meldingen meer ontvangen over deze site tot hij of zij opnieuw gaat volgen.\n\nWil je deze volger toch verwijderen?</string>
+	<string name="error_remove_follower">Volger verwijderen mislukt</string>
+	<string name="error_remove_viewer">Lezer verwijderen mislukt</string>
+	<string name="error_fetch_email_followers_list">E-mailvolgers site ophalen mislukt</string>
+	<string name="error_fetch_followers_list">Sitevolgers ophalen mislukt</string>
 	<string name="editor_failed_uploads_switch_html">Enkele media konden niet worden geüpload. Je kunt niet overschakelen naar HTML.\n in deze staat. Alle mislukte uploads verwijderen en doorgaan?</string>
 	<string name="format_bar_description_html">HTML</string>
 	<string name="visual_editor">Visual Editor</string>
@@ -28,6 +44,7 @@
 	<string name="uploading_gallery_placeholder">Galerij wordt geüpload …</string>
 	<string name="invite_sent">Uitnodiging verzonden</string>
 	<string name="tap_to_try_again">Tik om het opnieuw te proberen!</string>
+	<string name="invite_error_for_username">%1$s: %2$s</string>
 	<string name="invite_message_info">(Optioneel) Je kunt een aangepast bericht invoeren van maximaal 500 tekens, dat wordt toegevoegd aan de uitnodiging van de gebruiker(s).</string>
 	<string name="invite_message_remaining_other">%d tekens resterend</string>
 	<string name="invite_message_remaining_one">1 teken resterend</string>
@@ -141,10 +158,6 @@
 	<string name="xmlrpc_missing_method_error">Kon geen verbinding maken. Vereiste XML-RPC-methoden ontbreken op de server.</string>
 	<string name="post_format_status">Status</string>
 	<string name="post_format_video">Video</string>
-	<string name="align_none">Geen</string>
-	<string name="align_left">Links</string>
-	<string name="align_center">Midden</string>
-	<string name="align_right">Rechts</string>
 	<string name="theme_free">Gratis</string>
 	<string name="theme_all">Alle</string>
 	<string name="theme_premium">Premium</string>
@@ -428,9 +441,7 @@
 	<string name="reader_short_like_count_one">1 like</string>
 	<string name="reader_label_follow_count">%,d volgers</string>
 	<string name="reader_short_like_count_none">Like</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Tags en blogs bijwerken</string>
-	<string name="reader_label_word_count">%,d woorden</string>
 	<string name="reader_title_post_detail">Reader-bericht</string>
 	<string name="local_draft_explainer">Dit bericht is een lokaal concept dat niet is gepubliceerd</string>
 	<string name="local_changes_explainer">Dit bericht bevat lokale wijzigingen die niet zijn gepubliceerd</string>

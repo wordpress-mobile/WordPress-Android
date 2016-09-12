@@ -10,8 +10,6 @@
 	<string name="comments_empty_list_filtered_approved">Žiadne komentáre schválené</string>
 	<string name="button_skip">Preskočiť</string>
 	<string name="post_format_video">Video</string>
-	<string name="align_left">Doľava</string>
-	<string name="align_right">Doprava</string>
 	<string name="post_format_gallery">Galéria</string>
 	<string name="post_format_image">Obrázok</string>
 	<string name="post_format_link">Odkaz</string>
@@ -126,9 +124,7 @@
 	<string name="reader_label_follow_count">počet sledujúcich: %,d</string>
 	<string name="reader_short_like_count_one">1 lajk</string>
 	<string name="reader_short_like_count_none">lajk</string>
-	<string name="reader_label_reading_time_in_minutes">%,d minút</string>
 	<string name="reader_menu_tags">Upraviť značky a blogy</string>
-	<string name="reader_label_word_count">počet slov: %,d</string>
 	<string name="reader_title_post_detail">Článok čítačky</string>
 	<string name="local_draft_explainer">Tento článok je koncept, ktorý nebol zverejnený</string>
 	<string name="local_changes_explainer">Tento má úpravy, ktoré neboli zverejnené</string>
