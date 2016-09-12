@@ -97,14 +97,6 @@ public class MySiteFragment extends Fragment
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        if (mFabView.getVisibility() == View.VISIBLE) {
-            AniUtils.showFab(mFabView, false);
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -155,6 +147,11 @@ public class MySiteFragment extends Fragment
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
+
+        // hide the FAB the first time the fragment is created in order to animate it in onResume()
+        if (savedInstanceState == null) {
+            mFabView.setVisibility(View.INVISIBLE);
+        }
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override

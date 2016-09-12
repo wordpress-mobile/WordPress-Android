@@ -1058,6 +1058,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case ABTEST_START:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("AB Test - Started");
                 break;
+            case TRAIN_TRACKS_RENDER: case TRAIN_TRACKS_INTERACT:
+                // Do nothing. These events are just for Tracks.
+                instructions = null;
+                break;
             default:
                 instructions = null;
                 break;

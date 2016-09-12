@@ -39,8 +39,17 @@ public class ReaderPost {
     private String primaryTag;    // most popular tag on this post based on usage in blog
     private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
+    /*
+     * the "date" field is a generic date which depends on the stream the post is from:
+     *   - for tagged posts, this is the date the post was tagged
+     *   - for liked posts, this is the date the post was liked
+     *   - for other posts, this is the date the post was published
+     * this date is used when requesting older posts from the backend, and is also used
+     * to generate the sortIndex below (which determines how posts are sorted for display)
+     */
+    private String date;
+    private String pubDate;
     public double sortIndex;
-    private String published;
 
     private String url;
     private String shortUrl;
@@ -64,6 +73,8 @@ public class ReaderPost {
 
     public long xpostPostId;
     public long xpostBlogId;
+
+    private String railcarJson;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -114,18 +125,20 @@ public class ReaderPost {
 
         post.featuredImage = JSONUtils.getString(json, "featured_image");
         post.blogName = JSONUtils.getStringDecoded(json, "site_name");
-        post.published = JSONUtils.getString(json, "date");
+        post.pubDate = JSONUtils.getString(json, "date");
 
-        // sort index determines how posts are sorted - this is a "score" for search results,
-        // liked date for liked posts, and published date for all others
-        if (json.has("score")) {
-            post.sortIndex = json.optDouble("score");
-        } else if (json.has("date_liked")) {
-            String likeDate = JSONUtils.getString(json, "date_liked");
-            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(likeDate);
+        // a post's date is the liked date for liked posts, tagged date for tag streams, and
+        // published date for all others
+        if (json.has("date_liked")) {
+            post.date = JSONUtils.getString(json, "date_liked");
+        } else if (json.has("tagged_on")) {
+            post.date = JSONUtils.getString(json, "tagged_on");
         } else {
-            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(post.published);
+            post.date = post.pubDate;
         }
+
+        // sort index determines how posts are sorted, which is based on the date retrieved above
+        post.sortIndex = DateTimeUtils.timestampFromIso8601(post.date);
 
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt()) {
@@ -195,6 +208,12 @@ public class ReaderPost {
         if (!post.hasFeaturedImage() && post.hasText() && post.text.contains("<img")) {
             post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
                     .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+        }
+
+        // "railcar" data - currently used in search streams, used by TrainTracks
+        JSONObject jsonRailcar = json.optJSONObject("railcar");
+        if (jsonRailcar != null) {
+            post.setRailcarJson(jsonRailcar.toString());
         }
 
         return post;
@@ -426,11 +445,18 @@ public class ReaderPost {
         this.pseudoId = StringUtils.notNullStr(pseudoId);
     }
 
-    public String getPublished() {
-        return StringUtils.notNullStr(published);
+    public String getDate() {
+        return StringUtils.notNullStr(date);
     }
-    public void setPublished(String published) {
-        this.published = StringUtils.notNullStr(published);
+    public void setDate(String dateStr) {
+        this.date = StringUtils.notNullStr(dateStr);
+    }
+
+    public String getPubDate() {
+        return StringUtils.notNullStr(pubDate);
+    }
+    public void setPubDate(String published) {
+        this.pubDate = StringUtils.notNullStr(published);
     }
 
     public String getPrimaryTag() {
@@ -585,6 +611,17 @@ public class ReaderPost {
         return (isWP() || isJetpack) && (!isDiscoverPost());
     }
 
+
+    public String getRailcarJson() {
+        return StringUtils.notNullStr(railcarJson);
+    }
+    public void setRailcarJson(String jsonRailcar) {
+        this.railcarJson = StringUtils.notNullStr(jsonRailcar);
+    }
+    public boolean hasRailcar() {
+        return !TextUtils.isEmpty(railcarJson);
+    }
+
     /****
      * the following are transient variables - not stored in the db or returned in the json - whose
      * sole purpose is to cache commonly-used values for the post that speeds up using them inside
@@ -635,14 +672,14 @@ public class ReaderPost {
     }
 
     /*
-     * converts iso8601 published date to an actual java date
+     * converts iso8601 pubDate to a java date for display - this is the date that appears on posts
      */
-    private transient java.util.Date dtPublished;
-    public java.util.Date getDatePublished() {
-        if (dtPublished == null) {
-            dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
+    private transient java.util.Date dtDisplay;
+    public java.util.Date getDisplayDate() {
+        if (dtDisplay == null) {
+            dtDisplay = DateTimeUtils.dateFromIso8601(this.pubDate);
         }
-        return dtPublished;
+        return dtDisplay;
     }
 
     /*

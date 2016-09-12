@@ -114,7 +114,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected WPTextView mJetpackAuthLabel;
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -312,12 +312,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     public boolean canAutofillUsernameAndPassword() {
-        return EditTextUtils.getText(mUsernameEditText).isEmpty() && EditTextUtils.getText(mPasswordEditText).isEmpty();
+        return EditTextUtils.getText(mUsernameEditText).isEmpty()
+               && EditTextUtils.getText(mPasswordEditText).isEmpty()
+               && mUsernameEditText != null
+               && mPasswordEditText != null;
     }
 
     public void onCredentialRetrieved(Credential credential) {
         AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
-        if (canAutofillUsernameAndPassword()) {
+        if (isAdded() && canAutofillUsernameAndPassword()) {
             track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED, null);
             mUsernameEditText.setText(credential.getId());
             mPasswordEditText.setText(credential.getPassword());
