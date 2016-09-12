@@ -120,7 +120,7 @@ public class TestUtils {
 
     public static Date parseStringToDate(String value) {
         // try do parseit as a Date
-        Date newValue = DateTimeUtils.iso8601ToJavaDate(value);
+        Date newValue = DateTimeUtils.dateFromIso8601(value);
         if (newValue != null) {
             return newValue;
         }

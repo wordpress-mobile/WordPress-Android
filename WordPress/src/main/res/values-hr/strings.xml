@@ -217,9 +217,7 @@
 	<string name="reader_short_like_count_none">Lajkovi</string>
 	<string name="reader_label_follow_count">%,d sljedbenika</string>
 	<string name="reader_short_like_count_one">1 lajk</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Uredi oznake i blogove</string>
-	<string name="reader_label_word_count">%,d riječi</string>
 	<string name="reader_title_post_detail">Objava u Čitaču</string>
 	<string name="local_draft_explainer">Ova objava je skica koja još nije objavljena</string>
 	<string name="local_changes_explainer">Ova objava sadrži promjene koje još nisu objavljene</string>
