@@ -315,7 +315,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         holder.txtTitle.setText(post.getTitle());
 
-        String timestamp = DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate());
+        String timestamp = DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext());
         if (post.hasAuthorName()) {
             holder.txtDateline.setText(post.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
         } else if (post.hasBlogName()) {

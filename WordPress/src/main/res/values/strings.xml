@@ -1081,7 +1081,7 @@
       reader strings
     -->
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
-    <string name="reader_timespan_now">now</string>
+    <string name="timespan_now">now</string>
 
     <!-- title shown for untitled posts and blogs -->
     <string name="reader_untitled_post">(Untitled)</string>

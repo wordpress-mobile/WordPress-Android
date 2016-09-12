@@ -403,7 +403,7 @@ public class MySiteFragment extends Fragment
         if (!site.isWPCom()) {
             return false;
         } else {
-            Date dateCreated = DateTimeUtils.iso8601ToJavaDate(mAccountStore.getAccount().getDate());
+            Date dateCreated = DateTimeUtils.dateFromIso8601(mAccountStore.getAccount().getDate());
             GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH,
                     HIDE_WP_ADMIN_DAY);
             calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
