@@ -12,11 +12,16 @@ public class XMLRPCUtils {
      */
     @NonNull
     public static <T> T safeGetMapValue(@NonNull Map<?, ?> map, T defaultValue) {
+        return safeGetMapValue(map, "value", defaultValue);
+    }
+
+    @NonNull
+    public static <T> T safeGetMapValue(@NonNull Map<?, ?> map, String key, T defaultValue) {
         if (map != null) {
-            if (!map.containsKey("value")) {
+            if (!map.containsKey(key)) {
                 return defaultValue;
             }
-            Object value = map.get("value");
+            Object value = map.get(key);
             if (defaultValue.getClass().isInstance(value)) {
                 return (T) value;
             }
@@ -36,5 +41,16 @@ public class XMLRPCUtils {
             }
         }
         return defaultValue;
+    }
+
+    public static <T> T safeGetMap(@NonNull Map<?, ?> map, String key, T defaultValue) {
+        if (!map.containsKey(key)) {
+            return defaultValue;
+        }
+        Object objectMap = map.get(key);
+        if (!(objectMap instanceof Map)) {
+            return defaultValue;
+        }
+        return safeGetMapValue((Map<?, ?>) objectMap, defaultValue);
     }
 }
