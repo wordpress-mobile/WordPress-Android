@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
@@ -307,7 +308,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         holder.txtTitle.setText(post.getTitle());
 
-        String timestamp = DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate());
+        String timestamp = DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext());
         if (post.hasAuthorName()) {
             holder.txtDateline.setText(post.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
         } else if (post.hasBlogName()) {

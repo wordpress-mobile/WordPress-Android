@@ -138,7 +138,7 @@ public class ReaderPost {
         }
 
         // sort index determines how posts are sorted, which is based on the date retrieved above
-        post.sortIndex = DateTimeUtils.iso8601ToTimestamp(post.date);
+        post.sortIndex = DateTimeUtils.timestampFromIso8601(post.date);
 
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt()) {
@@ -677,7 +677,7 @@ public class ReaderPost {
     private transient java.util.Date dtDisplay;
     public java.util.Date getDisplayDate() {
         if (dtDisplay == null) {
-            dtDisplay = DateTimeUtils.iso8601ToJavaDate(this.pubDate);
+            dtDisplay = DateTimeUtils.dateFromIso8601(this.pubDate);
         }
         return dtDisplay;
     }

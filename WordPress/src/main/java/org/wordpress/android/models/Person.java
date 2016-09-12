@@ -160,7 +160,7 @@ public class Person {
     private transient java.util.Date dtSubscribed;
     public java.util.Date getDateSubscribed() {
         if (dtSubscribed == null)
-            dtSubscribed = DateTimeUtils.iso8601ToJavaDate(subscribed);
+            dtSubscribed = DateTimeUtils.dateFromIso8601(subscribed);
         return dtSubscribed;
     }
 
