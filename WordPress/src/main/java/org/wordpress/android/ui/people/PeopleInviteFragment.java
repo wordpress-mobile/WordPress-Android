@@ -2,6 +2,8 @@ package org.wordpress.android.ui.people;
 
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -30,6 +33,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.MultiUsernameEditText;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,15 +54,13 @@ public class PeopleInviteFragment extends Fragment implements
 
     private static final int MAX_NUMBER_OF_INVITEES = 10;
     private static final String[] USERNAME_DELIMITERS = {" ", ","};
-
+    private final Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
+    private final HashMap<String, String> mUsernameResults = new HashMap<>();
+    private final Map<String, View> mUsernameErrorViews = new Hashtable<>();
     private ViewGroup mUsernamesContainer;
     private MultiUsernameEditText mUsernameEditText;
     private TextView mRoleTextView;
     private EditText mCustomMessageEditText;
-
-    private final Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
-    private final HashMap<String, String> mUsernameResults = new HashMap<>();
-    private final Map<String, View> mUsernameErrorViews = new Hashtable<>();
     private Role mRole;
     private String mCustomMessage = "";
     private boolean mInviteOperationInProgress = false;
@@ -194,7 +196,7 @@ public class PeopleInviteFragment extends Fragment implements
             populateUsernameButtons(usernames);
         }
 
-        View roleContainer = view.findViewById(R.id.role_container);
+        View roleContainer = view.findViewById(R.id.role);
         roleContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,8 +204,17 @@ public class PeopleInviteFragment extends Fragment implements
             }
         });
         mRoleTextView = (TextView) view.findViewById(R.id.role);
-
         setRole(role);
+
+        ImageView imgInfo = (ImageView) view.findViewById(R.id.imgInfo);
+        imgInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(getString(R.string.role_info_url));
+                AppLockManager.getInstance().setExtendedTimeout();
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+            }
+        });
 
         final int MAX_CHARS = getResources().getInteger(R.integer.invite_message_char_limit);
         final TextView remainingCharsTextView = (TextView) view.findViewById(R.id.message_remaining);
@@ -345,6 +356,7 @@ public class PeopleInviteFragment extends Fragment implements
 
     /**
      * Deletes the last entered username.
+     *
      * @return true if the username was deleted
      */
     private boolean removeLastEnteredUsername() {
@@ -402,7 +414,7 @@ public class PeopleInviteFragment extends Fragment implements
                         return;
                     }
 
-                    if(!isUserInInvitees(username)){
+                    if (!isUserInInvitees(username)) {
                         //user is removed from invitees before validation
                         return;
                     }
@@ -433,10 +445,6 @@ public class PeopleInviteFragment extends Fragment implements
                 validationEndListener.onValidationEnd();
             }
         }
-    }
-
-    public interface ValidationEndListener {
-        void onValidationEnd();
     }
 
     private void styleButton(String username, String validationResultMessage) {
@@ -629,5 +637,9 @@ public class PeopleInviteFragment extends Fragment implements
         String dotComBlogId = getArguments().getString(ARG_BLOGID);
         Blog blog = WordPress.wpDB.getBlogForDotComBlogId(dotComBlogId);
         return blog != null && blog.isPrivate();
+    }
+
+    public interface ValidationEndListener {
+        void onValidationEnd();
     }
 }
