@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,6 +57,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -130,7 +132,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected @Inject HTTPAuthManager mHTTPAuthManager;
     protected @Inject MemorizingTrustManager mMemorizingTrustManager;
 
-
+    private ProgressDialog mProgressDialog;
     protected boolean mSitesFetched = false;
     protected boolean mAccountSettingsFetched = false;
     protected boolean mAccountFetched = false;
@@ -229,17 +231,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
         // Ensure two-step form is shown if needed
         if (!TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.GONE) {
             setTwoStepAuthVisibility(true);
+        }
+
+        // show progress indicator while waiting for network response when migrating access token
+        if (AppPrefs.wasAccessTokenMigrated()) {
+            showProgressDialog();
         }
     }
 
@@ -887,6 +889,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mAccountFetched |= event.causeOfChange == AccountAction.FETCH_ACCOUNT;
         // Finish activity if sites have been fetched
         if (mSitesFetched && mAccountSettingsFetched && mAccountFetched) {
+            updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
     }
@@ -896,6 +899,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             showAuthError(event.error.type, event.error.message);
+            updateMigrationStatusIfNeeded();
             endProgress();
             return;
         }
@@ -923,6 +927,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSitesFetched = true;
         // Finish activity if account settings have been fetched or if it's a wporg site
         if ((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) {
+            updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
     }
@@ -980,6 +985,27 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             case GENERIC_ERROR:
                 showGenericErrorDialog(getResources().getString(R.string.login_failed_message));
                 break;
+        }
+    }
+
+    private void updateMigrationStatusIfNeeded() {
+        if (AppPrefs.wasAccessTokenMigrated()) {
+            AppPrefs.setAccessTokenMigrated(false);
+            hideProgressDialog();
+        }
+    }
+
+    private void showProgressDialog() {
+        if (!isAdded()) return;
+        mProgressDialog = new ProgressDialog(getActivity(), R.style.Calypso_AlertDialog);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage(getString(R.string.access_token_migration_message));
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 }

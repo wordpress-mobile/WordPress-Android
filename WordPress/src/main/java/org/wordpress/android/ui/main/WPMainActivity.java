@@ -202,7 +202,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         });
 
         if (savedInstanceState == null) {
-            if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (!AppPrefs.wasAccessTokenMigrated()
+                && WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
@@ -319,8 +320,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         super.onStart();
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
-
-        showAccessTokenMigrationDialogIfNeeded();
     }
 
     @Override
@@ -551,14 +550,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     public void onAccountChanged(OnAccountChanged event) {
         if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed out
-            hideAccessTokenMigrationDialog(true);
             resetFragments();
             ActivityLauncher.showSignInForResult(this);
-        } else {
-            if (mMigrationDialog != null) {
-                mMigrationDialog.setHasAccount(true);
-                hideAccessTokenMigrationDialog(false);
-            }
         }
     }
 
@@ -716,35 +709,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
             mSelectedSite = site;
-            if (mMigrationDialog != null) {
-                mMigrationDialog.setHasSites(true);
-                hideAccessTokenMigrationDialog(false);
-            }
-        }
-    }
-
-    //
-    // Access token migration to AccountStore
-    //
-
-    private TokenMigrationDialog mMigrationDialog;
-    private void showAccessTokenMigrationDialogIfNeeded() {
-        if (AppPrefs.wasAccessTokenMigrated()) {
-            AppLog.d(T.MAIN, "+show");
-            // app is awaiting response to account/site fetches, show progress bar until onSite/AccountChanged
-            boolean hasAccount = mAccountStore.getAccount() != null;
-            boolean hasSites = getSelectedSite() != null;
-            mMigrationDialog = TokenMigrationDialog.newInstance(hasAccount, hasSites);
-            mMigrationDialog.show(getFragmentManager(), "migration-progress");
-        }
-    }
-
-    private void hideAccessTokenMigrationDialog(boolean force) {
-        if (mMigrationDialog != null && mMigrationDialog.isResumed()) {
-            if (force || mMigrationDialog.hasData()) {
-                AppLog.d(T.MAIN, "+dismiss");
-                mMigrationDialog.dismiss();
-            }
         }
     }
 }
