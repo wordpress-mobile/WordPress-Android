@@ -83,15 +83,29 @@
             android:background="?android:selectableItemBackground"
             android:orientation="vertical">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:text="@string/role"
-                android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_large"
-                tools:text="@string/role" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:text="@string/role"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/text_sz_large"
+                    tools:text="@string/role" />
+
+                <ImageView
+                    android:id="@+id/imgInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/margin_small"
+                    android:paddingRight="@dimen/margin_small"
+                    android:src="@drawable/dashicon_info" />
+            </LinearLayout>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/role"
