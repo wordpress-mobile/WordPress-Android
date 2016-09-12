@@ -838,22 +838,20 @@ public class MediaGridFragment extends Fragment
         AppLog.e(AppLog.T.MEDIA, "Media error occurred: " + errorType);
         // TODO: Handle permission error
         final boolean isPermissionError = false;
-        if (errorType != MediaStore.MediaErrorType.NONE) {
-            if (getActivity() != null) {
-                if (!isPermissionError) {
-                    ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media),
-                            Duration.LONG);
-                } else {
-                    if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
-                        ToastUtils.showToast(getActivity(), getString(
-                                R.string.media_error_no_permission));
-                    }
+        if (getActivity() != null) {
+            if (!isPermissionError) {
+                ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media),
+                        Duration.LONG);
+            } else {
+                if (mEmptyView == null || mEmptyView.getVisibility() != View.VISIBLE) {
+                    ToastUtils.showToast(getActivity(), getString(
+                            R.string.media_error_no_permission));
                 }
             }
-            MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-            mHasRetrievedAllMedia = true;
-            adapter.setHasRetrievedAll(true);
         }
+        MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+        mHasRetrievedAllMedia = true;
+        adapter.setHasRetrievedAll(true);
 
         // the activity may be gone by the time we get this, so check for it
         if (getActivity() != null && MediaGridFragment.this.isVisible()) {
