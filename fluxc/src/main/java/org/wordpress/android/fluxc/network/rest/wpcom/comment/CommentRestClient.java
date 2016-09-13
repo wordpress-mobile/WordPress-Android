@@ -15,11 +15,14 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.CommentsWPComRestResponse;
+import org.wordpress.android.fluxc.store.CommentStore.CommentError;
+import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
 
 import java.util.ArrayList;
@@ -58,11 +61,22 @@ public class CommentRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // FIXME:
+                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
+                                commentErrorToPayload(error)));
                     }
                 }
         );
         add(request);
+    }
+
+    private FetchCommentsResponsePayload commentErrorToPayload(BaseNetworkError error) {
+        FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(new ArrayList<CommentModel>());
+        CommentErrorType errorType = CommentErrorType.GENERIC_ERROR;
+        if (error.isGeneric() && error.type == GenericErrorType.INVALID_RESPONSE) {
+            errorType = CommentErrorType.INVALID_RESPONSE;
+        }
+        payload.error = new CommentError(errorType, "");
+        return payload;
     }
 
     private List<CommentModel> commentsResponseToCommentList(CommentsWPComRestResponse response, SiteModel site) {
