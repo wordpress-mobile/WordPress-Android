@@ -31,7 +31,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class CommentXMLRPCClient extends BaseXMLRPCClient {
-    public static final int DEFAULT_NUMBER_COMMENTS = 50;
+    private static final int DEFAULT_NUMBER_COMMENTS = 20;
 
     @Inject
     public CommentXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,

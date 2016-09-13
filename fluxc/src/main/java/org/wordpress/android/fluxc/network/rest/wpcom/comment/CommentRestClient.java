@@ -30,6 +30,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class CommentRestClient extends BaseWPComRestClient {
+    private static final String DEFAULT_NUMBER_COMMENTS = "20";
+
     @Inject
     public CommentRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                              AccessToken accessToken, UserAgent userAgent) {
@@ -41,6 +43,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         Map<String, String> params = new HashMap<>();
         params.put("status", status.toString());
         params.put("offset", String.valueOf(offset));
+        params.put("number", DEFAULT_NUMBER_COMMENTS);
         final WPComGsonRequest<CommentsWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, params, CommentsWPComRestResponse.class,
                 new Listener<CommentsWPComRestResponse>() {
