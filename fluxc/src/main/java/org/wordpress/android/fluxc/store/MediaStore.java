@@ -25,6 +25,31 @@ import javax.inject.Singleton;
 
 @Singleton
 public class MediaStore extends Store {
+    public static class MediaFilter {
+        public static final int MAX_NUMBER = 100;
+        public static final long UNATTACHED_POST_ID = 0;
+
+        public enum SortOrder {
+            DESCENDING, ASCENDING
+        }
+
+        public enum SortField {
+            DATE, TITLE, ID
+        }
+
+        public List<String> fields;
+        public int number;
+        public long postId;
+        public int offset;
+        public int page;
+        public SortOrder sortOrder;
+        public SortField sortField;
+        public String searchQuery;
+        public String after;
+        public String before;
+        public String mimeType;
+    }
+
     //
     // Payloads
     //
@@ -35,11 +60,16 @@ public class MediaStore extends Store {
     public static class MediaListPayload extends Payload {
         public MediaAction cause;
         public SiteModel site;
+        public MediaFilter filter;
         public List<MediaModel> media;
         public MediaError error;
         public MediaListPayload(MediaAction cause, SiteModel site, List<MediaModel> media) {
+            this(cause, site, null, media);
+        }
+        public MediaListPayload(MediaAction cause, SiteModel site, MediaFilter filter, List<MediaModel> media) {
             this.cause = cause;
             this.site = site;
+            this.filter = filter;
             this.media = media;
         }
 
@@ -78,6 +108,37 @@ public class MediaStore extends Store {
         @Override
         public boolean isError() {
             return error != null;
+        }
+    }
+
+    //
+    // OnChanged events
+    //
+
+    public static class MediaError implements OnChangedError {
+        public MediaErrorType type;
+        public MediaError(MediaErrorType type) {
+            this.type = type;
+        }
+    }
+
+    public class OnMediaChanged extends OnChanged<MediaError> {
+        public MediaAction cause;
+        public List<MediaModel> media;
+        public OnMediaChanged(MediaAction cause, List<MediaModel> media) {
+            this.cause = cause;
+            this.media = media;
+        }
+    }
+
+    public class OnMediaUploaded extends OnChanged<MediaError> {
+        public MediaModel media;
+        public float progress;
+        public boolean completed;
+        public OnMediaUploaded(MediaModel media, float progress, boolean completed) {
+            this.media = media;
+            this.progress = progress;
+            this.completed = completed;
         }
     }
 
@@ -121,37 +182,6 @@ public class MediaStore extends Store {
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }
-        }
-    }
-
-    public static class MediaError implements OnChangedError {
-        public MediaErrorType type;
-        public MediaError(MediaErrorType type) {
-            this.type = type;
-        }
-    }
-
-    //
-    // OnChanged events
-    //
-
-    public class OnMediaChanged extends OnChanged<MediaError> {
-        public MediaAction cause;
-        public List<MediaModel> media;
-        public OnMediaChanged(MediaAction cause, List<MediaModel> media) {
-            this.cause = cause;
-            this.media = media;
-        }
-    }
-
-    public class OnMediaUploaded extends OnChanged<MediaError> {
-        public MediaModel media;
-        public float progress;
-        public boolean completed;
-        public OnMediaUploaded(MediaModel media, float progress, boolean completed) {
-            this.media = media;
-            this.progress = progress;
-            this.completed = completed;
         }
     }
 
@@ -202,6 +232,10 @@ public class MediaStore extends Store {
     @Override
     public void onRegister() {
     }
+
+    //
+    // Media persistence
+    //
 
     public List<MediaModel> getAllSiteMedia(long siteId) {
         return MediaSqlUtils.getAllSiteMedia(siteId);
