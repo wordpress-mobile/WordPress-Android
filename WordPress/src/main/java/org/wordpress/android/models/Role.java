@@ -40,7 +40,7 @@ public enum Role {
             case "viewer":
                 return VIEWER;
         }
-        Exception e = new IllegalArgumentException("All roles must be handled");
+        Exception e = new IllegalArgumentException("All roles must be handled: " + role);
         CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.PEOPLE);
 
         // All roles should have been handled, but in case an edge case occurs,
