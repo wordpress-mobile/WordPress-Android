@@ -54,8 +54,8 @@
                     android:paddingLeft="@dimen/margin_medium"
                     android:paddingRight="@dimen/margin_medium"
                     android:singleLine="true"
-                    android:textColor="#444444"
-                    android:textColorHint="#AAAAAA"
+                    android:textColor="@color/nux_text_grey"
+                    android:textColorHint="@color/nux_text_hint_grey"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="sdfwefef"
                     android:inputType="text"
@@ -71,6 +71,12 @@
                 android:textSize="@dimen/text_sz_small"
                 android:textStyle="italic"
                 android:text="@string/invite_message_usernames_limit"/>
+
+            <LinearLayout
+                android:id="@+id/username_errors_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
         </LinearLayout>
 
         <LinearLayout

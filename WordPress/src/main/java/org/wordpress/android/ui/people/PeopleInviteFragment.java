@@ -334,9 +334,9 @@ public class PeopleInviteFragment extends Fragment implements
         mUsernameResults.remove(username);
         usernamesView.removeView(removedButton);
 
-        final ViewGroup usernamesContainer = (ViewGroup) getView().findViewById(R.id.usernames_container);
+        final ViewGroup usernameErrorsContainer = (ViewGroup) getView().findViewById(R.id.username_errors_container);
         View removedErrorView = mUsernameErrorViews.remove(username);
-        usernamesContainer.removeView(removedErrorView);
+        usernameErrorsContainer.removeView(removedErrorView);
     }
 
     private boolean isUserInInvitees(String username) {
@@ -365,6 +365,12 @@ public class PeopleInviteFragment extends Fragment implements
     @Override
     public void onRoleSelected(Role newRole) {
         setRole(newRole);
+
+        clearUsernamesStyling(mUsernameButtons.keySet());
+        mUsernameResults.clear();
+        clearErrorViews();
+
+        validateAndStyleUsername(new ArrayList<>(mUsernameButtons.keySet()), null);
     }
 
     private void setRole(Role newRole) {
@@ -395,7 +401,8 @@ public class PeopleInviteFragment extends Fragment implements
         if (usernamesToCheck.size() > 0) {
 
             String dotComBlogId = getArguments().getString(ARG_BLOGID);
-            PeopleUtils.validateUsernames(usernamesToCheck, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
+            PeopleUtils
+                    .validateUsernames(usernamesToCheck, mRole, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
                 @Override
                 public void onUsernameValidation(String username, ValidationResult validationResult) {
                     if (!isAdded()) {
@@ -410,8 +417,9 @@ public class PeopleInviteFragment extends Fragment implements
                     final String usernameResultString = getValidationErrorString(username, validationResult);
                     mUsernameResults.put(username, usernameResultString);
 
+                    styleButton(username, usernameResultString);
+
                     if (validationResult != ValidationResult.USER_FOUND) {
-                        styleButton(username, usernameResultString);
                         appendError(username, usernameResultString);
                     }
                 }
@@ -449,7 +457,7 @@ public class PeopleInviteFragment extends Fragment implements
         if (!validationResultMessage.equals(FLAG_SUCCESS)) {
             textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
         } else {
-            // properly style the button
+            textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.nux_text_grey));
         }
     }
 
@@ -475,11 +483,11 @@ public class PeopleInviteFragment extends Fragment implements
             return;
         }
 
-        final ViewGroup usernamesContainer = (ViewGroup) getView().findViewById(R.id.usernames_container);
+        final ViewGroup usernameErrorsContainer = (ViewGroup) getView().findViewById(R.id.username_errors_container);
         final TextView usernameError = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout
                 .people_invite_error_view, null);
         usernameError.setText(error);
-        usernamesContainer.addView(usernameError);
+        usernameErrorsContainer.addView(usernameError);
         mUsernameErrorViews.put(username, usernameError);
     }
 
@@ -492,6 +500,17 @@ public class PeopleInviteFragment extends Fragment implements
             setRole(getDefaultRole());
             resetEditTextContent(mCustomMessageEditText);
         }
+    }
+
+    private void clearUsernamesStyling(Collection<String> usernames) {
+        for (String username : usernames) {
+            styleButton(username, FLAG_SUCCESS);
+        }
+    }
+
+    private void clearErrorViews() {
+        final ViewGroup usernameErrorsContainer = (ViewGroup) getView().findViewById(R.id.username_errors_container);
+        usernameErrorsContainer.removeAllViews();
     }
 
     @Override
