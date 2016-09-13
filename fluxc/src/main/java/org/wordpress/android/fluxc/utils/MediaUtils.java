@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestRespon
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCException;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
+import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.MapUtils;
 import org.xmlpull.v1.XmlPullParserException;
@@ -24,29 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 public class MediaUtils {
-    public static boolean canReadFile(String filePath) {
-        File file = new File(filePath);
-        return file.canRead();
-    }
-
-    /**
-     * Returns the substring of characters that follow the final '.' in the given string.
-     */
-    public static String getExtension(String filePath) {
-        if (TextUtils.isEmpty(filePath) || !filePath.contains(".")) return null;
-        if (filePath.lastIndexOf(".") + 1 >= filePath.length()) return null;
-        return filePath.substring(filePath.lastIndexOf(".") + 1);
-    }
-
-    /**
-     * Returns the substring of characters that follow the final '/' in the given string.
-     */
-    public static String getFileName(String filePath) {
-        if (TextUtils.isEmpty(filePath) || !filePath.contains("/")) return null;
-        if (filePath.lastIndexOf("/") + 1 >= filePath.length()) return null;
-        return filePath.substring(filePath.lastIndexOf("/") + 1);
-    }
-
     //
     // WP.com REST API
     //
@@ -205,6 +183,32 @@ public class MediaUtils {
         return media;
     }
 
+    // filter query parameter keys for XMLRPC.GET_MEDIA_LIBRARY
+    public static final String NUMBER_FILTER_KEY = "number";
+    public static final String OFFSET_FILTER_KEY = "offset";
+    public static final String PARENT_FILTER_KEY = "parent_id";
+    public static final String MIME_TYPE_FILTER_KEY = "mime_type";
+
+    public static void addFilterParams(@NonNull final List<Object> params, @NonNull final MediaFilter filter) {
+        Map<String, Object> queryParams = new HashMap<>();
+
+        if (filter.number > 0) {
+            queryParams.put(NUMBER_FILTER_KEY, Math.min(filter.number, MediaFilter.MAX_NUMBER));
+        }
+        if (filter.offset > 0) {
+            queryParams.put(OFFSET_FILTER_KEY, filter.offset);
+        }
+        if (filter.postId > 0) {
+            queryParams.put(PARENT_FILTER_KEY, filter.postId);
+        }
+        if (!TextUtils.isEmpty(filter.mimeType)) {
+            queryParams.put(MIME_TYPE_FILTER_KEY, filter.mimeType);
+        }
+        if (!queryParams.isEmpty()) {
+            params.add(queryParams);
+        }
+    }
+
     //
     // MIME types
     //
@@ -295,5 +299,36 @@ public class MediaUtils {
             if (mimeType.equals(type + supportedSubtype)) return true;
         }
         return false;
+    }
+
+    //
+    // File operations
+    //
+
+    /**
+     * Queries filesystem to determine if a given file can be read.
+     */
+    public static boolean canReadFile(String filePath) {
+        if (filePath == null || TextUtils.isEmpty(filePath)) return false;
+        File file = new File(filePath);
+        return file.canRead();
+    }
+
+    /**
+     * Returns the substring of characters that follow the final '.' in the given string.
+     */
+    public static String getExtension(String filePath) {
+        if (TextUtils.isEmpty(filePath) || !filePath.contains(".")) return null;
+        if (filePath.lastIndexOf(".") + 1 >= filePath.length()) return null;
+        return filePath.substring(filePath.lastIndexOf(".") + 1);
+    }
+
+    /**
+     * Returns the substring of characters that follow the final '/' in the given string.
+     */
+    public static String getFileName(String filePath) {
+        if (TextUtils.isEmpty(filePath) || !filePath.contains("/")) return null;
+        if (filePath.lastIndexOf("/") + 1 >= filePath.length()) return null;
+        return filePath.substring(filePath.lastIndexOf("/") + 1);
     }
 }
