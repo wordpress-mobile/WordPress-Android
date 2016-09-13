@@ -28,8 +28,8 @@ public class CommentStore extends Store {
     // Payloads
 
     public static class FetchCommentsPayload extends Payload {
-        final public SiteModel site;
-        final public boolean loadMore;
+        public final SiteModel site;
+        public final boolean loadMore;
 
         public FetchCommentsPayload(@NonNull SiteModel site) {
             this.site = site;
@@ -43,8 +43,8 @@ public class CommentStore extends Store {
     }
 
     public static class FetchCommentsResponsePayload extends Payload {
-        final public List<CommentModel> comments;
-
+        public final List<CommentModel> comments;
+        public CommentError error;
         public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments) {
             this.comments = comments;
         }
@@ -53,18 +53,19 @@ public class CommentStore extends Store {
     // Errors
 
     public enum CommentErrorType {
-        INVALID_SITE,
-        GENERIC_ERROR
+        GENERIC_ERROR,
+        INVALID_RESPONSE,
+        INVALID_COMMENT
     }
 
     public static class CommentError implements OnChangedError {
         public CommentErrorType type;
-
-        public CommentError(CommentErrorType type) {
+        public String message;
+        public CommentError(CommentErrorType type, @NonNull String message) {
             this.type = type;
+            this.message = message;
         }
     }
-
 
     // Actions
 
@@ -104,7 +105,7 @@ public class CommentStore extends Store {
     private void fetchComments(FetchCommentsPayload payload) {
         int offset = 0;
         if (payload.loadMore) {
-            offset = 2; // TODO:
+            offset = 20; // FIXME: do something here
         }
         if (payload.site.isWPCom()) {
             mCommentRestClient.fetchComments(payload.site, offset, CommentStatus.ALL);
@@ -119,7 +120,7 @@ public class CommentStore extends Store {
             rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
         }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
-        // FIXME: error management
+        event.error = payload.error;
         emitChange(event);
     }
 
