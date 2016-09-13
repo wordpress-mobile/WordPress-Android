@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.utils.MediaUtils;
@@ -106,8 +107,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         performUpload(site, media);
     }
 
-    public void fetchAllMedia(final SiteModel site) {
+    public void fetchAllMedia(final SiteModel site, final MediaFilter filter) {
         List<Object> params = getBasicParams(site);
+        if (filter != null) {
+            MediaUtils.addFilterParams(params, filter);
+        }
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params, new Listener() {
             @Override
             public void onResponse(Object response) {
@@ -248,7 +252,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         });
     }
 
-    private List<Object> getBasicParams(SiteModel site) {
+    private List<Object> getBasicParams(@NonNull SiteModel site) {
         List<Object> params = new ArrayList<>();
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());

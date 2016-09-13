@@ -381,7 +381,7 @@ public class MediaStore extends Store {
         if (payload.site.isWPCom()) {
             mMediaRestClient.fetchAllMedia(payload.site);
         } else {
-            mMediaXmlrpcClient.fetchAllMedia(payload.site);
+            mMediaXmlrpcClient.fetchAllMedia(payload.site, payload.filter);
         }
     }
 
