@@ -461,6 +461,10 @@ public class PeopleInviteFragment extends Fragment implements
                 return getString(R.string.invite_username_not_found, username);
             case ALREADY_MEMBER:
                 return getString(R.string.invite_already_a_member, username);
+            case ALREADY_FOLLOWING:
+                return getString(R.string.invite_already_following, username);
+            case BLOCKED_INVITES:
+                return getString(R.string.invite_user_blocked_invites, username);
             case INVALID_EMAIL:
                 return getString(R.string.invite_invalid_email, username);
             case USER_FOUND:

@@ -376,6 +376,12 @@ public class PeopleUtils {
                                 case "invalid_input_has_role":
                                     callback.onUsernameValidation(username, ValidationResult.ALREADY_MEMBER);
                                     continue;
+                                case "invalid_input_following":
+                                    callback.onUsernameValidation(username, ValidationResult.ALREADY_FOLLOWING);
+                                    continue;
+                                case "invalid_user_blocked_invites":
+                                    callback.onUsernameValidation(username, ValidationResult.BLOCKED_INVITES);
+                                    continue;
                             }
 
                             callback.onError();
@@ -434,6 +440,8 @@ public class PeopleUtils {
         enum ValidationResult {
             USER_NOT_FOUND,
             ALREADY_MEMBER,
+            ALREADY_FOLLOWING,
+            BLOCKED_INVITES,
             INVALID_EMAIL,
             USER_FOUND
         }
