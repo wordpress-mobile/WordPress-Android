@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.media;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -17,8 +18,10 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCException;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
@@ -28,11 +31,16 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
+import org.wordpress.android.util.MapUtils;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,11 +52,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
-    // keys for pushing changes to existing remote media
-    public static final String TITLE_EDIT_KEY       = "post_title";
-    public static final String DESCRIPTION_EDIT_KEY = "post_content";
-    public static final String CAPTION_EDIT_KEY     = "post_excerpt";
-
     private OkHttpClient mOkHttpClient;
 
     public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okClient,
@@ -63,15 +66,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         notifyMediaProgress(media, Math.max(0.99f, progress), null);
     }
 
-    public void pushMedia(final SiteModel site, List<MediaModel> mediaList) {
+    public void pushMedia(final SiteModel site, final List<MediaModel> mediaList) {
         for (final MediaModel media : mediaList) {
-            List<Object> params = getBasicParams(site);
-            params.add(media.getMediaId());
-            Map<String, Object> mediaFields = new HashMap<>();
-            mediaFields.put(TITLE_EDIT_KEY, media.getTitle());
-            mediaFields.put(DESCRIPTION_EDIT_KEY, media.getDescription());
-            mediaFields.put(CAPTION_EDIT_KEY, media.getCaption());
-            params.add(mediaFields);
+            List<Object> params = getBasicParams(site, media);
+            params.add(getEditMediaFields(media));
             add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.EDIT_POST, params, new Listener() {
                 @Override
                 public void onResponse(Object response) {
@@ -108,14 +106,14 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     public void fetchAllMedia(final SiteModel site, final MediaFilter filter) {
-        List<Object> params = getBasicParams(site);
+        List<Object> params = getBasicParams(site, null);
         if (filter != null) {
-            MediaUtils.addFilterParams(params, filter);
+            params.add(getQueryParams(filter));
         }
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params, new Listener() {
             @Override
             public void onResponse(Object response) {
-                List<MediaModel> media = MediaUtils.mediaListFromXmlrpcResponse(response, site.getSiteId());
+                List<MediaModel> media = getMediaListFromXmlrpcResponse(response, site.getSiteId());
                 if (media != null) {
                     AppLog.v(T.MEDIA, "Fetched all media for site via XMLRPC.GET_MEDIA_LIBRARY");
                     notifyMediaFetched(MediaAction.FETCH_ALL_MEDIA, site, media, null);
@@ -139,15 +137,15 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         if (site == null || mediaToFetch == null || mediaToFetch.isEmpty()) return;
 
         for (final MediaModel media : mediaToFetch) {
-            List<Object> params = getBasicParams(site);
-            params.add(media.getMediaId());
+            List<Object> params = getBasicParams(site, media);
             add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_ITEM, params, new Listener() {
                 @Override
                 public void onResponse(Object response) {
                     AppLog.v(T.MEDIA, "Fetched media for site via XMLRPC.GET_MEDIA_ITEM");
-                    MediaModel responseMedia = MediaUtils.mediaFromXmlrpcResponse((HashMap) response, site.getSiteId());
+                    MediaModel responseMedia = getMediaFromXmlrpcResponse((HashMap) response);
                     if (responseMedia != null) {
                         AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
+                        responseMedia.setSiteId(site.getSiteId());
                         notifyMediaFetched(MediaAction.FETCH_MEDIA, site, responseMedia, null);
                     } else {
                         AppLog.w(T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
@@ -170,8 +168,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         if (site == null || mediaToDelete == null || mediaToDelete.isEmpty()) return;
 
         for (final MediaModel media : mediaToDelete) {
-            List<Object> params = getBasicParams(site);
-            params.add(media.getMediaId());
+            List<Object> params = getBasicParams(site, media);
             add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_POST, params, new Listener() {
                 @Override
                 public void onResponse(Object response) {
@@ -234,7 +231,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     AppLog.d(T.MEDIA, "media upload successful: " + media.getTitle());
-                    MediaModel responseMedia = MediaUtils.mediaFromXmlrpcUploadResponse(response);
+                    MediaModel responseMedia = getMediaFromUploadResponse(response);
                     notifyMediaUploaded(responseMedia, null);
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
@@ -252,35 +249,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         });
     }
 
-    private List<Object> getBasicParams(@NonNull SiteModel site) {
-        List<Object> params = new ArrayList<>();
-        params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
-        return params;
-    }
-
-    private boolean is404Response(BaseRequest.BaseNetworkError error) {
-        if (error.isGeneric() && error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
-            return true;
-        }
-
-        if (error.hasVolleyError() && error.volleyError != null) {
-            VolleyError volleyError = error.volleyError;
-            if (volleyError.networkResponse != null
-            && volleyError.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
-                return true;
-            }
-
-            if (volleyError.getCause() instanceof XMLRPCFault) {
-                if (((XMLRPCFault) volleyError.getCause()).getFaultCode() == HttpURLConnection.HTTP_NOT_FOUND) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
+    //
+    // Helper methods to dispatch media actions
+    //
 
     private void notifyMediaProgress(MediaModel media, float progress, MediaError error) {
         AppLog.v(AppLog.T.MEDIA, "Progress update on upload of " + media.getTitle() + ": " + progress);
@@ -325,5 +296,162 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         MediaStore.MediaListPayload payload = new MediaStore.MediaListPayload(cause, site, mediaList);
         payload.error = error;
         mDispatcher.dispatch(MediaActionBuilder.newDeletedMediaAction(payload));
+    }
+
+    //
+    // Utility methods
+    //
+
+    // WordPress XML-RPC response keys
+    private static final String MEDIA_ID_KEY         = "attachment_id";
+    private static final String POST_ID_KEY          = "parent";
+    private static final String TITLE_KEY            = "title";
+    private static final String CAPTION_KEY          = "caption";
+    private static final String DESCRIPTION_KEY      = "description";
+    private static final String VIDEOPRESS_GUID_KEY  = "videopress_shortcode";
+    private static final String THUMBNAIL_URL_KEY    = "thumbnail";
+    private static final String DATE_UPLOADED_KEY    = "date_created_gmt";
+    private static final String LINK_KEY             = "link";
+    private static final String METADATA_KEY         = "metadata";
+    private static final String WIDTH_KEY            = "width";
+    private static final String HEIGHT_KEY           = "height";
+
+    // filter query parameter keys for XMLRPC.GET_MEDIA_LIBRARY
+    private static final String NUMBER_FILTER_KEY    = "number";
+    private static final String OFFSET_FILTER_KEY    = "offset";
+    private static final String PARENT_FILTER_KEY    = "parent_id";
+    private static final String MIME_TYPE_FILTER_KEY = "mime_type";
+
+    // keys for pushing changes to existing remote media
+    public static final String TITLE_EDIT_KEY       = "post_title";
+    public static final String DESCRIPTION_EDIT_KEY = "post_content";
+    public static final String CAPTION_EDIT_KEY     = "post_excerpt";
+
+    // media list responses should be of type Object[] with each media item in the array represented by a HashMap
+    private List<MediaModel> getMediaListFromXmlrpcResponse(Object response, long siteId) {
+        if (response == null || !(response instanceof Object[])) return null;
+
+        Object[] responseArray = (Object[]) response;
+        List<MediaModel> responseMedia = new ArrayList<>();
+        for (Object mediaObject : responseArray) {
+            if (!(mediaObject instanceof HashMap)) continue;
+            MediaModel media = getMediaFromXmlrpcResponse((HashMap) mediaObject);
+            if (media != null) {
+                media.setSiteId(siteId);
+                responseMedia.add(media);
+            }
+        }
+
+        return responseMedia;
+    }
+
+    private MediaModel getMediaFromXmlrpcResponse(HashMap response) {
+        if (response == null || response.isEmpty()) return null;
+
+        MediaModel media = new MediaModel();
+        media.setMediaId(MapUtils.getMapLong(response, MEDIA_ID_KEY));
+        media.setPostId(MapUtils.getMapLong(response, POST_ID_KEY));
+        media.setTitle(MapUtils.getMapStr(response, TITLE_KEY));
+        media.setCaption(MapUtils.getMapStr(response, CAPTION_KEY));
+        media.setDescription(MapUtils.getMapStr(response, DESCRIPTION_KEY));
+        media.setVideoPressGuid(MapUtils.getMapStr(response, VIDEOPRESS_GUID_KEY));
+        media.setThumbnailUrl(MapUtils.getMapStr(response, THUMBNAIL_URL_KEY));
+        media.setUploadDate(MapUtils.getMapDate(response, DATE_UPLOADED_KEY).toString());
+
+        String link = MapUtils.getMapStr(response, LINK_KEY);
+        String fileExtension = MediaUtils.getExtension(link);
+        media.setUrl(link);
+        media.setFileName(MediaUtils.getFileName(link));
+        media.setFileExtension(fileExtension);
+        media.setMimeType(MediaUtils.getMimeTypeForExtension(fileExtension));
+
+        Object metadataObject = response.get(METADATA_KEY);
+        if (metadataObject instanceof Map) {
+            Map metadataMap = (Map) metadataObject;
+            media.setWidth(MapUtils.getMapInt(metadataMap, WIDTH_KEY));
+            media.setHeight(MapUtils.getMapInt(metadataMap, HEIGHT_KEY));
+        }
+
+        return media;
+    }
+
+    private MediaModel getMediaFromUploadResponse(okhttp3.Response response) {
+        MediaModel media = new MediaModel();
+        try {
+            String data = new String(response.body().bytes(), "UTF-8");
+            InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
+            Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
+            if (obj instanceof Map) {
+                media.setMediaId(MapUtils.getMapLong((Map) obj, MEDIA_ID_KEY));
+            }
+        } catch (IOException | XMLRPCException | XmlPullParserException e) {
+            AppLog.w(AppLog.T.MEDIA, "failed to parse XMLRPC.wpUploadFile response: " + response);
+            return null;
+        }
+        return media;
+    }
+
+    @NonNull
+    private List<Object> getBasicParams(final SiteModel site, final MediaModel media) {
+        List<Object> params = new ArrayList<>();
+        if (site != null) {
+            params.add(site.getSelfHostedSiteId());
+            params.add(site.getUsername());
+            params.add(site.getPassword());
+            if (media != null) {
+                params.add(media.getMediaId());
+            }
+        }
+        return params;
+    }
+
+    private Map<String, Object> getEditMediaFields(final MediaModel media) {
+        if (media == null) return null;
+        Map<String, Object> mediaFields = new HashMap<>();
+        mediaFields.put(TITLE_EDIT_KEY, media.getTitle());
+        mediaFields.put(DESCRIPTION_EDIT_KEY, media.getDescription());
+        mediaFields.put(CAPTION_EDIT_KEY, media.getCaption());
+        return mediaFields;
+    }
+
+    private Map<String, Object> getQueryParams(final MediaFilter filter) {
+        if (filter == null) return null;
+
+        Map<String, Object> queryParams = new HashMap<>();
+        if (filter.number > 0) {
+            queryParams.put(NUMBER_FILTER_KEY, Math.min(filter.number, MediaFilter.MAX_NUMBER));
+        }
+        if (filter.offset > 0) {
+            queryParams.put(OFFSET_FILTER_KEY, filter.offset);
+        }
+        if (filter.postId > 0) {
+            queryParams.put(PARENT_FILTER_KEY, filter.postId);
+        }
+        if (!TextUtils.isEmpty(filter.mimeType)) {
+            queryParams.put(MIME_TYPE_FILTER_KEY, filter.mimeType);
+        }
+        return queryParams;
+    }
+
+    private boolean is404Response(BaseRequest.BaseNetworkError error) {
+        if (error.isGeneric() && error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
+            return true;
+        }
+
+        if (error.hasVolleyError() && error.volleyError != null) {
+            VolleyError volleyError = error.volleyError;
+            if (volleyError.networkResponse != null
+                    && volleyError.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
+                return true;
+            }
+
+            if (volleyError.getCause() instanceof XMLRPCFault) {
+                if (((XMLRPCFault) volleyError.getCause()).getFaultCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
