@@ -241,6 +241,10 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getAllSiteMedia(siteId);
     }
 
+    public List<MediaModel> getAllSiteMediaAsCursor(long siteId) {
+        return MediaSqlUtils.getAllSiteMediaAsCursor(siteId);
+    }
+
     public int getSiteMediaCount(long siteId) {
         return getAllSiteMedia(siteId).size();
     }
