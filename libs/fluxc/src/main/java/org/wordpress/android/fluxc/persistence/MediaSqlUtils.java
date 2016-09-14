@@ -15,6 +15,12 @@ public class MediaSqlUtils {
                 .getAsModel();
     }
 
+    public static List<MediaModel> getAllSiteMediaAsCursor(long siteId) {
+        return WellSql.select(MediaModel.class)
+                .where().equals(MediaModelTable.SITE_ID, siteId).endWhere()
+                .getAsCursor();
+    }
+
     public static List<MediaModel> getSiteMediaWithId(long siteId, long mediaId) {
         return WellSql.select(MediaModel.class).where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteId)
