@@ -4,6 +4,8 @@ import android.support.annotation.StringRes;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
 
 public enum Role {
     ADMIN(R.string.role_admin),
@@ -38,7 +40,12 @@ public enum Role {
             case "viewer":
                 return VIEWER;
         }
-        throw new IllegalArgumentException("All roles must be handled");
+        Exception e = new IllegalArgumentException("All roles must be handled: " + role);
+        CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.PEOPLE);
+
+        // All roles should have been handled, but in case an edge case occurs,
+        // using "Contributor" role is the safest option
+        return CONTRIBUTOR;
     }
 
     @Override
