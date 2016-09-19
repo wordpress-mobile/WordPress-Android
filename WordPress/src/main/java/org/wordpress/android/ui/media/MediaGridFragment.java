@@ -510,15 +510,15 @@ public class MediaGridFragment extends Fragment
     }
 
     private Cursor filterItems(Filter filter) {
-        String blogId = String.valueOf(mSite.getId());
+        long siteId = mSite.getSiteId();
 
         switch (filter) {
             case ALL:
-                return mMediaStore.getAllSiteMediaAsCursor(mSite.getSiteId());
+                return mMediaStore.getAllSiteMediaAsCursor(siteId);
             case IMAGES:
-                return WordPress.wpDB.getMediaImagesForBlog(blogId);
+                return mMediaStore.getSiteImagesAsCursor(siteId);
             case UNATTACHED:
-                return WordPress.wpDB.getMediaUnattachedForBlog(blogId);
+                return mMediaStore.getUnattachedSiteMediaAsCursor(siteId);
             case CUSTOM_DATE:
                 // show date picker only when the user clicks on the spinner, not when we are doing syncing
                 if (mIsDateFilterSet) {
