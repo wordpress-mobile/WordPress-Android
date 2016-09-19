@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import com.wellsql.generated.MediaModelTable;
+import com.yarolegovich.wellsql.WellCursor;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -15,7 +16,7 @@ public class MediaSqlUtils {
                 .getAsModel();
     }
 
-    public static List<MediaModel> getAllSiteMediaAsCursor(long siteId) {
+    public static WellCursor<MediaModel> getAllSiteMediaAsCursor(long siteId) {
         return WellSql.select(MediaModel.class)
                 .where().equals(MediaModelTable.SITE_ID, siteId).endWhere()
                 .getAsCursor();

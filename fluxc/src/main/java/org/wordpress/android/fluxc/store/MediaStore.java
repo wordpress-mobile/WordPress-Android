@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store;
 import android.support.annotation.NonNull;
 
 import com.wellsql.generated.MediaModelTable;
+import com.yarolegovich.wellsql.WellCursor;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -241,7 +242,7 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getAllSiteMedia(siteId);
     }
 
-    public List<MediaModel> getAllSiteMediaAsCursor(long siteId) {
+    public WellCursor<MediaModel> getAllSiteMediaAsCursor(long siteId) {
         return MediaSqlUtils.getAllSiteMediaAsCursor(siteId);
     }
 
