@@ -330,11 +330,11 @@ public class MediaGridFragment extends Fragment
     }
 
     void updateFilterText() {
-        String blogId = String.valueOf(mSite.getId());
+        long siteId = mSite.getSiteId();
 
-        int countAll = WordPress.wpDB.getMediaCountAll(blogId);
-        int countImages = WordPress.wpDB.getMediaCountImages(blogId);
-        int countUnattached = WordPress.wpDB.getMediaCountUnattached(blogId);
+        int countAll = mMediaStore.getSiteMediaCount(siteId);
+        int countImages = mMediaStore.getSiteImageCount(siteId);
+        int countUnattached = mMediaStore.getUnattachedSiteMediaCount(siteId);
 
         setFiltersText(countAll, countImages, countUnattached);
     }
