@@ -130,7 +130,7 @@ dependencies {
     // Simperium
     compile 'com.simperium.android:simperium:0.6.8'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:feature~39-media-store-SNAPSHOT') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:feature~39-media-store-cursors-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 
