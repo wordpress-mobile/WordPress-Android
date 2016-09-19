@@ -17,10 +17,10 @@ import android.widget.ImageView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
@@ -220,7 +220,7 @@ public class WordPressMediaUtils {
             cursor.close();
             return false;
         }
-        String state = cursor.getString(cursor.getColumnIndex("uploadState"));
+        String state = cursor.getString(cursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         cursor.close();
         return state == null || !state.equals("uploading");
     }
@@ -279,11 +279,11 @@ public class WordPressMediaUtils {
      * @param width width to use for photon request (if applicable)
      */
     public static String getNetworkThumbnailUrl(Cursor cursor, SiteModel site, int width) {
-        String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
+        String thumbnailURL = cursor.getString(cursor.getColumnIndex(MediaModelTable.THUMBNAIL_URL));
 
         // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
         if (SiteUtils.isPhotonCapable(site)) {
-            String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
+            String imageURL = cursor.getString(cursor.getColumnIndex(MediaModelTable.URL));
             if (imageURL != null) {
                 thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, width, 0);
             }
