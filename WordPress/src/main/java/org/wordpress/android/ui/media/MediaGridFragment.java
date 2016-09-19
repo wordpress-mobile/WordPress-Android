@@ -390,8 +390,8 @@ public class MediaGridFragment extends Fragment
 
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
-        String blogId = String.valueOf(mSite.getId());
-        Cursor cursor = WordPress.wpDB.getMediaFilesForBlog(blogId, searchTerm);
+        // TODO: pass searchTerm to `getAllSiteMediaAsCursor`
+        Cursor cursor = mMediaStore.getAllSiteMediaAsCursor(mSite.getSiteId());
         mGridAdapter.changeCursor(cursor);
     }
 
@@ -514,7 +514,7 @@ public class MediaGridFragment extends Fragment
 
         switch (filter) {
             case ALL:
-                return WordPress.wpDB.getMediaFilesForBlog(blogId);
+                return mMediaStore.getAllSiteMediaAsCursor(mSite.getSiteId());
             case IMAGES:
                 return WordPress.wpDB.getMediaImagesForBlog(blogId);
             case UNATTACHED:
