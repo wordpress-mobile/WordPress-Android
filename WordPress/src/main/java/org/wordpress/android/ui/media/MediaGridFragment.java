@@ -391,8 +391,7 @@ public class MediaGridFragment extends Fragment
 
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
-        // TODO: pass searchTerm to `getAllSiteMediaAsCursor`
-        Cursor cursor = mMediaStore.getAllSiteMediaAsCursor(mSite.getSiteId());
+        Cursor cursor = mMediaStore.searchSiteMediaByTitleAsCursor(mSite.getSiteId(), mSearchTerm);
         mGridAdapter.changeCursor(cursor);
     }
 
