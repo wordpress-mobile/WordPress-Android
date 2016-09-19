@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import com.wellsql.generated.MediaModelTable;
+import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellCursor;
 import com.yarolegovich.wellsql.WellSql;
 
@@ -11,15 +12,16 @@ import java.util.List;
 
 public class MediaSqlUtils {
     public static List<MediaModel> getAllSiteMedia(long siteId) {
-        return WellSql.select(MediaModel.class)
-                .where().equals(MediaModelTable.SITE_ID, siteId).endWhere()
-                .getAsModel();
+        return getAllSiteMediaQuery(siteId).getAsModel();
     }
 
     public static WellCursor<MediaModel> getAllSiteMediaAsCursor(long siteId) {
+        return getAllSiteMediaQuery(siteId).getAsCursor();
+    }
+
+    private static SelectQuery<MediaModel> getAllSiteMediaQuery(long siteId) {
         return WellSql.select(MediaModel.class)
-                .where().equals(MediaModelTable.SITE_ID, siteId).endWhere()
-                .getAsCursor();
+                .where().equals(MediaModelTable.SITE_ID, siteId).endWhere();
     }
 
     public static List<MediaModel> getSiteMediaWithId(long siteId, long mediaId) {
