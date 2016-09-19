@@ -40,20 +40,35 @@ public class MediaSqlUtils {
     }
 
     public static List<MediaModel> searchSiteMedia(long siteId, String column, String searchTerm) {
+        return searchSiteMediaQuery(siteId, column, searchTerm).getAsModel();
+    }
+
+    public static WellCursor<MediaModel> searchSiteMediaAsCursor(long siteId, String column, String searchTerm) {
+        return searchSiteMediaQuery(siteId, column, searchTerm).getAsCursor();
+    }
+
+    private static SelectQuery<MediaModel> searchSiteMediaQuery(long siteId, String column, String searchTerm) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteId)
                 .contains(column, searchTerm)
-                .endGroup().endWhere().getAsModel();
+                .endGroup().endWhere();
     }
 
     public static List<MediaModel> getSiteImages(long siteId) {
+        return getSiteImagesQuery(siteId).getAsModel();
+    }
+
+    public static WellCursor<MediaModel> getSiteImagesAsCursor(long siteId) {
+        return getSiteImagesQuery(siteId).getAsCursor();
+    }
+
+    private static SelectQuery<MediaModel> getSiteImagesQuery(long siteId) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteId)
                 .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
-                .endGroup().endWhere()
-                .getAsModel();
+                .endGroup().endWhere();
     }
 
     public static List<MediaModel> getSiteImagesExcluding(long siteId, List<Long> filter) {
@@ -75,11 +90,19 @@ public class MediaSqlUtils {
     }
 
     public static List<MediaModel> matchSiteMedia(long siteId, String column, Object value) {
+        return matchSiteMediaQuery(siteId, column, value).getAsModel();
+    }
+
+    public static WellCursor<MediaModel> matchSiteMediaAsCursor(long siteId, String column, Object value) {
+        return matchSiteMediaQuery(siteId, column, value).getAsCursor();
+    }
+
+    private static SelectQuery<MediaModel> matchSiteMediaQuery(long siteId, String column, Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteId)
                 .equals(column, value)
-                .endGroup().endWhere().getAsModel();
+                .endGroup().endWhere();
     }
 
     public static List<MediaModel> matchPostMedia(long postId, String column, Object value) {
