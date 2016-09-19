@@ -267,6 +267,10 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteImages(siteId);
     }
 
+    public WellCursor<MediaModel> getSiteImagesAsCursor(long siteId) {
+        return MediaSqlUtils.getSiteImagesAsCursor(siteId);
+    }
+
     public int getSiteImageCount(long siteId) {
         return getSiteImages(siteId).size();
     }
@@ -277,6 +281,10 @@ public class MediaStore extends Store {
 
     public List<MediaModel> getUnattachedSiteMedia(long siteId) {
         return MediaSqlUtils.matchSiteMedia(siteId, MediaModelTable.POST_ID, 0);
+    }
+
+    public WellCursor<MediaModel> getUnattachedSiteMediaAsCursor(long siteId) {
+        return MediaSqlUtils.matchSiteMediaAsCursor(siteId, MediaModelTable.POST_ID, 0);
     }
 
     public int getUnattachedSiteMediaCount(long siteId) {
@@ -301,6 +309,10 @@ public class MediaStore extends Store {
 
     public List<MediaModel> searchSiteMediaByTitle(long siteId, String titleSearch) {
         return MediaSqlUtils.searchSiteMedia(siteId, MediaModelTable.TITLE, titleSearch);
+    }
+
+    public WellCursor<MediaModel> searchSiteMediaByTitleAsCursor(long siteId, String titleSearch) {
+        return MediaSqlUtils.searchSiteMediaAsCursor(siteId, MediaModelTable.TITLE, titleSearch);
     }
 
     public MediaModel getPostMediaWithPath(long postId, String filePath) {
