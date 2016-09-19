@@ -23,10 +23,10 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.util.DisplayUtils;
@@ -155,26 +155,26 @@ public class MediaGridAdapter extends CursorAdapter {
             view.setTag(holder);
         }
 
-        final String mediaId = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID));
+        final String mediaId = cursor.getString(cursor.getColumnIndex(MediaModelTable.ID));
 
-        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
+        String state = cursor.getString(cursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         boolean isLocalFile = MediaUtils.isLocalFile(state);
 
         // file name
-        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
+        String fileName = cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_NAME));
         if (holder.filenameView != null) {
             holder.filenameView.setText(fileName);
         }
 
         // title of media
-        String title = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE));
+        String title = cursor.getString(cursor.getColumnIndex(MediaModelTable.TITLE));
         if (title == null || title.equals(""))
             title = fileName;
         holder.titleView.setText(title);
 
         // upload date
         if (holder.uploadDateView != null) {
-            String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
+            String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(MediaModelTable.UPLOAD_DATE)));
             holder.uploadDateView.setText(date);
         }
 
@@ -187,7 +187,7 @@ public class MediaGridAdapter extends CursorAdapter {
         }
 
         // get the file extension from the fileURL
-        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
+        String mimeType = cursor.getString(cursor.getColumnIndex(MediaModelTable.MIME_TYPE));
         String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
         fileExtension = fileExtension.toUpperCase();
         // file type
@@ -198,12 +198,12 @@ public class MediaGridAdapter extends CursorAdapter {
         }
 
         // dimensions
-        String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
+        String filePath = cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_PATH));
         TextView dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
         if (dimensionView != null) {
             if( MediaUtils.isValidImage(filePath)) {
-                int width = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
-                int height = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
+                int width = cursor.getInt(cursor.getColumnIndex(MediaModelTable.WIDTH));
+                int height = cursor.getInt(cursor.getColumnIndex(MediaModelTable.HEIGHT));
 
                 if (width > 0 && height > 0) {
                     String dimensions = width + "x" + height;
@@ -271,7 +271,7 @@ public class MediaGridAdapter extends CursorAdapter {
     }
 
     private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
-        final String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
+        final String filePath = cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_PATH));
 
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
@@ -386,7 +386,7 @@ public class MediaGridAdapter extends CursorAdapter {
         }
 
         // regular cells
-        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
+        String state = cursor.getString(cursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         if (MediaUtils.isLocalFile(state))
             return ViewTypes.LOCAL.ordinal();
         else
@@ -486,7 +486,7 @@ public class MediaGridAdapter extends CursorAdapter {
         if (cursor == null) {
             return;
         }
-        int columnIndex = cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID);
+        int columnIndex = cursor.getColumnIndex(MediaModelTable.ID);
         if (columnIndex != -1) {
             String mediaId = cursor.getString(columnIndex);
             setItemSelected(mediaId, selected);
@@ -504,7 +504,7 @@ public class MediaGridAdapter extends CursorAdapter {
 
     public void toggleItemSelected(int position) {
         Cursor cursor = (Cursor) getItem(position);
-        int columnIndex = cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID);
+        int columnIndex = cursor.getColumnIndex(MediaModelTable.ID);
         if (columnIndex != -1) {
             String mediaId = cursor.getString(columnIndex);
             if (mSelectedItems.contains(mediaId)) {
