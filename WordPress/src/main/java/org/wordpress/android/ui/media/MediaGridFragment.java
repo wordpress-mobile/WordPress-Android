@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.wellsql.generated.MediaModelTable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -398,7 +399,7 @@ public class MediaGridFragment extends Fragment
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Cursor cursor = ((MediaGridAdapter) parent.getAdapter()).getCursor();
-        String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
+        String mediaId = cursor.getString(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
         mListener.onMediaItemSelected(mediaId);
     }
 
