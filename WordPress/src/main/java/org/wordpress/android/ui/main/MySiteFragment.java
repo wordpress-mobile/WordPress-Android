@@ -67,7 +67,7 @@ public class MySiteFragment extends Fragment
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
-    private LinearLayout mAdminView;
+    private RelativeLayout mAdminView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -95,14 +95,6 @@ public class MySiteFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mFabView.getVisibility() == View.VISIBLE) {
-            AniUtils.showFab(mFabView, false);
-        }
     }
 
     @Override
@@ -151,12 +143,17 @@ public class MySiteFragment extends Fragment
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mSharingView = rootView.findViewById(R.id.row_sharing);
-        mAdminView = (LinearLayout) rootView.findViewById(R.id.admin_section);
+        mAdminView = (RelativeLayout) rootView.findViewById(R.id.row_admin);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
+
+        // hide the FAB the first time the fragment is created in order to animate it in onResume()
+        if (savedInstanceState == null) {
+            mFabView.setVisibility(View.INVISIBLE);
+        }
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override

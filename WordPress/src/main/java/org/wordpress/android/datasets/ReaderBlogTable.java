@@ -148,7 +148,7 @@ public class ReaderBlogTable {
             stmt.bindLong  (9, SqlUtils.boolToSql(blogInfo.isJetpack));
             stmt.bindLong  (10, SqlUtils.boolToSql(blogInfo.isFollowing));
             stmt.bindLong  (11, blogInfo.numSubscribers);
-            stmt.bindString(12, DateTimeUtils.javaDateToIso8601(new Date()));
+            stmt.bindString(12, DateTimeUtils.iso8601FromDate(new Date()));
             stmt.execute();
         } finally {
             SqlUtils.closeStatement(stmt);
@@ -371,7 +371,7 @@ public class ReaderBlogTable {
             return NEVER_UPDATED;
         }
 
-        Date dtUpdated = DateTimeUtils.iso8601ToJavaDate(updated);
+        Date dtUpdated = DateTimeUtils.dateFromIso8601(updated);
         if (dtUpdated == null) {
             return 0;
         }

@@ -14,6 +14,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.AccountModel;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
@@ -137,6 +138,11 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
     public void onSuccessfulInput(String input, int callbackId) {
         View rootView = getView();
         if (rootView == null) return;
+
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            ToastUtils.showToast(getActivity(), R.string.error_post_my_profile_no_connection);
+            return;
+        }
 
         WPTextView textView = (WPTextView) rootView.findViewById(callbackId);
         updateLabel(textView, input);

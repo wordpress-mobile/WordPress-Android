@@ -26,13 +26,8 @@
 	<string name="alert_action_while_uploading">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
 	<string name="alert_insert_image_html_mode">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
 	<string name="uploading_gallery_placeholder">Llwytho\'r oriel...</string>
-	<string name="invite_error_some_failed">Wedi anfon y gwahoddiad ond digwyddodd gwall(au)!</string>
 	<string name="invite_sent">wedi anfon gwahoddiad yn llwyddiannus</string>
 	<string name="tap_to_try_again">Tapiwch i geisio eto!</string>
-	<string name="invite_error_sending">Digwyddodd gwall wrth geisio anfon y gwahoddiad!</string>
-	<string name="invite_error_invalid_usenames_multiple">Methu anfon: Mae enwau defnyddwyr neu negeseuon e-bost annilys</string>
-	<string name="invite_error_invalid_usenames_one">Methu anfon: Mae enw defnyddiwr neu e-bost yn annilys</string>
-	<string name="invite_error_no_usenames">Ychwanegwch o leiaf un enw defnyddiwr</string>
 	<string name="invite_message_info">(Dewisol) Gallwch gynnwys neges bersonol o hyd at 500 nod a fydd yn cael ei gynnwys yn y gwahoddiad i\'r defnyddiwr.</string>
 	<string name="invite_message_remaining_other">%d nod yn weddill</string>
 	<string name="invite_message_remaining_one">1 nod yn weddill</string>
@@ -41,7 +36,6 @@
 	<string name="invite_message_title">Neges Bersonol</string>
 	<string name="invite_already_a_member">Mae yna eisoes aelod sy\'n defnyddio\'r enw defnyddiwr \'%s\'</string>
 	<string name="invite_username_not_found">Nid oes defnyddiwr yn defnyddio\'r enw \'%s\'</string>
-	<string name="invite_names_hint">Teipiwch gyfeiriad e-bost neu enw defnyddiwr...</string>
 	<string name="invite">Gwahodd</string>
 	<string name="invite_names_title">Enwau defnyddwyr neu E-byst</string>
 	<string name="signup_succeed_signin_failed">Mae eich cyfrif wedi ei greu ond bu gwall wrth i ni eich mewngofnodi\n      Ceisiwch fewngofnodi gyda\'ch enw defnyddiwr a chyfrinair newydd.</string>
@@ -61,16 +55,12 @@
 	<string name="preview_screen_links_disabled">Mae dolenni wedi eu hanalluogi ar y sgrin rhagolwg</string>
 	<string name="draft_explainer">Mae\'r cofnod yn ddrafft sydd heb ei gyhoeddi</string>
 	<string name="send">Anfon</string>
-	<string name="person_removed_general">Defnyddiwr wedi ei dynnu\'n llwyddiannus</string>
-	<string name="person_remove_confirmation_message">Os ydych am dynnu %1$s, ni fydd y defnyddiwr yn gallu cael mynediad at y wefan, ond bydd unrhyw gynnwys crëwyd gan %1$s yn aros ar y wefan.\n\nYdych chi dal eisiau tynnu\'r defnyddiwr yma?</string>
-	<string name="person_removed">Wedi tynnu @%1$s yn llwydiannus</string>
 	<string name="person_remove_confirmation_title">Tynnu %1$s</string>
 	<string name="reader_empty_posts_in_custom_list">Nid yw\'r gwefannau ar y rhestr hon wedi cofnodi dim yn ddiweddar</string>
 	<string name="people">Pobl</string>
 	<string name="edit_user">Golygu Defnyddiwr</string>
 	<string name="role">Rôl</string>
 	<string name="error_remove_user">Methu tynnu defnyddiwr</string>
-	<string name="error_fetch_people_list">Methu adfer defnyddiwr y wefan</string>
 	<string name="error_update_role">Methu diweddaru rôl defnyddiwr</string>
 	<string name="gravatar_camera_and_media_permission_required">Y caniatâd sydd eu hange i ddewis neu gipio llun</string>
 	<string name="error_updating_gravatar">Gwall wrth ddiweddaru eich Gravatar</string>
@@ -103,7 +93,6 @@
 	<string name="plans_post_purchase_text_customize">Bellach mae gennych fynediad i ffontiau,  lliwiau a galluoedd  golygu CSS.</string>
 	<string name="plans_post_purchase_text_intro">Mae eich gwefan yn llawn cyffro! Ewch i archwilio nodweddion newydd eich gwefan a dewis be i ddechrau.</string>
 	<string name="plans_post_purchase_title_customize">Cyfaddasu Ffontiau a Lliwiau</string>
-	<string name="plan_purchase_now">Prynu Nawr</string>
 	<string name="plans_post_purchase_title_intro">Chi bia hwn nawr, i ffwrdd â chi!</string>
 	<string name="export_your_content_message">Bydd cofnodion, tudalennau a gosodiadau yn cael eu e-bost atoch i %s.</string>
 	<string name="plan">Cynllun</string>
@@ -152,10 +141,6 @@
 	<string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
 	<string name="post_format_status">Statws</string>
 	<string name="post_format_video">Fideo</string>
-	<string name="align_none">Dim</string>
-	<string name="align_left">Chwith</string>
-	<string name="align_center">Canol</string>
-	<string name="align_right">De</string>
 	<string name="theme_free">Rhad ac am Ddim</string>
 	<string name="theme_all">Y Cyfan</string>
 	<string name="theme_premium">Premiwm</string>
@@ -439,9 +424,7 @@
 	<string name="reader_short_like_count_one">1 Hoffi</string>
 	<string name="reader_label_follow_count">%,d dilynnwr</string>
 	<string name="reader_short_like_count_none">Hoffi</string>
-	<string name="reader_label_reading_time_in_minutes">%,d mun</string>
 	<string name="reader_menu_tags">Golygu tagiau a blogiau</string>
-	<string name="reader_label_word_count">%,d gair</string>
 	<string name="reader_title_post_detail">Cofnod Darllennydd</string>
 	<string name="local_draft_explainer">Mae\'r cofnod yn ddrafft lleol sydd heb ei gyhoeddi</string>
 	<string name="local_changes_explainer">Mae gan y cofnod newidiadau lleol sydd heb eu cyhoeddi</string>

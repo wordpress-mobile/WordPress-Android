@@ -29,8 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.credentials.Credential;
-import com.optimizely.Optimizely;
-import com.optimizely.Variable.LiveVariable;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
@@ -76,7 +74,6 @@ import java.util.regex.Pattern;
 
 public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String TAG = "sign_in_fragment_tag";
-    private static LiveVariable<Boolean> isNotOnWordPressComVariable = Optimizely.booleanForKey("isNotOnWordPressCom", false);
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
@@ -117,7 +114,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected WPTextView mJetpackAuthLabel;
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,7 +149,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mCreateAccountButton = (WPTextView) rootView.findViewById(R.id.nux_create_account_button);
         mCreateAccountButton.setOnClickListener(mCreateAccountListener);
         mAddSelfHostedButton = (WPTextView) rootView.findViewById(R.id.nux_add_selfhosted_button);
-        setDotComAddSelfHostedButtonText();
+        mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
         mAddSelfHostedButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,14 +221,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private void setDotComAddSelfHostedButtonText() {
-        if (isNotOnWordPressComVariable.get()) {
-            mAddSelfHostedButton.setText(R.string.not_on_wordpress_com);
-        } else {
-            mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
-        }
-    }
-
     /**
      * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
      * edit box
@@ -256,7 +245,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     protected void showDotComSignInForm(){
         mUrlButtonLayout.setVisibility(View.GONE);
-        setDotComAddSelfHostedButtonText();
+        mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
     }
 
     protected void showSelfHostedSignInForm(){
@@ -323,12 +312,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     public boolean canAutofillUsernameAndPassword() {
-        return EditTextUtils.getText(mUsernameEditText).isEmpty() && EditTextUtils.getText(mPasswordEditText).isEmpty();
+        return EditTextUtils.getText(mUsernameEditText).isEmpty()
+               && EditTextUtils.getText(mPasswordEditText).isEmpty()
+               && mUsernameEditText != null
+               && mPasswordEditText != null;
     }
 
     public void onCredentialRetrieved(Credential credential) {
         AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
-        if (canAutofillUsernameAndPassword()) {
+        if (isAdded() && canAutofillUsernameAndPassword()) {
             track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED, null);
             mUsernameEditText.setText(credential.getId());
             mPasswordEditText.setText(credential.getPassword());
@@ -538,7 +530,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             }
 
             trackAnalyticsSignIn();
-            Optimizely.trackEvent("Signed In");
 
             // get reader tags so they're available as soon as the Reader is accessed - done for
             // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this

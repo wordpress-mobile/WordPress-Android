@@ -17,16 +17,22 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
@@ -93,11 +99,27 @@ public class PlansActivity extends AppCompatActivity {
 
         // Download plans if not already available
         if (mAvailablePlans == null) {
+            if (!NetworkUtils.checkConnection(this)) {
+                finish();
+                return;
+            }
             showProgress();
             PlanUpdateService.startService(this, mLocalBlogID);
         } else {
             setupPlansUI();
         }
+
+        // navigate to the "manage plans" page for this blog when the user clicks the manage bar
+        mManageBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Blog blog = WordPress.getBlog(mLocalBlogID);
+                if (blog == null) return;
+                String domain = UrlUtils.getHost(blog.getUrl());
+                String managePlansUrl = "https://wordpress.com/plans/" + domain;
+                ReaderActivityLauncher.openUrl(view.getContext(), managePlansUrl, OpenUrlType.EXTERNAL);
+            }
+        });
     }
 
     @Override
@@ -130,12 +152,33 @@ public class PlansActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(getPageAdapter());
 
-        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-
         int normalColor = ContextCompat.getColor(this, R.color.blue_light);
         int selectedColor = ContextCompat.getColor(this, R.color.white);
         mTabLayout.setTabTextColors(normalColor, selectedColor);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        // tabMode is set to scrollable in layout, set to fixed if there's enough space to show them all
+        mTabLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mTabLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                if (mTabLayout.getChildCount() > 0) {
+                    int tabLayoutWidth = 0;
+                    LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
+                    for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+                        LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
+                        tabLayoutWidth += (tabView.getMeasuredWidth() + tabView.getPaddingLeft() + tabView.getPaddingRight());
+                    }
+
+                    int displayWidth = DisplayUtils.getDisplayPixelWidth(PlansActivity.this);
+                    if (tabLayoutWidth < displayWidth) {
+                        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+                        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                    }
+                }
+            }
+        });
 
         if (mViewPager.getVisibility() != View.VISIBLE) {
             // use a circular reveal on API 21+

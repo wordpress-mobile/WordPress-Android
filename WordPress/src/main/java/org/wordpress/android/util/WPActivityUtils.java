@@ -75,7 +75,7 @@ public class WPActivityUtils {
     public static void removeToolbarFromDialog(final Fragment context, final Dialog dialog) {
         if (dialog == null || !context.isAdded()) return;
 
-        LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
+        ViewGroup root = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
         if (root.getChildAt(0) instanceof Toolbar) {
             root.removeViewAt(0);
         }

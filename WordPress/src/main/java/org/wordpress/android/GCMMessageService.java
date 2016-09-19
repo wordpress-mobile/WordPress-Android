@@ -38,6 +38,7 @@ import org.wordpress.android.util.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -67,6 +68,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_FOLLOW = "follow";
     private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
+    private static final String PUSH_TYPE_BADGE_RESET = "badge-reset";
 
     // Add to the analytics properties map a subset of the push notification payload.
     private static String[] propertiesToCopyIntoAnalytics = {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id",
@@ -99,6 +101,22 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
+        if (noteType.equals(PUSH_TYPE_BADGE_RESET)) {
+            handleBadgeResetPN(data);
+            return;
+        }
+
+        buildAndShowNotificationFromNoteData(data);
+
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+    }
+
+    private void buildAndShowNotificationFromNoteData(Bundle data) {
+
+        if (data == null)
+            return;
+
+        String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
         String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
         if (title == null) {
@@ -151,23 +169,6 @@ public class GCMMessageService extends GcmListenerService {
             sActiveNotificationsMap.put(pushId, data);
         }
 
-        String iconUrl = data.getString("icon");
-        Bitmap largeIconBitmap = null;
-        if (iconUrl != null) {
-            try {
-                iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
-                int largeIconSize = getResources().getDimensionPixelSize(
-                        android.R.dimen.notification_large_icon_height);
-                String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
-                largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
-                if (largeIconBitmap != null && shouldCircularizeNoteIcon(noteType)) {
-                    largeIconBitmap = ImageUtils.getCircularBitmap(largeIconBitmap);
-                }
-            } catch (UnsupportedEncodingException e) {
-                AppLog.e(T.NOTIFS, e);
-            }
-        }
-
         // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
         if (NotificationsUtils.isNotificationsEnabled(this)) {
             Map<String, Object> properties = new HashMap<>();
@@ -184,10 +185,67 @@ public class GCMMessageService extends GcmListenerService {
             AnalyticsTracker.flush();
         }
 
-        NotificationCompat.Builder builder;
+        showGroupNotificationForActiveNotificationsMap(pushId, noteId, noteType, data.getString("icon"), title, message);
+    }
+
+    private void showGroupNotificationForActiveNotificationsMap(int pushId, String noteId, String noteType,
+                                                                String largeIconUri, String title, String message) {
 
         // Build the new notification, add group to support wearable stacking
-        builder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder builder = getNotificationBuilder(title, message);
+
+        Bitmap largeIconBitmap = getLargeIconBitmap(largeIconUri, shouldCircularizeNoteIcon(noteType));
+        if (largeIconBitmap != null) {
+            builder.setLargeIcon(largeIconBitmap);
+        }
+
+        showIndividualNotificationForBuilder(builder, noteType, noteId, pushId);
+
+        // Also add a group summary notification, which is required for non-wearable devices
+        showGroupNotificationForBuilder(builder, message);
+    }
+
+    private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+        // Add some actions if this is a comment notification
+        Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
+        commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+        commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        commentReplyIntent.setAction("android.intent.action.MAIN");
+        commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
+        commentReplyIntent.addCategory("comment-reply");
+        commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
+        if (noteId != null) {
+            commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+        }
+        PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(this, 0, commentReplyIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
+                commentReplyPendingIntent);
+    }
+
+    private Bitmap getLargeIconBitmap(String iconUrl, boolean shouldCircularizeIcon){
+        Bitmap largeIconBitmap = null;
+        if (iconUrl != null) {
+            try {
+                iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
+                int largeIconSize = getResources().getDimensionPixelSize(
+                        android.R.dimen.notification_large_icon_height);
+                String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
+                largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
+                if (largeIconBitmap != null && shouldCircularizeIcon) {
+                    largeIconBitmap = ImageUtils.getCircularBitmap(largeIconBitmap);
+                }
+            } catch (UnsupportedEncodingException e) {
+                AppLog.e(T.NOTIFS, e);
+            }
+        }
+        return largeIconBitmap;
+    }
+
+    private NotificationCompat.Builder getNotificationBuilder(String title, String message){
+        // Build the new notification, add group to support wearable stacking
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setColor(getResources().getColor(R.color.blue_wordpress))
                 .setContentTitle(title)
@@ -197,32 +255,15 @@ public class GCMMessageService extends GcmListenerService {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setGroup(NOTIFICATION_GROUP_KEY);
 
-        // Add some actions if this is a comment notification
-        if (noteType.equals(PUSH_TYPE_COMMENT)) {
-            Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
-            commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-            commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            commentReplyIntent.setAction("android.intent.action.MAIN");
-            commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
-            commentReplyIntent.addCategory("comment-reply");
-            commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
-            if (noteId != null) {
-                commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
-            }
-            PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(this, 0, commentReplyIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
-                    commentReplyPendingIntent);
+        return builder;
+    }
+
+    private void showGroupNotificationForBuilder(NotificationCompat.Builder builder, String message) {
+
+        if (builder == null) {
+            return;
         }
 
-        if (largeIconBitmap != null) {
-            builder.setLargeIcon(largeIconBitmap);
-        }
-
-        showNotificationForBuilder(builder, this, pushId);
-
-        // Also add a group summary notification, which is required for non-wearable devices
         if (sActiveNotificationsMap.size() > 1) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             int noteCtr = 1;
@@ -265,13 +306,23 @@ public class GCMMessageService extends GcmListenerService {
                     .setStyle(inboxStyle);
 
             showNotificationForBuilder(groupBuilder, this, GROUP_NOTIFICATION_ID);
+
         } else {
             // Set the individual notification we've already built as the group summary
             builder.setGroupSummary(true);
             showNotificationForBuilder(builder, this, GROUP_NOTIFICATION_ID);
         }
+    }
 
-        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+    private void showIndividualNotificationForBuilder(NotificationCompat.Builder builder, String noteType, String noteId, int pushId) {
+        if (builder == null) {
+            return;
+        }
+
+        if (noteType.equals(PUSH_TYPE_COMMENT)) {
+            addActionsForCommentNotification(builder, noteId);
+        }
+        showNotificationForBuilder(builder, this, pushId);
     }
 
     // Displays a notification to the user
@@ -327,6 +378,77 @@ public class GCMMessageService extends GcmListenerService {
         builder.setContentIntent(pendingIntent);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(notificationId, builder.build());
+    }
+
+    private void rebuildAndUpdateNotificationsOnSystemBar(Bundle data) {
+        Bitmap largeIconBitmap = null;
+        // here notify the existing group notification by eliminating the line that is now gone
+        String title = getNotificationTitleOrAppNameFromBundle(data);
+        String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
+
+        NotificationCompat.Builder builder = null;
+
+        if (sActiveNotificationsMap.size() == 1) {
+            //only one notification remains, so get the proper message for it and re-instate in the system dashboard
+            Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
+            if (remainingNote != null) {
+                String remainingNoteTitle = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_TITLE));
+                if (!TextUtils.isEmpty(remainingNoteTitle)) {
+                    title = remainingNoteTitle;
+                }
+                String remainingNoteMessage = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_MSG));
+                if (!TextUtils.isEmpty(remainingNoteMessage)) {
+                    message = remainingNoteMessage;
+                }
+                largeIconBitmap = getLargeIconBitmap(remainingNote.getString("icon"),
+                        shouldCircularizeNoteIcon(remainingNote.getString(PUSH_ARG_TYPE)));
+
+                builder = getNotificationBuilder(title, message);
+
+                String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
+                String noteId = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
+                showIndividualNotificationForBuilder(builder, noteType, noteId, sActiveNotificationsMap.keyAt(0));
+            }
+        }
+
+        if (builder == null) {
+            builder = getNotificationBuilder(title, message);
+        }
+
+        if (largeIconBitmap == null) {
+            largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(PUSH_TYPE_BADGE_RESET));
+        }
+
+        if (largeIconBitmap != null) {
+            builder.setLargeIcon(largeIconBitmap);
+        }
+
+        showGroupNotificationForBuilder(builder, message);
+
+    }
+
+    private String getNotificationTitleOrAppNameFromBundle(Bundle data){
+        String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
+        if (title == null) {
+            title = getString(R.string.app_name);
+        }
+        return title;
+    }
+
+    // Clear all notifications
+    private void handleBadgeResetPN(Bundle data) {
+        if (data == null || !data.containsKey(PUSH_ARG_NOTE_ID))  {
+            // ignore the reset-badge PN if it's a global one
+            return;
+        }
+
+        removeNotificationWithNoteIdFromSystemBar(this, data);
+        //now that we cleared the specific notif, we can check and make any visual updates
+        if (sActiveNotificationsMap.size() > 0) {
+            rebuildAndUpdateNotificationsOnSystemBar(data);
+        }
+
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
     // Show a notification for two-step auth users who sign in from a web browser
@@ -441,8 +563,39 @@ public class GCMMessageService extends GcmListenerService {
         return !sActiveNotificationsMap.isEmpty();
     }
 
+    // Removes a specific notification from the internal map - only use this when we know
+    // the user has dismissed the app by swiping it off the screen
     public static synchronized void removeNotification(int notificationId) {
         sActiveNotificationsMap.remove(notificationId);
+    }
+
+    // Removes a specific notification from the system bar
+    public static synchronized void removeNotificationWithNoteIdFromSystemBar(Context context, Bundle data) {
+        if (context == null || data == null || !hasNotifications()) {
+            return;
+        }
+
+        String noteID = data.getString(PUSH_ARG_NOTE_ID, "");
+        if (TextUtils.isEmpty(noteID)) {
+            return;
+        }
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        // here we loop with an Iterator as there might be several Notifications with the same Note ID (i.e. likes on the same Note)
+        // so we need to keep cancelling them and removing them from our activeNotificationsMap as we find it suitable
+        for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<Integer, Bundle> row = it.next();
+            Integer pushId = row.getKey();
+            Bundle noteBundle = row.getValue();
+            if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
+                notificationManager.cancel(pushId);
+                it.remove();
+            }
+        }
+
+        if (sActiveNotificationsMap.size() == 0) {
+            notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
+        }
     }
 
     // Removes all app notifications from the system bar

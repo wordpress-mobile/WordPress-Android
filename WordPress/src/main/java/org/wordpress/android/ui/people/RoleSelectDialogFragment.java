@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.people;
 
-import org.wordpress.android.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,15 +8,25 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import org.wordpress.android.R;
+import org.wordpress.android.models.Role;
+
 public class RoleSelectDialogFragment extends DialogFragment {
+    private static final String IS_PRIVATE_TAG = "is_private";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final String[] roles = getResources().getStringArray(R.array.roles);
+        boolean isPrivateSite = getArguments().getBoolean(IS_PRIVATE_TAG);
+        final Role[] roles = Role.inviteRoles(isPrivateSite);
+        final String[] stringRoles = new String[roles.length];
+        for (int i = 0; i < roles.length; i++) {
+            stringRoles[i] = roles[i].toDisplayString();
+        }
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.role);
-        builder.setItems(roles, new DialogInterface.OnClickListener() {
+        builder.setItems(stringRoles, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!isAdded()) {
@@ -36,8 +44,12 @@ public class RoleSelectDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public static <T extends Fragment & OnRoleSelectListener> void show(T parentFragment, int requestCode) {
+    public static <T extends Fragment & OnRoleSelectListener> void show(T parentFragment, int requestCode,
+                                                                        boolean isPrivateSite) {
         RoleSelectDialogFragment roleChangeDialogFragment = new RoleSelectDialogFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(IS_PRIVATE_TAG, isPrivateSite);
+        roleChangeDialogFragment.setArguments(args);
         roleChangeDialogFragment.setTargetFragment(parentFragment, requestCode);
         roleChangeDialogFragment.show(parentFragment.getFragmentManager(), null);
     }
@@ -49,6 +61,6 @@ public class RoleSelectDialogFragment extends DialogFragment {
 
     // Container Activity must implement this interface
     public interface OnRoleSelectListener {
-        void onRoleSelected(String newRole);
+        void onRoleSelected(Role newRole);
     }
 }

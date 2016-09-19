@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.Role;
 
 import de.greenrobot.event.EventBus;
 
@@ -26,18 +27,18 @@ public class RoleChangeDialogFragment extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        String role = mRoleListAdapter.getSelectedRole();
-        outState.putString(ROLE_TAG, role);
+        Role role = mRoleListAdapter.getSelectedRole();
+        outState.putSerializable(ROLE_TAG, role);
     }
 
-    public static RoleChangeDialogFragment newInstance(long personID, int localTableBlogId, String role) {
+    public static RoleChangeDialogFragment newInstance(long personID, int localTableBlogId, Role role) {
         RoleChangeDialogFragment roleChangeDialogFragment = new RoleChangeDialogFragment();
         Bundle args = new Bundle();
 
         args.putLong(PERSON_ID_TAG, personID);
         args.putInt(PERSON_LOCAL_TABLE_BLOG_ID_TAG, localTableBlogId);
         if (role != null) {
-            args.putString(ROLE_TAG, role);
+            args.putSerializable(ROLE_TAG, role);
         }
 
         roleChangeDialogFragment.setArguments(args);
@@ -52,7 +53,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String role = mRoleListAdapter.getSelectedRole();
+                Role role = mRoleListAdapter.getSelectedRole();
                 Bundle args = getArguments();
                 if (args != null) {
                     long personID = args.getLong(PERSON_ID_TAG);
@@ -63,16 +64,16 @@ public class RoleChangeDialogFragment extends DialogFragment {
         });
 
         if (mRoleListAdapter == null) {
-            final String[] roles = getResources().getStringArray(R.array.roles);
-            mRoleListAdapter = new RoleListAdapter(getActivity(), R.layout.role_list_row, roles);
+            final Role[] userRoles = Role.userRoles();
+            mRoleListAdapter = new RoleListAdapter(getActivity(), R.layout.role_list_row, userRoles);
         }
         if (savedInstanceState != null) {
-            String savedRole = savedInstanceState.getString(ROLE_TAG);
+            Role savedRole = (Role) savedInstanceState.getSerializable(ROLE_TAG);
             mRoleListAdapter.setSelectedRole(savedRole);
         } else {
             Bundle args = getArguments();
             if (args != null) {
-                String role = args.getString(ROLE_TAG);
+                Role role = (Role) args.getSerializable(ROLE_TAG);
                 mRoleListAdapter.setSelectedRole(role);
             }
         }
@@ -81,10 +82,10 @@ public class RoleChangeDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    private class RoleListAdapter extends ArrayAdapter<String> {
-        private String mSelectedRole;
+    private class RoleListAdapter extends ArrayAdapter<Role> {
+        private Role mSelectedRole;
 
-        public RoleListAdapter(Context context, int resource, String[] objects) {
+        public RoleListAdapter(Context context, int resource, Role[] objects) {
             super(context, resource, objects);
         }
 
@@ -96,11 +97,11 @@ public class RoleChangeDialogFragment extends DialogFragment {
 
             final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
             TextView mainText = (TextView) convertView.findViewById(R.id.role_label);
-            String role = getItem(position);
-            mainText.setText(role);
+            Role role = getItem(position);
+            mainText.setText(role.toDisplayString());
 
             if (radioButton != null) {
-                radioButton.setChecked(role.equalsIgnoreCase(mSelectedRole));
+                radioButton.setChecked(role == mSelectedRole);
                 radioButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -124,11 +125,11 @@ public class RoleChangeDialogFragment extends DialogFragment {
             notifyDataSetChanged();
         }
 
-        public String getSelectedRole() {
+        public Role getSelectedRole() {
             return mSelectedRole;
         }
 
-        public void setSelectedRole(String role) {
+        public void setSelectedRole(Role role) {
             mSelectedRole = role;
         }
     }
@@ -136,9 +137,9 @@ public class RoleChangeDialogFragment extends DialogFragment {
     public static class RoleChangeEvent {
         public final long personID;
         public final int localTableBlogId;
-        public final String newRole;
+        public final Role newRole;
 
-        public RoleChangeEvent(long personID, int localTableBlogId, String newRole) {
+        public RoleChangeEvent(long personID, int localTableBlogId, Role newRole) {
             this.personID = personID;
             this.localTableBlogId = localTableBlogId;
             this.newRole = newRole;
