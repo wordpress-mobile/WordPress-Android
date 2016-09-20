@@ -481,13 +481,12 @@ public class MediaGridFragment extends Fragment
     }
 
     Cursor setDateFilter() {
-        String blogId = String.valueOf(mSite.getId());
-
         GregorianCalendar startDate = new GregorianCalendar(mStartYear, mStartMonth, mStartDay);
         GregorianCalendar endDate = new GregorianCalendar(mEndYear, mEndMonth, mEndDay);
 
-        long one_day = 24 * 60 * 60 * 1000;
-        Cursor cursor = WordPress.wpDB.getMediaFilesForBlog(blogId, startDate.getTimeInMillis(), endDate.getTimeInMillis() + one_day);
+        // long one_day = 24 * 60 * 60 * 1000;
+        // TODO: Filter images by date using `startDate.getTimeInMillis(), endDate.getTimeInMillis() + one_day`
+        Cursor cursor = mMediaStore.getAllSiteMediaAsCursor(mSite.getSiteId());
         mGridAdapter.swapCursor(cursor);
 
         if (cursor != null && cursor.moveToFirst()) {
