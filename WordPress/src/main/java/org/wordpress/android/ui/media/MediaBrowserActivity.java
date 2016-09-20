@@ -560,7 +560,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
                 // view (if it was the one displayed)
                 for (MediaModel mediaModel : event.media) {
-                    String mediaId = Integer.toString(mediaModel.getId());
+                    String mediaId = String.valueOf(mediaModel.getId());
                     mMediaGridFragment.removeFromMultiSelect(mediaId);
                     if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
                             && mediaId.equals(mMediaEditFragment.getMediaId())) {
