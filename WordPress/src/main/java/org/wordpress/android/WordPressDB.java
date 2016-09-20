@@ -26,7 +26,6 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
@@ -955,20 +954,10 @@ public class WordPressDB {
                 + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "uploading" });
     }
 
-    /** For a given blogId, get all the media files with searchTerm **/
-    public Cursor getMediaFilesForBlog(String blogId, String searchTerm) {
-        // Currently on WordPress.com, the media search engine only searches the title.
-        // We'll match this.
-
-        String term = searchTerm.toLowerCase(LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext()));
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND title LIKE ? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "%" + term + "%", "uploading"});
-    }
-
     /** For a given blogId, get the media file with the given media_id **/
     public Cursor getMediaFile(String blogId, String mediaId) {
         return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
-
 
     /**
      * Given a VideoPress id, returns the corresponding remote video URL stored in the DB
@@ -1020,19 +1009,6 @@ public class WordPressDB {
 
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
                 + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? " + mediaIdsStr + " ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "image%", "uploading"});
-    }
-
-    public int getMediaCountImages(String blogId) {
-        return getMediaImagesForBlog(blogId).getCount();
-    }
-
-    public Cursor getMediaUnattachedForBlog(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND " +
-                "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND postId=0 ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "uploading"});
-    }
-
-    public int getMediaCountUnattached(String blogId) {
-        return getMediaUnattachedForBlog(blogId).getCount();
     }
 
     public Cursor getMediaFilesForBlog(String blogId, long startDate, long endDate) {
