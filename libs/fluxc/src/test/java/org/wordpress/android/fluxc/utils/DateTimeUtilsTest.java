@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.utils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.wordpress.android.fluxc.utils.DateTimeUtils;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.Date;
 
@@ -18,11 +18,11 @@ public class DateTimeUtilsTest {
         String iso8601dateUTC = "1955-11-05T14:15:00+00:00";
 
         // A UTC ISO 8601 date converted to Date and back should be unaltered
-        Date result = DateTimeUtils.dateFromIso8601(iso8601dateUTC);
+        Date result = DateTimeUtils.dateUTCFromIso8601(iso8601dateUTC);
         assertEquals(iso8601dateUTC, DateTimeUtils.iso8601UTCFromDate(result));
 
         // An ISO 8601 date with timezone offset converted to Date and back should be in UTC format
-        result = DateTimeUtils.dateFromIso8601(iso8601date);
+        result = DateTimeUtils.dateUTCFromIso8601(iso8601date);
         assertEquals(iso8601dateUTC, DateTimeUtils.iso8601UTCFromDate(result));
     }
 }
