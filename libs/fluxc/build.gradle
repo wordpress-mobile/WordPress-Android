@@ -45,7 +45,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.1.1'
 
     // WordPress libs
-    compile ('org.wordpress:utils:1.13.0') {
+    compile ('org.wordpress:utils:1.14.0') {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley";
     }
