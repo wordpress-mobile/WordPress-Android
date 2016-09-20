@@ -624,7 +624,7 @@ public class MediaGridFragment extends Fragment
         mGridView.setSelection(0);
         mGridView.requestFocusFromTouch();
         mGridView.setSelection(0);
-        // TOOD: We want to inject the image loader in this class instead of using a static field.
+        // TODO: We want to inject the image loader in this class instead of using a static field.
         mGridAdapter.setImageLoader(WordPress.imageLoader);
         mGridAdapter.changeCursor(null);
         resetSpinnerAdapter();
