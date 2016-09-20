@@ -38,6 +38,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.ActivityId;
@@ -46,7 +47,6 @@ import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -58,8 +58,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * The main activity in which the user can browse their media.
@@ -159,13 +157,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onStart() {
         super.onStart();
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        EventBus.getDefault().register(this);
         mDispatcher.register(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         mDispatcher.unregister(this);
         super.onStop();
@@ -494,48 +490,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaChanged event) {
-        updateOnMediaChanged(event.mLocalBlogId, event.mMediaId);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaUploadSucceeded event) {
-        updateOnMediaChanged(event.mLocalBlogId, event.mLocalMediaId);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaUploadFailed event) {
-        ToastUtils.showToast(this, event.mErrorMessage, ToastUtils.Duration.LONG);
-    }
-
-    public void updateOnMediaChanged(String blogId, String mediaId) {
-        if (mediaId == null) {
-            return;
-        }
-
-        // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
-        // view (if it was the one displayed)
-        if (!WordPress.wpDB.mediaFileExists(blogId, mediaId)) {
-            mMediaGridFragment.removeFromMultiSelect(mediaId);
-            if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
-                    && mediaId.equals(mMediaEditFragment.getMediaId())) {
-                if (mMediaEditFragment.isInLayout()) {
-                    mMediaEditFragment.loadMedia(null);
-                } else {
-                    getFragmentManager().popBackStack();
-                }
-            }
-        }
-
-        // Update Grid view
-        mMediaGridFragment.refreshMediaFromDB();
-
-        // Update Spinner views
-        mMediaGridFragment.updateFilterText();
-        mMediaGridFragment.updateSpinnerAdapter();
-    }
-
     @Override
     public void onRetryUpload(String mediaId) {
         mMediaAddFragment.addToQueue(mediaId);
@@ -590,6 +544,41 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        // no-op
+        if (event.isError()) {
+            // TODO: Convert error.type to an actual error message
+            ToastUtils.showToast(this, "Media error occurred: " + event.error.type, ToastUtils.Duration.LONG);
+            return;
+        }
+
+        switch (event.cause) {
+            case DELETE_MEDIA:
+                if (event.media == null) {
+                    // we need the media details to take action
+                    break;
+                }
+
+                // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
+                // view (if it was the one displayed)
+                for (MediaModel mediaModel : event.media) {
+                    String mediaId = Integer.toString(mediaModel.getId());
+                    mMediaGridFragment.removeFromMultiSelect(mediaId);
+                    if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
+                            && mediaId.equals(mMediaEditFragment.getMediaId())) {
+                        if (mMediaEditFragment.isInLayout()) {
+                            mMediaEditFragment.loadMedia(null);
+                        } else {
+                            getFragmentManager().popBackStack();
+                        }
+                    }
+                }
+                break;
+        }
+
+        // Update Grid view
+        mMediaGridFragment.refreshMediaFromDB();
+
+        // Update Spinner views
+        mMediaGridFragment.updateFilterText();
+        mMediaGridFragment.updateSpinnerAdapter();
     }
 }
