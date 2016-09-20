@@ -91,8 +91,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 // Coming from zero connection. Continue what's pending for delete
-                int blogId = mSite.getId();
-                if (blogId != -1 && WordPress.wpDB.hasMediaDeleteQueueItems(blogId)) {
+                long siteId = mSite.getSiteId();
+                if (siteId != -1 && mMediaStore.hasSiteMediaToDelete(siteId)) {
                     startMediaDeleteService();
                 }
             }
