@@ -1,115 +1,10 @@
 package org.wordpress.android.fluxc.utils;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse;
-import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
 
 public class MediaUtils {
-    /**
-     * Returns the substring of characters that follow the final '.' in the given string.
-     */
-    public static String getExtension(String filePath) {
-        if (TextUtils.isEmpty(filePath) || !filePath.contains(".")) return null;
-        if (filePath.lastIndexOf(".") + 1 >= filePath.length()) return null;
-        return filePath.substring(filePath.lastIndexOf(".") + 1);
-    }
-
-    /**
-     * Returns the substring of characters that follow the final '/' in the given string.
-     */
-    public static String getFileName(String filePath) {
-        if (TextUtils.isEmpty(filePath) || !filePath.contains("/")) return null;
-        if (filePath.lastIndexOf("/") + 1 >= filePath.length()) return null;
-        return filePath.substring(filePath.lastIndexOf("/") + 1);
-    }
-
-    //
-    // MediaModel
-    //
-
-    private static final String MEDIA_TITLE_KEY = "title";
-    private static final String MEDIA_DESCRIPTION_KEY = "description";
-    private static final String MEDIA_CAPTION_KEY = "caption";
-    private static final String MEDIA_ALT_KEY = "alt";
-    private static final String MEDIA_PARENT_KEY = "parent_id";
-
-    /**
-     * Creates a {@link MediaModel} list from a WP.com REST response to a request for all media.
-     */
-    public static List<MediaModel> mediaListFromRestResponse(MultipleMediaResponse from, long siteId) {
-        if (from == null || from.media == null) return null;
-        List<MediaModel> media = new ArrayList<>();
-        for (int i = 0; i < from.media.size(); ++i) {
-            media.add(i, mediaFromRestResponse(from.media.get(i), siteId));
-        }
-        return media;
-    }
-
-    /**
-     * Creates a {@link MediaModel} from a WP.com REST response to a fetch request.
-     */
-    public static MediaModel mediaFromRestResponse(MediaWPComRestResponse from, long siteId) {
-        MediaModel media = new MediaModel();
-        media.setSiteId(siteId);
-        media.setMediaId(from.ID);
-        media.setUploadDate(from.date);
-        media.setPostId(from.post_ID);
-        media.setAuthorId(from.author_ID);
-        media.setUrl(from.URL);
-        media.setGuid(from.guid);
-        media.setFileName(from.file);
-        media.setFileExtension(from.extension);
-        media.setMimeType(from.mime_type);
-        media.setTitle(from.title);
-        media.setCaption(from.caption);
-        media.setDescription(from.description);
-        media.setAlt(from.alt);
-        media.setThumbnailUrl(from.thumbnails.thumbnail);
-        media.setHeight(from.height);
-        media.setWidth(from.width);
-        media.setLength(from.length);
-        media.setVideoPressGuid(from.videopress_guid);
-        media.setVideoPressProcessingDone(from.videopress_processing_done);
-        media.setDeleted(MediaWPComRestResponse.DELETED_STATUS.equals(from.status));
-        // TODO: legacy fields
-        return media;
-    }
-
-    /**
-     * The current REST API call (v1.1) accepts 'title', 'description', 'caption', 'alt',
-     * and 'parent_id' for all media. Audio media also accepts 'artist' and 'album' attributes.
-     *
-     * ref https://developer.wordpress.com/docs/api/1.1/post/sites/%24site/media/new/
-     */
-    @NonNull
-    public static Map<String, String> getMediaRestParams(@NonNull MediaModel media) {
-        final Map<String, String> params = new HashMap<>();
-        if (!TextUtils.isEmpty(media.getTitle())) {
-            params.put(MEDIA_TITLE_KEY, media.getTitle());
-        }
-        if (!TextUtils.isEmpty(media.getDescription())) {
-            params.put(MEDIA_DESCRIPTION_KEY, media.getDescription());
-        }
-        if (!TextUtils.isEmpty(media.getCaption())) {
-            params.put(MEDIA_CAPTION_KEY, media.getCaption());
-        }
-        if (!TextUtils.isEmpty(media.getAlt())) {
-            params.put(MEDIA_ALT_KEY, media.getAlt());
-        }
-        if (media.getPostId() > 0) {
-            params.put(MEDIA_PARENT_KEY, String.valueOf(media.getPostId()));
-        }
-        return params;
-    }
-
     //
     // MIME types
     //
@@ -200,5 +95,36 @@ public class MediaUtils {
             if (mimeType.equals(type + supportedSubtype)) return true;
         }
         return false;
+    }
+
+    //
+    // File operations
+    //
+
+    /**
+     * Queries filesystem to determine if a given file can be read.
+     */
+    public static boolean canReadFile(String filePath) {
+        if (filePath == null || TextUtils.isEmpty(filePath)) return false;
+        File file = new File(filePath);
+        return file.canRead();
+    }
+
+    /**
+     * Returns the substring of characters that follow the final '.' in the given string.
+     */
+    public static String getExtension(String filePath) {
+        if (TextUtils.isEmpty(filePath) || !filePath.contains(".")) return null;
+        if (filePath.lastIndexOf(".") + 1 >= filePath.length()) return null;
+        return filePath.substring(filePath.lastIndexOf(".") + 1);
+    }
+
+    /**
+     * Returns the substring of characters that follow the final '/' in the given string.
+     */
+    public static String getFileName(String filePath) {
+        if (TextUtils.isEmpty(filePath) || !filePath.contains("/")) return null;
+        if (filePath.lastIndexOf("/") + 1 >= filePath.length()) return null;
+        return filePath.substring(filePath.lastIndexOf("/") + 1);
     }
 }

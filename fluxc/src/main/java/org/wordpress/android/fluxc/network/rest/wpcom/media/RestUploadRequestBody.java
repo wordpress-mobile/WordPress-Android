@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.media;
 
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
-import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.io.File;
@@ -29,9 +28,9 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
 
     private final MultipartBody mMultipartBody;
 
-    public RestUploadRequestBody(MediaModel media, ProgressListener listener) {
+    public RestUploadRequestBody(MediaModel media, Map<String, String> params, ProgressListener listener) {
         super(media, listener);
-        mMultipartBody = buildMultipartBody();
+        mMultipartBody = buildMultipartBody(params);
     }
 
     @Override
@@ -62,14 +61,13 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
         bufferedSink.flush();
     }
 
-    private MultipartBody buildMultipartBody() {
+    private MultipartBody buildMultipartBody(Map<String, String> params) {
         MediaModel media = getMedia();
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         // add media attributes
-        Map<String, String> mediaData = MediaUtils.getMediaRestParams(media);
-        for (String key : mediaData.keySet()) {
-            builder.addFormDataPart(String.format(MEDIA_PARAM_FORMAT, key), mediaData.get(key));
+        for (String key : params.keySet()) {
+            builder.addFormDataPart(String.format(MEDIA_PARAM_FORMAT, key), params.get(key));
         }
 
         // add media file data
