@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -145,10 +146,16 @@ public class SiteStore extends Store {
         SITE_TITLE_INVALID,
         GENERIC_ERROR;
 
-        public static NewSiteErrorType fromString(String string) {
-            if (string != null) {
+        // SiteStore semantics prefers SITE over BLOG but errors reported from the API use BLOG
+        // these are used to convert API errors to the appropriate enum value in fromString
+        private static final String BLOG = "BLOG";
+        private static final String SITE = "SITE";
+
+        public static NewSiteErrorType fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                String siteString = string.toUpperCase().replace(BLOG, SITE);
                 for (NewSiteErrorType v : NewSiteErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
+                    if (siteString.equalsIgnoreCase(v.name())) {
                         return v;
                     }
                 }
