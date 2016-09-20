@@ -33,9 +33,13 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
@@ -53,6 +57,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -63,6 +69,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         MediaEditFragmentCallback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
+
+    @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
 
     private MediaGridFragment mMediaGridFragment;
     private MediaItemFragment mMediaItemFragment;
@@ -93,6 +102,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -150,12 +160,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         super.onStart();
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
+        mDispatcher.unregister(this);
         super.onStop();
     }
 
@@ -574,5 +586,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             View gridView = findViewById(R.id.media_gridview);
             mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        // no-op
     }
 }
