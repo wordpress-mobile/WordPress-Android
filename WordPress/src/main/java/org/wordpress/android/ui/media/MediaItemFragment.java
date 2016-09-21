@@ -25,10 +25,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
@@ -46,6 +50,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
+import javax.inject.Inject;
+
 /**
  * A fragment display a media item's details.
  */
@@ -53,6 +59,9 @@ public class MediaItemFragment extends Fragment {
     private static final String ARGS_MEDIA_ID = "media_id";
 
     public static final String TAG = MediaItemFragment.class.getName();
+
+    @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
 
     private WPNetworkImageView mImageView;
     private TextView mCaptionView;
@@ -85,6 +94,7 @@ public class MediaItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState == null) {
             if (getArguments() != null) {
@@ -100,6 +110,18 @@ public class MediaItemFragment extends Fragment {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -392,5 +414,10 @@ public class MediaItemFragment extends Fragment {
             AppLog.e(AppLog.T.UTILS, e);
             ToastUtils.showToast(getActivity(), R.string.error_copy_to_clipboard);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        // no-op
     }
 }
