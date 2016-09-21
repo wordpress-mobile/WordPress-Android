@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
@@ -206,8 +207,13 @@ public class MediaEditFragment extends Fragment {
     public void loadMedia(String mediaId) {
         mMediaId = mediaId;
         if (getActivity() != null && mMediaId != null) {
-            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(), Long.parseLong(mMediaId));
-            refreshViews(mediaModel);
+            try {
+                MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(), Long.parseLong(mMediaId));
+                refreshViews(mediaModel);
+            } catch (NumberFormatException e) {
+                AppLog.e(AppLog.T.MEDIA, "NumberFormatException converting mediaId to long: " + mMediaId);
+                refreshViews(null);
+            }
         } else {
             refreshViews(null);
         }
