@@ -230,9 +230,11 @@ public class MediaItemFragment extends Fragment {
         }
 
         mDateView.setText(mediaModel.getUploadDate());
-        TextView txtDateLabel = (TextView) getView().findViewById(R.id.media_listitem_details_date_label);
-        txtDateLabel.setText(
-                mIsLocal ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
+        if (getView() != null) {
+            TextView txtDateLabel = (TextView) getView().findViewById(R.id.media_listitem_details_date_label);
+            txtDateLabel.setText(
+                    mIsLocal ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
+        }
 
         String fileURL = mediaModel.getUrl();
         String fileName = mediaModel.getFileName();
