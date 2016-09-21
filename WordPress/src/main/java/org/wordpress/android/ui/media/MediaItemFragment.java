@@ -9,7 +9,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -29,8 +28,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -41,7 +40,6 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -49,6 +47,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -184,35 +183,37 @@ public class MediaItemFragment extends Fragment {
     public void loadMedia(String mediaId) {
         if (mSite == null)
             return;
-        String blogId = String.valueOf(mSite.getId());
 
-        Cursor cursor = null;
+        MediaModel mediaModel = null;
         try {
-            // if the id is null, get the first media item in the database
-            if (mediaId == null) {
-                cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
-            } else {
-                cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
-            }
-            refreshViews(cursor);
-        } finally {
-            SqlUtils.closeCursor(cursor);
+            mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(),Long.parseLong(mediaId));
+        } catch (NumberFormatException e) {
+            AppLog.e(AppLog.T.MEDIA, "NumberFormatException converting mediaId to long: " + mediaId);
         }
+
+        // if the id is null, get the first media item in the database
+        if (mediaModel == null) {
+            List<MediaModel> list = mMediaStore.getAllSiteMedia(mSite.getSiteId());
+            if (list != null && list.size() > 0) {
+                mediaModel = list.get(0);
+            }
+        }
+        refreshViews(mediaModel);
     }
 
-    private void refreshViews(Cursor cursor) {
-        if (!isAdded() || !cursor.moveToFirst()) {
+    private void refreshViews(MediaModel mediaModel) {
+        if (!isAdded() || mediaModel == null) {
             return;
         }
 
         // check whether or not to show the edit button
-        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
+        String state = mediaModel.getUploadState();
         mIsLocal = MediaUtils.isLocalFile(state);
         if (mIsLocal && getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }
 
-        String caption = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION));
+        String caption = mediaModel.getCaption();
         if (TextUtils.isEmpty(caption)) {
             mCaptionView.setVisibility(View.GONE);
         } else {
@@ -220,7 +221,7 @@ public class MediaItemFragment extends Fragment {
             mCaptionView.setVisibility(View.VISIBLE);
         }
 
-        String desc = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION));
+        String desc = mediaModel.getDescription();
         if (TextUtils.isEmpty(desc)) {
             mDescriptionView.setVisibility(View.GONE);
         } else {
@@ -228,23 +229,22 @@ public class MediaItemFragment extends Fragment {
             mDescriptionView.setVisibility(View.VISIBLE);
         }
 
-        String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
-        mDateView.setText(date);
+        mDateView.setText(mediaModel.getUploadDate());
         TextView txtDateLabel = (TextView) getView().findViewById(R.id.media_listitem_details_date_label);
         txtDateLabel.setText(
                 mIsLocal ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
 
-        String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
+        String fileURL = mediaModel.getUrl();
+        String fileName = mediaModel.getFileName();
         mImageUri = TextUtils.isEmpty(fileURL)
-                ? cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH))
+                ? mediaModel.getFilePath()
                 : fileURL;
         boolean isValidImage = MediaUtils.isValidImage(mImageUri);
 
         mFileNameView.setText(fileName);
 
-        float mediaWidth = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
-        float mediaHeight = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
+        float mediaWidth = mediaModel.getWidth();
+        float mediaHeight = mediaModel.getHeight();
 
         // image and dimensions
         if (isValidImage) {
@@ -285,7 +285,7 @@ public class MediaItemFragment extends Fragment {
             }
 
             if (mIsLocal) {
-                final String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
+                final String filePath = mediaModel.getFilePath();
                 loadLocalImage(mImageView, filePath, imageWidth, imageHeight);
             } else {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
