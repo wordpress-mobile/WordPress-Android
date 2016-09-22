@@ -435,7 +435,6 @@
 	<string name="media_add_new_media_gallery">गैलरी बनाएं</string>
 	<string name="username_invalid">अमान्य उपयोगकर्ता नाम</string>
 	<string name="jetpack_not_found">जेटपैक प्लगइन नहीं मिला</string>
-	<string name="reader_timespan_now">अब</string>
 	<string name="reader_likes_one">एक व्यक्ति ने पसंद किया</string>
 	<string name="reader_btn_share">साझा करे</string>
 	<string name="reader_likes_only_you">आपने इसे पसंद किया</string>

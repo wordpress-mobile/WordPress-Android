@@ -480,7 +480,6 @@
 	<string name="media_add_new_media_gallery">Opret galleri</string>
 	<string name="empty_list_default">Listen er tom</string>
 	<string name="select_from_media_library">Vælg fra mediebiblioteket</string>
-	<string name="reader_timespan_now">nu</string>
 	<string name="reader_label_added_tag">Tilføjede %s</string>
 	<string name="reader_label_removed_tag">Fjernede %s</string>
 	<string name="reader_likes_only_you">Du synes godt om dette</string>

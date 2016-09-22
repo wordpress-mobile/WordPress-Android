@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Последователите ще спрат да получават известия за сайта ако ги премахнете, освен ако не го добавят отново.\n\nЖелаете ли да продължите с премахването?</string>
 	<string name="follower_subscribed_since">От %1$s</string>
 	<string name="reader_label_view_gallery">Преглед</string>
-	<string name="reader_label_image_count">%d снимки</string>
 	<string name="error_remove_follower">Неуспешно премахване на последователя</string>
 	<string name="error_remove_viewer">Неуспешно премахване на потребителя</string>
 	<string name="error_fetch_email_followers_list">Неуспешно показване на последователите по имейл.</string>

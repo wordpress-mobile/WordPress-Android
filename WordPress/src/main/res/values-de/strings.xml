@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Nach dem Entfernen bekommt der Follower keine Mitteilungen über dieser Website mehr, bis er wieder folgt.\n\nMöchtest du diesen Follower noch immer entfernen?</string>
 	<string name="follower_subscribed_since">Seit %1$s</string>
 	<string name="reader_label_view_gallery">Galerie anzeigen</string>
-	<string name="reader_label_image_count">%d Bilder</string>
 	<string name="error_remove_follower">Konnte Follower nicht entfernen</string>
 	<string name="error_remove_viewer">Konnte Besucher nicht entfernen</string>
 	<string name="error_fetch_email_followers_list">Konnte E-Mail-Follower der Website nicht abrufen</string>

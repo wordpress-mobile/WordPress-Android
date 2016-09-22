@@ -565,7 +565,6 @@
 	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="jetpack_message">Necesitas el pluging Jetpack para tener estadísticas estadísticas. ¿Quieres instalar Jetpack?</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
-	<string name="reader_timespan_now">ahora</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_share_subject">Compartido desde %s</string>
 	<string name="reader_btn_share">Compartir</string>

@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>
 	<string name="follower_subscribed_since">Since %1$s</string>
 	<string name="reader_label_view_gallery">View Gallery</string>
-	<string name="reader_label_image_count">%d images</string>
 	<string name="error_remove_follower">Couldn\'t remove follower</string>
 	<string name="error_remove_viewer">Couldn\'t remove viewer</string>
 	<string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>

@@ -25,7 +25,6 @@
 	<string name="people_dropdown_item_team">Taldea</string>
 	<string name="follower_subscribed_since">%1$s-(e)tik</string>
 	<string name="reader_label_view_gallery">Ikusi galeria</string>
-	<string name="reader_label_image_count">%d irudi</string>
 	<string name="error_remove_follower">Ezin izan da jarraitzailea kendu</string>
 	<string name="error_remove_viewer">Ezin izan da ikuslea kendu</string>
 	<string name="error_fetch_email_followers_list">Ezin izan dira guneko e-posta jarraitzaileak eskuratu</string>
@@ -629,7 +628,6 @@
 	<string name="reader_toast_err_url_intent">Ezin izan da %s ireki</string>
 	<string name="nux_tutorial_get_started_title">Hasi!</string>
 	<string name="empty_list_default">Zerrenda hau hutsik dago</string>
-	<string name="reader_timespan_now">orain</string>
 	<string name="reader_share_subject">%s-tik partekatua</string>
 	<string name="reader_btn_share">Partekatu</string>
 	<string name="reader_btn_follow">Jarraitu</string>
