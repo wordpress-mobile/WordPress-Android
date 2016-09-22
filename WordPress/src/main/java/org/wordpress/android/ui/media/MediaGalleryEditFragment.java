@@ -32,7 +32,7 @@ import java.util.Collections;
 public class MediaGalleryEditFragment extends Fragment implements DropListener, RemoveListener {
     private static final String SAVED_MEDIA_IDS = "SAVED_MEDIA_IDS";
     private MediaGalleryAdapter mGridAdapter;
-    private ArrayList<String> mIds;
+    private ArrayList<Long> mIds;
     private SiteModel mSite;
 
     @Override
@@ -45,9 +45,9 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mIds = new ArrayList<String>();
+        mIds = new ArrayList<>();
         if (savedInstanceState != null) {
-            mIds = savedInstanceState.getStringArrayList(SAVED_MEDIA_IDS);
+            mIds = (ArrayList<Long>) savedInstanceState.getSerializable(SAVED_MEDIA_IDS);
         }
 
         // TODO: We want to inject the image loader in this class instead of using a static field.
@@ -69,7 +69,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(SAVED_MEDIA_IDS, mIds);
+        outState.putSerializable(SAVED_MEDIA_IDS, mIds);
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
@@ -106,8 +106,9 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
         int size = mIds.size();
         for (int i = 0; i < size; i++) {
             while (cursor.moveToNext()) {
-                String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
-                if (mediaId.equals(mIds.get(i))) {
+                // TODO: Use MediaModel cursor here
+                long mediaId = cursor.getLong(cursor.getColumnIndex("mediaId"));
+                if (mediaId == mIds.get(i)) {
                     positions.put(i, cursor.getPosition());
                     cursor.moveToPosition(-1);
                     break;
@@ -117,12 +118,12 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
         return positions;
     }
 
-    public void setMediaIds(ArrayList<String> ids) {
+    public void setMediaIds(ArrayList<Long> ids) {
         mIds = ids;
         refreshGridView();
     }
 
-    public ArrayList<String> getMediaIds() {
+    public ArrayList<Long> getMediaIds() {
         return mIds;
     }
 
@@ -188,7 +189,8 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
             return;
         }
         cursor.moveToPosition(info.position);
-        String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
+        // TODO: Use MediaModel cursor here
+        long mediaId = cursor.getLong(cursor.getColumnIndex("mediaId"));
 
         menu.add(ContextMenu.NONE, mIds.indexOf(mediaId), ContextMenu.NONE, R.string.delete);
     }
@@ -203,7 +205,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
     @Override
     public void drop(int from, int to) {
-        String id = mIds.get(from);
+        long id = mIds.get(from);
         mIds.remove(id);
         mIds.add(to, id);
         refreshGridView();
