@@ -266,7 +266,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onMediaItemSelected(String mediaId) {
+    public void onMediaItemSelected(long mediaId) {
         String tempQuery = mQuery;
         if (mSearchView != null) {
             mSearchView.clearFocus();
@@ -361,7 +361,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
             return true;
         } else if (i == R.id.menu_edit_media) {
-            String mediaId = mMediaItemFragment.getMediaId();
+            long mediaId = mMediaItemFragment.getMediaId();
             FragmentManager fm = getFragmentManager();
 
             if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
@@ -458,7 +458,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         return true;
     }
 
-    public void onSavedEdit(String mediaId, boolean result) {
+    public void onSavedEdit(long mediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
             FragmentManager fm = getFragmentManager();
             fm.popBackStack();
@@ -495,7 +495,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mMediaAddFragment.addToQueue(mediaId);
     }
 
-    public void deleteMedia(final ArrayList<String> ids) {
+    public void deleteMedia(final ArrayList<Long> ids) {
         final String blogId = String.valueOf(mSite.getId());
         Set<String> sanitizedIds = new HashSet<>(ids.size());
 
@@ -503,9 +503,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         getFragmentManager().popBackStack();
 
         // Make sure there are no media in "uploading"
-        for (String currentID : ids) {
-            if (WordPressMediaUtils.canDeleteMedia(blogId, currentID)) {
-                sanitizedIds.add(currentID);
+        for (long currentId : ids) {
+            if (WordPressMediaUtils.canDeleteMedia(blogId, String.valueOf(currentId))) {
+                sanitizedIds.add(String.valueOf(currentId));
             }
         }
 
@@ -560,12 +560,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
                 // view (if it was the one displayed)
                 for (MediaModel mediaModel : event.media) {
-                    String mediaId = String.valueOf(mediaModel.getId());
+                    long mediaId = mediaModel.getMediaId();
                     mMediaGridFragment.removeFromMultiSelect(mediaId);
                     if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
-                            && mediaId.equals(mMediaEditFragment.getMediaId())) {
+                            && mediaId == mMediaEditFragment.getMediaId()) {
                         if (mMediaEditFragment.isInLayout()) {
-                            mMediaEditFragment.loadMedia(null);
+                            mMediaEditFragment.loadMedia(MediaEditFragment.MISSING_MEDIA_ID);
                         } else {
                             getFragmentManager().popBackStack();
                         }
