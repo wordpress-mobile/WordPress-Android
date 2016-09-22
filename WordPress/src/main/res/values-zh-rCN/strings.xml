@@ -10,7 +10,7 @@
 	<string name="alignment_none">无</string>
 	<string name="alignment_left">左</string>
 	<string name="alignment_right">右</string>
-	<string name="site_settings_list_editor_action_mode_title">已选择 %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">已选择 %1$d</string>
 	<string name="error_fetch_users_list">无法检索站点用户</string>
 	<string name="plans_manage">在 WordPress.com/plans 上\n管理您的套餐</string>
 	<string name="people_empty_list_filtered_viewers">您目前没有任何查看者。</string>

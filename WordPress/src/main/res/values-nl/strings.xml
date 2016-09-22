@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="role_viewer">Lezer</string>
-	<string name="site_settings_list_editor_action_mode_title">Geselecteerde %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Geselecteerde %1$d</string>
 	<string name="error_fetch_users_list">Site-gebruikers ophalen mislukt</string>
 	<string name="plans_manage">Beheer je abonnement op\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Je hebt nog geen volgers.</string>

@@ -10,7 +10,7 @@
 	<string name="alignment_right">Wyrównaj do prawej</string>
 	<string name="alignment_left">Wyrównaj do lewej</string>
 	<string name="alignment_none">Brak wyrównania</string>
-	<string name="site_settings_list_editor_action_mode_title">Wybrano %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Wybrano %1$d</string>
 	<string name="error_fetch_users_list">Nie można pobrać użytkowników witryny</string>
 	<string name="plans_manage">Zarządzaj swoim planem na\nWorPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Witryna nie ma jeszcze oglądających</string>

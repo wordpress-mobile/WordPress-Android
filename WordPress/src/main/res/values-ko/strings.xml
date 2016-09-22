@@ -10,7 +10,7 @@
 	<string name="alignment_none">없음</string>
 	<string name="alignment_left">왼쪽</string>
 	<string name="alignment_right">오른쪽</string>
-	<string name="site_settings_list_editor_action_mode_title">%1$s 선택</string>
+	<string name="site_settings_list_editor_action_mode_title">%1$d 선택</string>
 	<string name="error_fetch_users_list">사이트 사용자를 가져올 수 없습니다.</string>
 	<string name="plans_manage">요금제 관리:\n워드프레스닷컴/요금제</string>
 	<string name="people_empty_list_filtered_viewers">아직 방문자가 없습니다.</string>

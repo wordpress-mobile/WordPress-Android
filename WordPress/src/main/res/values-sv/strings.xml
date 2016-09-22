@@ -10,7 +10,7 @@
 	<string name="alignment_none">Ingen</string>
 	<string name="alignment_left">Vänster</string>
 	<string name="alignment_right">Höger</string>
-	<string name="site_settings_list_editor_action_mode_title">Vald %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Vald %1$d</string>
 	<string name="error_fetch_users_list">Kunde inte hämta webbplatsens användare</string>
 	<string name="plans_manage">Uppgradera ditt paket på\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Du har inga läsare än.</string>

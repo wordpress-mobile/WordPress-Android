@@ -10,7 +10,7 @@
 	<string name="alignment_none">無</string>
 	<string name="alignment_left">左</string>
 	<string name="alignment_right">右</string>
-	<string name="site_settings_list_editor_action_mode_title">已選取 %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">已選取 %1$d</string>
 	<string name="viewer_remove_confirmation_message">如果移除這位瀏覽者，對方將無法造訪此網站。\n\n仍要移除這位瀏覽者嗎？</string>
 	<string name="follower_remove_confirmation_message">移除後，這位關注者如果沒有重新關注，就會停止收到此網站的通知。\n\n仍要移除這位關注者嗎？</string>
 	<string name="follower_subscribed_since">自 %1$s 開始</string>
