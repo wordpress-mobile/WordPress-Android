@@ -57,11 +57,11 @@ public class MediaGridAdapter extends CursorAdapter {
     private SiteModel mSite;
 
     // Must be an ArrayList (order is important for galleries)
-    private ArrayList<String> mSelectedItems;
+    private ArrayList<Long> mSelectedItems;
 
     public interface MediaGridAdapterCallback {
         void fetchMoreData(int offset);
-        void onRetryUpload(String mediaId);
+        void onRetryUpload(long mediaId);
         boolean isInMultiSelect();
     }
 
@@ -93,7 +93,7 @@ public class MediaGridAdapter extends CursorAdapter {
         }
     }
 
-    public ArrayList<String> getSelectedItems() {
+    public ArrayList<Long> getSelectedItems() {
         return mSelectedItems;
     }
 
@@ -155,7 +155,7 @@ public class MediaGridAdapter extends CursorAdapter {
             view.setTag(holder);
         }
 
-        final String mediaId = cursor.getString(cursor.getColumnIndex(MediaModelTable.ID));
+        final long mediaId = cursor.getLong(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
 
         String state = cursor.getString(cursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         boolean isLocalFile = MediaUtils.isLocalFile(state);
@@ -477,7 +477,7 @@ public class MediaGridAdapter extends CursorAdapter {
         mSelectedItems.clear();
     }
 
-    public boolean isItemSelected(String mediaId) {
+    public boolean isItemSelected(long mediaId) {
         return mSelectedItems.contains(mediaId);
     }
 
@@ -486,14 +486,14 @@ public class MediaGridAdapter extends CursorAdapter {
         if (cursor == null) {
             return;
         }
-        int columnIndex = cursor.getColumnIndex(MediaModelTable.ID);
+        int columnIndex = cursor.getColumnIndex(MediaModelTable.MEDIA_ID);
         if (columnIndex != -1) {
-            String mediaId = cursor.getString(columnIndex);
+            long mediaId = cursor.getLong(columnIndex);
             setItemSelected(mediaId, selected);
         }
     }
 
-    public void setItemSelected(String mediaId, boolean selected) {
+    public void setItemSelected(long mediaId, boolean selected) {
         if (selected) {
             mSelectedItems.add(mediaId);
         } else {
@@ -504,9 +504,9 @@ public class MediaGridAdapter extends CursorAdapter {
 
     public void toggleItemSelected(int position) {
         Cursor cursor = (Cursor) getItem(position);
-        int columnIndex = cursor.getColumnIndex(MediaModelTable.ID);
+        int columnIndex = cursor.getColumnIndex(MediaModelTable.MEDIA_ID);
         if (columnIndex != -1) {
-            String mediaId = cursor.getString(columnIndex);
+            long mediaId = cursor.getLong(columnIndex);
             if (mSelectedItems.contains(mediaId)) {
                 mSelectedItems.remove(mediaId);
             } else {
@@ -516,7 +516,7 @@ public class MediaGridAdapter extends CursorAdapter {
         }
     }
 
-    public void setSelectedItems(ArrayList<String> selectedItems) {
+    public void setSelectedItems(ArrayList<Long> selectedItems) {
         mSelectedItems = selectedItems;
         notifyDataSetChanged();
     }
