@@ -253,7 +253,9 @@ public class MediaGridFragment extends Fragment
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
 
         if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
-            ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_SELECTED_STATES);
+            // we already know that selectedItems is an `ArrayList<Long>`
+            @SuppressWarnings("unchecked")
+            ArrayList<Long> selectedItems = (ArrayList<Long>) savedInstanceState.getSerializable(BUNDLE_SELECTED_STATES);
             mGridAdapter.setSelectedItems(selectedItems);
             if (isInMultiSelectMode) {
                 setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
@@ -287,7 +289,7 @@ public class MediaGridFragment extends Fragment
     }
 
     private void saveState(Bundle outState) {
-        outState.putStringArrayList(BUNDLE_SELECTED_STATES, mGridAdapter.getSelectedItems());
+        outState.putSerializable(BUNDLE_SELECTED_STATES, mGridAdapter.getSelectedItems());
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridView.getFirstVisiblePosition());
         outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
