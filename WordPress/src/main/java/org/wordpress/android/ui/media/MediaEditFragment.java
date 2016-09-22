@@ -47,6 +47,7 @@ public class MediaEditFragment extends Fragment {
     private static final String ARGS_MEDIA_ID = "media_id";
     // also appears in the layouts, from the strings.xml
     public static final String TAG = "MediaEditFragment";
+    private static final int MISSING_MEDIA_ID = -1;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -62,7 +63,7 @@ public class MediaEditFragment extends Fragment {
 
     private boolean mIsMediaUpdating = false;
 
-    private String mMediaId;
+    private long mMediaId = MISSING_MEDIA_ID;
     private ScrollView mScrollView;
     private View mLinearLayout;
     private ImageLoader mImageLoader;
@@ -72,13 +73,13 @@ public class MediaEditFragment extends Fragment {
     public interface MediaEditFragmentCallback {
         void onResume(Fragment fragment);
         void onPause(Fragment fragment);
-        void onSavedEdit(String mediaId, boolean result);
+        void onSavedEdit(long mediaId, boolean result);
     }
 
-    public static MediaEditFragment newInstance(SiteModel site, String mediaId) {
+    public static MediaEditFragment newInstance(SiteModel site, long mediaId) {
         MediaEditFragment fragment = new MediaEditFragment();
         Bundle args = new Bundle();
-        args.putString(ARGS_MEDIA_ID, mediaId);
+        args.putLong(ARGS_MEDIA_ID, mediaId);
         args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
         return fragment;
@@ -164,14 +165,14 @@ public class MediaEditFragment extends Fragment {
         }
     }
 
-    public String getMediaId() {
-        if (mMediaId != null) {
+    public long getMediaId() {
+        if (mMediaId != MISSING_MEDIA_ID) {
             return mMediaId;
         } else if (getArguments() != null) {
-            mMediaId = getArguments().getString(ARGS_MEDIA_ID);
+            mMediaId = getArguments().getLong(ARGS_MEDIA_ID);
             return mMediaId;
         } else {
-            return null;
+            return MISSING_MEDIA_ID;
         }
     }
 
@@ -204,11 +205,11 @@ public class MediaEditFragment extends Fragment {
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
-    public void loadMedia(String mediaId) {
+    public void loadMedia(long mediaId) {
         mMediaId = mediaId;
-        if (getActivity() != null && mMediaId != null) {
+        if (getActivity() != null && mMediaId != MISSING_MEDIA_ID) {
             try {
-                MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(), Long.parseLong(mMediaId));
+                MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(), mMediaId);
                 refreshViews(mediaModel);
             } catch (NumberFormatException e) {
                 AppLog.e(AppLog.T.MEDIA, "NumberFormatException converting mediaId to long: " + mMediaId);
@@ -221,18 +222,18 @@ public class MediaEditFragment extends Fragment {
 
     void editMedia() {
         ActivityUtils.hideKeyboard(getActivity());
-        final String mediaId = this.getMediaId();
+        final long mediaId = getMediaId();
         final String title = mTitleView.getText().toString();
         final String description = mDescriptionView.getText().toString();
         final String caption = mCaptionView.getText().toString();
 
-        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mSite, mediaId, title,
+        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mSite, String.valueOf(mediaId), title,
                 description, caption,
                 new ApiHelper.GenericCallback() {
                     @Override
                     public void onSuccess() {
                         String blogId = String.valueOf(mSite.getId());
-                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
+                        WordPress.wpDB.updateMediaFile(blogId, String.valueOf(mediaId), title, description, caption);
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
                         }
