@@ -119,7 +119,7 @@ public class MediaGridFragment extends Fragment
     public interface MediaGridListener {
         void onMediaItemListDownloadStart();
         void onMediaItemListDownloaded();
-        void onMediaItemSelected(String mediaId);
+        void onMediaItemSelected(long mediaId);
         void onRetryUpload(long mediaId);
     }
 
@@ -400,7 +400,7 @@ public class MediaGridFragment extends Fragment
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Cursor cursor = ((MediaGridAdapter) parent.getAdapter()).getCursor();
-        String mediaId = cursor.getString(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
+        long mediaId = cursor.getLong(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
         mListener.onMediaItemSelected(mediaId);
     }
 
@@ -633,7 +633,7 @@ public class MediaGridFragment extends Fragment
         mHasRetrievedAllMedia = false;
     }
 
-    public void removeFromMultiSelect(String mediaId) {
+    public void removeFromMultiSelect(long mediaId) {
         if (isInMultiSelect() && mGridAdapter.isItemSelected(mediaId)) {
             mGridAdapter.setItemSelected(mediaId, false);
             setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
@@ -721,7 +721,7 @@ public class MediaGridFragment extends Fragment
             if (!isAdded()) {
                 return;
             }
-            ArrayList<String> ids = mGridAdapter.getSelectedItems();
+            ArrayList<Long> ids = mGridAdapter.getSelectedItems();
             ActivityLauncher.newMediaPost(getActivity(), mSite, ids.iterator().next());
         }
 

@@ -175,7 +175,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void newGalleryPost(Activity context, SiteModel site, ArrayList<String> mediaIds) {
+    public static void newGalleryPost(Activity context, SiteModel site, ArrayList<Long> mediaIds) {
         if (site == null) return;
         // Create a new post object and assign default settings
         Intent intent = new Intent(context, EditPostActivity.class);
@@ -185,7 +185,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void newMediaPost(Activity context, SiteModel site, String mediaId) {
+    public static void newMediaPost(Activity context, SiteModel site, long mediaId) {
         if (site == null) return;
         // Create a new post object and assign default settings
         Intent intent = new Intent(context, EditPostActivity.class);
@@ -318,7 +318,7 @@ public class ActivityLauncher {
     }
 
     public static void viewMediaGalleryPickerForSiteAndMediaIds(Activity activity, @NonNull SiteModel site,
-                                                     @NonNull ArrayList<String> mediaIds) {
+                                                     @NonNull ArrayList<Long> mediaIds) {
         Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, mediaIds);

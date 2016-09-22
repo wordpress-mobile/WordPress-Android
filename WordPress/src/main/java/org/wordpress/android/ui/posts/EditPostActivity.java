@@ -164,7 +164,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mShowNewEditor;
 
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
-    private Map<Long, List<String>> mPendingGalleryUploads = new HashMap<>();
+    private Map<Long, List<Long>> mPendingGalleryUploads = new HashMap<>();
 
     // -1=no response yet, 0=unavailable, 1=available
     private int mBlogMediaStatus = -1;
@@ -999,8 +999,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return mMaxThumbWidth;
     }
 
-    private MediaFile createMediaFile(String blogId, final String mediaId) {
-        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
+    private MediaFile createMediaFile(String blogId, final long mediaId) {
+        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, String.valueOf(mediaId));
 
         if (cursor == null || !cursor.moveToFirst()) {
             if (cursor != null) {
@@ -1016,7 +1016,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         MediaFile mediaFile = new MediaFile();
-        mediaFile.setMediaId(mediaId);
+        mediaFile.setMediaId(String.valueOf(mediaId));
         mediaFile.setBlogId(blogId);
         mediaFile.setFileURL(url);
         mediaFile.setCaption(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION)));
@@ -1056,7 +1056,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return mediaFile;
     }
 
-    private void addExistingMediaToEditor(String mediaId) {
+    private void addExistingMediaToEditor(long mediaId) {
         String blogId = String.valueOf(mSite.getId());
         MediaFile mediaFile = createMediaFile(blogId, mediaId);
         if (mediaFile == null) {
@@ -1286,12 +1286,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void prepareMediaGallery() {
         MediaGallery mediaGallery = new MediaGallery();
-        mediaGallery.setIds(getIntent().getStringArrayListExtra(NEW_MEDIA_GALLERY_EXTRA_IDS));
+        @SuppressWarnings("unchecked")
+        ArrayList<Long> ids = (ArrayList<Long>) getIntent().getSerializableExtra(NEW_MEDIA_GALLERY_EXTRA_IDS);
+        mediaGallery.setIds(ids);
         startMediaGalleryActivity(mediaGallery);
     }
 
     private void prepareMediaPost() {
-        String mediaId = getIntent().getStringExtra(NEW_MEDIA_POST_EXTRA);
+        long mediaId = getIntent().getLongExtra(NEW_MEDIA_POST_EXTRA, 0);
         addExistingMediaToEditor(mediaId);
     }
 
@@ -1544,7 +1546,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
+        MediaFile mediaFile = queueFileForUpload(path, new ArrayList<Long>());
         if (mediaFile != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, WordPress.imageLoader);
         }
@@ -1648,12 +1650,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void handleMediaGalleryPickerResult(Intent data) {
-        ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
+        @SuppressWarnings("unchecked")
+        ArrayList<Long> ids = (ArrayList<Long>) data.getSerializableExtra(MediaGalleryPickerActivity.RESULT_IDS);
         if (ids == null || ids.size() == 0) {
             return;
         }
 
-        String mediaId = ids.get(0);
+        long mediaId = ids.get(0);
         addExistingMediaToEditor(mediaId);
     }
 
@@ -1680,14 +1683,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
 
             if (selectedContent != null && selectedContent.size() > 0) {
-                ArrayList<String> blogMediaIds = new ArrayList<>();
-                ArrayList<String> localMediaIds = new ArrayList<>();
+                ArrayList<Long> blogMediaIds = new ArrayList<>();
+                ArrayList<Long> localMediaIds = new ArrayList<>();
 
                 for (MediaItem content : selectedContent) {
                     Uri source = content.getSource();
-                    final String id = content.getTag();
 
-                    if (source != null && id != null) {
+                    if (source != null && content.getTag() != null) {
+                        final long id = Long.parseLong(content.getTag());
                         final String sourceString = source.toString();
 
                         if (MediaUtils.isVideo(sourceString)) {
@@ -1740,7 +1743,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (selectedContent != null && selectedContent.size() > 0) {
             for (MediaItem media : selectedContent) {
                 if (URLUtil.isNetworkUrl(media.getSource().toString())) {
-                    addExistingMediaToEditor(media.getTag());
+                    addExistingMediaToEditor(Long.parseLong(media.getTag()));
                 } else {
                     addMedia(media.getSource());
                 }
@@ -1810,7 +1813,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     int remaining = mPendingGalleryUploads.get(galleryId).size() - 1;
                     mEditorMediaUploadListener.onGalleryMediaUploadSucceeded(galleryId, event.mRemoteMediaId, remaining);
                 } else {
-                    handleGalleryImageUploadedLegacyEditor(galleryId, event.mLocalMediaId, event.mRemoteMediaId);
+                    handleGalleryImageUploadedLegacyEditor(galleryId, Integer.parseInt(event.mLocalMediaId),
+                            Long.parseLong(event.mRemoteMediaId));
                 }
 
                 mPendingGalleryUploads.get(galleryId).remove(event.mLocalMediaId);
@@ -1859,7 +1863,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void handleGalleryImageUploadedLegacyEditor(Long galleryId, String localId, String remoteId) {
+    private void handleGalleryImageUploadedLegacyEditor(Long galleryId, int localId, long remoteId) {
         SpannableStringBuilder postContent;
         if (mEditorFragment.getSpannedContent() != null) {
             // needed by the legacy editor to save local drafts
@@ -1877,7 +1881,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
                 MediaGallery gallery = gallerySpan.getMediaGallery();
                 if (gallery.getUniqueId() == galleryId) {
-                    ArrayList<String> galleryIds = gallery.getIds();
+                    ArrayList<Long> galleryIds = gallery.getIds();
                     galleryIds.add(remoteId);
                     gallery.setIds(galleryIds);
                     gallerySpan.setMediaGallery(gallery);
@@ -1984,11 +1988,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * @param mediaIdOut
      *  the new {@link org.wordpress.android.util.helpers.MediaFile} ID is added if non-null
      */
-    private MediaFile queueFileForUpload(String path, ArrayList<String> mediaIdOut) {
+    private MediaFile queueFileForUpload(String path, ArrayList<Long> mediaIdOut) {
         return queueFileForUpload(path, mediaIdOut, "queued");
     }
 
-    private MediaFile queueFileForUpload(String path, ArrayList<String> mediaIdOut, String startingState) {
+    private MediaFile queueFileForUpload(String path, ArrayList<Long> mediaIdOut, String startingState) {
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
             Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
@@ -2029,7 +2033,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mediaIdOut != null) {
-            mediaIdOut.add(mediaFile.getMediaId());
+            mediaIdOut.add(Long.parseLong(mediaFile.getMediaId()));
         }
 
         saveMediaFile(mediaFile);

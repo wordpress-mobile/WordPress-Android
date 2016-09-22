@@ -57,17 +57,20 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ArrayList<String> selectedItems = new ArrayList<String>();
+        ArrayList<Long> selectedItems = new ArrayList<>();
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
 
-        ArrayList<String> prevSelectedItems = getIntent().getStringArrayListExtra(PARAM_SELECTED_IDS);
+        @SuppressWarnings("unchecked")
+        ArrayList<Long> prevSelectedItems = (ArrayList<Long>) getIntent().getSerializableExtra(PARAM_SELECTED_IDS);
         if (prevSelectedItems != null) {
             selectedItems.addAll(prevSelectedItems);
         }
 
         if (savedInstanceState != null) {
-            selectedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
+            @SuppressWarnings("unchecked")
+            ArrayList<Long> list = (ArrayList<Long>) savedInstanceState.getSerializable(STATE_SELECTED_ITEMS);
+            selectedItems.addAll(list);
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
             mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
         }
@@ -116,7 +119,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(STATE_SELECTED_ITEMS, mGridAdapter.getSelectedItems());
+        outState.putSerializable(STATE_SELECTED_ITEMS, mGridAdapter.getSelectedItems());
         outState.putStringArrayList(STATE_FILTERED_ITEMS, mFilteredItems);
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
@@ -145,7 +148,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             // Single select, just finish the activity once an item is selected
             mGridAdapter.setItemSelected(position, true);
             Intent intent = new Intent();
-            intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
+            intent.putExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
             setResult(RESULT_OK, intent);
             finish();
         } else {
@@ -178,7 +181,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Intent intent = new Intent();
-        intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
+        intent.putExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
         setResult(RESULT_OK, intent);
         finish();
     }
