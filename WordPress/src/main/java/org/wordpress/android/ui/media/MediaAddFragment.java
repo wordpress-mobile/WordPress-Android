@@ -271,9 +271,9 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         WordPressMediaUtils.launchPictureLibrary(this);
     }
 
-    public void addToQueue(String mediaId) {
+    public void addToQueue(long mediaId) {
         String blogId = String.valueOf(mSite.getId());
-        WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.QUEUED);
+        WordPress.wpDB.updateMediaUploadState(blogId, String.valueOf(mediaId), MediaUploadState.QUEUED);
         startMediaUploadService();
     }
 

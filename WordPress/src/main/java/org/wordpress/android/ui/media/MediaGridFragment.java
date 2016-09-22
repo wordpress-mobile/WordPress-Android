@@ -120,7 +120,7 @@ public class MediaGridFragment extends Fragment
         void onMediaItemListDownloadStart();
         void onMediaItemListDownloaded();
         void onMediaItemSelected(String mediaId);
-        void onRetryUpload(String mediaId);
+        void onRetryUpload(long mediaId);
     }
 
     public enum Filter {
@@ -612,7 +612,7 @@ public class MediaGridFragment extends Fragment
     }
 
     @Override
-    public void onRetryUpload(String mediaId) {
+    public void onRetryUpload(long mediaId) {
         mListener.onRetryUpload(mediaId);
     }
 

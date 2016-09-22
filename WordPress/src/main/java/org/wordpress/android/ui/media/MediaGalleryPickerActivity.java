@@ -191,7 +191,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRetryUpload(String mediaId) {
+    public void onRetryUpload(long mediaId) {
     }
 
     @Override

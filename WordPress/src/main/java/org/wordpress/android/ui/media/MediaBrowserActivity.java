@@ -491,7 +491,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onRetryUpload(String mediaId) {
+    public void onRetryUpload(long mediaId) {
         mMediaAddFragment.addToQueue(mediaId);
     }
 
