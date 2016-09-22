@@ -56,6 +56,7 @@ import javax.inject.Inject;
  */
 public class MediaItemFragment extends Fragment {
     private static final String ARGS_MEDIA_ID = "media_id";
+    private static final int MISSING_MEDIA_ID = -1;
 
     public static final String TAG = MediaItemFragment.class.getName();
 
@@ -80,10 +81,10 @@ public class MediaItemFragment extends Fragment {
         void onPause(Fragment fragment);
     }
 
-    public static MediaItemFragment newInstance(SiteModel site, String mediaId) {
+    public static MediaItemFragment newInstance(SiteModel site, long mediaId) {
         MediaItemFragment fragment = new MediaItemFragment();
         Bundle args = new Bundle();
-        args.putString(ARGS_MEDIA_ID, mediaId);
+        args.putLong(ARGS_MEDIA_ID, mediaId);
         args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
         return fragment;
@@ -153,11 +154,11 @@ public class MediaItemFragment extends Fragment {
         mCallback.onPause(this);
     }
 
-    public String getMediaId() {
+    public long getMediaId() {
         if (getArguments() != null) {
-            return getArguments().getString(ARGS_MEDIA_ID);
+            return getArguments().getLong(ARGS_MEDIA_ID);
         } else {
-            return null;
+            return MISSING_MEDIA_ID;
         }
     }
 
@@ -177,18 +178,16 @@ public class MediaItemFragment extends Fragment {
 
     /** Loads the first media item for the current blog from the database **/
     public void loadDefaultMedia() {
-        loadMedia(null);
+        loadMedia(MISSING_MEDIA_ID);
     }
 
-    public void loadMedia(String mediaId) {
+    public void loadMedia(long mediaId) {
         if (mSite == null)
             return;
 
         MediaModel mediaModel = null;
-        try {
-            mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(),Long.parseLong(mediaId));
-        } catch (NumberFormatException e) {
-            AppLog.e(AppLog.T.MEDIA, "NumberFormatException converting mediaId to long: " + mediaId);
+        if (mediaId != MISSING_MEDIA_ID) {
+            mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(), mediaId);
         }
 
         // if the id is null, get the first media item in the database
@@ -378,7 +377,7 @@ public class MediaItemFragment extends Fragment {
 
         if (itemId == R.id.menu_delete) {
             String blogId = String.valueOf(mSite.getId());
-            boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(blogId, getMediaId());
+            boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(blogId, String.valueOf(getMediaId()));
             if (!canDeleteMedia) {
                 Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
                 return true;
@@ -389,7 +388,7 @@ public class MediaItemFragment extends Fragment {
                             R.string.delete, new OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ArrayList<String> ids = new ArrayList<>(1);
+                                    ArrayList<Long> ids = new ArrayList<>(1);
                                     ids.add(getMediaId());
                                     if (getActivity() instanceof MediaBrowserActivity) {
                                         ((MediaBrowserActivity) getActivity()).deleteMedia(ids);
