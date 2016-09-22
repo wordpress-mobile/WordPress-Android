@@ -973,7 +973,6 @@
 	<string name="select_from_media_library">اختر من مكتبة الوسائط</string>
 	<string name="jetpack_message">مطلوب اضافة الـ Jetpack للإحصائيات , هل تريد تثبيت الـ Jetpack ؟</string>
 	<string name="jetpack_not_found">اضافة Jetpack غير موجودة</string>
-	<string name="reader_timespan_now">الان</string>
 	<string name="reader_untitled_post">( بدون اسم )</string>
 	<string name="reader_share_subject">تمت المشاركة من %s</string>
 	<string name="reader_btn_share">مشاركة</string>

@@ -957,7 +957,6 @@
 	<string name="reader_toast_err_share_intent">Onmogelijk te delen</string>
 	<string name="reader_toast_err_view_image">Onmogelijk afbeelding te bekijken</string>
 	<string name="reader_empty_followed_tags">Je volgt geen enkele tags</string>
-	<string name="reader_timespan_now">Nu</string>
 	<string name="jetpack_message">De Jetpack plugin is nodig voor statistieken. Wil je Jetpack installeren?</string>
 	<string name="empty_list_default">Deze lijst is leeg</string>
 	<string name="media_add_new_media_gallery">Een nieuwe galerij aanmaken</string>

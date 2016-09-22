@@ -17,7 +17,6 @@
 	<string name="follower_remove_confirmation_message">Jika dibuang, pengikut ini akan berhenti menerima pemberitahuan tentang laman ini, kecuali jika mereka mengikut kembali.\n\nAnda masih ingin membuang pengikut ini?</string>
 	<string name="follower_subscribed_since">Sejak %1$s</string>
 	<string name="reader_label_view_gallery">Lihat Galeri</string>
-	<string name="reader_label_image_count">%d imej</string>
 	<string name="error_remove_follower">Tidak dapat membuang pengikut</string>
 	<string name="error_remove_viewer">Tidak dapat membuang penonton</string>
 	<string name="error_fetch_email_followers_list">Tidak boleh mendapatkan pengikut emel laman</string>
@@ -963,7 +962,6 @@
 	<string name="select_from_media_library">Pilih dari perpustakaan media</string>
 	<string name="jetpack_message">Pemalam Jetpack diperlukan bagi statistik. Anda ingin memasang Jetpack?</string>
 	<string name="jetpack_not_found">Pemalam Jetpack tidak dijumpai</string>
-	<string name="reader_timespan_now">sekarang</string>
 	<string name="reader_untitled_post">(Tanpa tajuk)</string>
 	<string name="reader_share_subject">Dikongsi dari %s</string>
 	<string name="reader_btn_share">Kongsi</string>

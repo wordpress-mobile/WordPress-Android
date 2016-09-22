@@ -23,7 +23,6 @@
 	<string name="viewer_remove_confirmation_message">לאחר הסרת צופה זה, הוא או היא לא יוכלו לבקר יותר באתר זה.\n\nבחרת להסיר צופה זה - האם ההחלטה סופית?</string>
 	<string name="follower_remove_confirmation_message">לאחר הסרת עוקב זה, הוא יפסיק לקבל הודעות לגבי אתר זה, אלא אם יגדיר מעקב מחדש.\n\nבחרת להסיר עוקב זה - האם ההחלטה סופית?</string>
 	<string name="follower_subscribed_since">מאז %1$s</string>
-	<string name="reader_label_image_count">%d תמונות</string>
 	<string name="reader_label_view_gallery">הצגת גלריה</string>
 	<string name="error_remove_follower">לא ניתן היה להסיר עוקב</string>
 	<string name="error_remove_viewer">לא ניתן היה להסיר צופה</string>
@@ -971,7 +970,6 @@
 	<string name="select_from_media_library">בחר מתוך ספריית מדיה</string>
 	<string name="jetpack_message">התוסף Jetpack נדרש לקבלת נתונים סטטיסטיים. אתה מעוניין להתקין את Jetpack?</string>
 	<string name="jetpack_not_found">התוסף Jetpack לא נמצא</string>
-	<string name="reader_timespan_now">עכשיו</string>
 	<string name="reader_untitled_post">(ללא כותרת)</string>
 	<string name="reader_share_subject">שיתוף מ-%s</string>
 	<string name="reader_btn_share">שתף</string>

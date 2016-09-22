@@ -933,7 +933,6 @@
 	<string name="select_from_media_library">Dewiswch o\'r llyfrgell cyfryngau</string>
 	<string name="jetpack_message">Mae angen yr ategyn Jetpack ar gyfer adrodd ar yr ystadegau. Hoffech chi osod Jetpack?</string>
 	<string name="jetpack_not_found">Heb ganfod ategyn jetpack</string>
-	<string name="reader_timespan_now">nawr</string>
 	<string name="reader_untitled_post">(Dideitl)</string>
 	<string name="reader_share_subject">Rhannu o %s</string>
 	<string name="reader_btn_share">Rhannu</string>

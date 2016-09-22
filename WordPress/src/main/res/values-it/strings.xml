@@ -17,7 +17,6 @@
 	<string name="follower_remove_confirmation_message">Se rimosso, questo follower smetterà di ricevere notifiche da questo sito, a meno che non si iscriva di nuovo.\n\nVuoi ancora di rimuovere questo follower?</string>
 	<string name="follower_subscribed_since">Dal %1$s</string>
 	<string name="reader_label_view_gallery">Visualizza galleria</string>
-	<string name="reader_label_image_count">%d imagini</string>
 	<string name="error_remove_follower">Non è possibile rimuovere il follower</string>
 	<string name="error_remove_viewer">Non è possibile rimuovere il visitatore</string>
 	<string name="error_fetch_email_followers_list">Non è possibile recuperare l\'email dei follower del sito</string>
@@ -968,7 +967,6 @@
 	<string name="reader_label_removed_tag">Rimosso %s</string>
 	<string name="reader_likes_one">Ad una persona piace questo</string>
 	<string name="reader_likes_only_you">Ti piace questo</string>
-	<string name="reader_timespan_now">adesso</string>
 	<string name="reader_untitled_post">(Senza titolo)</string>
 	<string name="reader_share_subject">Condividi da %s</string>
 	<string name="reader_btn_share">Condividi</string>

@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Si lo eliminas, este seguidor dejará de recibir informaciones de tu sitio, a no ser que vuelta a seguirte. \n\n¿Todavía quieres eliminar a este seguidor? </string>
 	<string name="follower_subscribed_since">Desde %1$s</string>
 	<string name="reader_label_view_gallery">Ver galería</string>
-	<string name="reader_label_image_count">%d imágenes</string>
 	<string name="error_remove_follower">No se pudo quitar al seguidor</string>
 	<string name="error_remove_viewer">No se pudo quitar el espectador</string>
 	<string name="error_fetch_email_followers_list">No se pudieron recuperar los correos electrónicos de los seguidores del sitio</string>
@@ -991,7 +990,6 @@
 	<string name="reader_label_removed_tag">Eliminado %s</string>
 	<string name="media_add_new_media_gallery">Crear galería</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
-	<string name="reader_timespan_now">ahora</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_share_subject">Compartido desde %s</string>
 	<string name="reader_btn_share">Compartir</string>

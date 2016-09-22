@@ -522,7 +522,6 @@
 	<string name="reader_btn_share">Поделите</string>
 	<string name="reader_share_subject">Подељено од стране %s</string>
 	<string name="reader_untitled_post">(Без наслова)</string>
-	<string name="reader_timespan_now">сада</string>
 	<string name="jetpack_not_found">Додатак Џетпек није пронађен</string>
 	<string name="jetpack_message">Џетпек додатак је неопходан за статистике. Да ли желите да инсталирате Џетпек?</string>
 	<string name="reader_toast_err_share_intent">Није могуће делити</string>
