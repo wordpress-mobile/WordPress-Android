@@ -113,8 +113,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     }
 
     private void refreshGridView() {
-        String blogId = String.valueOf(mSite.getId());
-        Cursor cursor = WordPress.wpDB.getMediaFiles(blogId, mIds);
+        Cursor cursor = mMediaStore.getSiteMediaWithIdsAsCursor(mSite.getSiteId(), mIds);
         if (cursor == null) {
             mGridAdapter.changeCursor(null);
             return;
