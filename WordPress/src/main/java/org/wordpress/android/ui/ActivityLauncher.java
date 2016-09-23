@@ -46,6 +46,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -180,7 +181,7 @@ public class ActivityLauncher {
         // Create a new post object and assign default settings
         Intent intent = new Intent(context, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, mediaIds);
+        intent.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, ListUtils.toLongArray(mediaIds));
         intent.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
         context.startActivity(intent);
     }

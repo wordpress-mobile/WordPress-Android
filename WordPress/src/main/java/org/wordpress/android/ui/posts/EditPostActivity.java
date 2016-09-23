@@ -47,6 +47,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -93,6 +94,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -1286,9 +1288,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void prepareMediaGallery() {
         MediaGallery mediaGallery = new MediaGallery();
-        @SuppressWarnings("unchecked")
-        ArrayList<Long> ids = (ArrayList<Long>) getIntent().getSerializableExtra(NEW_MEDIA_GALLERY_EXTRA_IDS);
-        mediaGallery.setIds(ids);
+        long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_GALLERY_EXTRA_IDS);
+        ArrayList<Long> idsList = ListUtils.toLongList(idsArray);
+        mediaGallery.setIds(idsList);
         startMediaGalleryActivity(mediaGallery);
     }
 
