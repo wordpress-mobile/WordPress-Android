@@ -47,7 +47,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -1813,7 +1812,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (mEditorMediaUploadListener != null) {
                     // Notify the visual editor of gallery image upload
                     int remaining = mPendingGalleryUploads.get(galleryId).size() - 1;
-                    mEditorMediaUploadListener.onGalleryMediaUploadSucceeded(galleryId, event.mRemoteMediaId, remaining);
+                    mEditorMediaUploadListener.onGalleryMediaUploadSucceeded(galleryId, Long.parseLong(event.mRemoteMediaId), remaining);
                 } else {
                     handleGalleryImageUploadedLegacyEditor(galleryId, Integer.parseInt(event.mLocalMediaId),
                             Long.parseLong(event.mRemoteMediaId));

@@ -1166,9 +1166,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onGalleryMediaUploadSucceeded(final long galleryId, String remoteMediaId, int remaining) {
+    public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
         if (galleryId == mUploadingMediaGallery.getUniqueId()) {
-            ArrayList<String> mediaIds = mUploadingMediaGallery.getIds();
+            ArrayList<Long> mediaIds = mUploadingMediaGallery.getIds();
             mediaIds.add(remoteMediaId);
             mUploadingMediaGallery.setIds(mediaIds);
 
