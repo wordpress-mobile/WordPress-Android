@@ -17,13 +17,19 @@ import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.DragSortListView.DropListener;
 import com.mobeta.android.dslv.DragSortListView.RemoveListener;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import javax.inject.Inject;
 
 /**
  * Fragment where containing a drag-sort listview where the user can drag items
@@ -35,10 +41,26 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     private ArrayList<Long> mIds;
     private SiteModel mSite;
 
+    @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
         updateSiteOrFinishActivity(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -213,5 +235,10 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
     @Override
     public void remove(int position) {
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        // no-op
     }
 }
