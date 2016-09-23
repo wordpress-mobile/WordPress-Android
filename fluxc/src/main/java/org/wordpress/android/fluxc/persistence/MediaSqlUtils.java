@@ -32,11 +32,19 @@ public class MediaSqlUtils {
     }
 
     public static List<MediaModel> getSiteMediaWithIds(long siteId, List<Long> mediaIds) {
+        return getSiteMediaWithIdsQuery(siteId, mediaIds).getAsModel();
+    }
+
+    public static WellCursor<MediaModel> getSiteMediaWithIdsAsCursor(long siteId, List<Long> mediaIds) {
+        return getSiteMediaWithIdsQuery(siteId, mediaIds).getAsCursor();
+    }
+
+    private static SelectQuery<MediaModel> getSiteMediaWithIdsQuery(long siteId, List<Long> mediaIds) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteId)
                 .isIn(MediaModelTable.MEDIA_ID, mediaIds)
-                .endGroup().endWhere().getAsModel();
+                .endGroup().endWhere();
     }
 
     public static List<MediaModel> searchSiteMedia(long siteId, String column, String searchTerm) {
