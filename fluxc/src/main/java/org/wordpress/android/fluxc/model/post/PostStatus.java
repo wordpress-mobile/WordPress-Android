@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.model.post;
 
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.utils.DateTimeUtils;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -64,7 +64,7 @@ public enum PostStatus {
         String value = post.getStatus();
         long dateCreatedGMT = 0;
         if (post.getDateCreated() != null) {
-            Date dateCreated = DateTimeUtils.dateFromIso8601(post.getDateCreated());
+            Date dateCreated = DateTimeUtils.dateUTCFromIso8601(post.getDateCreated());
             if (dateCreated != null) {
                 dateCreatedGMT = dateCreated.getTime();
             }
