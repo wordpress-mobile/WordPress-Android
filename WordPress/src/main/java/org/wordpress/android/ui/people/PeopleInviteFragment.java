@@ -395,7 +395,7 @@ public class PeopleInviteFragment extends Fragment implements
         if (usernamesToCheck.size() > 0) {
 
             String dotComBlogId = getArguments().getString(ARG_BLOGID);
-            PeopleUtils.validateUsernames(usernamesToCheck, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
+            PeopleUtils.validateUsernames(usernamesToCheck, mRole, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
                 @Override
                 public void onUsernameValidation(String username, ValidationResult validationResult) {
                     if (!isAdded()) {

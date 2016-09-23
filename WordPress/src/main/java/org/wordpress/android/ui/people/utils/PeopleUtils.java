@@ -342,7 +342,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void validateUsernames(final List<String> usernames, String dotComBlogId, final
+    public static void validateUsernames(final List<String> usernames, Role role, String dotComBlogId, final
             ValidateUsernameCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -432,7 +432,7 @@ public class PeopleUtils {
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
         }
-        params.put("role", "follower"); // the specific role is not important, just needs to be a valid one
+        params.put("role", role.toRESTString());
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
