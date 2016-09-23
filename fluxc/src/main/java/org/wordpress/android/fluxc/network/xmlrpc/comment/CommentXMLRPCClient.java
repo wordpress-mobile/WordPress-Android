@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
-import org.wordpress.android.fluxc.utils.DateTimeUtils;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
