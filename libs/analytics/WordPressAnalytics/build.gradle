@@ -40,7 +40,7 @@ archivesBaseName = "analytics"
 
 signing {
     required {
-        has("release") && project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")
+        project.properties.containsKey("signing.keyId") && project.properties.containsKey("signing.secretKeyRingFile")
     }
     sign configurations.archives
 }
