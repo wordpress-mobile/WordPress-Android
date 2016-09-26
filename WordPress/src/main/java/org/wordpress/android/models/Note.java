@@ -272,7 +272,7 @@ public class Note extends Syncable {
      * Get the timestamp provided by the API for the note
      */
     public long getTimestamp() {
-        return DateTimeUtils.iso8601ToTimestamp(queryJSON("timestamp", ""));
+        return DateTimeUtils.timestampFromIso8601(queryJSON("timestamp", ""));
     }
 
     public JSONArray getBody() {
@@ -386,7 +386,7 @@ public class Note extends Syncable {
                 getPostId(),
                 getCommentId(),
                 getCommentAuthorName(),
-                DateTimeUtils.timestampToIso8601Str(getTimestamp()),
+                DateTimeUtils.iso8601FromTimestamp(getTimestamp()),
                 getCommentText(),
                 CommentStatus.toString(getCommentStatus()),
                 "", // post title is unavailable in note model

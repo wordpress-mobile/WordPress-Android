@@ -283,6 +283,7 @@ public class PeopleListFragment extends Fragment {
 
     public interface OnFetchPeopleListener {
         boolean onFetchFirstPage(PeopleListFilter filter);
+
         boolean onFetchMorePeople(PeopleListFilter filter);
     }
 
