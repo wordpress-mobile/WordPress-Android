@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
@@ -24,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestRe
 import org.wordpress.android.fluxc.store.CommentStore.CommentError;
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
+import org.wordpress.android.fluxc.store.CommentStore.PushCommentResponsePayload;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,14 +69,67 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void pushComment(final SiteModel site, final CommentModel comment) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).getUrlV1_1();
+        Map<String, String> params = commentToParams(comment);
+
+        final WPComGsonRequest<CommentWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
+                url, params, CommentWPComRestResponse.class,
+                new Listener<CommentWPComRestResponse>() {
+                    @Override
+                    public void onResponse(CommentWPComRestResponse response) {
+                        CommentModel comment = commentResponseToComment(response, site);
+                        PushCommentResponsePayload payload = new PushCommentResponsePayload(comment);
+                        mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
+                    }
+                },
+
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(
+                                commentErrorToPayload(error, comment)));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    // Private methods
+
+    private Map<String, String> commentToParams(CommentModel comment) {
+        Map<String, String> params = new HashMap<>();
+        params.put("content", comment.getContent());
+        params.put("date", comment.getDatePublished());
+        params.put("status", comment.getStatus());
+        return params;
+    }
+
+    private PushCommentResponsePayload commentErrorToPayload(BaseNetworkError error, CommentModel comment) {
+        PushCommentResponsePayload payload = new PushCommentResponsePayload(comment);
+        payload.error = new CommentError(genericToCommentError(error), "");
+        return payload;
+    }
+
     private FetchCommentsResponsePayload commentErrorToPayload(BaseNetworkError error) {
         FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(new ArrayList<CommentModel>());
-        CommentErrorType errorType = CommentErrorType.GENERIC_ERROR;
-        if (error.isGeneric() && error.type == GenericErrorType.INVALID_RESPONSE) {
-            errorType = CommentErrorType.INVALID_RESPONSE;
-        }
-        payload.error = new CommentError(errorType, "");
+        payload.error = new CommentError(genericToCommentError(error), "");
         return payload;
+    }
+
+    private CommentErrorType genericToCommentError(BaseNetworkError error) {
+        CommentErrorType errorType = CommentErrorType.GENERIC_ERROR;
+        if (error.isGeneric()) {
+            switch (error.type) {
+                case NOT_FOUND:
+                    errorType = CommentErrorType.INVALID_COMMENT;
+                    break;
+                case INVALID_RESPONSE:
+                    errorType = CommentErrorType.INVALID_RESPONSE;
+                    break;
+            }
+        }
+        return errorType;
     }
 
     private List<CommentModel> commentsResponseToCommentList(CommentsWPComRestResponse response, SiteModel site) {

@@ -50,6 +50,25 @@ public class CommentStore extends Store {
         }
     }
 
+    public static class PushCommentPayload extends Payload {
+        public final CommentModel comment;
+        public final SiteModel site;
+
+        public PushCommentPayload(@NonNull CommentModel comment, @NonNull SiteModel site) {
+            this.comment = comment;
+            this.site = site;
+        }
+    }
+
+    public static class PushCommentResponsePayload extends Payload {
+        public final CommentModel comment;
+        public CommentError error;
+
+        public PushCommentResponsePayload(@NonNull CommentModel comment) {
+            this.comment = comment;
+        }
+    }
+
     // Errors
 
     public enum CommentErrorType {
@@ -99,6 +118,12 @@ public class CommentStore extends Store {
             case FETCHED_COMMENTS:
                 handleFetchCommentsResponse((FetchCommentsResponsePayload) action.getPayload());
                 break;
+            case PUSH_COMMENT:
+                pushComment((PushCommentPayload) action.getPayload());
+                break;
+            case PUSHED_COMMENT:
+                handlePushCommentResponse((PushCommentResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -119,6 +144,21 @@ public class CommentStore extends Store {
         for (CommentModel comment : payload.comments) {
             rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
         }
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.error = payload.error;
+        emitChange(event);
+    }
+
+    private void pushComment(PushCommentPayload payload) {
+        if (payload.site.isWPCom()) {
+            mCommentRestClient.pushComment(payload.site, payload.comment);
+        } else {
+            mCommentXMLRPCClient.pushComment(payload.site, payload.comment);
+        }
+    }
+
+    private void handlePushCommentResponse(PushCommentResponsePayload payload) {
+        int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.error = payload.error;
         emitChange(event);
