@@ -47,6 +47,7 @@ import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -253,9 +254,7 @@ public class MediaGridFragment extends Fragment
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
 
         if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
-            // we already know that selectedItems is an `ArrayList<Long>`
-            @SuppressWarnings("unchecked")
-            ArrayList<Long> selectedItems = (ArrayList<Long>) savedInstanceState.getSerializable(BUNDLE_SELECTED_STATES);
+            ArrayList<Long> selectedItems = ListUtils.toLongList(savedInstanceState.getLongArray(BUNDLE_SELECTED_STATES));
             mGridAdapter.setSelectedItems(selectedItems);
             if (isInMultiSelectMode) {
                 setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
@@ -289,7 +288,7 @@ public class MediaGridFragment extends Fragment
     }
 
     private void saveState(Bundle outState) {
-        outState.putSerializable(BUNDLE_SELECTED_STATES, mGridAdapter.getSelectedItems());
+        outState.putLongArray(BUNDLE_SELECTED_STATES, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridView.getFirstVisiblePosition());
         outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
