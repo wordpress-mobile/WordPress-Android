@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
         mIds = new ArrayList<>();
         if (savedInstanceState != null) {
-            mIds = (ArrayList<Long>) savedInstanceState.getSerializable(SAVED_MEDIA_IDS);
+            mIds = ListUtils.toLongList(savedInstanceState.getLongArray(SAVED_MEDIA_IDS));
         }
 
         // TODO: We want to inject the image loader in this class instead of using a static field.
@@ -91,7 +92,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(SAVED_MEDIA_IDS, mIds);
+        outState.putLongArray(SAVED_MEDIA_IDS, ListUtils.toLongArray(mIds));
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
