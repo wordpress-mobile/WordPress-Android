@@ -26,6 +26,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_OPENED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_RELATED_POST_CLICKED;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_RELATED_POST_SITE_CLICKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER;
@@ -251,7 +252,8 @@ public class AnalyticsUtils {
                 || stat == READER_ARTICLE_OPENED
                 || stat == READER_SEARCH_RESULT_TAPPED
                 || stat == READER_ARTICLE_COMMENTED_ON
-                || stat == READER_RELATED_POST_CLICKED;
+                || stat == READER_RELATED_POST_CLICKED
+                || stat == READER_RELATED_POST_SITE_CLICKED;
     }
 
     /*
