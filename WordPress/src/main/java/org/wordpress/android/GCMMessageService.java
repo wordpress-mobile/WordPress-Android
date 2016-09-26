@@ -407,7 +407,9 @@ public class GCMMessageService extends GcmListenerService {
 
                 String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                 String noteId = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
-                showIndividualNotificationForBuilder(builder, noteType, noteId, sActiveNotificationsMap.keyAt(0));
+                if (!sActiveNotificationsMap.isEmpty()) {
+                    showIndividualNotificationForBuilder(builder, noteType, noteId, sActiveNotificationsMap.keyAt(0));
+                }
             }
         }
 
