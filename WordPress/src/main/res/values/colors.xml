@@ -130,6 +130,8 @@
     <color name="nux_background">@color/blue_wordpress</color>
     <color name="nux_eye_icon_color_closed">@color/grey_lighten_20</color>
     <color name="nux_eye_icon_color_open">@color/grey_lighten_10</color>
+    <color name="nux_text_grey">#444444</color>
+    <color name="nux_text_hint_grey">#AAAAAA</color>
 
     <!-- Editor -->
     <color name="image_options_label">@color/grey_lighten_20</color>
