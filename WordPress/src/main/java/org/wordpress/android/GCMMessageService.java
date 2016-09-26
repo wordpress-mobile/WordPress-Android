@@ -211,7 +211,7 @@ public class GCMMessageService extends GcmListenerService {
     private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // Add some actions if this is a comment notification
 
-        boolean bActionsSet = false;
+        boolean areActionsSet = false;
 
         if (SimperiumUtils.getNotesBucket() != null) {
             try {
@@ -234,14 +234,14 @@ public class GCMMessageService extends GcmListenerService {
                         }
                     }
                 }
-                bActionsSet = true;
+                areActionsSet = true;
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
             }
         }
 
         // if we could not set the actions, set the default ones REPLY / LIKE
-        if (!bActionsSet) {
+        if (!areActionsSet) {
             addCommentReplyActionForCommentNotification(builder, noteId);
             addCommentLikeActionForCommentNotification(builder, noteId);
         }
