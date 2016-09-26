@@ -62,13 +62,13 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
 
-        ArrayList<Long> prevSelectedItems = ListUtils.toLongList(getIntent().getLongArrayExtra(PARAM_SELECTED_IDS));
+        ArrayList<Long> prevSelectedItems = ListUtils.fromLongArray(getIntent().getLongArrayExtra(PARAM_SELECTED_IDS));
         if (prevSelectedItems != null) {
             selectedItems.addAll(prevSelectedItems);
         }
 
         if (savedInstanceState != null) {
-            ArrayList<Long> list = ListUtils.toLongList(savedInstanceState.getLongArray(STATE_SELECTED_ITEMS));
+            ArrayList<Long> list = ListUtils.fromLongArray(savedInstanceState.getLongArray(STATE_SELECTED_ITEMS));
             selectedItems.addAll(list);
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
             mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ListUtils {
     @Nullable
-    public static ArrayList<Long> toLongList(long[] array) {
+    public static ArrayList<Long> fromLongArray(long[] array) {
         if (array == null) {
             return null;
         }

@@ -254,7 +254,7 @@ public class MediaGridFragment extends Fragment
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
 
         if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
-            ArrayList<Long> selectedItems = ListUtils.toLongList(savedInstanceState.getLongArray(BUNDLE_SELECTED_STATES));
+            ArrayList<Long> selectedItems = ListUtils.fromLongArray(savedInstanceState.getLongArray(BUNDLE_SELECTED_STATES));
             mGridAdapter.setSelectedItems(selectedItems);
             if (isInMultiSelectMode) {
                 setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);

@@ -488,7 +488,7 @@ public class EditPostSettingsFragment extends Fragment
                 case MediaGalleryPickerActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
                         ArrayList<Long> ids = ListUtils.
-                                toLongList(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
+                                fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
                         if (ids == null || ids.size() == 0) {
                             return;
                         }

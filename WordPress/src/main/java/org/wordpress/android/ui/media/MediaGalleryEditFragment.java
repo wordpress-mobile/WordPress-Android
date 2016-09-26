@@ -70,7 +70,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
         mIds = new ArrayList<>();
         if (savedInstanceState != null) {
-            mIds = ListUtils.toLongList(savedInstanceState.getLongArray(SAVED_MEDIA_IDS));
+            mIds = ListUtils.fromLongArray(savedInstanceState.getLongArray(SAVED_MEDIA_IDS));
         }
 
         // TODO: We want to inject the image loader in this class instead of using a static field.

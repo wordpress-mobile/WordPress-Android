@@ -1288,7 +1288,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void prepareMediaGallery() {
         MediaGallery mediaGallery = new MediaGallery();
         long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_GALLERY_EXTRA_IDS);
-        ArrayList<Long> idsList = ListUtils.toLongList(idsArray);
+        ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
         mediaGallery.setIds(idsList);
         startMediaGalleryActivity(mediaGallery);
     }
@@ -1651,7 +1651,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void handleMediaGalleryPickerResult(Intent data) {
-        ArrayList<Long> ids = ListUtils.toLongList(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
+        ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
             return;
         }
