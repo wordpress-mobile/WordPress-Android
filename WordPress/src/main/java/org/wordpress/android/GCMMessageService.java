@@ -76,7 +76,7 @@ public class GCMMessageService extends GcmListenerService {
 
     private void synchronizedHandleDefaultPush(String from, @NonNull Bundle data) {
         // sActiveNotificationsMap being static, we can't just synchronize the method
-        synchronized (sActiveNotificationsMap) {
+        synchronized (GCMMessageService.class) {
             handleDefaultPush(from, data);
         }
     }
