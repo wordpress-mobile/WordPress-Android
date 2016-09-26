@@ -540,10 +540,11 @@ public class ReaderPostDetailFragment extends Fragment
      * activity for this related post
      */
     private void showRelatedPost(long blogId, long postId) {
+        AnalyticsUtils.trackWithReaderPostDetails(
+                AnalyticsTracker.Stat.READER_RELATED_POST_CLICKED, blogId, postId);
+
         if (mIsRelatedPost) {
-            if (mPost != null) {
-                mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
-            }
+            mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
             replacePost(blogId, postId);
         } else {
             ReaderActivityLauncher.showReaderPostDetail(getActivity(), blogId, postId, true);
