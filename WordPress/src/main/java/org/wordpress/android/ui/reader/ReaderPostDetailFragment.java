@@ -541,7 +541,9 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void showRelatedPost(long blogId, long postId) {
         if (mIsRelatedPost) {
-            mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
+            if (mPost != null) {
+                mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
+            }
             replacePost(blogId, postId);
         } else {
             ReaderActivityLauncher.showReaderPostDetail(getActivity(), blogId, postId, true);
