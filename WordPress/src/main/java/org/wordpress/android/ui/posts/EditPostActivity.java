@@ -1651,8 +1651,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void handleMediaGalleryPickerResult(Intent data) {
-        @SuppressWarnings("unchecked")
-        ArrayList<Long> ids = (ArrayList<Long>) data.getSerializableExtra(MediaGalleryPickerActivity.RESULT_IDS);
+        ArrayList<Long> ids = ListUtils.toLongList(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
             return;
         }

@@ -147,7 +147,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             // Single select, just finish the activity once an item is selected
             mGridAdapter.setItemSelected(position, true);
             Intent intent = new Intent();
-            intent.putExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
             setResult(RESULT_OK, intent);
             finish();
         } else {
@@ -180,7 +180,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Intent intent = new Intent();
-        intent.putExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
+        intent.putExtra(RESULT_IDS, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
         setResult(RESULT_OK, intent);
         finish();
     }

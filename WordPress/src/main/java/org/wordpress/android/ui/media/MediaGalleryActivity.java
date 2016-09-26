@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.MediaGallerySettingsFragment.MediaGallerySettingsCallback;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaGallery;
 
@@ -144,8 +145,7 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MediaGalleryPickerActivity.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                @SuppressWarnings("unchecked")
-                ArrayList<Long> ids = (ArrayList<Long>) data.getSerializableExtra(MediaGalleryPickerActivity.RESULT_IDS);
+                ArrayList<Long> ids = ListUtils.toLongList(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
                 mMediaGalleryEditFragment.setMediaIds(ids);
             }
         }

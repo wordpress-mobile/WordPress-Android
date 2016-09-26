@@ -68,6 +68,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
@@ -486,12 +487,13 @@ public class EditPostSettingsFragment extends Fragment
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
-                        ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
+                        ArrayList<Long> ids = ListUtils.
+                                toLongList(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
                         if (ids == null || ids.size() == 0) {
                             return;
                         }
 
-                        updateFeaturedImage(Long.parseLong(ids.get(0)));
+                        updateFeaturedImage(ids.get(0));
                     }
             }
         }
