@@ -23,6 +23,7 @@
             android:background="@color/tab_background"
             android:visibility="gone"
             app:tabIndicatorColor="@color/tab_indicator"
+            app:tabMode="scrollable"
             tools:visibility="visible" />
 
     </android.support.design.widget.AppBarLayout>
@@ -60,13 +61,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="web"
-            android:textColorLink="@color/blue_light"
             android:gravity="center"
+            android:linksClickable="false"
             android:minHeight="@dimen/toolbar_height"
             android:paddingLeft="@dimen/content_margin"
             android:paddingRight="@dimen/content_margin"
             android:text="@string/plans_manage"
             android:textColor="@color/white"
+            android:textColorLink="@color/blue_light"
             android:textSize="@dimen/text_sz_large" />
     </FrameLayout>
 

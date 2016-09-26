@@ -182,7 +182,9 @@ public final class AnalyticsTracker {
         SITE_SETTINGS_DELETE_SITE_REQUESTED,
         SITE_SETTINGS_DELETE_SITE_RESPONSE_OK,
         SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR,
-        ABTEST_START
+        ABTEST_START,
+        TRAIN_TRACKS_RENDER,
+        TRAIN_TRACKS_INTERACT
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -156,7 +157,7 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void updateRole(final String blogId, long personID, String newRole, final int localTableBlogId,
+    public static void updateRole(final String blogId, long personID, Role newRole, final int localTableBlogId,
                                   final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -188,7 +189,7 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("roles", newRole.toLowerCase());
+        params.put("roles", newRole.toRESTString());
         String path = String.format("sites/%s/users/%d", blogId, personID);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
@@ -442,7 +443,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void sendInvitations(final List<String> usernames, String role, String message, String dotComBlogId,
+    public static void sendInvitations(final List<String> usernames, Role role, String message, String dotComBlogId,
                                        final InvitationsSendCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -506,7 +507,7 @@ public class PeopleUtils {
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
         }
-        params.put("role", role);
+        params.put("role", role.toRESTString());
         params.put("message", message);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }

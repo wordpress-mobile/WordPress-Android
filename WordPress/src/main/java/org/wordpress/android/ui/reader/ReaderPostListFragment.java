@@ -1310,7 +1310,7 @@ public class ReaderPostListFragment extends Fragment
 
     /*
      * swipe-to-refresh isn't supported for search results since they're really brief snapshots
-     * and are unlikely to show new posts due to the way they're sorted by score
+     * and are unlikely to show new posts due to the way they're sorted
      */
     private boolean isSwipeToRefreshSupported() {
         return getPostListType() != ReaderPostListType.SEARCH_RESULTS;
@@ -1444,7 +1444,7 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
             case SEARCH_RESULTS:
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED);
+                AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post);
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
         }

@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">מנהל המערכת</string>
+	<string name="role_editor">עורך</string>
+	<string name="role_author">מאת</string>
+	<string name="role_contributor">תורם</string>
+	<string name="role_follower">עוקב</string>
+	<string name="role_viewer">צופה</string>
+	<string name="error_post_my_profile_no_connection">אין חיבור, הפרופיל לא נשמר</string>
+	<string name="site_settings_list_editor_action_mode_title">%1$d נבחרו</string>
+	<string name="plans_manage">ניהול התוכנית שלך בכתובת\nWordPress.com/plans</string>
+	<string name="title_follower">עוקב</string>
+	<string name="people_empty_list_filtered_viewers">אין לך צופים עדיין.</string>
+	<string name="title_email_follower">עוקב אימייל</string>
+	<string name="people_empty_list_filtered_email_followers">אין לך עוקבים באימייל עדיין.</string>
+	<string name="people_empty_list_filtered_followers">אין לך עוקבים עדיין.</string>
+	<string name="people_empty_list_filtered_users">אין לך משתמשים עדיין.</string>
+	<string name="people_dropdown_item_email_followers">עוקבי אימייל</string>
+	<string name="people_dropdown_item_viewers">צופים</string>
+	<string name="people_dropdown_item_followers">עוקבים</string>
+	<string name="people_dropdown_item_team">צוות</string>
+	<string name="invite_message_usernames_limit">אפשר לשלוח עד 10 הזמנות לכתובות אימייל ו/או שמות משתמשים ב-WordPress.com. הוראות ליצירת שם משתמש יישלחו לכל מי שזקוק לשם משתמש.</string>
+	<string name="viewer_remove_confirmation_message">לאחר הסרת צופה זה, הוא או היא לא יוכלו לבקר יותר באתר זה.\n\nבחרת להסיר צופה זה - האם ההחלטה סופית?</string>
+	<string name="follower_remove_confirmation_message">לאחר הסרת עוקב זה, הוא יפסיק לקבל הודעות לגבי אתר זה, אלא אם יגדיר מעקב מחדש.\n\nבחרת להסיר עוקב זה - האם ההחלטה סופית?</string>
+	<string name="follower_subscribed_since">מאז %1$s</string>
+	<string name="reader_label_view_gallery">הצגת גלריה</string>
+	<string name="error_remove_follower">לא ניתן היה להסיר עוקב</string>
+	<string name="error_remove_viewer">לא ניתן היה להסיר צופה</string>
+	<string name="error_fetch_email_followers_list">לא הצלחנו לאחזר עוקבי אימייל של האתר</string>
+	<string name="error_fetch_followers_list">לא הצלחנו לאחזר עוקבים של האתר</string>
 	<string name="editor_failed_uploads_switch_html">מספר העלאות מדיה נכשלו. לא ניתן לעבור למצב HTML\n במצב זה. להסיר את כל ההעלאות שנכשלו ולהמשיך?</string>
 	<string name="format_bar_description_html">מצב HTML</string>
 	<string name="visual_editor">עורך ויזואלי</string>
@@ -29,10 +57,11 @@
 	<string name="invite_error_some_failed">ההזמנה נשלחה אך אירעו שגיאות!</string>
 	<string name="invite_sent">ההזמנה נשלחה בהצלחה</string>
 	<string name="tap_to_try_again">יש להקיש כדי לנסות שוב!</string>
+	<string name="invite_error_for_username">%1$s: %2$s</string>
 	<string name="invite_error_sending">אירעה שגיאה בעת הניסיון לשלוח את ההזמנה!</string>
-	<string name="invite_error_invalid_usenames_multiple">לא ניתן לשלוח: יש שמות משתמש או כתובות אימייל לא תקפים</string>
-	<string name="invite_error_invalid_usenames_one">לא ניתן לשלוח: שם משתמש או אימייל לא תקפים</string>
-	<string name="invite_error_no_usenames">יש להוסיף שם משתמש אחד לפחות</string>
+	<string name="invite_error_invalid_usernames_multiple">לא ניתן לשלוח: יש שמות משתמש או כתובות אימייל לא תקפים</string>
+	<string name="invite_error_invalid_usernames_one">לא ניתן לשלוח: שם משתמש או אימייל לא תקפים</string>
+	<string name="invite_error_no_usernames">יש להוסיף שם משתמש אחד לפחות</string>
 	<string name="invite_message_info">(אופציונלי) אפשר להזין הודעה מותאמת אישית של עד 500 תווים שתיכלל בהזמנה למשתמשים.</string>
 	<string name="invite_message_remaining_other">נותרו %d תווים</string>
 	<string name="invite_message_remaining_one">תו אחד נותר</string>
@@ -41,7 +70,6 @@
 	<string name="invite_message_title">הודעה מותאמת אישית</string>
 	<string name="invite_already_a_member">כבר יש חבר בעל שם המשתמש \'%s\'</string>
 	<string name="invite_username_not_found">לא נמצא משתמש לשם המשתמש \'%s\'</string>
-	<string name="invite_names_hint">יש להקליד כתובת אימייל או שם משתמש...</string>
 	<string name="invite">הזמנה</string>
 	<string name="invite_names_title">שמות משתמש או אימיילים</string>
 	<string name="my_site_header_external">חיצוני</string>
@@ -61,8 +89,7 @@
 	<string name="preview_screen_links_disabled">קישורים מושבתים במסך התצוגה המקדימה</string>
 	<string name="draft_explainer">פוסט זה הוא טיוטה שלא פורסמה</string>
 	<string name="send">שלח</string>
-	<string name="person_removed_general">הסרת בהצלחה את המשתמש</string>
-	<string name="person_remove_confirmation_message">לאחר הסרת %1$s, משתמש זה לא יקבל יותר גישה לאתר זה אך כל התוכן שנוצר על ידי %1$s יישאר באתר.\n\nבחרת להסיר משתמש זה - האם ההחלטה סופית?</string>
+	<string name="user_remove_confirmation_message">לאחר הסרת %1$s, משתמש זה לא יקבל יותר גישה לאתר זה אך כל התוכן שנוצר על ידי %1$s יישאר באתר.\n\nבחרת להסיר משתמש זה - האם ההחלטה סופית?</string>
 	<string name="person_removed">הסרת בהצלחה את @%1$s</string>
 	<string name="person_remove_confirmation_title">הסרת %1$s</string>
 	<string name="reader_empty_posts_in_custom_list">האתרים ברשימה זו לא פרסמו דבר בזמן האחרון</string>
@@ -70,7 +97,7 @@
 	<string name="edit_user">עריכת פרטי משתמש</string>
 	<string name="role">תפקיד</string>
 	<string name="error_remove_user">לא ניתן היה להסיר משתמש</string>
-	<string name="error_fetch_people_list">לא הצלחנו לאחזר את משתמשי האתר</string>
+	<string name="error_fetch_viewers_list">לא הצלחנו לאחזר את משתמשי האתר</string>
 	<string name="error_update_role">לא הצלחנו לעדכן תפקיד משתמש</string>
 	<string name="gravatar_camera_and_media_permission_required">דרושות הרשאות לבחירה או לכידה של תמונה</string>
 	<string name="error_updating_gravatar">שגיאה בעדכון ה-gravatar שלך</string>
@@ -103,7 +130,6 @@
 	<string name="plans_post_purchase_text_customize">כעת יש לך גישה לגופנים מותאמים אישית, צבעים מותאמים אישית יכולות עריכה של CSS מותאם אישית.</string>
 	<string name="plans_post_purchase_text_intro">האתר שלך עושה סלטות מרוב התרגשות! זה הזמן לגלות את התכונות החדשות של האתר שלך ולבחור במה להתחיל.</string>
 	<string name="plans_post_purchase_title_customize">התאמה אישית של גופנים וצבעים</string>
-	<string name="plan_purchase_now">לרכוש עכשיו</string>
 	<string name="plans_post_purchase_title_intro">הכול שלך, כל הכבוד!</string>
 	<string name="export_your_content_message">הפוסטים, העמודים וההגדרות שלך יישלחו באימייל לכתובת %s.</string>
 	<string name="plan">תוכנית</string>
@@ -151,12 +177,8 @@
 	<string name="xmlrpc_malformed_response_error">לא ניתן להתחבר. התקנת WordPress הגיבה עם מסמך XML-RPC לא תקף.</string>
 	<string name="xmlrpc_missing_method_error">לא ניתן להתחבר. שיטות XML-RPC נדרשות חסרות בשרת.</string>
 	<string name="post_format_video">וידאו</string>
-	<string name="align_left">שמאל</string>
-	<string name="align_center">מרכז</string>
-	<string name="align_right">ימין</string>
 	<string name="theme_free">חינם</string>
 	<string name="theme_premium">פרימיום</string>
-	<string name="align_none">ללא</string>
 	<string name="post_format_status">מצב</string>
 	<string name="theme_all">הכול</string>
 	<string name="post_format_chat">צ\'אט</string>
@@ -439,8 +461,6 @@
 	<string name="reader_short_like_count_one">לייק אחד</string>
 	<string name="reader_short_like_count_none">לייק</string>
 	<string name="reader_label_follow_count">%,d עוקבים</string>
-	<string name="reader_label_reading_time_in_minutes">%,d דקות</string>
-	<string name="reader_label_word_count">%,d מילים</string>
 	<string name="reader_menu_tags">עריכת תגיות ובלוגים</string>
 	<string name="reader_title_post_detail">קורא פוטס</string>
 	<string name="local_draft_explainer">לפוסט זה יש טיוטה מקומית שלא פורסמה</string>
@@ -950,7 +970,6 @@
 	<string name="select_from_media_library">בחר מתוך ספריית מדיה</string>
 	<string name="jetpack_message">התוסף Jetpack נדרש לקבלת נתונים סטטיסטיים. אתה מעוניין להתקין את Jetpack?</string>
 	<string name="jetpack_not_found">התוסף Jetpack לא נמצא</string>
-	<string name="reader_timespan_now">עכשיו</string>
 	<string name="reader_untitled_post">(ללא כותרת)</string>
 	<string name="reader_share_subject">שיתוף מ-%s</string>
 	<string name="reader_btn_share">שתף</string>

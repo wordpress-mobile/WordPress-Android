@@ -49,14 +49,13 @@
     <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
     <dimen name="content_margin_normal_landscape">48dp</dimen>
     <dimen name="content_margin_tablet">48dp</dimen>
-    <dimen name="content_margin_tablet_landscape">96dp</dimen>
+    <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
 
     <!-- spacing between icons in main tab strip -->
-    <dimen name="tabstrip_icon_spacing_normal">0dp</dimen>
-    <dimen name="tabstrip_icon_spacing_landscape">24dp</dimen>
-    <dimen name="tabstrip_icon_spacing_tablet">24dp</dimen>
-    <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_normal</dimen>
+    <dimen name="tabstrip_icon_spacing_zero">0dp</dimen>
+    <dimen name="tabstrip_icon_spacing_medium">24dp</dimen>
+    <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_zero</dimen>
 
     <!--
         native reader dimens
@@ -74,16 +73,14 @@
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
-    <dimen name="reader_card_margin_normal_landscape">48dp</dimen>
     <dimen name="reader_card_margin_tablet">48dp</dimen>
-    <dimen name="reader_card_margin_tablet_landscape">96dp</dimen>
+    <dimen name="reader_card_margin_tablet_big">96dp</dimen>
     <dimen name="reader_card_margin">@dimen/reader_card_margin_normal</dimen>
 
     <!-- left/right margin for reader detail -->
     <dimen name="reader_detail_margin_normal">24dp</dimen>
-    <dimen name="reader_detail_margin_normal_landscape">48dp</dimen>
     <dimen name="reader_detail_margin_tablet">48dp</dimen>
-    <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
+    <dimen name="reader_detail_margin_tablet_big">96dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
     <dimen name="reader_related_post_margin">@dimen/margin_extra_large</dimen>
@@ -242,6 +239,7 @@
     <dimen name="related_posts_dialog_padding_right">24dp</dimen>
     <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
     <dimen name="text_sz_related_post_small">11sp</dimen>
+    <dimen name="list_divider_height">1dp</dimen>
     <dimen name="list_editor_input_max_width">500dp</dimen>
     <dimen name="start_over_padding_top">40dp</dimen>
     <dimen name="start_over_margin">20dp</dimen>

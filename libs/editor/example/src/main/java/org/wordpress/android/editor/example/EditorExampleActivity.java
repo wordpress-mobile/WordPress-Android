@@ -6,10 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
+import android.view.DragEvent;
 import android.view.MenuItem;
 import android.view.View;
 
 import org.wordpress.android.editor.EditorFragmentAbstract;
+import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
@@ -19,10 +21,12 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditorExampleActivity extends AppCompatActivity implements EditorFragmentListener {
+public class EditorExampleActivity extends AppCompatActivity implements EditorFragmentListener,
+        EditorDragAndDropListener {
     public static final String EDITOR_PARAM = "EDITOR_PARAM";
     public static final String TITLE_PARAM = "TITLE_PARAM";
     public static final String CONTENT_PARAM = "CONTENT_PARAM";
@@ -330,5 +334,15 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         };
 
         thread.start();
+    }
+
+    @Override
+    public void onMediaDropped(ArrayList<Uri> mediaUri) {
+        // TODO
+    }
+
+    @Override
+    public void onRequestDragAndDropPermissions(DragEvent dragEvent) {
+        // TODO
     }
 }

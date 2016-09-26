@@ -3,10 +3,12 @@ package org.wordpress.android.datasets;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
@@ -99,7 +101,9 @@ public class PeopleTable {
         switch (table) {
             case TEAM_TABLE:
                 values.put("user_name", person.getUsername());
-                values.put("role", person.getRole());
+                if (person.getRole() != null) {
+                    values.put("role", person.getRole().toString());
+                }
                 break;
             case FOLLOWERS_TABLE:
                 values.put("user_name", person.getUsername());
@@ -176,10 +180,20 @@ public class PeopleTable {
             for (String table : tables) {
                 int size = getPeopleCountForLocalBlogId(table, localTableBlogId);
                 if (size > fetchLimit) {
-                    int deleteCount = size - fetchLimit;
-                    String[] args = new String[] {Integer.toString(localTableBlogId), Integer.toString(deleteCount)};
-                    getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (SELECT person_id FROM "
-                            + table + " WHERE local_blog_id=?1" + orderByString(table) + " DESC LIMIT ?2)", args);
+                    String where = "local_blog_id=" + localTableBlogId;
+                    String[] columns = {"person_id"};
+                    String limit = Integer.toString(size - fetchLimit);
+                    String orderBy;
+                    if (shouldOrderAlphabetically(table)) {
+                        orderBy = "lower(display_name) DESC, lower(user_name) DESC";
+                    } else {
+                        orderBy = "ROWID DESC";
+                    }
+                    String inQuery = SQLiteQueryBuilder.buildQueryString(false, table, columns, where, null, null,
+                            orderBy, limit);
+
+                    String[] args = new String[] {Integer.toString(localTableBlogId)};
+                    getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (" + inQuery + ")", args);
                 }
             }
             getWritableDb().setTransactionSuccessful();
@@ -232,7 +246,13 @@ public class PeopleTable {
 
     private static List<Person> getPeople(String table, int localTableBlogId) {
         String[] args = {Integer.toString(localTableBlogId)};
-        String orderBy = orderByString(table);
+        String orderBy;
+        if (shouldOrderAlphabetically(table)) {
+            orderBy = " ORDER BY lower(display_name), lower(user_name)";
+        } else {
+            // we want the server-side order for followers & viewers
+            orderBy = " ORDER BY ROWID";
+        }
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + table + " WHERE local_blog_id=?" + orderBy, args);
 
         List<Person> people = new ArrayList<>();
@@ -290,7 +310,8 @@ public class PeopleTable {
         switch (table) {
             case TEAM_TABLE:
                 person.setUsername(c.getString(c.getColumnIndex("user_name")));
-                person.setRole(c.getString(c.getColumnIndex("role")));
+                String role = c.getString(c.getColumnIndex("role"));
+                person.setRole(Role.fromString(role));
                 person.setPersonType(Person.PersonType.USER);
                 break;
             case FOLLOWERS_TABLE:
@@ -311,12 +332,9 @@ public class PeopleTable {
         return person;
     }
 
-    // order is disabled for followers for now since the API is not supporting it
-    private static String orderByString(String table) {
-        if (table.equals(FOLLOWERS_TABLE) || table.equals(EMAIL_FOLLOWERS_TABLE)) {
-            return "";
-        }
-        return " ORDER BY lower(display_name), lower(user_name)";
+    // order is disabled for followers & viewers for now since the API is not supporting it
+    private static boolean shouldOrderAlphabetically(String table) {
+       return table.equals(TEAM_TABLE);
     }
 
     @Nullable

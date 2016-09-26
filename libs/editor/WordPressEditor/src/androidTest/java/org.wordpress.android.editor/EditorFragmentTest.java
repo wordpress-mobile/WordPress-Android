@@ -80,7 +80,7 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         selectionArgs.put("id", "zss_field_content");
         mFragment.onSelectionChanged(selectionArgs);
 
-        waitFor(100);
+        waitFor(500);
 
         // The formatting buttons should be enabled while the content field is selected
         assertTrue(mediaButton.isEnabled());
@@ -129,6 +129,8 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         });
 
         uiThreadLatch1.await();
+
+        waitFor(500);
 
         // The HTML mode fields should be populated with the raw HTML loaded into the WebView on load
         // (see MockEditorActivity)

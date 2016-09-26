@@ -13,9 +13,7 @@
 	<string name="reader_short_like_count_one">1 свиђање</string>
 	<string name="reader_short_like_count_none">Свиђање</string>
 	<string name="reader_label_follow_count">%,d пратиоца</string>
-	<string name="reader_label_reading_time_in_minutes">%,d минута</string>
 	<string name="reader_menu_tags">Уређивање ознака и блогова</string>
-	<string name="reader_label_word_count">%,d речи</string>
 	<string name="reader_title_post_detail">Чланак читача</string>
 	<string name="local_draft_explainer">Овај чланак је локални нацрт који није објављен</string>
 	<string name="local_changes_explainer">Овај чланак има локалне измене које нису објављене</string>
@@ -524,7 +522,6 @@
 	<string name="reader_btn_share">Поделите</string>
 	<string name="reader_share_subject">Подељено од стране %s</string>
 	<string name="reader_untitled_post">(Без наслова)</string>
-	<string name="reader_timespan_now">сада</string>
 	<string name="jetpack_not_found">Додатак Џетпек није пронађен</string>
 	<string name="jetpack_message">Џетпек додатак је неопходан за статистике. Да ли желите да инсталирате Џетпек?</string>
 	<string name="reader_toast_err_share_intent">Није могуће делити</string>

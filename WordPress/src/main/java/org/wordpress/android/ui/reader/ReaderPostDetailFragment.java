@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -89,6 +90,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
     private View mLikingUsersDivider;
+    private View mLikingUsersLabel;
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
@@ -189,6 +191,7 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutFooter = (ViewGroup) view.findViewById(R.id.layout_post_detail_footer);
         mLikingUsersView = (ReaderLikingUsersView) view.findViewById(R.id.layout_liking_users_view);
         mLikingUsersDivider = view.findViewById(R.id.layout_liking_users_divider);
+        mLikingUsersLabel = view.findViewById(R.id.text_liking_users_label);
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
@@ -351,9 +354,9 @@ public class ReaderPostDetailFragment extends Fragment
         refreshIconCounts();
 
         if (isAskingToLike) {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mBlogId);
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mPost);
         } else {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mBlogId);
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mPost);
         }
     }
 
@@ -441,8 +444,10 @@ public class ReaderPostDetailFragment extends Fragment
         // with the correct info once the new post loads
         getView().findViewById(R.id.container_related_posts).setVisibility(View.GONE);
         getView().findViewById(R.id.text_related_posts_label).setVisibility(View.GONE);
+
         mLikingUsersView.setVisibility(View.GONE);
         mLikingUsersDivider.setVisibility(View.GONE);
+        mLikingUsersLabel.setVisibility(View.GONE);
 
         // clear the webView - otherwise it will remain scrolled to where the user scrolled to
         mReaderWebView.clearContent();
@@ -626,6 +631,7 @@ public class ReaderPostDetailFragment extends Fragment
             if (mPost.numLikes > 0 && mLikingUsersView.getVisibility() == View.GONE) {
                 mLikingUsersView.setVisibility(View.INVISIBLE);
                 mLikingUsersDivider.setVisibility(View.INVISIBLE);
+                mLikingUsersLabel.setVisibility(View.INVISIBLE);
             }
         } else {
             countLikes.setVisibility(View.INVISIBLE);
@@ -645,6 +651,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost.numLikes == 0) {
             mLikingUsersView.setVisibility(View.GONE);
             mLikingUsersDivider.setVisibility(View.GONE);
+            mLikingUsersLabel.setVisibility(View.GONE);
             return;
         }
 
@@ -657,6 +664,7 @@ public class ReaderPostDetailFragment extends Fragment
         });
 
         mLikingUsersDivider.setVisibility(View.VISIBLE);
+        mLikingUsersLabel.setVisibility(View.VISIBLE);
         mLikingUsersView.setVisibility(View.VISIBLE);
         mLikingUsersView.showLikingUsers(mPost);
     }
@@ -903,7 +911,7 @@ public class ReaderPostDetailFragment extends Fragment
                 imgAvatar.showDefaultGravatarImage();
             }
 
-            String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
+            String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             if (mPost.hasAuthorName()) {
                 txtDateline.setText(mPost.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
             } else if (mPost.hasBlogName()) {

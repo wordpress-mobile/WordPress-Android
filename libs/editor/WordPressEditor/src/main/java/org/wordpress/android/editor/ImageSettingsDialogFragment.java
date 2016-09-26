@@ -32,7 +32,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -52,6 +51,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     private EditText mCaptionText;
     private EditText mAltText;
     private Spinner mAlignmentSpinner;
+    private String[] mAlignmentKeyArray;
     private EditText mLinkTo;
     private EditText mWidthText;
     private CheckBox mFeaturedCheckBox;
@@ -159,12 +159,9 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 mAltText.setText(mImageMeta.getString("alt"));
 
                 String alignment = mImageMeta.getString("align");
-
-                // Capitalize the alignment value to match the spinner entries
-                alignment = alignment.substring(0, 1).toUpperCase(Locale.US) + alignment.substring(1);
-
-                String[] alignmentArray = getResources().getStringArray(R.array.alignment_array);
-                mAlignmentSpinner.setSelection(Arrays.asList(alignmentArray).indexOf(alignment));
+                mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
+                int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
+                mAlignmentSpinner.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
 
                 mLinkTo.setText(mImageMeta.getString("linkUrl"));
 
@@ -191,6 +188,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.show();
@@ -305,7 +303,9 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             metaData.put("title", mTitleText.getText().toString());
             metaData.put("caption", mCaptionText.getText().toString());
             metaData.put("alt", mAltText.getText().toString());
-            metaData.put("align", mAlignmentSpinner.getSelectedItem().toString().toLowerCase(Locale.US));
+            if (mAlignmentSpinner.getSelectedItemPosition() < mAlignmentKeyArray.length) {
+                metaData.put("align", mAlignmentKeyArray[mAlignmentSpinner.getSelectedItemPosition()]);
+            }
             metaData.put("linkUrl", mLinkTo.getText().toString());
 
             int newWidth = getEditTextIntegerClamped(mWidthText, 10, mMaxImageWidth);

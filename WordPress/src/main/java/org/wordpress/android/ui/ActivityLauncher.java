@@ -288,4 +288,10 @@ public class ActivityLauncher {
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
+
+    public static boolean shouldShowMagicLinksLogin(Activity activity) {
+        boolean isMagicLinksEnabled = false;
+
+        return isMagicLinksEnabled && WPActivityUtils.isEmailClientAvailable(activity);
+    }
 }

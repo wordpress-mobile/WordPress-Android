@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">管理員</string>
+	<string name="role_editor">編輯者</string>
+	<string name="role_author">作者</string>
+	<string name="role_contributor">撰寫人員</string>
+	<string name="role_follower">關注者</string>
+	<string name="role_viewer">瀏覽者</string>
+	<string name="error_post_my_profile_no_connection">無法連線，故無法儲存你的個人檔案</string>
+	<string name="alignment_none">無</string>
+	<string name="alignment_left">左</string>
+	<string name="alignment_right">右</string>
+	<string name="site_settings_list_editor_action_mode_title">已選取 %1$d</string>
+	<string name="viewer_remove_confirmation_message">如果移除這位瀏覽者，對方將無法造訪此網站。\n\n仍要移除這位瀏覽者嗎？</string>
+	<string name="follower_remove_confirmation_message">移除後，這位關注者如果沒有重新關注，就會停止收到此網站的通知。\n\n仍要移除這位關注者嗎？</string>
+	<string name="follower_subscribed_since">自 %1$s 開始</string>
+	<string name="reader_label_view_gallery">檢視圖庫</string>
+	<string name="error_remove_follower">無法移除關注者</string>
+	<string name="error_remove_viewer">無法移除瀏覽者</string>
+	<string name="error_fetch_email_followers_list">無法擷取網站電子郵件關注者</string>
+	<string name="error_fetch_followers_list">無法擷取網站關注者</string>
 	<string name="editor_failed_uploads_switch_html">部分媒體上傳失敗。在此狀態下，你無法\n切換至 HTML 模式。要移除所有上傳失敗的項目並繼續嗎？</string>
 	<string name="format_bar_description_html">HTML 模式</string>
 	<string name="visual_editor">視覺化編輯器</string>
@@ -26,13 +45,9 @@
 	<string name="alert_action_while_uploading">你目前正在上傳媒體。請等待此項作業完成。</string>
 	<string name="alert_insert_image_html_mode">無法直接在 HTML 模式中插入媒體。請切換回視覺化模式。</string>
 	<string name="uploading_gallery_placeholder">正在上傳圖庫...</string>
-	<string name="invite_error_some_failed">已送出邀請但發生錯誤！</string>
 	<string name="invite_sent">已成功送出邀請</string>
 	<string name="tap_to_try_again">點選以重試！</string>
-	<string name="invite_error_sending">嘗試傳送邀請時發生錯誤！</string>
-	<string name="invite_error_invalid_usenames_multiple">無法傳送：使用者名稱或電子郵件無效</string>
-	<string name="invite_error_invalid_usenames_one">無法傳送：使用者名稱或電子郵件無效</string>
-	<string name="invite_error_no_usenames">請新增至少一個使用者名稱</string>
+	<string name="invite_error_for_username">%1$s：%2$s</string>
 	<string name="invite_message_info">(選用) 你最多可以輸入 500 個字元的自訂訊息，附在傳送給使用者的邀請中。</string>
 	<string name="invite_message_remaining_other">剩下 %d 個字元</string>
 	<string name="invite_message_remaining_one">剩下 1 個字元</string>
@@ -41,7 +56,6 @@
 	<string name="invite_message_title">自訂訊息</string>
 	<string name="invite_already_a_member">已有成員使用「%s」作為使用者名稱</string>
 	<string name="invite_username_not_found">找不到使用者名稱為「%s」的使用者</string>
-	<string name="invite_names_hint">輸入電子郵件地址或使用者名稱…</string>
 	<string name="invite">邀請</string>
 	<string name="invite_names_title">使用者名稱或電子郵件</string>
 	<string name="signup_succeed_signin_failed">系統已為你建立帳號，但在將你登入時發生錯誤\n。請嘗試使用新建立的使用者名稱與密碼登入。</string>
@@ -61,16 +75,12 @@
 	<string name="preview_screen_links_disabled">預覽畫面上的連結已停用</string>
 	<string name="draft_explainer">這篇文章只是草稿，尚未發表</string>
 	<string name="send">傳送</string>
-	<string name="person_removed_general">已成功移除使用者</string>
-	<string name="person_remove_confirmation_message">如果移除 %1$s，該使用者將無法再存取此網站，但 %1$s 建立的所有內容仍會保留在網站上。\n\n仍要移除這位使用者嗎？</string>
-	<string name="person_removed">已成功移除 @%1$s</string>
 	<string name="person_remove_confirmation_title">移除 %1$s</string>
 	<string name="reader_empty_posts_in_custom_list">此清單中的網站最近未張貼任何文章</string>
 	<string name="people">使用者</string>
 	<string name="edit_user">編輯使用者</string>
 	<string name="role">角色</string>
 	<string name="error_remove_user">無法移除使用者</string>
-	<string name="error_fetch_people_list">無法擷取網站使用者</string>
 	<string name="error_update_role">無法更新使用者角色</string>
 	<string name="gravatar_camera_and_media_permission_required">需要權限才能選取或拍攝照片</string>
 	<string name="error_updating_gravatar">更新你的 Gravatar 時發生錯誤</string>
@@ -103,7 +113,6 @@
 	<string name="plans_post_purchase_text_customize">你現在可以存取自訂字型、自訂顏色及自訂 CSS 編輯功能。</string>
 	<string name="plans_post_purchase_text_intro">你的網站簡直令人樂不可支！現在，你可以探索自己網站的新功能，並自行選擇要從哪裡開始。</string>
 	<string name="plans_post_purchase_title_customize">自訂字型和顏色</string>
-	<string name="plan_purchase_now">立即購買</string>
 	<string name="plans_post_purchase_title_intro">交給你了，加油！</string>
 	<string name="export_your_content_message">我們會將你的文章、頁面和設定寄到你的電子郵件地址：%s.</string>
 	<string name="plan">方案</string>
@@ -152,10 +161,6 @@
 	<string name="xmlrpc_missing_method_error">無法連結。伺服器缺少必要的 XML-RPC 方式。</string>
 	<string name="post_format_status">狀態</string>
 	<string name="post_format_video">影片</string>
-	<string name="align_none">無</string>
-	<string name="align_left">靠左</string>
-	<string name="align_center">置中</string>
-	<string name="align_right">靠右</string>
 	<string name="theme_free">免費</string>
 	<string name="theme_all">全部</string>
 	<string name="theme_premium">進階版</string>
@@ -439,9 +444,7 @@
 	<string name="reader_short_like_count_one">1 個讚</string>
 	<string name="reader_label_follow_count">%,d 個關注者</string>
 	<string name="reader_short_like_count_none">讚</string>
-	<string name="reader_label_reading_time_in_minutes">%,d 分鐘</string>
 	<string name="reader_menu_tags">編輯標籤和網誌</string>
-	<string name="reader_label_word_count">%,d 字</string>
 	<string name="reader_title_post_detail">讀者文章</string>
 	<string name="local_draft_explainer">這篇文章是儲存在本機上的草稿，尚未發表</string>
 	<string name="local_changes_explainer">這篇文章的本機存檔經過變更，變更內容尚未發表</string>
@@ -950,7 +953,6 @@
 	<string name="select_from_media_library">從媒體庫選擇</string>
 	<string name="jetpack_not_found">找不到 Jetpack</string>
 	<string name="jetpack_message">Jetpack 外掛需要統計資訊。你想要安裝 Jetpack 嗎？</string>
-	<string name="reader_timespan_now">現在</string>
 	<string name="reader_untitled_post">（未命名）</string>
 	<string name="reader_share_subject">從 %s 分享</string>
 	<string name="reader_btn_unfollow">追蹤</string>

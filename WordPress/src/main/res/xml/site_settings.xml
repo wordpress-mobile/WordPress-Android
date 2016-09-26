@@ -149,19 +149,19 @@
                 android:title="@string/site_settings_discussion_new_posts_header">
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_allow_comments"
+                    android:id="@+id/pref_allow_comments_nested"
                     android:key="@string/pref_key_site_allow_comments_nested"
                     android:title="@string/site_settings_allow_comments_title"
                     app:longClickHint="@string/site_settings_allow_comments_hint" />
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_send_pingbacks"
+                    android:id="@+id/pref_send_pingbacks_nested"
                     android:key="@string/pref_key_site_send_pingbacks_nested"
                     android:title="@string/site_settings_send_pingbacks_title"
                     app:longClickHint="@string/site_settings_send_pingbacks_hint" />
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_receive_pingbacks"
+                    android:id="@+id/pref_receive_pingbacks_nested"
                     android:key="@string/pref_key_site_receive_pingbacks_nested"
                     android:title="@string/site_settings_receive_pingbacks_title"
                     app:longClickHint="@string/site_settings_receive_pingbacks_hint" />
