@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">المسؤول</string>
+	<string name="role_editor">المحرر</string>
+	<string name="role_author">الكاتب</string>
+	<string name="role_contributor">المساهم</string>
+	<string name="role_follower">المتابع</string>
+	<string name="role_viewer">المشاهد</string>
+	<string name="error_post_my_profile_no_connection">لا يوجد اتصال، تعذر حفظ ملفك الشخصي</string>
+	<string name="alignment_none">لا شيء</string>
+	<string name="alignment_left">يسار</string>
+	<string name="alignment_right">يمين</string>
+	<string name="error_fetch_users_list">تعذر استرداد مستخدمي الموقع</string>
+	<string name="plans_manage">إدارة باقتك على\nWordPress.com/plans</string>
+	<string name="people_empty_list_filtered_viewers">ليس لديك أي مشاهدين بعد.</string>
+	<string name="people_fetching">جارٍ إحضار المستخدمين...</string>
+	<string name="title_follower">المتابع</string>
+	<string name="title_email_follower">المتابع عبر البريد الإلكتروني</string>
+	<string name="people_empty_list_filtered_email_followers">ليس لديك أي متابعين عبر البريد الإلكتروني بعد.</string>
+	<string name="people_empty_list_filtered_followers">ليس لديك أي متابعين بعد.</string>
+	<string name="people_empty_list_filtered_users">ليس لديك أي مستخدمين بعد.</string>
+	<string name="people_dropdown_item_email_followers">المتابعون عبر البريد الإلكتروني</string>
+	<string name="people_dropdown_item_viewers">المشاهدون</string>
+	<string name="people_dropdown_item_followers">المتابعون</string>
+	<string name="people_dropdown_item_team">الفريق</string>
+	<string name="invite_message_usernames_limit">دعوة ما يقارب 10 عناوين بريد إلكتروني و/أو أسماء مستخدمين في وردبرس.كوم. سيتم إرسال تعليمات عن كيفية إنشاء اسم مستخدم لمَن لا يملك اسم مستخدم.</string>
+	<string name="viewer_remove_confirmation_message">إذا قمت بإزالة هذا المشاهد، فلن يتمكن بعد الآن من زيارة هذا الموقع.\n\nألا تزال تريد إزالة هذا المشاهد؟</string>
+	<string name="follower_remove_confirmation_message">في حالة إزالة المتابع، فسيتم وقف إرسال التنبيهات إليه عن هذا الموقع، ما لم يتابع مرة أخرى.\n\nألا تزال تريد إزالة هذا المتابع؟</string>
+	<string name="reader_label_view_gallery">عرض المعرض</string>
+	<string name="error_remove_follower">تعذر إزالة المتابع</string>
+	<string name="error_remove_viewer">تعذر إزالة المشاهد</string>
+	<string name="error_fetch_email_followers_list">تعذر استرداد متابعي الموقع عبر البريد الإلكتروني</string>
+	<string name="error_fetch_followers_list">تعذر استرداد متابعي الموقع</string>
 	<string name="editor_failed_uploads_switch_html">فشل رفع بعض الوسائط. يمكنك الإنتقال الى وضع HTML\nبهذه الحالة. إزالة جميع المرفوعات الفاشلة والمتابعة؟</string>
 	<string name="format_bar_description_html">وضع HTML</string>
 	<string name="visual_editor">المحرر المرئي</string>
@@ -27,6 +58,7 @@
 	<string name="alert_insert_image_html_mode">لا يمكن إدراج الوسائط مباشرة في وضع HTML. يرجى التبديل إلى الوضع المرئي.</string>
 	<string name="uploading_gallery_placeholder">جاري رفع المعرض...</string>
 	<string name="invite_error_some_failed">تم إرسال الدعوة ولكن بعض الأخطاء قد وقعت!</string>
+	<string name="invite_error_for_username">%1$s: %2$s</string>
 	<string name="invite_sent">تم إرسال الدعوة بنجاح</string>
 	<string name="tap_to_try_again">اضغط للمحاولة مرة أخرى!</string>
 	<string name="invite_error_sending">حدث خطأ ما أثناء محاولة إرسال الدعوة!</string>
@@ -149,10 +181,6 @@
 	<string name="xmlrpc_missing_method_error">تعذر الاتصال. طرق XML-RPC غير موجودة على الخادم.</string>
 	<string name="post_format_status">الحالة</string>
 	<string name="post_format_video">الفيديو</string>
-	<string name="align_none">بلا</string>
-	<string name="align_left">يسار</string>
-	<string name="align_center">وسط</string>
-	<string name="align_right">يمين</string>
 	<string name="theme_free">مجانًا</string>
 	<string name="theme_all">الكل</string>
 	<string name="theme_premium">Premium</string>
@@ -436,9 +464,7 @@
 	<string name="reader_short_like_count_one">إعجاب واحد</string>
 	<string name="reader_label_follow_count">%,d متابعين</string>
 	<string name="reader_short_like_count_none">أعجبني</string>
-	<string name="reader_label_reading_time_in_minutes">%,d دقيقة</string>
 	<string name="reader_menu_tags">تحرير الوسوم والمدوّنات</string>
-	<string name="reader_label_word_count">%,d كلمات</string>
 	<string name="reader_title_post_detail">مقالة القارئ</string>
 	<string name="local_draft_explainer">هذه المقالة مسودة محلية لم تُنشَر بعد</string>
 	<string name="local_changes_explainer">تشتمل هذه المقالة على تغييرات محلية لم تُنشَر بعد</string>
@@ -947,7 +973,6 @@
 	<string name="select_from_media_library">اختر من مكتبة الوسائط</string>
 	<string name="jetpack_message">مطلوب اضافة الـ Jetpack للإحصائيات , هل تريد تثبيت الـ Jetpack ؟</string>
 	<string name="jetpack_not_found">اضافة Jetpack غير موجودة</string>
-	<string name="reader_timespan_now">الان</string>
 	<string name="reader_untitled_post">( بدون اسم )</string>
 	<string name="reader_share_subject">تمت المشاركة من %s</string>
 	<string name="reader_btn_share">مشاركة</string>

@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">Administrator</string>
+	<string name="role_editor">Editor</string>
+	<string name="role_author">Author</string>
+	<string name="role_contributor">Contributor</string>
+	<string name="role_follower">Follower</string>
+	<string name="role_viewer">Viewer</string>
+	<string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
+	<string name="alignment_none">None</string>
+	<string name="alignment_left">Left</string>
+	<string name="alignment_right">Right</string>
+	<string name="site_settings_list_editor_action_mode_title">Selected %1$d</string>
 	<string name="error_fetch_users_list">Couldn\'t retrieve site users</string>
 	<string name="plans_manage">Manage your plan at\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">You don\'t have any viewers yet.</string>
-	<string name="people_fetching">Fetching users..</string>
+	<string name="people_fetching">Fetching users…</string>
 	<string name="title_follower">Follower</string>
 	<string name="title_email_follower">Email Follower</string>
 	<string name="people_empty_list_filtered_email_followers">You don\'t have any email followers yet.</string>
@@ -18,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>
 	<string name="follower_subscribed_since">Since %1$s</string>
 	<string name="reader_label_view_gallery">View Gallery</string>
-	<string name="reader_label_image_count">%d images</string>
 	<string name="error_remove_follower">Couldn\'t remove follower</string>
 	<string name="error_remove_viewer">Couldn\'t remove viewer</string>
 	<string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>
@@ -173,10 +183,7 @@
 	<string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
 	<string name="post_format_status">Status</string>
 	<string name="post_format_video">Video</string>
-	<string name="align_none">None</string>
-	<string name="align_left">Left</string>
-	<string name="align_center">Centre</string>
-	<string name="align_right">Right</string>
+	<string name="alignment_center">Centre</string>
 	<string name="theme_free">Free</string>
 	<string name="theme_all">All</string>
 	<string name="theme_premium">Premium</string>
@@ -460,9 +467,7 @@
 	<string name="reader_short_like_count_one">1 Like</string>
 	<string name="reader_label_follow_count">%,d followers</string>
 	<string name="reader_short_like_count_none">Like</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Edit tags and blogs</string>
-	<string name="reader_label_word_count">%,d words</string>
 	<string name="reader_title_post_detail">Reader Post</string>
 	<string name="local_draft_explainer">This post is a local draft which hasn\'t been published</string>
 	<string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
@@ -700,6 +705,7 @@
 	<string name="reader_label_comment_count_multi">%,d comments</string>
 	<string name="reader_label_view_original">View original article</string>
 	<string name="reader_label_like">Like</string>
+	<string name="reader_label_liked_by">Liked By</string>
 	<string name="reader_label_comment_count_single">One comment</string>
 	<string name="reader_label_comments_closed">Comments are closed</string>
 	<string name="reader_label_comments_on">Comments on</string>
@@ -971,7 +977,6 @@
 	<string name="select_from_media_library">Select from media library</string>
 	<string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
 	<string name="jetpack_not_found">Jetpack plugin not found</string>
-	<string name="reader_timespan_now">now</string>
 	<string name="reader_untitled_post">(Untitled)</string>
 	<string name="reader_share_subject">Shared from %s</string>
 	<string name="reader_btn_share">Share</string>

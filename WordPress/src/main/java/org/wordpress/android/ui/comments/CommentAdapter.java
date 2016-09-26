@@ -169,7 +169,7 @@ class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         holder.txtTitle.setText(Html.fromHtml(comment.getFormattedTitle()));
         holder.txtComment.setText(comment.getUnescapedCommentTextWithDrawables());
-        holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
+        holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished(), mContext));
 
         // status is only shown for comments that haven't been approved
         final boolean showStatus;

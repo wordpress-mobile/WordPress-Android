@@ -79,12 +79,8 @@
 	<string name="post_format_video">Video</string>
 	<string name="theme_all">Todo</string>
 	<string name="theme_premium">Premium</string>
-	<string name="align_none">Ninguno</string>
-	<string name="align_left">Izquierda</string>
 	<string name="theme_free">Gratis</string>
 	<string name="post_format_status">Estado</string>
-	<string name="align_right">Derecha</string>
-	<string name="align_center">Centrado</string>
 	<string name="post_format_image">Imagen</string>
 	<string name="post_format_gallery">Galería</string>
 	<string name="post_format_standard">Estándar</string>
@@ -365,9 +361,7 @@
 	<string name="reader_short_like_count_none">Me gusta</string>
 	<string name="reader_short_like_count_one">1 Me gusta</string>
 	<string name="reader_label_follow_count">%,d seguidores</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Editar etiquetas y blogs</string>
-	<string name="reader_label_word_count">%,d palabras</string>
 	<string name="reader_title_post_detail">Entrada del lector</string>
 	<string name="local_draft_explainer">Esta entrada tiene un borrador local que no ha sido publicado</string>
 	<string name="local_changes_explainer">Esta entrada tiene cambios en local que no han sido publicados</string>
@@ -876,7 +870,6 @@
 	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="jetpack_message">Necesitas el pluging Jetpack para tener estadísticas estadísticas. ¿Quieres instalar Jetpack?</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
-	<string name="reader_timespan_now">ahora</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_share_subject">Compartido desde %s</string>
 	<string name="reader_btn_share">Compartir</string>

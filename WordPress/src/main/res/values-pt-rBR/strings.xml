@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">Administrador</string>
+	<string name="role_editor">Editor</string>
+	<string name="role_author">Autor</string>
+	<string name="role_contributor">Colaborador</string>
+	<string name="role_follower">Seguidor</string>
+	<string name="role_viewer">Leitor</string>
+	<string name="error_post_my_profile_no_connection">Sem conexão, não foi possível salvar seu perfil</string>
+	<string name="alignment_left">Esquerda</string>
+	<string name="alignment_right">Direita</string>
+	<string name="alignment_none">Nenhum</string>
+	<string name="site_settings_list_editor_action_mode_title">Selecionado %1$d</string>
 	<string name="error_fetch_users_list">Não foi possível recuperar os usuários do site</string>
 	<string name="plans_manage">Gerenciar o seu plano em\nWordPress.com/plans</string>
 	<string name="title_follower">Seguidor</string>
@@ -18,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Caso removido, este seguidor irá parar de receber notificações sobre este site, menos que ele comece a seguir novamente.\n\nVocê gostaria ainda de remover este seguidor?</string>
 	<string name="follower_subscribed_since">Desde de %1$s</string>
 	<string name="reader_label_view_gallery">Ver galeria</string>
-	<string name="reader_label_image_count">%d imagens</string>
 	<string name="error_remove_follower">Não foi possível remover o seguidor</string>
 	<string name="error_remove_viewer">Não foi possível remover o espectador</string>
 	<string name="error_fetch_email_followers_list">Não foi possível recuperar os seguidores por e-mail do site</string>
@@ -173,13 +183,10 @@
 	<string name="xmlrpc_missing_method_error">Não foi possível conectar. Alguns métodos XML-RPC necessários estão faltando no servidor.</string>
 	<string name="post_format_status">Status</string>
 	<string name="post_format_video">Vídeo</string>
-	<string name="align_none">Nenhum</string>
-	<string name="align_left">À esquerda</string>
-	<string name="align_center">Centralizar</string>
-	<string name="align_right">À direita</string>
 	<string name="theme_free">Gratuito</string>
 	<string name="theme_all">Tudo</string>
 	<string name="theme_premium">Premium</string>
+	<string name="alignment_center">Centro</string>
 	<string name="post_format_chat">Chat</string>
 	<string name="post_format_gallery">Galeria</string>
 	<string name="post_format_image">Imagem</string>
@@ -460,9 +467,7 @@
 	<string name="reader_short_like_count_one">1 curtida</string>
 	<string name="reader_label_follow_count">%,d seguidores</string>
 	<string name="reader_short_like_count_none">Curtir</string>
-	<string name="reader_label_reading_time_in_minutes">%,d minutos</string>
 	<string name="reader_menu_tags">Editar tags e blogs</string>
-	<string name="reader_label_word_count">%,d palavras</string>
 	<string name="reader_title_post_detail">Post do leitor</string>
 	<string name="local_draft_explainer">Este post é um rascunho local que ainda não foi publicado</string>
 	<string name="local_changes_explainer">Este post teve alterações locais que ainda não foram publicadas</string>
@@ -696,6 +701,7 @@
 	<string name="reader_label_comment_count_multi">%,d comentários</string>
 	<string name="reader_label_view_original">Ver o artigo original</string>
 	<string name="reader_label_like">Curtir</string>
+	<string name="reader_label_liked_by">Curtido por</string>
 	<string name="reader_label_comment_count_single">Um comentário</string>
 	<string name="reader_label_comments_closed">Os comentários estão desativados</string>
 	<string name="reader_label_comments_on">Comentários sobre</string>
@@ -971,7 +977,6 @@
 	<string name="jetpack_message">O plugin Jetpack é necessário para as estatísticas. Você quer instalar o Jetpack?</string>
 	<string name="jetpack_not_found">Plugin Jetpack não encontrado</string>
 	<string name="reader_btn_follow">Seguir </string>
-	<string name="reader_timespan_now">agora</string>
 	<string name="reader_btn_share">Compartilhar</string>
 	<string name="reader_label_removed_tag">Excluído %s</string>
 	<string name="reader_likes_one">Uma pessoa curte isto</string>

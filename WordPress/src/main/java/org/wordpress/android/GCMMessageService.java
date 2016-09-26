@@ -79,7 +79,7 @@ public class GCMMessageService extends GcmListenerService {
 
     private void synchronizedHandleDefaultPush(String from, @NonNull Bundle data) {
         // sActiveNotificationsMap being static, we can't just synchronize the method
-        synchronized (sActiveNotificationsMap) {
+        synchronized (GCMMessageService.class) {
             handleDefaultPush(from, data);
         }
     }
@@ -482,7 +482,9 @@ public class GCMMessageService extends GcmListenerService {
 
                 String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                 String noteId = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
-                showIndividualNotificationForBuilder(builder, noteType, noteId, sActiveNotificationsMap.keyAt(0));
+                if (!sActiveNotificationsMap.isEmpty()) {
+                    showIndividualNotificationForBuilder(builder, noteType, noteId, sActiveNotificationsMap.keyAt(0));
+                }
             }
         }
 

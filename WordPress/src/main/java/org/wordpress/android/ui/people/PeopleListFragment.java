@@ -283,6 +283,7 @@ public class PeopleListFragment extends Fragment {
 
     public interface OnFetchPeopleListener {
         boolean onFetchFirstPage(PeopleListFilter filter);
+
         boolean onFetchMorePeople(PeopleListFilter filter);
     }
 
@@ -344,7 +345,10 @@ public class PeopleListFragment extends Fragment {
                 peopleViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
                 peopleViewHolder.txtDisplayName.setText(StringUtils.unescapeHTML(person.getDisplayName()));
                 if (person.getRole() != null) {
+                    peopleViewHolder.txtRole.setVisibility(View.VISIBLE);
                     peopleViewHolder.txtRole.setText(StringUtils.capitalize(person.getRole().toDisplayString()));
+                } else {
+                    peopleViewHolder.txtRole.setVisibility(View.GONE);
                 }
                 if (!person.getUsername().isEmpty()) {
                     peopleViewHolder.txtUsername.setVisibility(View.VISIBLE);

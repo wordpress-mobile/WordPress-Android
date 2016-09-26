@@ -4,7 +4,6 @@
 	<string name="plans_manage">Gestisci il tuo piano su\nWordPress.com/plans</string>
 	<string name="title_follower">Follower</string>
 	<string name="title_email_follower">Email al follower</string>
-	<string name="people_fetching">Recupero utenti in corso…</string>
 	<string name="people_empty_list_filtered_viewers">Non hai ancora visitatori.</string>
 	<string name="people_empty_list_filtered_email_followers">Non hai ancora follower via email.</string>
 	<string name="people_empty_list_filtered_followers">Non hai ancora follower.</string>
@@ -18,7 +17,6 @@
 	<string name="follower_remove_confirmation_message">Se rimosso, questo follower smetterà di ricevere notifiche da questo sito, a meno che non si iscriva di nuovo.\n\nVuoi ancora di rimuovere questo follower?</string>
 	<string name="follower_subscribed_since">Dal %1$s</string>
 	<string name="reader_label_view_gallery">Visualizza galleria</string>
-	<string name="reader_label_image_count">%d imagini</string>
 	<string name="error_remove_follower">Non è possibile rimuovere il follower</string>
 	<string name="error_remove_viewer">Non è possibile rimuovere il visitatore</string>
 	<string name="error_fetch_email_followers_list">Non è possibile recuperare l\'email dei follower del sito</string>
@@ -173,10 +171,6 @@
 	<string name="xmlrpc_missing_method_error">Non è possibile connettersi. Sul server mancano i necessari metodi XML-RPC</string>
 	<string name="post_format_status">Stato</string>
 	<string name="post_format_video">Video</string>
-	<string name="align_none">Nessuno</string>
-	<string name="align_left">Sinistra</string>
-	<string name="align_center">Centro</string>
-	<string name="align_right">Destra</string>
 	<string name="theme_free">Gratuito</string>
 	<string name="theme_all">Tutti</string>
 	<string name="theme_premium">Premium</string>
@@ -460,9 +454,7 @@
 	<string name="reader_short_like_count_one">1 Mi piace</string>
 	<string name="reader_label_follow_count">%,d ti seguono</string>
 	<string name="reader_short_like_count_none">Mi piace</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Modifica tag e blog</string>
-	<string name="reader_label_word_count">%,d parole</string>
 	<string name="reader_title_post_detail">Reader articoli</string>
 	<string name="local_draft_explainer">Questo articolo è una bozza locale che non è stata pubblicata</string>
 	<string name="local_changes_explainer">Questo articolo contiene modifiche locali che non sono state pubblicate</string>
@@ -975,7 +967,6 @@
 	<string name="reader_label_removed_tag">Rimosso %s</string>
 	<string name="reader_likes_one">Ad una persona piace questo</string>
 	<string name="reader_likes_only_you">Ti piace questo</string>
-	<string name="reader_timespan_now">adesso</string>
 	<string name="reader_untitled_post">(Senza titolo)</string>
 	<string name="reader_share_subject">Condividi da %s</string>
 	<string name="reader_btn_share">Condividi</string>

@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="role_admin">Administrator</string>
+	<string name="role_editor">Redakteur</string>
+	<string name="role_author">Autor</string>
+	<string name="role_contributor">Mitarbeiter</string>
+	<string name="role_follower">Follower</string>
+	<string name="role_viewer">Besucher</string>
+	<string name="error_post_my_profile_no_connection">Keine Verbindung, dein Profil konnte nicht gespeichert werden</string>
+	<string name="alignment_none">Keine</string>
+	<string name="alignment_left">Links</string>
+	<string name="alignment_right">Rechts</string>
+	<string name="site_settings_list_editor_action_mode_title">Ausgewählt %1$d</string>
 	<string name="error_fetch_users_list">Website-Benutzer konnten nicht abgerufen werden</string>
 	<string name="plans_manage">Verwalte deinen Tarif auf\nWordPress.com/plans</string>
-	<string name="people_empty_list_filtered_viewers">Du hast noch keine Betrachter.</string>
+	<string name="people_empty_list_filtered_viewers">Du hast noch keine Besucher.</string>
 	<string name="people_fetching">Benutzer werden abgerufen ...</string>
 	<string name="title_follower">Follower</string>
 	<string name="title_email_follower">E-Mail-Follower</string>
@@ -10,17 +21,16 @@
 	<string name="people_empty_list_filtered_followers">Du hast noch keine Follower.</string>
 	<string name="people_empty_list_filtered_users">Du hast bisher keine Benutzer.</string>
 	<string name="people_dropdown_item_email_followers">E-Mail-Follower</string>
-	<string name="people_dropdown_item_viewers">Betrachter</string>
+	<string name="people_dropdown_item_viewers">Besucher</string>
 	<string name="people_dropdown_item_followers">Follower</string>
 	<string name="people_dropdown_item_team">Team</string>
 	<string name="invite_message_usernames_limit">Lade bis zu 10 E-Mail-Adressen und/oder WordPress.com Benutzernamen ein. Diejenigen, welche einen Benutzernamen benötigen, werden eine Anleitung gesendet bekommen, wie sie einen erstellen.</string>
-	<string name="viewer_remove_confirmation_message">Falls du diesen Betrachter entfernst, kann er oder sie die Website nicht mehr ansehen.\n\nMöchtest du diesen Betrachter noch immer entfernen?</string>
+	<string name="viewer_remove_confirmation_message">Falls du diesen Besucher entfernst, kann er oder sie die Website nicht mehr ansehen.\n\nMöchtest du diesen Besucher noch immer entfernen?</string>
 	<string name="follower_remove_confirmation_message">Nach dem Entfernen bekommt der Follower keine Mitteilungen über dieser Website mehr, bis er wieder folgt.\n\nMöchtest du diesen Follower noch immer entfernen?</string>
 	<string name="follower_subscribed_since">Seit %1$s</string>
 	<string name="reader_label_view_gallery">Galerie anzeigen</string>
-	<string name="reader_label_image_count">%d Bilder</string>
 	<string name="error_remove_follower">Konnte Follower nicht entfernen</string>
-	<string name="error_remove_viewer">Konnte Betrachter nicht entfernen</string>
+	<string name="error_remove_viewer">Konnte Besucher nicht entfernen</string>
 	<string name="error_fetch_email_followers_list">Konnte E-Mail-Follower der Website nicht abrufen</string>
 	<string name="error_fetch_followers_list">Konnte Follower der Website nicht abrufen</string>
 	<string name="editor_failed_uploads_switch_html">Einige Medien konnten nicht hochgeladen werden. Du kannst daher derzeit nicht in den HTML-Modus umschalten. Möchtest du alle fehlgeschlagenen Uploads entfernen und fortfahren?</string>
@@ -92,7 +102,7 @@
 	<string name="edit_user">Benutzer bearbeiten</string>
 	<string name="role">Rolle</string>
 	<string name="error_remove_user">Benutzer konnte nicht entfernt werden</string>
-	<string name="error_fetch_viewers_list">Website-Betrachter konnten nicht abgerufen werden</string>
+	<string name="error_fetch_viewers_list">Website-Besucher konnten nicht abgerufen werden</string>
 	<string name="error_update_role">Benutzerrolle konnte nicht aktualisiert werden</string>
 	<string name="gravatar_camera_and_media_permission_required">Zum aufnehmen oder auswählen eines Fotos sind die entsprechenden Rechte erforderlich</string>
 	<string name="error_updating_gravatar">Beim Aktualisieren deines Gravatars ist ein Fehler aufgetreten</string>
@@ -173,10 +183,7 @@
 	<string name="xmlrpc_missing_method_error">Konnte nicht verbinden. Die benötigte XML-RPC Methoden sind nicht auf dem Server vorhanden.</string>
 	<string name="post_format_status">Status</string>
 	<string name="post_format_video">Video</string>
-	<string name="align_none">Nichts</string>
-	<string name="align_left">Links</string>
-	<string name="align_center">Zentriert</string>
-	<string name="align_right">Rechts</string>
+	<string name="alignment_center">Zentriert</string>
 	<string name="theme_free">Gratis</string>
 	<string name="theme_all">Alle</string>
 	<string name="theme_premium">Premium</string>
@@ -460,9 +467,7 @@
 	<string name="reader_short_like_count_one">1 Like</string>
 	<string name="reader_label_follow_count">%,d Follower</string>
 	<string name="reader_short_like_count_none">Like</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Schlagwörter und Blogs bearbeiten</string>
-	<string name="reader_label_word_count">%,d Wörter</string>
 	<string name="reader_title_post_detail">Reader-Beitrag</string>
 	<string name="local_draft_explainer">Dieser Beitrag ist ein lokaler Entwurf, der noch nicht veröffentlicht wurde</string>
 	<string name="local_changes_explainer">Dieser Beitrag enthält lokale Änderungen, die noch nicht veröffentlicht wurden</string>
@@ -700,6 +705,7 @@
 	<string name="reader_label_comment_count_multi">%,d Kommentare</string>
 	<string name="reader_label_view_original">Zeige Original-Beitrag</string>
 	<string name="reader_label_like">Gefällt mir</string>
+	<string name="reader_label_liked_by">Gefällt</string>
 	<string name="reader_label_comment_count_single">Ein Kommentar</string>
 	<string name="reader_label_comments_closed">Kommentare sind geschlossen</string>
 	<string name="reader_label_comments_on">Kommentare zu</string>
@@ -971,7 +977,6 @@
 	<string name="select_from_media_library">Aus der Mediathek auswählen</string>
 	<string name="jetpack_message">Das Jetpack-Plugin ist erforderlich für Statistiken. Möchtest Du Jetpack installieren?</string>
 	<string name="jetpack_not_found">Jetpack Plugin nicht gefunden</string>
-	<string name="reader_timespan_now">jetzt</string>
 	<string name="reader_untitled_post">(Ohne Titel)</string>
 	<string name="reader_share_subject">Geteilt von %s</string>
 	<string name="reader_btn_share">Teilen</string>

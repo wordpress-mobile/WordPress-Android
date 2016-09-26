@@ -588,7 +588,7 @@
     <string name="site_settings_list_editor_summary_one">1 item</string>
     <string name="site_settings_list_editor_summary_other">%d items</string>
 
-    <string name="site_settings_list_editor_action_mode_title">Selected %1$s</string>
+    <string name="site_settings_list_editor_action_mode_title">Selected %1$d</string>
     <string name="site_settings_list_editor_no_items_text">No items</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
@@ -1083,7 +1083,7 @@
       reader strings
     -->
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
-    <string name="reader_timespan_now">now</string>
+    <string name="timespan_now">now</string>
 
     <!-- title shown for untitled posts and blogs -->
     <string name="reader_untitled_post">(Untitled)</string>
@@ -1145,7 +1145,8 @@
     <string name="reader_label_post_search_running">Searching…</string>
     <string name="reader_label_related_posts">Related Reading</string>
     <string name="reader_label_view_gallery">View Gallery</string>
-    <string name="reader_label_image_count">%d images</string>
+    <string name="reader_label_image_count_one">1 image</string>
+    <string name="reader_label_image_count_multi">%d images</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>

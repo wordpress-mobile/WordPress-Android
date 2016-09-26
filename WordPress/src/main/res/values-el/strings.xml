@@ -141,10 +141,6 @@
 	<string name="xmlrpc_missing_method_error">Αδυναμία σύνδεσης. Οι απαιτούμενες μέθοδοι XML-RPC απουσιάζουν από το διακομιστή.</string>
 	<string name="post_format_status">Κατάσταση</string>
 	<string name="post_format_video">Βίντεο</string>
-	<string name="align_none">Καμία</string>
-	<string name="align_left">Αριστερά</string>
-	<string name="align_center">Κέντρο</string>
-	<string name="align_right">Δεξιά</string>
 	<string name="theme_free">Δωρεάν</string>
 	<string name="theme_all">Όλα</string>
 	<string name="theme_premium">Premium</string>
@@ -428,9 +424,7 @@
 	<string name="reader_short_like_count_one">1 "Like"</string>
 	<string name="reader_label_follow_count">%,d ακόλουθοι</string>
 	<string name="reader_short_like_count_none">"Like"</string>
-	<string name="reader_label_reading_time_in_minutes">%,d λεπτά</string>
 	<string name="reader_menu_tags">Επεξεργασία ετικετών και ιστολογίων</string>
-	<string name="reader_label_word_count">%,d λέξεις</string>
 	<string name="reader_title_post_detail">Άρθρο Αναγνώστη</string>
 	<string name="local_draft_explainer">Αυτό το άρθρο είναι ένα τοπικό προσχέδιο που δεν έχει δημοσιευτεί</string>
 	<string name="local_changes_explainer">Αυτό το άρθρο έχει τοπικές αλλαγές που δεν έχουν δημοσιευθεί</string>
@@ -939,7 +933,6 @@
 	<string name="select_from_media_library">Διαλέξτε από την βιβλιοθήκη πολυμέσων</string>
 	<string name="jetpack_message">Το Jetpack plugin είναι αναγκαίο για την συλλογή στατιστικών στοιχείων. Θέλετε να εγκαταστήσετε το Jetpack;</string>
 	<string name="jetpack_not_found">Δεν βρέθηκε το Jetpack plugin</string>
-	<string name="reader_timespan_now">τώρα</string>
 	<string name="reader_untitled_post">Ανώνυμο</string>
 	<string name="reader_share_subject">Μοιράστηκε από %s</string>
 	<string name="reader_btn_share">Μοιράσου</string>
