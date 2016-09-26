@@ -73,6 +73,11 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
     private static final String PUSH_TYPE_BADGE_RESET = "badge-reset";
 
+    private static final String KEY_CATEGORY_COMMENT_LIKE = "comment-like";
+    private static final String KEY_CATEGORY_COMMENT_REPLY = "comment-reply";
+    private static final String KEY_CATEGORY_COMMENT_MODERATE = "comment-moderate";
+
+
     // Add to the analytics properties map a subset of the push notification payload.
     private static String[] propertiesToCopyIntoAnalytics = {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id",
             "comment_id"};
@@ -250,7 +255,7 @@ public class GCMMessageService extends GcmListenerService {
     private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // adding comment reply action
         Intent commentReplyIntent = getCommentActionIntent();
-        commentReplyIntent.addCategory("comment-reply");
+        commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
         commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
         if (noteId != null) {
             commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
@@ -264,7 +269,7 @@ public class GCMMessageService extends GcmListenerService {
     private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // adding comment like action
         Intent commentLikeIntent = getCommentActionIntent();
-        commentLikeIntent.addCategory("comment-like");
+        commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
         commentLikeIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, true);
         if (noteId != null) {
             commentLikeIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
@@ -278,7 +283,7 @@ public class GCMMessageService extends GcmListenerService {
     private void addCommentApproveActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // adding comment approve action
         Intent commentApproveIntent = getCommentActionIntent();
-        commentApproveIntent.addCategory("comment-moderate");
+        commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
         commentApproveIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, true);
         if (noteId != null) {
             commentApproveIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
