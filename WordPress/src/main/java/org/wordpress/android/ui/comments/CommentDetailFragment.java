@@ -116,9 +116,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mShouldApproveInstantly;
 
     /*
-         * Used to request a comment from a note using its site and comment ids, rather than build
-         * the comment with the content in the note. See showComment()
-         */
+     * Used to request a comment from a note using its site and comment ids, rather than build
+     * the comment with the content in the note. See showComment()
+     */
     private boolean mShouldRequestCommentFromNote = false;
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
