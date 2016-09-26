@@ -512,7 +512,7 @@ public class ReaderPostDetailFragment extends Fragment
             postView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showRelatedPost(relatedPost.getBlogId(), relatedPost.getPostId());
+                    showRelatedPostDetail(relatedPost.getBlogId(), relatedPost.getPostId());
                 }
             });
 
@@ -535,11 +535,11 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * user clicked a related post - if we're already viewing a related post, add it to the history
-     * stack so the user can back-button through the history - otherwise start a new detail
+     * user clicked a single related post - if we're already viewing a related post, add it to the
+     * history stack so the user can back-button through the history - otherwise start a new detail
      * activity for this related post
      */
-    private void showRelatedPost(long blogId, long postId) {
+    private void showRelatedPostDetail(long blogId, long postId) {
         AnalyticsUtils.trackWithReaderPostDetails(
                 AnalyticsTracker.Stat.READER_RELATED_POST_CLICKED, blogId, postId);
 
