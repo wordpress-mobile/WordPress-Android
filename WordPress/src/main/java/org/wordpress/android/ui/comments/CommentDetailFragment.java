@@ -112,10 +112,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private String mRestoredNoteId;
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
+    private boolean mShouldLikeInstantly;
+    private boolean mShouldApproveInstantly;
+
     /*
-         * Used to request a comment from a note using its site and comment ids, rather than build
-         * the comment with the content in the note. See showComment()
-         */
+     * Used to request a comment from a note using its site and comment ids, rather than build
+     * the comment with the content in the note. See showComment()
+     */
     private boolean mShouldRequestCommentFromNote = false;
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -145,6 +148,26 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public static CommentDetailFragment newInstance(final String noteId) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         fragment.setNoteWithNoteId(noteId);
+        return fragment;
+    }
+
+    /*
+     * used when called from a comment notification 'like' action
+     */
+    public static CommentDetailFragment newInstanceForInstantLike(final String noteId) {
+        CommentDetailFragment fragment = newInstance(noteId);
+        //here tell the fragment to trigger the Like action when ready
+        fragment.setLikeCommentWhenReady();
+        return fragment;
+    }
+
+    /*
+     * used when called from a comment notification 'approve' action
+     */
+    public static CommentDetailFragment newInstanceForInstantApprove(final String noteId) {
+        CommentDetailFragment fragment = newInstance(noteId);
+        //here tell the fragment to trigger the Like action when ready
+        fragment.setApproveCommentWhenReady();
         return fragment;
     }
 
@@ -311,7 +334,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnLikeComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                likeComment();
+                likeComment(false);
             }
         });
 
@@ -330,6 +353,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             setNoteWithNoteId(mRestoredNoteId);
             mRestoredNoteId = null;
         }
+
+        if (mShouldLikeInstantly) {
+            mShouldLikeInstantly = false;
+            likeComment(true);
+        } else if (mShouldApproveInstantly) {
+            mShouldApproveInstantly = false;
+            performModerateAction();
+        }
+
     }
 
     private void setupSuggestionServiceAndAdapter() {
@@ -776,7 +808,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             public void onActionResult(CommentActionResult result) {
                 if (!isAdded()) return;
 
-                if (!result.isSuccess()) {
+                if (result.isSuccess()) {
+                    ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                } else {
                     mComment.setStatus(CommentStatus.toString(oldStatus));
                     updateStatusViews();
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
@@ -916,19 +950,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnModerateComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!hasComment() || !isAdded() || !NetworkUtils.checkConnection(getActivity())) {
-                        return;
-                    }
-
-                    CommentStatus newStatus = CommentStatus.APPROVED;
-                    if (mComment.getStatusEnum() == CommentStatus.APPROVED) {
-                        newStatus = CommentStatus.UNAPPROVED;
-                    }
-
-                    mComment.setStatus(newStatus.toString());
-                    setModerateButtonForStatus(newStatus);
-                    AniUtils.startAnimation(mBtnModerateIcon, R.anim.notifications_button_scale);
-                    moderateComment(newStatus);
+                    performModerateAction();
                 }
             });
             mBtnModerateComment.setVisibility(View.VISIBLE);
@@ -962,6 +984,22 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         mLayoutButtons.setVisibility(View.VISIBLE);
+    }
+
+    private void performModerateAction(){
+        if (!hasComment() || !isAdded() || !NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
+
+        CommentStatus newStatus = CommentStatus.APPROVED;
+        if (mComment.getStatusEnum() == CommentStatus.APPROVED) {
+            newStatus = CommentStatus.UNAPPROVED;
+        }
+
+        mComment.setStatus(newStatus.toString());
+        setModerateButtonForStatus(newStatus);
+        AniUtils.startAnimation(mBtnModerateIcon, R.anim.notifications_button_scale);
+        moderateComment(newStatus);
     }
 
     private void setModerateButtonForStatus(CommentStatus status) {
@@ -1058,9 +1096,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         getFragmentManager().invalidateOptionsMenu();
     }
 
+    private void setLikeCommentWhenReady() {
+        mShouldLikeInstantly = true;
+    }
+
+    private void setApproveCommentWhenReady() {
+        mShouldApproveInstantly = true;
+    }
+
     // Like or unlike a comment via the REST API
-    private void likeComment() {
+    private void likeComment(boolean forceLike) {
         if (mNote == null) return;
+        if (!isAdded()) return;
+        if (forceLike && mBtnLikeComment.isActivated()) return;
 
         toggleLikeButton(!mBtnLikeComment.isActivated());
 

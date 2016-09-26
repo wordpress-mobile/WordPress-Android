@@ -324,6 +324,9 @@
     <!-- comment actions -->
     <string name="reply">Reply</string>
     <string name="trash">Trash</string>
+    <string name="like">Like</string>
+    <string name="approve">Approve</string>
+    <string name="comment_moderated_approved">Comment approved!</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
