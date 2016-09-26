@@ -100,7 +100,7 @@
                     tools:text="@string/role" />
 
                 <ImageView
-                    android:id="@+id/imgInfo"
+                    android:id="@+id/imgRoleInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/margin_small"
@@ -114,7 +114,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/invites_border"
                 android:drawableRight="@drawable/arrow"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
