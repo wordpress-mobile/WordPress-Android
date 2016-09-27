@@ -602,7 +602,8 @@ public class PeopleInviteFragment extends Fragment implements
 
                             populateUsernameButtons(failedUsernameErrors.keySet());
 
-                            ToastUtils.showToast(getActivity(), R.string.invite_error_some_failed);
+                            ToastUtils.showToast(getActivity(), succeededUsernames.isEmpty()
+                                    ? R.string.invite_error_sending : R.string.invite_error_some_failed);
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.invite_sent, ToastUtils.Duration.LONG);
                         }
