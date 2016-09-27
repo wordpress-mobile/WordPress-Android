@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -38,17 +37,10 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper.Method;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,8 +74,8 @@ public class PostUploadService extends Service {
         mUseLegacyMode = enabled;
     }
 
-    /*
-     * returns true if the passed post is either uploading or waiting to be uploaded
+    /**
+     * Returns true if the passed post is either uploading or waiting to be uploaded.
      */
     public static boolean isPostUploading(PostModel post) {
         // first check the currently uploading post
@@ -172,7 +164,6 @@ public class PostUploadService extends Service {
         private String mErrorMessage = "";
         private boolean mIsMediaError = false;
         private int featuredImageID = -1;
-        private XMLRPCClientInterface mClient;
 
         // True when the post goes from draft or local draft to published status
         boolean mIsFirstPublishing = false;
@@ -199,14 +190,11 @@ public class PostUploadService extends Service {
                 return false;
             }
 
-            // Create the XML-RPC client
-            XMLRPCClientInterface mClient = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
             if (TextUtils.isEmpty(mPost.getStatus())) {
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
             }
 
-            // TODO: Implement
-            // mPost.setContent(processPostMedia(mPost.getContent()));
+            mPost.setContent(processPostMedia(mPost.getContent()));
 
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError) {
@@ -243,7 +231,7 @@ public class PostUploadService extends Service {
 
         private void trackUploadAnalytics() {
             // Calculate the words count
-            Map<String, Object> properties = new HashMap<String, Object>();
+            Map<String, Object> properties = new HashMap<>();
             properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
 
             if (hasGallery()) {
@@ -290,7 +278,7 @@ public class PostUploadService extends Service {
                     String imageUri = m.group(1);
                     if (!imageUri.equals("")) {
                         // TODO: MediaStore
-                        //MediaFile mediaFile = WordPress.wpDB.getMediaFile(imageUri, mPost);
+                        // MediaFile mediaFile = WordPress.wpDB.getMediaFile(imageUri, mPost);
                         MediaFile mediaFile = new MediaFile();
                         if (mediaFile != null) {
                             // Get image thumbnail for notification icon
@@ -475,7 +463,9 @@ public class PostUploadService extends Service {
                 return null;
             }
 
-            Object result = uploadFileHelper(params, tempFile);
+            // TODO: MediaStore
+            Object result = null;
+            // Object result = uploadFileHelper(params, tempFile);
             Map<?, ?> resultMap = (HashMap<?, ?>) result;
             if (resultMap != null && resultMap.containsKey("url")) {
                 String resultURL = resultMap.get("url").toString();
@@ -519,7 +509,9 @@ public class PostUploadService extends Service {
                     StringUtils.notNullStr(mSite.getUsername()),
                     StringUtils.notNullStr(mSite.getPassword()),
                     pictureParams};
-            Object result = uploadFileHelper(params, tempFile);
+            // Object result = uploadFileHelper(params, tempFile);
+            // TODO: MediaStore
+            Object result = null;
             if (result == null) {
                 mIsMediaError = true;
                 return null;
@@ -541,47 +533,6 @@ public class PostUploadService extends Service {
             }
 
             return pictureURL;
-        }
-
-        private Object uploadFileHelper(Object[] params, final File tempFile) {
-            // Create listener for tracking upload progress in the notification
-            if (mClient instanceof XMLRPCClient) {
-                XMLRPCClient xmlrpcClient = (XMLRPCClient) mClient;
-                xmlrpcClient.setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
-                    @Override
-                    public void onBytesUploaded(long uploadedBytes) {
-                        if (tempFile.length() == 0) {
-                            return;
-                        }
-                        float percentage = (uploadedBytes * 100) / tempFile.length();
-                        mPostUploadNotifier.updateNotificationProgress(percentage);
-                    }
-                });
-            }
-
-            try {
-                return mClient.call(Method.UPLOAD_FILE, params, tempFile);
-            } catch (XMLRPCException e) {
-                // well formed XML-RPC response from the server, but it's an error. Ok to print the error message
-                AppLog.e(T.API, e);
-                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
-                return null;
-            } catch (IOException e) {
-                // I/O-related error. Show a generic connection error message
-                AppLog.e(T.API, e);
-                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload_connection);
-                return null;
-            } catch (XmlPullParserException e) {
-                // XML-RPC response isn't well formed or valid. DO NOT print the real error message
-                AppLog.e(T.API, e);
-                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload);
-                return null;
-            } finally {
-                // remove the temporary upload file now that we're done with it
-                if (tempFile != null && tempFile.exists()) {
-                    tempFile.delete();
-                }
-            }
         }
     }
 
