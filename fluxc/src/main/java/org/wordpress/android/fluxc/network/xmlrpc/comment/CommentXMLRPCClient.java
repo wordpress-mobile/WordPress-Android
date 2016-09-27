@@ -68,6 +68,55 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
+    public void pushComment(final SiteModel site, final CommentModel comment) {
+        List<Object> params = new ArrayList<>(2);
+        Map<String, Object> commentParams = new HashMap<>();
+        commentParams.put("content", comment.getContent());
+        commentParams.put("date", comment.getDatePublished());
+        String status = getXMLRPCCommentStatus(CommentStatus.fromString(comment.getStatus()));
+        commentParams.put("status", status);
+
+        params.add(site.getSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        params.add(comment.getRemoteCommentId());
+        params.add(commentParams);
+        final XMLRPCRequest request = new XMLRPCRequest(
+                site.getXmlRpcUrl(), XMLRPC.EDIT_COMMENT, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    }
+                }
+        );
+        add(request);
+    }
+
+    // Private methods
+
+    private String getXMLRPCCommentStatus(CommentStatus status) {
+        switch (status) {
+            case APPROVED:
+                return "approve";
+            case UNAPPROVED:
+                return "hold";
+            case SPAM:
+                return "spam";
+            case TRASH:
+                return "trash";
+            default:
+            case ALL:
+            case UNSPAM:
+            case UNTRASH:
+                return "approve";
+        }
+    }
+
     private List<CommentModel> commentsResponseToCommentList(Object response, SiteModel site) {
         List<CommentModel> comments = new ArrayList<>();
         if (!(response instanceof Object[])) {
