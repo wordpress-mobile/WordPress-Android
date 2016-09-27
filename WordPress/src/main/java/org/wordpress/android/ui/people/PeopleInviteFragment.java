@@ -447,6 +447,11 @@ public class PeopleInviteFragment extends Fragment implements
         }
     }
 
+
+    public interface ValidationEndListener {
+        void onValidationEnd();
+    }
+
     private void styleButton(String username, @Nullable String validationResultMessage) {
         if (!isAdded()) {
             return;
@@ -661,7 +666,4 @@ public class PeopleInviteFragment extends Fragment implements
         return blog != null && blog.isPrivate();
     }
 
-    public interface ValidationEndListener {
-        void onValidationEnd();
-    }
 }
