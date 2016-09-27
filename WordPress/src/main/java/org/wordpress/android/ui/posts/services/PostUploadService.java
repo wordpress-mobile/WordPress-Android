@@ -1,9 +1,5 @@
 package org.wordpress.android.ui.posts.services;
 
-import android.app.Notification;
-import android.app.Notification.Builder;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -32,20 +28,15 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
-import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.SystemServiceFactory;
-import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper.Method;
@@ -62,7 +53,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,11 +61,13 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class PostUploadService extends Service {
-    private static Context mContext;
     private static final ArrayList<PostModel> mPostsList = new ArrayList<>();
     private static PostModel mCurrentUploadingPost = null;
     private static boolean mUseLegacyMode;
     private UploadPostTask mCurrentTask = null;
+
+    private Context mContext;
+    private PostUploadNotifier mPostUploadNotifier;
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -122,6 +114,7 @@ public class PostUploadService extends Service {
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
         mContext = this.getApplicationContext();
+        mPostUploadNotifier = new PostUploadNotifier(mContext, this);
     }
 
     @Override
@@ -175,7 +168,6 @@ public class PostUploadService extends Service {
     private class UploadPostTask extends AsyncTask<PostModel, Boolean, Boolean> {
         private PostModel mPost;
         private SiteModel mSite;
-        private PostUploadNotifier mPostUploadNotifier;
 
         private String mErrorMessage = "";
         private boolean mIsMediaError = false;
@@ -185,34 +177,8 @@ public class PostUploadService extends Service {
         // True when the post goes from draft or local draft to published status
         boolean mIsFirstPublishing = false;
 
-        // Used when the upload succeed
-        private Bitmap mLatestIcon;
-
         // Used for analytics
         private boolean mHasImage, mHasVideo, mHasCategory;
-
-        @Override
-        protected void onPostExecute(Boolean postUploadedSuccessfully) {
-            if (postUploadedSuccessfully) {
-                // TODO: MediaStore?
-                //WordPress.wpDB.deleteMediaFilesForPost(mPost);
-                mPostUploadNotifier.cancelNotification();
-                mPostUploadNotifier.updateNotificationSuccess(mPost, mLatestIcon, mIsFirstPublishing);
-            } else {
-                mPostUploadNotifier.updateNotificationError(mErrorMessage, mIsMediaError, mPost.isPage());
-            }
-
-            postUploaded();
-        }
-
-        @Override
-        protected void onCancelled(Boolean aBoolean) {
-            super.onCancelled(aBoolean);
-            // mPostUploadNotifier and mPost can be null if onCancelled is called before doInBackground
-            if (mPostUploadNotifier != null && mPost != null) {
-                mPostUploadNotifier.updateNotificationError(mErrorMessage, mIsMediaError, mPost.isPage());
-            }
-        }
 
         @Override
         protected Boolean doInBackground(PostModel... posts) {
@@ -224,7 +190,8 @@ public class PostUploadService extends Service {
                     getString(R.string.sending_content),
                     mPost.isPage() ? getString(R.string.page).toLowerCase() : getString(R.string.post).toLowerCase()
             );
-            mPostUploadNotifier = new PostUploadNotifier(mPost, uploadingPostTitle, uploadingPostMessage);
+
+            mPostUploadNotifier.updateNotificationNewPost(mPost, uploadingPostTitle, uploadingPostMessage);
 
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
             if (mSite == null) {
@@ -313,7 +280,7 @@ public class PostUploadService extends Service {
                 totalMediaItems++;
             }
 
-            mPostUploadNotifier.setTotalMediaItems(totalMediaItems);
+            mPostUploadNotifier.setTotalMediaItems(mPost, totalMediaItems);
 
             int mediaItemCount = 0;
             for (String tag : imageTags) {
@@ -337,12 +304,11 @@ public class PostUploadService extends Service {
                             if (imageIcon != null) {
                                 int squaredSize = DisplayUtils.dpToPx(mContext, 64);
                                 imageIcon = ThumbnailUtils.extractThumbnail(imageIcon, squaredSize, squaredSize);
-                                mLatestIcon = imageIcon;
                             }
 
                             mediaItemCount++;
-                            mPostUploadNotifier.setCurrentMediaItem(mediaItemCount);
-                            mPostUploadNotifier.updateNotificationIcon(imageIcon);
+                            mPostUploadNotifier.setCurrentMediaItem(mPost, mediaItemCount);
+                            mPostUploadNotifier.updateNotificationIcon(mPost, imageIcon);
 
                             String mediaUploadOutput;
                             if (mediaFile.isVideo()) {
@@ -623,182 +589,19 @@ public class PostUploadService extends Service {
         return File.createTempFile("wp-", fileExtension, mContext.getCacheDir());
     }
 
-    private class PostUploadNotifier {
-        private final NotificationManager mNotificationManager;
-        private final Builder mNotificationBuilder;
-        private final int mNotificationId;
-        private int mNotificationErrorId = 0;
-        private int mTotalMediaItems;
-        private int mCurrentMediaItem;
-        private float mItemProgressSize;
-
-        public PostUploadNotifier(PostModel post, String title, String message) {
-            // add the uploader to the notification bar
-            mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
-                    Context.NOTIFICATION_SERVICE);
-            mNotificationBuilder = new Notification.Builder(getApplicationContext());
-            mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
-            if (title != null) {
-                mNotificationBuilder.setContentTitle(title);
-            }
-            if (message != null) {
-                mNotificationBuilder.setContentText(message);
-            }
-            mNotificationId = (new Random()).nextInt() + post.getLocalSiteId();
-            startForeground(mNotificationId, mNotificationBuilder.build());
-        }
-
-        public void updateNotificationIcon(Bitmap icon) {
-            if (icon != null) {
-                mNotificationBuilder.setLargeIcon(icon);
-            }
-            doNotify(mNotificationId, mNotificationBuilder.build());
-        }
-
-        public void cancelNotification() {
-            mNotificationManager.cancel(mNotificationId);
-        }
-
-        public void updateNotificationSuccess(PostModel post, Bitmap largeIcon, boolean isFirstPublishing) {
-            AppLog.d(T.POSTS, "updateNotificationSuccess");
-
-            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
-            String shareableUrl = WPMeShortlinks.getPostShortlink(site, post);
-            if (shareableUrl == null && !TextUtils.isEmpty(post.getLink())) {
-                    shareableUrl = post.getLink();
-            }
-
-            // Notification builder
-            Builder notificationBuilder = new Notification.Builder(getApplicationContext());
-            String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
-                    .page_published) : mContext.getResources().getText(R.string.post_published));
-            if (!isFirstPublishing) {
-                notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
-                        .page_updated) : mContext.getResources().getText(R.string.post_updated));
-            }
-            notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
-            if (largeIcon == null) {
-                notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.mipmap.app_icon));
-            } else {
-                notificationBuilder.setLargeIcon(largeIcon);
-            }
-            notificationBuilder.setContentTitle(notificationTitle);
-            notificationBuilder.setContentText(post.getTitle());
-            notificationBuilder.setAutoCancel(true);
-
-            // Tap notification intent (open the post list)
-            Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            notificationIntent.putExtra(PostsListActivity.EXTRA_SELECT_SITE_LOCAL_ID, post.getLocalSiteId());
-            notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
-            PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext, 0,
-                    notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            notificationBuilder.setContentIntent(pendingIntentPost);
-
-            // Share intent - started if the user tap the share link button - only if the link exist
-            long notificationId = getNotificationIdForPost(post);
-            if (shareableUrl != null && PostStatus.fromPost(post) == PostStatus.PUBLISHED) {
-                Intent shareIntent = new Intent(mContext, ShareAndDismissNotificationReceiver.class);
-                shareIntent.putExtra(ShareAndDismissNotificationReceiver.NOTIFICATION_ID_KEY, notificationId);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareableUrl);
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, shareIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT);
-                notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_action),
-                        pendingIntent);
-            }
-            doNotify(notificationId, notificationBuilder.build());
-        }
-
-        private long getNotificationIdForPost(PostModel post) {
-            long remotePostId = post.getRemotePostId();
-            // We can't use the local table post id here because it can change between first post (local draft) to
-            // first edit (post pulled from the server)
-            return post.getLocalSiteId() + remotePostId;
-        }
-
-        public void updateNotificationError(String mErrorMessage, boolean isMediaError, boolean isPage) {
-            AppLog.d(T.POSTS, "updateNotificationError: " + mErrorMessage);
-
-            Builder notificationBuilder = new Notification.Builder(getApplicationContext());
-            String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
-                    : mContext.getResources().getText(R.string.post_id));
-            Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
-            notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, mErrorMessage);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
-                    notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            String errorText = mContext.getResources().getText(R.string.upload_failed).toString();
-            if (isMediaError) {
-                errorText = mContext.getResources().getText(R.string.media) + " "
-                        + mContext.getResources().getText(R.string.error);
-            }
-
-            notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
-            notificationBuilder.setContentTitle((isMediaError) ? errorText :
-                    mContext.getResources().getText(R.string.upload_failed));
-            notificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText
-                    + ": " + mErrorMessage);
-            notificationBuilder.setContentIntent(pendingIntent);
-            notificationBuilder.setAutoCancel(true);
-            if (mNotificationErrorId == 0) {
-                mNotificationErrorId = mNotificationId + (new Random()).nextInt();
-            }
-            doNotify(mNotificationErrorId, notificationBuilder.build());
-        }
-
-        public void updateNotificationProgress(float progress) {
-            if (mTotalMediaItems == 0) {
-                return;
-            }
-
-            // Simple way to show progress of entire post upload
-            // Would be better if we could get total bytes for all media items.
-            double currentChunkProgress = (mItemProgressSize * progress) / 100;
-
-            if (mCurrentMediaItem > 1) {
-                currentChunkProgress += mItemProgressSize * (mCurrentMediaItem - 1);
-            }
-
-            mNotificationBuilder.setProgress(100, (int)Math.ceil(currentChunkProgress), false);
-            doNotify(mNotificationId, mNotificationBuilder.build());
-        }
-
-        private synchronized void doNotify(long id, Notification notification) {
-            try {
-                mNotificationManager.notify((int) id, notification);
-            } catch (RuntimeException runtimeException) {
-                CrashlyticsUtils.logException(runtimeException, CrashlyticsUtils.ExceptionType.SPECIFIC,
-                        AppLog.T.UTILS, "See issue #2858 / #3966");
-                AppLog.d(T.POSTS, "See issue #2858 / #3966; notify failed with:" + runtimeException);
-            }
-        }
-
-        public void setTotalMediaItems(int totalMediaItems) {
-            if (totalMediaItems <= 0) {
-                totalMediaItems = 1;
-            }
-
-            mTotalMediaItems = totalMediaItems;
-            mItemProgressSize = 100.0f / mTotalMediaItems;
-        }
-
-        public void setCurrentMediaItem(int currentItem) {
-            mCurrentMediaItem = currentItem;
-
-            mNotificationBuilder.setContentText(String.format(getString(R.string.uploading_total), mCurrentMediaItem,
-                    mTotalMediaItems));
-        }
-    }
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        // TODO: Implement
+        if (event.isError()) {
+            // TODO: We should interpret event.error.type and pass our own string rather than use event.error.message
+            mPostUploadNotifier.updateNotificationError(event.post, event.error.message, false, event.post.isPage());
+        } else {
+            // TODO: MediaStore?
+            // WordPress.wpDB.deleteMediaFilesForPost(mPost);
+            mPostUploadNotifier.cancelNotification(event.post);
+            SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
+            mPostUploadNotifier.updateNotificationSuccess(event.post, site, true);
+            postUploaded();
+        }
     }
 }
