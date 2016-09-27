@@ -40,6 +40,10 @@ public class EndpointProcessor extends AbstractProcessor {
         List<String> deletePostAliases = new ArrayList<>();
         deletePostAliases.add("DELETE_MEDIA");
         XML_RPC_ALIASES.put("wp.deletePost", deletePostAliases);
+
+        List<String> getUsersBlogsAliases = new ArrayList<>();
+        getUsersBlogsAliases.add("GET_USERS_SITES");
+        XML_RPC_ALIASES.put("wp.getUsersBlogs", getUsersBlogsAliases);
     }
 
     private Filer mFiler;
