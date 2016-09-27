@@ -646,7 +646,6 @@
 	<string name="username_invalid">Nesprávne použivateľské meno</string>
 	<string name="reader_toast_err_url_intent">Nie je možné otvoriť %s</string>
 	<string name="reader_btn_share">Zdielať</string>
-	<string name="reader_timespan_now">teraz</string>
 	<string name="empty_list_default">Tento zoznam je prázdny</string>
 	<string name="media_add_new_media_gallery">Vytvoriť galériu</string>
 	<string name="media_add_popup_title">Pridať do knižnice súborov</string>

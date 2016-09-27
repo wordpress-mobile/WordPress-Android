@@ -10,7 +10,7 @@
 	<string name="alignment_right">Wyrównaj do prawej</string>
 	<string name="alignment_left">Wyrównaj do lewej</string>
 	<string name="alignment_none">Brak wyrównania</string>
-	<string name="site_settings_list_editor_action_mode_title">Wybrano %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Wybrano %1$d</string>
 	<string name="error_fetch_users_list">Nie można pobrać użytkowników witryny</string>
 	<string name="plans_manage">Zarządzaj swoim planem na\nWorPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Witryna nie ma jeszcze oglądających</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Jeśli usuniesz tego obserwującego, przestanie on otrzymywać powiadomienia o tej witrynie, chyba że zacznie ponownie obserwować.\nCzy wciąż chcesz usunąć tego obserwującego?</string>
 	<string name="follower_subscribed_since">Od %1$s</string>
 	<string name="reader_label_view_gallery">Zabacz Galerię</string>
-	<string name="reader_label_image_count">%d obrazków</string>
 	<string name="error_remove_follower">Nie można usunąć obserwującego</string>
 	<string name="error_remove_viewer">Nie można usunąć oglądającego</string>
 	<string name="error_fetch_email_followers_list">Nie można pobrać obserwujących witrynę przez e-mail</string>
@@ -977,7 +976,6 @@
 	<string name="empty_list_default">Lista jest pusta</string>
 	<string name="jetpack_not_found">Wtyczka Jetpack nie została znaleziona</string>
 	<string name="reader_untitled_post">(Brak tytułu)</string>
-	<string name="reader_timespan_now">teraz</string>
 	<string name="jetpack_message">Wtyczka Jetpack jest wymagana, aby uzyskać dostęp do statystyk. Zainstalować wtyczkę?</string>
 	<string name="reader_share_subject">Udostępnione przez %s</string>
 	<string name="reader_btn_share">Udostępnij</string>

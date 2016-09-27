@@ -283,19 +283,29 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
-        boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
         if (GCMMessageService.getNotificationsCount() == 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
                 GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
-                NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard);
+                boolean doLikeNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
+                if (doLikeNote) {
+                    NotificationsListFragment.openNoteForLike(this, noteId);
+                } else {
+                    boolean doApproveNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
+                    if (doApproveNote) {
+                        NotificationsListFragment.openNoteForApprove(this, noteId);
+                    } else {
+                        boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard);
+                    }
+                }
             }
         } else {
           // mark all tapped here
             GCMMessageService.bumpPushNotificationsTappedAllAnalytics();
         }
 
-        GCMMessageService.clearNotifications();
+        GCMMessageService.removeAllNotifications(this);
     }
 
     @Override

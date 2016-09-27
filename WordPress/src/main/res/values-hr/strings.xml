@@ -727,7 +727,6 @@
 	<string name="empty_list_default">Popis je prazan</string>
 	<string name="select_from_media_library">Odaberi iz medijskih zapisa</string>
 	<string name="jetpack_not_found">Dodatak Jetpack nije pronađen</string>
-	<string name="reader_timespan_now">sad</string>
 	<string name="reader_untitled_post">(Bez naslova)</string>
 	<string name="reader_btn_share">Podjeli</string>
 	<string name="reader_btn_unfollow">Prati se</string>

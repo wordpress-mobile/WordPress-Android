@@ -493,7 +493,6 @@
 	<string name="username_invalid">Keçərsiz istifadəçi adı</string>
 	<string name="nux_tutorial_get_started_title">Başlayın!</string>
 	<string name="jetpack_message">Statistikalar üçün Jetpack plaqininə ehtiyac var. Jetpack plaqinini qurmaq istəyirsinizmi?</string>
-	<string name="reader_timespan_now">indi</string>
 	<string name="reader_untitled_post">(adsız)</string>
 	<string name="reader_share_subject">Paylaşılan %s</string>
 	<string name="reader_label_added_tag"> %s əlavə edildi</string>

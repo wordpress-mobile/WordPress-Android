@@ -10,7 +10,7 @@
 	<string name="alignment_none">Keine</string>
 	<string name="alignment_left">Links</string>
 	<string name="alignment_right">Rechts</string>
-	<string name="site_settings_list_editor_action_mode_title">Ausgewählt %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Ausgewählt %1$d</string>
 	<string name="error_fetch_users_list">Website-Benutzer konnten nicht abgerufen werden</string>
 	<string name="plans_manage">Verwalte deinen Tarif auf\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Du hast noch keine Besucher.</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Nach dem Entfernen bekommt der Follower keine Mitteilungen über dieser Website mehr, bis er wieder folgt.\n\nMöchtest du diesen Follower noch immer entfernen?</string>
 	<string name="follower_subscribed_since">Seit %1$s</string>
 	<string name="reader_label_view_gallery">Galerie anzeigen</string>
-	<string name="reader_label_image_count">%d Bilder</string>
 	<string name="error_remove_follower">Konnte Follower nicht entfernen</string>
 	<string name="error_remove_viewer">Konnte Besucher nicht entfernen</string>
 	<string name="error_fetch_email_followers_list">Konnte E-Mail-Follower der Website nicht abrufen</string>
@@ -978,7 +977,6 @@
 	<string name="select_from_media_library">Aus der Mediathek auswählen</string>
 	<string name="jetpack_message">Das Jetpack-Plugin ist erforderlich für Statistiken. Möchtest Du Jetpack installieren?</string>
 	<string name="jetpack_not_found">Jetpack Plugin nicht gefunden</string>
-	<string name="reader_timespan_now">jetzt</string>
 	<string name="reader_untitled_post">(Ohne Titel)</string>
 	<string name="reader_share_subject">Geteilt von %s</string>
 	<string name="reader_btn_share">Teilen</string>
