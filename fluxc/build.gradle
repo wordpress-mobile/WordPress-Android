@@ -47,8 +47,8 @@ dependencies {
     }
 
     // Custom WellSql version
-    compile 'org.wordpress:wellsql:1.0.9'
-    apt 'org.wordpress:wellsql-processor:1.0.9'
+    compile 'org.wordpress:wellsql:1.1.0'
+    apt 'org.wordpress:wellsql-processor:1.1.0'
 
     // FluxC annotations
     compile project(':fluxc-annotations')
