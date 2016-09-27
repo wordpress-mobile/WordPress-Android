@@ -71,8 +71,10 @@ public class CommentRestClient extends BaseWPComRestClient {
 
     public void pushComment(final SiteModel site, final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).getUrlV1_1();
-        Map<String, String> params = commentToParams(comment);
-
+        Map<String, String> params = new HashMap<>();
+        params.put("content", comment.getContent());
+        params.put("date", comment.getDatePublished());
+        params.put("status", comment.getStatus());
         final WPComGsonRequest<CommentWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
                 url, params, CommentWPComRestResponse.class,
                 new Listener<CommentWPComRestResponse>() {
@@ -96,14 +98,6 @@ public class CommentRestClient extends BaseWPComRestClient {
     }
 
     // Private methods
-
-    private Map<String, String> commentToParams(CommentModel comment) {
-        Map<String, String> params = new HashMap<>();
-        params.put("content", comment.getContent());
-        params.put("date", comment.getDatePublished());
-        params.put("status", comment.getStatus());
-        return params;
-    }
 
     private PushCommentResponsePayload commentErrorToPayload(BaseNetworkError error, CommentModel comment) {
         PushCommentResponsePayload payload = new PushCommentResponsePayload(comment);
