@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -130,25 +131,31 @@ public class SiteStore extends Store {
 
     // Enums
     public enum NewSiteErrorType {
-        BLOG_NAME_REQUIRED,
-        BLOG_NAME_NOT_ALLOWED,
-        BLOG_NAME_MUST_BE_AT_LEAST_FOUR_CHARACTERS,
-        BLOG_NAME_MUST_BE_LESS_THAN_SIXTY_FOUR_CHARACTERS,
-        BLOG_NAME_CONTAINS_INVALID_CHARACTERS,
-        BLOG_NAME_CANT_BE_USED,
-        BLOG_NAME_ONLY_LOWERCASE_LETTERS_AND_NUMBERS,
-        BLOG_NAME_MUST_INCLUDE_LETTERS,
-        BLOG_NAME_EXISTS,
-        BLOG_NAME_RESERVED,
-        BLOG_NAME_RESERVED_BUT_MAY_BE_AVAILABLE,
-        BLOG_NAME_INVALID,
-        BLOG_TITLE_INVALID,
+        SITE_NAME_REQUIRED,
+        SITE_NAME_NOT_ALLOWED,
+        SITE_NAME_MUST_BE_AT_LEAST_FOUR_CHARACTERS,
+        SITE_NAME_MUST_BE_LESS_THAN_SIXTY_FOUR_CHARACTERS,
+        SITE_NAME_CONTAINS_INVALID_CHARACTERS,
+        SITE_NAME_CANT_BE_USED,
+        SITE_NAME_ONLY_LOWERCASE_LETTERS_AND_NUMBERS,
+        SITE_NAME_MUST_INCLUDE_LETTERS,
+        SITE_NAME_EXISTS,
+        SITE_NAME_RESERVED,
+        SITE_NAME_RESERVED_BUT_MAY_BE_AVAILABLE,
+        SITE_NAME_INVALID,
+        SITE_TITLE_INVALID,
         GENERIC_ERROR;
 
-        public static NewSiteErrorType fromString(String string) {
-            if (string != null) {
+        // SiteStore semantics prefers SITE over BLOG but errors reported from the API use BLOG
+        // these are used to convert API errors to the appropriate enum value in fromString
+        private static final String BLOG = "BLOG";
+        private static final String SITE = "SITE";
+
+        public static NewSiteErrorType fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                String siteString = string.toUpperCase().replace(BLOG, SITE);
                 for (NewSiteErrorType v : NewSiteErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
+                    if (siteString.equalsIgnoreCase(v.name())) {
                         return v;
                     }
                 }
@@ -555,7 +562,7 @@ public class SiteStore extends Store {
         int rowsAffected = SiteSqlUtils.deleteSite(site);
         // TODO: This should be captured by 'QuickPressShortcutsStore' so it can handle deleting any QP shortcuts
         // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
-        // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
+        // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int siteId)
         emitChange(new OnSiteRemoved(rowsAffected));
     }
 
