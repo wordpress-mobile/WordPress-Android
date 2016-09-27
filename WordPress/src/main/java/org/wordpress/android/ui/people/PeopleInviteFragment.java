@@ -197,15 +197,15 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
 
-        mRoleTextView = (TextView) view.findViewById(R.id.role);
-        setRole(role);
-        mRoleTextView.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, isPrivateSite());
             }
         });
 
+        mRoleTextView = (TextView) view.findViewById(R.id.role);
+        setRole(role);
         ImageView imgRoleInfo = (ImageView) view.findViewById(R.id.imgRoleInfo);
         imgRoleInfo.setOnClickListener(new View.OnClickListener() {
             @Override
