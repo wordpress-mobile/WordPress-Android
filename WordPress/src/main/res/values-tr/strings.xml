@@ -10,7 +10,7 @@
 	<string name="alignment_none">Hiçbiri</string>
 	<string name="alignment_left">Sol</string>
 	<string name="alignment_right">Sağ</string>
-	<string name="site_settings_list_editor_action_mode_title">%1$s seçildi</string>
+	<string name="site_settings_list_editor_action_mode_title">%1$d seçildi</string>
 	<string name="error_fetch_users_list">Site kullanıcıları getirilemedi</string>
 	<string name="plans_manage">Planınızı yönetin:\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Henüz hiç izleyiciniz yok.</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Eğer kaldırılırsa, bu takipçi site hakkındaki bildirimleri almayı kesecek, tabi tekrar takibe başlayana kadar.\n\nHala bu takipçiyi kaldırmak istiyor musunuz?</string>
 	<string name="follower_subscribed_since">%1$s tarihinden beri</string>
 	<string name="reader_label_view_gallery">Galeriyi görüntüle</string>
-	<string name="reader_label_image_count">%d görsel</string>
 	<string name="error_remove_follower">Takipçi kaldırılamıyor</string>
 	<string name="error_remove_viewer">İzleyici kaldırılamıyor</string>
 	<string name="error_fetch_email_followers_list">Sitenin e-posta takipçileri getirilemedi</string>
@@ -994,7 +993,6 @@
 	<string name="reader_btn_follow">Takip et</string>
 	<string name="reader_btn_unfollow">Takipte</string>
 	<string name="reader_toast_err_comment_failed">Yorumunuz gönderilemedi</string>
-	<string name="reader_timespan_now">şuan</string>
 	<string name="reader_label_added_tag">%s eklendi</string>
 	<string name="reader_label_removed_tag">%s kaldırıldı</string>
 	<string name="reader_toast_err_view_image">Imaj görüntülenemedi</string>

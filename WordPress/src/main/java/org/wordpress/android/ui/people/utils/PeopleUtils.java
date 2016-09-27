@@ -342,7 +342,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void validateUsernames(final List<String> usernames, String dotComBlogId, final
+    public static void validateUsernames(final List<String> usernames, Role role, String dotComBlogId, final
             ValidateUsernameCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -375,6 +375,12 @@ public class PeopleUtils {
                                     break;
                                 case "invalid_input_has_role":
                                     callback.onUsernameValidation(username, ValidationResult.ALREADY_MEMBER);
+                                    continue;
+                                case "invalid_input_following":
+                                    callback.onUsernameValidation(username, ValidationResult.ALREADY_FOLLOWING);
+                                    continue;
+                                case "invalid_user_blocked_invites":
+                                    callback.onUsernameValidation(username, ValidationResult.BLOCKED_INVITES);
                                     continue;
                             }
 
@@ -426,7 +432,7 @@ public class PeopleUtils {
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
         }
-        params.put("role", "follower"); // the specific role is not important, just needs to be a valid one
+        params.put("role", role.toRESTString());
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
@@ -434,6 +440,8 @@ public class PeopleUtils {
         enum ValidationResult {
             USER_NOT_FOUND,
             ALREADY_MEMBER,
+            ALREADY_FOLLOWING,
+            BLOCKED_INVITES,
             INVALID_EMAIL,
             USER_FOUND
         }

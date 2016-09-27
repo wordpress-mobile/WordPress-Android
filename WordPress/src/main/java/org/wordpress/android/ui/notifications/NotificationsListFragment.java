@@ -40,6 +40,8 @@ public class NotificationsListFragment extends Fragment
                    WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
+    public static final String NOTE_INSTANT_LIKE_EXTRA = "instantLike";
+    public static final String NOTE_INSTANT_APPROVE_EXTRA = "instantApprove";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
 
@@ -175,16 +177,23 @@ public class NotificationsListFragment extends Fragment
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNote(getActivity(), noteId, false);
+            openNoteForReply(getActivity(), noteId, false);
         }
     };
+
+    private static Intent getOpenNoteIntent(Activity activity,
+                                String noteId) {
+        Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
+        detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
+        return detailIntent;
+    }
 
     /**
      * Open a note fragment based on the type of note
      */
-    public static void openNote(Activity activity,
-                                String noteId,
-                                boolean shouldShowKeyboard) {
+    public static void openNoteForReply(Activity activity,
+                                        String noteId,
+                                        boolean shouldShowKeyboard) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -193,9 +202,44 @@ public class NotificationsListFragment extends Fragment
             return;
         }
 
-        Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
-        detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
+        Intent detailIntent = getOpenNoteIntent(activity, noteId);
         detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
+        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
+    }
+
+    /**
+     * Open a note fragment based on the type of note, signaling to issue a like action immediately
+     */
+    public static void openNoteForLike(Activity activity,
+                                       String noteId) {
+        if (noteId == null || activity == null) {
+            return;
+        }
+
+        if (activity.isFinishing()) {
+            return;
+        }
+
+        Intent detailIntent = getOpenNoteIntent(activity, noteId);
+        detailIntent.putExtra(NOTE_INSTANT_LIKE_EXTRA, true);
+        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
+    }
+
+    /**
+     * Open a note fragment based on the type of note, signaling to issue a moderate:approve action immediately
+     */
+    public static void openNoteForApprove(Activity activity,
+                                       String noteId) {
+        if (noteId == null || activity == null) {
+            return;
+        }
+
+        if (activity.isFinishing()) {
+            return;
+        }
+
+        Intent detailIntent = getOpenNoteIntent(activity, noteId);
+        detailIntent.putExtra(NOTE_INSTANT_APPROVE_EXTRA, true);
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 

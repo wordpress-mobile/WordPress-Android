@@ -56,7 +56,7 @@
                     android:paddingRight="@dimen/margin_medium"
                     android:paddingTop="@dimen/margin_large"
                     android:singleLine="true"
-                    android:textColor="#444444"
+                    android:textColor="@color/grey_dark"
                     android:textColorHint="#AAAAAA"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="sdfwefef" />
@@ -66,10 +66,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="@string/invite_message_usernames_limit"
                 android:textColor="@color/grey_lighten_10"
                 android:textSize="@dimen/text_sz_small"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:text="@string/invite_message_usernames_limit"/>
+
+            <LinearLayout
+                android:id="@+id/username_errors_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical" />
         </LinearLayout>
 
         <LinearLayout

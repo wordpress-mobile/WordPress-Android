@@ -10,7 +10,7 @@
 	<string name="alignment_none">无</string>
 	<string name="alignment_left">左</string>
 	<string name="alignment_right">右</string>
-	<string name="site_settings_list_editor_action_mode_title">已选择 %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">已选择 %1$d</string>
 	<string name="error_fetch_users_list">无法检索站点用户</string>
 	<string name="plans_manage">在 WordPress.com/plans 上\n管理您的套餐</string>
 	<string name="people_empty_list_filtered_viewers">您目前没有任何查看者。</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">如果删除该粉丝，则此人将不会再收到关于此站点的通知，除非其重新关注此站点。\n\n是否仍要删除该粉丝？</string>
 	<string name="follower_subscribed_since">从 %1$s开始</string>
 	<string name="reader_label_view_gallery">查看图库</string>
-	<string name="reader_label_image_count">%d 张图片</string>
 	<string name="error_remove_follower">无法删除粉丝</string>
 	<string name="error_remove_viewer">无法删除查看者</string>
 	<string name="error_fetch_email_followers_list">无法检索站点电子邮件粉丝</string>
@@ -968,7 +967,6 @@
 	<string name="select_from_media_library">从媒体库选择</string>
 	<string name="jetpack_message">统计需要Jetpack插件，您希望安装Jetpack吗？</string>
 	<string name="jetpack_not_found">没有找到Jetpack插件</string>
-	<string name="reader_timespan_now">现在</string>
 	<string name="reader_untitled_post">(未命名)</string>
 	<string name="reader_share_subject">从 %s 共享</string>
 	<string name="reader_btn_share">共享</string>

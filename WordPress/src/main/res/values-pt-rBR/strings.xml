@@ -10,7 +10,7 @@
 	<string name="alignment_left">Esquerda</string>
 	<string name="alignment_right">Direita</string>
 	<string name="alignment_none">Nenhum</string>
-	<string name="site_settings_list_editor_action_mode_title">Selecionado %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Selecionado %1$d</string>
 	<string name="error_fetch_users_list">Não foi possível recuperar os usuários do site</string>
 	<string name="plans_manage">Gerenciar o seu plano em\nWordPress.com/plans</string>
 	<string name="title_follower">Seguidor</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Caso removido, este seguidor irá parar de receber notificações sobre este site, menos que ele comece a seguir novamente.\n\nVocê gostaria ainda de remover este seguidor?</string>
 	<string name="follower_subscribed_since">Desde de %1$s</string>
 	<string name="reader_label_view_gallery">Ver galeria</string>
-	<string name="reader_label_image_count">%d imagens</string>
 	<string name="error_remove_follower">Não foi possível remover o seguidor</string>
 	<string name="error_remove_viewer">Não foi possível remover o espectador</string>
 	<string name="error_fetch_email_followers_list">Não foi possível recuperar os seguidores por e-mail do site</string>
@@ -978,7 +977,6 @@
 	<string name="jetpack_message">O plugin Jetpack é necessário para as estatísticas. Você quer instalar o Jetpack?</string>
 	<string name="jetpack_not_found">Plugin Jetpack não encontrado</string>
 	<string name="reader_btn_follow">Seguir </string>
-	<string name="reader_timespan_now">agora</string>
 	<string name="reader_btn_share">Compartilhar</string>
 	<string name="reader_label_removed_tag">Excluído %s</string>
 	<string name="reader_likes_one">Uma pessoa curte isto</string>
