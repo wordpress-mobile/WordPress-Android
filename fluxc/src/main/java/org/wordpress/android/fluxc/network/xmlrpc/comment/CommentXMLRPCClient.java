@@ -62,6 +62,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // FIXME
                     }
                 }
         );
@@ -86,11 +87,37 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
+                        // FIXME
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // FIXME
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void fetchComment(final SiteModel site, final CommentModel comment) {
+        List<Object> params = new ArrayList<>(2);
+        params.add(site.getSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        params.add(comment.getRemoteCommentId());
+        final XMLRPCRequest request = new XMLRPCRequest(
+                site.getXmlRpcUrl(), XMLRPC.GET_COMMENT, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                        // FIXME
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // FIXME
                     }
                 }
         );

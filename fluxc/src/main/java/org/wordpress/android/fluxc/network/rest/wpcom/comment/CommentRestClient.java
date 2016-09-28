@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.CommentsWPComRestResponse;
 import org.wordpress.android.fluxc.store.CommentStore.CommentError;
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
+import org.wordpress.android.fluxc.store.CommentStore.FetchCommentResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.PushCommentResponsePayload;
 
@@ -62,7 +63,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
-                                commentErrorToPayload(error)));
+                                commentErrorToFetchCommentsPayload(error)));
                     }
                 }
         );
@@ -90,7 +91,32 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(
-                                commentErrorToPayload(error, comment)));
+                                commentErrorToPushCommentPayload(error, comment)));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void fetchComment(final SiteModel site, final CommentModel comment) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).getUrlV1_1();
+        Map<String, String> params = new HashMap<>();
+        final WPComGsonRequest<CommentWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
+                url, params, CommentWPComRestResponse.class,
+                new Listener<CommentWPComRestResponse>() {
+                    @Override
+                    public void onResponse(CommentWPComRestResponse response) {
+                        CommentModel comment = commentResponseToComment(response, site);
+                        FetchCommentResponsePayload payload = new FetchCommentResponsePayload(comment);
+                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(payload));
+                    }
+                },
+
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(
+                                commentErrorToFetchCommentPayload(error, comment)));
                     }
                 }
         );
@@ -99,14 +125,21 @@ public class CommentRestClient extends BaseWPComRestClient {
 
     // Private methods
 
-    private PushCommentResponsePayload commentErrorToPayload(BaseNetworkError error, CommentModel comment) {
-        PushCommentResponsePayload payload = new PushCommentResponsePayload(comment);
+    private FetchCommentResponsePayload commentErrorToFetchCommentPayload(BaseNetworkError error,
+                                                                          CommentModel comment) {
+        FetchCommentResponsePayload payload = new FetchCommentResponsePayload(comment);
         payload.error = new CommentError(genericToCommentError(error), "");
         return payload;
     }
 
-    private FetchCommentsResponsePayload commentErrorToPayload(BaseNetworkError error) {
+    private FetchCommentsResponsePayload commentErrorToFetchCommentsPayload(BaseNetworkError error) {
         FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(new ArrayList<CommentModel>());
+        payload.error = new CommentError(genericToCommentError(error), "");
+        return payload;
+    }
+
+    private PushCommentResponsePayload commentErrorToPushCommentPayload(BaseNetworkError error, CommentModel comment) {
+        PushCommentResponsePayload payload = new PushCommentResponsePayload(comment);
         payload.error = new CommentError(genericToCommentError(error), "");
         return payload;
     }

@@ -42,11 +42,29 @@ public class CommentStore extends Store {
         }
     }
 
+    public static class FetchCommentPayload extends Payload {
+        public final SiteModel site;
+        public final CommentModel comment;
+
+        public FetchCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment) {
+            this.site = site;
+            this.comment = comment;
+        }
+    }
+
     public static class FetchCommentsResponsePayload extends Payload {
         public final List<CommentModel> comments;
         public CommentError error;
         public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments) {
             this.comments = comments;
+        }
+    }
+
+    public static class FetchCommentResponsePayload extends Payload {
+        public final CommentModel comment;
+        public CommentError error;
+        public FetchCommentResponsePayload(@NonNull CommentModel comment) {
+            this.comment = comment;
         }
     }
 
@@ -118,6 +136,12 @@ public class CommentStore extends Store {
             case FETCHED_COMMENTS:
                 handleFetchCommentsResponse((FetchCommentsResponsePayload) action.getPayload());
                 break;
+            case FETCH_COMMENT:
+                fetchComment((FetchCommentPayload) action.getPayload());
+                break;
+            case FETCHED_COMMENT:
+                handleFetchCommentResponse((FetchCommentResponsePayload) action.getPayload());
+                break;
             case PUSH_COMMENT:
                 pushComment((PushCommentPayload) action.getPayload());
                 break;
@@ -158,6 +182,21 @@ public class CommentStore extends Store {
     }
 
     private void handlePushCommentResponse(PushCommentResponsePayload payload) {
+        int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.error = payload.error;
+        emitChange(event);
+    }
+
+    private void fetchComment(FetchCommentPayload payload) {
+        if (payload.site.isWPCom()) {
+            mCommentRestClient.fetchComment(payload.site, payload.comment);
+        } else {
+            mCommentXMLRPCClient.fetchComment(payload.site, payload.comment);
+        }
+    }
+
+    private void handleFetchCommentResponse(FetchCommentResponsePayload payload) {
         int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.error = payload.error;
