@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="role_viewer">Lezer</string>
-	<string name="site_settings_list_editor_action_mode_title">Geselecteerde %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Geselecteerde %1$d</string>
 	<string name="error_fetch_users_list">Site-gebruikers ophalen mislukt</string>
 	<string name="plans_manage">Beheer je abonnement op\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Je hebt nog geen volgers.</string>
@@ -957,7 +957,6 @@
 	<string name="reader_toast_err_share_intent">Onmogelijk te delen</string>
 	<string name="reader_toast_err_view_image">Onmogelijk afbeelding te bekijken</string>
 	<string name="reader_empty_followed_tags">Je volgt geen enkele tags</string>
-	<string name="reader_timespan_now">Nu</string>
 	<string name="jetpack_message">De Jetpack plugin is nodig voor statistieken. Wil je Jetpack installeren?</string>
 	<string name="empty_list_default">Deze lijst is leeg</string>
 	<string name="media_add_new_media_gallery">Een nieuwe galerij aanmaken</string>

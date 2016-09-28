@@ -16,12 +16,15 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.simperium.client.BucketObjectMissingException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -74,6 +77,10 @@ public class GCMMessageService extends GcmListenerService {
 
     @Inject AccountStore mAccountStore;
 
+    private static final String KEY_CATEGORY_COMMENT_LIKE = "comment-like";
+    private static final String KEY_CATEGORY_COMMENT_REPLY = "comment-reply";
+    private static final String KEY_CATEGORY_COMMENT_MODERATE = "comment-moderate";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -86,7 +93,7 @@ public class GCMMessageService extends GcmListenerService {
 
     private void synchronizedHandleDefaultPush(String from, @NonNull Bundle data) {
         // sActiveNotificationsMap being static, we can't just synchronize the method
-        synchronized (sActiveNotificationsMap) {
+        synchronized (GCMMessageService.class) {
             handleDefaultPush(from, data);
         }
     }
@@ -217,13 +224,47 @@ public class GCMMessageService extends GcmListenerService {
 
     private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // Add some actions if this is a comment notification
-        Intent commentReplyIntent = new Intent(this, WPMainActivity.class);
-        commentReplyIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-        commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        commentReplyIntent.setAction("android.intent.action.MAIN");
-        commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
-        commentReplyIntent.addCategory("comment-reply");
+
+        boolean areActionsSet = false;
+
+        if (SimperiumUtils.getNotesBucket() != null) {
+            try {
+                Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                if (note != null) {
+                    //if note can be replied to, we'll always add this action first
+                    if (note.canReply()) {
+                        addCommentReplyActionForCommentNotification(builder, noteId);
+                    }
+
+                    // if the comment is lacking approval, offer moderation actions
+                    if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
+                        if (note.canModerate()) {
+                            addCommentApproveActionForCommentNotification(builder, noteId);
+                        }
+                    } else {
+                        //else offer REPLY / LIKE actions
+                        if (note.canLike()) {
+                            addCommentLikeActionForCommentNotification(builder, noteId);
+                        }
+                    }
+                }
+                areActionsSet = true;
+            } catch (BucketObjectMissingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // if we could not set the actions, set the default ones REPLY / LIKE
+        if (!areActionsSet) {
+            addCommentReplyActionForCommentNotification(builder, noteId);
+            addCommentLikeActionForCommentNotification(builder, noteId);
+        }
+    }
+
+    private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+        // adding comment reply action
+        Intent commentReplyIntent = getCommentActionIntent();
+        commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
         commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
         if (noteId != null) {
             commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
@@ -232,6 +273,44 @@ public class GCMMessageService extends GcmListenerService {
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
+    }
+
+    private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+        // adding comment like action
+        Intent commentLikeIntent = getCommentActionIntent();
+        commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
+        commentLikeIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, true);
+        if (noteId != null) {
+            commentLikeIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+        }
+        PendingIntent commentLikePendingIntent = PendingIntent.getActivity(this, 0, commentLikeIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
+                commentLikePendingIntent);
+    }
+
+    private void addCommentApproveActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+        // adding comment approve action
+        Intent commentApproveIntent = getCommentActionIntent();
+        commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
+        commentApproveIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, true);
+        if (noteId != null) {
+            commentApproveIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+        }
+        PendingIntent commentApprovePendingIntent = PendingIntent.getActivity(this, 0, commentApproveIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
+                commentApprovePendingIntent);
+    }
+
+    private Intent getCommentActionIntent(){
+        Intent intent = new Intent(this, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setAction("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.LAUNCHER");
+        return intent;
     }
 
     private Bitmap getLargeIconBitmap(String iconUrl, boolean shouldCircularizeIcon){
@@ -417,7 +496,9 @@ public class GCMMessageService extends GcmListenerService {
 
                 String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                 String noteId = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
-                showIndividualNotificationForBuilder(builder, noteType, noteId, sActiveNotificationsMap.keyAt(0));
+                if (!sActiveNotificationsMap.isEmpty()) {
+                    showIndividualNotificationForBuilder(builder, noteType, noteId, sActiveNotificationsMap.keyAt(0));
+                }
             }
         }
 
@@ -452,7 +533,7 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        removeNotificationWithNoteIdFromSystemBar(this, data);
+        removeNotificationWithNoteIdFromSystemBar(this, data.getString(PUSH_ARG_NOTE_ID, ""));
         //now that we cleared the specific notif, we can check and make any visual updates
         if (sActiveNotificationsMap.size() > 0) {
             rebuildAndUpdateNotificationsOnSystemBar(data);
@@ -580,13 +661,8 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     // Removes a specific notification from the system bar
-    public static synchronized void removeNotificationWithNoteIdFromSystemBar(Context context, Bundle data) {
-        if (context == null || data == null || !hasNotifications()) {
-            return;
-        }
-
-        String noteID = data.getString(PUSH_ARG_NOTE_ID, "");
-        if (TextUtils.isEmpty(noteID)) {
+    public static synchronized void removeNotificationWithNoteIdFromSystemBar(Context context, String noteID) {
+        if (context == null || TextUtils.isEmpty(noteID) || !hasNotifications()) {
             return;
         }
 

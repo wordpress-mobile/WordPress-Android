@@ -10,7 +10,7 @@
 	<string name="alignment_none">Без</string>
 	<string name="alignment_left">Ляво</string>
 	<string name="alignment_right">Дясно</string>
-	<string name="site_settings_list_editor_action_mode_title">Избрано %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Избрано %1$d</string>
 	<string name="error_fetch_users_list">Неуспешно извикване на потребителите</string>
 	<string name="plans_manage">Управление на плана ви\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Все още нямате потребители.</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Последователите ще спрат да получават известия за сайта ако ги премахнете, освен ако не го добавят отново.\n\nЖелаете ли да продължите с премахването?</string>
 	<string name="follower_subscribed_since">От %1$s</string>
 	<string name="reader_label_view_gallery">Преглед</string>
-	<string name="reader_label_image_count">%d снимки</string>
 	<string name="error_remove_follower">Неуспешно премахване на последователя</string>
 	<string name="error_remove_viewer">Неуспешно премахване на потребителя</string>
 	<string name="error_fetch_email_followers_list">Неуспешно показване на последователите по имейл.</string>
@@ -978,7 +977,6 @@
 	<string name="select_from_media_library">Избор от медийната библиотека</string>
 	<string name="jetpack_message">Jetpack е нужен за извличане на статистиката. Искате ли да инсталирате Jetpack?</string>
 	<string name="jetpack_not_found">Jetpack не беше намерен</string>
-	<string name="reader_timespan_now">сега</string>
 	<string name="reader_untitled_post">(Неозаглавен)</string>
 	<string name="reader_share_subject">Споделено от %s</string>
 	<string name="reader_btn_share">Споделяне</string>
