@@ -19,7 +19,12 @@ import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.util.DateTimeUtils;
 
+import java.util.Date;
+import java.util.List;
+
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -224,5 +229,36 @@ public class PostStoreUnitTest {
 
         assertEquals(1, mPostStore.getUploadedPostsCountForSite(site));
         assertEquals(1, mPostStore.getUploadedPagesCountForSite(site));
+    }
+
+    @Test
+    public void testPostOrder() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        PostModel post = new PostModel();
+        post.setLocalSiteId(6);
+        post.setRemotePostId(42);
+        post.setDateCreated(DateTimeUtils.iso8601UTCFromDate(new Date()));
+        PostSqlUtils.insertPostForResult(post);
+
+        PostModel localDraft = new PostModel();
+        localDraft.setLocalSiteId(6);
+        localDraft.setIsLocalDraft(true);
+        localDraft.setDateCreated("2016-01-01T07:00:00+00:00");
+        PostSqlUtils.insertPostForResult(localDraft);
+
+        PostModel scheduledPost = new PostModel();
+        scheduledPost.setLocalSiteId(6);
+        scheduledPost.setRemotePostId(23);
+        scheduledPost.setDateCreated("2056-01-01T07:00:00+00:00");
+        PostSqlUtils.insertPostForResult(scheduledPost);
+
+        List<PostModel> posts = PostSqlUtils.getPostsForSite(site, false);
+
+        // Expect order draft > scheduled > published
+        assertTrue(posts.get(0).isLocalDraft());
+        assertEquals(23, posts.get(1).getRemotePostId());
+        assertEquals(42, posts.get(2).getRemotePostId());
     }
 }
