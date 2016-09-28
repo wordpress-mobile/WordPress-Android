@@ -126,10 +126,6 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:paddingBottom="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
-                android:paddingTop="@dimen/margin_medium"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="@string/role" />
