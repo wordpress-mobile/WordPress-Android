@@ -2,6 +2,8 @@ package org.wordpress.android.ui.people;
 
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -30,6 +33,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.MultiUsernameEditText;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,15 +54,14 @@ public class PeopleInviteFragment extends Fragment implements
 
     private static final int MAX_NUMBER_OF_INVITEES = 10;
     private static final String[] USERNAME_DELIMITERS = {" ", ","};
-
+    private final Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
+    private final HashMap<String, String> mUsernameResults = new HashMap<>();
+    private final Map<String, View> mUsernameErrorViews = new Hashtable<>();
     private ViewGroup mUsernamesContainer;
     private MultiUsernameEditText mUsernameEditText;
     private TextView mRoleTextView;
     private EditText mCustomMessageEditText;
 
-    private final Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
-    private final HashMap<String, String> mUsernameResults = new HashMap<>();
-    private final Map<String, TextView> mUsernameErrorViews = new Hashtable<>();
     private Role mRole;
     private String mCustomMessage = "";
     private boolean mInviteOperationInProgress = false;
@@ -194,16 +197,25 @@ public class PeopleInviteFragment extends Fragment implements
             populateUsernameButtons(usernames);
         }
 
-        View roleContainer = view.findViewById(R.id.role_container);
-        roleContainer.setOnClickListener(new View.OnClickListener() {
+
+        view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, isPrivateSite());
             }
         });
-        mRoleTextView = (TextView) view.findViewById(R.id.role);
 
+        mRoleTextView = (TextView) view.findViewById(R.id.role);
         setRole(role);
+        ImageView imgRoleInfo = (ImageView) view.findViewById(R.id.imgRoleInfo);
+        imgRoleInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(getString(R.string.role_info_url));
+                AppLockManager.getInstance().setExtendedTimeout();
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+            }
+        });
 
         final int MAX_CHARS = getResources().getInteger(R.integer.invite_message_char_limit);
         final TextView remainingCharsTextView = (TextView) view.findViewById(R.id.message_remaining);
@@ -343,6 +355,7 @@ public class PeopleInviteFragment extends Fragment implements
 
     /**
      * Deletes the last entered username.
+     *
      * @return true if the username was deleted
      */
     private boolean removeLastEnteredUsername() {
@@ -403,7 +416,7 @@ public class PeopleInviteFragment extends Fragment implements
                         return;
                     }
 
-                    if(!isUserInInvitees(username)){
+                    if (!isUserInInvitees(username)) {
                         //user is removed from invitees before validation
                         return;
                     }
@@ -433,6 +446,7 @@ public class PeopleInviteFragment extends Fragment implements
             }
         }
     }
+
 
     public interface ValidationEndListener {
         void onValidationEnd();
@@ -477,7 +491,7 @@ public class PeopleInviteFragment extends Fragment implements
 
         TextView usernameErrorTextView;
         if (mUsernameErrorViews.containsKey(username)) {
-            usernameErrorTextView = mUsernameErrorViews.get(username);
+            usernameErrorTextView = (TextView) mUsernameErrorViews.get(username);
 
             if (usernameResult == null || usernameResult.equals(FLAG_SUCCESS)) {
                 // no error so we need to remove the existing error view
@@ -651,4 +665,5 @@ public class PeopleInviteFragment extends Fragment implements
         Blog blog = WordPress.wpDB.getBlogForDotComBlogId(dotComBlogId);
         return blog != null && blog.isPrivate();
     }
+
 }

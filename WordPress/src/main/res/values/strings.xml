@@ -1574,5 +1574,6 @@
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state. Would you like to remove all failed media?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+    <string name="role_info_url">https://en.support.wordpress.com/user-roles/</string>
 
 </resources>
