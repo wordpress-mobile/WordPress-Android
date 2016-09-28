@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import com.wellsql.generated.PostModelTable;
+import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.PostModel;
@@ -65,7 +66,10 @@ public class PostSqlUtils {
                 .where().beginGroup()
                 .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
                 .equals(PostModelTable.IS_PAGE, getPages)
-                .endGroup().endWhere().getAsModel();
+                .endGroup().endWhere()
+                .orderBy(PostModelTable.IS_LOCAL_DRAFT, SelectQuery.ORDER_DESCENDING)
+                .orderBy(PostModelTable.DATE_CREATED, SelectQuery.ORDER_DESCENDING)
+                .getAsModel();
     }
 
     public static List<PostModel> getUploadedPostsForSite(SiteModel site, boolean getPages) {
@@ -78,7 +82,10 @@ public class PostSqlUtils {
                 .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
                 .equals(PostModelTable.IS_PAGE, getPages)
                 .equals(PostModelTable.IS_LOCAL_DRAFT, false)
-                .endGroup().endWhere().getAsModel();
+                .endGroup().endWhere()
+                .orderBy(PostModelTable.IS_LOCAL_DRAFT, SelectQuery.ORDER_DESCENDING)
+                .orderBy(PostModelTable.DATE_CREATED, SelectQuery.ORDER_DESCENDING)
+                .getAsModel();
     }
 
     public static PostModel insertPostForResult(PostModel post) {
