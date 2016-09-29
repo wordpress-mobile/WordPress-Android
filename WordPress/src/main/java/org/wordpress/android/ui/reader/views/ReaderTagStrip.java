@@ -17,15 +17,13 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppLog;
 
 /**
  * used by the detail view to display a row of tags from a reader post
  */
 public class ReaderTagStrip extends LinearLayout {
 
-    private View mView;
-    private LinearLayout mContainer;
+    private LinearLayout mView;
     private int mNumTags;
 
     public ReaderTagStrip(Context context) {
@@ -50,12 +48,11 @@ public class ReaderTagStrip extends LinearLayout {
     }
 
     private void initView(Context context) {
-        mView = inflate(context, R.layout.reader_tag_strip, this);
-        mContainer = (LinearLayout) mView.findViewById(R.id.tag_strip_container);
+        mView = (LinearLayout) inflate(context, R.layout.reader_tag_strip, this);
     }
 
     public void setPost(@NonNull ReaderPost post) {
-        mContainer.removeAllViews();
+        mView.removeAllViews();
         mNumTags = 0;
 
         if (post.hasPrimaryTag()) {
@@ -74,10 +71,11 @@ public class ReaderTagStrip extends LinearLayout {
 
     private void addTag(final String tagName) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(R.layout.reader_tag_strip_label, mContainer, false);
+        View tagView = inflater.inflate(R.layout.reader_tag_strip_label, mView, false);
 
-        TextView txtTag = (TextView) view.findViewById(R.id.text_tag);
-        txtTag.setText(mNumTags > 0 ? ", " + tagName : tagName);
+        TextView txtTag = (TextView) tagView.findViewById(R.id.text_tag);
+        String tagDisplayName = mNumTags > 0 ? ", " + ReaderUtils.makeHashTag(tagName) : ReaderUtils.makeHashTag(tagName);
+        txtTag.setText(tagDisplayName);
 
         txtTag.setOnClickListener(new OnClickListener() {
             @Override
@@ -87,10 +85,7 @@ public class ReaderTagStrip extends LinearLayout {
             }
         });
 
-        mContainer.addView(view);
+        mView.addView(tagView);
         mNumTags++;
-
-        // TODO: remove logging
-        AppLog.w(AppLog.T.READER, "Added tag " + tagName);
     }
 }
