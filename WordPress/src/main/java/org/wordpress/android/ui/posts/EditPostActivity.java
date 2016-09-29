@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
@@ -1523,10 +1522,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private String getPathFromContentUri(Uri imageUri) {
         String path = null;
-        String[] projection = new String[]{MediaStore.Images.Media.DATA};
+        String[] projection = new String[]{android.provider.MediaStore.Images.Media.DATA};
         Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
         if (cur != null && cur.moveToFirst()) {
-            int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
+            int dataColumn = cur.getColumnIndex(android.provider.MediaStore.Images.Media.DATA);
             path = cur.getString(dataColumn);
             cur.close();
         }
