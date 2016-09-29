@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -132,7 +131,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected @Inject HTTPAuthManager mHTTPAuthManager;
     protected @Inject MemorizingTrustManager mMemorizingTrustManager;
 
-    private ProgressDialog mProgressDialog;
     protected boolean mSitesFetched = false;
     protected boolean mAccountSettingsFetched = false;
     protected boolean mAccountFetched = false;
@@ -241,7 +239,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         // show progress indicator while waiting for network response when migrating access token
         if (AppPrefs.wasAccessTokenMigrated() && checkNetworkConnectivity()) {
-            showProgressDialog();
+            startProgress(getString(R.string.access_token_migration_message));
         }
     }
 
@@ -994,21 +992,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void updateMigrationStatusIfNeeded() {
         if (AppPrefs.wasAccessTokenMigrated()) {
             AppPrefs.setAccessTokenMigrated(false);
-            hideProgressDialog();
-        }
-    }
-
-    private void showProgressDialog() {
-        if (!isAdded()) return;
-        mProgressDialog = new ProgressDialog(getActivity(), R.style.Calypso_AlertDialog);
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setMessage(getString(R.string.access_token_migration_message));
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+            endProgress();
         }
     }
 }
