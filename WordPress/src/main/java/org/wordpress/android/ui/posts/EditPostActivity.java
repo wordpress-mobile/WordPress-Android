@@ -1936,9 +1936,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             if (mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests.isEmpty()) {
                                 // If there are pending requests for video URLs from VideoPress ids, query the DB for
                                 // them again and notify the editor
-                                String blogId = String.valueOf(mSite.getId());
                                 for (String videoId : mPendingVideoPressInfoRequests) {
-                                    String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
+                                    String videoUrl = mMediaStore.
+                                            getUrlForSiteVideoWithVideoPressGuid(mSite.getSiteId(), videoId);
                                     String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
 
                                     mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
@@ -2115,8 +2115,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onVideoPressInfoRequested(final String videoId) {
-        String blogId = String.valueOf(mSite.getId());
-        String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
+        String videoUrl = mMediaStore.
+                getUrlForSiteVideoWithVideoPressGuid(mSite.getSiteId(), videoId);
 
         if (videoUrl.isEmpty()) {
             if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
