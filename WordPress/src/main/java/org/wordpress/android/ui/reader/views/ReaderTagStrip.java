@@ -56,7 +56,10 @@ public class ReaderTagStrip extends LinearLayout {
     }
 
     public void setPost(@NonNull ReaderPost post) {
-        mView.removeAllViews();
+        if (mView.getChildCount() > 0) {
+            mView.removeAllViews();
+        }
+
         mNumTags = 0;
 
         if (post.hasPrimaryTag()) {
@@ -78,9 +81,8 @@ public class ReaderTagStrip extends LinearLayout {
 
         // inflate a new textView to show this tag
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View tagView = inflater.inflate(R.layout.reader_tag_strip_label, mView, false);
-        TextView txtTag = (TextView) tagView.findViewById(R.id.text_tag);
-        mView.addView(tagView);
+        TextView txtTag = (TextView) inflater.inflate(R.layout.reader_tag_strip_label, mView, false);
+        mView.addView(txtTag);
 
         // skip showing this tag if it will make the view wider than the max
         if (mNumTags > 0) {
@@ -88,14 +90,14 @@ public class ReaderTagStrip extends LinearLayout {
             Rect rect = new Rect();
             Paint paint = txtTag.getPaint();
             paint.getTextBounds(tagDisplayName, 0, tagDisplayName.length(), rect);
-            int tagWidth = rect.width();
+            int thisTagWidth = rect.width();
 
             // determine the width of the tag already displayed
             paint.getTextBounds(mAllTags, 0, mAllTags.length(), rect);
-            int currentWidth = rect.width();
+            int currentTagWidth = rect.width();
 
             int maxWidth = DisplayUtils.getDisplayPixelWidth(getContext());
-            if (currentWidth + tagWidth > maxWidth) {
+            if (currentTagWidth + thisTagWidth > maxWidth) {
                 return;
             }
         }
@@ -104,7 +106,7 @@ public class ReaderTagStrip extends LinearLayout {
         mAllTags += tagDisplayName;
         mNumTags++;
 
-        // show all posts with this tag when the tag is clicked
+        // show all posts with this tag when clicked
         txtTag.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
