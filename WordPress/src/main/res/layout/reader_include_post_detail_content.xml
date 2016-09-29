@@ -72,13 +72,6 @@
         android:layout_below="@+id/text_title"
         android:orientation="horizontal">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
-            android:id="@+id/image_avatar"
-            style="@style/ReaderImageView.Avatar.Tiny"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/margin_medium"
-            tools:src="@drawable/gravatar_placeholder" />
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_dateline"
             style="@style/ReaderTextView.Label"
