@@ -468,7 +468,7 @@ public class ReaderPost {
             this.primaryTag = StringUtils.notNullStr(tagName);
         }
     }
-    boolean hasPrimaryTag() {
+    public boolean hasPrimaryTag() {
         return !TextUtils.isEmpty(primaryTag);
     }
 
@@ -479,6 +479,9 @@ public class ReaderPost {
         if (!ReaderTag.isDefaultTagTitle(tagName)) {
             this.secondaryTag = StringUtils.notNullStr(tagName);
         }
+    }
+    public boolean hasSecondaryTag() {
+        return !TextUtils.isEmpty(secondaryTag);
     }
 
     /*
