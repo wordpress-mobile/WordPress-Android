@@ -12,6 +12,11 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 
+/**
+ * {@link #migrateAccessTokenToAccountStore(Context, Dispatcher)} moves an existing access token from a previous version
+ * of WPAndroid into {@link AccountStore}. The access token has historically existed in preferences and two DB tables.
+ * The existing access token is deleted if found.
+ */
 public class WPLegacyMigrationUtils {
     //
     // WPStores Access Token migration
