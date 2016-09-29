@@ -10,5 +10,5 @@
     android:ellipsize="end"
     android:maxLines="1"
     android:textColor="@color/blue_medium"
-    android:textSize="@dimen/text_sz_medium"
+    android:textSize="@dimen/text_sz_large"
     tools:text="tagName" />
