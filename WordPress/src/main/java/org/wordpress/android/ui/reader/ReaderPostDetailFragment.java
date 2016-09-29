@@ -26,8 +26,6 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
@@ -839,7 +837,6 @@ public class ReaderPostDetailFragment extends Fragment
             TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
             TextView txtDomain = (TextView) getView().findViewById(R.id.text_domain);
             TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
-            TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
             ReaderTagStrip tagStrip = (ReaderTagStrip) getView().findViewById(R.id.tag_strip);
 
             WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
@@ -923,18 +920,6 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             tagStrip.setPost(mPost);
-
-            final String tagToDisplay = mPost.getTagForDisplay(null);
-            if (!TextUtils.isEmpty(tagToDisplay)) {
-                txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
-                txtTag.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderTag tag = ReaderUtils.getTagFromTagName(tagToDisplay, ReaderTagType.FOLLOWED);
-                        ReaderActivityLauncher.showReaderTagPreview(v.getContext(), tag);
-                    }
-                });
-            }
 
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
                 AniUtils.fadeIn(mLayoutFooter, AniUtils.Duration.LONG);
