@@ -74,11 +74,12 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_dateline"
-            style="@style/ReaderTextView.Label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_large"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_large"
             tools:text="text_dateline" />
 
         <org.wordpress.android.ui.reader.views.ReaderTagStrip
