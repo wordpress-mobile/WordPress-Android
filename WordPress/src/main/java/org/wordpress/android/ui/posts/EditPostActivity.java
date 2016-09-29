@@ -46,6 +46,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -64,8 +66,10 @@ import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
@@ -159,6 +163,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static int PAGE_PREVIEW = 2;
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
+
+    @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
 
     private Handler mHandler;
     private boolean mShowNewEditor;
@@ -394,11 +401,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onStart() {
         super.onStart();
+        mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
+        mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -2210,5 +2219,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
                 break;
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        // no-op
     }
 }
