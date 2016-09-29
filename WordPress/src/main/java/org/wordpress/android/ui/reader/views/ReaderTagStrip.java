@@ -58,7 +58,8 @@ public class ReaderTagStrip extends LinearLayout {
         View view = inflater.inflate(R.layout.reader_tag_strip_label, mContainer, false);
 
         TextView txtTag = (TextView) view.findViewById(R.id.text_tag);
-        txtTag.setText(tagName);
+        txtTag.setText(mNumTags > 0 ? ", " + tagName : tagName);
+
         txtTag.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

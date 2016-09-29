@@ -18,32 +18,6 @@
         android:layout_alignRight="@+id/reader_webview"
         tools:text="text_title" />
 
-    <LinearLayout
-        android:id="@+id/layout_dateline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/reader_webview"
-        android:layout_alignRight="@+id/reader_webview"
-        android:layout_below="@id/text_title"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        android:orientation="horizontal">
-
-        <org.wordpress.android.widgets.WPNetworkImageView
-            android:id="@+id/image_avatar"
-            style="@style/ReaderImageView.Avatar.Tiny"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/margin_medium"
-            tools:src="@drawable/gravatar_placeholder" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_dateline"
-            style="@style/ReaderTextView.Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            tools:text="text_dateline" />
-    </LinearLayout>
-
     <org.wordpress.android.ui.reader.views.ReaderWebView
         android:id="@+id/reader_webview"
         android:layout_width="@dimen/reader_webview_width"
@@ -88,5 +62,37 @@
         android:background="?android:selectableItemBackground"
         android:visibility="gone"
         tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/layout_dateline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/text_title"
+        android:orientation="horizontal">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_avatar"
+            style="@style/ReaderImageView.Avatar.Tiny"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/margin_medium"
+            tools:src="@drawable/gravatar_placeholder" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_dateline"
+            style="@style/ReaderTextView.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/margin_medium"
+            tools:text="text_dateline" />
+
+        <org.wordpress.android.ui.reader.views.ReaderTagStrip
+            android:id="@+id/tag_strip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
 
 </RelativeLayout>

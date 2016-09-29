@@ -44,6 +44,7 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
+import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
@@ -839,6 +840,7 @@ public class ReaderPostDetailFragment extends Fragment
             TextView txtDomain = (TextView) getView().findViewById(R.id.text_domain);
             TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
             TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
+            ReaderTagStrip tagStrip = (ReaderTagStrip) getView().findViewById(R.id.tag_strip);
 
             WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
             WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
@@ -919,6 +921,8 @@ public class ReaderPostDetailFragment extends Fragment
             } else {
                 txtDateline.setText(timestamp);
             }
+
+            tagStrip.setPost(mPost);
 
             final String tagToDisplay = mPost.getTagForDisplay(null);
             if (!TextUtils.isEmpty(tagToDisplay)) {

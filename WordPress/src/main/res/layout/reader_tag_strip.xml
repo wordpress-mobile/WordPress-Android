@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
     android:orientation="horizontal">
 
     <ImageView
-        android:layout_width="@dimen/avatar_sz_medium"
-        android:layout_height="@dimen/avatar_sz_medium"
+        android:layout_width="@dimen/reader_tag_strip_icon"
+        android:layout_height="@dimen/reader_tag_strip_icon"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_extra_small"
         android:src="@drawable/ic_genericon_tag_grey_24dp"
         android:tint="@color/blue_medium" />
 
