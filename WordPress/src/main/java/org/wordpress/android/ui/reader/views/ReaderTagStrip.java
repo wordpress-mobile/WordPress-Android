@@ -17,6 +17,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 
 /**
  * used by the detail view to display a row of tags from a reader post
@@ -53,6 +54,24 @@ public class ReaderTagStrip extends LinearLayout {
         mContainer = (LinearLayout) mView.findViewById(R.id.tag_strip_container);
     }
 
+    public void setPost(@NonNull ReaderPost post) {
+        mContainer.removeAllViews();
+        mNumTags = 0;
+
+        if (post.hasPrimaryTag()) {
+            addTag(post.getPrimaryTag());
+        }
+        if (post.hasSecondaryTag()) {
+            addTag(post.getSecondaryTag());
+        }
+
+        if (mNumTags == 0) {
+            mView.setVisibility(View.GONE);
+        } else if (mView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mView, AniUtils.Duration.SHORT);
+        }
+    }
+
     private void addTag(final String tagName) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View view = inflater.inflate(R.layout.reader_tag_strip_label, mContainer, false);
@@ -70,23 +89,8 @@ public class ReaderTagStrip extends LinearLayout {
 
         mContainer.addView(view);
         mNumTags++;
-    }
 
-    public void setPost(@NonNull ReaderPost post) {
-        mContainer.removeAllViews();
-        mNumTags = 0;
-
-        if (post.hasPrimaryTag()) {
-            addTag(post.getPrimaryTag());
-        }
-        if (post.hasSecondaryTag()) {
-            addTag(post.getSecondaryTag());
-        }
-
-        if (mNumTags == 0) {
-            mView.setVisibility(View.GONE);
-        } else if (mView.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mView, AniUtils.Duration.SHORT);
-        }
+        // TODO: remove logging
+        AppLog.w(AppLog.T.READER, "Added tag " + tagName);
     }
 }
