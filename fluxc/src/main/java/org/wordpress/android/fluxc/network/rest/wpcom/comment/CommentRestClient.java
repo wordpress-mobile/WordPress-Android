@@ -20,11 +20,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.CommentsWPComRestResponse;
-import org.wordpress.android.fluxc.store.CommentStore.CommentError;
-import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.PushCommentResponsePayload;
+import org.wordpress.android.fluxc.utils.CommentErrorUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,7 +62,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
-                                commentErrorToFetchCommentsPayload(error)));
+                                CommentErrorUtils.commentErrorToFetchCommentsPayload(error)));
                     }
                 }
         );
@@ -91,7 +90,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(
-                                commentErrorToPushCommentPayload(error, comment)));
+                                CommentErrorUtils.commentErrorToPushCommentPayload(error, comment)));
                     }
                 }
         );
@@ -116,7 +115,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(
-                                commentErrorToFetchCommentPayload(error, comment)));
+                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
                 }
         );
@@ -124,40 +123,6 @@ public class CommentRestClient extends BaseWPComRestClient {
     }
 
     // Private methods
-
-    private FetchCommentResponsePayload commentErrorToFetchCommentPayload(BaseNetworkError error,
-                                                                          CommentModel comment) {
-        FetchCommentResponsePayload payload = new FetchCommentResponsePayload(comment);
-        payload.error = new CommentError(genericToCommentError(error), "");
-        return payload;
-    }
-
-    private FetchCommentsResponsePayload commentErrorToFetchCommentsPayload(BaseNetworkError error) {
-        FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(new ArrayList<CommentModel>());
-        payload.error = new CommentError(genericToCommentError(error), "");
-        return payload;
-    }
-
-    private PushCommentResponsePayload commentErrorToPushCommentPayload(BaseNetworkError error, CommentModel comment) {
-        PushCommentResponsePayload payload = new PushCommentResponsePayload(comment);
-        payload.error = new CommentError(genericToCommentError(error), "");
-        return payload;
-    }
-
-    private CommentErrorType genericToCommentError(BaseNetworkError error) {
-        CommentErrorType errorType = CommentErrorType.GENERIC_ERROR;
-        if (error.isGeneric()) {
-            switch (error.type) {
-                case NOT_FOUND:
-                    errorType = CommentErrorType.INVALID_COMMENT;
-                    break;
-                case INVALID_RESPONSE:
-                    errorType = CommentErrorType.INVALID_RESPONSE;
-                    break;
-            }
-        }
-        return errorType;
-    }
 
     private List<CommentModel> commentsResponseToCommentList(CommentsWPComRestResponse response, SiteModel site) {
         List<CommentModel> comments = new ArrayList<>();

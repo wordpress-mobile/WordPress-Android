@@ -19,7 +19,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
+import org.wordpress.android.fluxc.store.CommentStore.FetchCommentResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
+import org.wordpress.android.fluxc.store.CommentStore.PushCommentResponsePayload;
+import org.wordpress.android.fluxc.utils.CommentErrorUtils;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -62,7 +65,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // FIXME
+                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
+                                CommentErrorUtils.commentErrorToFetchCommentsPayload(error)));
                     }
                 }
         );
@@ -87,13 +91,16 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        // FIXME
+                        CommentModel updatedComment = commentResponseToComment(response, site);
+                        PushCommentResponsePayload payload = new PushCommentResponsePayload(updatedComment);
+                        mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // FIXME
+                        mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(
+                                CommentErrorUtils.commentErrorToPushCommentPayload(error, comment)));
                     }
                 }
         );
@@ -105,19 +112,22 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
-        params.add(comment.getRemoteCommentId());
+        //params.add(comment.getRemoteCommentId());
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_COMMENT, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        // FIXME
+                        CommentModel updatedComment = commentResponseToComment(response, site);
+                        FetchCommentResponsePayload payload = new FetchCommentResponsePayload(updatedComment);
+                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // FIXME
+                        mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(
+                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
                 }
         );

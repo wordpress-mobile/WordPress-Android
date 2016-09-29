@@ -72,7 +72,7 @@ public class CommentStore extends Store {
         public final CommentModel comment;
         public final SiteModel site;
 
-        public PushCommentPayload(@NonNull CommentModel comment, @NonNull SiteModel site) {
+        public PushCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment) {
             this.comment = comment;
             this.site = site;
         }
