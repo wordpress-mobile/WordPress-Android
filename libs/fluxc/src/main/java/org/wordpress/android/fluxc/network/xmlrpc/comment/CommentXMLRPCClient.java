@@ -112,7 +112,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
-        //params.add(comment.getRemoteCommentId());
+        params.add(comment.getRemoteCommentId());
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_COMMENT, params,
                 new Listener<Object>() {
