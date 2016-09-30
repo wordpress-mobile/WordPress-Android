@@ -62,8 +62,7 @@ public class SimperiumUtils {
                     public void onUserStatusChange(User.Status status) {
                         switch (status) {
                             case AUTHORIZED:
-//FIXME: MZ uncomment this line
-//                                startBuckets();
+                                startBuckets();
                                 break;
                             case NOT_AUTHORIZED:
                                 mNotesBucket.stop();
@@ -113,14 +112,13 @@ public class SimperiumUtils {
     }
 
     public static void startBuckets() {
-        //FIXME: MZ uncomment this line
-//        if (mNotesBucket != null) {
-//            mNotesBucket.start();
-//        }
-//
-//        if (mMetaBucket != null) {
-//            mMetaBucket.start();
-//        }
+        if (mNotesBucket != null) {
+            mNotesBucket.start();
+        }
+
+        if (mMetaBucket != null) {
+            mMetaBucket.start();
+        }
     }
 
     public static void resetBucketsAndDeauthorize() {

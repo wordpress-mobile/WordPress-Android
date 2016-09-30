@@ -95,8 +95,7 @@ public class GCMMessageService extends GcmListenerService {
 
     private void handleDefaultPush(String from, @NonNull Bundle data) {
         // Ensure Simperium is running so that notes sync
-        //FIXME: MZ uncomment this line
-//        SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
+        SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
 
         long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
         String pushUserId = data.getString(PUSH_ARG_USER);
