@@ -20,9 +20,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.CommentsWPComRestResponse;
-import org.wordpress.android.fluxc.store.CommentStore.FetchCommentResponsePayload;
+import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
-import org.wordpress.android.fluxc.store.CommentStore.PushCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
 
 import java.util.ArrayList;
@@ -81,7 +80,8 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
                         CommentModel comment = commentResponseToComment(response, site);
-                        PushCommentResponsePayload payload = new PushCommentResponsePayload(comment);
+                        CommentStore.RemoteCommentResponsePayload
+                                payload = new CommentStore.RemoteCommentResponsePayload(comment);
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
                     }
                 },
@@ -106,7 +106,8 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
                         CommentModel comment = commentResponseToComment(response, site);
-                        FetchCommentResponsePayload payload = new FetchCommentResponsePayload(comment);
+                        org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload
+                                payload = new org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload(comment);
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(payload));
                     }
                 },
