@@ -32,14 +32,12 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
-import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
@@ -356,39 +354,6 @@ public class ReaderPostDetailFragment extends Fragment
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mPost);
         } else {
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mPost);
-        }
-    }
-
-    /*
-     * user tapped follow button to follow/unfollow the blog this post is from
-     */
-    private void togglePostFollowed() {
-        if (!isAdded() || !hasPost()) {
-            return;
-        }
-
-        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(mPost);
-        final ReaderFollowButton followButton = (ReaderFollowButton) getView().findViewById(R.id.follow_button);
-
-        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!isAdded()) {
-                    return;
-                }
-                followButton.setEnabled(true);
-                if (!succeeded) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(getActivity(), resId);
-                    followButton.setIsFollowedAnimated(!isAskingToFollow);
-                }
-            }
-        };
-
-        followButton.setEnabled(false);
-
-        if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, listener)) {
-            followButton.setIsFollowedAnimated(isAskingToFollow);
         }
     }
 
@@ -858,23 +823,17 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            // TODO: move this logic to the header view
-            /*followButton.setVisibility(mIsLoggedOutReader ? View.GONE : View.VISIBLE);
-            if (!mIsLoggedOutReader) {
-                followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
-                followButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        togglePostFollowed();
-                    }
-                });
-            }*/
-
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
 
-            // TODO: hide header when getPostListType() == ReaderPostListType.BLOG_PREVIEW
-            headerView.setPost(mPost);
+            // don't show the header for blog preview
+            if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                headerView.setVisibility(View.GONE);
+            } else {
+                headerView.setVisibility(View.VISIBLE);
+                headerView.setPost(mPost);
+            }
+
             tagStrip.setPost(mPost);
 
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
