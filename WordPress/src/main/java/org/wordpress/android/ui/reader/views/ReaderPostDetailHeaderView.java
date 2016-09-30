@@ -101,6 +101,13 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         }
 
         // TODO: show blavatar
+        if (mPost.hasBlogUrl()) {
+            int blavatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+            String blavatarUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz);
+            //imgBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        } else {
+            //imgBlavatar.showDefaultBlavatarImage();
+        }
     }
 
     private void toggleFollowStatus() {

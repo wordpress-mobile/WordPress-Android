@@ -42,6 +42,7 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
+import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
@@ -53,7 +54,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -834,16 +834,11 @@ public class ReaderPostDetailFragment extends Fragment
             mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
 
             TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
-            TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
-            TextView txtDomain = (TextView) getView().findViewById(R.id.text_domain);
             TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
 
             WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
             ReaderTagStrip tagStrip = (ReaderTagStrip) getView().findViewById(R.id.tag_strip);
-
-            ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
-            ReaderFollowButton followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
-
+            ReaderPostDetailHeaderView headerView = (ReaderPostDetailHeaderView) getView().findViewById(R.id.header_view);
             if (!canShowFooter()) {
                 mLayoutFooter.setVisibility(View.GONE);
             }
@@ -863,7 +858,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            followButton.setVisibility(mIsLoggedOutReader ? View.GONE : View.VISIBLE);
+            // TODO: move this logic to the header view
+            /*followButton.setVisibility(mIsLoggedOutReader ? View.GONE : View.VISIBLE);
             if (!mIsLoggedOutReader) {
                 followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
                 followButton.setOnClickListener(new View.OnClickListener() {
@@ -882,29 +878,12 @@ public class ReaderPostDetailFragment extends Fragment
                         ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
                     }
                 });
-            }
-
-            if (mPost.hasBlogName()) {
-                txtBlogName.setText(mPost.getBlogName());
-            } else if (mPost.hasAuthorName()) {
-                txtBlogName.setText(mPost.getAuthorName());
-            } else {
-                txtBlogName.setText(null);
-            }
-
-            if (mPost.hasBlogUrl()) {
-                int blavatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-                String imageUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz);
-                imgBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
-                txtDomain.setText(UrlUtils.getHost(mPost.getBlogUrl()));
-            } else {
-                imgBlavatar.showDefaultBlavatarImage();
-                txtDomain.setText(null);
-            }
+            }*/
 
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
 
+            headerView.setPost(mPost);
             tagStrip.setPost(mPost);
 
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
