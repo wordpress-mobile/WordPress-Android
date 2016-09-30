@@ -42,11 +42,11 @@ public class CommentStore extends Store {
         }
     }
 
-    public static class FetchCommentPayload extends Payload {
+    public static class RemoteCommentPayload extends Payload {
         public final SiteModel site;
         public final CommentModel comment;
 
-        public FetchCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment) {
+        public RemoteCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment) {
             this.site = site;
             this.comment = comment;
         }
@@ -60,29 +60,10 @@ public class CommentStore extends Store {
         }
     }
 
-    public static class FetchCommentResponsePayload extends Payload {
+    public static class RemoteCommentResponsePayload extends Payload {
         public final CommentModel comment;
         public CommentError error;
-        public FetchCommentResponsePayload(@NonNull CommentModel comment) {
-            this.comment = comment;
-        }
-    }
-
-    public static class PushCommentPayload extends Payload {
-        public final CommentModel comment;
-        public final SiteModel site;
-
-        public PushCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment) {
-            this.comment = comment;
-            this.site = site;
-        }
-    }
-
-    public static class PushCommentResponsePayload extends Payload {
-        public final CommentModel comment;
-        public CommentError error;
-
-        public PushCommentResponsePayload(@NonNull CommentModel comment) {
+        public RemoteCommentResponsePayload(@NonNull CommentModel comment) {
             this.comment = comment;
         }
     }
@@ -137,18 +118,46 @@ public class CommentStore extends Store {
                 handleFetchCommentsResponse((FetchCommentsResponsePayload) action.getPayload());
                 break;
             case FETCH_COMMENT:
-                fetchComment((FetchCommentPayload) action.getPayload());
+                fetchComment((org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload) action.getPayload());
                 break;
             case FETCHED_COMMENT:
-                handleFetchCommentResponse((FetchCommentResponsePayload) action.getPayload());
+                handleFetchCommentResponse((org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload) action.getPayload());
+                break;
+            case UPDATE_COMMENT:
+                updateComment((CommentModel) action.getPayload());
                 break;
             case PUSH_COMMENT:
-                pushComment((PushCommentPayload) action.getPayload());
+                pushComment((RemoteCommentPayload) action.getPayload());
                 break;
             case PUSHED_COMMENT:
-                handlePushCommentResponse((PushCommentResponsePayload) action.getPayload());
+                handlePushCommentResponse((RemoteCommentResponsePayload) action.getPayload());
+                break;
+            case REMOVE_COMMENT:
+                removeComment((CommentModel) action.getPayload());
+                break;
+            case DELETE_COMMENT:
+                break;
+            case DELETED_COMMENT:
                 break;
         }
+    }
+
+    private void updateComment(CommentModel payload) {
+        int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload);
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        emitChange(event);
+    }
+
+    private void removeComment(CommentModel payload) {
+        CommentSqlUtils.deleteComment(payload);
+    }
+
+    private void deleteComment(CommentModel payload) {
+        // FIXME
+    }
+
+    private void handleDeletedComment(CommentModel payload) {
+        // FIXME
     }
 
     private void fetchComments(FetchCommentsPayload payload) {
@@ -173,7 +182,7 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
-    private void pushComment(PushCommentPayload payload) {
+    private void pushComment(RemoteCommentPayload payload) {
         if (payload.site.isWPCom()) {
             mCommentRestClient.pushComment(payload.site, payload.comment);
         } else {
@@ -181,14 +190,14 @@ public class CommentStore extends Store {
         }
     }
 
-    private void handlePushCommentResponse(PushCommentResponsePayload payload) {
+    private void handlePushCommentResponse(RemoteCommentResponsePayload payload) {
         int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.error = payload.error;
         emitChange(event);
     }
 
-    private void fetchComment(FetchCommentPayload payload) {
+    private void fetchComment(org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload payload) {
         if (payload.site.isWPCom()) {
             mCommentRestClient.fetchComment(payload.site, payload.comment);
         } else {
@@ -196,7 +205,8 @@ public class CommentStore extends Store {
         }
     }
 
-    private void handleFetchCommentResponse(FetchCommentResponsePayload payload) {
+    private void handleFetchCommentResponse(
+            org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload payload) {
         int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.error = payload.error;

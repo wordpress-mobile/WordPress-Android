@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import com.wellsql.generated.CommentModelTable;
+import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -38,6 +39,16 @@ public class CommentSqlUtils {
             return WellSql.update(CommentModel.class).whereId(oldId)
                     .put(comment, new UpdateAllExceptId<CommentModel>()).execute();
         }
+    }
+
+    public static int deleteComment(CommentModel comment) {
+        if (comment == null) {
+            return 0;
+        }
+
+        return WellSql.delete(CommentModel.class)
+                .where().equals(PostModelTable.ID, comment.getId()).endWhere()
+                .execute();
     }
 
     public static List<CommentModel> getCommentsForSite(SiteModel site) {
