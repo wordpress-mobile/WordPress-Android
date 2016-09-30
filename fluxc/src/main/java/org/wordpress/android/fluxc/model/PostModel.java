@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Table
-public class PostModel extends Payload implements Identifiable, Serializable {
+public class PostModel extends Payload implements Cloneable, Identifiable, Serializable {
     private static final long FEATURED_IMAGE_INIT_VALUE = -2;
 
     @PrimaryKey
@@ -436,5 +436,14 @@ public class PostModel extends Payload implements Identifiable, Serializable {
             return "";
         }
         return TextUtils.join(",", ids);
+    }
+
+    @Override
+    public PostModel clone() {
+        try {
+            return (PostModel) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Can't happen
+        }
     }
 }
