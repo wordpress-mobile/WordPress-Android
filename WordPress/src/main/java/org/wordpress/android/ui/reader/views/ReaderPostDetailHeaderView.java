@@ -49,15 +49,14 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         View view = inflate(context, R.layout.reader_post_detail_header_view, this);
         mFollowButton = (ReaderFollowButton) view.findViewById(R.id.header_follow_button);
 
-        // in landscape we want the detail below the avatar, otherwise we want it to the right
         View frameAvatar = view.findViewById(R.id.frame_avatar);
         View header = view.findViewById(R.id.layout_post_header);
 
         RelativeLayout.LayoutParams paramsFrame = (RelativeLayout.LayoutParams) frameAvatar.getLayoutParams();
         RelativeLayout.LayoutParams paramsHeader = (RelativeLayout.LayoutParams) header.getLayoutParams();
 
-        boolean isLandscape = DisplayUtils.isLandscape(context);
-        if (isLandscape) {
+        // in landscape we want the detail below the avatar, otherwise we want it to the right
+        if (DisplayUtils.isLandscape(context)) {
             paramsFrame.addRule(RelativeLayout.CENTER_HORIZONTAL);
             paramsHeader.addRule(RelativeLayout.CENTER_HORIZONTAL);
             paramsHeader.addRule(RelativeLayout.BELOW, frameAvatar.getId());
