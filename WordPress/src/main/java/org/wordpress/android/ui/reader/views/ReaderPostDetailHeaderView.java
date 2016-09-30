@@ -29,6 +29,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
     private ReaderPost mPost;
     private ReaderFollowButton mFollowButton;
+    private int mFollowerCount;
 
     public ReaderPostDetailHeaderView(Context context) {
         super(context);
@@ -145,6 +146,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     }
 
     private void setFollowerCount(int count) {
+        mFollowerCount = count;
         TextView txtFollowerCount = (TextView) findViewById(R.id.text_header_follow_count);
         txtFollowerCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), count));
     }
@@ -190,12 +192,12 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                 mFollowButton.setEnabled(true);
                 if (succeeded) {
                     mPost.isFollowedByCurrentUser = isAskingToFollow;
-                    updateFollowerCount();
                 } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
                 }
+                updateFollowerCount();
             }
         };
 
@@ -211,6 +213,12 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         if (result) {
             mFollowButton.setIsFollowedAnimated(isAskingToFollow);
+
+            if (isAskingToFollow) {
+                setFollowerCount(mFollowerCount + 1);
+            } else {
+                setFollowerCount(mFollowerCount - 1);
+            }
         }
     }
 }
