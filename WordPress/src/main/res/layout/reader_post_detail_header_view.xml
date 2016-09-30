@@ -56,7 +56,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/margin_medium"
                     android:textColor="@color/grey_darken_10"
-                    android:textSize="@dimen/text_sz_small"
+                    android:textSize="@dimen/text_sz_medium"
                     tools:text="12 followers" />
 
                 <org.wordpress.android.ui.reader.views.ReaderFollowButton
