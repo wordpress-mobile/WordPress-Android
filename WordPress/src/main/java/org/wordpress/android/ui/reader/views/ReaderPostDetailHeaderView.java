@@ -54,6 +54,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         TextView txtTitle = (TextView) findViewById(R.id.text_header_title);
         TextView txtAuthorName = (TextView) findViewById(R.id.text_header_author_name);
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
+        WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
 
         boolean hasBlogName = mPost.hasBlogName();
         boolean hasAuthorName = mPost.hasAuthorName();
@@ -97,20 +98,19 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         }
 
         if (mPost.hasPostAvatar()) {
-            int avatarSize = getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+            int avatarSize = getContext().getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar);
             String avatarUrl = GravatarUtils.fixGravatarUrl(mPost.getPostAvatar(), avatarSize);
             imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
             imgAvatar.showDefaultGravatarImage();
         }
 
-        // TODO: show blavatar
         if (mPost.hasBlogUrl()) {
-            int blavatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+            int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
             String blavatarUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz);
-            //imgBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
         } else {
-            //imgBlavatar.showDefaultBlavatarImage();
+            imgBlavatar.showDefaultBlavatarImage();
         }
 
         showFollowerCount();

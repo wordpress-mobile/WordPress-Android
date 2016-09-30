@@ -1,80 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <FrameLayout
+        android:id="@+id/frame_avatar"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_large">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_header_blavatar"
+            android:layout_width="@dimen/reader_detail_header_blavatar"
+            android:layout_height="@dimen/reader_detail_header_blavatar"
+            android:layout_gravity="top|left"
+            tools:src="@drawable/blavatar_placeholder" />
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_header_avatar"
-            style="@style/ReaderImageView.Avatar.Large"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/margin_large"
+            android:layout_width="@dimen/reader_detail_header_avatar"
+            android:layout_height="@dimen/reader_detail_header_avatar"
+            android:layout_gravity="bottom|right"
             tools:src="@drawable/gravatar_placeholder" />
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/frame_avatar"
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
+            tools:text="text_header_title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_header_author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_header_author_name" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/image_header_avatar"
-            android:orientation="vertical">
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_header_title"
+                android:id="@+id/text_header_follow_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/reader_hyperlink"
-                android:textSize="@dimen/text_sz_large"
-                android:textStyle="bold"
-                tools:text="text_header_title" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_header_author_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/reader_hyperlink"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:textColor="@color/grey_darken_10"
                 android:textSize="@dimen/text_sz_medium"
-                tools:text="text_header_author_name" />
+                tools:text="12 followers" />
 
-            <LinearLayout
+            <org.wordpress.android.ui.reader.views.ReaderFollowButton
+                android:id="@+id/header_follow_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/text_header_follow_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="@dimen/margin_medium"
-                    android:textColor="@color/grey_darken_10"
-                    android:textSize="@dimen/text_sz_medium"
-                    tools:text="12 followers" />
-
-                <org.wordpress.android.ui.reader.views.ReaderFollowButton
-                    android:id="@+id/header_follow_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/margin_medium"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-            </LinearLayout>
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/margin_large"
-        android:background="@color/reader_divider_grey" />
-
-</LinearLayout>
+</RelativeLayout>
