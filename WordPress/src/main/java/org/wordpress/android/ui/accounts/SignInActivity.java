@@ -28,12 +28,11 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.MagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkSentFragment;
-import org.wordpress.android.ui.accounts.login.MagicLinkSignInFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 public class SignInActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener, MagicLinkRequestFragment.OnMagicLinkFragmentInteraction,
-        MagicLinkSignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
+        SignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int REQUEST_CODE = 5000;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
@@ -128,8 +127,8 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
 
     private void attemptLoginWithToken(Uri uri) {
         getSignInFragment().setToken(uri.getQueryParameter(TOKEN_PARAMETER));
-        MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
-        slideInFragment(magicLinkSignInFragment, false);
+        SignInFragment signInFragment = getSignInFragment();
+        slideInFragment(signInFragment, false);
 
         mProgressDialog = ProgressDialog
                 .show(this, "", getString(R.string.logging_in), true, true, new DialogInterface.OnCancelListener() {
@@ -173,11 +172,11 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         }
     }
 
-    public MagicLinkSignInFragment getSignInFragment() {
-        MagicLinkSignInFragment signInFragment =
-                (MagicLinkSignInFragment) getSupportFragmentManager().findFragmentByTag(MagicLinkSignInFragment.TAG);
+    public SignInFragment getSignInFragment() {
+        SignInFragment signInFragment =
+                (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
         if (signInFragment == null) {
-            return new MagicLinkSignInFragment();
+            return new SignInFragment();
         } else {
             return signInFragment;
         }
@@ -203,9 +202,9 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     protected void addSignInFragment() {
-        MagicLinkSignInFragment signInFragment = new MagicLinkSignInFragment();
+        SignInFragment signInFragment = new SignInFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, signInFragment, MagicLinkSignInFragment.TAG);
+        fragmentTransaction.replace(R.id.fragment_container, signInFragment, SignInFragment.TAG);
         fragmentTransaction.commit();
     }
 
