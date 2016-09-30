@@ -15,10 +15,13 @@ import com.simperium.client.Query;
 import com.simperium.client.User;
 
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.HashMap;
 
 import de.greenrobot.event.EventBus;
 
@@ -26,6 +29,9 @@ public class SimperiumUtils {
     private static final String NOTE_TIMESTAMP = "timestamp";
     private static final String META_BUCKET_NAME = "meta";
     private static final String META_LAST_SEEN = "last_seen";
+
+    private static final String TRACK_ERROR_KEY = "error";
+    private static final String TRACK_NOTEID_KEY = "note_id";
 
     private static Simperium mSimperium;
     private static Bucket<Note> mNotesBucket;
@@ -56,7 +62,8 @@ public class SimperiumUtils {
                     public void onUserStatusChange(User.Status status) {
                         switch (status) {
                             case AUTHORIZED:
-                                startBuckets();
+//FIXME: MZ uncomment this line
+//                                startBuckets();
                                 break;
                             case NOT_AUTHORIZED:
                                 mNotesBucket.stop();
@@ -106,13 +113,14 @@ public class SimperiumUtils {
     }
 
     public static void startBuckets() {
-        if (mNotesBucket != null) {
-            mNotesBucket.start();
-        }
-
-        if (mMetaBucket != null) {
-            mMetaBucket.start();
-        }
+        //FIXME: MZ uncomment this line
+//        if (mNotesBucket != null) {
+//            mNotesBucket.start();
+//        }
+//
+//        if (mMetaBucket != null) {
+//            mMetaBucket.start();
+//        }
     }
 
     public static void resetBucketsAndDeauthorize() {
@@ -181,4 +189,15 @@ public class SimperiumUtils {
 
         return false;
     }
+
+    // in general, we shouldn't have BucketObjectMissingExceptions but sometimes this might happen
+    // when simperium can't sync up and get up to speed to push notifications,
+    // so we're interested in tracking these
+    public static void trackBucketObjectMissing(String message, String noteId) {
+        HashMap<String, String> errorProperties = new HashMap<>();
+        errorProperties.put(TRACK_ERROR_KEY, message);
+        errorProperties.put(TRACK_NOTEID_KEY, noteId);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_MISSING_SYNC_WARNING, errorProperties);
+    }
+
 }

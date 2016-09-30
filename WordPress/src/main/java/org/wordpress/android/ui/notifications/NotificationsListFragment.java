@@ -39,6 +39,8 @@ public class NotificationsListFragment extends Fragment
         implements Bucket.Listener<Note>,
                    WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener {
     public static final String NOTE_ID_EXTRA = "noteId";
+    public static final String REMOTE_BLOG_ID_EXTRA = "remoteBlogId";
+    public static final String REMOTE_ITEM_ID = "remoteItemId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_INSTANT_LIKE_EXTRA = "instantLike";
     public static final String NOTE_INSTANT_APPROVE_EXTRA = "instantApprove";
@@ -177,7 +179,9 @@ public class NotificationsListFragment extends Fragment
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNoteForReply(getActivity(), noteId, false);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(NOTE_INSTANT_REPLY_EXTRA, false);
+            openNoteWithFallbackData(bundle, getActivity(), noteId);
         }
     };
 
@@ -189,12 +193,13 @@ public class NotificationsListFragment extends Fragment
     }
 
     /**
-     * Open a note fragment based on the type of note
+     * Open a note fragment based on the type of note, extracting blog id and internal id information
+     * from the intent data for fallback-ing on REST api in case the Note is not yet synced to the local
+     * buckets by Simperium
      */
-    public static void openNoteForReply(Activity activity,
-                                        String noteId,
-                                        boolean shouldShowKeyboard) {
-        if (noteId == null || activity == null) {
+    public static void openNoteWithFallbackData(Bundle data, Activity activity, String noteId) {
+
+        if (noteId == null || activity == null || data == null) {
             return;
         }
 
@@ -203,44 +208,27 @@ public class NotificationsListFragment extends Fragment
         }
 
         Intent detailIntent = getOpenNoteIntent(activity, noteId);
-        detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
+        detailIntent.putExtra(NOTE_INSTANT_LIKE_EXTRA,
+                data.getBoolean(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false));
+        detailIntent.putExtra(NOTE_INSTANT_APPROVE_EXTRA,
+                data.getBoolean(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false));
+        detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA,
+                data.getBoolean(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false));
+
+        // get fallback data and put it through to the activity intent
+        // by "fallback data" we mean the basic information needed in order to fetch an item from the REST
+        // api in case we can't find the Note in our local Simperium bucket by the time the NotificationsDetailActivity
+        // is up and running, so we try get to show something to the user
+        // basic info is:
+        //  - blog id
+        //  - item id (i.e. comment id in most cases)
+        detailIntent.putExtra(REMOTE_BLOG_ID_EXTRA,
+                data.getString(NotificationsListFragment.REMOTE_BLOG_ID_EXTRA, ""));
+        detailIntent.putExtra(REMOTE_ITEM_ID,
+                data.getString(NotificationsListFragment.REMOTE_ITEM_ID, ""));
+
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
-    }
 
-    /**
-     * Open a note fragment based on the type of note, signaling to issue a like action immediately
-     */
-    public static void openNoteForLike(Activity activity,
-                                       String noteId) {
-        if (noteId == null || activity == null) {
-            return;
-        }
-
-        if (activity.isFinishing()) {
-            return;
-        }
-
-        Intent detailIntent = getOpenNoteIntent(activity, noteId);
-        detailIntent.putExtra(NOTE_INSTANT_LIKE_EXTRA, true);
-        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
-    }
-
-    /**
-     * Open a note fragment based on the type of note, signaling to issue a moderate:approve action immediately
-     */
-    public static void openNoteForApprove(Activity activity,
-                                       String noteId) {
-        if (noteId == null || activity == null) {
-            return;
-        }
-
-        if (activity.isFinishing()) {
-            return;
-        }
-
-        Intent detailIntent = getOpenNoteIntent(activity, noteId);
-        detailIntent.putExtra(NOTE_INSTANT_APPROVE_EXTRA, true);
-        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 
     private void setNoteIsHidden(String noteId, boolean isHidden) {
@@ -487,6 +475,7 @@ public class NotificationsListFragment extends Fragment
                 }
             } catch (BucketObjectMissingException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Could not create note after receiving change.");
+                SimperiumUtils.trackBucketObjectMissing(e.getMessage(), key);
             }
         }
 

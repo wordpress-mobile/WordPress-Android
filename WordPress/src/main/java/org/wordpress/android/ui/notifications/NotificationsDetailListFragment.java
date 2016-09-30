@@ -169,6 +169,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 setNote(note);
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
+                SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
             }
         }
     }
@@ -501,6 +502,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 }
             } catch (BucketObjectMissingException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Couldn't load note after receiving change.");
+                SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
             }
         }
     }
