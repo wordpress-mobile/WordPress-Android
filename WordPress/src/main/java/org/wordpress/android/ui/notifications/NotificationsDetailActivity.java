@@ -90,6 +90,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                     return;
                 }
             }
+
+            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);//clearNotifications();
+
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
         }
@@ -99,7 +102,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
 
-        GCMMessageService.clearNotifications();
     }
 
     @Override
@@ -138,7 +140,13 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            fragment = CommentDetailFragment.newInstance(note.getId());
+            boolean isInstantLike = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
+            boolean isInstantApprove = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
+            fragment = isInstantLike ?
+                        CommentDetailFragment.newInstanceForInstantLike(note.getId()) :
+                        isInstantApprove ?
+                            CommentDetailFragment.newInstanceForInstantApprove(note.getId()) :
+                            CommentDetailFragment.newInstance(note.getId());
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
