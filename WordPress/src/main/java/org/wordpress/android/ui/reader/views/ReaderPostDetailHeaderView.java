@@ -8,6 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -51,7 +53,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         TextView txtTitle = (TextView) findViewById(R.id.text_header_title);
         TextView txtAuthorName = (TextView) findViewById(R.id.text_header_author_name);
-        TextView txtFollowCount = (TextView) findViewById(R.id.text_header_follow_count);
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
 
         boolean hasBlogName = mPost.hasBlogName();
@@ -82,9 +83,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         txtAuthorName.setOnClickListener(mClickListener);
         imgAvatar.setOnClickListener(mClickListener);
 
-        // TODO: get follower count
-        //txtFollowCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
-
         if (ReaderUtils.isLoggedOutReader()) {
             mFollowButton.setVisibility(View.GONE);
         } else {
@@ -114,8 +112,41 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         } else {
             //imgBlavatar.showDefaultBlavatarImage();
         }
+
+        showFollowerCount();
     }
 
+    private void showFollowerCount() {
+        // show current follower count
+        ReaderBlog blogInfo = mPost.feedId != 0 ? ReaderBlogTable.getFeedInfo(mPost.feedId) : ReaderBlogTable.getBlogInfo(mPost.blogId);
+        if (blogInfo != null) {
+            setFollowerCount(blogInfo.numSubscribers);
+        }
+
+        // update blog info if it's time or it doesn't exist
+        if (blogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(blogInfo)) {
+            ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
+                @Override
+                public void onResult(ReaderBlog serverBlogInfo) {
+                    setFollowerCount(serverBlogInfo.numSubscribers);
+                }
+            };
+            if (mPost.feedId != 0) {
+                ReaderBlogActions.updateFeedInfo(mPost.feedId, null, listener);
+            } else {
+                ReaderBlogActions.updateBlogInfo(mPost.blogId, null, listener);
+            }
+        }
+    }
+
+    private void setFollowerCount(int count) {
+        TextView txtFollowerCount = (TextView) findViewById(R.id.text_header_follow_count);
+        txtFollowerCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), count));
+    }
+
+    /*
+     * click listener which shows blog preview
+     */
     private final OnClickListener mClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
