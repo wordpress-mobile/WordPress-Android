@@ -24,6 +24,8 @@
             android:layout_width="@dimen/reader_detail_header_avatar"
             android:layout_height="@dimen/reader_detail_header_avatar"
             android:layout_gravity="bottom|right"
+            android:background="@drawable/shape_oval_white"
+            android:padding="2dp"
             tools:src="@drawable/gravatar_placeholder" />
     </FrameLayout>
 
