@@ -51,7 +51,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     public void setPost(@NonNull ReaderPost post) {
         mPost = post;
 
-        TextView txtTitle = (TextView) findViewById(R.id.text_header_title);
+        TextView txtBlogName = (TextView) findViewById(R.id.text_header_blog_name);
         TextView txtAuthorName = (TextView) findViewById(R.id.text_header_author_name);
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
         WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
@@ -60,7 +60,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         boolean hasAuthorName = mPost.hasAuthorName();
 
         if (hasBlogName && hasAuthorName) {
-            txtTitle.setText(mPost.getBlogName());
+            txtBlogName.setText(mPost.getBlogName());
             // don't show author name if it's the same as the blog name
             if (mPost.getAuthorName().equals(mPost.getBlogName())) {
                 txtAuthorName.setVisibility(View.GONE);
@@ -69,18 +69,18 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                 txtAuthorName.setVisibility(View.VISIBLE);
             }
         } else if (hasBlogName) {
-            txtTitle.setText(mPost.getBlogName());
+            txtBlogName.setText(mPost.getBlogName());
             txtAuthorName.setVisibility(View.GONE);
         } else if (hasAuthorName) {
-            txtTitle.setText(mPost.getAuthorName());
-            txtAuthorName.setVisibility(View.GONE);
+            txtAuthorName.setText(mPost.getAuthorName());
+            txtBlogName.setVisibility(View.GONE);
         } else {
-            txtTitle.setText(R.string.untitled);
+            txtBlogName.setText(R.string.untitled);
             txtAuthorName.setVisibility(View.GONE);
         }
 
         // show blog preview when these views are tapped
-        txtTitle.setOnClickListener(mClickListener);
+        txtBlogName.setOnClickListener(mClickListener);
         txtAuthorName.setOnClickListener(mClickListener);
         imgAvatar.setOnClickListener(mClickListener);
 

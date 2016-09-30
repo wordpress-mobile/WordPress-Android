@@ -38,23 +38,23 @@
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_header_title"
+            android:id="@+id/text_header_author_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
-            tools:text="text_header_title" />
+            tools:text="text_header_author_name" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_header_author_name"
+            android:id="@+id/text_header_blog_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="text_header_author_name" />
+            tools:text="text_header_blog_name" />
 
         <LinearLayout
             android:layout_width="wrap_content"
