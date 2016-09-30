@@ -511,15 +511,7 @@ public class ReaderPostDetailFragment extends Fragment
             postView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // if we're already viewing a related post, add it to the history stack
-                    // so the user can back-button through the history - otherwise start a
-                    // new detail activity for this related post
-                    if (mIsRelatedPost) {
-                        mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
-                        replacePost(relatedPost.getBlogId(), relatedPost.getPostId());
-                    } else {
-                        ReaderActivityLauncher.showReaderPostDetail(getActivity(), relatedPost.getBlogId(), relatedPost.getPostId(), true);
-                    }
+                    showRelatedPostDetail(relatedPost.getBlogId(), relatedPost.getPostId());
                 }
             });
 
@@ -538,6 +530,23 @@ public class ReaderPostDetailFragment extends Fragment
         }
         if (container.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(container, AniUtils.Duration.MEDIUM);
+        }
+    }
+
+    /*
+     * user clicked a single related post - if we're already viewing a related post, add it to the
+     * history stack so the user can back-button through the history - otherwise start a new detail
+     * activity for this related post
+     */
+    private void showRelatedPostDetail(long blogId, long postId) {
+        AnalyticsUtils.trackWithReaderPostDetails(
+                AnalyticsTracker.Stat.READER_RELATED_POST_CLICKED, blogId, postId);
+
+        if (mIsRelatedPost) {
+            mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
+            replacePost(blogId, postId);
+        } else {
+            ReaderActivityLauncher.showReaderPostDetail(getActivity(), blogId, postId, true);
         }
     }
 
