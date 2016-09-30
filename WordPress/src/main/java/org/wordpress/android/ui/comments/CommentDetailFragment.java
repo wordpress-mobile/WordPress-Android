@@ -88,10 +88,11 @@ import de.greenrobot.event.EventBus;
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
     private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
     private static final String KEY_COMMENT_ID = "comment_id";
+    private static final String KEY_REMOTE_COMMENT_ID = "remote_comment_id";
     private static final String KEY_NOTE_ID = "note_id";
     private int mLocalBlogId;
     private int mRemoteBlogId;
-    private int mRemoteCommentId;
+    private long mRemoteCommentId;
     private Comment mComment;
     private Note mNote;
     private SuggestionAdapter mSuggestionAdapter;
@@ -202,6 +203,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             } else {
                 int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
                 long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
+                mRemoteCommentId = savedInstanceState.getLong(KEY_REMOTE_COMMENT_ID);
                 setComment(localBlogId, commentId);
             }
         }
@@ -215,6 +217,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (hasComment()) {
             outState.putInt(KEY_LOCAL_BLOG_ID, getLocalBlogId());
             outState.putLong(KEY_COMMENT_ID, getCommentId());
+            outState.putLong(KEY_REMOTE_COMMENT_ID, getRemoteCommentId());
         }
 
         if (mNote != null) {
@@ -550,7 +553,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mRemoteCommentId = remoteCommentId;
     }
 
-    private int getRemoteCommentId(){
+    private long getRemoteCommentId(){
         return mRemoteCommentId;
     }
 
@@ -878,6 +881,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     } else if (newStatus.equals(CommentStatus.UNAPPROVED)) {
                         ToastUtils.showToast(getActivity(), R.string.comment_moderated_unapproved, ToastUtils.Duration.SHORT);
                     }
+
+                    CommentTable.updateComment(mLocalBlogId, mComment);
+
                 } else {
                     mComment.setStatus(CommentStatus.toString(oldStatus));
                     updateStatusViews();
