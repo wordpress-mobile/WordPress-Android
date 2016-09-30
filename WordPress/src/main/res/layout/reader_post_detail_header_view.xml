@@ -27,6 +27,7 @@
             android:layout_gravity="center_horizontal"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
             tools:text="text_header_title" />
 
         <org.wordpress.android.widgets.WPTextView
