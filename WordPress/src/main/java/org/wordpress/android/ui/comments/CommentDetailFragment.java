@@ -847,20 +847,37 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        if (mNote == null) return;
+        long siteId;
+        long commentId;
+
+        if (mNote != null) {
+            siteId = mNote.getSiteId();
+            commentId = mComment.commentID;
+        } else {
+            //use fallback data
+            siteId = mRemoteBlogId;
+            commentId = mRemoteCommentId;
+        }
+
+        //if basic data is not set, we should just abort this action
+        if (siteId == 0 || commentId == 0) return;
 
         // Basic moderation support
         // Uses WP.com REST API and requires a note object
         final CommentStatus oldStatus = mComment.getStatusEnum();
         mComment.setStatus(CommentStatus.toString(newStatus));
         updateStatusViews();
-        CommentActions.moderateCommentRestApi(mNote.getSiteId(), mComment.commentID, newStatus, new CommentActions.CommentActionListener() {
+        CommentActions.moderateCommentRestApi(siteId, commentId, newStatus, new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(CommentActionResult result) {
                 if (!isAdded()) return;
 
                 if (result.isSuccess()) {
-                    ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                    if (newStatus.equals(CommentStatus.APPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                    } else if (newStatus.equals(CommentStatus.UNAPPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_unapproved, ToastUtils.Duration.SHORT);
+                    }
                 } else {
                     mComment.setStatus(CommentStatus.toString(oldStatus));
                     updateStatusViews();
