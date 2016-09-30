@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -76,6 +77,11 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             txtAuthorName.setVisibility(View.GONE);
         }
 
+        // show blog preview when these views are tapped
+        txtTitle.setOnClickListener(mClickListener);
+        txtAuthorName.setOnClickListener(mClickListener);
+        imgAvatar.setOnClickListener(mClickListener);
+
         // TODO: get follower count
         //txtFollowCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
 
@@ -109,6 +115,15 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             //imgBlavatar.showDefaultBlavatarImage();
         }
     }
+
+    private final OnClickListener mClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mPost != null) {
+                ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
+            }
+        }
+    };
 
     private void toggleFollowStatus() {
         if (!NetworkUtils.checkConnection(getContext())) {

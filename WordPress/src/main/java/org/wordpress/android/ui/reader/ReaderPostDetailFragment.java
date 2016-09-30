@@ -868,21 +868,12 @@ public class ReaderPostDetailFragment extends Fragment
                         togglePostFollowed();
                     }
                 });
-            }
-
-            // clicking the header shows blog preview
-            if (getPostListType() != ReaderPostListType.BLOG_PREVIEW) {
-                layoutHeader.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
-                    }
-                });
             }*/
 
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
 
+            // TODO: hide header when getPostListType() == ReaderPostListType.BLOG_PREVIEW
             headerView.setPost(mPost);
             tagStrip.setPost(mPost);
 
