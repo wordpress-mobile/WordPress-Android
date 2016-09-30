@@ -12,7 +12,7 @@
     tools:targetApi="LOLLIPOP">
 
     <org.wordpress.android.widgets.WPNetworkImageView
-        android:id="@+id/image_avatar"
+        android:id="@+id/image_header_avatar"
         style="@style/ReaderImageView.Avatar.Large"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/margin_large"
@@ -22,11 +22,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/image_avatar"
+        android:layout_toRightOf="@+id/image_header_avatar"
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_title"
+            android:id="@+id/text_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -35,7 +35,7 @@
             tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_author_name"
+            android:id="@+id/text_header_author_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -50,7 +50,7 @@
             android:orientation="horizontal">
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_blog_follow_count"
+                android:id="@+id/text_header_follow_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -60,7 +60,7 @@
                 tools:text="12 followers" />
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
-                android:id="@+id/follow_button"
+                android:id="@+id/header_follow_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

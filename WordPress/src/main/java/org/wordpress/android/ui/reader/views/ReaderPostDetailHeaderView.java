@@ -12,6 +12,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -41,16 +42,16 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_post_detail_header_view, this);
-        mFollowButton = (ReaderFollowButton) view.findViewById(R.id.follow_button);
+        mFollowButton = (ReaderFollowButton) view.findViewById(R.id.header_follow_button);
     }
 
     public void setPost(@NonNull ReaderPost post) {
         mPost = post;
 
-        TextView txtTitle = (TextView) findViewById(R.id.text_title);
-        TextView txtAuthorName = (TextView) findViewById(R.id.text_author_name);
-        TextView txtFollowCount = (TextView) findViewById(R.id.text_blog_follow_count);
-        WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_avatar);
+        TextView txtTitle = (TextView) findViewById(R.id.text_header_title);
+        TextView txtAuthorName = (TextView) findViewById(R.id.text_header_author_name);
+        TextView txtFollowCount = (TextView) findViewById(R.id.text_header_follow_count);
+        WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
 
         boolean hasBlogName = mPost.hasBlogName();
         boolean hasAuthorName = mPost.hasAuthorName();
@@ -91,8 +92,15 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             });
         }
 
-        // TODO: show avatar/blavatar
-        int avatarSize = getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+        if (mPost.hasPostAvatar()) {
+            int avatarSize = getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+            String avatarUrl = GravatarUtils.fixGravatarUrl(mPost.getPostAvatar(), avatarSize);
+            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+        } else {
+            imgAvatar.showDefaultGravatarImage();
+        }
+
+        // TODO: show blavatar
     }
 
     private void toggleFollowStatus() {
