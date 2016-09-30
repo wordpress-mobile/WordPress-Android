@@ -132,35 +132,35 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             imgBlavatar.showDefaultBlavatarImage();
         }
 
-        showFollowerCount();
-    }
-
-    private void showFollowerCount() {
         // show current follower count
         ReaderBlog blogInfo = mPost.feedId != 0 ? ReaderBlogTable.getFeedInfo(mPost.feedId) : ReaderBlogTable.getBlogInfo(mPost.blogId);
         if (blogInfo != null) {
             setFollowerCount(blogInfo.numSubscribers);
         }
 
-        // update blog info if it's time or it doesn't exist
+        // update blog info if it's time or it doesn't exist to ensure we show more accurate count
         if (blogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(blogInfo)) {
-            ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
-                @Override
-                public void onResult(ReaderBlog serverBlogInfo) {
-                    setFollowerCount(serverBlogInfo.numSubscribers);
-                }
-            };
-            if (mPost.feedId != 0) {
-                ReaderBlogActions.updateFeedInfo(mPost.feedId, null, listener);
-            } else {
-                ReaderBlogActions.updateBlogInfo(mPost.blogId, null, listener);
-            }
+            updateFollowerCount();
         }
     }
 
     private void setFollowerCount(int count) {
         TextView txtFollowerCount = (TextView) findViewById(R.id.text_header_follow_count);
         txtFollowerCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), count));
+    }
+
+    private void updateFollowerCount() {
+        ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
+            @Override
+            public void onResult(ReaderBlog serverBlogInfo) {
+                setFollowerCount(serverBlogInfo.numSubscribers);
+            }
+        };
+        if (mPost.feedId != 0) {
+            ReaderBlogActions.updateFeedInfo(mPost.feedId, null, listener);
+        } else {
+            ReaderBlogActions.updateBlogInfo(mPost.blogId, null, listener);
+        }
     }
 
     /*
@@ -190,7 +190,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                 mFollowButton.setEnabled(true);
                 if (succeeded) {
                     mPost.isFollowedByCurrentUser = isAskingToFollow;
-                    showFollowerCount();
+                    updateFollowerCount();
                 } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
