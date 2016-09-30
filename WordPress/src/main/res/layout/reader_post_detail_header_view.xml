@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_medium"
                 android:textColor="@color/grey_darken_10"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="12 followers" />
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginLeft="@dimen/margin_medium"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </LinearLayout>
