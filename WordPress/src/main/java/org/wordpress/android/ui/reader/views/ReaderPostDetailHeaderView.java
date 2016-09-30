@@ -185,11 +185,13 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (getContext() == null) {
-                    return;
-                }
+                if (getContext() == null) return;
+
                 mFollowButton.setEnabled(true);
-                if (!succeeded) {
+                if (succeeded) {
+                    mPost.isFollowedByCurrentUser = isAskingToFollow;
+                    showFollowerCount();
+                } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
