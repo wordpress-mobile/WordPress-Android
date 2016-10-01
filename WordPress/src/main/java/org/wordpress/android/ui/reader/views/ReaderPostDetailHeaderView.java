@@ -154,8 +154,10 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     private void updateFollowerCount() {
         ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
             @Override
-            public void onResult(ReaderBlog serverBlogInfo) {
-                setFollowerCount(serverBlogInfo.numSubscribers);
+            public void onResult(ReaderBlog blogInfo) {
+                if (blogInfo != null) {
+                    setFollowerCount(blogInfo.numSubscribers);
+                }
             }
         };
         if (mPost.feedId != 0) {
