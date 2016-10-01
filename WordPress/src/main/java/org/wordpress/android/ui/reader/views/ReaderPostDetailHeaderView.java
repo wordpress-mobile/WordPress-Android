@@ -145,19 +145,26 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             imgBlavatar.showDefaultBlavatarImage();
         }
 
-        // update blog info if it's time or it doesn't exist to ensure we show more accurate count
+        // update blog info if it's time or it doesn't exist
         if (blogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(blogInfo)) {
-            updateFollowerCount();
+            updateBlogInfo();
         }
     }
 
     private void setFollowerCount(int count) {
-        mFollowerCount = count;
-        TextView txtFollowerCount = (TextView) findViewById(R.id.text_header_follow_count);
-        txtFollowerCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), count));
+        if (count != mFollowerCount) {
+            mFollowerCount = count;
+            TextView txtFollowerCount = (TextView) findViewById(R.id.text_header_follow_count);
+            txtFollowerCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), count));
+        }
     }
 
-    private void updateFollowerCount() {
+    /*
+     * get the latest info about this post's blog so we have an accurate follower count
+     */
+    private void updateBlogInfo() {
+        if (!NetworkUtils.isNetworkAvailable(getContext())) return;
+
         ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
             @Override
             public void onResult(ReaderBlog blogInfo) {
@@ -186,11 +193,11 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     };
 
     private void toggleFollowStatus() {
-        if (!NetworkUtils.checkConnection(getContext())) {
-            return;
-        }
+        if (!NetworkUtils.checkConnection(getContext())) return;
 
         final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
+        final int currentFollowerCount = mFollowerCount;
+        int newFollowerCount = isAskingToFollow ? mFollowerCount + 1 : mFollowerCount - 1;
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
@@ -204,8 +211,9 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
+                    setFollowerCount(currentFollowerCount);
                 }
-                updateFollowerCount();
+                updateBlogInfo();
             }
         };
 
@@ -221,12 +229,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         if (result) {
             mFollowButton.setIsFollowedAnimated(isAskingToFollow);
-
-            if (isAskingToFollow) {
-                setFollowerCount(mFollowerCount + 1);
-            } else {
-                setFollowerCount(mFollowerCount - 1);
-            }
+            setFollowerCount(newFollowerCount);
         }
     }
 }
