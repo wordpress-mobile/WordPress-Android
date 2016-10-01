@@ -149,7 +149,7 @@ public class PostUploadService extends Service {
         }
     }
 
-    private void postUploaded() {
+    private void finishUpload() {
         synchronized (mPostsList) {
             mCurrentTask = null;
             mCurrentUploadingPost = null;
@@ -552,7 +552,8 @@ public class PostUploadService extends Service {
             mPostUploadNotifier.cancelNotification(event.post);
             SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
             mPostUploadNotifier.updateNotificationSuccess(event.post, site, true);
-            postUploaded();
         }
+
+        finishUpload();
     }
 }
