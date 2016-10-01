@@ -19,6 +19,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -126,18 +127,22 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             imgAvatar.showDefaultGravatarImage();
         }
 
-        if (mPost.hasBlogUrl()) {
-            int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
-            String blavatarUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz);
-            imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
-        } else {
-            imgBlavatar.showDefaultBlavatarImage();
-        }
-
         // show current follower count
         ReaderBlog blogInfo = mPost.feedId != 0 ? ReaderBlogTable.getFeedInfo(mPost.feedId) : ReaderBlogTable.getBlogInfo(mPost.blogId);
         if (blogInfo != null) {
             setFollowerCount(blogInfo.numSubscribers);
+        }
+
+        // first get blavatar from blogInfo, fall back to creating one from blog's url
+        int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
+        if (blogInfo != null && blogInfo.hasImageUrl()) {
+            String blavatarUrl = PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), blavatarSz, blavatarSz);
+            imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        } else if (mPost.hasBlogUrl()) {
+            String blavatarUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz);
+            imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        } else {
+            imgBlavatar.showDefaultBlavatarImage();
         }
 
         // update blog info if it's time or it doesn't exist to ensure we show more accurate count
