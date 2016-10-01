@@ -23,7 +23,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
- * topmost view in post detail
+ * topmost view in post detail - contains post blavatar+avatar, author name, blog name, follower
+ * count and follow button
  */
 public class ReaderPostDetailHeaderView extends LinearLayout {
 
