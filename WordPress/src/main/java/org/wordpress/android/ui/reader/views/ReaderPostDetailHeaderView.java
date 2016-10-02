@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -76,7 +77,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         TextView txtBlogName = (TextView) findViewById(R.id.text_header_blog_name);
         TextView txtAuthorName = (TextView) findViewById(R.id.text_header_author_name);
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
-        WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
 
         boolean hasBlogName = mPost.hasBlogName();
         boolean hasAuthorName = mPost.hasAuthorName();
@@ -128,22 +128,8 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         }
 
         // show current follower count
-        ReaderBlog blogInfo = mPost.feedId != 0 ? ReaderBlogTable.getFeedInfo(mPost.feedId) : ReaderBlogTable.getBlogInfo(mPost.blogId);
-        if (blogInfo != null) {
-            setFollowerCount(blogInfo.numSubscribers);
-        }
-
-        // first get blavatar from blogInfo, fall back to creating one from blog's url
-        int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
-        if (blogInfo != null && blogInfo.hasImageUrl()) {
-            String blavatarUrl = PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), blavatarSz, blavatarSz);
-            imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
-        } else if (mPost.hasBlogUrl()) {
-            String blavatarUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz);
-            imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
-        } else {
-            imgBlavatar.showDefaultBlavatarImage();
-        }
+        ReaderBlog blogInfo = mPost.isExternal ? ReaderBlogTable.getFeedInfo(mPost.feedId) : ReaderBlogTable.getBlogInfo(mPost.blogId);
+        showBlogInfo(blogInfo);
 
         // update blog info if it's time or it doesn't exist
         if (blogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(blogInfo)) {
@@ -168,15 +154,38 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
             @Override
             public void onResult(ReaderBlog blogInfo) {
-                if (blogInfo != null) {
-                    setFollowerCount(blogInfo.numSubscribers);
-                }
+                showBlogInfo(blogInfo);
             }
         };
-        if (mPost.feedId != 0) {
+        if (mPost.isExternal) {
             ReaderBlogActions.updateFeedInfo(mPost.feedId, null, listener);
         } else {
             ReaderBlogActions.updateBlogInfo(mPost.blogId, null, listener);
+        }
+    }
+
+    private void showBlogInfo(ReaderBlog blogInfo) {
+        if (blogInfo == null) return;
+
+        setFollowerCount(blogInfo.numSubscribers);
+
+        // first get blavatar from blogInfo, fall back to creating one from blog's url
+        int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
+        if (blogInfo.hasImageUrl()) {
+            setBlavatarUrl(PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), blavatarSz, blavatarSz));
+        } else if (mPost.hasBlogUrl()) {
+            setBlavatarUrl(GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz));
+        } else {
+            setBlavatarUrl(null);
+        }
+    }
+
+    private void setBlavatarUrl(String blavatarUrl) {
+        WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
+        if (!TextUtils.isEmpty(blavatarUrl)) {
+            imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        } else {
+            imgBlavatar.showDefaultBlavatarImage();
         }
     }
 
@@ -221,7 +230,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         mFollowButton.setEnabled(false);
 
         boolean result;
-        if (mPost.feedId != 0) {
+        if (mPost.isExternal) {
             result = ReaderBlogActions.followFeedById(mPost.feedId, isAskingToFollow, listener);
         } else {
             result = ReaderBlogActions.followBlogById(mPost.blogId, isAskingToFollow, listener);
