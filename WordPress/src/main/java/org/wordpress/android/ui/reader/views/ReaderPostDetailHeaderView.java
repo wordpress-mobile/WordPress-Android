@@ -21,6 +21,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -33,6 +34,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     private ReaderPost mPost;
     private ReaderFollowButton mFollowButton;
     private int mFollowerCount;
+    private String mBlavatarUrl;
 
     public ReaderPostDetailHeaderView(Context context) {
         super(context);
@@ -181,6 +183,9 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     }
 
     private void setBlavatarUrl(String blavatarUrl) {
+        if (StringUtils.equals(blavatarUrl, mBlavatarUrl)) return;
+
+        mBlavatarUrl = blavatarUrl;
         WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
         if (!TextUtils.isEmpty(blavatarUrl)) {
             imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
