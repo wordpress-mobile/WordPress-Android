@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.widget.ImageView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -121,41 +122,43 @@ public class WordPressMediaUtils {
         return Intent.createChooser(intent, title);
     }
 
-    public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
-        Intent intent = preparelaunchCamera(activity, callback);
+    public static void launchCamera(Activity activity, String applicationId, LaunchCameraCallback callback) {
+        Intent intent = preparelaunchCamera(activity, applicationId, callback);
         if (intent != null) {
             AppLockManager.getInstance().setExtendedTimeout();
             activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
     }
 
-    public static void launchCamera(Fragment fragment, LaunchCameraCallback callback) {
+    public static void launchCamera(Fragment fragment, String applicationId, LaunchCameraCallback callback) {
         if (!fragment.isAdded()) {
             return;
         }
-        Intent intent = preparelaunchCamera(fragment.getActivity(), callback);
+        Intent intent = preparelaunchCamera(fragment.getActivity(), applicationId, callback);
         if (intent != null) {
             AppLockManager.getInstance().setExtendedTimeout();
             fragment.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
     }
 
-    private static Intent preparelaunchCamera(Context context, LaunchCameraCallback callback) {
+    private static Intent preparelaunchCamera(Context context, String applicationId, LaunchCameraCallback callback) {
         String state = android.os.Environment.getExternalStorageState();
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
             showSDCardRequiredDialog(context);
             return null;
         } else {
-            return getLaunchCameraIntent(callback);
+            return getLaunchCameraIntent(context, applicationId, callback);
         }
     }
 
-    private static Intent getLaunchCameraIntent(LaunchCameraCallback callback) {
+    private static Intent getLaunchCameraIntent(Context context, String applicationId, LaunchCameraCallback callback) {
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
-        String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
+        String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System
+                .currentTimeMillis() + ".jpg";
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mediaCapturePath)));
+        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context,
+                applicationId + ".provider", new File(mediaCapturePath)));
 
         if (callback != null) {
             callback.onMediaCapturePathReady(mediaCapturePath);
@@ -173,20 +176,21 @@ public class WordPressMediaUtils {
         return intent;
     }
 
-    public static void launchPictureLibraryOrCapture(Fragment fragment, LaunchCameraCallback callback) {
+    public static void launchPictureLibraryOrCapture(Fragment fragment, String applicationId, LaunchCameraCallback
+            callback) {
         if (!fragment.isAdded()) {
             return;
         }
         AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(makePickOrCaptureIntent(fragment.getActivity(), callback),
+        fragment.startActivityForResult(makePickOrCaptureIntent(fragment.getActivity(), applicationId, callback),
                 RequestCodes.PICTURE_LIBRARY_OR_CAPTURE);
     }
 
-    private static Intent makePickOrCaptureIntent(Context context, LaunchCameraCallback callback) {
+    private static Intent makePickOrCaptureIntent(Context context, String applicationId, LaunchCameraCallback callback) {
         Intent pickPhotoIntent = prepareGalleryIntent(context.getString(R.string.capture_or_pick_photo));
 
         if (DeviceUtils.getInstance().hasCamera(context)) {
-            Intent cameraIntent = getLaunchCameraIntent(callback);
+            Intent cameraIntent = getLaunchCameraIntent(context, applicationId, callback);
             pickPhotoIntent.putExtra(
                     Intent.EXTRA_INITIAL_INTENTS,
                     new Intent[]{ cameraIntent });

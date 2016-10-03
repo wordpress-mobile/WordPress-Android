@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.RequestCodes;
@@ -134,12 +135,13 @@ public class MediaPickerActivity extends AppCompatActivity
         if (item.getItemId() == android.R.id.home) {
             finish();
         } else if (item.getItemId() == R.id.capture_image) {
-            WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {
-                @Override
-                public void onMediaCapturePathReady(String mediaCapturePath) {
-                    mCapturePath = mediaCapturePath;
-                }
-            });
+            WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
+                    new WordPressMediaUtils.LaunchCameraCallback() {
+                        @Override
+                        public void onMediaCapturePathReady(String mediaCapturePath) {
+                            mCapturePath = mediaCapturePath;
+                        }
+                    });
             return true;
         } else if (item.getItemId() == R.id.capture_video) {
             WordPressMediaUtils.launchVideoCamera(this);
