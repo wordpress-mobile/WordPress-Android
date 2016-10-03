@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.network.BaseRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,28 @@ public class PostModelTest {
         assertFalse(testPost.equals(testPost2));
         testPost2.setRemotePostId(testPost.getRemotePostId());
         assertTrue(testPost.equals(testPost2));
+    }
+
+    @Test
+    public void testClone() {
+        PostModel testPost = PostTestUtils.generateSampleLocalDraftPost();
+
+        // Fill a few more sample fields
+        testPost.setDateCreated("1955-11-05T06:15:00-0800");
+        testPost.setStatus(PostStatus.SCHEDULED.toString());
+        List<Long> categoryList = new ArrayList<>();
+        categoryList.add(45L);
+        testPost.setCategoryIdList(categoryList);
+
+        testPost.error = new BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.PARSE_ERROR);
+
+        PostModel clonedPost = (PostModel) testPost.clone();
+
+        assertFalse(testPost == clonedPost);
+        assertTrue(testPost.equals(clonedPost));
+
+        // The inherited error should also be cloned
+        assertFalse(testPost.error == clonedPost.error);
     }
 
     @Test
