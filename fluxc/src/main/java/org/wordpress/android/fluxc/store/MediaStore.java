@@ -6,10 +6,12 @@ import com.wellsql.generated.MediaModelTable;
 import com.yarolegovich.wellsql.WellCursor;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
+import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
@@ -17,6 +19,7 @@ import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
+import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -196,42 +199,55 @@ public class MediaStore extends Store {
         mMediaXmlrpcClient = xmlrpcClient;
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
-        if (action.getType() == MediaAction.PUSH_MEDIA) {
-            performPushMedia((MediaListPayload) action.getPayload());
-        } else if (action.getType() == MediaAction.PUSHED_MEDIA) {
-            MediaListPayload payload = (MediaListPayload) action.getPayload();
-            handleMediaPushed(payload);
-        } else if (action.getType() == MediaAction.UPLOAD_MEDIA) {
-            performUploadMedia((UploadMediaPayload) action.getPayload());
-        } else if (action.getType() == MediaAction.UPLOADED_MEDIA) {
-            ProgressPayload payload = (ProgressPayload) action.getPayload();
-            handleMediaUploaded(payload);
-        } else if (action.getType() == MediaAction.FETCH_ALL_MEDIA) {
-            performFetchAllMedia((MediaListPayload) action.getPayload());
-        } else if (action.getType() == MediaAction.FETCH_MEDIA) {
-            performFetchMedia((MediaListPayload) action.getPayload());
-        } else if (action.getType() == MediaAction.FETCHED_MEDIA) {
-            MediaListPayload payload = (MediaListPayload) action.getPayload();
-            handleMediaFetched(payload.cause, payload);
-        } else if (action.getType() == MediaAction.DELETE_MEDIA) {
-            performDeleteMedia((MediaListPayload) action.getPayload());
-        } else if (action.getType() == MediaAction.DELETED_MEDIA) {
-            MediaListPayload payload = (MediaListPayload) action.getPayload();
-            handleMediaDeleted(payload);
-        } else if (action.getType() == MediaAction.UPDATE_MEDIA) {
-            MediaListPayload payload = (MediaListPayload) action.getPayload();
-            updateMedia(payload.media, true);
-        } else if (action.getType() == MediaAction.REMOVE_MEDIA) {
-            MediaListPayload payload = (MediaListPayload) action.getPayload();
-            removeMedia(payload.media);
+        IAction actionType = action.getType();
+        if (!(actionType instanceof MediaAction)) {
+            return;
+        }
+
+        switch ((MediaAction) actionType) {
+            case PUSH_MEDIA:
+                performPushMedia((MediaListPayload) action.getPayload());
+                break;
+            case UPLOAD_MEDIA:
+                performUploadMedia((UploadMediaPayload) action.getPayload());
+                break;
+            case FETCH_ALL_MEDIA:
+                performFetchAllMedia((MediaListPayload) action.getPayload());
+                break;
+            case FETCH_MEDIA:
+                performFetchMedia((MediaListPayload) action.getPayload());
+                break;
+            case DELETE_MEDIA:
+                performDeleteMedia((MediaListPayload) action.getPayload());
+                break;
+            case PUSHED_MEDIA:
+                handleMediaPushed((MediaListPayload) action.getPayload());
+                break;
+            case UPLOADED_MEDIA:
+                handleMediaUploaded((ProgressPayload) action.getPayload());
+                break;
+            case FETCHED_MEDIA:
+                MediaListPayload payload = (MediaListPayload) action.getPayload();
+                handleMediaFetched(payload.cause, payload);
+                break;
+            case DELETED_MEDIA:
+                handleMediaDeleted((MediaListPayload) action.getPayload());
+                break;
+            case UPDATE_MEDIA:
+                updateMedia(((MediaListPayload) action.getPayload()).media, true);
+                break;
+            case REMOVE_MEDIA:
+                removeMedia(((MediaListPayload) action.getPayload()).media);
+                break;
         }
     }
 
     @Override
     public void onRegister() {
+        AppLog.d(AppLog.T.MEDIA, "MediaStore onRegister");
     }
 
     //
@@ -433,16 +449,20 @@ public class MediaStore extends Store {
         }
     }
 
+    private void handleMediaPushed(@NonNull MediaListPayload payload) {
+        OnMediaChanged onMediaChanged = new OnMediaChanged(payload.cause, payload.media);
+        if (payload.isError()) {
+            onMediaChanged.error = payload.error;
+        } else {
+            updateMedia(payload.media, false);
+        }
+        emitChange(onMediaChanged);
+    }
+
     private void handleMediaUploaded(@NonNull ProgressPayload payload) {
         OnMediaUploaded onMediaUploaded = new OnMediaUploaded(payload.media, payload.progress, payload.completed);
         onMediaUploaded.error = payload.error;
         emitChange(onMediaUploaded);
-    }
-
-    private void handleMediaPushed(@NonNull MediaListPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.PUSH_MEDIA, payload.media);
-        onMediaChanged.error = payload.error;
-        emitChange(onMediaChanged);
     }
 
     private void handleMediaFetched(MediaAction cause, @NonNull MediaListPayload payload) {

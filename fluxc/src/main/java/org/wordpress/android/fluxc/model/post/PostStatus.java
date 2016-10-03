@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.model.post;
 
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.utils.DateTimeUtils;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +14,25 @@ public enum PostStatus {
     PENDING,
     TRASHED,
     SCHEDULED; // NOTE: Only recognized for .com REST posts - XML-RPC returns scheduled posts with status 'publish'
+
+    public String toString() {
+        switch (this) {
+            case PUBLISHED:
+                return "publish";
+            case DRAFT:
+                return "draft";
+            case PRIVATE:
+                return "private";
+            case PENDING:
+                return "pending";
+            case TRASHED:
+                return "trash";
+            case SCHEDULED:
+                return "future";
+            default:
+                return "";
+        }
+    }
 
     private static synchronized PostStatus fromStringAndDateGMT(String value, long dateCreatedGMT) {
         if (value == null) {
@@ -45,31 +64,12 @@ public enum PostStatus {
         String value = post.getStatus();
         long dateCreatedGMT = 0;
         if (post.getDateCreated() != null) {
-            Date dateCreated = DateTimeUtils.dateFromIso8601(post.getDateCreated());
+            Date dateCreated = DateTimeUtils.dateUTCFromIso8601(post.getDateCreated());
             if (dateCreated != null) {
                 dateCreatedGMT = dateCreated.getTime();
             }
         }
         return fromStringAndDateGMT(value, dateCreatedGMT);
-    }
-
-    public static String toString(PostStatus status) {
-        switch (status) {
-            case PUBLISHED:
-                return "publish";
-            case DRAFT:
-                return "draft";
-            case PRIVATE:
-                return "private";
-            case PENDING:
-                return "pending";
-            case TRASHED:
-                return "trash";
-            case SCHEDULED:
-                return "future";
-            default:
-                return "";
-        }
     }
 
     public static String postStatusListToString(List<PostStatus> statusList) {
