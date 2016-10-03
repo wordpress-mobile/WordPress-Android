@@ -46,6 +46,7 @@
 	<string name="purchases_request_error">Algo fue mal. No se pudo realizar la compra.</string>
 	<string name="delete_site_progress">Borrando sitio...</string>
 	<string name="delete_site_summary">Esta acción no se puede deshacer. Eliminar tu sitio eliminará todo el contenido, contribuidores y dominios de tu sitio.</string>
+	<string name="delete_site_hint">Borrar tu sitio</string>
 	<string name="export_site_hint">Exportar tu sitio a un archivo XML</string>
 	<string name="are_you_sure">¿Estás seguro?</string>
 	<string name="export_site_summary">Si estás seguro, por favor asegúrate de invertir tiempo en exportar tu contenido ahora. No podrá ser recuperado en el futuro.</string>
@@ -81,6 +82,7 @@
 	<string name="theme_premium">Premium</string>
 	<string name="theme_free">Gratis</string>
 	<string name="post_format_status">Estado</string>
+	<string name="alignment_center">Centrado</string>
 	<string name="post_format_image">Imagen</string>
 	<string name="post_format_gallery">Galería</string>
 	<string name="post_format_standard">Estándar</string>
@@ -985,6 +987,7 @@
 	<string name="scaled_image">Ancho de la imagen en escala</string>
 	<string name="scheduled">Programado</string>
 	<string name="link_enter_url">URL</string>
+	<string name="uploading">Subiendo</string>
 	<string name="version">Versión</string>
 	<string name="tos">Términos del servicio</string>
 	<string name="app_title">WordPress para Android</string>
@@ -1012,6 +1015,7 @@
 	<string name="categories">Categorías</string>
 	<string name="dlg_deleting_comments">Eliminando comentarios</string>
 	<string name="notification_blink">Notificación luminosa</string>
+	<string name="notification_sound">Notificación sonora</string>
 	<string name="notification_vibrate">Vibrar</string>
 	<string name="status">Estado</string>
 	<string name="location">Ubicación</string>
