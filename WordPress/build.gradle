@@ -34,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "5.9-rc-1"
-        versionCode 302
+        versionName "5.9-rc-2"
+        versionCode 305
         minSdkVersion 16
         targetSdkVersion 24
 
@@ -105,13 +105,14 @@ dependencies {
     compile 'org.wordpress:persistentedittext:1.0.1'
     compile 'org.wordpress:emailchecker2:1.1.0'
 
-    compile 'com.yalantis:ucrop:1.5.0'
+    compile 'com.yalantis:ucrop:2.2.0'
     compile 'com.github.xizzhu:simple-tool-tip:0.5.0'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
     androidTestCompile 'org.mockito:mockito-core:+'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
+    androidTestCompile 'com.squareup.okio:okio:1.9.0' // explicitly compile okio to match the version needed by ucrop
 
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central

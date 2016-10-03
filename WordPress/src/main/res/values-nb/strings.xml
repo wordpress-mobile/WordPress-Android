@@ -238,7 +238,6 @@
 	<string name="nux_welcome_create_account">Opprett konto</string>
 	<string name="nux_oops_not_selfhosted_blog">Logg inn på WordPress.com</string>
 	<string name="signing_in">Logger inn …</string>
-	<string name="reader_timespan_now">nå</string>
 	<string name="reader_btn_share">Del</string>
 	<string name="reader_btn_follow">Følg</string>
 	<string name="jetpack_not_found">Fant ikke utvidelsen Jetpack</string>
