@@ -7,8 +7,8 @@
 
     <FrameLayout
         android:id="@+id/frame_avatar"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="@dimen/reader_detail_header_avatar_frame"
+        android:layout_height="@dimen/reader_detail_header_avatar_frame"
         android:layout_marginRight="@dimen/margin_large"
         tools:layout_centerVertical="true">
 

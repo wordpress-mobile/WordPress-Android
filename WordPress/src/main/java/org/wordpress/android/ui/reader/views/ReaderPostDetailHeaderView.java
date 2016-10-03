@@ -171,14 +171,25 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         setFollowerCount(blogInfo.numSubscribers);
 
+        // load the blavatar if there is one, otherwise hide the blavatar and set the avatar
+        // to the same size as its parent frame
+        int avatarSz;
         WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
         if (blogInfo.hasImageUrl()) {
             int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
             String blavatarUrl = PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), blavatarSz, blavatarSz);
+            imgBlavatar.setVisibility(View.VISIBLE);
             imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar);
         } else {
-            imgBlavatar.showDefaultBlavatarImage();
+            imgBlavatar.setVisibility(View.GONE);
+            avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar_frame);
+
         }
+
+        WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
+        imgAvatar.getLayoutParams().height = avatarSz;
+        imgAvatar.getLayoutParams().width = avatarSz;
     }
 
     /*
