@@ -504,7 +504,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // Make sure there are no media in "uploading"
         for (long currentId : ids) {
-            if (WordPressMediaUtils.canDeleteMedia(blogId, String.valueOf(currentId))) {
+            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(), currentId);
+            if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
                 sanitizedIds.add(String.valueOf(currentId));
             }
         }

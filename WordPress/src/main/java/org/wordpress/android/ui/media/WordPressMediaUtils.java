@@ -21,6 +21,7 @@ import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
@@ -214,14 +215,8 @@ public class WordPressMediaUtils {
         }
     }
 
-    public static boolean canDeleteMedia(String blogId, String mediaID) {
-        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaID);
-        if (!cursor.moveToFirst()) {
-            cursor.close();
-            return false;
-        }
-        String state = cursor.getString(cursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-        cursor.close();
+    public static boolean canDeleteMedia(MediaModel mediaModel) {
+        String state = mediaModel.getUploadState();
         return state == null || !state.equals("uploading");
     }
 
