@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,7 +20,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -129,9 +127,11 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             imgAvatar.showDefaultGravatarImage();
         }
 
-        // show current follower count
+        // get local blog info so we can set the follower count and blavatar
         ReaderBlog blogInfo = mPost.isExternal ? ReaderBlogTable.getFeedInfo(mPost.feedId) : ReaderBlogTable.getBlogInfo(mPost.blogId);
-        showBlogInfo(blogInfo);
+        if (blogInfo != null) {
+            showBlogInfo(blogInfo);
+        }
 
         // update blog info if it's time or it doesn't exist
         if (blogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(blogInfo)) {
@@ -171,23 +171,10 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         setFollowerCount(blogInfo.numSubscribers);
 
-        // first get blavatar from blogInfo, fall back to creating one from blog's url
-        int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
-        if (blogInfo.hasImageUrl()) {
-            setBlavatarUrl(PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), blavatarSz, blavatarSz));
-        } else if (mPost.hasBlogUrl()) {
-            setBlavatarUrl(GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz));
-        } else {
-            setBlavatarUrl(null);
-        }
-    }
-
-    private void setBlavatarUrl(String blavatarUrl) {
-        if (StringUtils.equals(blavatarUrl, mBlavatarUrl)) return;
-
-        mBlavatarUrl = blavatarUrl;
         WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
-        if (!TextUtils.isEmpty(blavatarUrl)) {
+        if (blogInfo.hasImageUrl()) {
+            int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
+            String blavatarUrl = PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), blavatarSz, blavatarSz);
             imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
         } else {
             imgBlavatar.showDefaultBlavatarImage();
