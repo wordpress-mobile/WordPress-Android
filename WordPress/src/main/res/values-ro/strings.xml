@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_image_count_one">1 imagine</string>
+	<string name="timespan_now">acum</string>
 	<string name="role_admin">Administrator</string>
 	<string name="role_editor">Editor</string>
 	<string name="role_author">Autor</string>
@@ -29,7 +31,7 @@
 	<string name="follower_remove_confirmation_message">Dacă-l înlături, acest urmăritor nu va mai primi notificări despre acest sit, decât dacă-l reurmărește.\n\nMai vrei să înlături acest urmăritor?</string>
 	<string name="follower_subscribed_since">De la %1$s</string>
 	<string name="reader_label_view_gallery">Vizualizează galeria</string>
-	<string name="reader_label_image_count">%d imagini</string>
+	<string name="reader_label_image_count_multi">%d imagini</string>
 	<string name="error_remove_follower">N-am putut înlătura urmăritorul</string>
 	<string name="error_remove_viewer">N-am putut înlătura vizitatorul</string>
 	<string name="error_fetch_email_followers_list">N-am putut aduce urmăritorii prin email ai sitului</string>
@@ -987,7 +989,6 @@
 	<string name="reader_label_added_tag">%s adăugat</string>
 	<string name="reader_btn_unfollow">Urmăresc</string>
 	<string name="reader_btn_follow">Urmărește</string>
-	<string name="reader_timespan_now">acum</string>
 	<string name="reader_untitled_post">(Fără titlu)</string>
 	<string name="jetpack_not_found">Modulul Jetpack nu e găsit</string>
 	<string name="select_from_media_library">Selectează din biblioteca media</string>
