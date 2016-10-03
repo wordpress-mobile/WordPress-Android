@@ -24,14 +24,15 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
-import org.wordpress.android.fluxc.utils.DateTimeUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
@@ -140,7 +141,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void pushPost(final PostModel post, final SiteModel site) {
         if (TextUtils.isEmpty(post.getStatus())) {
-            post.setStatus(PostStatus.toString(PostStatus.PUBLISHED));
+            post.setStatus(PostStatus.PUBLISHED.toString());
         }
 
         Map<String, Object> contentStruct = postModelToContentStruct(post);
@@ -301,10 +302,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 Map<?, ?> customFieldMap = (Map<?, ?>) customField;
                 if (customFieldMap.get("key") != null && customFieldMap.get("value") != null) {
                     if (customFieldMap.get("key").equals("geo_longitude")) {
-                        postLocation.setLongitude(Long.valueOf(customFieldMap.get("value").toString()));
+                        postLocation.setLongitude(XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0));
                     }
                     if (customFieldMap.get("key").equals("geo_latitude")) {
-                        postLocation.setLatitude(Long.valueOf(customFieldMap.get("value").toString()));
+                        postLocation.setLatitude(XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0));
                     }
                 }
             }
@@ -353,7 +354,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         if (post.getDateCreated() != null) {
             String dateCreated = post.getDateCreated();
-            Date date = DateTimeUtils.dateFromIso8601(dateCreated);
+            Date date = DateTimeUtils.dateUTCFromIso8601(dateCreated);
             if (date != null) {
                 contentStruct.put("post_date", date);
                 // Redundant, but left in just in case
