@@ -10,7 +10,7 @@
 	<string name="alignment_none">Нет</string>
 	<string name="alignment_left">Слева</string>
 	<string name="alignment_right">Справа</string>
-	<string name="site_settings_list_editor_action_mode_title">Выбрано %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Выбрано %1$d</string>
 	<string name="error_fetch_users_list">Не удалось получить список пользователей сайта</string>
 	<string name="plans_manage">Управление тарифными планами:\nwordpress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">У вас пока нет обозревателей.</string>
@@ -28,7 +28,6 @@
 	<string name="viewer_remove_confirmation_message">Если удалить этого обозревателя, он больше не сможет зайти на ваш сайт.\n\nВсё равно удалить этого обозревателя?</string>
 	<string name="follower_remove_confirmation_message">Если удалить этого читателя, он больше не будет получать уведомления об изменениях на этом сайте, пока не восстановит подписку.\n\nВсё равно удалить этого читателя?</string>
 	<string name="reader_label_view_gallery">Просмотр галереи</string>
-	<string name="reader_label_image_count">%d изображ</string>
 	<string name="error_remove_follower">Не удалось удалить читателя</string>
 	<string name="error_remove_viewer">Не удалось удалить обозревателя</string>
 	<string name="error_fetch_email_followers_list">Не удалось получить список подписчиков по электронной почте</string>
@@ -975,7 +974,6 @@
 	<string name="select_from_media_library">Выбрать из медиа-библиотеки</string>
 	<string name="jetpack_message">Для статистики нужен плагин Jetpack. Хотите установить его?</string>
 	<string name="jetpack_not_found">Плагин Jetpack не найден</string>
-	<string name="reader_timespan_now">сейчас</string>
 	<string name="reader_untitled_post">(Без названия)</string>
 	<string name="reader_share_subject">Поделиться через %s</string>
 	<string name="reader_btn_share">Поделиться</string>

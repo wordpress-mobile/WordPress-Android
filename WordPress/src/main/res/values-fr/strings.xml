@@ -10,7 +10,7 @@
 	<string name="alignment_none">Aucun</string>
 	<string name="alignment_left">Gauche</string>
 	<string name="alignment_right">Droit</string>
-	<string name="site_settings_list_editor_action_mode_title">Sélectionné %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Sélectionné %1$d</string>
 	<string name="error_fetch_users_list">Impossible de récupérer les utilisateurs du site</string>
 	<string name="plans_manage">Gérez votre plan sur\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Vous n\'avez pas encore de lecteur.</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Une fois supprimé, cet abonné ne recevra plus de notifications à propos de ce site, à moins de se réabonner.\n\nVoulez-vous vraiment supprimer cet abonné ?</string>
 	<string name="follower_subscribed_since">Depuis le %1$s</string>
 	<string name="reader_label_view_gallery">Afficher la galerie</string>
-	<string name="reader_label_image_count">%d images</string>
 	<string name="error_remove_follower">Impossible de supprimer l\'abonné</string>
 	<string name="error_remove_viewer">Impossible de supprimer le lecteur</string>
 	<string name="error_fetch_email_followers_list">Impossible de récupérer les abonnés par e-mail</string>
@@ -978,7 +977,6 @@
 	<string name="select_from_media_library">Sélectionner depuis la bibliothèque média</string>
 	<string name="jetpack_message">Le module Jetpack est requis pour afficher les statistiques. Voulez-vous installer Jetpack ?</string>
 	<string name="jetpack_not_found">Le module Jetpack est introuvable</string>
-	<string name="reader_timespan_now">actuellement</string>
 	<string name="reader_untitled_post">(Sans Titre)</string>
 	<string name="reader_share_subject">Partagé depuis %s</string>
 	<string name="reader_btn_share">Partager</string>

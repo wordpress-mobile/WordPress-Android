@@ -10,12 +10,11 @@
 	<string name="alignment_none">無</string>
 	<string name="alignment_left">左</string>
 	<string name="alignment_right">右</string>
-	<string name="site_settings_list_editor_action_mode_title">已選取 %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">已選取 %1$d</string>
 	<string name="viewer_remove_confirmation_message">如果移除這位瀏覽者，對方將無法造訪此網站。\n\n仍要移除這位瀏覽者嗎？</string>
 	<string name="follower_remove_confirmation_message">移除後，這位關注者如果沒有重新關注，就會停止收到此網站的通知。\n\n仍要移除這位關注者嗎？</string>
 	<string name="follower_subscribed_since">自 %1$s 開始</string>
 	<string name="reader_label_view_gallery">檢視圖庫</string>
-	<string name="reader_label_image_count">%d 張圖片</string>
 	<string name="error_remove_follower">無法移除關注者</string>
 	<string name="error_remove_viewer">無法移除瀏覽者</string>
 	<string name="error_fetch_email_followers_list">無法擷取網站電子郵件關注者</string>
@@ -954,7 +953,6 @@
 	<string name="select_from_media_library">從媒體庫選擇</string>
 	<string name="jetpack_message">Jetpack 外掛需要統計資訊。你想要安裝 Jetpack 嗎？</string>
 	<string name="jetpack_not_found">找不到 Jetpack</string>
-	<string name="reader_timespan_now">現在</string>
 	<string name="reader_untitled_post">（未命名）</string>
 	<string name="reader_share_subject">從 %s 分享</string>
 	<string name="reader_btn_share">分享</string>

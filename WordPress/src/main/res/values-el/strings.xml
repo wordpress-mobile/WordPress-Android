@@ -933,7 +933,6 @@
 	<string name="select_from_media_library">Διαλέξτε από την βιβλιοθήκη πολυμέσων</string>
 	<string name="jetpack_message">Το Jetpack plugin είναι αναγκαίο για την συλλογή στατιστικών στοιχείων. Θέλετε να εγκαταστήσετε το Jetpack;</string>
 	<string name="jetpack_not_found">Δεν βρέθηκε το Jetpack plugin</string>
-	<string name="reader_timespan_now">τώρα</string>
 	<string name="reader_untitled_post">Ανώνυμο</string>
 	<string name="reader_share_subject">Μοιράστηκε από %s</string>
 	<string name="reader_btn_share">Μοιράσου</string>

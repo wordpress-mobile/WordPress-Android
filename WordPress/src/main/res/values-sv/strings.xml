@@ -10,7 +10,7 @@
 	<string name="alignment_none">Ingen</string>
 	<string name="alignment_left">Vänster</string>
 	<string name="alignment_right">Höger</string>
-	<string name="site_settings_list_editor_action_mode_title">Vald %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Vald %1$d</string>
 	<string name="error_fetch_users_list">Kunde inte hämta webbplatsens användare</string>
 	<string name="plans_manage">Uppgradera ditt paket på\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Du har inga läsare än.</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Om följaren tas bort kommer hen inte längre få notiser från denna webbplats såvida de inte följer webbplatsen på nytt.\n\nVill du fortfarande ta bort denna följare?</string>
 	<string name="follower_subscribed_since">Sedan %1$s</string>
 	<string name="reader_label_view_gallery">Visa galleri</string>
-	<string name="reader_label_image_count">%d bilder</string>
 	<string name="error_remove_follower">Kunde inte ta bort följare</string>
 	<string name="error_remove_viewer">Kunde inte ta bort läsare</string>
 	<string name="error_fetch_email_followers_list">Kunde inte hämta följare via e-post</string>
@@ -978,7 +977,6 @@
 	<string name="select_from_media_library">Välj från mediebiblioteket</string>
 	<string name="jetpack_message">Jetpack-tillägget behövs för att visa statistik. Vill du installera Jetpack?</string>
 	<string name="jetpack_not_found">Jetpack-tillägget kunde inte hittas</string>
-	<string name="reader_timespan_now">nu</string>
 	<string name="reader_untitled_post">(Ingen titel)</string>
 	<string name="reader_share_subject">Delad från %s</string>
 	<string name="reader_btn_share">Dela</string>
