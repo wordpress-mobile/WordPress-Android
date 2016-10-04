@@ -60,6 +60,8 @@ public class CommentSqlUtils {
         return WellSql.select(CommentModel.class)
                 .where().beginGroup()
                 .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
-                .endGroup().endWhere().getAsModel();
+                .endGroup().endWhere()
+                .orderBy(CommentModelTable.DATE_PUBLISHED, SelectQuery.ORDER_ASCENDING)
+                .getAsModel();
     }
 }
