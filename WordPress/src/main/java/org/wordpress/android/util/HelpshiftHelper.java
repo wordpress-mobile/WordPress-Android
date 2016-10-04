@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.helpshift.Core;
+import com.helpshift.InstallConfig;
+import com.helpshift.exceptions.InstallException;
 import com.helpshift.support.Support;
 import com.helpshift.support.Support.Delegate;
 
@@ -16,6 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.File;
 import java.util.HashMap;
@@ -84,11 +87,16 @@ public class HelpshiftHelper {
     }
 
     public static void init(Application application) {
-        HashMap<String, Boolean> config = new HashMap<String, Boolean>();
-        config.put("enableInAppNotification", false);
+        InstallConfig installConfig = new InstallConfig.Builder()
+                .setEnableInAppNotification(true)
+                .build();
         Core.init(Support.getInstance());
-        Core.install(application, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
-                BuildConfig.HELPSHIFT_API_ID, config);
+        try {
+            Core.install(application, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
+                    BuildConfig.HELPSHIFT_API_ID, installConfig);
+        } catch (InstallException e) {
+            AppLog.e(T.UTILS, e);
+        }
         Support.setDelegate(new Delegate() {
             @Override
             public void sessionBegan() {
