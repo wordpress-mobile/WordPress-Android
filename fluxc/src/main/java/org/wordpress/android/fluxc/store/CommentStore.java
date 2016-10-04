@@ -52,6 +52,14 @@ public class CommentStore extends Store {
         }
     }
 
+    public static class InstantiateCommentPayload extends Payload {
+        public final SiteModel site;
+
+        public InstantiateCommentPayload(@NonNull SiteModel site) {
+            this.site = site;
+        }
+    }
+
     public static class FetchCommentsResponsePayload extends Payload {
         public final List<CommentModel> comments;
         public CommentError error;
@@ -94,6 +102,15 @@ public class CommentStore extends Store {
         }
     }
 
+    public class OnCommentInstantiated extends OnChanged<CommentError> {
+        public CommentModel comment;
+        public OnCommentInstantiated(CommentModel comment) {
+            this.comment = comment;
+        }
+    }
+
+    // Constructor
+
     @Inject
     public CommentStore(Dispatcher dispatcher, CommentRestClient commentRestClient, CommentXMLRPCClient
             commentXMLRPCClient) {
@@ -101,6 +118,14 @@ public class CommentStore extends Store {
         mCommentRestClient = commentRestClient;
         mCommentXMLRPCClient = commentXMLRPCClient;
     }
+
+    // Getters
+
+    public List<CommentModel> getCommentsForSite(SiteModel site) {
+        return CommentSqlUtils.getCommentsForSite(site);
+    }
+
+    // Store Methods
 
     @Override
     @Subscribe
@@ -123,6 +148,9 @@ public class CommentStore extends Store {
             case FETCHED_COMMENT:
                 handleFetchCommentResponse((org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload) action.getPayload());
                 break;
+            case INSTANTIATE_COMMENT:
+                instantiateComment((InstantiateCommentPayload) action.getPayload());
+                break;
             case UPDATE_COMMENT:
                 updateComment((CommentModel) action.getPayload());
                 break;
@@ -136,11 +164,20 @@ public class CommentStore extends Store {
                 removeComment((CommentModel) action.getPayload());
                 break;
             case DELETE_COMMENT:
+                deleteComment((RemoteCommentPayload) action.getPayload());
                 break;
             case DELETED_COMMENT:
+                handleDeletedCommentResponse((RemoteCommentResponsePayload) action.getPayload());
                 break;
         }
     }
+
+    @Override
+    public void onRegister() {
+        AppLog.d(T.API, this.getClass().getName() + ": onRegister");
+    }
+
+    // Private methods
 
     private void updateComment(CommentModel payload) {
         int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload);
@@ -152,11 +189,18 @@ public class CommentStore extends Store {
         CommentSqlUtils.deleteComment(payload);
     }
 
-    private void deleteComment(CommentModel payload) {
+    private void instantiateComment(InstantiateCommentPayload payload) {
+        CommentModel comment = new CommentModel();
+        comment.setLocalSiteId(payload.site.getId());
+        CommentSqlUtils.insertOrUpdateComment(comment);
+        emitChange(new OnCommentInstantiated(comment));
+    }
+
+    private void deleteComment(RemoteCommentPayload payload) {
         // FIXME
     }
 
-    private void handleDeletedComment(CommentModel payload) {
+    private void handleDeletedCommentResponse(RemoteCommentResponsePayload payload) {
         // FIXME
     }
 
@@ -211,16 +255,5 @@ public class CommentStore extends Store {
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.error = payload.error;
         emitChange(event);
-    }
-
-    @Override
-    public void onRegister() {
-        AppLog.d(T.API, this.getClass().getName() + ": onRegister");
-    }
-
-    // Getters
-
-    public List<CommentModel> getCommentsForSite(SiteModel site) {
-        return CommentSqlUtils.getCommentsForSite(site);
     }
 }

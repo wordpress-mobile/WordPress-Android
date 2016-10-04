@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
+import org.wordpress.android.fluxc.store.CommentStore.InstantiateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 
@@ -19,6 +20,8 @@ public enum CommentAction implements IAction {
     FETCH_COMMENT,
     @Action(payloadType = RemoteCommentResponsePayload.class)
     FETCHED_COMMENT,
+    @Action(payloadType = InstantiateCommentPayload.class)
+    INSTANTIATE_COMMENT,
     @Action(payloadType = CommentModel.class)
     UPDATE_COMMENT,
     @Action(payloadType = RemoteCommentPayload.class)
