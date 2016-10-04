@@ -27,7 +27,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -941,13 +940,6 @@ public class WordPressDB {
 
     }
 
-    /** For a given blogId, get the first media files **/
-    public Cursor getFirstMediaFileForBlog(String blogId) {
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND " +
-                           "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) ORDER BY (uploadState=?) DESC, date_created_gmt DESC LIMIT 1",
-                new String[]{blogId, "uploading"});
-    }
-
     /** For a given blogId, get all the media files **/
     public Cursor getMediaFilesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
@@ -957,20 +949,6 @@ public class WordPressDB {
     /** For a given blogId, get the media file with the given media_id **/
     public Cursor getMediaFile(String blogId, String mediaId) {
         return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[]{blogId, mediaId});
-    }
-
-    /**
-     * Given a VideoPress id, returns the corresponding remote video URL stored in the DB
-     */
-    public String getMediaUrlByVideoPressId(String blogId, String videoId) {
-        if (TextUtils.isEmpty(blogId) || TextUtils.isEmpty(videoId)) {
-            return "";
-        }
-
-        String shortcode = ShortcodeUtils.getVideoPressShortcodeFromId(videoId);
-
-        String query = "SELECT " + COLUMN_NAME_FILE_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND videoPressShortcode=?";
-        return SqlUtils.stringForQuery(db, query, new String[]{blogId, shortcode});
     }
 
     public String getMediaThumbnailUrl(int blogId, long mediaId) {
@@ -983,11 +961,6 @@ public class WordPressDB {
         int count = cursor.getCount();
         cursor.close();
         return count;
-    }
-
-    public boolean mediaFileExists(String blogId, String mediaId) {
-        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?",
-                new String[]{blogId, mediaId});
     }
 
     public Cursor getMediaImagesForBlog(String blogId) {
@@ -1009,19 +982,6 @@ public class WordPressDB {
 
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
                 + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? " + mediaIdsStr + " ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "image%", "uploading"});
-    }
-
-    public Cursor getMediaFiles(String blogId, ArrayList<String> mediaIds) {
-        if (mediaIds == null || mediaIds.size() == 0)
-            return null;
-
-        String mediaIdsStr = "(";
-        for (String mediaId : mediaIds) {
-            mediaIdsStr += "'" + mediaId + "',";
-        }
-        mediaIdsStr = mediaIdsStr.subSequence(0, mediaIdsStr.length() - 1) + ")";
-
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId IN " + mediaIdsStr, new String[] { blogId });
     }
 
     public MediaFile getMediaFile(String src, Post post) {
@@ -1140,16 +1100,6 @@ public class WordPressDB {
         db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[]{blogId, "uploading"});
     }
 
-    /** For a given blogId, clear the upload states in the upload queue **/
-    public void clearMediaUploaded(String blogId) {
-        if (blogId == null || blogId.equals(""))
-            return;
-
-        ContentValues values = new ContentValues();
-        values.putNull("uploadState");
-        db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[]{blogId, "uploaded"});
-    }
-
     /** Delete a media item from a blog locally **/
     public void deleteMediaFile(String blogId, String mediaId) {
         db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
@@ -1181,18 +1131,6 @@ public class WordPressDB {
         return db.rawQuery("SELECT blogId, mediaId FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=? LIMIT 1",
                 new String[]{"delete", blogId});
     }
-
-    /** Get all media files scheduled for delete for a given blogId **/
-    public Cursor getMediaDeleteQueueItems(String blogId) {
-        return db.rawQuery("SELECT blogId, mediaId FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=?",
-                new String[]{"delete", blogId});
-    }
-
-    public boolean hasMediaDeleteQueueItems(int blogId) {
-        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + MEDIA_TABLE + " WHERE uploadState=? AND blogId=?",
-                new String[]{"delete", Integer.toString(blogId)});
-    }
-
 
     /*
      * returns the number of posts/pages in the passed blog that aren't local drafts
