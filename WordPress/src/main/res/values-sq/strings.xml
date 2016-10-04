@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_image_count_one">1 figurë</string>
+	<string name="timespan_now">tani</string>
 	<string name="role_admin">Përgjegjës</string>
 	<string name="role_editor">Redaktor</string>
 	<string name="role_author">Autor</string>
@@ -29,7 +31,7 @@
 	<string name="follower_remove_confirmation_message">Në u heqtë, ku ndjekës do të reshtë së marri njoftime mbi këtë sajt, veç në u ribëftë ndjekës.\n\nDo të donit ta hiqnit këtë ndjekës, sido qoftë?</string>
 	<string name="follower_subscribed_since">Që prej %1$s</string>
 	<string name="reader_label_view_gallery">Shihni Galerinë</string>
-	<string name="reader_label_image_count">%d figura</string>
+	<string name="reader_label_image_count_multi">%d figura</string>
 	<string name="error_remove_follower">S&amp;#8217;u hoq dot ndjekësi</string>
 	<string name="error_remove_viewer">S&amp;#8217;u hoq dot shikuesi</string>
 	<string name="error_fetch_email_followers_list">S&amp;#8217;u morën dot ndjekës të sajtit me email</string>
@@ -994,7 +996,6 @@
 	<string name="limit_reached">U mbërrit në kufi. Mund të riprovoni pas 1 minute. Riprovimi para kësaj vetëm sa do të shtojë kohën që ju duhet të prisni para se të hiqet përzënia. Nëse mendoni se ky është një gabim, lidhuni me asistencën.</string>
 	<string name="button_next">Pasuesi</string>
 	<string name="jetpack_not_found">S&amp;#8217;u gjet shtojcë Jetpack</string>
-	<string name="reader_timespan_now">tani</string>
 	<string name="reader_btn_unfollow">Ndjekur prej jush</string>
 	<string name="reader_toast_err_comment_failed">S&amp;#8217;u postua dot komenti juaj</string>
 	<string name="reader_toast_err_tag_invalid">Kjo s&amp;#8217;është etiketë e vlefshme</string>
