@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -231,7 +232,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     public void launchCamera() {
-        WordPressMediaUtils.launchCamera(this, this);
+        WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
     }
 
     public void launchVideoCamera() {
