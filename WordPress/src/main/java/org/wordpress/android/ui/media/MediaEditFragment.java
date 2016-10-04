@@ -209,7 +209,7 @@ public class MediaEditFragment extends Fragment {
         mMediaId = mediaId;
         if (getActivity() != null && mMediaId != MISSING_MEDIA_ID) {
             try {
-                MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(), mMediaId);
+                MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, mMediaId);
                 refreshViews(mediaModel);
             } catch (NumberFormatException e) {
                 AppLog.e(AppLog.T.MEDIA, "NumberFormatException converting mediaId to long: " + mMediaId);

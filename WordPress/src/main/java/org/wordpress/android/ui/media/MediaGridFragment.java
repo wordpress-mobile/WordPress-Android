@@ -331,11 +331,9 @@ public class MediaGridFragment extends Fragment
     }
 
     void updateFilterText() {
-        long siteId = mSite.getSiteId();
-
-        int countAll = mMediaStore.getSiteMediaCount(siteId);
-        int countImages = mMediaStore.getSiteImageCount(siteId);
-        int countUnattached = mMediaStore.getUnattachedSiteMediaCount(siteId);
+        int countAll = mMediaStore.getSiteMediaCount(mSite);
+        int countImages = mMediaStore.getSiteImageCount(mSite);
+        int countUnattached = mMediaStore.getUnattachedSiteMediaCount(mSite);
 
         setFiltersText(countAll, countImages, countUnattached);
     }
@@ -392,7 +390,7 @@ public class MediaGridFragment extends Fragment
 
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
-        Cursor cursor = mMediaStore.searchSiteMediaByTitleAsCursor(mSite.getSiteId(), mSearchTerm);
+        Cursor cursor = mMediaStore.searchSiteMediaByTitleAsCursor(mSite, mSearchTerm);
         mGridAdapter.changeCursor(cursor);
     }
 
@@ -487,7 +485,7 @@ public class MediaGridFragment extends Fragment
 
         // long one_day = 24 * 60 * 60 * 1000;
         // TODO: Filter images by date using `startDate.getTimeInMillis(), endDate.getTimeInMillis() + one_day`
-        Cursor cursor = mMediaStore.getAllSiteMediaAsCursor(mSite.getSiteId());
+        Cursor cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
         mGridAdapter.swapCursor(cursor);
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -510,15 +508,13 @@ public class MediaGridFragment extends Fragment
     }
 
     private Cursor filterItems(Filter filter) {
-        long siteId = mSite.getSiteId();
-
         switch (filter) {
             case ALL:
-                return mMediaStore.getAllSiteMediaAsCursor(siteId);
+                return mMediaStore.getAllSiteMediaAsCursor(mSite);
             case IMAGES:
-                return mMediaStore.getSiteImagesAsCursor(siteId);
+                return mMediaStore.getSiteImagesAsCursor(mSite);
             case UNATTACHED:
-                return mMediaStore.getUnattachedSiteMediaAsCursor(siteId);
+                return mMediaStore.getUnattachedSiteMediaAsCursor(mSite);
             case CUSTOM_DATE:
                 // show date picker only when the user clicks on the spinner, not when we are doing syncing
                 if (mIsDateFilterSet) {

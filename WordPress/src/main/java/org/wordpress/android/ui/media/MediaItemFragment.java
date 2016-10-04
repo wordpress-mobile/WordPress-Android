@@ -187,12 +187,12 @@ public class MediaItemFragment extends Fragment {
 
         MediaModel mediaModel = null;
         if (mediaId != MISSING_MEDIA_ID) {
-            mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(), mediaId);
+            mediaModel = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         }
 
         // if the id is null, get the first media item in the database
         if (mediaModel == null) {
-            List<MediaModel> list = mMediaStore.getAllSiteMedia(mSite.getSiteId());
+            List<MediaModel> list = mMediaStore.getAllSiteMedia(mSite);
             if (list != null && list.size() > 0) {
                 mediaModel = list.get(0);
             }
@@ -376,7 +376,7 @@ public class MediaItemFragment extends Fragment {
         int itemId = item.getItemId();
 
         if (itemId == R.id.menu_delete) {
-            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(), getMediaId());
+            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, getMediaId());
             boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(mediaModel);
             if (!canDeleteMedia) {
                 Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();

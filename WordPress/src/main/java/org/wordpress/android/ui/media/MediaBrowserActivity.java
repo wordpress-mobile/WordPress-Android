@@ -89,8 +89,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 // Coming from zero connection. Continue what's pending for delete
-                long siteId = mSite.getSiteId();
-                if (siteId != -1 && mMediaStore.hasSiteMediaToDelete(siteId)) {
+                if (mMediaStore.hasSiteMediaToDelete(mSite)) {
                     startMediaDeleteService();
                 }
             }
@@ -504,7 +503,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // Make sure there are no media in "uploading"
         for (long currentId : ids) {
-            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite.getSiteId(), currentId);
+            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, currentId);
             if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
                 sanitizedIds.add(String.valueOf(currentId));
             }

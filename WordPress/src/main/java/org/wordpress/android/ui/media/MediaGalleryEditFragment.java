@@ -114,7 +114,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     }
 
     private void refreshGridView() {
-        Cursor cursor = mMediaStore.getSiteMediaWithIdsAsCursor(mSite.getSiteId(), mIds);
+        Cursor cursor = mMediaStore.getSiteMediaWithIdsAsCursor(mSite, mIds);
         if (cursor == null) {
             mGridAdapter.changeCursor(null);
             return;
