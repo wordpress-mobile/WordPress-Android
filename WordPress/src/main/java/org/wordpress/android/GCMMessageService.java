@@ -422,6 +422,14 @@ public class GCMMessageService extends GcmListenerService {
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, sPreviousNoteId);
         }
 
+        //now check base64Fulldata. If it exists, put it into the resultIntent bundle
+        //so we can use it as a fallback to show something to the use in poor connectivity conditions.
+        Bundle noteBundle = sActiveNotificationsMap.get(notificationId);
+        if (noteBundle != null && noteBundle.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
+            String base64FullData = noteBundle.getString(PUSH_ARG_NOTE_FULL_DATA);
+            resultIntent.putExtra(PUSH_ARG_NOTE_FULL_DATA, base64FullData);
+        }
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         boolean shouldPlaySound = prefs.getBoolean("wp_pref_notification_sound", false);

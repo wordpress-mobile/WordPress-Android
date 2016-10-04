@@ -86,6 +86,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
                     }
                 } catch (BucketObjectMissingException e) {
+                    //FIXME MZ here decode base64fullNoteData
                     showErrorToastAndFinish();
                     return;
                 }
