@@ -254,85 +254,85 @@ public class MediaStore extends Store {
     // Media persistence
     //
 
-    public List<MediaModel> getAllSiteMedia(long siteId) {
-        return MediaSqlUtils.getAllSiteMedia(siteId);
+    public List<MediaModel> getAllSiteMedia(SiteModel siteModel) {
+        return MediaSqlUtils.getAllSiteMedia(siteModel);
     }
 
-    public WellCursor<MediaModel> getAllSiteMediaAsCursor(long siteId) {
-        return MediaSqlUtils.getAllSiteMediaAsCursor(siteId);
+    public WellCursor<MediaModel> getAllSiteMediaAsCursor(SiteModel siteModel) {
+        return MediaSqlUtils.getAllSiteMediaAsCursor(siteModel);
     }
 
-    public int getSiteMediaCount(long siteId) {
-        return getAllSiteMedia(siteId).size();
+    public int getSiteMediaCount(SiteModel siteModel) {
+        return getAllSiteMedia(siteModel).size();
     }
 
-    public boolean hasSiteMediaWithId(long siteId, long mediaId) {
-        return getSiteMediaWithId(siteId, mediaId) != null;
+    public boolean hasSiteMediaWithId(SiteModel siteModel, long mediaId) {
+        return getSiteMediaWithId(siteModel, mediaId) != null;
     }
 
-    public MediaModel getSiteMediaWithId(long siteId, long mediaId) {
-        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(siteId, mediaId);
+    public MediaModel getSiteMediaWithId(SiteModel siteModel, long mediaId) {
+        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(siteModel, mediaId);
         return media.size() > 0 ? media.get(0) : null;
     }
 
-    public List<MediaModel> getSiteMediaWithIds(long siteId, List<Long> mediaIds) {
-        return MediaSqlUtils.getSiteMediaWithIds(siteId, mediaIds);
+    public List<MediaModel> getSiteMediaWithIds(SiteModel siteModel, List<Long> mediaIds) {
+        return MediaSqlUtils.getSiteMediaWithIds(siteModel, mediaIds);
     }
 
-    public WellCursor<MediaModel> getSiteMediaWithIdsAsCursor(long siteId, List<Long> mediaIds) {
-        return MediaSqlUtils.getSiteMediaWithIdsAsCursor(siteId, mediaIds);
+    public WellCursor<MediaModel> getSiteMediaWithIdsAsCursor(SiteModel siteModel, List<Long> mediaIds) {
+        return MediaSqlUtils.getSiteMediaWithIdsAsCursor(siteModel, mediaIds);
     }
 
-    public List<MediaModel> getSiteImages(long siteId) {
-        return MediaSqlUtils.getSiteImages(siteId);
+    public List<MediaModel> getSiteImages(SiteModel siteModel) {
+        return MediaSqlUtils.getSiteImages(siteModel);
     }
 
-    public WellCursor<MediaModel> getSiteImagesAsCursor(long siteId) {
-        return MediaSqlUtils.getSiteImagesAsCursor(siteId);
+    public WellCursor<MediaModel> getSiteImagesAsCursor(SiteModel siteModel) {
+        return MediaSqlUtils.getSiteImagesAsCursor(siteModel);
     }
 
-    public int getSiteImageCount(long siteId) {
-        return getSiteImages(siteId).size();
+    public int getSiteImageCount(SiteModel siteModel) {
+        return getSiteImages(siteModel).size();
     }
 
-    public List<MediaModel> getSiteImagesExcludingIds(long siteId, List<Long> filter) {
-        return MediaSqlUtils.getSiteImagesExcluding(siteId, filter);
+    public List<MediaModel> getSiteImagesExcludingIds(SiteModel siteModel, List<Long> filter) {
+        return MediaSqlUtils.getSiteImagesExcluding(siteModel, filter);
     }
 
-    public List<MediaModel> getUnattachedSiteMedia(long siteId) {
-        return MediaSqlUtils.matchSiteMedia(siteId, MediaModelTable.POST_ID, 0);
+    public List<MediaModel> getUnattachedSiteMedia(SiteModel siteModel) {
+        return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.POST_ID, 0);
     }
 
-    public WellCursor<MediaModel> getUnattachedSiteMediaAsCursor(long siteId) {
-        return MediaSqlUtils.matchSiteMediaAsCursor(siteId, MediaModelTable.POST_ID, 0);
+    public WellCursor<MediaModel> getUnattachedSiteMediaAsCursor(SiteModel siteModel) {
+        return MediaSqlUtils.matchSiteMediaAsCursor(siteModel, MediaModelTable.POST_ID, 0);
     }
 
-    public int getUnattachedSiteMediaCount(long siteId) {
-        return getUnattachedSiteMedia(siteId).size();
+    public int getUnattachedSiteMediaCount(SiteModel siteModel) {
+        return getUnattachedSiteMedia(siteModel).size();
     }
 
-    public List<MediaModel> getLocalSiteMedia(long siteId) {
+    public List<MediaModel> getLocalSiteMedia(SiteModel siteModel) {
         MediaModel.UploadState expectedState = MediaModel.UploadState.UPLOADED;
-        return MediaSqlUtils.getSiteMediaExcluding(siteId, MediaModelTable.UPLOAD_STATE, expectedState);
+        return MediaSqlUtils.getSiteMediaExcluding(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
     }
 
-    public String getUrlForSiteVideoWithVideoPressGuid(long siteId, String videoPressGuid) {
+    public String getUrlForSiteVideoWithVideoPressGuid(SiteModel siteModel, String videoPressGuid) {
         List<MediaModel> media =
-                MediaSqlUtils.matchSiteMedia(siteId, MediaModelTable.VIDEO_PRESS_GUID, videoPressGuid);
+                MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.VIDEO_PRESS_GUID, videoPressGuid);
         return media.size() > 0 ? media.get(0).getUrl() : null;
     }
 
-    public String getThumbnailUrlForSiteMediaWithId(long siteId, long mediaId) {
-        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(siteId, mediaId);
+    public String getThumbnailUrlForSiteMediaWithId(SiteModel siteModel, long mediaId) {
+        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(siteModel, mediaId);
         return media.size() > 0 ? media.get(0).getThumbnailUrl() : null;
     }
 
-    public List<MediaModel> searchSiteMediaByTitle(long siteId, String titleSearch) {
-        return MediaSqlUtils.searchSiteMedia(siteId, MediaModelTable.TITLE, titleSearch);
+    public List<MediaModel> searchSiteMediaByTitle(SiteModel siteModel, String titleSearch) {
+        return MediaSqlUtils.searchSiteMedia(siteModel, MediaModelTable.TITLE, titleSearch);
     }
 
-    public WellCursor<MediaModel> searchSiteMediaByTitleAsCursor(long siteId, String titleSearch) {
-        return MediaSqlUtils.searchSiteMediaAsCursor(siteId, MediaModelTable.TITLE, titleSearch);
+    public WellCursor<MediaModel> searchSiteMediaByTitleAsCursor(SiteModel siteModel, String titleSearch) {
+        return MediaSqlUtils.searchSiteMediaAsCursor(siteModel, MediaModelTable.TITLE, titleSearch);
     }
 
     public MediaModel getPostMediaWithPath(long postId, String filePath) {
@@ -340,14 +340,14 @@ public class MediaStore extends Store {
         return media.size() > 0 ? media.get(0) : null;
     }
 
-    public MediaModel getNextSiteMediaToDelete(long siteId) {
-        List<MediaModel> media = MediaSqlUtils.matchSiteMedia(siteId,
+    public MediaModel getNextSiteMediaToDelete(SiteModel siteModel) {
+        List<MediaModel> media = MediaSqlUtils.matchSiteMedia(siteModel,
                 MediaModelTable.UPLOAD_STATE, MediaModel.UploadState.DELETE.toString());
         return media.size() > 0 ? media.get(0) : null;
     }
 
-    public boolean hasSiteMediaToDelete(long siteId) {
-        return getNextSiteMediaToDelete(siteId) != null;
+    public boolean hasSiteMediaToDelete(SiteModel siteModel) {
+        return getNextSiteMediaToDelete(siteModel) != null;
     }
 
     //
