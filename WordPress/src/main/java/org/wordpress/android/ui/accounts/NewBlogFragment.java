@@ -148,7 +148,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return false;
         }
         switch (newSiteError) {
-            case BLOG_TITLE_INVALID:
+            case SITE_TITLE_INVALID:
                 showSiteTitleError(message);
                 return true;
             default:
