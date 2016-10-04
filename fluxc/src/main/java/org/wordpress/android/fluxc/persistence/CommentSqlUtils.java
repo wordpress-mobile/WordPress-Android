@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.persistence;
 
 import com.wellsql.generated.CommentModelTable;
 import com.wellsql.generated.PostModelTable;
+import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.CommentModel;
