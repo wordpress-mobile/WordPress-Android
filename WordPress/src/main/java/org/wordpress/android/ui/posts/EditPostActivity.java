@@ -140,7 +140,7 @@ import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
-    public static final String EXTRA_POST = "postId";
+    public static final String EXTRA_POST = "postModel";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
@@ -304,10 +304,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     throw new RuntimeException("No callback received from INSTANTIATE_POST action");
                 }
             } else if (extras != null) {
-                // Load post from the postId passed in extras
+                // Load post passed in extras
                 mPost = (PostModel) extras.getSerializable(EXTRA_POST);
-                mOriginalPost = (PostModel) extras.getSerializable(EXTRA_POST);
-                mIsPage = mPost.isPage();
+                if (mPost != null) {
+                    mOriginalPost = mPost.clone();
+                    mIsPage = mPost.isPage();
+                }
             } else {
                 // A postId extra must be passed to this activity
                 showErrorAndFinish(R.string.post_not_found);
