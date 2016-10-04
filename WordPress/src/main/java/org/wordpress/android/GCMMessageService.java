@@ -63,6 +63,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_ARG_TITLE = "title";
     private static final String PUSH_ARG_MSG = "msg";
     private static final String PUSH_ARG_NOTE_ID = "note_id";
+    private static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
 
     private static final String PUSH_TYPE_COMMENT = "c";
     private static final String PUSH_TYPE_LIKE = "like";
@@ -399,7 +400,7 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        if (noteType.equals(PUSH_TYPE_COMMENT)) {
+        if (PUSH_TYPE_COMMENT.equals(noteType)) {
             addActionsForCommentNotification(builder, noteId);
         }
         showNotificationForBuilder(builder, this, pushId);
