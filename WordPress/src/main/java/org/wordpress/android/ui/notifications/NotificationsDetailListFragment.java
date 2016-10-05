@@ -81,6 +81,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         return fragment;
     }
 
+    public static NotificationsDetailListFragment newInstance(final Note note) {
+        NotificationsDetailListFragment fragment = new NotificationsDetailListFragment();
+        fragment.initWithNote(note);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,6 +163,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Override
     public void setNote(Note note) {
         mNote = note;
+    }
+
+    private void initWithNote(Note note) {
+        if (note == null) return;
+        mIsUnread = note.isUnread();
+        setNote(note);
     }
 
     private void setNoteWithNoteId(String noteId) {
