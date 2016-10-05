@@ -226,7 +226,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             mGridAdapter.setRefreshing(true);
 
             ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
-                // refersh db from server. If returned count is 0, we've retrieved all the media.
+                // refresh db from server. If returned count is 0, we've retrieved all the media.
                 // stop retrieving until the user manually refreshes
 
                 @Override
