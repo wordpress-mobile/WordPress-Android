@@ -81,13 +81,20 @@ public class MediaSqlUtils {
     }
 
     public static List<MediaModel> getSiteImagesExcluding(SiteModel siteModel, List<Long> filter) {
+        return getSiteImagesExcludingQuery(siteModel, filter).getAsModel();
+    }
+
+    public static WellCursor<MediaModel> getSiteImagesExcludingAsCursor(SiteModel siteModel, List<Long> filter) {
+        return getSiteImagesExcludingQuery(siteModel, filter).getAsCursor();
+    }
+
+    public static SelectQuery<MediaModel> getSiteImagesExcludingQuery(SiteModel siteModel, List<Long> filter) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteModel.getSiteId())
                 .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
                 .isNotIn(MediaModelTable.MEDIA_ID, filter)
-                .endGroup().endWhere()
-                .getAsModel();
+                .endGroup().endWhere();
     }
 
     public static List<MediaModel> getSiteMediaExcluding(SiteModel siteModel, String column, Object value) {
