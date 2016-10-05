@@ -424,6 +424,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 setRemoteBlogId(note.getSiteId());
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
+                SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
+                //FIXME MZ here load the note maybe?
             }
         }
     }

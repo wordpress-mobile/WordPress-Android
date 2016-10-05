@@ -283,6 +283,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                         NotificationsListFragment.openNoteForReply(this, noteId, base64FullNoteData, shouldShowKeyboard);
                     }
                 }
+            } else {
+                SimperiumUtils.trackBucketObjectMissing("No note id found in PN", "");
             }
         } else {
           // mark all tapped here
@@ -423,16 +425,18 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     private void moderateCommentOnActivityResult(Intent data) {
+        String noteId = StringUtils.notNullStr(data.getStringExtra
+                (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA));
         try {
             if (SimperiumUtils.getNotesBucket() != null) {
-                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
-                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+                Note note = SimperiumUtils.getNotesBucket().get(noteId);
                 CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                         NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
                 NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, e);
+            SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
         }
     }
 

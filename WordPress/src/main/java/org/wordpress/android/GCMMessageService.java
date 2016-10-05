@@ -243,6 +243,7 @@ public class GCMMessageService extends GcmListenerService {
                 areActionsSet = true;
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
+                SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
             }
         }
 
