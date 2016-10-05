@@ -40,7 +40,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     private MediaGridAdapter mGridAdapter;
     private ActionMode mActionMode;
 
-    private ArrayList<String> mFilteredItems;
+    private ArrayList<Long> mFilteredItems;
     private boolean mIsSelectOneItem;
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
@@ -51,7 +51,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
-    private static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
     public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
     public static final String RESULT_IDS = "RESULT_IDS";
     public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
@@ -65,7 +64,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         ((WordPress) getApplication()).component().inject(this);
 
         ArrayList<Long> selectedItems = new ArrayList<>();
-        mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
 
         ArrayList<Long> prevSelectedItems = ListUtils.fromLongArray(getIntent().getLongArrayExtra(PARAM_SELECTED_IDS));
@@ -76,7 +74,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             ArrayList<Long> list = ListUtils.fromLongArray(savedInstanceState.getLongArray(STATE_SELECTED_ITEMS));
             selectedItems.addAll(list);
-            mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
+            mFilteredItems = ListUtils.fromLongArray(savedInstanceState.getLongArray(STATE_FILTERED_ITEMS));
             mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
         }
 
@@ -125,7 +123,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLongArray(STATE_SELECTED_ITEMS, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
-        outState.putStringArrayList(STATE_FILTERED_ITEMS, mFilteredItems);
+        outState.putLongArray(STATE_FILTERED_ITEMS, ListUtils.toLongArray(mFilteredItems));
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
 
