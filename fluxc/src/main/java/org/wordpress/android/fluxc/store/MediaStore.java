@@ -299,6 +299,10 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteImagesExcluding(siteModel, filter);
     }
 
+    public WellCursor<MediaModel> getSiteImagesExcludingIdsAsCursor(SiteModel siteModel, List<Long> filter) {
+        return MediaSqlUtils.getSiteImagesExcludingAsCursor(siteModel, filter);
+    }
+
     public List<MediaModel> getUnattachedSiteMedia(SiteModel siteModel) {
         return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.POST_ID, 0);
     }
