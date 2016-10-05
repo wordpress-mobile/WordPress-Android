@@ -22,15 +22,13 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 public class Note extends Syncable {
     private static final String TAG = "NoteModel";
@@ -302,7 +300,9 @@ public class Note extends Syncable {
             Log.e(TAG, "Unable to update note read property", e);
             return;
         }
-        save();
+
+        if (getBucket() != null)
+            save();
     }
 
     /**
@@ -595,27 +595,30 @@ public class Note extends Syncable {
             if (base64FullNoteData == null) return null;
 
             byte[] encryptedWithoutB64 = Base64.decode(base64FullNoteData, Base64.DEFAULT);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ByteArrayInputStream bis = new ByteArrayInputStream(encryptedWithoutB64);
 
-            GZIPInputStream zis = null;
+            // Decompress the payload
+            Inflater decompresser = new Inflater();
+            decompresser.setInput(encryptedWithoutB64, 0, encryptedWithoutB64.length);
+            byte[] result = new byte[4096];
+            int resultLength = 0;
             try {
-                zis = new GZIPInputStream(bis);
-                byte[] tmpBuffer = new byte[256];
-                int n;
-                while ((n = zis.read(tmpBuffer)) >= 0) {
-                    bos.write(tmpBuffer, 0, n);
-                }
-                zis.close();
-            } catch (IOException e) {
+                resultLength = decompresser.inflate(result);
+                decompresser.end();
+            } catch (DataFormatException e) {
                 e.printStackTrace();
             }
 
-            String out = new String(bos.toByteArray(), StandardCharsets.UTF_8);
 
+            String out = new String(result, 0, resultLength, StandardCharsets.UTF_8);
             if (out != null) {
                 try {
                     JSONObject jsonObject = new JSONObject(out);
+                    if (jsonObject.has("notes")) {
+                        JSONArray jsonArray = jsonObject.getJSONArray("notes");
+                        if (jsonArray != null && jsonArray.length() == 1) {
+                            jsonObject = jsonArray.getJSONObject(0);
+                        }
+                    }
                     note = build(noteId, jsonObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
