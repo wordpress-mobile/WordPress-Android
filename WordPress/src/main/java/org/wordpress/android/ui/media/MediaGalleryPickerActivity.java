@@ -18,11 +18,14 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 /**
  * An activity where the user can add new images to their media gallery or where the user
@@ -31,6 +34,8 @@ import java.util.ArrayList;
 public class MediaGalleryPickerActivity extends AppCompatActivity
         implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
                    AdapterView.OnItemClickListener {
+    @Inject MediaStore mMediaStore;
+
     private GridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private ActionMode mActionMode;
@@ -57,6 +62,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         ArrayList<Long> selectedItems = new ArrayList<>();
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
