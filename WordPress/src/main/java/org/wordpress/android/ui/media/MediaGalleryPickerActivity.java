@@ -128,8 +128,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     private void refreshViews() {
-        final String localBlogId = String.valueOf(mSite.getId());
-        Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(localBlogId, mFilteredItems);
+        Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
         if (cursor.getCount() == 0) {
             refreshMediaFromServer(0);
         } else {
@@ -249,8 +248,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                             public void run() {
                                 //mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                String blogId = String.valueOf(mSite.getId());
-                                Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
+                                Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
                                 mGridAdapter.swapCursor(cursor);
 
                             }
