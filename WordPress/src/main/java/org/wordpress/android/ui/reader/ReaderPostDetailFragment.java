@@ -78,6 +78,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private long mPostId;
     private long mBlogId;
+    private boolean mIsFeed;
     private ReaderPost mPost;
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
@@ -108,16 +109,18 @@ public class ReaderPostDetailFragment extends Fragment
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(blogId, postId, false, null);
+        return newInstance(false, blogId, postId, false, null);
     }
 
-    public static ReaderPostDetailFragment newInstance(long blogId,
+    public static ReaderPostDetailFragment newInstance(boolean isFeed,
+                                                       long blogId,
                                                        long postId,
                                                        boolean isRelatedPost,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
+        args.putBoolean(ReaderConstants.ARG_IS_FEED, isFeed);
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
         args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
@@ -144,6 +147,7 @@ public class ReaderPostDetailFragment extends Fragment
     public void setArguments(Bundle args) {
         super.setArguments(args);
         if (args != null) {
+            mIsFeed = args.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
             mIsRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
@@ -264,6 +268,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(ReaderConstants.ARG_IS_FEED, mIsFeed);
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
 
@@ -291,6 +296,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
+            mIsFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
@@ -349,7 +355,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         // get the post again since it has changed, then refresh to show changes
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
+        mPost = ReaderPostTable.getPost(mPost.blogId, mPost.postId, false);
         refreshLikes();
         refreshIconCounts();
 
@@ -435,6 +441,7 @@ public class ReaderPostDetailFragment extends Fragment
      * replace the current post with the passed one
      */
     private void replacePost(long blogId, long postId) {
+        mIsFeed = false;
         mBlogId = blogId;
         mPostId = postId;
         mHasAlreadyRequestedPost = false;
@@ -477,7 +484,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (!isAdded() || !hasPost()) return;
 
         // make sure this is for the current post
-        if (event.getSourcePost().postId == mPostId && event.getSourcePost().blogId == mBlogId) {
+        if (event.getSourcePost().postId == mPost.postId && event.getSourcePost().blogId == mPost.blogId) {
             showRelatedPosts(event.getRelatedPosts());
         }
     }
@@ -547,7 +554,7 @@ public class ReaderPostDetailFragment extends Fragment
             mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
             replacePost(blogId, postId);
         } else {
-            ReaderActivityLauncher.showReaderPostDetail(getActivity(), blogId, postId, true);
+            ReaderActivityLauncher.showReaderPostDetail(getActivity(), false, blogId, postId, true);
         }
     }
 
@@ -583,7 +590,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged()) {
-                    mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
+                    mPost = ReaderPostTable.getPost(mPost.blogId, mPost.postId, false);
                     refreshIconCounts();
                 }
                 // refresh likes if necessary - done regardless of whether the post has changed
@@ -749,7 +756,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             }
         };
-        ReaderPostActions.requestPost(mBlogId, mPostId, listener);
+        ReaderPostActions.requestPost(mIsFeed, mBlogId, mPostId, listener);
     }
 
     /*
@@ -793,7 +800,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
+            mPost = ReaderPostTable.getPost(mIsFeed, mBlogId, mPostId, false);
             if (mPost == null) {
                 return false;
             }
@@ -805,6 +812,7 @@ public class ReaderPostDetailFragment extends Fragment
                         && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
                         && discoverData.getBlogId() != 0
                         && discoverData.getPostId() != 0) {
+                    mIsFeed = false;
                     mBlogId = discoverData.getBlogId();
                     mPostId = discoverData.getPostId();
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);

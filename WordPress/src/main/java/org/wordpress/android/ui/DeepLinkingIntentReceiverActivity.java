@@ -14,16 +14,20 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
+import java.util.List;
+
 /**
- * An activity to handle deep linking.
+ * An activity to handle deep linking and intercepting
  *
  * wordpress://viewpost?blogId={blogId}&postId={postId}
+ * http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
  *
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private static final int INTENT_WELCOME = 0;
 
+    private boolean mIsFeed;
     private String mBlogId;
     private String mPostId;
 
@@ -36,8 +40,28 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-            mBlogId = uri.getQueryParameter("blogId");
-            mPostId = uri.getQueryParameter("postId");
+
+            switch (uri.getScheme()) {
+                case "wordpress":
+                    mBlogId = uri.getQueryParameter("blogId");
+                    mPostId = uri.getQueryParameter("postId");
+                    break;
+                case "http":
+                case "https":
+                    List<String> segments = uri.getPathSegments();
+
+                    if (segments != null && segments.get(0).equals("read")) {
+                        if (segments.size() > 2 && segments.get(1).equals("feeds")) {
+                            mIsFeed = true;
+                            mBlogId = segments.get(2);
+                        }
+
+                        if (segments.size() > 4 && segments.get(3).equals("posts")) {
+                            mPostId = segments.get(4);
+                        }
+                    }
+                    break;
+            }
 
             // if user is logged in, show the post right away - otherwise show welcome activity
             // and then show the post once the user has logged in
@@ -63,7 +87,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private void showPost() {
         if (!TextUtils.isEmpty(mBlogId) && !TextUtils.isEmpty(mPostId)) {
             try {
-                ReaderActivityLauncher.showReaderPostDetail(this, Long.parseLong(mBlogId), Long.parseLong(mPostId));
+                ReaderActivityLauncher.showReaderPostDetail(this, mIsFeed, Long.parseLong(mBlogId),
+                        Long.parseLong(mPostId), false);
             } catch (NumberFormatException e) {
                 AppLog.e(T.READER, e);
             }

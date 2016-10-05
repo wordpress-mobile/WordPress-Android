@@ -49,6 +49,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private Toolbar mToolbar;
 
     private ReaderTag mCurrentTag;
+    private boolean mIsFeed;
     private long mBlogId;
     private long mPostId;
     private int mLastSelectedPosition = -1;
@@ -78,6 +79,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         mProgress = (ProgressBar) findViewById(R.id.progress_loading);
 
         if (savedInstanceState != null) {
+            mIsFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
@@ -89,6 +91,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
             }
         } else {
+            mIsFeed = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_FEED, false);
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
@@ -483,6 +486,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             }
 
             return ReaderPostDetailFragment.newInstance(
+                    mIsFeed,
                     mIdList.get(position).getBlogId(),
                     mIdList.get(position).getPostId(),
                     mIsRelatedPostView,

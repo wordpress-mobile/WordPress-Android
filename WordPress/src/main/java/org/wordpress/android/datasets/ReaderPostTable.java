@@ -270,11 +270,15 @@ public class ReaderPostTable {
     }
 
     public static ReaderPost getPost(long blogId, long postId, boolean excludeTextColumn) {
+        return getPost(false, blogId, postId, excludeTextColumn);
+    }
 
+    public static ReaderPost getPost(boolean isFeed, long blogOrFeedId, long postOrItemId, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id=? AND post_id=? LIMIT 1";
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE "
+                + (isFeed ? "feed_id" : "blog_id") + "=? AND " + (isFeed ? "feed_item_id" : "post_id") + "=? LIMIT 1";
 
-        String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
+        String[] args = new String[] {Long.toString(blogOrFeedId), Long.toString(postOrItemId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             if (!c.moveToFirst()) {
