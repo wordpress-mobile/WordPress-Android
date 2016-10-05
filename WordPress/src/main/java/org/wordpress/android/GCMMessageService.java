@@ -49,6 +49,7 @@ import de.greenrobot.event.EventBus;
 
 public class GCMMessageService extends GcmListenerService {
     private static final ArrayMap<Integer, Bundle> sActiveNotificationsMap = new ArrayMap<>();
+    private static int sPreviousPushNotificationId = 0;
     private static String sPreviousNoteId = null;
     private static long sPreviousNoteTime = 0L;
 
@@ -168,6 +169,7 @@ public class GCMMessageService extends GcmListenerService {
             Bundle noteBundle = sActiveNotificationsMap.get(id);
             if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                 pushId = id;
+                sPreviousPushNotificationId = pushId;
                 sActiveNotificationsMap.put(pushId, data);
                 break;
             }
@@ -175,6 +177,7 @@ public class GCMMessageService extends GcmListenerService {
 
         if (pushId == 0) {
             pushId = PUSH_NOTIFICATION_ID + sActiveNotificationsMap.size();
+            sPreviousPushNotificationId = pushId;
             sActiveNotificationsMap.put(pushId, data);
         }
 
@@ -425,7 +428,8 @@ public class GCMMessageService extends GcmListenerService {
 
         //now check base64Fulldata. If it exists, put it into the resultIntent bundle
         //so we can use it as a fallback to show something to the use in poor connectivity conditions.
-        Bundle noteBundle = sActiveNotificationsMap.get(notificationId);
+
+        Bundle noteBundle = sActiveNotificationsMap.get(sPreviousPushNotificationId);
         if (noteBundle != null && noteBundle.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
             String base64FullData = noteBundle.getString(PUSH_ARG_NOTE_FULL_DATA);
             resultIntent.putExtra(PUSH_ARG_NOTE_FULL_DATA, base64FullData);

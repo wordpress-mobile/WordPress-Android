@@ -178,7 +178,7 @@ public class NotificationsListFragment extends Fragment
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNoteForReply(getActivity(), noteId, false);
+            openNoteForReply(getActivity(), noteId, null, false);
         }
     };
 

@@ -111,7 +111,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         //if note was not found in bucket, try building up the note from the PN payload
         if (note == null) {
-            String base64FullData = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+            String base64FullData = getIntent().getStringExtra(NotificationsListFragment.NOTE_FULL_DATA_EXTRA);
             note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
         }
 
