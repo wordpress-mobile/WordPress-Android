@@ -105,7 +105,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             try {
                 note = SimperiumUtils.getNotesBucket().get(noteId);
             } catch (BucketObjectMissingException e) {
-                SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
+                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
             }
         }
 
@@ -164,10 +164,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             boolean isInstantLike = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
             boolean isInstantApprove = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
             fragment = isInstantLike ?
-                        CommentDetailFragment.newInstanceForInstantLike(note.getId()) :
+                        CommentDetailFragment.newInstanceForInstantLike(note) :
                         isInstantApprove ?
-                            CommentDetailFragment.newInstanceForInstantApprove(note.getId()) :
-                            CommentDetailFragment.newInstance(note.getId());
+                            CommentDetailFragment.newInstanceForInstantApprove(note) :
+                            CommentDetailFragment.newInstance(note);
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above

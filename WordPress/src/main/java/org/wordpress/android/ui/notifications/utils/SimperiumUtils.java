@@ -112,13 +112,13 @@ public class SimperiumUtils {
     }
 
     public static void startBuckets() {
-        if (mNotesBucket != null) {
-            mNotesBucket.start();
-        }
-
-        if (mMetaBucket != null) {
-            mMetaBucket.start();
-        }
+//        if (mNotesBucket != null) {
+//            mNotesBucket.start();
+//        }
+//
+//        if (mMetaBucket != null) {
+//            mMetaBucket.start();
+//        }
     }
 
     public static void resetBucketsAndDeauthorize() {
@@ -191,10 +191,21 @@ public class SimperiumUtils {
     // in general, we shouldn't have BucketObjectMissingExceptions but sometimes this might happen
     // when simperium can't sync up and get up to speed to push notifications,
     // so we're interested in tracking these
-    public static void trackBucketObjectMissing(String message, String noteId) {
+    public static void trackBucketObjectMissingWarning(String message, String noteId) {
+        trackBucketObjectMissing(message, AnalyticsTracker.Stat.NOTIFICATIONS_MISSING_SYNC_WARNING, noteId);
+    }
+
+    //these track when we couldn't do anything else to try show something to the user, and ended up
+    // showing an error on the screen i.e. "Sorry, couldn' load the note"
+    public static void trackBucketObjectMissingError(String message, String noteId) {
+        trackBucketObjectMissing(message, AnalyticsTracker.Stat.NOTIFICATIONS_MISSING_SYNC_ERROR, noteId);
+    }
+
+    private static void trackBucketObjectMissing(String message, AnalyticsTracker.Stat type, String noteId) {
         HashMap<String, String> errorProperties = new HashMap<>();
         errorProperties.put(TRACK_ERROR_KEY, message);
         errorProperties.put(TRACK_NOTEID_KEY, noteId);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_MISSING_SYNC_WARNING, errorProperties);
+        AnalyticsTracker.track(type, errorProperties);
     }
+
 }

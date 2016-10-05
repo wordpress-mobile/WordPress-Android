@@ -284,7 +284,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     }
                 }
             } else {
-                SimperiumUtils.trackBucketObjectMissing("No note id found in PN", "");
+                SimperiumUtils.trackBucketObjectMissingWarning("No note id found in PN", "");
             }
         } else {
           // mark all tapped here
@@ -436,7 +436,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, e);
-            SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
+            SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
         }
     }
 

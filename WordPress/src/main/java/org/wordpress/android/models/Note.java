@@ -360,6 +360,10 @@ public class Note extends Syncable {
         }
     }
 
+    private JSONObject getJSON() {
+        return mNoteJSON;
+    }
+
     /*
      * returns the actions allowed on this note, assumes it's a comment notification
      */
@@ -594,12 +598,12 @@ public class Note extends Syncable {
 
             if (base64FullNoteData == null) return null;
 
-            byte[] encryptedWithoutB64 = Base64.decode(base64FullNoteData, Base64.DEFAULT);
+            byte[] b64DecodedPayload = Base64.decode(base64FullNoteData, Base64.DEFAULT);
 
             // Decompress the payload
             Inflater decompresser = new Inflater();
-            decompresser.setInput(encryptedWithoutB64, 0, encryptedWithoutB64.length);
-            byte[] result = new byte[4096];
+            decompresser.setInput(b64DecodedPayload, 0, b64DecodedPayload.length);
+            byte[] result = new byte[4096]; //max length an Android PN payload can have
             int resultLength = 0;
             try {
                 resultLength = decompresser.inflate(result);
@@ -631,5 +635,10 @@ public class Note extends Syncable {
         public void update(Note note, JSONObject properties) {
             note.updateJSON(properties);
         }
+
+        public static JSONObject getJSON(Note note) {
+            return note.getJSON();
+        }
+
     }
 }
