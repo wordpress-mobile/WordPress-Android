@@ -324,6 +324,9 @@
     <!-- comment actions -->
     <string name="reply">Reply</string>
     <string name="trash">Trash</string>
+    <string name="like">Like</string>
+    <string name="approve">Approve</string>
+    <string name="comment_moderated_approved">Comment approved!</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -585,7 +588,7 @@
     <string name="site_settings_list_editor_summary_one">1 item</string>
     <string name="site_settings_list_editor_summary_other">%d items</string>
 
-    <string name="site_settings_list_editor_action_mode_title">Selected %1$s</string>
+    <string name="site_settings_list_editor_action_mode_title">Selected %1$d</string>
     <string name="site_settings_list_editor_no_items_text">No items</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
@@ -1413,9 +1416,11 @@
     <string name="invite_names_title">Usernames or Emails</string>
     <string name="invite">Invite</string>
     <string name="button_invite" translatable="false">@string/invite</string>
-    <string name="invite_username_not_found">No user was found for username \'%s\'</string>
-    <string name="invite_already_a_member">There\'s already a member with username \'%s\'</string>
-    <string name="invite_invalid_email">The email address \'%s\' is invalid</string>
+    <string name="invite_username_not_found">%s: User not found</string>
+    <string name="invite_already_a_member">%s: Already a member</string>
+    <string name="invite_already_following">%s: Already following</string>
+    <string name="invite_user_blocked_invites">%s: User blocked invites</string>
+    <string name="invite_invalid_email">%s: Invalid email</string>
     <string name="invite_message_title">Custom Message</string>
     <string name="invite_message_remaining_zero">0 characters remaining</string>
     <string name="invite_message_remaining_one">1 character remaining</string>
@@ -1569,5 +1574,6 @@
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state. Would you like to remove all failed media?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+    <string name="role_info_url">https://en.support.wordpress.com/user-roles/</string>
 
 </resources>

@@ -20,6 +20,7 @@
         android:lines="1"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textColor="@color/grey_dark"
         tools:text="Suggestion" />
 
     <ImageView

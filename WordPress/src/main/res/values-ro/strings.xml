@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="reader_label_image_count_one">1 imagine</string>
-	<string name="timespan_now">acum</string>
 	<string name="role_admin">Administrator</string>
 	<string name="role_editor">Editor</string>
 	<string name="role_author">Autor</string>
@@ -12,7 +10,7 @@
 	<string name="alignment_none">Niciuna</string>
 	<string name="alignment_left">Stânga</string>
 	<string name="alignment_right">Dreapta</string>
-	<string name="site_settings_list_editor_action_mode_title">Selectate %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Selectate %1$d</string>
 	<string name="error_fetch_users_list">N-am putut aduce utilizatorii sitului</string>
 	<string name="plans_manage">Administrează-ți planul la\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Nu ai încă niciun vizitator.</string>
@@ -31,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Dacă-l înlături, acest urmăritor nu va mai primi notificări despre acest sit, decât dacă-l reurmărește.\n\nMai vrei să înlături acest urmăritor?</string>
 	<string name="follower_subscribed_since">De la %1$s</string>
 	<string name="reader_label_view_gallery">Vizualizează galeria</string>
-	<string name="reader_label_image_count_multi">%d imagini</string>
 	<string name="error_remove_follower">N-am putut înlătura urmăritorul</string>
 	<string name="error_remove_viewer">N-am putut înlătura vizitatorul</string>
 	<string name="error_fetch_email_followers_list">N-am putut aduce urmăritorii prin email ai sitului</string>

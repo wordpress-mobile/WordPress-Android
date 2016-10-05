@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="reader_label_image_count_one">1 figurë</string>
-	<string name="timespan_now">tani</string>
 	<string name="role_admin">Përgjegjës</string>
 	<string name="role_editor">Redaktor</string>
 	<string name="role_author">Autor</string>
@@ -12,7 +10,7 @@
 	<string name="alignment_none">Pa drejtim</string>
 	<string name="alignment_left">Majtas</string>
 	<string name="alignment_right">Djathtas</string>
-	<string name="site_settings_list_editor_action_mode_title">U përzgjodh %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">U përzgjodh %1$d</string>
 	<string name="error_fetch_users_list">S&amp;#8217;u morën dot përdorues të sajtit</string>
 	<string name="plans_manage">Administroni planin tuaj te\nWordPress.com/plans</string>
 	<string name="people_fetching">Po sillen përdoruesit…</string>
@@ -31,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">Në u heqtë, ku ndjekës do të reshtë së marri njoftime mbi këtë sajt, veç në u ribëftë ndjekës.\n\nDo të donit ta hiqnit këtë ndjekës, sido qoftë?</string>
 	<string name="follower_subscribed_since">Që prej %1$s</string>
 	<string name="reader_label_view_gallery">Shihni Galerinë</string>
-	<string name="reader_label_image_count_multi">%d figura</string>
 	<string name="error_remove_follower">S&amp;#8217;u hoq dot ndjekësi</string>
 	<string name="error_remove_viewer">S&amp;#8217;u hoq dot shikuesi</string>
 	<string name="error_fetch_email_followers_list">S&amp;#8217;u morën dot ndjekës të sajtit me email</string>
