@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -37,6 +38,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
+import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
+import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
 
 public class NotificationsDetailActivity extends AppCompatActivity implements
         CommentActions.OnNoteCommentActionListener {
@@ -131,8 +136,24 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                     .add(R.id.notifications_detail_container, detailFragment)
                     .commitAllowingStateLoss();
 
+            //set title
             if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(note.getTitle());
+                String title = note.getTitle();
+                if (TextUtils.isEmpty(title)) {
+                    //set a deafult title if title is not set within the note
+                    switch(note.getType()) {
+                        case NOTE_FOLLOW_TYPE:
+                            title = getString(R.string.follows);
+                            break;
+                        case NOTE_LIKE_TYPE:
+                            title = getString(R.string.like);
+                            break;
+                        case NOTE_COMMENT_TYPE:
+                            title = getString(R.string.comment);
+                            break;
+                    }
+                }
+                getSupportActionBar().setTitle(title);
             }
 
             // mark the note as read if it's unread
