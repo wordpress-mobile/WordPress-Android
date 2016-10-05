@@ -234,8 +234,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                     mHasRetrievedAllMedia = (count == 0);
                     adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
-                    String blogId = String.valueOf(mSite.getId());
-                    if (WordPress.wpDB.getMediaCountAll(blogId) == 0 && count == 0) {
+                    if (mMediaStore.getSiteMediaCount(mSite) == 0 && count == 0) {
                         // There is no media at all
                         noMediaFinish();
                     }
