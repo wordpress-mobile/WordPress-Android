@@ -32,7 +32,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     private ReaderPost mPost;
     private ReaderFollowButton mFollowButton;
     private int mFollowerCount;
-    private String mBlavatarUrl;
 
     public ReaderPostDetailHeaderView(Context context) {
         super(context);
