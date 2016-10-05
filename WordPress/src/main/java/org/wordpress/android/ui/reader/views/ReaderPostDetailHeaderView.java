@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -16,7 +15,6 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -51,23 +49,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_post_detail_header_view, this);
         mFollowButton = (ReaderFollowButton) view.findViewById(R.id.header_follow_button);
-
-        View frameAvatar = view.findViewById(R.id.frame_avatar);
-        View header = view.findViewById(R.id.layout_post_header);
-
-        RelativeLayout.LayoutParams paramsFrame = (RelativeLayout.LayoutParams) frameAvatar.getLayoutParams();
-        RelativeLayout.LayoutParams paramsHeader = (RelativeLayout.LayoutParams) header.getLayoutParams();
-
-        // in landscape we want the detail below the avatar, otherwise we want it to the right
-        if (DisplayUtils.isLandscape(context)) {
-            paramsFrame.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            paramsHeader.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            paramsHeader.addRule(RelativeLayout.BELOW, frameAvatar.getId());
-        } else {
-            paramsFrame.addRule(RelativeLayout.CENTER_VERTICAL);
-            paramsHeader.addRule(RelativeLayout.CENTER_VERTICAL);
-            paramsHeader.addRule(RelativeLayout.RIGHT_OF, frameAvatar.getId());
-        }
     }
 
     public void setPost(@NonNull ReaderPost post) {

@@ -9,8 +9,8 @@
         android:id="@+id/frame_avatar"
         android:layout_width="@dimen/reader_detail_header_avatar_frame"
         android:layout_height="@dimen/reader_detail_header_avatar_frame"
-        android:layout_marginRight="@dimen/margin_extra_large"
-        tools:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_header_blavatar"
@@ -34,9 +34,9 @@
         android:id="@+id/layout_post_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:layout_centerVertical="true"
-        tools:layout_toRightOf="@+id/frame_avatar">
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/frame_avatar"
+        android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_header_author_name"
