@@ -72,6 +72,10 @@ public class CommentActions {
         void onModerateCommentForNote(Note note, CommentStatus newStatus);
     }
 
+    public interface OnCommentSetListener {
+        void onCommentSet(Comment comment);
+    }
+
 
     /**
      * reply to an individual comment

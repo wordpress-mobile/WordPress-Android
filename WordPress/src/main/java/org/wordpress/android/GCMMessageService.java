@@ -50,6 +50,8 @@ import de.greenrobot.event.EventBus;
 public class GCMMessageService extends GcmListenerService {
     private static final ArrayMap<Integer, Bundle> sActiveNotificationsMap = new ArrayMap<>();
     private static String sPreviousNoteId = null;
+    private static String sBlogId = null;
+    private static String sCommentId = null; //purpose-specific for comments type notifications.
     private static long sPreviousNoteTime = 0L;
 
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
@@ -63,6 +65,8 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_ARG_TITLE = "title";
     private static final String PUSH_ARG_MSG = "msg";
     private static final String PUSH_ARG_NOTE_ID = "note_id";
+    private static final String PUSH_ARG_BLOG_ID = "blog_id";
+    private static final String PUSH_ARG_COMMENT_ID = "comment_id";
 
     private static final String PUSH_TYPE_COMMENT = "c";
     private static final String PUSH_TYPE_LIKE = "like";
@@ -158,6 +162,13 @@ public class GCMMessageService extends GcmListenerService {
         sPreviousNoteId = noteId;
         sPreviousNoteTime = thisTime;
 
+        //for the specific case of comments, some lag has been detected with Simperium
+        //we'll need the blog id and comment id in case simperium sync lags behind when the user taps on
+        //the notification to see the comment notification details, so we can try fetching it from the REST api
+        sBlogId = data.getString(PUSH_ARG_BLOG_ID, "");
+        sCommentId = data.getString(PUSH_ARG_COMMENT_ID, "");
+
+
         // Update notification content for the same noteId if it is already showing
         int pushId = 0;
         for (Integer id : sActiveNotificationsMap.keySet()) {
@@ -242,6 +253,7 @@ public class GCMMessageService extends GcmListenerService {
                 areActionsSet = true;
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
+                SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
             }
         }
 
@@ -419,6 +431,12 @@ public class GCMMessageService extends GcmListenerService {
         resultIntent.addCategory("android.intent.category.LAUNCHER");
         if (sPreviousNoteId != null) {
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, sPreviousNoteId);
+        }
+        if (sBlogId != null) {
+            resultIntent.putExtra(NotificationsListFragment.REMOTE_BLOG_ID_EXTRA, sBlogId);
+        }
+        if (sCommentId != null) {
+            resultIntent.putExtra(NotificationsListFragment.REMOTE_ITEM_ID, sCommentId);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

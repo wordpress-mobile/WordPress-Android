@@ -14,6 +14,7 @@ import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -39,7 +40,7 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 
 public class NotificationsDetailActivity extends AppCompatActivity implements
-        CommentActions.OnNoteCommentActionListener {
+        CommentActions.OnNoteCommentActionListener, CommentActions.OnCommentSetListener {
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
 
@@ -65,28 +66,18 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             if (SimperiumUtils.getNotesBucket() != null) {
                 try {
                     Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                    handleNotificationDetailForNote(note);
 
-                    Map<String, String> properties = new HashMap<>();
-                    properties.put("notification_type", note.getType());
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
-
-                    Fragment detailFragment = getDetailFragmentForNote(note);
+                } catch (BucketObjectMissingException e) {
+                    //sometimes Simperium sync might be lagging a bit,
+                    //so if note could not be found in local Simperium bucket, try fetching it
+                    SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
+                    String remoteBlogId = getIntent().getStringExtra(NotificationsListFragment.REMOTE_BLOG_ID_EXTRA);
+                    String remoteCommentId = getIntent().getStringExtra(NotificationsListFragment.REMOTE_ITEM_ID);
+                    Fragment detailFragment = CommentDetailFragment.newInstanceForRemoteNoteComment(noteId, remoteBlogId, remoteCommentId);
                     getFragmentManager().beginTransaction()
                             .add(R.id.notifications_detail_container, detailFragment)
                             .commitAllowingStateLoss();
-
-                    if (getSupportActionBar() != null) {
-                        getSupportActionBar().setTitle(note.getTitle());
-                    }
-
-                    // mark the note as read if it's unread
-                    if (note.isUnread()) {
-                        // mark as read which syncs with simperium
-                        note.markAsRead();
-                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-                    }
-                } catch (BucketObjectMissingException e) {
-                    showErrorToastAndFinish();
                     return;
                 }
             }
@@ -101,6 +92,32 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
+
+    }
+
+    private void handleNotificationDetailForNote(Note note){
+        Map<String, String> properties = new HashMap<>();
+        properties.put("notification_type", note.getType());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+
+        Fragment detailFragment = getDetailFragmentForNote(note);
+        getFragmentManager().beginTransaction()
+                .add(R.id.notifications_detail_container, detailFragment)
+                .commitAllowingStateLoss();
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(note.getTitle());
+        }
+
+        // mark the note as read if it's unread
+        if (note.isUnread()) {
+            // mark as read which syncs with simperium
+            note.markAsRead();
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+        }
+    }
+
+    private void handleNotificationDetailForCommentId(){
 
     }
 
@@ -221,5 +238,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         setResult(RESULT_OK, resultIntent);
         finish();
+    }
+
+    @Override
+    public void onCommentSet(Comment comment) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getString(R.string.comment));
+        }
     }
 }

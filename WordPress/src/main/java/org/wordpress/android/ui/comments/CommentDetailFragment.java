@@ -49,6 +49,7 @@ import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.comments.CommentActions.OnCommentSetListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -87,9 +88,11 @@ import de.greenrobot.event.EventBus;
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
     private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
     private static final String KEY_COMMENT_ID = "comment_id";
+    private static final String KEY_REMOTE_COMMENT_ID = "remote_comment_id";
     private static final String KEY_NOTE_ID = "note_id";
     private int mLocalBlogId;
     private int mRemoteBlogId;
+    private long mRemoteCommentId;
     private Comment mComment;
     private Note mNote;
     private SuggestionAdapter mSuggestionAdapter;
@@ -126,6 +129,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private OnPostClickListener mOnPostClickListener;
     private OnCommentActionListener mOnCommentActionListener;
     private OnNoteCommentActionListener mOnNoteCommentActionListener;
+    private OnCommentSetListener mOnCommentSetListener;
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
      * for this comment - all actions are enabled when opened from the comment list, only
@@ -174,9 +178,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from notifications to load a comment that doesn't already exist in the note
      */
-    public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId) {
+    public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId,
+                                                                        final String remoteBlogId,
+                                                                        final String remoteCommentId) {
         CommentDetailFragment fragment = newInstance(noteId);
         fragment.enableShouldRequestCommentFromNote();
+        if (!TextUtils.isEmpty(remoteBlogId) && TextUtils.isDigitsOnly(remoteBlogId)) {
+            fragment.setRemoteBlogId(Integer.parseInt(remoteBlogId));
+        }
+        if (!TextUtils.isEmpty(remoteCommentId) && TextUtils.isDigitsOnly(remoteCommentId)) {
+            fragment.setRemoteCommentId(Integer.parseInt(remoteCommentId));
+        }
         return fragment;
     }
 
@@ -191,6 +203,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             } else {
                 int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
                 long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
+                mRemoteCommentId = savedInstanceState.getLong(KEY_REMOTE_COMMENT_ID);
                 setComment(localBlogId, commentId);
             }
         }
@@ -204,6 +217,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (hasComment()) {
             outState.putInt(KEY_LOCAL_BLOG_ID, getLocalBlogId());
             outState.putLong(KEY_COMMENT_ID, getCommentId());
+            outState.putLong(KEY_REMOTE_COMMENT_ID, getRemoteCommentId());
         }
 
         if (mNote != null) {
@@ -354,13 +368,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mRestoredNoteId = null;
         }
 
-        if (mShouldLikeInstantly) {
-            mShouldLikeInstantly = false;
-            likeComment(true);
-        } else if (mShouldApproveInstantly) {
-            mShouldApproveInstantly = false;
-            performModerateAction();
-        }
+        if (mNote == null) return;
+
+        performInstantActionsIfNeeded();
 
     }
 
@@ -424,7 +434,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 setRemoteBlogId(note.getSiteId());
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
+                SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
+                setNote(null);
+                setRemoteBlogId(0);
             }
+        }
+    }
+
+    private void showErrorToastAndFinish() {
+        AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
+        if (getActivity() != null) {
+        ToastUtils.showToast(getActivity(), R.string.error_notification_open);
+            getActivity().finish();
         }
     }
 
@@ -439,6 +460,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mOnCommentActionListener = (OnCommentActionListener) activity;
         if (activity instanceof OnNoteCommentActionListener)
             mOnNoteCommentActionListener = (OnNoteCommentActionListener) activity;
+        if (activity instanceof OnCommentSetListener)
+            mOnCommentSetListener = (OnCommentSetListener) activity;
+
     }
 
     @Override
@@ -525,6 +549,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mRemoteBlogId = remoteBlogId;
     }
 
+    private void setRemoteCommentId(int remoteCommentId) {
+        mRemoteCommentId = remoteCommentId;
+    }
+
+    private long getRemoteCommentId(){
+        return mRemoteCommentId;
+    }
+
     /*
      * reload the current comment from the local database
      */
@@ -569,20 +601,28 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             scrollView.setVisibility(View.GONE);
             layoutBottom.setVisibility(View.GONE);
 
-            if (mNote != null && mShouldRequestCommentFromNote) {
+            if (mShouldRequestCommentFromNote) {
+
                 // If a remote comment was requested, check if we have the comment for display.
                 // Otherwise request the comment via the REST API
-                int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mNote.getSiteId());
-                if (localTableBlogId > 0) {
-                    Comment comment = CommentTable.getComment(localTableBlogId, mNote.getParentCommentId());
-                    if (comment != null) {
-                        setComment(localTableBlogId, comment);
-                        return;
-                    }
-                }
 
-                long commentId = mNote.getParentCommentId() > 0 ? mNote.getParentCommentId() : mNote.getCommentId();
-                requestComment(localTableBlogId, mNote.getSiteId(), commentId);
+                if (mNote != null) {
+                    int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mNote.getSiteId());
+                    if (localTableBlogId > 0) {
+                        Comment comment = CommentTable.getComment(localTableBlogId, mNote.getParentCommentId());
+                        if (comment != null) {
+                            setComment(localTableBlogId, comment);
+                            return;
+                        }
+                    }
+
+                    long commentId = mNote.getParentCommentId() > 0 ? mNote.getParentCommentId() : mNote.getCommentId();
+                    requestComment(localTableBlogId, mNote.getSiteId(), commentId);
+                } else {
+                    //as the note was not here, let' try fetching it from the REST api
+                    int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
+                    requestComment(localTableBlogId, mRemoteBlogId, mRemoteCommentId);
+                }
             } else if (mNote != null) {
                 showCommentForNote(mNote);
             }
@@ -648,7 +688,21 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         getFragmentManager().invalidateOptionsMenu();
+
+        performInstantActionsIfNeeded();
     }
+
+
+    private void performInstantActionsIfNeeded() {
+        if (mShouldLikeInstantly) {
+            mShouldLikeInstantly = false;
+            likeComment(true);
+        } else if (mShouldApproveInstantly) {
+            mShouldApproveInstantly = false;
+            performModerateAction();
+        }
+    }
+
 
     /*
      * displays the passed post title for the current comment, updates stored title if one doesn't exist
@@ -796,20 +850,40 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        if (mNote == null) return;
+        long siteId;
+        long commentId;
 
-        // Basic moderation support, currently only used when this Fragment is in a CommentDetailActivity
+        if (mNote != null) {
+            siteId = mNote.getSiteId();
+            commentId = mComment.commentID;
+        } else {
+            //use fallback data
+            siteId = mRemoteBlogId;
+            commentId = mRemoteCommentId;
+        }
+
+        //if basic data is not set, we should just abort this action
+        if (siteId == 0 || commentId == 0) return;
+
+        // Basic moderation support
         // Uses WP.com REST API and requires a note object
         final CommentStatus oldStatus = mComment.getStatusEnum();
         mComment.setStatus(CommentStatus.toString(newStatus));
         updateStatusViews();
-        CommentActions.moderateCommentRestApi(mNote.getSiteId(), mComment.commentID, newStatus, new CommentActions.CommentActionListener() {
+        CommentActions.moderateCommentRestApi(siteId, commentId, newStatus, new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(CommentActionResult result) {
                 if (!isAdded()) return;
 
                 if (result.isSuccess()) {
-                    ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                    if (newStatus.equals(CommentStatus.APPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                    } else if (newStatus.equals(CommentStatus.UNAPPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_unapproved, ToastUtils.Duration.SHORT);
+                    }
+
+                    CommentTable.updateComment(mLocalBlogId, mComment);
+
                 } else {
                     mComment.setStatus(CommentStatus.toString(oldStatus));
                     updateStatusViews();
@@ -1209,6 +1283,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         if (localBlogId > 0) {
                             CommentTable.addComment(localBlogId, comment);
                         }
+                        if (mOnCommentSetListener != null) {
+                            mOnCommentSetListener.onCommentSet(comment);
+                        }
                         // now, at long last, show the comment
                         setComment(localBlogId, comment);
                     }
@@ -1224,6 +1301,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         progress.setVisibility(View.GONE);
                     }
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_comment, ToastUtils.Duration.LONG);
+                    getActivity().finish();
                 }
             }
         };
