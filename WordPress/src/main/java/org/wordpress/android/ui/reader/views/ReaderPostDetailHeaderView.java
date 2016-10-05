@@ -75,7 +75,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         TextView txtBlogName = (TextView) findViewById(R.id.text_header_blog_name);
         TextView txtAuthorName = (TextView) findViewById(R.id.text_header_author_name);
-        WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
 
         boolean hasBlogName = mPost.hasBlogName();
         boolean hasAuthorName = mPost.hasAuthorName();
@@ -103,7 +102,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         // show blog preview when these views are tapped
         txtBlogName.setOnClickListener(mClickListener);
         txtAuthorName.setOnClickListener(mClickListener);
-        imgAvatar.setOnClickListener(mClickListener);
 
         if (ReaderUtils.isLoggedOutReader()) {
             mFollowButton.setVisibility(View.GONE);
@@ -174,9 +172,15 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         }
 
+        // show the author's avatar now that we know whether there's a blavatar
+        showAvatar(hasBlavatar);
+    }
+
+    private void showAvatar(boolean hasBlavatar) {
         // avatar size depends on whether there's a blavatar
         int resId = hasBlavatar ? R.dimen.reader_detail_header_avatar : R.dimen.reader_detail_header_avatar_frame;
         int avatarSz = getContext().getResources().getDimensionPixelSize(resId);
+
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
         imgAvatar.getLayoutParams().height = avatarSz;
         imgAvatar.getLayoutParams().width = avatarSz;
@@ -187,8 +191,9 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         } else {
             imgAvatar.showDefaultGravatarImage();
         }
-    }
 
+        imgAvatar.setOnClickListener(mClickListener);
+    }
     /*
      * click listener which shows blog preview
      */
