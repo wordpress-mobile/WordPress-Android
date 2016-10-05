@@ -2,10 +2,13 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -170,6 +173,17 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            if (mIsFeed) {
+                Intent feedListIntent = ReaderActivityLauncher.getReaderFeedPreviewIntent(this, mBlogId);
+
+                if (NavUtils.shouldUpRecreateTask(this, feedListIntent) || isTaskRoot()) {
+                    TaskStackBuilder.create(this)
+                            .addNextIntentWithParentStack(feedListIntent)
+                            .startActivities();
+                    return true;
+                }
+            }
+
             onBackPressed();
             return true;
         }
