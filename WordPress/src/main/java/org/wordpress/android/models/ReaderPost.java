@@ -286,6 +286,7 @@ public class ReaderPost {
 
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
+            String thisTagName = JSONUtils.getStringDecoded(jsonThisTag, "slug");
 
             // if the number of posts on this blog that use this tag is higher than previous,
             // set this as the most popular tag, and set the second most popular tag to
@@ -293,8 +294,10 @@ public class ReaderPost {
             int postCount = jsonThisTag.optInt("post_count");
             if (postCount > popularCount) {
                 nextMostPopularTag = mostPopularTag;
-                mostPopularTag = JSONUtils.getStringDecoded(jsonThisTag, "slug");
+                mostPopularTag = thisTagName;
                 popularCount = postCount;
+            } else if (nextMostPopularTag == null) {
+                nextMostPopularTag = thisTagName;
             }
         }
 
@@ -468,7 +471,7 @@ public class ReaderPost {
             this.primaryTag = StringUtils.notNullStr(tagName);
         }
     }
-    boolean hasPrimaryTag() {
+    public boolean hasPrimaryTag() {
         return !TextUtils.isEmpty(primaryTag);
     }
 
@@ -479,6 +482,9 @@ public class ReaderPost {
         if (!ReaderTag.isDefaultTagTitle(tagName)) {
             this.secondaryTag = StringUtils.notNullStr(tagName);
         }
+    }
+    public boolean hasSecondaryTag() {
+        return !TextUtils.isEmpty(secondaryTag);
     }
 
     /*

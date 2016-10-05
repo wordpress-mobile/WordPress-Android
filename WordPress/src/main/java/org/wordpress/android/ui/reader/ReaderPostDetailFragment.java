@@ -26,8 +26,6 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
@@ -44,6 +42,7 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
+import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
@@ -847,10 +846,9 @@ public class ReaderPostDetailFragment extends Fragment
             TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
             TextView txtDomain = (TextView) getView().findViewById(R.id.text_domain);
             TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
-            TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
 
             WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
-            WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
+            ReaderTagStrip tagStrip = (ReaderTagStrip) getView().findViewById(R.id.tag_strip);
 
             ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
             ReaderFollowButton followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
@@ -913,33 +911,10 @@ public class ReaderPostDetailFragment extends Fragment
                 txtDomain.setText(null);
             }
 
-            if (mPost.hasPostAvatar()) {
-                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_tiny);
-                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
-            } else {
-                imgAvatar.showDefaultGravatarImage();
-            }
-
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
-            if (mPost.hasAuthorName()) {
-                txtDateline.setText(mPost.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
-            } else if (mPost.hasBlogName()) {
-                txtDateline.setText(mPost.getBlogName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
-            } else {
-                txtDateline.setText(timestamp);
-            }
+            txtDateline.setText(timestamp);
 
-            final String tagToDisplay = mPost.getTagForDisplay(null);
-            if (!TextUtils.isEmpty(tagToDisplay)) {
-                txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
-                txtTag.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderTag tag = ReaderUtils.getTagFromTagName(tagToDisplay, ReaderTagType.FOLLOWED);
-                        ReaderActivityLauncher.showReaderTagPreview(v.getContext(), tag);
-                    }
-                });
-            }
+            tagStrip.setPost(mPost);
 
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
                 AniUtils.fadeIn(mLayoutFooter, AniUtils.Duration.LONG);
