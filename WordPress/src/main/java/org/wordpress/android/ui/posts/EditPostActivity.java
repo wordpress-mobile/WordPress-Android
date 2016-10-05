@@ -1225,13 +1225,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void launchCamera() {
-        WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {
-            @Override
-            public void onMediaCapturePathReady(String mediaCapturePath) {
-                mMediaCapturePath = mediaCapturePath;
-                AppLockManager.getInstance().setExtendedTimeout();
-            }
-        });
+        WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
+                new WordPressMediaUtils.LaunchCameraCallback() {
+                    @Override
+                    public void onMediaCapturePathReady(String mediaCapturePath) {
+                        mMediaCapturePath = mediaCapturePath;
+                        AppLockManager.getInstance().setExtendedTimeout();
+                    }
+                });
     }
 
     protected void setPostContentFromShareAction() {

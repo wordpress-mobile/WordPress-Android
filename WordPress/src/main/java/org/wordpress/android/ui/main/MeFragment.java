@@ -39,6 +39,8 @@ import com.yalantis.ucrop.UCropActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -520,13 +522,14 @@ public class MeFragment extends Fragment {
     }
 
     private void askForCameraOrGallery() {
-        WordPressMediaUtils.launchPictureLibraryOrCapture(MeFragment.this, new WordPressMediaUtils
-                .LaunchCameraCallback() {
-            @Override
-            public void onMediaCapturePathReady(String mediaCapturePath) {
-                mMediaCapturePath = mediaCapturePath;
-            }
-        });
+        WordPressMediaUtils
+                .launchPictureLibraryOrCapture(MeFragment.this, BuildConfig.APPLICATION_ID,
+                        new WordPressMediaUtils.LaunchCameraCallback() {
+                            @Override
+                            public void onMediaCapturePathReady(String mediaCapturePath) {
+                                mMediaCapturePath = mediaCapturePath;
+                            }
+                        });
     }
 
     private void startCropActivity(Uri uri) {
