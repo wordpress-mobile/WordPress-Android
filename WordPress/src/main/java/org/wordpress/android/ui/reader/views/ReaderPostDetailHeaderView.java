@@ -119,14 +119,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             });
         }
 
-        if (mPost.hasPostAvatar()) {
-            int avatarSize = getContext().getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar);
-            String avatarUrl = GravatarUtils.fixGravatarUrl(mPost.getPostAvatar(), avatarSize);
-            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-        } else {
-            imgAvatar.showDefaultGravatarImage();
-        }
-
         // get local blog info so we can set the follower count and blavatar
         ReaderBlog blogInfo = mPost.isExternal ? ReaderBlogTable.getFeedInfo(mPost.feedId) : ReaderBlogTable.getBlogInfo(mPost.blogId);
         if (blogInfo != null) {
@@ -171,25 +163,31 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         setFollowerCount(blogInfo.numSubscribers);
 
-        // load the blavatar if there is one, otherwise hide the blavatar and set the avatar
-        // to the same size as its parent frame
-        int avatarSz;
+        boolean hasBlavatar = blogInfo.hasImageUrl();
         WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
-        if (blogInfo.hasImageUrl()) {
+        if (hasBlavatar) {
             int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
             String blavatarUrl = PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), blavatarSz, blavatarSz);
             imgBlavatar.setVisibility(View.VISIBLE);
             imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
-            avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar);
         } else {
             imgBlavatar.setVisibility(View.GONE);
-            avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar_frame);
 
         }
 
+        // avatar size depends on whether there's a blavatar
+        int resId = hasBlavatar ? R.dimen.reader_detail_header_avatar : R.dimen.reader_detail_header_avatar_frame;
+        int avatarSz = getContext().getResources().getDimensionPixelSize(resId);
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
         imgAvatar.getLayoutParams().height = avatarSz;
         imgAvatar.getLayoutParams().width = avatarSz;
+
+        if (mPost != null && mPost.hasPostAvatar()) {
+            String avatarUrl = GravatarUtils.fixGravatarUrl(mPost.getPostAvatar(), avatarSz);
+            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+        } else {
+            imgAvatar.showDefaultGravatarImage();
+        }
     }
 
     /*
