@@ -956,13 +956,6 @@ public class WordPressDB {
         return SqlUtils.stringForQuery(db, query, new String[]{Integer.toString(blogId), Long.toString(mediaId)});
     }
 
-    public int getMediaCountAll(String blogId) {
-        Cursor cursor = getMediaFilesForBlog(blogId);
-        int count = cursor.getCount();
-        cursor.close();
-        return count;
-    }
-
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
                 + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "image%", "uploading"});
