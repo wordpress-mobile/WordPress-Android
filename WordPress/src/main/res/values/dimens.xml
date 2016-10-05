@@ -83,7 +83,7 @@
     <dimen name="reader_detail_margin_tablet_big">96dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
-    <dimen name="reader_detail_header_avatar">46dp</dimen>
+    <dimen name="reader_detail_header_avatar">48dp</dimen>
     <dimen name="reader_detail_header_blavatar">56dp</dimen>
     <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
 
