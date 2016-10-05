@@ -43,8 +43,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,15 +60,33 @@ public class PostUploadService extends Service {
     private static boolean mUseLegacyMode;
     private UploadPostTask mCurrentTask = null;
 
+    private static final Set<Integer> mFirstPublishPosts = new HashSet<>();
     private Context mContext;
     private PostUploadNotifier mPostUploadNotifier;
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
 
-    public static void addPostToUpload(PostModel currentPost) {
+    /**
+     * Adds a post to the queue.
+     */
+    public static void addPostToUpload(PostModel post) {
         synchronized (mPostsList) {
-            mPostsList.add(currentPost);
+            mPostsList.add(post);
+        }
+    }
+
+    /**
+     * Adds a post to the queue and tracks post analytics.
+     * To be used only the first time a post is uploaded, i.e. when its status changes from local draft or remote draft
+     * to published.
+     */
+    public static void addPostToUploadAndTrackAnalytics(PostModel post) {
+        synchronized (mFirstPublishPosts) {
+            mFirstPublishPosts.add(post.getId());
+        }
+        synchronized (mPostsList) {
+            mPostsList.add(post);
         }
     }
 
@@ -165,9 +185,6 @@ public class PostUploadService extends Service {
         private boolean mIsMediaError = false;
         private int featuredImageID = -1;
 
-        // True when the post goes from draft or local draft to published status
-        boolean mIsFirstPublishing = false;
-
         // Used for analytics
         private boolean mHasImage, mHasVideo, mHasCategory;
 
@@ -211,12 +228,8 @@ public class PostUploadService extends Service {
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
             mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
 
-            // TODO: Fix first publish tracking
-            // Check if it's the first publishing before changing post status.
-            mIsFirstPublishing = mPost.isLocalDraft() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED;
-
             // Track analytics only if the post is newly published
-            if (mIsFirstPublishing) {
+            if (mFirstPublishPosts.contains(mPost.getId())) {
                 trackUploadAnalytics();
             }
 
@@ -546,12 +559,14 @@ public class PostUploadService extends Service {
         if (event.isError()) {
             // TODO: We should interpret event.error.type and pass our own string rather than use event.error.message
             mPostUploadNotifier.updateNotificationError(event.post, event.error.message, false, event.post.isPage());
+            mFirstPublishPosts.remove(event.post.getId());
         } else {
             // TODO: MediaStore?
             // WordPress.wpDB.deleteMediaFilesForPost(mPost);
             mPostUploadNotifier.cancelNotification(event.post);
             SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
-            mPostUploadNotifier.updateNotificationSuccess(event.post, site, true);
+            boolean isFirstTimePublish = mFirstPublishPosts.remove(event.post.getId());
+            mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
         }
 
         finishUpload();

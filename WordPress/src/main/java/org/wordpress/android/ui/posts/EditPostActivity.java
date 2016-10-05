@@ -681,6 +681,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         new Thread(new Runnable() {
             @Override
             public void run() {
+                boolean isFirstTimePublish = false;
+                if (PostStatus.fromPost(mPost) == PostStatus.PUBLISHED &&
+                        (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT)) {
+                    isFirstTimePublish = true;
+                }
                 updatePostObject(false);
                 savePostToDb();
 
@@ -697,7 +702,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
-                PostUploadService.addPostToUpload(mPost);
+                if (isFirstTimePublish) {
+                    PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
+                } else {
+                    PostUploadService.addPostToUpload(mPost);
+                }
                 PostUploadService.setLegacyMode(!mShowNewEditor);
                 startService(new Intent(EditPostActivity.this, PostUploadService.class));
                 setResult(RESULT_OK);

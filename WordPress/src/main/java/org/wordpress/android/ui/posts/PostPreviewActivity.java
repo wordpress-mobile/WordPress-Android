@@ -286,10 +286,16 @@ public class PostPreviewActivity extends AppCompatActivity {
             }
 
             if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
+                // Remote draft being published
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
+                PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
+            } else if (mPost.isLocalDraft() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
+                // Local draft being published
+                PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
+            } else {
+                // Not a first-time publish
+                PostUploadService.addPostToUpload(mPost);
             }
-
-            PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
         }
     }

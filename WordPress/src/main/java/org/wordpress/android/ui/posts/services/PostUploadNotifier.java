@@ -80,7 +80,7 @@ public class PostUploadNotifier {
         mNotificationManager.cancel(mPostIdToNotificationData.get(post.getId()).notificationId);
     }
 
-    public void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstPublishing) {
+    public void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationSuccess");
 
         NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
@@ -95,7 +95,7 @@ public class PostUploadNotifier {
         Notification.Builder notificationBuilder = new Notification.Builder(mContext.getApplicationContext());
         String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
                 .page_published) : mContext.getResources().getText(R.string.post_published));
-        if (!isFirstPublishing) {
+        if (!isFirstTimePublish) {
             notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
                     .page_updated) : mContext.getResources().getText(R.string.post_updated));
         }

@@ -439,10 +439,9 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        // TODO: The status change should happen later, since we're dropping post.setChangedFromDraftToPublished(true)
         post.setStatus(PostStatus.PUBLISHED.toString());
 
-        PostUploadService.addPostToUpload(post);
+        PostUploadService.addPostToUploadAndTrackAnalytics(post);
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
         PostUtils.trackSavePostAnalytics(post, mSite);
