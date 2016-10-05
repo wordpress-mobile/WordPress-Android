@@ -62,35 +62,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 return;
             }
 
-            if (SimperiumUtils.getNotesBucket() != null) {
-                try {
-                    Note note = SimperiumUtils.getNotesBucket().get(noteId);
-
-                    Map<String, String> properties = new HashMap<>();
-                    properties.put("notification_type", note.getType());
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
-
-                    Fragment detailFragment = getDetailFragmentForNote(note);
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.notifications_detail_container, detailFragment)
-                            .commitAllowingStateLoss();
-
-                    if (getSupportActionBar() != null) {
-                        getSupportActionBar().setTitle(note.getTitle());
-                    }
-
-                    // mark the note as read if it's unread
-                    if (note.isUnread()) {
-                        // mark as read which syncs with simperium
-                        note.markAsRead();
-                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-                    }
-                } catch (BucketObjectMissingException e) {
-                    //FIXME MZ here decode base64fullNoteData
-                    showErrorToastAndFinish();
-                    return;
-                }
-            }
+            retrieveOrBuildNoteAndShowNoteDetail(noteId);
 
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);//clearNotifications();
 
@@ -122,6 +94,54 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         super.onSaveInstanceState(outState);
+    }
+
+    private void retrieveOrBuildNoteAndShowNoteDetail(String noteId) {
+        Note note = null;
+
+        if (noteId == null) return;
+
+        if (SimperiumUtils.getNotesBucket() != null) {
+            try {
+                note = SimperiumUtils.getNotesBucket().get(noteId);
+            } catch (BucketObjectMissingException e) {
+                SimperiumUtils.trackBucketObjectMissing(e.getMessage(), noteId);
+            }
+        }
+
+        //if note was not found in bucket, try building up the note from the PN payload
+        if (note == null) {
+            String base64FullData = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+            note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
+        }
+
+        //if we still couldn't build it up just fail, nothing else to do here
+        if (note == null) {
+            showErrorToastAndFinish();
+            return;
+        } else {
+            //show the note
+
+            Map<String, String> properties = new HashMap<>();
+            properties.put("notification_type", note.getType());
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+
+            Fragment detailFragment = getDetailFragmentForNote(note);
+            getFragmentManager().beginTransaction()
+                    .add(R.id.notifications_detail_container, detailFragment)
+                    .commitAllowingStateLoss();
+
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(note.getTitle());
+            }
+
+            // mark the note as read if it's unread
+            if (note.isUnread()) {
+                // mark as read which syncs with simperium
+                note.markAsRead();
+                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+            }
+        }
     }
 
     private void showErrorToastAndFinish() {

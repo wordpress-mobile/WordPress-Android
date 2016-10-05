@@ -6,6 +6,7 @@ package org.wordpress.android.models;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import com.simperium.client.BucketSchema;
@@ -21,10 +22,15 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 public class Note extends Syncable {
     private static final String TAG = "NoteModel";
@@ -581,6 +587,42 @@ public class Note extends Syncable {
         @Override
         public Note build(String key, JSONObject properties) {
             return new Note(key, properties);
+        }
+
+        public Note buildFromBase64EncodedData(String noteId, String base64FullNoteData){
+            Note note = null;
+
+            if (base64FullNoteData == null) return null;
+
+            byte[] encryptedWithoutB64 = Base64.decode(base64FullNoteData, Base64.DEFAULT);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ByteArrayInputStream bis = new ByteArrayInputStream(encryptedWithoutB64);
+
+            GZIPInputStream zis = null;
+            try {
+                zis = new GZIPInputStream(bis);
+                byte[] tmpBuffer = new byte[256];
+                int n;
+                while ((n = zis.read(tmpBuffer)) >= 0) {
+                    bos.write(tmpBuffer, 0, n);
+                }
+                zis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String out = new String(bos.toByteArray(), StandardCharsets.UTF_8);
+
+            if (out != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(out);
+                    note = build(noteId, jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return note;
         }
 
         public void update(Note note, JSONObject properties) {
