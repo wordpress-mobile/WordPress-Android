@@ -97,6 +97,7 @@ public class CommentStore extends Store {
 
     public class OnCommentChanged extends OnChanged<CommentError> {
         public int rowsAffected;
+        public CommentAction causeOfChange;
         public OnCommentChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
         }
@@ -123,6 +124,10 @@ public class CommentStore extends Store {
 
     public List<CommentModel> getCommentsForSite(SiteModel site) {
         return CommentSqlUtils.getCommentsForSite(site);
+    }
+
+    public CommentModel getCommentByLocalId(int localId) {
+        return CommentSqlUtils.getCommentByLocalCommentId(localId);
     }
 
     // Store Methods
@@ -182,6 +187,7 @@ public class CommentStore extends Store {
     private void updateComment(CommentModel payload) {
         int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.causeOfChange = CommentAction.UPDATE_COMMENT;
         emitChange(event);
     }
 
@@ -222,6 +228,7 @@ public class CommentStore extends Store {
             rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
         }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.causeOfChange = CommentAction.FETCH_COMMENTS;
         event.error = payload.error;
         emitChange(event);
     }
@@ -237,6 +244,7 @@ public class CommentStore extends Store {
     private void handlePushCommentResponse(RemoteCommentResponsePayload payload) {
         int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.causeOfChange = CommentAction.PUSH_COMMENT;
         event.error = payload.error;
         emitChange(event);
     }
@@ -253,6 +261,7 @@ public class CommentStore extends Store {
             org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload payload) {
         int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.causeOfChange = CommentAction.FETCH_COMMENT;
         event.error = payload.error;
         emitChange(event);
     }
