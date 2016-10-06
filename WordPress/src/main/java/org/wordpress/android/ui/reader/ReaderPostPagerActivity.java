@@ -173,6 +173,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+
+            // offer "UP" navigation to the feed list instead of returning to the launching app
             if (mIsFeed) {
                 Intent feedListIntent = ReaderActivityLauncher.getReaderFeedPreviewIntent(this, mBlogId);
 
