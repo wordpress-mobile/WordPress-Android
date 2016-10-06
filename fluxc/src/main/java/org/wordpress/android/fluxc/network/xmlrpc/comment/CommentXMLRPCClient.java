@@ -181,6 +181,21 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         newComment(site, comment.getRemotePostId(), reply, replyParams);
     }
 
+    /**
+     * Create a new comment to a Post
+     */
+    public void createNewComment(final SiteModel site, final PostModel post, final CommentModel comment) {
+        // Comment parameters
+        Map<String, Object> commentParams = new HashMap<>();
+        commentParams.put("comment_parent", comment.getRemoteParentCommentId());
+        commentParams.put("content", comment.getContent());
+        commentParams.put("author", comment.getAuthorName());
+        commentParams.put("author_url", comment.getAuthorUrl());
+        commentParams.put("author_email", comment.getAuthorEmail());
+
+        newComment(site, post.getRemotePostId(), comment, commentParams);
+    }
+
     // Private methods
 
     private void newComment(final SiteModel site, long remotePostId, final CommentModel comment,
