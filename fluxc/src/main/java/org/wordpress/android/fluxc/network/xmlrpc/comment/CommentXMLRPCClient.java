@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -42,7 +44,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void fetchComments(final SiteModel site, int offset, CommentStatus status) {
-        List<Object> params = new ArrayList<>(2);
+        List<Object> params = new ArrayList<>(4);
         Map<String, Object> commentParams = new HashMap<>();
         commentParams.put("number", DEFAULT_NUMBER_COMMENTS);
         commentParams.put("offset", offset);
@@ -73,7 +75,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void pushComment(final SiteModel site, final CommentModel comment) {
-        List<Object> params = new ArrayList<>(2);
+        List<Object> params = new ArrayList<>(5);
         Map<String, Object> commentParams = new HashMap<>();
         commentParams.put("content", comment.getContent());
         commentParams.put("date", comment.getDatePublished());
@@ -91,8 +93,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         CommentModel updatedComment = commentResponseToComment(response, site);
-                        CommentStore.RemoteCommentResponsePayload
-                                payload = new CommentStore.RemoteCommentResponsePayload(updatedComment);
+                        RemoteCommentResponsePayload payload = new CommentStore.RemoteCommentResponsePayload
+                                (updatedComment);
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
                     }
                 },
@@ -108,7 +110,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void fetchComment(final SiteModel site, final CommentModel comment) {
-        List<Object> params = new ArrayList<>(2);
+        List<Object> params = new ArrayList<>(4);
         params.add(site.getSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
@@ -119,8 +121,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         CommentModel updatedComment = commentResponseToComment(response, site);
-                        org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload
-                                payload = new org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload(updatedComment);
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(updatedComment);
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(payload));
                     }
                 },
@@ -147,6 +148,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 return "spam";
             case TRASH:
                 return "trash";
+            // Defaults (don't exist in XMLRPC)
             default:
             case ALL:
             case UNSPAM:
