@@ -76,10 +76,35 @@ public class CommentStore extends Store {
         }
     }
 
+    public static class RemoteCreateCommentPayload extends Payload {
+        public final SiteModel site;
+        public final CommentModel comment;
+        public final CommentModel reply;
+        public final PostModel post;
+
+        public CommentError error;
+        public RemoteCreateCommentPayload(@NonNull SiteModel site, @NonNull PostModel post,
+                                          @NonNull CommentModel comment) {
+            this.site = site;
+            this.post = post;
+            this.comment = comment;
+            this.reply = null;
+        }
+
+        public RemoteCreateCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment,
+                                          @NonNull CommentModel reply) {
+            this.site = site;
+            this.comment = comment;
+            this.reply = reply;
+            this.post = null;
+        }
+    }
+
     // Errors
 
     public enum CommentErrorType {
         GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
         INVALID_COMMENT
     }
@@ -184,6 +209,23 @@ public class CommentStore extends Store {
 
     // Private methods
 
+    private void createNewComment(RemoteCreateCommentPayload payload) {
+        if (payload.reply == null) {
+            // Create a new comment on a specific Post
+            if (payload.site.isWPCom()) {
+                mCommentRestClient.createNewComment(payload.site, payload.post, payload.comment);
+            } else {
+                mCommentXMLRPCClient.createNewComment(payload.site, payload.post, payload.comment);
+            }
+        } else {
+            // Create a new reply to a specific Comment
+            if (payload.site.isWPCom()) {
+                mCommentRestClient.createNewReply(payload.site, payload.comment, payload.reply);
+            } else {
+                mCommentXMLRPCClient.createNewReply(payload.site, payload.comment, payload.reply);
+            }
+        }
+    }
     private void updateComment(CommentModel payload) {
         int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
