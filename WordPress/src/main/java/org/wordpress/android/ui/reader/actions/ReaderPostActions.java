@@ -221,7 +221,7 @@ public class ReaderPostActions {
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestPost(final long blogId,
+    public static void requestBlogPost(final long blogId,
             final long postId,
             final ReaderActions.OnRequestListener requestListener) {
         requestPost(false, blogId, postId, requestListener);
@@ -230,7 +230,13 @@ public class ReaderPostActions {
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestPost(final boolean isFeed,
+    public static void requestFeedPost(final long blogId,
+            final long postId,
+            final ReaderActions.OnRequestListener requestListener) {
+        requestPost(true, blogId, postId, requestListener);
+    }
+
+    private static void requestPost(final boolean isFeed,
             final long blogOrFeedId,
             final long postOrItemId,
             final ReaderActions.OnRequestListener requestListener) {
@@ -288,7 +294,7 @@ public class ReaderPostActions {
     }
 
     public static void bumpPageViewForPost(long blogId, long postId) {
-        bumpPageViewForPost(ReaderPostTable.getPost(blogId, postId, true));
+        bumpPageViewForPost(ReaderPostTable.getBlogPost(blogId, postId, true));
     }
     public static void bumpPageViewForPost(ReaderPost post) {
         if (post == null) {

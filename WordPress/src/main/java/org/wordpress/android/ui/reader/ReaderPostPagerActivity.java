@@ -272,7 +272,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         // analytics tracking
         AnalyticsUtils.trackWithReaderPostDetails(
                 AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                ReaderPostTable.getPost(idPair.getBlogId(), idPair.getPostId(), true));
+                ReaderPostTable.getBlogPost(idPair.getBlogId(), idPair.getPostId(), true));
     }
 
     /*

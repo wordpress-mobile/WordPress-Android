@@ -355,7 +355,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         // get the post again since it has changed, then refresh to show changes
-        mPost = ReaderPostTable.getPost(mPost.blogId, mPost.postId, false);
+        mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
         refreshLikes();
         refreshIconCounts();
 
@@ -590,7 +590,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged()) {
-                    mPost = ReaderPostTable.getPost(mPost.blogId, mPost.postId, false);
+                    mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
                     refreshIconCounts();
                 }
                 // refresh likes if necessary - done regardless of whether the post has changed
@@ -756,7 +756,11 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             }
         };
-        ReaderPostActions.requestPost(mIsFeed, mBlogId, mPostId, listener);
+        if (mIsFeed) {
+            ReaderPostActions.requestFeedPost(mBlogId, mPostId, listener);
+        } else {
+            ReaderPostActions.requestBlogPost(mBlogId, mPostId, listener);
+        }
     }
 
     /*
@@ -800,7 +804,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            mPost = ReaderPostTable.getPost(mIsFeed, mBlogId, mPostId, false);
+            mPost = mIsFeed ? ReaderPostTable.getFeedPost(mBlogId, mPostId, false)
+                    : ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
             if (mPost == null) {
                 return false;
             }
@@ -815,7 +820,7 @@ public class ReaderPostDetailFragment extends Fragment
                     mIsFeed = false;
                     mBlogId = discoverData.getBlogId();
                     mPostId = discoverData.getPostId();
-                    mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
+                    mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
                     if (mPost == null) {
                         return false;
                     }
