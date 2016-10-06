@@ -136,6 +136,31 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
+    public void deleteComment(final SiteModel site, final CommentModel comment) {
+        List<Object> params = new ArrayList<>(4);
+        params.add(site.getSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        params.add(comment.getRemoteCommentId());
+        final XMLRPCRequest request = new XMLRPCRequest(
+                site.getXmlRpcUrl(), XMLRPC.DELETE_COMMENT, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(
+                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
+                    }
+                }
+        );
+        add(request);
+    }
     // Private methods
 
     private String getXMLRPCCommentStatus(CommentStatus status) {
