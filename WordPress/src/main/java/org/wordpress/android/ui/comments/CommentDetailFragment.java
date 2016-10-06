@@ -1193,11 +1193,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                                 setCommentStatusUnapproved();
                             }
                         } else {
-                            // everything ok, so update in-memory copy of mNote, just in case...
-                            //FIXME working on this, need to update the note JSON with this.
+                            // everything ok, so update in-memory copy of mNote, to keep it up-to-date
+                            // in case of config changes.
                             mNote.setLikedComment(mBtnLikeComment.isActivated());
                             mRestoredNoteJson = Note.Schema.getJSON(mNote).toString();
-                            //mNote = new Note.Schema().build(mNote.getId(), new JSONObject(mRestoredNoteJson));
                         }
                     }
                 }, new RestRequest.ErrorListener() {
