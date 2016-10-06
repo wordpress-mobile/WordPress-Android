@@ -9,6 +9,7 @@
 /sites/$site/posts/
 /sites/$site/posts/$post_ID/
 /sites/$site/posts/$post_ID/delete/
+/sites/$site/posts/$post_ID/replies/new
 /sites/$site/posts/new/
 
 /sites/$site/media/
