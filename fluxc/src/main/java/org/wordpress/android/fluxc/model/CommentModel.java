@@ -16,6 +16,7 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
     @Column private int mId;
     @Column private long mRemoteCommentId;
     @Column private long mRemotePostId;
+    @Column private long mRemoteParentCommentId;
     @Column private int mLocalSiteId;
     @Column private long mRemoteSiteId;
 
@@ -135,5 +136,13 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
 
     public void setRemoteSiteId(long remoteSiteId) {
         mRemoteSiteId = remoteSiteId;
+    }
+
+    public long getRemoteParentCommentId() {
+        return mRemoteParentCommentId;
+    }
+
+    public void setRemoteParentCommentId(long remoteParentCommentId) {
+        mRemoteParentCommentId = remoteParentCommentId;
     }
 }
