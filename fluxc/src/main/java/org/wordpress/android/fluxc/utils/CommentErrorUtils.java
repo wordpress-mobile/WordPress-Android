@@ -6,14 +6,15 @@ import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.CommentError;
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 
 import java.util.ArrayList;
 
 public class CommentErrorUtils {
-    public static org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload commentErrorToFetchCommentPayload(BaseNetworkError error,
-                                                                                                                                CommentModel comment) {
-        org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload
-                payload = new org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload(comment);
+    public static RemoteCommentResponsePayload commentErrorToFetchCommentPayload(BaseNetworkError error,
+                                                                                 CommentModel comment) {
+        RemoteCommentResponsePayload payload = new org.wordpress.android.fluxc.store.CommentStore
+                .RemoteCommentResponsePayload(comment);
         payload.error = new CommentError(genericToCommentError(error), "");
         return payload;
     }
@@ -24,9 +25,9 @@ public class CommentErrorUtils {
         return payload;
     }
 
-    public static CommentStore.RemoteCommentResponsePayload commentErrorToPushCommentPayload(BaseNetworkError error,
-                                                                                             CommentModel comment) {
-        CommentStore.RemoteCommentResponsePayload payload = new CommentStore.RemoteCommentResponsePayload(comment);
+    public static RemoteCommentResponsePayload commentErrorToPushCommentPayload(BaseNetworkError error,
+                                                                                CommentModel comment) {
+        RemoteCommentResponsePayload payload = new CommentStore.RemoteCommentResponsePayload(comment);
         payload.error = new CommentError(genericToCommentError(error), "");
         return payload;
     }
