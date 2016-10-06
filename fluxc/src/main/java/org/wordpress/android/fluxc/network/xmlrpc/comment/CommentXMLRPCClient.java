@@ -161,7 +161,55 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         );
         add(request);
     }
+
+    /**
+     * Create a new reply to a Comment
+     */
+    public void createNewReply(final SiteModel site, final CommentModel comment, final CommentModel reply) {
+        // Comment parameters
+        Map<String, Object> replyParams = new HashMap<>();
+
+        // Use remote comment id as reply comment parent
+        replyParams.put("comment_parent", comment.getRemoteCommentId());
+
+        // Reply parameters
+        replyParams.put("content", reply.getContent());
+        replyParams.put("author", reply.getAuthorName());
+        replyParams.put("author_url", reply.getAuthorUrl());
+        replyParams.put("author_email", reply.getAuthorEmail());
+
+        newComment(site, comment.getRemotePostId(), reply, replyParams);
+    }
+
     // Private methods
+
+    private void newComment(final SiteModel site, long remotePostId, final CommentModel comment,
+                            Map<String, Object> commentParams) {
+        List<Object> params = new ArrayList<>(5);
+        params.add(site.getSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        params.add(remotePostId);
+        params.add(commentParams);
+        final XMLRPCRequest request = new XMLRPCRequest(
+                site.getXmlRpcUrl(), XMLRPC.NEW_COMMENT, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(
+                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
+                    }
+                }
+        );
+        add(request);
+    }
 
     private String getXMLRPCCommentStatus(CommentStatus status) {
         switch (status) {
