@@ -112,13 +112,13 @@ public class SimperiumUtils {
     }
 
     public static void startBuckets() {
-//        if (mNotesBucket != null) {
-//            mNotesBucket.start();
-//        }
-//
-//        if (mMetaBucket != null) {
-//            mMetaBucket.start();
-//        }
+        if (mNotesBucket != null) {
+            mNotesBucket.start();
+        }
+
+        if (mMetaBucket != null) {
+            mMetaBucket.start();
+        }
     }
 
     public static void resetBucketsAndDeauthorize() {
