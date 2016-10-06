@@ -50,6 +50,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                 case "https":
                     List<String> segments = uri.getPathSegments();
 
+                    // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
+                    //  with the first segment being 'read'.
                     if (segments != null && segments.get(0).equals("read")) {
                         if (segments.size() > 2 && segments.get(1).equals("feeds")) {
                             mIsFeed = true;
