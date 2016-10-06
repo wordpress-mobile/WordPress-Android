@@ -187,6 +187,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         Date datePublished = XMLRPCUtils.safeGetMapValue(commentMap, "date_created_gmt", new Date());
         comment.setDatePublished(DateTimeUtils.iso8601UTCFromDate(datePublished));
         comment.setContent(XMLRPCUtils.safeGetMapValue(commentMap, "content", ""));
+        comment.setRemoteParentCommentId(XMLRPCUtils.safeGetMapValue(commentMap, "parent", 0));
 
         // Author
         comment.setAuthorUrl(XMLRPCUtils.safeGetMapValue(commentMap, "author_url", ""));
