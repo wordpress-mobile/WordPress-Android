@@ -191,7 +191,6 @@ public class GCMMessageService extends GcmListenerService {
             AnalyticsTracker.flush();
         }
 
-        //showGroupNotificationForActiveNotificationsMap(pushId, noteId, noteType, data.getString("icon"), title, message);
         showGroupNotificationForActiveNotificationsMap(pushId, data);
     }
 
