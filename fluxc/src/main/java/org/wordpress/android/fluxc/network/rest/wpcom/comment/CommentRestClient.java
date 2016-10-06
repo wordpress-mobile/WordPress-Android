@@ -125,6 +125,30 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void deleteComment(final SiteModel site, final CommentModel comment) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).delete
+                .getUrlV1_1();
+        Map<String, String> params = new HashMap<>();
+        final WPComGsonRequest<CommentWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
+                url, params, CommentWPComRestResponse.class,
+                new Listener<CommentWPComRestResponse>() {
+                    @Override
+                    public void onResponse(CommentWPComRestResponse response) {
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
+                    }
+                },
+
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(
+                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
+                    }
+                }
+        );
+        add(request);
+    }
     // Private methods
 
     private List<CommentModel> commentsResponseToCommentList(CommentsWPComRestResponse response, SiteModel site) {
