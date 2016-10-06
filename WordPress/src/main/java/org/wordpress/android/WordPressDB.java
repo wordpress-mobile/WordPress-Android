@@ -36,7 +36,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -959,22 +958,6 @@ public class WordPressDB {
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
                 + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "image%", "uploading"});
-    }
-
-    /** Ids in the filteredIds will not be selected **/
-    public Cursor getMediaImagesForBlog(String blogId, ArrayList<String> filteredIds) {
-        String mediaIdsStr = "";
-
-        if (filteredIds != null && filteredIds.size() > 0) {
-            mediaIdsStr = "AND mediaId NOT IN (";
-            for (String mediaId : filteredIds) {
-                mediaIdsStr += "'" + mediaId + "',";
-            }
-            mediaIdsStr = mediaIdsStr.subSequence(0, mediaIdsStr.length() - 1) + ")";
-        }
-
-        return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
-                + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? " + mediaIdsStr + " ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "image%", "uploading"});
     }
 
     public MediaFile getMediaFile(String src, Post post) {
