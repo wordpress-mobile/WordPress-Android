@@ -126,14 +126,8 @@ public class GCMMessageService extends GcmListenerService {
         if (data == null)
             return;
 
-        String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
-
-        String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
-        if (title == null) {
-            title = getString(R.string.app_name);
-        }
-        String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
         String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
+        String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification
@@ -197,11 +191,23 @@ public class GCMMessageService extends GcmListenerService {
             AnalyticsTracker.flush();
         }
 
-        showGroupNotificationForActiveNotificationsMap(pushId, noteId, noteType, data.getString("icon"), title, message);
+        //showGroupNotificationForActiveNotificationsMap(pushId, noteId, noteType, data.getString("icon"), title, message);
+        showGroupNotificationForActiveNotificationsMap(pushId, data);
     }
 
-    private void showGroupNotificationForActiveNotificationsMap(int pushId, String noteId, String noteType,
-                                                                String largeIconUri, String title, String message) {
+    private void showGroupNotificationForActiveNotificationsMap(int pushId, Bundle data) {
+        if (data == null)
+            return;
+
+        String largeIconUri = data.getString("icon");
+        String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
+        String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
+
+        String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
+        if (title == null) {
+            title = getString(R.string.app_name);
+        }
+        String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
 
         // Build the new notification, add group to support wearable stacking
         NotificationCompat.Builder builder = getNotificationBuilder(title, message);
@@ -211,13 +217,13 @@ public class GCMMessageService extends GcmListenerService {
             builder.setLargeIcon(largeIconBitmap);
         }
 
-        showIndividualNotificationForBuilder(builder, noteType, noteId, pushId);
+        showIndividualNotificationForBuilder(builder, data, noteType, noteId, pushId);
 
         // Also add a group summary notification, which is required for non-wearable devices
         showGroupNotificationForBuilder(builder, message);
     }
 
-    private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+    private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId, Bundle data) {
         // Add some actions if this is a comment notification
 
         boolean areActionsSet = false;
@@ -228,18 +234,18 @@ public class GCMMessageService extends GcmListenerService {
                 if (note != null) {
                     //if note can be replied to, we'll always add this action first
                     if (note.canReply()) {
-                        addCommentReplyActionForCommentNotification(builder, noteId);
+                        addCommentReplyActionForCommentNotification(builder, noteId, data);
                     }
 
                     // if the comment is lacking approval, offer moderation actions
                     if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
                         if (note.canModerate()) {
-                            addCommentApproveActionForCommentNotification(builder, noteId);
+                            addCommentApproveActionForCommentNotification(builder, noteId, data);
                         }
                     } else {
                         //else offer REPLY / LIKE actions
                         if (note.canLike()) {
-                            addCommentLikeActionForCommentNotification(builder, noteId);
+                            addCommentLikeActionForCommentNotification(builder, noteId, data);
                         }
                     }
                 }
@@ -252,12 +258,12 @@ public class GCMMessageService extends GcmListenerService {
 
         // if we could not set the actions, set the default ones REPLY / LIKE
         if (!areActionsSet) {
-            addCommentReplyActionForCommentNotification(builder, noteId);
-            addCommentLikeActionForCommentNotification(builder, noteId);
+            addCommentReplyActionForCommentNotification(builder, noteId, data);
+            addCommentLikeActionForCommentNotification(builder, noteId, data);
         }
     }
 
-    private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+    private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId, Bundle noteBundle) {
         // adding comment reply action
         Intent commentReplyIntent = getCommentActionIntent();
         commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
@@ -265,13 +271,17 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
         }
+        if (noteBundle != null && noteBundle.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
+            String base64FullData = noteBundle.getString(PUSH_ARG_NOTE_FULL_DATA);
+            commentReplyIntent.putExtra(PUSH_ARG_NOTE_FULL_DATA, base64FullData);
+        }
         PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(this, 0, commentReplyIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
     }
 
-    private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+    private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId, Bundle noteBundle) {
         // adding comment like action
         Intent commentLikeIntent = getCommentActionIntent();
         commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
@@ -279,13 +289,18 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentLikeIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
         }
+        if (noteBundle != null && noteBundle.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
+            String base64FullData = noteBundle.getString(PUSH_ARG_NOTE_FULL_DATA);
+            commentLikeIntent.putExtra(PUSH_ARG_NOTE_FULL_DATA, base64FullData);
+        }
+
         PendingIntent commentLikePendingIntent = PendingIntent.getActivity(this, 0, commentLikeIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                 commentLikePendingIntent);
     }
 
-    private void addCommentApproveActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+    private void addCommentApproveActionForCommentNotification(NotificationCompat.Builder builder, String noteId, Bundle noteBundle) {
         // adding comment approve action
         Intent commentApproveIntent = getCommentActionIntent();
         commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
@@ -293,6 +308,11 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentApproveIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
         }
+        if (noteBundle != null && noteBundle.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
+            String base64FullData = noteBundle.getString(PUSH_ARG_NOTE_FULL_DATA);
+            commentApproveIntent.putExtra(PUSH_ARG_NOTE_FULL_DATA, base64FullData);
+        }
+
         PendingIntent commentApprovePendingIntent = PendingIntent.getActivity(this, 0, commentApproveIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
@@ -399,13 +419,13 @@ public class GCMMessageService extends GcmListenerService {
         }
     }
 
-    private void showIndividualNotificationForBuilder(NotificationCompat.Builder builder, String noteType, String noteId, int pushId) {
+    private void showIndividualNotificationForBuilder(NotificationCompat.Builder builder, Bundle data, String noteType, String noteId, int pushId) {
         if (builder == null) {
             return;
         }
 
         if (PUSH_TYPE_COMMENT.equals(noteType)) {
-            addActionsForCommentNotification(builder, noteId);
+            addActionsForCommentNotification(builder, noteId, data);
         }
         showNotificationForBuilder(builder, this, pushId);
     }
@@ -502,7 +522,7 @@ public class GCMMessageService extends GcmListenerService {
                 String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                 String noteId = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
                 if (!sActiveNotificationsMap.isEmpty()) {
-                    showIndividualNotificationForBuilder(builder, noteType, noteId, sActiveNotificationsMap.keyAt(0));
+                    showIndividualNotificationForBuilder(builder, remainingNote, noteType, noteId, sActiveNotificationsMap.keyAt(0));
                 }
             }
         }

@@ -484,6 +484,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onStart();
         EventBus.getDefault().register(this);
         showComment();
+
     }
 
     @Override
@@ -847,7 +848,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (!isAdded()) return;
 
                 if (result.isSuccess()) {
-                    ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+
+                    if (newStatus.equals(CommentStatus.APPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                    } else if (newStatus.equals(CommentStatus.UNAPPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_unapproved, ToastUtils.Duration.SHORT);
+                    }
+
+                    CommentTable.updateComment(mLocalBlogId, mComment);
+
                 } else {
                     mComment.setStatus(CommentStatus.toString(oldStatus));
                     updateStatusViews();
@@ -1183,6 +1192,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                             if (commentStatusShouldRevert) {
                                 setCommentStatusUnapproved();
                             }
+                        } else {
+                            // everything ok, so update in-memory copy of mNote, just in case...
+                            //FIXME working on this, need to update the note JSON with this.
+                            mNote.setLikedComment(mBtnLikeComment.isActivated());
+                            mRestoredNoteJson = Note.Schema.getJSON(mNote).toString();
+                            //mNote = new Note.Schema().build(mNote.getId(), new JSONObject(mRestoredNoteJson));
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -1200,9 +1215,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setCommentStatusUnapproved() {
-        mComment.setStatus(CommentStatus.toString(CommentStatus.UNAPPROVED));
-        mNotificationsDetailListFragment.refreshBlocksForCommentStatus(CommentStatus.UNAPPROVED);
-        setModerateButtonForStatus(CommentStatus.UNAPPROVED);
+        setCommentStatus(CommentStatus.UNAPPROVED);
+    }
+
+    private void setCommentStatusApproved() {
+        setCommentStatus(CommentStatus.APPROVED);
+    }
+
+    private void setCommentStatus(CommentStatus status) {
+        if (mComment != null && mNotificationsDetailListFragment != null) {
+            mComment.setStatus(CommentStatus.toString(status));
+            mNotificationsDetailListFragment.refreshBlocksForCommentStatus(status);
+        }
+        setModerateButtonForStatus(status);
     }
 
     private void toggleLikeButton(boolean isLiked) {

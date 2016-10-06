@@ -360,10 +360,6 @@ public class Note extends Syncable {
         }
     }
 
-    private JSONObject getJSON() {
-        return mNoteJSON;
-    }
-
     /*
      * returns the actions allowed on this note, assumes it's a comment notification
      */
@@ -490,6 +486,22 @@ public class Note extends Syncable {
     public boolean hasLikedComment() {
         JSONObject jsonActions = getCommentActions();
         return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
+    }
+
+    public void setLikedComment(boolean liked) {
+        // Find comment block that matches the root note comment id
+        JSONObject jsonActions = getCommentActions();
+        if (jsonActions != null) {
+            try {
+                jsonActions.putOpt(ACTION_KEY_LIKE, liked);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private JSONObject getJSON() {
+        return mNoteJSON;
     }
 
     public String getUrl() {
