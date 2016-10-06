@@ -52,6 +52,15 @@ public class CommentSqlUtils {
                 .execute();
     }
 
+    public static CommentModel getCommentByLocalCommentId(int localId) {
+        List<CommentModel> results = WellSql.select(CommentModel.class)
+                .where().equals(CommentModelTable.ID, localId).endWhere().getAsModel();
+        if (results.isEmpty()) {
+            return null;
+        }
+        return results.get(0);
+    }
+
     public static List<CommentModel> getCommentsForSite(SiteModel site) {
         if (site == null) {
             return Collections.emptyList();
