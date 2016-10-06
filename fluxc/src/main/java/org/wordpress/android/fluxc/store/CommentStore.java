@@ -240,16 +240,29 @@ public class CommentStore extends Store {
     private void instantiateComment(InstantiateCommentPayload payload) {
         CommentModel comment = new CommentModel();
         comment.setLocalSiteId(payload.site.getId());
+        // Init with defaults
+        comment.setContent("");
+        comment.setDatePublished(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
+        comment.setStatus(CommentStatus.APPROVED.toString());
         CommentSqlUtils.insertOrUpdateComment(comment);
         emitChange(new OnCommentInstantiated(comment));
     }
 
     private void deleteComment(RemoteCommentPayload payload) {
-        // FIXME
+        if (payload.site.isWPCom()) {
+            mCommentRestClient.deleteComment(payload.site, payload.comment);
+        } else {
+            mCommentXMLRPCClient.deleteComment(payload.site, payload.comment);
+        }
     }
 
     private void handleDeletedCommentResponse(RemoteCommentResponsePayload payload) {
-        // FIXME
+        OnCommentChanged event = new OnCommentChanged(0);
+        event.causeOfChange = CommentAction.DELETE_COMMENT;
+        event.error = payload.error;
+        if (!payload.isError()) {
+            CommentSqlUtils.deleteComment(payload.comment);
+        }
     }
 
     private void fetchComments(FetchCommentsPayload payload) {
