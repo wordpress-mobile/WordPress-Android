@@ -39,6 +39,7 @@ public class ReaderPostActions {
 
     private static final String TRACKING_REFERRER = "https://wordpress.com/";
     private static final Random mRandom = new Random();
+    private static final int NUM_RELATED_POSTS_TO_REQUEST = 2;
 
     private ReaderPostActions() {
         throw new AssertionError();
@@ -340,9 +341,17 @@ public class ReaderPostActions {
     }
 
     /*
-     * request posts related to the passed one
+     * request posts related to the passed one, use requestGlobalRelatedPosts() to return related
+     * posts from any site, or requestLocalRelatedPosts() to return related posts from the same
+     * site as the passed post
      */
-    public static void requestRelatedPosts(final ReaderPost sourcePost) {
+    public static void requestGlobalRelatedPosts(ReaderPost sourcePost) {
+        requestRelatedPosts(sourcePost, 0, NUM_RELATED_POSTS_TO_REQUEST);
+    }
+    public static void requestLocalRelatedPosts(ReaderPost sourcePost) {
+        requestRelatedPosts(sourcePost, NUM_RELATED_POSTS_TO_REQUEST, 0);
+    }
+    private static void requestRelatedPosts(final ReaderPost sourcePost, int numLocal, int numGlobal) {
         if (sourcePost == null) return;
 
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -360,7 +369,11 @@ public class ReaderPostActions {
             }
         };
 
-        String path = "/read/site/" + sourcePost.blogId + "/post/" + sourcePost.postId + "/related";
+        String path = "/read/site/" + sourcePost.blogId
+                + "/post/" + sourcePost.postId
+                + "/related?meta=site"
+                + "&size_local=" + numLocal
+                + "&size_global=" + numGlobal;
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
