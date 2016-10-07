@@ -501,8 +501,12 @@ public class ReaderPostDetailFragment extends Fragment
             }
         }
 
+        // make sure the label for these related posts is showing
         int labelId = isGlobal ? R.id.text_global_related_posts_label : R.id.text_local_related_posts_label;
-        View label = getView().findViewById(labelId);
+        TextView label = (TextView) getView().findViewById(labelId);
+        if (!isGlobal) {
+            label.setText(String.format(getString(R.string.reader_label_local_related_posts), mPost.getBlogName()));
+        }
         if (label.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(label, AniUtils.Duration.MEDIUM);
         }
