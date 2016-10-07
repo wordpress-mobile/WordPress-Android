@@ -93,8 +93,18 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private void showPost() {
         if (!TextUtils.isEmpty(mBlogId) && !TextUtils.isEmpty(mPostId)) {
             try {
-                ReaderActivityLauncher.showReaderPostDetail(this, mIsFeed, Long.parseLong(mBlogId),
-                        Long.parseLong(mPostId), false);
+                final long blogId = Long.parseLong(mBlogId);
+                final long postId = Long.parseLong(mPostId);
+
+                if (mIsFeed) {
+                    AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
+                            blogId, postId);
+                } else {
+                    AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
+                            blogId, postId);
+                }
+
+                ReaderActivityLauncher.showReaderPostDetail(this, mIsFeed, blogId, postId, false);
             } catch (NumberFormatException e) {
                 AppLog.e(T.READER, e);
             }

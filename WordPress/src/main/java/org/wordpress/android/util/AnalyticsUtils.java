@@ -218,7 +218,23 @@ public class AnalyticsUtils {
         trackWithReaderPostDetails(stat, ReaderPostTable.getBlogPost(blogId, postId, true));
     }
 
-  /**
+    public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(BLOG_ID_KEY, blogId);
+        properties.put(POST_ID_KEY, postId);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    public static void trackWithFeedPostDetails(AnalyticsTracker.Stat stat, long feedId, long feedItemId) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(FEED_ID_KEY, feedId);
+        properties.put(FEED_ITEM_ID_KEY, feedItemId);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
      * Track when app launched via deep-linking
      *
      * @param stat The Stat to bump
