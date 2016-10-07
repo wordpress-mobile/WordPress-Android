@@ -28,23 +28,23 @@
             tools:src="@drawable/gravatar_placeholder" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_site_name"
+            android:id="@+id/text_author_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/image_avatar"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_small"
-            tools:text="text_site_name" />
+            tools:text="text_author_name" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_author_name"
+            android:id="@+id/text_site_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/text_site_name"
+            android:layout_below="@+id/text_author_name"
             android:layout_toRightOf="@+id/image_avatar"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_extra_small"
-            tools:text="text_author_name" />
+            tools:text="text_site_name" />
 
     </RelativeLayout>
 
@@ -52,39 +52,40 @@
         android:id="@+id/image_featured"
         android:layout_width="@dimen/reader_related_post_image_width"
         android:layout_height="@dimen/reader_related_post_image_height"
-        android:scaleType="centerCrop"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/layout_related_post_site_header"
-        android:layout_marginRight="@dimen/margin_large"
+        android:layout_marginLeft="@dimen/margin_large"
+        android:scaleType="centerCrop"
         android:visibility="gone"
         tools:src="@drawable/gravatar_placeholder"
         tools:visibility="visible" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_related_post_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_related_post_site_header"
-        android:layout_toRightOf="@+id/image_featured"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_sz_medium"
-        android:textStyle="bold"
-        app:wpFontFamily="merriweather"
-        tools:text="text_related_post_title" />
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_related_post_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_related_post_site_header"
+            android:layout_toLeftOf="@+id/image_featured"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_medium"
+            android:textStyle="bold"
+            app:wpFontFamily="merriweather"
+            tools:text="text_related_post_title" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_related_post_excerpt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_related_post_title"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_toRightOf="@+id/image_featured"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:textColor="@color/grey_darken_20"
-        android:textSize="@dimen/text_sz_medium"
-        app:wpFontFamily="merriweather"
-        tools:text="text_related_post_excerpt\ntext_related_post_excerpt\ntext_related_post_excerpt" />
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_related_post_excerpt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_related_post_title"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_toLeftOf="@+id/image_featured"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="@color/grey_darken_20"
+            android:textSize="@dimen/text_sz_medium"
+            app:wpFontFamily="merriweather"
+            tools:text="text_related_post_excerpt\ntext_related_post_excerpt\ntext_related_post_excerpt" />
 
-</RelativeLayout>
+    </RelativeLayout>
