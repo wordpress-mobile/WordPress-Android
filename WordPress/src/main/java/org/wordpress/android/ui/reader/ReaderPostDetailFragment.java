@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -413,8 +412,10 @@ public class ReaderPostDetailFragment extends Fragment
 
         // hide views that would show info for the previous post - these will be re-displayed
         // with the correct info once the new post loads
-        getView().findViewById(R.id.container_related_posts).setVisibility(View.GONE);
-        getView().findViewById(R.id.text_related_posts_label).setVisibility(View.GONE);
+        getView().findViewById(R.id.container_local_related_posts).setVisibility(View.GONE);
+        getView().findViewById(R.id.text_local_related_posts_label).setVisibility(View.GONE);
+        getView().findViewById(R.id.container_global_related_posts).setVisibility(View.GONE);
+        getView().findViewById(R.id.text_global_related_posts_label).setVisibility(View.GONE);
 
         mLikingUsersView.setVisibility(View.GONE);
         mLikingUsersDivider.setVisibility(View.GONE);
@@ -457,9 +458,8 @@ public class ReaderPostDetailFragment extends Fragment
 
     private void showRelatedPosts(ReaderRelatedPostList relatedPosts, ReaderPostActions.RelatedPostsType relatedPostsType) {
         // locate the related posts container and remove any existing related post views
-        int containerId = (relatedPostsType == ReaderPostActions.RelatedPostsType.GLOBAL
-                ? R.id.container_global_related_posts
-                : R.id.container_local_related_posts);
+        boolean isGlobal = relatedPostsType == ReaderPostActions.RelatedPostsType.GLOBAL;
+        int containerId = isGlobal ? R.id.container_global_related_posts : R.id.container_local_related_posts;
         ViewGroup container = (ViewGroup) getView().findViewById(containerId);
         container.removeAllViews();
 
@@ -501,7 +501,8 @@ public class ReaderPostDetailFragment extends Fragment
             }
         }
 
-        View label = getView().findViewById(R.id.text_related_posts_label);
+        int labelId = isGlobal ? R.id.text_global_related_posts_label : R.id.text_local_related_posts_label;
+        View label = getView().findViewById(labelId);
         if (label.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(label, AniUtils.Duration.MEDIUM);
         }
