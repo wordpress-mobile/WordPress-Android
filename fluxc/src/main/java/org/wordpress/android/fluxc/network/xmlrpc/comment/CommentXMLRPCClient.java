@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
-import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
@@ -93,8 +92,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         CommentModel updatedComment = commentResponseToComment(response, site);
-                        RemoteCommentResponsePayload payload = new CommentStore.RemoteCommentResponsePayload
-                                (updatedComment);
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(updatedComment);
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
                     }
                 },
@@ -211,7 +209,9 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                        CommentModel newComment = commentResponseToComment(response, site);
+                        newComment.setId(comment.getId()); // reconciliate local instance and newly created object
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
                         mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(payload));
                     }
                 },

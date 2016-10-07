@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.CommentsWPComRestResponse;
-import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
@@ -81,9 +80,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                 new Listener<CommentWPComRestResponse>() {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
-                        CommentModel comment = commentResponseToComment(response, site);
-                        CommentStore.RemoteCommentResponsePayload
-                                payload = new CommentStore.RemoteCommentResponsePayload(comment);
+                        CommentModel newComment = commentResponseToComment(response, site);
+                        newComment.setId(newComment.getId()); // reconciliate local instance and newly created object
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
                     }
                 },
@@ -159,7 +158,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                 new Listener<CommentWPComRestResponse>() {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                        CommentModel newComment = commentResponseToComment(response, site);
+                        newComment.setId(reply.getId()); // reconciliate local instance and newly created object
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
                         mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(payload));
                     }
                 },
@@ -168,7 +169,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
-                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
+                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, reply)));
                     }
                 }
         );
@@ -185,7 +186,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                 new Listener<CommentWPComRestResponse>() {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                        CommentModel newComment = commentResponseToComment(response, site);
+                        newComment.setId(comment.getId()); // reconciliate local instance and newly created object
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
                         mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(payload));
                     }
                 },

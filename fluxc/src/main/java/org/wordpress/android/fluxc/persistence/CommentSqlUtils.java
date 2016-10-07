@@ -18,17 +18,21 @@ public class CommentSqlUtils {
         }
 
         List<CommentModel> commentResult;
-        commentResult = WellSql.select(CommentModel.class)
-                .where()
+
+        // If the comment already exist and has an id, we want to update it.
+        commentResult = WellSql.select(CommentModel.class).where()
                 .beginGroup()
-                    .equals(CommentModelTable.ID, comment.getId())
-                .or()
+                .equals(CommentModelTable.ID, comment.getId())
+                .endGroup().endWhere().getAsModel();
+
+        // If it's not a new comment, try to find the "remote" comment
+        if (commentResult.isEmpty()) {
+            commentResult = WellSql.select(CommentModel.class).where()
                     .beginGroup()
-                        .equals(CommentModelTable.REMOTE_COMMENT_ID, comment.getRemoteCommentId())
-                        .equals(CommentModelTable.LOCAL_SITE_ID, comment.getLocalSiteId())
-                    .endGroup()
-                .endGroup()
-                .endWhere().getAsModel();
+                    .equals(CommentModelTable.REMOTE_COMMENT_ID, comment.getRemoteCommentId())
+                    .equals(CommentModelTable.LOCAL_SITE_ID, comment.getLocalSiteId())
+                    .endGroup().endWhere().getAsModel();
+        }
 
         if (commentResult.isEmpty()) {
             // insert
