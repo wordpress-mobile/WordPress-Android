@@ -31,11 +31,13 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -78,6 +80,7 @@ public class PostsListFragment extends Fragment
 
     private SiteModel mSite;
 
+    @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
 
@@ -115,6 +118,10 @@ public class PostsListFragment extends Fragment
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            mSite = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
         }
 
         if (mSite == null) {
