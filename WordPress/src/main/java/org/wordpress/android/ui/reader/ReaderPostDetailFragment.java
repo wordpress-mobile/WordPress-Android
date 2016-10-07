@@ -436,7 +436,8 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void requestRelatedPosts() {
         if (hasPost() && mPost.isWP()) {
-            ReaderPostActions.requestGlobalRelatedPosts(mPost);
+            ReaderPostActions.requestRelatedPosts(mPost, ReaderPostActions.RelatedPostsType.GLOBAL);
+            ReaderPostActions.requestRelatedPosts(mPost, ReaderPostActions.RelatedPostsType.LOCAL);
         }
     }
 
@@ -448,14 +449,18 @@ public class ReaderPostDetailFragment extends Fragment
         if (!isAdded() || !hasPost()) return;
 
         // make sure this is for the current post
-        if (event.getSourcePost().postId == mPost.postId && event.getSourcePost().blogId == mPost.blogId) {
-            showRelatedPosts(event.getRelatedPosts());
+        if (event.getSourcePost().postId == mPost.postId
+                && event.getSourcePost().blogId == mPost.blogId) {
+            showRelatedPosts(event.getRelatedPosts(), event.getRelatedPostsType());
         }
     }
 
-    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts) {
+    private void showRelatedPosts(ReaderRelatedPostList relatedPosts, ReaderPostActions.RelatedPostsType relatedPostsType) {
         // locate the related posts container and remove any existing related post views
-        ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
+        int containerId = (relatedPostsType == ReaderPostActions.RelatedPostsType.GLOBAL
+                ? R.id.container_global_related_posts
+                : R.id.container_local_related_posts);
+        ViewGroup container = (ViewGroup) getView().findViewById(containerId);
         container.removeAllViews();
 
         // add a separate view for each related post
