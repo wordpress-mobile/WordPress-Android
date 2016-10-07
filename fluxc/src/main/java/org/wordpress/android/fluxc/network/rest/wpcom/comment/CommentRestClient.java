@@ -161,14 +161,14 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
                         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
-                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
+                        mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(payload));
                     }
                 },
 
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(
+                        mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
                 }
@@ -187,14 +187,14 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
                         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
-                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
+                        mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(payload));
                     }
                 },
 
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(
+                        mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
                 }
