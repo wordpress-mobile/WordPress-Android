@@ -21,7 +21,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * used by the detail view to display related posts, which can be either local (related posts
- * from the same site as the source posts) or global (related posts from across wp.com)
+ * from the same site as the source post) or global (related posts from across wp.com)
  */
 public class ReaderRelatedPostsView extends LinearLayout {
 
@@ -65,7 +65,6 @@ public class ReaderRelatedPostsView extends LinearLayout {
                                  String siteName) {
 
         if (relatedPosts.size() == 0) {
-            setVisibility(View.GONE);
             return;
         }
 

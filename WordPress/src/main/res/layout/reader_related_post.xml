@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    individual related posts shown in ReaderRelatedPostsView
+    individual related post shown in ReaderRelatedPostsView
  -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,8 +9,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
-    android:padding="@dimen/reader_related_post_margin">
+    android:layout_marginBottom="@dimen/margin_extra_large"
+    android:background="?android:selectableItemBackground">
 
     <RelativeLayout
         android:id="@+id/layout_related_post_site_header"
