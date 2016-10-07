@@ -16,7 +16,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions.RelatedPostsTyp
 import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -101,7 +101,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 txtSiteName.setText(relatedPost.getSiteName());
                 txtAuthorName.setText(relatedPost.getAuthorName());
                 if (relatedPost.hasAuthorAvatarUrl()) {
-                    String avatarUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getAuthorAvatarUrl(), avatarSize, avatarSize);
+                    String avatarUrl = GravatarUtils.fixGravatarUrl(relatedPost.getAuthorAvatarUrl(), avatarSize);
                     imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
                 } else {
                     imgAvatar.showDefaultGravatarImage();
