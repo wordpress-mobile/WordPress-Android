@@ -283,7 +283,15 @@ public class CommentStore extends Store {
         event.causeOfChange = CommentAction.DELETE_COMMENT;
         event.error = payload.error;
         if (!payload.isError()) {
-            CommentSqlUtils.deleteComment(payload.comment);
+            // Delete once means "send to trash", so we don't want to remove it from the DB, just update it's
+            // status. Delete twice means "farewell comment, we won't you ever again". Only delete from the DB if the
+            // status is "deleted".
+            if (payload.comment.getStatus().equals(CommentStatus.DELETED.toString())) {
+                CommentSqlUtils.deleteComment(payload.comment);
+            } else {
+                // Update the local copy, only the status should have changed ("trash")
+                CommentSqlUtils.insertOrUpdateComment(payload.comment);
+            }
         }
         emitChange(event);
     }

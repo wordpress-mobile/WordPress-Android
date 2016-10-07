@@ -6,6 +6,7 @@ public enum CommentStatus {
     UNAPPROVED,
     SPAM,
     TRASH,
+    DELETED,
 
     // Used for filtering
     ALL,
