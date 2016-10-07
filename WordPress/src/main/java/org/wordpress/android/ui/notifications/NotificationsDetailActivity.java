@@ -39,6 +39,7 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
 import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
 import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
@@ -67,7 +68,53 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 return;
             }
 
-            retrieveOrBuildNoteAndShowNoteDetail(noteId);
+            if (SimperiumUtils.getNotesBucket() != null) {
+                try {
+                    Note note = SimperiumUtils.getNotesBucket().get(noteId);
+
+                    Map<String, String> properties = new HashMap<>();
+                    properties.put("notification_type", note.getType());
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+
+                    Fragment detailFragment = getDetailFragmentForNote(note);
+                    getFragmentManager().beginTransaction()
+                            .add(R.id.notifications_detail_container, detailFragment)
+                            .commitAllowingStateLoss();
+
+                    //set title
+                    if (getSupportActionBar() != null) {
+                        String title = note.getTitle();
+                        if (TextUtils.isEmpty(title)) {
+                            //set a deafult title if title is not set within the note
+                            switch(note.getType()) {
+                                case NOTE_FOLLOW_TYPE:
+                                    title = getString(R.string.follows);
+                                    break;
+                                case NOTE_COMMENT_LIKE_TYPE:
+                                    title = getString(R.string.comment_likes);
+                                    break;
+                                case NOTE_LIKE_TYPE:
+                                    title = getString(R.string.like);
+                                    break;
+                                case NOTE_COMMENT_TYPE:
+                                    title = getString(R.string.comment);
+                                    break;
+                            }
+                        }
+                        getSupportActionBar().setTitle(title);
+                    }
+
+                    // mark the note as read if it's unread
+                    if (note.isUnread()) {
+                        // mark as read which syncs with simperium
+                        note.markAsRead();
+                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+                    }
+                } catch (BucketObjectMissingException e) {
+                    showErrorToastAndFinish();
+                    return;
+                }
+            }
 
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);//clearNotifications();
 
@@ -101,70 +148,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
     }
 
-    private void retrieveOrBuildNoteAndShowNoteDetail(String noteId) {
-        Note note = null;
-
-        if (noteId == null) return;
-
-        if (SimperiumUtils.getNotesBucket() != null) {
-            try {
-                note = SimperiumUtils.getNotesBucket().get(noteId);
-            } catch (BucketObjectMissingException e) {
-                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-            }
-        }
-
-        //if note was not found in bucket, try building up the note from the PN payload
-        if (note == null) {
-            String base64FullData = getIntent().getStringExtra(NotificationsListFragment.NOTE_FULL_DATA_EXTRA);
-            note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
-        }
-
-        //if we still couldn't build it up just fail, nothing else to do here
-        if (note == null) {
-            showErrorToastAndFinish();
-            return;
-        } else {
-            //show the note
-
-            Map<String, String> properties = new HashMap<>();
-            properties.put("notification_type", note.getType());
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
-
-            Fragment detailFragment = getDetailFragmentForNote(note);
-            getFragmentManager().beginTransaction()
-                    .add(R.id.notifications_detail_container, detailFragment)
-                    .commitAllowingStateLoss();
-
-            //set title
-            if (getSupportActionBar() != null) {
-                String title = note.getTitle();
-                if (TextUtils.isEmpty(title)) {
-                    //set a deafult title if title is not set within the note
-                    switch(note.getType()) {
-                        case NOTE_FOLLOW_TYPE:
-                            title = getString(R.string.follows);
-                            break;
-                        case NOTE_LIKE_TYPE:
-                            title = getString(R.string.like);
-                            break;
-                        case NOTE_COMMENT_TYPE:
-                            title = getString(R.string.comment);
-                            break;
-                    }
-                }
-                getSupportActionBar().setTitle(title);
-            }
-
-            // mark the note as read if it's unread
-            if (note.isUnread()) {
-                // mark as read which syncs with simperium
-                note.markAsRead();
-                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-            }
-        }
-    }
-
     private void showErrorToastAndFinish() {
         AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
         ToastUtils.showToast(this, R.string.error_notification_open);
@@ -185,10 +168,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             boolean isInstantLike = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
             boolean isInstantApprove = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
             fragment = isInstantLike ?
-                        CommentDetailFragment.newInstanceForInstantLike(note) :
+                        CommentDetailFragment.newInstanceForInstantLike(note.getId()) :
                         isInstantApprove ?
-                            CommentDetailFragment.newInstanceForInstantApprove(note) :
-                            CommentDetailFragment.newInstance(note);
+                            CommentDetailFragment.newInstanceForInstantApprove(note.getId()) :
+                            CommentDetailFragment.newInstance(note.getId());
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above

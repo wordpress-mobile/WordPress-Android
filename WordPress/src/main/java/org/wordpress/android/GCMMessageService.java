@@ -49,7 +49,6 @@ import de.greenrobot.event.EventBus;
 
 public class GCMMessageService extends GcmListenerService {
     private static final ArrayMap<Integer, Bundle> sActiveNotificationsMap = new ArrayMap<>();
-    private static int sPreviousPushNotificationId = 0;
     private static String sPreviousNoteId = null;
     private static long sPreviousNoteTime = 0L;
 
@@ -121,13 +120,43 @@ public class GCMMessageService extends GcmListenerService {
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
+    private void ensureNoteExistsInBucket(Bundle data) {
+        if (SimperiumUtils.getNotesBucket() != null) {
+            Note note = null;
+            String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
+            try {
+                note = SimperiumUtils.getNotesBucket().get(noteId);
+                // all good if we got here
+            } catch (BucketObjectMissingException e) {
+                e.printStackTrace();
+                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
+
+                if (data != null && data.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
+                    //if note doesn't exist, try taking it from the PN payload, build it and save it
+                    // Simperium will take care of syncing local and server versions up at a later point
+                    String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
+                    note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
+                    SimperiumUtils.saveNote(note);
+                }
+            }
+        }
+    }
+
     private void buildAndShowNotificationFromNoteData(Bundle data) {
 
         if (data == null)
             return;
 
-        String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
+        ensureNoteExistsInBucket(data);
+
         String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
+
+        String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
+        if (title == null) {
+            title = getString(R.string.app_name);
+        }
+        String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
+        String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification
@@ -163,7 +192,6 @@ public class GCMMessageService extends GcmListenerService {
             Bundle noteBundle = sActiveNotificationsMap.get(id);
             if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                 pushId = id;
-                sPreviousPushNotificationId = pushId;
                 sActiveNotificationsMap.put(pushId, data);
                 break;
             }
@@ -171,7 +199,6 @@ public class GCMMessageService extends GcmListenerService {
 
         if (pushId == 0) {
             pushId = PUSH_NOTIFICATION_ID + sActiveNotificationsMap.size();
-            sPreviousPushNotificationId = pushId;
             sActiveNotificationsMap.put(pushId, data);
         }
 
@@ -191,22 +218,11 @@ public class GCMMessageService extends GcmListenerService {
             AnalyticsTracker.flush();
         }
 
-        showGroupNotificationForActiveNotificationsMap(pushId, data);
+        showGroupNotificationForActiveNotificationsMap(pushId, noteId, noteType, data.getString("icon"), title, message);
     }
 
-    private void showGroupNotificationForActiveNotificationsMap(int pushId, Bundle data) {
-        if (data == null)
-            return;
-
-        String largeIconUri = data.getString("icon");
-        String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
-        String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
-
-        String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
-        if (title == null) {
-            title = getString(R.string.app_name);
-        }
-        String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
+    private void showGroupNotificationForActiveNotificationsMap(int pushId, String noteId, String noteType,
+                                                                String largeIconUri, String title, String message) {
 
         // Build the new notification, add group to support wearable stacking
         NotificationCompat.Builder builder = getNotificationBuilder(title, message);
@@ -216,13 +232,13 @@ public class GCMMessageService extends GcmListenerService {
             builder.setLargeIcon(largeIconBitmap);
         }
 
-        showIndividualNotificationForBuilder(builder, data, noteType, noteId, pushId);
+        showIndividualNotificationForBuilder(builder, noteType, noteId, pushId);
 
         // Also add a group summary notification, which is required for non-wearable devices
         showGroupNotificationForBuilder(builder, message);
     }
 
-    private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId, Bundle data) {
+    private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // Add some actions if this is a comment notification
 
         boolean areActionsSet = false;
@@ -233,36 +249,35 @@ public class GCMMessageService extends GcmListenerService {
                 if (note != null) {
                     //if note can be replied to, we'll always add this action first
                     if (note.canReply()) {
-                        addCommentReplyActionForCommentNotification(builder, noteId, data);
+                        addCommentReplyActionForCommentNotification(builder, noteId);
                     }
 
                     // if the comment is lacking approval, offer moderation actions
                     if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
                         if (note.canModerate()) {
-                            addCommentApproveActionForCommentNotification(builder, noteId, data);
+                            addCommentApproveActionForCommentNotification(builder, noteId);
                         }
                     } else {
                         //else offer REPLY / LIKE actions
                         if (note.canLike()) {
-                            addCommentLikeActionForCommentNotification(builder, noteId, data);
+                            addCommentLikeActionForCommentNotification(builder, noteId);
                         }
                     }
                 }
                 areActionsSet = true;
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
-                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
             }
         }
 
         // if we could not set the actions, set the default ones REPLY / LIKE
         if (!areActionsSet) {
-            addCommentReplyActionForCommentNotification(builder, noteId, data);
-            addCommentLikeActionForCommentNotification(builder, noteId, data);
+            addCommentReplyActionForCommentNotification(builder, noteId);
+            addCommentLikeActionForCommentNotification(builder, noteId);
         }
     }
 
-    private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId, Bundle noteBundle) {
+    private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // adding comment reply action
         Intent commentReplyIntent = getCommentActionIntent();
         commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
@@ -270,17 +285,13 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
         }
-        if (noteBundle != null && noteBundle.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-            String base64FullData = noteBundle.getString(PUSH_ARG_NOTE_FULL_DATA);
-            commentReplyIntent.putExtra(PUSH_ARG_NOTE_FULL_DATA, base64FullData);
-        }
         PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(this, 0, commentReplyIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
     }
 
-    private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId, Bundle noteBundle) {
+    private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // adding comment like action
         Intent commentLikeIntent = getCommentActionIntent();
         commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
@@ -288,18 +299,13 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentLikeIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
         }
-        if (noteBundle != null && noteBundle.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-            String base64FullData = noteBundle.getString(PUSH_ARG_NOTE_FULL_DATA);
-            commentLikeIntent.putExtra(PUSH_ARG_NOTE_FULL_DATA, base64FullData);
-        }
-
         PendingIntent commentLikePendingIntent = PendingIntent.getActivity(this, 0, commentLikeIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                 commentLikePendingIntent);
     }
 
-    private void addCommentApproveActionForCommentNotification(NotificationCompat.Builder builder, String noteId, Bundle noteBundle) {
+    private void addCommentApproveActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
         // adding comment approve action
         Intent commentApproveIntent = getCommentActionIntent();
         commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
@@ -307,11 +313,6 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentApproveIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
         }
-        if (noteBundle != null && noteBundle.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-            String base64FullData = noteBundle.getString(PUSH_ARG_NOTE_FULL_DATA);
-            commentApproveIntent.putExtra(PUSH_ARG_NOTE_FULL_DATA, base64FullData);
-        }
-
         PendingIntent commentApprovePendingIntent = PendingIntent.getActivity(this, 0, commentApproveIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
@@ -418,13 +419,13 @@ public class GCMMessageService extends GcmListenerService {
         }
     }
 
-    private void showIndividualNotificationForBuilder(NotificationCompat.Builder builder, Bundle data, String noteType, String noteId, int pushId) {
+    private void showIndividualNotificationForBuilder(NotificationCompat.Builder builder, String noteType, String noteId, int pushId) {
         if (builder == null) {
             return;
         }
 
-        if (PUSH_TYPE_COMMENT.equals(noteType)) {
-            addActionsForCommentNotification(builder, noteId, data);
+        if (noteType.equals(PUSH_TYPE_COMMENT)) {
+            addActionsForCommentNotification(builder, noteId);
         }
         showNotificationForBuilder(builder, this, pushId);
     }
@@ -443,15 +444,6 @@ public class GCMMessageService extends GcmListenerService {
         resultIntent.addCategory("android.intent.category.LAUNCHER");
         if (sPreviousNoteId != null) {
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, sPreviousNoteId);
-        }
-
-        //now check base64Fulldata. If it exists, put it into the resultIntent bundle
-        //so we can use it as a fallback to show something to the use in poor connectivity conditions.
-
-        Bundle noteBundle = sActiveNotificationsMap.get(sPreviousPushNotificationId);
-        if (noteBundle != null && noteBundle.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-            String base64FullData = noteBundle.getString(PUSH_ARG_NOTE_FULL_DATA);
-            resultIntent.putExtra(PUSH_ARG_NOTE_FULL_DATA, base64FullData);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -521,7 +513,7 @@ public class GCMMessageService extends GcmListenerService {
                 String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                 String noteId = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
                 if (!sActiveNotificationsMap.isEmpty()) {
-                    showIndividualNotificationForBuilder(builder, remainingNote, noteType, noteId, sActiveNotificationsMap.keyAt(0));
+                    showIndividualNotificationForBuilder(builder, noteType, noteId, sActiveNotificationsMap.keyAt(0));
                 }
             }
         }

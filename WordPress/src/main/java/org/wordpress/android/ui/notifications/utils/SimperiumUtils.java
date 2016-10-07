@@ -11,6 +11,7 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketNameInvalid;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
+import com.simperium.client.BucketObjectNameInvalid;
 import com.simperium.client.Query;
 import com.simperium.client.User;
 
@@ -112,6 +113,17 @@ public class SimperiumUtils {
     }
 
     public static void startBuckets() {
+//        if (mNotesBucket != null) {
+//            mNotesBucket.start();
+//        }
+//
+//        if (mMetaBucket != null) {
+//            mMetaBucket.start();
+//        }
+    }
+
+    //FIXME DELETE THIS METHOD AND UNCOMMENT CONTENTS OF ABOVE METHOD
+    public static void startBucketsREALLY() {
         if (mNotesBucket != null) {
             mNotesBucket.start();
         }
@@ -159,6 +171,17 @@ public class SimperiumUtils {
         return false;
     }
 
+    public static void saveNote(Note note) {
+        if (note != null) {
+            try {
+                Note object = getNotesBucket().insertObject(note.getId(), Note.Schema.getJSON(note));
+                object.save();
+            } catch (BucketObjectNameInvalid e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     // Updates the 'last_seen' field in the meta bucket with the latest note's timestamp
     public static boolean updateLastSeenTime() {
         if (getNotesBucket() == null || getMetaBucket() == null) return false;
@@ -193,12 +216,6 @@ public class SimperiumUtils {
     // so we're interested in tracking these
     public static void trackBucketObjectMissingWarning(String message, String noteId) {
         trackBucketObjectMissing(message, AnalyticsTracker.Stat.NOTIFICATIONS_MISSING_SYNC_WARNING, noteId);
-    }
-
-    //these track when we couldn't do anything else to try show something to the user, and ended up
-    // showing an error on the screen i.e. "Sorry, couldn' load the note"
-    public static void trackBucketObjectMissingError(String message, String noteId) {
-        trackBucketObjectMissing(message, AnalyticsTracker.Stat.NOTIFICATIONS_MISSING_SYNC_ERROR, noteId);
     }
 
     private static void trackBucketObjectMissing(String message, AnalyticsTracker.Stat type, String noteId) {

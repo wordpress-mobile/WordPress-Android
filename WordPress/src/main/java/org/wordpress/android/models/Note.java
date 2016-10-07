@@ -40,10 +40,10 @@ public class Note extends Syncable {
     public static final String NOTE_FOLLOW_TYPE = "follow";
     public static final String NOTE_LIKE_TYPE = "like";
     public static final String NOTE_COMMENT_TYPE = "comment";
-    private static final String NOTE_MATCHER_TYPE = "automattcher";
-    private static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
-    private static final String NOTE_REBLOG_TYPE = "reblog";
-    private static final String NOTE_UNKNOWN_TYPE = "unknown";
+    public static final String NOTE_MATCHER_TYPE = "automattcher";
+    public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
+    public static final String NOTE_REBLOG_TYPE = "reblog";
+    public static final String NOTE_UNKNOWN_TYPE = "unknown";
 
     // JSON action keys
     private static final String ACTION_KEY_REPLY = "replyto-comment";
@@ -488,18 +488,6 @@ public class Note extends Syncable {
         return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
     }
 
-    public void setLikedComment(boolean liked) {
-        // Find comment block that matches the root note comment id
-        JSONObject jsonActions = getCommentActions();
-        if (jsonActions != null) {
-            try {
-                jsonActions.putOpt(ACTION_KEY_LIKE, liked);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private JSONObject getJSON() {
         return mNoteJSON;
     }
@@ -636,6 +624,7 @@ public class Note extends Syncable {
                         }
                     }
                     note = build(noteId, jsonObject);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
