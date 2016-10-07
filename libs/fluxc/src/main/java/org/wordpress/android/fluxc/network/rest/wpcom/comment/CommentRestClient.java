@@ -108,8 +108,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
                         CommentModel comment = commentResponseToComment(response, site);
-                        org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload
-                                payload = new org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload(comment);
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(payload));
                     }
                 },
