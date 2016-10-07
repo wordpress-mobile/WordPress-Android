@@ -59,6 +59,7 @@
                             android:id="@+id/related_posts_view_local"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/reader_related_post_margin"
                             android:visibility="gone"
                             tools:visibility="visible" />
 
@@ -66,6 +67,7 @@
                             android:id="@+id/related_posts_view_global"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/reader_related_post_margin"
                             android:visibility="gone"
                             tools:visibility="visible" />
 

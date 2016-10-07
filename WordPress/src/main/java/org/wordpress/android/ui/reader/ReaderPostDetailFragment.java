@@ -33,7 +33,6 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
@@ -446,20 +445,26 @@ public class ReaderPostDetailFragment extends Fragment
         if (!isAdded() || !hasPost()) return;
 
         // make sure this is for the current post
-        if (event.getSourcePost().postId == mPost.postId
-                && event.getSourcePost().blogId == mPost.blogId) {
-            showRelatedPosts(event.getRelatedPosts(), event.getRelatedPostsType());
+        if (event.getSourcePost().postId != mPost.postId || event.getSourcePost().blogId != mPost.blogId) {
+            return;
         }
-    }
 
-    private void showRelatedPosts(ReaderRelatedPostList relatedPosts, ReaderPostActions.RelatedPostsType relatedPostsType) {
-        int id = relatedPostsType == ReaderPostActions.RelatedPostsType.GLOBAL
+        // different container views for global/local related posts
+        int id = event.getRelatedPostsType() == ReaderPostActions.RelatedPostsType.GLOBAL
                 ? R.id.related_posts_view_global : R.id.related_posts_view_local;
-        ReaderRelatedPostsView view = (ReaderRelatedPostsView) getView().findViewById(id);
-        view.showRelatedPosts(relatedPosts, relatedPostsType, mPost.getBlogName());
+        ReaderRelatedPostsView relatedPostsView = (ReaderRelatedPostsView) getView().findViewById(id);
+        relatedPostsView.showRelatedPosts(event.getRelatedPosts(), event.getRelatedPostsType(), mPost.getBlogName());
 
-        if (view.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(view, AniUtils.Duration.MEDIUM);
+        // tapping a related posts should open the related post detail
+        relatedPostsView.setOnRelatedPostClickListener(new ReaderRelatedPostsView.OnRelatedPostClickListener() {
+            @Override
+            public void onRelatedPostClick(View v, long siteId, long postId) {
+                showRelatedPostDetail(siteId, postId);
+            }
+        });
+
+        if (relatedPostsView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM);
         }
     }
 

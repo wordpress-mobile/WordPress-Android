@@ -25,6 +25,12 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  */
 public class ReaderRelatedPostsView extends LinearLayout {
 
+    public interface OnRelatedPostClickListener {
+        void onRelatedPostClick(View v, long siteId, long postId);
+    }
+
+    private OnRelatedPostClickListener mClickListener;
+
     public ReaderRelatedPostsView(Context context) {
         super(context);
         initView(context);
@@ -48,6 +54,10 @@ public class ReaderRelatedPostsView extends LinearLayout {
 
     private void initView(Context context) {
         inflate(context, R.layout.reader_related_posts_view, this);
+    }
+
+    public void setOnRelatedPostClickListener(OnRelatedPostClickListener listener) {
+        mClickListener = listener;
     }
 
     public void showRelatedPosts(ReaderRelatedPostList relatedPosts,
@@ -102,12 +112,12 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 siteHeader.setVisibility(View.GONE);
             }
 
-            // tapping this view should open the related post detail
             postView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO
-                    //showRelatedPostDetail(relatedPost.getSiteId(), relatedPost.getPostId());
+                    if (mClickListener != null) {
+                        mClickListener.onRelatedPostClick(view, relatedPost.getSiteId(), relatedPost.getPostId());
+                    }
                 }
             });
 

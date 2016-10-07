@@ -5,15 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/reader_related_post_margin">
+    android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_related_posts_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_large"
-        android:layout_marginTop="@dimen/reader_related_post_margin"
         android:textAllCaps="true"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
