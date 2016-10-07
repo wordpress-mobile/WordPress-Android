@@ -493,12 +493,6 @@ public class ReaderPostDetailFragment extends Fragment
             });
 
             container.addView(postView);
-
-            // add a divider below all but the last related post
-            if (index < relatedPosts.size() - 1) {
-                View dividerView = inflater.inflate(R.layout.reader_related_post_divider, container, false);
-                container.addView(dividerView);
-            }
         }
 
         // make sure the label for these related posts is showing
