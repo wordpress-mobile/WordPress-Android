@@ -97,7 +97,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 txtExcerpt.setVisibility(View.GONE);
             }
 
-            if (relatedPost.hasFeaturedImageUrl()) {
+            if (relatedPost.hasFeaturedImageUrl() && relatedPost.hasExcerpt()) {
                 String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImageUrl(), imageWidth, imageHeight);
                 imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
                 imgFeatured.setVisibility(View.VISIBLE);
