@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -203,8 +204,8 @@ public class PostsListFragment extends Fragment
         return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
     }
 
-    private void loadPosts() {
-        getPostListAdapter().loadPosts();
+    private void loadPosts(LoadMode mode) {
+        getPostListAdapter().loadPosts(mode);
     }
 
     @Override
@@ -233,7 +234,7 @@ public class PostsListFragment extends Fragment
         }
 
         // always (re)load when resumed to reflect changes made elsewhere
-        loadPosts();
+        loadPosts(LoadMode.IF_CHANGED);
 
         // scale in the fab after a brief delay if it's not already showing
         if (mFabView.getVisibility() != View.VISIBLE) {
@@ -310,7 +311,7 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
         if (isAdded() && mSite.getId() == event.mLocalBlogId) {
-            loadPosts();
+            loadPosts(LoadMode.FORCED);
         }
     }
 
@@ -539,7 +540,7 @@ public class PostsListFragment extends Fragment
                 hideLoadMoreProgress();
                 if (!event.isError()) {
                     mCanLoadMorePosts = event.canLoadMore;
-                    loadPosts();
+                    loadPosts(LoadMode.IF_CHANGED);
                 } else {
                     PostStore.PostError error = event.error;
                     switch (error.type) {
@@ -562,7 +563,7 @@ public class PostsListFragment extends Fragment
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
         if (isAdded() && event.post.getLocalSiteId() == mSite.getId()) {
-            loadPosts();
+            loadPosts(LoadMode.FORCED);
         }
     }
 }

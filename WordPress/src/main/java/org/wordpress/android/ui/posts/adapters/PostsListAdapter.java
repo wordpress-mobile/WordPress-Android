@@ -62,6 +62,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         void onPostButtonClicked(int buttonId, PostModel post);
     }
 
+    public enum LoadMode {
+        IF_CHANGED,
+        FORCED
+    }
+
     private OnLoadMoreListener mOnLoadMoreListener;
     private OnPostsLoadedListener mOnPostsLoadedListener;
     private OnPostSelectedListener mOnPostSelectedListener;
@@ -510,11 +515,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         animOut.start();
     }
 
-    public void loadPosts() {
+    public void loadPosts(LoadMode mode) {
         if (mIsLoadingPosts) {
             AppLog.d(AppLog.T.POSTS, "post adapter > already loading posts");
         } else {
-            new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadPostsTask(mode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -546,7 +551,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void unhidePost(PostModel post) {
         if (mHiddenPosts.remove(post)) {
-            loadPosts();
+            loadPosts(LoadMode.IF_CHANGED);
         }
     }
 
@@ -562,7 +567,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         void onPostsLoaded(int postCount);
     }
 
-    class PostViewHolder extends RecyclerView.ViewHolder {
+    private class PostViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
         private final TextView txtExcerpt;
         private final TextView txtDate;
@@ -582,7 +587,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private final View disabledOverlay;
 
-        public PostViewHolder(View view) {
+        PostViewHolder(View view) {
             super(view);
 
             txtTitle = (TextView) view.findViewById(R.id.text_title);
@@ -606,7 +611,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    class PageViewHolder extends RecyclerView.ViewHolder {
+    private class PageViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
         private final TextView txtDate;
         private final TextView txtStatus;
@@ -615,7 +620,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final View dividerTop;
         private final View disabledOverlay;
 
-        public PageViewHolder(View view) {
+        PageViewHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtStatus = (TextView) view.findViewById(R.id.text_status);
@@ -627,8 +632,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    class EndListViewHolder extends RecyclerView.ViewHolder {
-        public EndListViewHolder(View view) {
+    private class EndListViewHolder extends RecyclerView.ViewHolder {
+        EndListViewHolder(View view) {
             super(view);
         }
     }
@@ -649,6 +654,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private List<PostModel> tmpPosts;
         private final ArrayList<Long> mediaIdsToUpdate = new ArrayList<>();
+        private LoadMode mLoadMode;
+
+        LoadPostsTask(LoadMode loadMode) {
+            mLoadMode = loadMode;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -676,7 +686,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             // Go no further if existing post list is the same
-            if (PostUtils.postListsAreEqual(mPosts, tmpPosts)) {
+            if (mLoadMode == LoadMode.IF_CHANGED && PostUtils.postListsAreEqual(mPosts, tmpPosts)) {
                 // Always update the list if there are uploading posts
                 boolean postsAreUploading = false;
                 for (PostModel post : tmpPosts) {
