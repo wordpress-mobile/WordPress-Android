@@ -221,10 +221,27 @@ public class ReaderPostActions {
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestPost(final long blogId,
-                                   final long postId,
-                                   final ReaderActions.OnRequestListener requestListener) {
-        String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
+    public static void requestBlogPost(final long blogId,
+            final long postId,
+            final ReaderActions.OnRequestListener requestListener) {
+        requestPost(false, blogId, postId, requestListener);
+    }
+
+    /**
+     * similar to updatePost, but used when post doesn't already exist in local db
+     **/
+    public static void requestFeedPost(final long blogId,
+            final long postId,
+            final ReaderActions.OnRequestListener requestListener) {
+        requestPost(true, blogId, postId, requestListener);
+    }
+
+    private static void requestPost(final boolean isFeed,
+            final long blogOrFeedId,
+            final long postOrItemId,
+            final ReaderActions.OnRequestListener requestListener) {
+        String path = isFeed ? "read/feed/" + blogOrFeedId + "/posts/" + postOrItemId + "/?meta=site,likes" :
+                "read/sites/" + blogOrFeedId + "/posts/" + postOrItemId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -257,8 +274,14 @@ public class ReaderPostActions {
                 }
             }
         };
-        AppLog.d(T.READER, "requesting post");
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+
+        if (isFeed) {
+            AppLog.d(T.READER, "requesting feed post");
+            WordPress.getRestClientUtilsV1_3().get(path, null, null, listener, errorListener);
+        } else {
+            AppLog.d(T.READER, "requesting post");
+            WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        }
     }
 
     private static String getTrackingPixelForPost(@NonNull ReaderPost post) {
@@ -271,7 +294,7 @@ public class ReaderPostActions {
     }
 
     public static void bumpPageViewForPost(long blogId, long postId) {
-        bumpPageViewForPost(ReaderPostTable.getPost(blogId, postId, true));
+        bumpPageViewForPost(ReaderPostTable.getBlogPost(blogId, postId, true));
     }
     public static void bumpPageViewForPost(ReaderPost post) {
         if (post == null) {
