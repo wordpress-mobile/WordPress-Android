@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
-import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
 
@@ -14,38 +12,26 @@ import org.wordpress.android.util.JSONUtils;
  */
 public class ReaderRelatedPost {
     private long mPostId;
-    private long mBlogId;
+    private long mSiteId;
     private String mTitle;
     private String mAuthorName;
     private String mAuthorAvatarUrl;
     private String mExcerpt;
-    private String mFeaturedImage;
     private String mSiteName;
-    private String mPubDate;
 
     public static ReaderRelatedPost fromJson(@NonNull JSONObject json) {
         ReaderRelatedPost post = new ReaderRelatedPost();
 
         post.mPostId = json.optLong("ID");
-        post.mBlogId = json.optLong("site_ID");
-
+        post.mSiteId = json.optLong("site_ID");
         post.mTitle = JSONUtils.getStringDecoded(json, "title");
         post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
-        post.mFeaturedImage = JSONUtils.getString(json, "featured_image");
         post.mSiteName = JSONUtils.getStringDecoded(json, "site_name");
-        post.mPubDate = JSONUtils.getString(json, "date");
 
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor != null) {
             post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
             post.mAuthorAvatarUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
-        }
-
-        // if we don't have a featured image, check whethe we can find a suitable image from the attachments
-        if (!post.hasFeaturedImage() && json.has("attachments")) {
-            JSONObject jsonAttachments = json.optJSONObject("attachments");
-            post.mFeaturedImage = new ImageSizeMap(jsonAttachments.toString())
-                    .getLargestImageUrl(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
 
         return post;
@@ -55,8 +41,8 @@ public class ReaderRelatedPost {
         return mPostId;
     }
 
-    public long getBlogId() {
-        return mBlogId;
+    public long getSiteId() {
+        return mSiteId;
     }
 
     public String getTitle() {
@@ -79,16 +65,8 @@ public class ReaderRelatedPost {
         return mAuthorAvatarUrl;
     }
 
-    public String getFeaturedImage() {
-        return mFeaturedImage;
-    }
-
     public boolean hasExcerpt() {
         return !TextUtils.isEmpty(mExcerpt);
-    }
-
-    public boolean hasFeaturedImage() {
-        return !TextUtils.isEmpty(mFeaturedImage);
     }
 
     public boolean hasAuthorName() {

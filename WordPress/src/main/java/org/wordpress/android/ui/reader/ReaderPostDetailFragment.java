@@ -463,7 +463,6 @@ public class ReaderPostDetailFragment extends Fragment
         ViewGroup container = (ViewGroup) getView().findViewById(containerId);
         container.removeAllViews();
 
-        int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
         int avatarSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
 
         // add a separate view for each related post
@@ -474,7 +473,6 @@ public class ReaderPostDetailFragment extends Fragment
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             TextView txtExcerpt = (TextView) postView.findViewById(R.id.text_related_post_excerpt);
-            WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
             View siteHeader = postView.findViewById(R.id.layout_related_post_site_header);
 
             txtTitle.setText(relatedPost.getTitle());
@@ -484,14 +482,6 @@ public class ReaderPostDetailFragment extends Fragment
                 txtExcerpt.setVisibility(View.VISIBLE);
             } else {
                 txtExcerpt.setVisibility(View.GONE);
-            }
-
-            if (relatedPost.hasFeaturedImage()) {
-                String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImage(), imageSize, imageSize);
-                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_ROUNDED);
-                imgFeatured.setVisibility(View.VISIBLE);
-            } else {
-                imgFeatured.setVisibility(View.GONE);
             }
 
             // site header only appears for global posts
@@ -516,7 +506,7 @@ public class ReaderPostDetailFragment extends Fragment
             postView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showRelatedPostDetail(relatedPost.getBlogId(), relatedPost.getPostId());
+                    showRelatedPostDetail(relatedPost.getSiteId(), relatedPost.getPostId());
                 }
             });
 
