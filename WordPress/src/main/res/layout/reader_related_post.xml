@@ -27,6 +27,16 @@
             tools:text="text_related_post_title" />
 
         <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_related_post_byline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/grey_darken_20"
+            android:textSize="@dimen/text_sz_small"
+            tools:text="text_related_post_byline" />
+
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_related_post_excerpt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
