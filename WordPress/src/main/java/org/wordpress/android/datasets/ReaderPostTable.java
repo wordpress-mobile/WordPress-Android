@@ -269,12 +269,20 @@ public class ReaderPostTable {
         addOrUpdatePosts(null, posts);
     }
 
-    public static ReaderPost getPost(long blogId, long postId, boolean excludeTextColumn) {
+    public static ReaderPost getBlogPost(long blogId, long postId, boolean excludeTextColumn) {
+        return getPost(false, blogId, postId, excludeTextColumn);
+    }
 
+    public static ReaderPost getFeedPost(long feedId, long feedItemId, boolean excludeTextColumn) {
+        return getPost(true, feedId, feedItemId, excludeTextColumn);
+    }
+
+    private static ReaderPost getPost(boolean isFeed, long blogOrFeedId, long postOrItemId, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id=? AND post_id=? LIMIT 1";
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE "
+                + (isFeed ? "feed_id" : "blog_id") + "=? AND " + (isFeed ? "feed_item_id" : "post_id") + "=? LIMIT 1";
 
-        String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
+        String[] args = new String[] {Long.toString(blogOrFeedId), Long.toString(postOrItemId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             if (!c.moveToFirst()) {
@@ -317,7 +325,7 @@ public class ReaderPostTable {
 
         boolean hasChanges = false;
         for (ReaderPost post: posts) {
-            ReaderPost existingPost = getPost(post.blogId, post.postId, true);
+            ReaderPost existingPost = getBlogPost(post.blogId, post.postId, true);
             if (existingPost == null) {
                 return ReaderActions.UpdateResult.HAS_NEW;
             } else if (!hasChanges && !post.isSamePost(existingPost)) {

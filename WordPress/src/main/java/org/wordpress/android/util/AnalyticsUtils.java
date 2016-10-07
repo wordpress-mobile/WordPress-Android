@@ -212,7 +212,7 @@ public class AnalyticsUtils {
     }
 
     public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
-        trackWithReaderPostDetails(stat, ReaderPostTable.getPost(blogId, postId, true));
+        trackWithReaderPostDetails(stat, ReaderPostTable.getBlogPost(blogId, postId, true));
     }
 
   /**
