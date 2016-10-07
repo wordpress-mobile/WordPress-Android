@@ -143,16 +143,16 @@ public class PostUploadNotifier {
         return post.getLocalSiteId() + remotePostId;
     }
 
-    public void updateNotificationError(PostModel post, String mErrorMessage, boolean isMediaError, boolean isPage) {
-        AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + mErrorMessage);
+    public void updateNotificationError(PostModel post, String errorMessage, boolean isMediaError) {
+        AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + errorMessage);
 
         Notification.Builder notificationBuilder = new Notification.Builder(mContext.getApplicationContext());
-        String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
+        String postOrPage = (String) (post.isPage() ? mContext.getResources().getText(R.string.page_id)
                 : mContext.getResources().getText(R.string.post_id));
         Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, mErrorMessage);
+        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, errorMessage);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -166,8 +166,8 @@ public class PostUploadNotifier {
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
         notificationBuilder.setContentTitle((isMediaError) ? errorText :
                 mContext.getResources().getText(R.string.upload_failed));
-        notificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText
-                + ": " + mErrorMessage);
+        notificationBuilder.setContentText((isMediaError) ? errorMessage : postOrPage + " " + errorText
+                + ": " + errorMessage);
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
 

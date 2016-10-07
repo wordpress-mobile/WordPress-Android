@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
@@ -61,6 +62,7 @@ public class PostUploadService extends Service {
     private UploadPostTask mCurrentTask = null;
 
     private static final Set<Integer> mFirstPublishPosts = new HashSet<>();
+
     private Context mContext;
     private PostUploadNotifier mPostUploadNotifier;
 
@@ -553,12 +555,25 @@ public class PostUploadService extends Service {
         return File.createTempFile("wp-", fileExtension, mContext.getCacheDir());
     }
 
+    /**
+     * Returns an error message string for a failed post upload.
+     */
+    private String buildErrorMessage(PostModel post, PostError error) {
+        // TODO: We should interpret event.error.type and pass our own string rather than use event.error.message
+        String postType = mContext.getResources().getText(post.isPage() ? R.string.page : R.string.post).toString().toLowerCase();
+
+        String errorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(), postType);
+        errorMessage += ": " + error.message;
+
+        return errorMessage;
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
         if (event.isError()) {
-            // TODO: We should interpret event.error.type and pass our own string rather than use event.error.message
-            mPostUploadNotifier.updateNotificationError(event.post, event.error.message, false, event.post.isPage());
+            AppLog.e(T.EDITOR, "Post upload failed. " + event.error.type + ": " + event.error.message);
+            mPostUploadNotifier.updateNotificationError(event.post, buildErrorMessage(event.post, event.error), false);
             mFirstPublishPosts.remove(event.post.getId());
         } else {
             // TODO: MediaStore?
