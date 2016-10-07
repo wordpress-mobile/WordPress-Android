@@ -113,17 +113,6 @@ public class SimperiumUtils {
     }
 
     public static void startBuckets() {
-//        if (mNotesBucket != null) {
-//            mNotesBucket.start();
-//        }
-//
-//        if (mMetaBucket != null) {
-//            mMetaBucket.start();
-//        }
-    }
-
-    //FIXME DELETE THIS METHOD AND UNCOMMENT CONTENTS OF ABOVE METHOD
-    public static void startBucketsREALLY() {
         if (mNotesBucket != null) {
             mNotesBucket.start();
         }
