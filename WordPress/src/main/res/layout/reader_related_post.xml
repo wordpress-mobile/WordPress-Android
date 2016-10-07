@@ -21,7 +21,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
+            android:textSize="@dimen/text_sz_medium"
             android:textStyle="bold"
             app:wpFontFamily="merriweather"
             tools:text="text_related_post_title" />
@@ -33,7 +33,7 @@
             android:ellipsize="end"
             android:maxLines="4"
             android:textColor="@color/grey_darken_10"
-            android:textSize="@dimen/text_sz_medium"
+            android:textSize="@dimen/text_sz_small"
             tools:text="text_related_post_byline" />
     </LinearLayout>
 

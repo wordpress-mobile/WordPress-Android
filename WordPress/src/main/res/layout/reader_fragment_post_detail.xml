@@ -64,7 +64,7 @@
                             android:text="@string/reader_label_local_related_posts"
                             android:textAllCaps="true"
                             android:textColor="@color/grey"
-                            android:textSize="@dimen/text_sz_large"
+                            android:textSize="@dimen/text_sz_medium"
                             android:textStyle="bold"
                             android:visibility="gone"
                             tools:visibility="visible" />
@@ -87,7 +87,7 @@
                             android:text="@string/reader_label_global_related_posts"
                             android:textAllCaps="true"
                             android:textColor="@color/grey"
-                            android:textSize="@dimen/text_sz_large"
+                            android:textSize="@dimen/text_sz_medium"
                             android:textStyle="bold"
                             android:visibility="gone"
                             tools:visibility="visible" />
