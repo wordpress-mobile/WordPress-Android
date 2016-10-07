@@ -29,7 +29,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
     private ReaderPost mPost;
     private ReaderFollowButton mFollowButton;
-    private int mFollowerCount;
 
     public ReaderPostDetailHeaderView(Context context) {
         super(context);
@@ -109,14 +108,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         }
     }
 
-    private void setFollowerCount(int count) {
-        if (count != mFollowerCount) {
-            mFollowerCount = count;
-            TextView txtFollowerCount = (TextView) findViewById(R.id.text_header_follow_count);
-            txtFollowerCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), count));
-        }
-    }
-
     /*
      * get the latest info about this post's blog so we have an accurate follower count
      */
@@ -138,8 +129,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
     private void showBlogInfo(ReaderBlog blogInfo) {
         if (blogInfo == null) return;
-
-        setFollowerCount(blogInfo.numSubscribers);
 
         boolean hasBlavatar = blogInfo.hasImageUrl();
         WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
@@ -175,6 +164,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         imgAvatar.setOnClickListener(mClickListener);
     }
+
     /*
      * click listener which shows blog preview
      */
@@ -191,8 +181,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         if (!NetworkUtils.checkConnection(getContext())) return;
 
         final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
-        final int currentFollowerCount = mFollowerCount;
-        int newFollowerCount = isAskingToFollow ? mFollowerCount + 1 : mFollowerCount - 1;
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
@@ -206,7 +194,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
-                    setFollowerCount(currentFollowerCount);
                 }
                 updateBlogInfo();
             }
@@ -224,7 +211,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         if (result) {
             mFollowButton.setIsFollowedAnimated(isAskingToFollow);
-            setFollowerCount(newFollowerCount);
         }
     }
 }

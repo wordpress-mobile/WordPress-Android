@@ -55,30 +55,12 @@
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_header_blog_name" />
 
-        <LinearLayout
+        <org.wordpress.android.ui.reader.views.ReaderFollowButton
+            android:id="@+id/header_follow_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_header_follow_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:textColor="@color/grey_darken_10"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="12 followers" />
-
-            <org.wordpress.android.ui.reader.views.ReaderFollowButton
-                android:id="@+id/header_follow_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </LinearLayout>
+            android:visibility="gone"
+            tools:visibility="visible" />
     </LinearLayout>
 
 </RelativeLayout>
