@@ -28,7 +28,7 @@ public class CommentErrorUtils {
 
     public static RemoteCommentResponsePayload commentErrorToPushCommentPayload(BaseNetworkError error,
                                                                                 CommentModel comment) {
-        RemoteCommentResponsePayload payload = new CommentStore.RemoteCommentResponsePayload(comment);
+        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
         payload.error = new CommentError(genericToCommentError(error), "");
         return payload;
     }
