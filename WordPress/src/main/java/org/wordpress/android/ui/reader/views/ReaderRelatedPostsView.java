@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -71,6 +72,8 @@ public class ReaderRelatedPostsView extends LinearLayout {
         ViewGroup container = (ViewGroup) findViewById(R.id.container_related_posts);
         container.removeAllViews();
 
+        int imageWidth = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_width));
+        int imageHeight = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_height));
         int avatarSize = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
         boolean isGlobal = relatedPostsType == ReaderPostActions.RelatedPostsType.GLOBAL;
 
@@ -82,6 +85,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             TextView txtExcerpt = (TextView) postView.findViewById(R.id.text_related_post_excerpt);
+            WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_featured);
             View siteHeader = postView.findViewById(R.id.layout_related_post_site_header);
 
             txtTitle.setText(relatedPost.getTitle());
@@ -91,6 +95,14 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 txtExcerpt.setVisibility(View.VISIBLE);
             } else {
                 txtExcerpt.setVisibility(View.GONE);
+            }
+
+            if (relatedPost.hasFeaturedImageUrl()) {
+                String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImageUrl(), imageWidth, imageHeight);
+                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                imgFeatured.setVisibility(View.VISIBLE);
+            } else {
+                imgFeatured.setVisibility(View.GONE);
             }
 
             // site header only appears for global posts

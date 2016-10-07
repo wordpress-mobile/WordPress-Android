@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
 
@@ -18,6 +20,7 @@ public class ReaderRelatedPost {
     private String mAuthorAvatarUrl;
     private String mExcerpt;
     private String mSiteName;
+    private String mFeaturedImageUrl;
 
     public static ReaderRelatedPost fromJson(@NonNull JSONObject json) {
         ReaderRelatedPost post = new ReaderRelatedPost();
@@ -27,11 +30,19 @@ public class ReaderRelatedPost {
         post.mTitle = JSONUtils.getStringDecoded(json, "title");
         post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
         post.mSiteName = JSONUtils.getStringDecoded(json, "site_name");
+        post.mFeaturedImageUrl = JSONUtils.getString(json, "featured_image");
 
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor != null) {
             post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
             post.mAuthorAvatarUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
+        }
+
+        // if the post doesn't have an assigned featured image, try to guess one from its attachments
+        if (!post.hasFeaturedImageUrl() && json.has("attachments")) {
+            JSONObject jsonAttachments = json.optJSONObject("attachments");
+            post.mFeaturedImageUrl = new ImageSizeMap(jsonAttachments.toString())
+                    .getLargestImageUrl(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
 
         return post;
@@ -65,6 +76,10 @@ public class ReaderRelatedPost {
         return mAuthorAvatarUrl;
     }
 
+    public String getFeaturedImageUrl() {
+        return mFeaturedImageUrl;
+    }
+
     public boolean hasExcerpt() {
         return !TextUtils.isEmpty(mExcerpt);
     }
@@ -75,5 +90,9 @@ public class ReaderRelatedPost {
 
     public boolean hasAuthorAvatarUrl() {
         return !TextUtils.isEmpty(mAuthorAvatarUrl);
+    }
+
+    public boolean hasFeaturedImageUrl() {
+        return !TextUtils.isEmpty(mFeaturedImageUrl);
     }
 }

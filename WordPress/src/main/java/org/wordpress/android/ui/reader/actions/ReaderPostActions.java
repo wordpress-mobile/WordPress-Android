@@ -375,7 +375,7 @@ public class ReaderPostActions {
                 + "/related"
                 + "?size_local=" + numLocal
                 + "&size_global=" + numGlobal
-                + "&fields=ID,site_ID,title,excerpt,URL,author,site_name,site_URL";
+                + "&fields=ID,site_ID,title,excerpt,URL,author,site_name,site_URL,featured_image,attachments";
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
