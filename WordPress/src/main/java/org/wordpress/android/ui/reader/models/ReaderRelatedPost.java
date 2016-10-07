@@ -3,63 +3,50 @@ package org.wordpress.android.ui.reader.models;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.util.UrlUtils;
+import org.json.JSONObject;
+import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.utils.ImageSizeMap;
+import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.JSONUtils;
 
 /**
  * simplified version of a reader post that contains only the fields necessary for a related post
  */
 public class ReaderRelatedPost {
-    private final long mPostId;
-    private final long mBlogId;
-    private final String mTitle;
-    private final String mByline;
-    private final String mExcerpt;
-    private final String mFeaturedImage;
+    private long mPostId;
+    private long mBlogId;
+    private String mTitle;
+    private String mAuthorName;
+    private String mExcerpt;
+    private String mFeaturedImage;
+    private String mSiteName;
+    private String mPubDate;
 
-    public ReaderRelatedPost(@NonNull ReaderPost post) {
-        mPostId = post.postId;
-        mBlogId = post.blogId;
+    public static ReaderRelatedPost fromJson(@NonNull JSONObject json) {
+        ReaderRelatedPost post = new ReaderRelatedPost();
 
-        mTitle = post.getTitle();
-        mFeaturedImage = post.getFeaturedImage();
-        mExcerpt = post.getExcerpt();
+        post.mPostId = json.optLong("ID");
+        post.mBlogId = json.optLong("site_ID");
 
-        /*
-         * we want to include the blog name in the byline when it's available, and most sites
-         * will have a name, but in rare cases there isn't one so we show the domain instead
-         */
-        String blogNameOrDomain;
-        boolean hasBlogNameOrDomain;
-        if (post.hasBlogName()) {
-            blogNameOrDomain = post.getBlogName();
-            hasBlogNameOrDomain = true;
-        } else if (post.hasBlogUrl()) {
-            blogNameOrDomain = UrlUtils.getHost(post.getBlogUrl());
-            hasBlogNameOrDomain = true;
-        } else {
-            blogNameOrDomain = null;
-            hasBlogNameOrDomain = false;
+        post.mTitle = JSONUtils.getStringDecoded(json, "title");
+        post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
+        post.mFeaturedImage = JSONUtils.getString(json, "featured_image");
+        post.mSiteName = JSONUtils.getStringDecoded(json, "site_name");
+        post.mPubDate = JSONUtils.getString(json, "date");
+
+        JSONObject jsonAuthor = json.optJSONObject("author");
+        if (jsonAuthor != null) {
+            post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
         }
 
-        /*
-         * The byline should show the author name and blog name if both are available, but if
-         * they're the same (which happens frequently) we only need to show the blog name.
-         * Otherwise, show either the blog name or author name depending on which is available.
-         */
-        if (post.hasAuthorName() && hasBlogNameOrDomain) {
-            if (post.getAuthorName().equalsIgnoreCase(blogNameOrDomain)) {
-                mByline = blogNameOrDomain;
-            } else {
-                mByline = post.getAuthorName() + ", " + blogNameOrDomain;
-            }
-        } else if (post.hasAuthorName()) {
-            mByline = post.getAuthorName();
-        } else if (hasBlogNameOrDomain) {
-            mByline = blogNameOrDomain;
-        } else {
-            mByline = "";
+        // if we don't have a featured image, check whethe we can find a suitable image from the attachments
+        if (!post.hasFeaturedImage() && json.has("attachments")) {
+            JSONObject jsonAttachments = json.optJSONObject("attachments");
+            post.mFeaturedImage = new ImageSizeMap(jsonAttachments.toString())
+                    .getLargestImageUrl(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
+
+        return post;
     }
 
     public long getPostId() {
@@ -78,19 +65,23 @@ public class ReaderRelatedPost {
         return mExcerpt;
     }
 
-    public boolean hasExcerpt() {
-        return !TextUtils.isEmpty(mExcerpt);
-    }
-
-    public String getByline() {
-        return mByline;
+    public String getAuthorName() {
+        return mAuthorName;
     }
 
     public String getFeaturedImage() {
         return mFeaturedImage;
     }
 
+    public boolean hasExcerpt() {
+        return !TextUtils.isEmpty(mExcerpt);
+    }
+
     public boolean hasFeaturedImage() {
         return !TextUtils.isEmpty(mFeaturedImage);
+    }
+
+    public boolean hasAuthorName() {
+        return !TextUtils.isEmpty(mAuthorName);
     }
 }

@@ -17,12 +17,12 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -372,9 +372,10 @@ public class ReaderPostActions {
 
         String path = "/read/site/" + sourcePost.blogId
                 + "/post/" + sourcePost.postId
-                + "/related?meta=site"
-                + "&size_local=" + numLocal
-                + "&size_global=" + numGlobal;
+                + "/related"
+                + "?size_local=" + numLocal
+                + "&size_global=" + numGlobal
+                + "&fields=ID,site_ID,title,excerpt,URL,author,date,site_name,site_URL,attachments";
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
@@ -386,9 +387,8 @@ public class ReaderPostActions {
         new Thread() {
             @Override
             public void run() {
-                ReaderPostList relatedPosts = ReaderPostList.fromJson(jsonObject);
+                ReaderRelatedPostList relatedPosts = ReaderRelatedPostList.fromJson(jsonObject);
                 if (relatedPosts != null && relatedPosts.size() > 0) {
-                    ReaderPostTable.addOrUpdatePosts(null, relatedPosts);
                     EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, relatedPosts, relatedPostsType));
                 }
             }
