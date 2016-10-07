@@ -10,12 +10,14 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.CommentSqlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.List;
 
@@ -106,7 +108,8 @@ public class CommentStore extends Store {
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
-        INVALID_COMMENT
+        INVALID_COMMENT,
+        DUPLICATE_COMMENT
     }
 
     public static class CommentError implements OnChangedError {
@@ -181,6 +184,12 @@ public class CommentStore extends Store {
             case INSTANTIATE_COMMENT:
                 instantiateComment((InstantiateCommentPayload) action.getPayload());
                 break;
+            case CREATE_NEW_COMMENT:
+                createNewComment((RemoteCreateCommentPayload) action.getPayload());
+                break;
+            case CREATED_NEW_COMMENT:
+                handleCreatedNewComment((RemoteCommentResponsePayload) action.getPayload());
+                break;
             case UPDATE_COMMENT:
                 updateComment((CommentModel) action.getPayload());
                 break;
@@ -226,6 +235,19 @@ public class CommentStore extends Store {
             }
         }
     }
+
+    private void handleCreatedNewComment(RemoteCommentResponsePayload payload) {
+        OnCommentChanged event = new OnCommentChanged(1);
+        event.causeOfChange = CommentAction.CREATE_NEW_COMMENT;
+
+        // Update the comment from the DB
+        if (!payload.isError()) {
+            CommentSqlUtils.insertOrUpdateComment(payload.comment);
+        }
+        event.error = payload.error;
+        emitChange(event);
+    }
+
     private void updateComment(CommentModel payload) {
         int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
@@ -263,6 +285,7 @@ public class CommentStore extends Store {
         if (!payload.isError()) {
             CommentSqlUtils.deleteComment(payload.comment);
         }
+        emitChange(event);
     }
 
     private void fetchComments(FetchCommentsPayload payload) {

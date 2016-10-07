@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.utils;
 
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.CommentError;
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
@@ -42,6 +43,12 @@ public class CommentErrorUtils {
                 case INVALID_RESPONSE:
                     errorType = CommentErrorType.INVALID_RESPONSE;
                     break;
+            }
+        }
+        if (error instanceof WPComGsonNetworkError) {
+            WPComGsonNetworkError wpComGsonNetworkError = (WPComGsonNetworkError) error;
+            if ("comment_duplicate".equals(wpComGsonNetworkError.apiError)) {
+                errorType = CommentErrorType.DUPLICATE_COMMENT;
             }
         }
         return errorType;
