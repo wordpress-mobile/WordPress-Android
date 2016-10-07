@@ -3,14 +3,9 @@
  */
 package org.wordpress.android.models;
 
-import android.text.Html;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.simperium.client.BucketSchema;
-import com.simperium.client.Syncable;
-import com.simperium.util.JSONDiff;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONArray;
@@ -21,12 +16,11 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.List;
 
-public class Note extends Syncable {
+public class Note {
     private static final String TAG = "NoteModel";
 
     // Maximum character length for a comment preview
@@ -76,24 +70,6 @@ public class Note extends Syncable {
     private Note(String key, JSONObject noteJSON) {
         mKey = key;
         mNoteJSON = noteJSON;
-    }
-
-    /**
-     * Simperium method @see Diffable
-     */
-    @Override
-    public JSONObject getDiffableValue() {
-        synchronized (mSyncLock) {
-            return JSONDiff.deepCopy(mNoteJSON);
-        }
-    }
-
-    /**
-     * Simperium method for identifying bucket object @see Diffable
-     */
-    @Override
-    public String getSimperiumKey() {
-        return getId();
     }
 
     public String getId() {
@@ -179,7 +155,7 @@ public class Note extends Syncable {
         return (enabledActions != null && enabledActions.contains(EnabledActions.ACTION_LIKE));
     }
 
-    private String getLocalStatus() {
+    public String getLocalStatus() {
         return StringUtils.notNullStr(mLocalStatus);
     }
 
@@ -202,7 +178,7 @@ public class Note extends Syncable {
         return null;
     }
 
-    private Spannable getFormattedSubject() {
+    public Spannable getFormattedSubject() {
         return NotificationsUtils.getSpannableContentForRanges(getSubject());
     }
 
@@ -210,11 +186,11 @@ public class Note extends Syncable {
         return queryJSON("title", "");
     }
 
-    private String getIconURL() {
+    public String getIconURL() {
         return queryJSON("icon", "");
     }
 
-    private String getCommentSubject() {
+    public String getCommentSubject() {
         synchronized (mSyncLock) {
             JSONArray subjectArray = mNoteJSON.optJSONArray("subject");
             if (subjectArray != null) {
@@ -233,7 +209,7 @@ public class Note extends Syncable {
         return "";
     }
 
-    private String getCommentSubjectNoticon() {
+    public String getCommentSubjectNoticon() {
         JSONArray subjectRanges = queryJSON("subject[0].ranges", new JSONArray());
         if (subjectRanges != null) {
             for (int i=0; i < subjectRanges.length(); i++) {
@@ -276,6 +252,13 @@ public class Note extends Syncable {
         }
     }
 
+    public static class TimeStampComparator implements Comparator<Note> {
+        @Override
+        public int compare(Note a, Note b) {
+            return b.getTimestampString().compareTo(a.getTimestampString());
+        }
+    }
+
     /**
      * The inverse of isRead
      */
@@ -296,14 +279,19 @@ public class Note extends Syncable {
             Log.e(TAG, "Unable to update note read property", e);
             return;
         }
-        save();
+
+        // TODO: post updated read state to rest api
     }
 
     /**
      * Get the timestamp provided by the API for the note
      */
     public long getTimestamp() {
-        return DateTimeUtils.timestampFromIso8601(queryJSON("timestamp", ""));
+        return DateTimeUtils.timestampFromIso8601(getTimestampString());
+    }
+
+    public String getTimestampString() {
+        return queryJSON("timestamp", "");
     }
 
     public JSONArray getBody() {
@@ -317,7 +305,7 @@ public class Note extends Syncable {
     }
 
     // returns character code for notification font
-    private String getNoticonCharacter() {
+    public String getNoticonCharacter() {
         return queryJSON("noticon", "");
     }
 
@@ -522,69 +510,5 @@ public class Note extends Syncable {
         }
 
         return new Reply(String.format("%s/replies/new", restPath), content);
-    }
-
-    /**
-     * Simperium Schema
-     */
-    public static class Schema extends BucketSchema<Note> {
-
-        static public final String NAME = "note20";
-        static public final String TIMESTAMP_INDEX = "timestamp";
-        static public final String SUBJECT_INDEX = "subject";
-        static public final String SNIPPET_INDEX = "snippet";
-        static public final String UNREAD_INDEX = "unread";
-        static public final String NOTICON_INDEX = "noticon";
-        static public final String ICON_URL_INDEX = "icon";
-        static public final String IS_UNAPPROVED_INDEX = "unapproved";
-        static public final String COMMENT_SUBJECT_NOTICON = "comment_subject_noticon";
-        static public final String LOCAL_STATUS = "local_status";
-        static public final String TYPE_INDEX = "type";
-
-        private static final Indexer<Note> sNoteIndexer = new Indexer<Note>() {
-
-            @Override
-            public List<Index> index(Note note) {
-                List<Index> indexes = new ArrayList<>();
-                try {
-                    indexes.add(new Index(TIMESTAMP_INDEX, note.getTimestamp()));
-                } catch (NumberFormatException e) {
-                    // note will not have an indexed timestamp so it will
-                    // show up at the end of a query sorting by timestamp
-                    android.util.Log.e("WordPress", "Failed to index timestamp", e);
-                }
-
-                indexes.add(new Index(SUBJECT_INDEX, Html.toHtml(note.getFormattedSubject())));
-                indexes.add(new Index(SNIPPET_INDEX, note.getCommentSubject()));
-                indexes.add(new Index(UNREAD_INDEX, note.isUnread()));
-                indexes.add(new Index(NOTICON_INDEX, note.getNoticonCharacter()));
-                indexes.add(new Index(ICON_URL_INDEX, note.getIconURL()));
-                indexes.add(new Index(IS_UNAPPROVED_INDEX, note.getCommentStatus() == CommentStatus.UNAPPROVED));
-                indexes.add(new Index(COMMENT_SUBJECT_NOTICON, note.getCommentSubjectNoticon()));
-                indexes.add(new Index(LOCAL_STATUS, note.getLocalStatus()));
-                indexes.add(new Index(TYPE_INDEX, note.getType()));
-
-                return indexes;
-            }
-
-        };
-
-        public Schema() {
-            addIndex(sNoteIndexer);
-        }
-
-        @Override
-        public String getRemoteName() {
-            return NAME;
-        }
-
-        @Override
-        public Note build(String key, JSONObject properties) {
-            return new Note(key, properties);
-        }
-
-        public void update(Note note, JSONObject properties) {
-            note.updateJSON(properties);
-        }
     }
 }

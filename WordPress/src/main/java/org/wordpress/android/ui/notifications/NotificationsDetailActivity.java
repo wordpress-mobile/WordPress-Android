@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.simperium.client.BucketObjectMissingException;
-
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -21,7 +19,6 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
@@ -62,33 +59,27 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 return;
             }
 
-            if (SimperiumUtils.getNotesBucket() != null) {
-                try {
-                    Note note = SimperiumUtils.getNotesBucket().get(noteId);
+            // Todo: Get note?
+            Note note = null; //SimperiumUtils.getNotesBucket().get(noteId);
 
-                    Map<String, String> properties = new HashMap<>();
-                    properties.put("notification_type", note.getType());
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+            Map<String, String> properties = new HashMap<>();
+            properties.put("notification_type", note.getType());
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
 
-                    Fragment detailFragment = getDetailFragmentForNote(note);
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.notifications_detail_container, detailFragment)
-                            .commitAllowingStateLoss();
+            Fragment detailFragment = getDetailFragmentForNote(note);
+            getFragmentManager().beginTransaction()
+                    .add(R.id.notifications_detail_container, detailFragment)
+                    .commitAllowingStateLoss();
 
-                    if (getSupportActionBar() != null) {
-                        getSupportActionBar().setTitle(note.getTitle());
-                    }
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(note.getTitle());
+            }
 
-                    // mark the note as read if it's unread
-                    if (note.isUnread()) {
-                        // mark as read which syncs with simperium
-                        note.markAsRead();
-                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-                    }
-                } catch (BucketObjectMissingException e) {
-                    showErrorToastAndFinish();
-                    return;
-                }
+            // mark the note as read if it's unread
+            if (note.isUnread()) {
+                // mark as read which syncs with simperium
+                note.markAsRead();
+                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
             }
 
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);//clearNotifications();

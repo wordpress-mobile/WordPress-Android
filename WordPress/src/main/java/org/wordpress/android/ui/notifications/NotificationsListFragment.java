@@ -16,9 +16,6 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.simperium.client.Bucket;
-import com.simperium.client.BucketObjectMissingException;
-
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -28,16 +25,13 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
 import de.greenrobot.event.EventBus;
 
 public class NotificationsListFragment extends Fragment
-        implements Bucket.Listener<Note>,
-                   WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener {
+        implements WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_INSTANT_LIKE_EXTRA = "instantLike";
@@ -56,8 +50,6 @@ public class NotificationsListFragment extends Fragment
     private View mFilterDivider;
 
     private int mRestoredScrollPosition;
-
-    private Bucket<Note> mBucket;
 
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
@@ -101,13 +93,7 @@ public class NotificationsListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        configureBucketAndAdapter();
         refreshNotes();
-
-        // start listening to bucket change events
-        if (mBucket != null) {
-            mBucket.addListener(this);
-        }
 
         // Removes app notifications from the system bar
         new Thread(new Runnable() {
@@ -115,20 +101,6 @@ public class NotificationsListFragment extends Fragment
                 GCMMessageService.removeAllNotifications(getActivity());
             }
         }).start();
-
-        if (SimperiumUtils.isUserAuthorized()) {
-            SimperiumUtils.startBuckets();
-            AppLog.i(AppLog.T.NOTIFS, "Starting Simperium buckets");
-        }
-    }
-
-    @Override
-    public void onPause() {
-        // unregister the listener
-        if (mBucket != null) {
-            mBucket.removeListener(this);
-        }
-        super.onPause();
     }
 
     @Override
@@ -139,30 +111,6 @@ public class NotificationsListFragment extends Fragment
         }
 
         super.onDestroy();
-    }
-
-    // Sets up the notes bucket and list adapter
-    private void configureBucketAndAdapter() {
-        mBucket = SimperiumUtils.getNotesBucket();
-        if (mBucket != null) {
-            if (mNotesAdapter == null) {
-                mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
-                mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
-            }
-
-            if (mRecyclerView.getAdapter() == null) {
-                mRecyclerView.setAdapter(mNotesAdapter);
-            }
-        } else {
-            if (!AccountHelper.isSignedInWordPressDotCom()) {
-                // let user know that notifications require a wp.com account and enable sign-in
-                showEmptyView(R.string.notifications_account_required, 0, R.string.sign_in);
-                mFilterRadioGroup.setVisibility(View.GONE);
-            } else {
-                // failed for some other reason
-                showEmptyView(R.string.error_refresh_notifications);
-            }
-        }
     }
 
     private final OnNoteClickListener mOnNoteClickListener = new OnNoteClickListener() {
@@ -460,42 +408,6 @@ public class NotificationsListFragment extends Fragment
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
         refreshNotes();
-    }
-
-    /**
-     * Simperium bucket listener methods
-     */
-    @Override
-    public void onSaveObject(Bucket<Note> bucket, final Note object) {
-        refreshNotes();
-    }
-
-    @Override
-    public void onDeleteObject(Bucket<Note> bucket, final Note object) {
-        refreshNotes();
-    }
-
-    @Override
-    public void onNetworkChange(Bucket<Note> bucket, final Bucket.ChangeType type, final String key) {
-        // Reset the note's local status when a remote change is received
-        if (type == Bucket.ChangeType.MODIFY) {
-            try {
-                Note note = bucket.get(key);
-                if (note.isCommentType()) {
-                    note.setLocalStatus(null);
-                    note.save();
-                }
-            } catch (BucketObjectMissingException e) {
-                AppLog.e(AppLog.T.NOTIFS, "Could not create note after receiving change.");
-            }
-        }
-
-        refreshNotes();
-    }
-
-    @Override
-    public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
-        //noop
     }
 
     @Override

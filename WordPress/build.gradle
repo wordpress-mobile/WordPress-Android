@@ -119,9 +119,6 @@ dependencies {
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:passcodelock:1.3.0'
 
-    // Simperium
-    compile 'com.simperium.android:simperium:0.6.8'
-
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
     releaseCompile project(path:':libs:networking:WordPressNetworking', configuration: 'release')
