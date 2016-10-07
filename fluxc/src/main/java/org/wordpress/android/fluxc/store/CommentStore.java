@@ -176,10 +176,10 @@ public class CommentStore extends Store {
                 handleFetchCommentsResponse((FetchCommentsResponsePayload) action.getPayload());
                 break;
             case FETCH_COMMENT:
-                fetchComment((org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload) action.getPayload());
+                fetchComment((RemoteCommentPayload) action.getPayload());
                 break;
             case FETCHED_COMMENT:
-                handleFetchCommentResponse((org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload) action.getPayload());
+                handleFetchCommentResponse((RemoteCommentResponsePayload) action.getPayload());
                 break;
             case INSTANTIATE_COMMENT:
                 instantiateComment((InstantiateCommentPayload) action.getPayload());
@@ -327,7 +327,7 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
-    private void fetchComment(org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload payload) {
+    private void fetchComment(RemoteCommentPayload payload) {
         if (payload.site.isWPCom()) {
             mCommentRestClient.fetchComment(payload.site, payload.comment);
         } else {
@@ -335,8 +335,7 @@ public class CommentStore extends Store {
         }
     }
 
-    private void handleFetchCommentResponse(
-            org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload payload) {
+    private void handleFetchCommentResponse(RemoteCommentResponsePayload payload) {
         int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.FETCH_COMMENT;
