@@ -582,6 +582,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "traintracks_render";
             case TRAIN_TRACKS_INTERACT:
                 return "traintracks_interact";
+            case DEEP_LINKED:
+                return "deep_linked";
             default:
                 return null;
         }

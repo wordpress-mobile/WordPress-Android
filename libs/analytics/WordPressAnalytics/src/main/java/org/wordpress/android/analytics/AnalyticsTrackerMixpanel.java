@@ -1068,6 +1068,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 // Do nothing. These events are just for Tracks.
                 instructions = null;
                 break;
+            case DEEP_LINKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Deep linked");
+                break;
             default:
                 instructions = null;
                 break;
