@@ -22,12 +22,8 @@ public class CommentWPComRestResponse {
         public String avatar_URL;
     }
 
-    public class Parent {
-        public long ID;
-    }
-
     public long ID;
-    public Parent parent;
+    public CommentParent parent;
     public Post post;
     public Author author;
     public String date;
