@@ -22,6 +22,9 @@ public class ReaderRelatedPost {
     private String mSiteName;
     private String mFeaturedImageUrl;
 
+    // these are the specific fields we should ask for when requesting related posts from the endpoint
+    public static final String RELATED_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,featured_image,author,attachments";
+
     public static ReaderRelatedPost fromJson(@NonNull JSONObject json) {
         ReaderRelatedPost post = new ReaderRelatedPost();
 

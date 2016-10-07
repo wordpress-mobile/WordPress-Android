@@ -22,6 +22,7 @@ import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -375,7 +376,7 @@ public class ReaderPostActions {
                 + "/related"
                 + "?size_local=" + numLocal
                 + "&size_global=" + numGlobal
-                + "&fields=ID,site_ID,title,excerpt,URL,author,site_name,site_URL,featured_image,attachments";
+                + "&fields=" + ReaderRelatedPost.RELATED_POST_FIELDS;
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 

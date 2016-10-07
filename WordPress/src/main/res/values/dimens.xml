@@ -123,7 +123,7 @@
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
 
     <dimen name="reader_related_post_image_height">72dp</dimen>
-    <dimen name="reader_related_post_image_width">48dp</dimen>
+    <dimen name="reader_related_post_image_width">56dp</dimen>
 
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
