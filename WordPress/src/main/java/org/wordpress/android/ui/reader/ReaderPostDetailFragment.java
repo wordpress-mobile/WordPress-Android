@@ -33,13 +33,13 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
+import org.wordpress.android.ui.reader.views.ReaderRelatedPostsView;
 import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
@@ -50,9 +50,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -412,10 +410,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         // hide views that would show info for the previous post - these will be re-displayed
         // with the correct info once the new post loads
-        getView().findViewById(R.id.container_local_related_posts).setVisibility(View.GONE);
-        getView().findViewById(R.id.text_local_related_posts_label).setVisibility(View.GONE);
-        getView().findViewById(R.id.container_global_related_posts).setVisibility(View.GONE);
-        getView().findViewById(R.id.text_global_related_posts_label).setVisibility(View.GONE);
+        getView().findViewById(R.id.related_posts_view_local).setVisibility(View.GONE);
+        getView().findViewById(R.id.related_posts_view_global).setVisibility(View.GONE);
 
         mLikingUsersView.setVisibility(View.GONE);
         mLikingUsersDivider.setVisibility(View.GONE);
@@ -457,73 +453,13 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void showRelatedPosts(ReaderRelatedPostList relatedPosts, ReaderPostActions.RelatedPostsType relatedPostsType) {
-        // locate the related posts container and remove any existing related post views
-        boolean isGlobal = relatedPostsType == ReaderPostActions.RelatedPostsType.GLOBAL;
-        int containerId = isGlobal ? R.id.container_global_related_posts : R.id.container_local_related_posts;
-        ViewGroup container = (ViewGroup) getView().findViewById(containerId);
-        container.removeAllViews();
+        int id = relatedPostsType == ReaderPostActions.RelatedPostsType.GLOBAL
+                ? R.id.related_posts_view_global : R.id.related_posts_view_local;
+        ReaderRelatedPostsView view = (ReaderRelatedPostsView) getView().findViewById(id);
+        view.showRelatedPosts(relatedPosts, relatedPostsType, mPost.getBlogName());
 
-        int avatarSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
-
-        // add a separate view for each related post
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        for (int index = 0; index < relatedPosts.size(); index++) {
-            final ReaderRelatedPost relatedPost = relatedPosts.get(index);
-
-            View postView = inflater.inflate(R.layout.reader_related_post, container, false);
-            TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
-            TextView txtExcerpt = (TextView) postView.findViewById(R.id.text_related_post_excerpt);
-            View siteHeader = postView.findViewById(R.id.layout_related_post_site_header);
-
-            txtTitle.setText(relatedPost.getTitle());
-
-            if (relatedPost.hasExcerpt()) {
-                txtExcerpt.setText(relatedPost.getExcerpt());
-                txtExcerpt.setVisibility(View.VISIBLE);
-            } else {
-                txtExcerpt.setVisibility(View.GONE);
-            }
-
-            // site header only appears for global posts
-            if (isGlobal) {
-                WPNetworkImageView imgAvatar = (WPNetworkImageView) siteHeader.findViewById(R.id.image_avatar);
-                TextView txtSiteName = (TextView) siteHeader.findViewById(R.id.text_site_name);
-                TextView txtAuthorName = (TextView) siteHeader.findViewById(R.id.text_author_name);
-                txtSiteName.setText(relatedPost.getSiteName());
-                txtAuthorName.setText(relatedPost.getAuthorName());
-                if (relatedPost.hasAuthorAvatarUrl()) {
-                    String avatarUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getAuthorAvatarUrl(), avatarSize, avatarSize);
-                    imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-                } else {
-                    imgAvatar.showDefaultGravatarImage();
-                }
-                siteHeader.setVisibility(View.VISIBLE);
-            } else {
-                siteHeader.setVisibility(View.GONE);
-            }
-
-            // tapping this view should open the related post detail
-            postView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showRelatedPostDetail(relatedPost.getSiteId(), relatedPost.getPostId());
-                }
-            });
-
-            container.addView(postView);
-        }
-
-        // make sure the label for these related posts is showing
-        int labelId = isGlobal ? R.id.text_global_related_posts_label : R.id.text_local_related_posts_label;
-        TextView label = (TextView) getView().findViewById(labelId);
-        if (!isGlobal) {
-            label.setText(String.format(getString(R.string.reader_label_local_related_posts), mPost.getBlogName()));
-        }
-        if (label.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(label, AniUtils.Duration.MEDIUM);
-        }
-        if (container.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(container, AniUtils.Duration.MEDIUM);
+        if (view.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(view, AniUtils.Duration.MEDIUM);
         }
     }
 
