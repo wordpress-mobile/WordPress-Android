@@ -463,9 +463,11 @@ public class ReaderPostDetailFragment extends Fragment
         ViewGroup container = (ViewGroup) getView().findViewById(containerId);
         container.removeAllViews();
 
+        int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
+        int avatarSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
+
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
         for (int index = 0; index < relatedPosts.size(); index++) {
             final ReaderRelatedPost relatedPost = relatedPosts.get(index);
 
@@ -473,9 +475,16 @@ public class ReaderPostDetailFragment extends Fragment
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             TextView txtExcerpt = (TextView) postView.findViewById(R.id.text_related_post_excerpt);
             WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
+            View siteHeader = postView.findViewById(R.id.layout_related_post_site_header);
 
             txtTitle.setText(relatedPost.getTitle());
-            txtExcerpt.setText(relatedPost.getExcerpt());
+
+            if (relatedPost.hasExcerpt()) {
+                txtExcerpt.setText(relatedPost.getExcerpt());
+                txtExcerpt.setVisibility(View.VISIBLE);
+            } else {
+                txtExcerpt.setVisibility(View.GONE);
+            }
 
             if (relatedPost.hasFeaturedImage()) {
                 String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImage(), imageSize, imageSize);
@@ -483,6 +492,24 @@ public class ReaderPostDetailFragment extends Fragment
                 imgFeatured.setVisibility(View.VISIBLE);
             } else {
                 imgFeatured.setVisibility(View.GONE);
+            }
+
+            // site header only appears for global posts
+            if (isGlobal) {
+                WPNetworkImageView imgAvatar = (WPNetworkImageView) siteHeader.findViewById(R.id.image_avatar);
+                TextView txtSiteName = (TextView) siteHeader.findViewById(R.id.text_site_name);
+                TextView txtAuthorName = (TextView) siteHeader.findViewById(R.id.text_author_name);
+                txtSiteName.setText(relatedPost.getSiteName());
+                txtAuthorName.setText(relatedPost.getAuthorName());
+                if (relatedPost.hasAuthorAvatarUrl()) {
+                    String avatarUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getAuthorAvatarUrl(), avatarSize, avatarSize);
+                    imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+                } else {
+                    imgAvatar.showDefaultGravatarImage();
+                }
+                siteHeader.setVisibility(View.VISIBLE);
+            } else {
+                siteHeader.setVisibility(View.GONE);
             }
 
             // tapping this view should open the related post detail

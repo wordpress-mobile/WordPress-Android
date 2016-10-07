@@ -17,6 +17,7 @@ public class ReaderRelatedPost {
     private long mBlogId;
     private String mTitle;
     private String mAuthorName;
+    private String mAuthorAvatarUrl;
     private String mExcerpt;
     private String mFeaturedImage;
     private String mSiteName;
@@ -37,6 +38,7 @@ public class ReaderRelatedPost {
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor != null) {
             post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
+            post.mAuthorAvatarUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
         }
 
         // if we don't have a featured image, check whethe we can find a suitable image from the attachments
@@ -65,8 +67,16 @@ public class ReaderRelatedPost {
         return mExcerpt;
     }
 
+    public String getSiteName() {
+        return mSiteName;
+    }
+
     public String getAuthorName() {
         return mAuthorName;
+    }
+
+    public String getAuthorAvatarUrl() {
+        return mAuthorAvatarUrl;
     }
 
     public String getFeaturedImage() {
@@ -83,5 +93,9 @@ public class ReaderRelatedPost {
 
     public boolean hasAuthorName() {
         return !TextUtils.isEmpty(mAuthorName);
+    }
+
+    public boolean hasAuthorAvatarUrl() {
+        return !TextUtils.isEmpty(mAuthorAvatarUrl);
     }
 }
