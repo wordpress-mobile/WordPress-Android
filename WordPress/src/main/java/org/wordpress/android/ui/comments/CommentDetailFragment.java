@@ -29,6 +29,7 @@ import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -88,6 +89,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
     private static final String KEY_COMMENT_ID = "comment_id";
     private static final String KEY_NOTE_ID = "note_id";
+    private static final String KEY_NOTE_JSON = "note_json";
     private int mLocalBlogId;
     private int mRemoteBlogId;
     private Comment mComment;
@@ -110,6 +112,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private TextView mBtnTrashComment;
     private String mRestoredReplyText;
     private String mRestoredNoteId;
+    private String mRestoredNoteJson;
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
     private boolean mShouldLikeInstantly;
@@ -152,10 +155,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
+     * used when called from a comment notification using the PN payload to build the Note
+     */
+    public static CommentDetailFragment newInstance(final Note note) {
+        CommentDetailFragment fragment = new CommentDetailFragment();
+        fragment.setNote(note);
+        return fragment;
+    }
+
+    /*
      * used when called from a comment notification 'like' action
      */
-    public static CommentDetailFragment newInstanceForInstantLike(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId);
+    public static CommentDetailFragment newInstanceForInstantLike(final Note note) {
+        CommentDetailFragment fragment = newInstance(note);
         //here tell the fragment to trigger the Like action when ready
         fragment.setLikeCommentWhenReady();
         return fragment;
@@ -164,19 +176,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from a comment notification 'approve' action
      */
-    public static CommentDetailFragment newInstanceForInstantApprove(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId);
+    public static CommentDetailFragment newInstanceForInstantApprove(final Note note) {
+        CommentDetailFragment fragment = newInstance(note);
         //here tell the fragment to trigger the Like action when ready
         fragment.setApproveCommentWhenReady();
-        return fragment;
-    }
-
-    /*
-     * used when called from notifications to load a comment that doesn't already exist in the note
-     */
-    public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId);
-        fragment.enableShouldRequestCommentFromNote();
         return fragment;
     }
 
@@ -188,6 +191,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 // The note will be set in onResume() because Simperium will be running there
                 // See WordPress.deferredInit()
                 mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
+
+                // unless the note doesn't exist, in which case we should have saved a Note
+                // coming from the PN payload
+                if (savedInstanceState.getString(KEY_NOTE_JSON) != null) {
+                    mRestoredNoteJson = savedInstanceState.getString(KEY_NOTE_JSON);
+                }
+
             } else {
                 int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
                 long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
@@ -208,6 +218,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (mNote != null) {
             outState.putString(KEY_NOTE_ID, mNote.getId());
+            outState.putString(KEY_NOTE_JSON, Note.Schema.getJSON(mNote).toString());
         }
     }
 
@@ -409,6 +420,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void setNote(Note note) {
         mNote = note;
+        setRemoteBlogId(note.getSiteId());
         if (isAdded() && mNote != null) {
             showComment();
         }
@@ -421,10 +433,36 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             try {
                 Note note = SimperiumUtils.getNotesBucket().get(noteId);
                 setNote(note);
-                setRemoteBlogId(note.getSiteId());
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
+                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
+                attemptRestoreNoteFromJson(noteId);
             }
+        }
+    }
+
+    private void attemptRestoreNoteFromJson(String noteId) {
+        if (mRestoredNoteJson != null) {
+            try {
+                Note note = new Note.Schema().build(noteId, new JSONObject(mRestoredNoteJson));
+                setNote(note);
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+                SimperiumUtils.trackBucketObjectMissingError("Couldn't restore note from PN payload", noteId);
+                showErrorToastAndFinish();
+            }
+        } else {
+            SimperiumUtils.trackBucketObjectMissingError("Couldn't restore note from PN payload", noteId);
+            showErrorToastAndFinish();
+        }
+    }
+
+
+    private void showErrorToastAndFinish() {
+        AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
+        if (getActivity() != null) {
+            ToastUtils.showToast(getActivity(), R.string.error_notification_open);
+            getActivity().finish();
         }
     }
 
@@ -446,6 +484,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onStart();
         EventBus.getDefault().register(this);
         showComment();
+
     }
 
     @Override
@@ -809,7 +848,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (!isAdded()) return;
 
                 if (result.isSuccess()) {
-                    ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+
+                    if (newStatus.equals(CommentStatus.APPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                    } else if (newStatus.equals(CommentStatus.UNAPPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_unapproved, ToastUtils.Duration.SHORT);
+                    }
+
+                    CommentTable.updateComment(mLocalBlogId, mComment);
+
                 } else {
                     mComment.setStatus(CommentStatus.toString(oldStatus));
                     updateStatusViews();
@@ -1062,7 +1109,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // Now we'll add a detail fragment list
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note.getId());
+        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note);
         mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
         // Listen for note changes from the detail list fragment, so we can update the status buttons
         mNotificationsDetailListFragment.setOnNoteChangeListener(new NotificationsDetailListFragment.OnNoteChangeListener() {
@@ -1145,6 +1192,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                             if (commentStatusShouldRevert) {
                                 setCommentStatusUnapproved();
                             }
+                        } else {
+                            // everything ok, so update in-memory copy of mNote, to keep it up-to-date
+                            // in case of config changes.
+                            mNote.setLikedComment(mBtnLikeComment.isActivated());
+                            mRestoredNoteJson = Note.Schema.getJSON(mNote).toString();
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -1162,9 +1214,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setCommentStatusUnapproved() {
-        mComment.setStatus(CommentStatus.toString(CommentStatus.UNAPPROVED));
-        mNotificationsDetailListFragment.refreshBlocksForCommentStatus(CommentStatus.UNAPPROVED);
-        setModerateButtonForStatus(CommentStatus.UNAPPROVED);
+        setCommentStatus(CommentStatus.UNAPPROVED);
+    }
+
+    private void setCommentStatusApproved() {
+        setCommentStatus(CommentStatus.APPROVED);
+    }
+
+    private void setCommentStatus(CommentStatus status) {
+        if (mComment != null && mNotificationsDetailListFragment != null) {
+            mComment.setStatus(CommentStatus.toString(status));
+            mNotificationsDetailListFragment.refreshBlocksForCommentStatus(status);
+        }
+        setModerateButtonForStatus(status);
     }
 
     private void toggleLikeButton(boolean isLiked) {

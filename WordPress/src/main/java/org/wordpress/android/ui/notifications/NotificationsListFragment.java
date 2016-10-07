@@ -38,6 +38,7 @@ import de.greenrobot.event.EventBus;
 public class NotificationsListFragment extends Fragment
         implements Bucket.Listener<Note>,
                    WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener {
+    public static final String NOTE_FULL_DATA_EXTRA = "note_full_data";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_INSTANT_LIKE_EXTRA = "instantLike";
@@ -177,7 +178,7 @@ public class NotificationsListFragment extends Fragment
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNoteForReply(getActivity(), noteId, false);
+            openNoteForReply(getActivity(), noteId, null, false);
         }
     };
 
@@ -193,6 +194,7 @@ public class NotificationsListFragment extends Fragment
      */
     public static void openNoteForReply(Activity activity,
                                         String noteId,
+                                        String base64FullNoteData,
                                         boolean shouldShowKeyboard) {
         if (noteId == null || activity == null) {
             return;
@@ -204,6 +206,9 @@ public class NotificationsListFragment extends Fragment
 
         Intent detailIntent = getOpenNoteIntent(activity, noteId);
         detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
+        if (!TextUtils.isEmpty(base64FullNoteData)) {
+            detailIntent.putExtra(NOTE_FULL_DATA_EXTRA, base64FullNoteData);
+        }
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 
@@ -211,7 +216,8 @@ public class NotificationsListFragment extends Fragment
      * Open a note fragment based on the type of note, signaling to issue a like action immediately
      */
     public static void openNoteForLike(Activity activity,
-                                       String noteId) {
+                                       String noteId,
+                                       String base64FullNoteData) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -222,6 +228,9 @@ public class NotificationsListFragment extends Fragment
 
         Intent detailIntent = getOpenNoteIntent(activity, noteId);
         detailIntent.putExtra(NOTE_INSTANT_LIKE_EXTRA, true);
+        if (!TextUtils.isEmpty(base64FullNoteData)) {
+            detailIntent.putExtra(NOTE_FULL_DATA_EXTRA, base64FullNoteData);
+        }
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 
@@ -229,7 +238,8 @@ public class NotificationsListFragment extends Fragment
      * Open a note fragment based on the type of note, signaling to issue a moderate:approve action immediately
      */
     public static void openNoteForApprove(Activity activity,
-                                       String noteId) {
+                                       String noteId,
+                                          String base64FullNoteData) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -240,6 +250,9 @@ public class NotificationsListFragment extends Fragment
 
         Intent detailIntent = getOpenNoteIntent(activity, noteId);
         detailIntent.putExtra(NOTE_INSTANT_APPROVE_EXTRA, true);
+        if (!TextUtils.isEmpty(base64FullNoteData)) {
+            detailIntent.putExtra(NOTE_FULL_DATA_EXTRA, base64FullNoteData);
+        }
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 

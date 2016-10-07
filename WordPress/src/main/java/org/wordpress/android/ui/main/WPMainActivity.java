@@ -269,18 +269,22 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
                 GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
+                //this is going to be used in case we can't retrieve the note by its noteId
+                String base64FullNoteData = getIntent().getStringExtra(NotificationsListFragment.NOTE_FULL_DATA_EXTRA);
                 boolean doLikeNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
                 if (doLikeNote) {
-                    NotificationsListFragment.openNoteForLike(this, noteId);
+                    NotificationsListFragment.openNoteForLike(this, noteId, base64FullNoteData);
                 } else {
                     boolean doApproveNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
                     if (doApproveNote) {
-                        NotificationsListFragment.openNoteForApprove(this, noteId);
+                        NotificationsListFragment.openNoteForApprove(this, noteId, base64FullNoteData);
                     } else {
                         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard);
+                        NotificationsListFragment.openNoteForReply(this, noteId, base64FullNoteData, shouldShowKeyboard);
                     }
                 }
+            } else {
+                SimperiumUtils.trackBucketObjectMissingWarning("No note id found in PN", "");
             }
         } else {
           // mark all tapped here
@@ -421,16 +425,18 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     private void moderateCommentOnActivityResult(Intent data) {
+        String noteId = StringUtils.notNullStr(data.getStringExtra
+                (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA));
         try {
             if (SimperiumUtils.getNotesBucket() != null) {
-                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
-                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+                Note note = SimperiumUtils.getNotesBucket().get(noteId);
                 CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                         NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
                 NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, e);
+            SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
         }
     }
 

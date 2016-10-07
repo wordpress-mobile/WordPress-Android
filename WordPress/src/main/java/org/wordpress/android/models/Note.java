@@ -6,6 +6,7 @@ package org.wordpress.android.models;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import com.simperium.client.BucketSchema;
@@ -21,10 +22,13 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 public class Note extends Syncable {
     private static final String TAG = "NoteModel";
@@ -296,7 +300,9 @@ public class Note extends Syncable {
             Log.e(TAG, "Unable to update note read property", e);
             return;
         }
-        save();
+
+        if (getBucket() != null)
+            save();
     }
 
     /**
@@ -482,6 +488,22 @@ public class Note extends Syncable {
         return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
     }
 
+    public void setLikedComment(boolean liked) {
+        // Find comment block that matches the root note comment id
+        JSONObject jsonActions = getCommentActions();
+        if (jsonActions != null) {
+            try {
+                jsonActions.putOpt(ACTION_KEY_LIKE, liked);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private JSONObject getJSON() {
+        return mNoteJSON;
+    }
+
     public String getUrl() {
         return queryJSON("url", "");
     }
@@ -583,8 +605,52 @@ public class Note extends Syncable {
             return new Note(key, properties);
         }
 
+        public Note buildFromBase64EncodedData(String noteId, String base64FullNoteData){
+            Note note = null;
+
+            if (base64FullNoteData == null) return null;
+
+            byte[] b64DecodedPayload = Base64.decode(base64FullNoteData, Base64.DEFAULT);
+
+            // Decompress the payload
+            Inflater decompresser = new Inflater();
+            decompresser.setInput(b64DecodedPayload, 0, b64DecodedPayload.length);
+            byte[] result = new byte[4096]; //max length an Android PN payload can have
+            int resultLength = 0;
+            try {
+                resultLength = decompresser.inflate(result);
+                decompresser.end();
+            } catch (DataFormatException e) {
+                e.printStackTrace();
+            }
+
+
+            String out = new String(result, 0, resultLength, StandardCharsets.UTF_8);
+            if (out != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(out);
+                    if (jsonObject.has("notes")) {
+                        JSONArray jsonArray = jsonObject.getJSONArray("notes");
+                        if (jsonArray != null && jsonArray.length() == 1) {
+                            jsonObject = jsonArray.getJSONObject(0);
+                        }
+                    }
+                    note = build(noteId, jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return note;
+        }
+
         public void update(Note note, JSONObject properties) {
             note.updateJSON(properties);
         }
+
+        public static JSONObject getJSON(Note note) {
+            return note.getJSON();
+        }
+
     }
 }

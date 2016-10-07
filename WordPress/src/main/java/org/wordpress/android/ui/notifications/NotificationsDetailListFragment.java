@@ -81,6 +81,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         return fragment;
     }
 
+    public static NotificationsDetailListFragment newInstance(final Note note) {
+        NotificationsDetailListFragment fragment = new NotificationsDetailListFragment();
+        fragment.initWithNote(note);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,6 +165,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         mNote = note;
     }
 
+    private void initWithNote(Note note) {
+        if (note == null) return;
+        mIsUnread = note.isUnread();
+        setNote(note);
+    }
+
     private void setNoteWithNoteId(String noteId) {
         if (noteId == null) return;
 
@@ -169,6 +181,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 setNote(note);
             } catch (BucketObjectMissingException e) {
                 e.printStackTrace();
+                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
             }
         }
     }
@@ -501,6 +514,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 }
             } catch (BucketObjectMissingException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Couldn't load note after receiving change.");
+                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
             }
         }
     }

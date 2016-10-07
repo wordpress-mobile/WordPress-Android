@@ -15,10 +15,13 @@ import com.simperium.client.Query;
 import com.simperium.client.User;
 
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.HashMap;
 
 import de.greenrobot.event.EventBus;
 
@@ -26,6 +29,9 @@ public class SimperiumUtils {
     private static final String NOTE_TIMESTAMP = "timestamp";
     private static final String META_BUCKET_NAME = "meta";
     private static final String META_LAST_SEEN = "last_seen";
+
+    private static final String TRACK_ERROR_KEY = "error";
+    private static final String TRACK_NOTEID_KEY = "note_id";
 
     private static Simperium mSimperium;
     private static Bucket<Note> mNotesBucket;
@@ -181,4 +187,25 @@ public class SimperiumUtils {
 
         return false;
     }
+
+    // in general, we shouldn't have BucketObjectMissingExceptions but sometimes this might happen
+    // when simperium can't sync up and get up to speed to push notifications,
+    // so we're interested in tracking these
+    public static void trackBucketObjectMissingWarning(String message, String noteId) {
+        trackBucketObjectMissing(message, AnalyticsTracker.Stat.NOTIFICATIONS_MISSING_SYNC_WARNING, noteId);
+    }
+
+    //these track when we couldn't do anything else to try show something to the user, and ended up
+    // showing an error on the screen i.e. "Sorry, couldn' load the note"
+    public static void trackBucketObjectMissingError(String message, String noteId) {
+        trackBucketObjectMissing(message, AnalyticsTracker.Stat.NOTIFICATIONS_MISSING_SYNC_ERROR, noteId);
+    }
+
+    private static void trackBucketObjectMissing(String message, AnalyticsTracker.Stat type, String noteId) {
+        HashMap<String, String> errorProperties = new HashMap<>();
+        errorProperties.put(TRACK_ERROR_KEY, message);
+        errorProperties.put(TRACK_NOTEID_KEY, noteId);
+        AnalyticsTracker.track(type, errorProperties);
+    }
+
 }
