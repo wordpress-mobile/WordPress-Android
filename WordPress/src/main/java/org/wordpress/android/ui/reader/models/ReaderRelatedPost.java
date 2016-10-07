@@ -14,6 +14,7 @@ public class ReaderRelatedPost {
     private final long mBlogId;
     private final String mTitle;
     private final String mByline;
+    private final String mExcerpt;
     private final String mFeaturedImage;
 
     public ReaderRelatedPost(@NonNull ReaderPost post) {
@@ -22,6 +23,7 @@ public class ReaderRelatedPost {
 
         mTitle = post.getTitle();
         mFeaturedImage = post.getFeaturedImage();
+        mExcerpt = post.getExcerpt();
 
         /*
          * we want to include the blog name in the byline when it's available, and most sites
@@ -70,6 +72,14 @@ public class ReaderRelatedPost {
 
     public String getTitle() {
         return mTitle;
+    }
+
+    public String getExcerpt() {
+        return mExcerpt;
+    }
+
+    public boolean hasExcerpt() {
+        return !TextUtils.isEmpty(mExcerpt);
     }
 
     public String getByline() {
