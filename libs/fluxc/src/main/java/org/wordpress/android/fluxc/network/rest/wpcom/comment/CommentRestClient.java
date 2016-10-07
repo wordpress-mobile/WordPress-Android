@@ -132,7 +132,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                 new Listener<CommentWPComRestResponse>() {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                        CommentModel modifiedComment = commentResponseToComment(response, site);
+                        modifiedComment.setId(comment.getId()); // reconciliate local instance and newly created object
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(modifiedComment);
                         mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
                     }
                 },
