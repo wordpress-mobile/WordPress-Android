@@ -380,10 +380,18 @@ public class ReaderPostActions {
         new Thread() {
             @Override
             public void run() {
-                ReaderRelatedPostList relatedPosts = ReaderRelatedPostList.fromJson(jsonObject);
-                if (relatedPosts != null && relatedPosts.size() > 0) {
-                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, relatedPosts));
+                ReaderRelatedPostList allRelatedPosts = ReaderRelatedPostList.fromJson(jsonObject);
+                // split into posts from the passed site (local) and from across wp.com (global)
+                ReaderRelatedPostList localRelatedPosts = new ReaderRelatedPostList();
+                ReaderRelatedPostList globalRelatedPosts = new ReaderRelatedPostList();
+                for (ReaderRelatedPost relatedPost : allRelatedPosts) {
+                    if (relatedPost.getSiteId() == sourcePost.blogId) {
+                        localRelatedPosts.add(relatedPost);
+                    } else {
+                        globalRelatedPosts.add(relatedPost);
+                    }
                 }
+                EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, localRelatedPosts, globalRelatedPosts));
             }
         }.start();
 

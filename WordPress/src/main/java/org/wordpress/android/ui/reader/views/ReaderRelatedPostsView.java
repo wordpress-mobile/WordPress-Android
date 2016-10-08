@@ -96,7 +96,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 txtExcerpt.setVisibility(View.GONE);
             }
 
-            // site header only appears for global posts
+            // site header only appears for global related posts
             if (isGlobal) {
                 WPNetworkImageView imgAvatar = (WPNetworkImageView) siteHeader.findViewById(R.id.image_avatar);
                 TextView txtSiteName = (TextView) siteHeader.findViewById(R.id.text_site_name);
@@ -140,7 +140,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
             container.addView(postView);
         }
 
-        // make sure the label for these related posts is showing
+        // make sure the label for these related posts has the correct caption
         TextView label = (TextView) findViewById(R.id.text_related_posts_label);
         if (isGlobal) {
             label.setText(getContext().getString(R.string.reader_label_global_related_posts));
@@ -206,6 +206,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
             }
         });
+
         imgFeatured.setVisibility(View.VISIBLE);
     }
 

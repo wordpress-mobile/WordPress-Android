@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.util.StringUtils;
@@ -120,19 +119,14 @@ public class ReaderEvents {
 
     public static class RelatedPostsUpdated {
         private final ReaderPost mSourcePost;
-        private final ReaderRelatedPostList mLocalRelatedPosts = new ReaderRelatedPostList();
-        private final ReaderRelatedPostList mGlobalRelatedPosts = new ReaderRelatedPostList();
+        private final ReaderRelatedPostList mLocalRelatedPosts;
+        private final ReaderRelatedPostList mGlobalRelatedPosts;
         public RelatedPostsUpdated(@NonNull ReaderPost sourcePost,
-                                   @NonNull ReaderRelatedPostList relatedPosts) {
+                                   @NonNull ReaderRelatedPostList localRelatedPosts,
+                                   @NonNull ReaderRelatedPostList globalRelatedPosts) {
             mSourcePost = sourcePost;
-            // split into posts from the passed site (local) and from across wp.com (global)
-            for (ReaderRelatedPost relatedPost : relatedPosts) {
-                if (relatedPost.getSiteId() == sourcePost.blogId) {
-                    mLocalRelatedPosts.add(relatedPost);
-                } else {
-                    mGlobalRelatedPosts.add(relatedPost);
-                }
-            }
+            mLocalRelatedPosts = localRelatedPosts;
+            mGlobalRelatedPosts = globalRelatedPosts;
         }
         public ReaderPost getSourcePost() {
             return mSourcePost;

@@ -439,25 +439,27 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * related posts were retrieved, so show them
+     * related posts were retrieved
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.RelatedPostsUpdated event) {
         if (!isAdded() || !hasPost()) return;
 
-        // make sure this is for the current post
-        if (event.getSourcePost().postId != mPost.postId || event.getSourcePost().blogId != mPost.blogId) {
-            return;
-        }
-
-        if (event.hasLocalRelatedPosts()) {
-            showRelatedPosts(event.getLocalRelatedPosts(), false);
-        }
-        if (event.hasGlobalRelatedPosts()) {
-            showRelatedPosts(event.getGlobalRelatedPosts(), true);
+        // make sure this event is for the current post
+        if (event.getSourcePost().postId == mPost.postId && event.getSourcePost().blogId == mPost.blogId) {
+            if (event.hasLocalRelatedPosts()) {
+                showRelatedPosts(event.getLocalRelatedPosts(), false);
+            }
+            if (event.hasGlobalRelatedPosts()) {
+                showRelatedPosts(event.getGlobalRelatedPosts(), true);
+            }
         }
     }
 
+    /*
+     * show the passed list of related posts - can be either global (related posts from
+     * across wp.com) or local (related posts from the same site as the current post)
+     */
     private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, boolean isGlobal) {
         // different container views for global/local related posts
         int id = isGlobal ? R.id.related_posts_view_global : R.id.related_posts_view_local;
