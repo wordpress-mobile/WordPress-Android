@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
-import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
 
@@ -15,27 +13,31 @@ import org.wordpress.android.util.JSONUtils;
 public class ReaderRelatedPost {
     private long mPostId;
     private long mSiteId;
+    private boolean mIsFollowing;
+
     private String mTitle;
     private String mAuthorName;
     private String mAuthorAvatarUrl;
     private String mExcerpt;
     private String mSiteName;
     private String mFeaturedImageUrl;
-    private boolean mIsFollowing;
 
-    // these are the specific fields we should ask for when requesting related posts from the endpoint
-    public static final String RELATED_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,featured_image,is_following,author,attachments";
+    // these are the specific fields we should ask for when requesting related posts from
+    // the endpoint - note that we want to avoid ever requesting the post content, since
+    // that makes the call much heavier
+    public static final String RELATED_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,is_following,author,featured_image,featured_media";
 
     public static ReaderRelatedPost fromJson(@NonNull JSONObject json) {
         ReaderRelatedPost post = new ReaderRelatedPost();
 
         post.mPostId = json.optLong("ID");
         post.mSiteId = json.optLong("site_ID");
+        post.mIsFollowing = JSONUtils.getBool(json, "is_following");
+
         post.mTitle = JSONUtils.getStringDecoded(json, "title");
         post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
         post.mSiteName = JSONUtils.getStringDecoded(json, "site_name");
         post.mFeaturedImageUrl = JSONUtils.getString(json, "featured_image");
-        post.mIsFollowing = JSONUtils.getBool(json, "is_following");
 
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor != null) {
@@ -43,11 +45,13 @@ public class ReaderRelatedPost {
             post.mAuthorAvatarUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
         }
 
-        // if the post doesn't have an assigned featured image, try to guess one from its attachments
-        if (!post.hasFeaturedImageUrl() && json.has("attachments")) {
-            JSONObject jsonAttachments = json.optJSONObject("attachments");
-            post.mFeaturedImageUrl = new ImageSizeMap(jsonAttachments.toString())
-                    .getLargestImageUrl(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+        // if there's no featured image, check if featured media has been set to an image
+        if (!post.hasFeaturedImageUrl() && json.has("featured_media")) {
+            JSONObject jsonMedia = json.optJSONObject("featured_media");
+            String type = JSONUtils.getString(jsonMedia, "type");
+            if (type.equals("image")) {
+                post.mFeaturedImageUrl = JSONUtils.getString(jsonMedia, "uri");
+            }
         }
 
         return post;
@@ -95,10 +99,6 @@ public class ReaderRelatedPost {
 
     public boolean hasExcerpt() {
         return !TextUtils.isEmpty(mExcerpt);
-    }
-
-    public boolean hasAuthorName() {
-        return !TextUtils.isEmpty(mAuthorName);
     }
 
     public boolean hasAuthorAvatarUrl() {

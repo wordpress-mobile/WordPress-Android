@@ -118,18 +118,23 @@ public class ReaderEvents {
     }
 
     public static class RelatedPostsUpdated {
-        private final ReaderPost mSourcePost;
+        private final long mSourcePostId;
+        private final long mSourceSiteId;
         private final ReaderRelatedPostList mLocalRelatedPosts;
         private final ReaderRelatedPostList mGlobalRelatedPosts;
         public RelatedPostsUpdated(@NonNull ReaderPost sourcePost,
                                    @NonNull ReaderRelatedPostList localRelatedPosts,
                                    @NonNull ReaderRelatedPostList globalRelatedPosts) {
-            mSourcePost = sourcePost;
+            mSourcePostId = sourcePost.postId;
+            mSourceSiteId = sourcePost.blogId;
             mLocalRelatedPosts = localRelatedPosts;
             mGlobalRelatedPosts = globalRelatedPosts;
         }
-        public ReaderPost getSourcePost() {
-            return mSourcePost;
+        public long getSourcePostId() {
+            return mSourcePostId;
+        }
+        public long getSourceSiteId() {
+            return mSourceSiteId;
         }
         public ReaderRelatedPostList getLocalRelatedPosts() {
             return mLocalRelatedPosts;

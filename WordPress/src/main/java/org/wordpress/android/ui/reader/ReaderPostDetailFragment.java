@@ -446,7 +446,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (!isAdded() || !hasPost()) return;
 
         // make sure this event is for the current post
-        if (event.getSourcePost().postId == mPost.postId && event.getSourcePost().blogId == mPost.blogId) {
+        if (event.getSourcePostId() == mPost.postId && event.getSourceSiteId() == mPost.blogId) {
             if (event.hasLocalRelatedPosts()) {
                 showRelatedPosts(event.getLocalRelatedPosts(), false);
             }
