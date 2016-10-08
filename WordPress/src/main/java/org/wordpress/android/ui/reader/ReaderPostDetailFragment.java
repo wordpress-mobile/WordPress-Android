@@ -432,8 +432,8 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void requestRelatedPosts() {
         if (hasPost() && mPost.isWP()) {
-            ReaderPostActions.requestRelatedPosts(mPost, ReaderPostActions.RelatedPostsType.GLOBAL);
             ReaderPostActions.requestRelatedPosts(mPost, ReaderPostActions.RelatedPostsType.LOCAL);
+            ReaderPostActions.requestRelatedPosts(mPost, ReaderPostActions.RelatedPostsType.GLOBAL);
         }
     }
 
