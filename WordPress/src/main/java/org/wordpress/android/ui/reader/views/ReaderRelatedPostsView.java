@@ -105,7 +105,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
             }
 
             // site header only appears for global posts
-            if (isGlobal || !isGlobal) {
+            if (isGlobal) {
                 WPNetworkImageView imgAvatar = (WPNetworkImageView) siteHeader.findViewById(R.id.image_avatar);
                 TextView txtSiteName = (TextView) siteHeader.findViewById(R.id.text_site_name);
                 TextView txtAuthorName = (TextView) siteHeader.findViewById(R.id.text_author_name);
