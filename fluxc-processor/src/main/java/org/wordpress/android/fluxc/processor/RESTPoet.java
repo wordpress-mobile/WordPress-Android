@@ -144,11 +144,13 @@ public class RESTPoet {
 
             // Add a constructor for each type this endpoint accepts (usually long)
             for (Class endpointType : getVariableEndpointTypes(endpointNode)) {
+                String variableName = endpointType.equals(String.class) ? endpointName : endpointName + "Id";
+
                 MethodSpec endpointConstructor = MethodSpec.constructorBuilder()
                         .addModifiers(Modifier.PRIVATE)
                         .addParameter(String.class, "previousEndpoint")
-                        .addParameter(endpointType, endpointName + "Id")
-                        .addStatement("super($L, $L)", "previousEndpoint", endpointName + "Id")
+                        .addParameter(endpointType, variableName)
+                        .addStatement("super($L, $L)", "previousEndpoint", variableName)
                         .build();
                 endpointClassBuilder.addMethod(endpointConstructor);
             }
@@ -182,20 +184,22 @@ public class RESTPoet {
                 methodName = "item";
             }
 
+            String variableName = endpointType.equals(String.class) ? endpointName : endpointName + "Id";
+
             MethodSpec.Builder endpointMethodBuilder = MethodSpec.methodBuilder(methodName)
                     .addModifiers(Modifier.PUBLIC)
                     .returns(endpointClassName)
-                    .addParameter(endpointType, endpointName + "Id")
+                    .addParameter(endpointType, variableName)
                     .addAnnotation(AnnotationSpec.builder(Endpoint.class)
                             .addMember("value", "$S", endpointNode.getFullEndpoint())
                             .build());
 
             if (endpointNode.getParent().isRoot()) {
                 endpointMethodBuilder.addModifiers(Modifier.STATIC)
-                        .addStatement("return new $T($S, $L)", endpointClassName, "/", endpointName + "Id");
+                        .addStatement("return new $T($S, $L)", endpointClassName, "/", variableName);
             } else {
                 endpointMethodBuilder
-                        .addStatement("return new $T(getEndpoint(), $L)", endpointClassName, endpointName + "Id");
+                        .addStatement("return new $T(getEndpoint(), $L)", endpointClassName, variableName);
             }
             endpointMethods.add(endpointMethodBuilder.build());
         }
