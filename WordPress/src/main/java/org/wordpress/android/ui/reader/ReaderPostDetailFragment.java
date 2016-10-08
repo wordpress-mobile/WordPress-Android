@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
@@ -432,8 +434,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void requestRelatedPosts() {
         if (hasPost() && mPost.isWP()) {
-            ReaderPostActions.requestRelatedPosts(mPost, ReaderPostActions.RelatedPostsType.LOCAL);
-            ReaderPostActions.requestRelatedPosts(mPost, ReaderPostActions.RelatedPostsType.GLOBAL);
+            ReaderPostActions.requestRelatedPosts(mPost);
         }
     }
 
@@ -449,11 +450,19 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
+        if (event.hasLocalRelatedPosts()) {
+            showRelatedPosts(event.getLocalRelatedPosts(), false);
+        }
+        if (event.hasGlobalRelatedPosts()) {
+            showRelatedPosts(event.getGlobalRelatedPosts(), true);
+        }
+    }
+
+    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, boolean isGlobal) {
         // different container views for global/local related posts
-        int id = event.getRelatedPostsType() == ReaderPostActions.RelatedPostsType.GLOBAL
-                ? R.id.related_posts_view_global : R.id.related_posts_view_local;
+        int id = isGlobal ? R.id.related_posts_view_global : R.id.related_posts_view_local;
         ReaderRelatedPostsView relatedPostsView = (ReaderRelatedPostsView) getView().findViewById(id);
-        relatedPostsView.showRelatedPosts(event.getRelatedPosts(), event.getRelatedPostsType(), mPost.getBlogName());
+        relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
 
         // tapping a related posts should open the related post detail
         relatedPostsView.setOnRelatedPostClickListener(new ReaderRelatedPostsView.OnRelatedPostClickListener() {

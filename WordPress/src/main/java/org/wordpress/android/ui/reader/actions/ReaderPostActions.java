@@ -41,9 +41,6 @@ public class ReaderPostActions {
     private static final String TRACKING_REFERRER = "https://wordpress.com/";
     private static final Random mRandom = new Random();
 
-    public enum RelatedPostsType {
-        LOCAL, GLOBAL
-    }
     private static final int NUM_RELATED_POSTS_TO_REQUEST = 2;
 
     private ReaderPostActions() {
@@ -346,17 +343,16 @@ public class ReaderPostActions {
     }
 
     /*
-     * request posts related to the passed one, use RelatedPostsType.GLOBAL to return related
-     * posts from any site, or RelatedPostsType.LOCAL to return related posts from the same
-     * site as the passed post
+     * request posts related to the passed one, endpoint returns a combined list of related posts
+     * posts from across wp.com and related posts from the same site as the passed post
      */
-    public static void requestRelatedPosts(final ReaderPost sourcePost, final RelatedPostsType relatedPostsType) {
+    public static void requestRelatedPosts(final ReaderPost sourcePost) {
         if (sourcePost == null) return;
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-               handleRelatedPostsResponse(sourcePost, jsonObject, relatedPostsType);
+               handleRelatedPostsResponse(sourcePost, jsonObject);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -368,21 +364,17 @@ public class ReaderPostActions {
             }
         };
 
-        int numLocal = relatedPostsType == RelatedPostsType.LOCAL ? NUM_RELATED_POSTS_TO_REQUEST : 0;
-        int numGlobal = relatedPostsType == RelatedPostsType.GLOBAL ? NUM_RELATED_POSTS_TO_REQUEST : 0;
-
         String path = "/read/site/" + sourcePost.blogId
                 + "/post/" + sourcePost.postId
                 + "/related"
-                + "?size_local=" + numLocal
-                + "&size_global=" + numGlobal
+                + "?size_local=" + NUM_RELATED_POSTS_TO_REQUEST
+                + "&size_global=" + NUM_RELATED_POSTS_TO_REQUEST
                 + "&fields=" + ReaderRelatedPost.RELATED_POST_FIELDS;
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     private static void handleRelatedPostsResponse(final ReaderPost sourcePost,
-                                                   final JSONObject jsonObject,
-                                                   final RelatedPostsType relatedPostsType) {
+                                                   final JSONObject jsonObject) {
         if (jsonObject == null) return;
 
         new Thread() {
@@ -390,7 +382,7 @@ public class ReaderPostActions {
             public void run() {
                 ReaderRelatedPostList relatedPosts = ReaderRelatedPostList.fromJson(jsonObject);
                 if (relatedPosts != null && relatedPosts.size() > 0) {
-                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, relatedPosts, relatedPostsType));
+                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, relatedPosts));
                 }
             }
         }.start();

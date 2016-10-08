@@ -14,8 +14,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader.actions.ReaderPostActions.RelatedPostsType;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.util.DisplayUtils;
@@ -69,20 +67,14 @@ public class ReaderRelatedPostsView extends LinearLayout {
         mClickListener = listener;
     }
 
-    public void showRelatedPosts(ReaderRelatedPostList posts,
-                                 RelatedPostsType relatedPostsType,
-                                 String siteName) {
-
+    public void showRelatedPosts(ReaderRelatedPostList posts, String siteName, boolean isGlobal) {
         mRelatedPostList = posts;
-        if (mRelatedPostList.size() == 0) {
-            return;
-        }
+        if (mRelatedPostList.size() == 0) return;
 
         ViewGroup container = (ViewGroup) findViewById(R.id.container_related_posts);
         container.removeAllViews();
 
         int avatarSize = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
-        boolean isGlobal = relatedPostsType == ReaderPostActions.RelatedPostsType.GLOBAL;
 
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getContext());
