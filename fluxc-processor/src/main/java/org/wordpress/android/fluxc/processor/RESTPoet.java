@@ -127,7 +127,7 @@ public class RESTPoet {
             MethodSpec endpointConstructor = MethodSpec.constructorBuilder()
                     .addModifiers(Modifier.PRIVATE)
                     .addParameter(String.class, "previousEndpoint")
-                    .addParameter(long.class, endpointName + "Id")
+                    .addParameter(getVariableEndpointType(endpointNode), endpointName + "Id")
                     .addStatement("super($L, $L)", "previousEndpoint", endpointName + "Id")
                     .build();
 
@@ -170,7 +170,7 @@ public class RESTPoet {
         MethodSpec.Builder endpointMethodBuilder = MethodSpec.methodBuilder(methodName)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(endpointClassName)
-                .addParameter(long.class, endpointName + "Id")
+                .addParameter(getVariableEndpointType(endpointNode), endpointName + "Id")
                 .addAnnotation(AnnotationSpec.builder(Endpoint.class)
                         .addMember("value", "$S", endpointNode.getFullEndpoint())
                         .build());
@@ -197,5 +197,21 @@ public class RESTPoet {
             }
         }
         return string;
+    }
+
+    private static Class getVariableEndpointType(EndpointNode endpointNode) {
+        Class paramType = long.class;
+
+        String endpointType = endpointNode.getEndpointType();
+
+        if (endpointType != null) {
+            switch (endpointType) {
+                case "String":
+                    paramType = String.class;
+                    break;
+            }
+        }
+
+        return paramType;
     }
 }
