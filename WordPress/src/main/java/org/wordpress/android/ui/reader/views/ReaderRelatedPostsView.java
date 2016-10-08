@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
     }
 
     private OnRelatedPostClickListener mClickListener;
+    private int mFeaturedImageWidth;
 
     public ReaderRelatedPostsView(Context context) {
         super(context);
@@ -55,6 +57,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
 
     private void initView(Context context) {
         inflate(context, R.layout.reader_related_posts_view, this);
+        mFeaturedImageWidth = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_width));
     }
 
     public void setOnRelatedPostClickListener(OnRelatedPostClickListener listener) {
@@ -72,8 +75,6 @@ public class ReaderRelatedPostsView extends LinearLayout {
         ViewGroup container = (ViewGroup) findViewById(R.id.container_related_posts);
         container.removeAllViews();
 
-        int imageWidth = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_width));
-        int imageHeight = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_height));
         int avatarSize = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
         boolean isGlobal = relatedPostsType == ReaderPostActions.RelatedPostsType.GLOBAL;
 
@@ -97,14 +98,6 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 txtExcerpt.setVisibility(View.GONE);
             }
 
-            if (relatedPost.hasFeaturedImageUrl() && relatedPost.hasExcerpt()) {
-                String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImageUrl(), imageWidth, imageHeight);
-                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
-                imgFeatured.setVisibility(View.VISIBLE);
-            } else {
-                imgFeatured.setVisibility(View.GONE);
-            }
-
             // site header only appears for global posts
             if (isGlobal) {
                 WPNetworkImageView imgAvatar = (WPNetworkImageView) siteHeader.findViewById(R.id.image_avatar);
@@ -122,6 +115,8 @@ public class ReaderRelatedPostsView extends LinearLayout {
             } else {
                 siteHeader.setVisibility(View.GONE);
             }
+
+            showFeaturedImage(relatedPost, postView);
 
             postView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -142,6 +137,28 @@ public class ReaderRelatedPostsView extends LinearLayout {
         } else {
             label.setText(String.format(getContext().getString(R.string.reader_label_local_related_posts), siteName));
         }
+    }
+
+    private void showFeaturedImage(final ReaderRelatedPost relatedPost, final View postView) {
+        final WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_featured);
+
+        // post must have an excerpt in order to show featured image
+        if (!relatedPost.hasFeaturedImageUrl() || !relatedPost.hasExcerpt()) {
+            imgFeatured.setVisibility(View.GONE);
+            return;
+        }
+
+        // featured image has height set to MATCH_PARENT so wait for parent's layout to complete
+        // before loading image so we can set the image height correctly
+        postView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                postView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                String photonUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImageUrl(), mFeaturedImageWidth, postView.getHeight());
+                imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
+            }
+        });
+        imgFeatured.setVisibility(View.VISIBLE);
     }
 
 }

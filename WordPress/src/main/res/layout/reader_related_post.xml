@@ -12,11 +12,22 @@
     android:layout_marginBottom="@dimen/margin_extra_large"
     android:background="?android:selectableItemBackground">
 
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_featured"
+        android:layout_width="@dimen/reader_related_post_image_width"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/margin_large"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        tools:src="@drawable/box_with_pages_top"
+        tools:visibility="visible" />
+
     <RelativeLayout
         android:id="@+id/layout_related_post_site_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_toRightOf="@+id/image_featured"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -47,17 +58,6 @@
             tools:text="text_site_name" />
 
     </RelativeLayout>
-
-    <org.wordpress.android.widgets.WPNetworkImageView
-        android:id="@+id/image_featured"
-        android:layout_width="@dimen/reader_related_post_image_width"
-        android:layout_height="@dimen/reader_related_post_image_height"
-        android:layout_below="@+id/layout_related_post_site_header"
-        android:layout_marginRight="@dimen/margin_large"
-        android:scaleType="centerCrop"
-        android:visibility="gone"
-        tools:src="@drawable/gravatar_placeholder"
-        tools:visibility="visible" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_related_post_title"
