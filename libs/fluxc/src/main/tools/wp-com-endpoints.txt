@@ -16,4 +16,6 @@
 /sites/$site/media/$media_ID/delete/
 /sites/$site/media/new/
 
+/sites/$site/taxonomies/$taxonomy#String/terms/
+/sites/$site/taxonomies/$taxonomy#String/terms/new/
 /users/new/
