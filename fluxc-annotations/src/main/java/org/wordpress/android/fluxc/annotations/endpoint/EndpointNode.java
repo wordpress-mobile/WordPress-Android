@@ -1,6 +1,8 @@
 package org.wordpress.android.fluxc.annotations.endpoint;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,14 +71,15 @@ public class EndpointNode {
         return getLocalEndpoint().replaceAll("/|\\$|#.*|_ID|_id", "").replaceAll("-", "_");
     }
 
-    public String getEndpointType() {
+    public List<String> getEndpointTypes() {
         Pattern pattern = Pattern.compile("#([^\\/]*)");
         Matcher matcher = pattern.matcher(getLocalEndpoint());
 
         if (matcher.find()) {
-            return matcher.group(1);
+            return Arrays.asList(matcher.group(1).split(","));
         }
-        return null;
+
+        return Collections.emptyList();
     }
 
     public boolean isRoot() {

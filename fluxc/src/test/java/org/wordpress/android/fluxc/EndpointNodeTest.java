@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class EndpointNodeTest {
@@ -48,12 +48,13 @@ public class EndpointNodeTest {
     }
 
     @Test
-    public void testGetEndpointType() {
+    public void testGetEndpointTypes() {
         EndpointNode typedNode = new EndpointNode("$taxonomy#String/");
-        assertEquals("String", typedNode.getEndpointType());
+        assertEquals(1, typedNode.getEndpointTypes().size());
+        assertEquals("String", typedNode.getEndpointTypes().get(0));
 
         EndpointNode normalNode = new EndpointNode("$post_ID/");
-        assertNull(normalNode.getEndpointType());
+        assertTrue(normalNode.getEndpointTypes().isEmpty());
     }
 
     @Test
