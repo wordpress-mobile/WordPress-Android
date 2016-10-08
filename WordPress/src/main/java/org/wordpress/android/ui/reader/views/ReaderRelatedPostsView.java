@@ -37,6 +37,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
 
     private OnRelatedPostClickListener mClickListener;
     private int mFeaturedImageWidth;
+    private ReaderRelatedPostList mRelatedPostList;
 
     public ReaderRelatedPostsView(Context context) {
         super(context);
@@ -68,11 +69,12 @@ public class ReaderRelatedPostsView extends LinearLayout {
         mClickListener = listener;
     }
 
-    public void showRelatedPosts(ReaderRelatedPostList relatedPosts,
+    public void showRelatedPosts(ReaderRelatedPostList posts,
                                  RelatedPostsType relatedPostsType,
                                  String siteName) {
 
-        if (relatedPosts.size() == 0) {
+        mRelatedPostList = posts;
+        if (mRelatedPostList.size() == 0) {
             return;
         }
 
@@ -84,13 +86,13 @@ public class ReaderRelatedPostsView extends LinearLayout {
 
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        for (int index = 0; index < relatedPosts.size(); index++) {
-            final ReaderRelatedPost relatedPost = relatedPosts.get(index);
+        for (int index = 0; index < mRelatedPostList.size(); index++) {
+            final int position = index;
+            ReaderRelatedPost relatedPost = mRelatedPostList.get(position);
 
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             TextView txtExcerpt = (TextView) postView.findViewById(R.id.text_related_post_excerpt);
-            WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_featured);
             View siteHeader = postView.findViewById(R.id.layout_related_post_site_header);
 
             txtTitle.setText(relatedPost.getTitle());
@@ -115,27 +117,30 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 } else {
                     imgAvatar.showDefaultGravatarImage();
                 }
+
+                final ReaderFollowButton btnFollow = (ReaderFollowButton) siteHeader.findViewById(R.id.related_post_follow_button);
+                btnFollow.setIsFollowed(relatedPost.isFollowing());
+                btnFollow.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleFollowStatus(btnFollow, position);
+                    }
+                });
+
                 siteHeader.setVisibility(View.VISIBLE);
             } else {
                 siteHeader.setVisibility(View.GONE);
             }
 
-            final ReaderFollowButton btnFollow = (ReaderFollowButton) postView.findViewById(R.id.related_post_follow_button);
-            btnFollow.setIsFollowed(relatedPost.isFollowing());
-            setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleFollowStatus(btnFollow, relatedPost);
-                }
-            });
-
-            showFeaturedImage(relatedPost, postView);
+            showFeaturedImage(postView, relatedPost);
 
             postView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mClickListener != null) {
-                        mClickListener.onRelatedPostClick(view, relatedPost.getSiteId(), relatedPost.getPostId());
+                        mClickListener.onRelatedPostClick(view,
+                                mRelatedPostList.get(position).getSiteId(),
+                                mRelatedPostList.get(position).getPostId());
                     }
                 }
             });
@@ -152,10 +157,15 @@ public class ReaderRelatedPostsView extends LinearLayout {
         }
     }
 
-    private void toggleFollowStatus(final ReaderFollowButton btnFollow, ReaderRelatedPost relatedPost) {
+    /**
+     * user tapped follow button on a global related post
+     * @param btnFollow Follow button for the site to follow
+     * @param position index of the related post in mRelatedPosts
+     */
+    private void toggleFollowStatus(final ReaderFollowButton btnFollow, final int position) {
         if (!NetworkUtils.checkConnection(getContext())) return;
 
-        final boolean isAskingToFollow = !relatedPost.isFollowing();
+        final boolean isAskingToFollow = !mRelatedPostList.get(position).isFollowing();
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
@@ -163,7 +173,9 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 if (getContext() == null) return;
 
                 btnFollow.setEnabled(true);
-                if (!succeeded) {
+                if (succeeded) {
+                    mRelatedPostList.get(position).setIsFollowing(isAskingToFollow);
+                } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     btnFollow.setIsFollowed(!isAskingToFollow);
@@ -171,24 +183,28 @@ public class ReaderRelatedPostsView extends LinearLayout {
             }
         };
 
-        // disable follow button until API call returns
+        // disable follow button until call completes
         btnFollow.setEnabled(false);
-        boolean result = ReaderBlogActions.followBlogById(relatedPost.getSiteId(), isAskingToFollow, listener);
-        if (result) {
-            btnFollow.setIsFollowedAnimated(isAskingToFollow);
-        }
+
+        ReaderBlogActions.followBlogById(mRelatedPostList.get(position).getSiteId(), isAskingToFollow, listener);
+        btnFollow.setIsFollowedAnimated(isAskingToFollow);
     }
 
-    private void showFeaturedImage(final ReaderRelatedPost relatedPost, final View postView) {
+    /**
+     * shows the featured image for the passed related post, if available
+     * @param postView parent view which contains the featured image and other related post views
+     * @param relatedPost related post to operate on
+     */
+    private void showFeaturedImage(final View postView, final ReaderRelatedPost relatedPost) {
         final WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_featured);
 
-        // post must have an excerpt in order to show featured image
+        // post must have an excerpt in order to show featured image (not enough space otherwise)
         if (!relatedPost.hasFeaturedImageUrl() || !relatedPost.hasExcerpt()) {
             imgFeatured.setVisibility(View.GONE);
             return;
         }
 
-        // featured image has height set to MATCH_PARENT so wait for parent's layout to complete
+        // featured image has height set to MATCH_PARENT so wait for parent view's layout to complete
         // before loading image so we can set the image height correctly
         postView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
