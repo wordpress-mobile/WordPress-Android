@@ -21,9 +21,10 @@ public class ReaderRelatedPost {
     private String mExcerpt;
     private String mSiteName;
     private String mFeaturedImageUrl;
+    private boolean mIsFollowing;
 
     // these are the specific fields we should ask for when requesting related posts from the endpoint
-    public static final String RELATED_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,featured_image,author,attachments";
+    public static final String RELATED_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,featured_image,is_following,author,attachments";
 
     public static ReaderRelatedPost fromJson(@NonNull JSONObject json) {
         ReaderRelatedPost post = new ReaderRelatedPost();
@@ -34,6 +35,7 @@ public class ReaderRelatedPost {
         post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
         post.mSiteName = JSONUtils.getStringDecoded(json, "site_name");
         post.mFeaturedImageUrl = JSONUtils.getString(json, "featured_image");
+        post.mIsFollowing = JSONUtils.getBool(json, "is_following");
 
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor != null) {
@@ -81,6 +83,14 @@ public class ReaderRelatedPost {
 
     public String getFeaturedImageUrl() {
         return mFeaturedImageUrl;
+    }
+
+    public boolean isFollowing() {
+        return mIsFollowing;
+    }
+
+    public void setIsFollowing(boolean isFollowing) {
+        mIsFollowing = isFollowing;
     }
 
     public boolean hasExcerpt() {

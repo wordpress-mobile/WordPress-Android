@@ -31,6 +31,13 @@
         android:visibility="gone"
         tools:visibility="visible">
 
+        <org.wordpress.android.ui.reader.views.ReaderFollowButton
+            android:id="@+id/related_post_follow_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_avatar"
             style="@style/ReaderImageView.Avatar.ExtraSmall"
@@ -42,6 +49,7 @@
             android:id="@+id/text_author_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/related_post_follow_button"
             android:layout_toRightOf="@+id/image_avatar"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_small"
@@ -52,6 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_author_name"
+            android:layout_toLeftOf="@+id/related_post_follow_button"
             android:layout_toRightOf="@+id/image_avatar"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_extra_small"

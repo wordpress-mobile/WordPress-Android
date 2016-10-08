@@ -12,13 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions.RelatedPostsType;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -116,6 +120,15 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 siteHeader.setVisibility(View.GONE);
             }
 
+            final ReaderFollowButton btnFollow = (ReaderFollowButton) postView.findViewById(R.id.related_post_follow_button);
+            btnFollow.setIsFollowed(relatedPost.isFollowing());
+            setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleFollowStatus(btnFollow, relatedPost);
+                }
+            });
+
             showFeaturedImage(relatedPost, postView);
 
             postView.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +149,33 @@ public class ReaderRelatedPostsView extends LinearLayout {
             label.setText(getContext().getString(R.string.reader_label_global_related_posts));
         } else {
             label.setText(String.format(getContext().getString(R.string.reader_label_local_related_posts), siteName));
+        }
+    }
+
+    private void toggleFollowStatus(final ReaderFollowButton btnFollow, ReaderRelatedPost relatedPost) {
+        if (!NetworkUtils.checkConnection(getContext())) return;
+
+        final boolean isAskingToFollow = !relatedPost.isFollowing();
+
+        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (getContext() == null) return;
+
+                btnFollow.setEnabled(true);
+                if (!succeeded) {
+                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
+                    ToastUtils.showToast(getContext(), errResId);
+                    btnFollow.setIsFollowed(!isAskingToFollow);
+                }
+            }
+        };
+
+        // disable follow button until API call returns
+        btnFollow.setEnabled(false);
+        boolean result = ReaderBlogActions.followBlogById(relatedPost.getSiteId(), isAskingToFollow, listener);
+        if (result) {
+            btnFollow.setIsFollowedAnimated(isAskingToFollow);
         }
     }
 
