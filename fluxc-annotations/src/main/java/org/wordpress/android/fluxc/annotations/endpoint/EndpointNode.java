@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.annotations.endpoint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EndpointNode {
     private String mLocalEndpoint;
@@ -56,15 +58,25 @@ public class EndpointNode {
     }
 
     public String getFullEndpoint() {
-        String fullEndpoint = getLocalEndpoint();
+        String fullEndpoint = getLocalEndpoint().replaceAll("#[^/]*", ""); // Strip any type metadata, e.g. $name#String
         if (getParent() == null) {
             return fullEndpoint;
         }
-       return getParent().getFullEndpoint() + fullEndpoint;
+        return getParent().getFullEndpoint() + fullEndpoint;
     }
 
     public String getCleanEndpointName() {
-        return getLocalEndpoint().replaceAll("/|\\$|_ID|_id", "").replaceAll("-", "_");
+        return getLocalEndpoint().replaceAll("/|\\$|#.*|_ID|_id", "").replaceAll("-", "_");
+    }
+
+    public String getEndpointType() {
+        Pattern pattern = Pattern.compile("#([^\\/]*)");
+        Matcher matcher = pattern.matcher(getLocalEndpoint());
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
 
     public boolean isRoot() {
