@@ -42,7 +42,7 @@ public class ReaderPost {
     private String dateLiked;
     private String dateTagged;
     private String datePublished;
-    public double sortIndex;
+    public double sortIndex;    // used primarily when sorting search results
 
     private String url;
     private String shortUrl;

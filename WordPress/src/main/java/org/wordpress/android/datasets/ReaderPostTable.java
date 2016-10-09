@@ -751,7 +751,25 @@ public class ReaderPostTable {
             }
         }
 
-        sql += " ORDER BY tbl_posts.sort_index DESC";
+        /*
+         * liked posts      sort by the date the post was liked
+         * followed posts   sort by the date the post was published
+         * search results   sort by sort_index, which is set based on the search ranking
+         * tagged posts     sort by the date the post was tagged
+         */
+        String orderByField;
+        if (tag.isPostsILike()) {
+            orderByField = "date_liked";
+        } else if (tag.isFollowedSites()) {
+            orderByField = "date_published";
+        } else if (tag.tagType == ReaderTagType.SEARCH) {
+            orderByField = "sort_index";
+        } else if (tag.isTagTopic()) {
+            orderByField = "date_tagged";
+        } else {
+            orderByField = "date_published";
+        }
+        sql += " ORDER BY tbl_posts." + orderByField + " DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
