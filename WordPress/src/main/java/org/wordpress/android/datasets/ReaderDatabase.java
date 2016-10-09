@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 125;
+    private static final int DB_VERSION = 126;
 
     /*
      * version history
@@ -77,6 +77,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *  123 - changed tbl_posts.published to tbl_posts.date
      *  124 - returned tbl_posts.published
      *  125 - added tbl_posts.railcar_json
+     *  126 - separate fields in tbl_posts for date_liked, date_tagged, date_published
      */
 
     /*

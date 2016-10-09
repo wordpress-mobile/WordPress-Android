@@ -47,24 +47,25 @@ public class ReaderPostTable {
           + "featured_video,"       // 18
           + "post_avatar,"          // 19
           + "sort_index,"           // 20
-          + "date,"                 // 21
-          + "published,"            // 22
-          + "num_replies,"          // 23
-          + "num_likes,"            // 24
-          + "is_liked,"             // 25
-          + "is_followed,"          // 26
-          + "is_comments_open,"     // 27
-          + "is_external,"          // 28
-          + "is_private,"           // 29
-          + "is_videopress,"        // 30
-          + "is_jetpack,"           // 31
-          + "primary_tag,"          // 32
-          + "secondary_tag,"        // 33
-          + "attachments_json,"     // 34
-          + "discover_json,"        // 35
-          + "xpost_post_id,"        // 36
-          + "xpost_blog_id,"        // 37
-          + "railcar_json";         // 38
+          + "date_published,"       // 21
+          + "date_liked,"           // 22
+          + "date_tagged,"          // 23
+          + "num_replies,"          // 24
+          + "num_likes,"            // 25
+          + "is_liked,"             // 26
+          + "is_followed,"          // 27
+          + "is_comments_open,"     // 28
+          + "is_external,"          // 29
+          + "is_private,"           // 30
+          + "is_videopress,"        // 31
+          + "is_jetpack,"           // 32
+          + "primary_tag,"          // 33
+          + "secondary_tag,"        // 34
+          + "attachments_json,"     // 35
+          + "discover_json,"        // 36
+          + "xpost_post_id,"        // 37
+          + "xpost_blog_id,"        // 38
+          + "railcar_json";         // 39
 
     // used when querying multiple rows and skipping tbl_posts.text
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -87,24 +88,25 @@ public class ReaderPostTable {
           + "tbl_posts.short_url,"            // 17
           + "tbl_posts.post_avatar,"          // 18
           + "tbl_posts.sort_index,"           // 19
-          + "tbl_posts.date,"                 // 20
-          + "tbl_posts.published,"            // 21
-          + "tbl_posts.num_replies,"          // 22
-          + "tbl_posts.num_likes,"            // 23
-          + "tbl_posts.is_liked,"             // 24
-          + "tbl_posts.is_followed,"          // 25
-          + "tbl_posts.is_comments_open,"     // 26
-          + "tbl_posts.is_external,"          // 27
-          + "tbl_posts.is_private,"           // 28
-          + "tbl_posts.is_videopress,"        // 29
-          + "tbl_posts.is_jetpack,"           // 30
-          + "tbl_posts.primary_tag,"          // 31
-          + "tbl_posts.secondary_tag,"        // 32
-          + "tbl_posts.attachments_json,"     // 33
-          + "tbl_posts.discover_json,"        // 34
-          + "tbl_posts.xpost_post_id,"        // 35
-          + "tbl_posts.xpost_blog_id,"        // 36
-          + "tbl_posts.railcar_json";         // 37
+          + "tbl_posts.date_published,"       // 20
+          + "tbl_posts.date_liked,"           // 21
+          + "tbl_posts.date_tagged,"          // 22
+          + "tbl_posts.num_replies,"          // 23
+          + "tbl_posts.num_likes,"            // 24
+          + "tbl_posts.is_liked,"             // 25
+          + "tbl_posts.is_followed,"          // 26
+          + "tbl_posts.is_comments_open,"     // 27
+          + "tbl_posts.is_external,"          // 28
+          + "tbl_posts.is_private,"           // 29
+          + "tbl_posts.is_videopress,"        // 30
+          + "tbl_posts.is_jetpack,"           // 31
+          + "tbl_posts.primary_tag,"          // 32
+          + "tbl_posts.secondary_tag,"        // 33
+          + "tbl_posts.attachments_json,"     // 34
+          + "tbl_posts.discover_json,"        // 35
+          + "tbl_posts.xpost_post_id,"        // 36
+          + "tbl_posts.xpost_blog_id,"        // 37
+          + "tbl_posts.railcar_json";         // 38
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -128,8 +130,9 @@ public class ReaderPostTable {
                 + " featured_video      TEXT,"
                 + " post_avatar         TEXT,"
                 + " sort_index          REAL DEFAULT 0,"
-                + " date                TEXT,"
-                + " published           TEXT,"
+                + " date_published      TEXT,"
+                + " date_liked          TEXT,"
+                + " date_tagged         TEXT,"
                 + " num_replies         INTEGER DEFAULT 0,"
                 + " num_likes           INTEGER DEFAULT 0,"
                 + " is_liked            INTEGER DEFAULT 0,"
@@ -459,35 +462,35 @@ public class ReaderPostTable {
     }
 
     /*
-     * returns the iso8601 date of the oldest post with the passed tag
+     * returns the iso8601 tagged date of the oldest post with the passed tag
      */
-    public static String getOldestDateWithTag(final ReaderTag tag) {
+    public static String getOldestTaggedDateWithTag(final ReaderTag tag) {
         if (tag == null) {
             return "";
         }
 
-        String sql = "SELECT tbl_posts.date FROM tbl_posts, tbl_post_tags"
+        String sql = "SELECT tbl_posts.date_tagged FROM tbl_posts, tbl_post_tags"
                    + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                    + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
-                   + " ORDER BY date LIMIT 1";
+                   + " ORDER BY date_tagged LIMIT 1";
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     /*
-     * returns the iso8601 date of the oldest post in the passed blog
+     * returns the iso8601 pub date of the oldest post in the passed blog
      */
-    public static String getOldestDateInBlog(long blogId) {
-        String sql = "SELECT date FROM tbl_posts"
+    public static String getOldestPubDateInBlog(long blogId) {
+        String sql = "SELECT date_published FROM tbl_posts"
                   + " WHERE blog_id = ?"
-                  + " ORDER BY date LIMIT 1";
+                  + " ORDER BY date_published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(blogId)});
     }
 
-    public static String getOldestDateInFeed(long feedId) {
-        String sql = "SELECT date FROM tbl_posts"
+    public static String getOldestPubDateInFeed(long feedId) {
+        String sql = "SELECT date_published FROM tbl_posts"
                   + " WHERE feed_id = ?"
-                  + " ORDER BY date LIMIT 1";
+                  + " ORDER BY date_published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
     }
 
@@ -536,13 +539,13 @@ public class ReaderPostTable {
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
 
-    public static String getGapMarkerDateForTag(ReaderTag tag) {
+    public static String getGapMarkerTaggedDateForTag(ReaderTag tag) {
         ReaderBlogIdPostId ids = getGapMarkerIdsForTag(tag);
         if (ids == null) {
             return null;
         }
         String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
-        String sql = "SELECT date FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        String sql = "SELECT date_tagged FROM tbl_posts WHERE blog_id=? AND post_id=?";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
@@ -653,7 +656,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, feed_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5,?6)");
 
@@ -681,24 +684,25 @@ public class ReaderPostTable {
                 stmtPosts.bindString(18, post.getFeaturedVideo());
                 stmtPosts.bindString(19, post.getPostAvatar());
                 stmtPosts.bindDouble(20, post.sortIndex);
-                stmtPosts.bindString(21, post.getDate());
-                stmtPosts.bindString(22, post.getPubDate());
-                stmtPosts.bindLong  (23, post.numReplies);
-                stmtPosts.bindLong  (24, post.numLikes);
-                stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isLikedByCurrentUser));
-                stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
-                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isCommentsOpen));
-                stmtPosts.bindLong  (28, SqlUtils.boolToSql(post.isExternal));
-                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isPrivate));
-                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindLong  (31, SqlUtils.boolToSql(post.isJetpack));
-                stmtPosts.bindString(32, post.getPrimaryTag());
-                stmtPosts.bindString(33, post.getSecondaryTag());
-                stmtPosts.bindString(34, post.getAttachmentsJson());
-                stmtPosts.bindString(35, post.getDiscoverJson());
-                stmtPosts.bindLong  (36, post.xpostPostId);
-                stmtPosts.bindLong  (37, post.xpostBlogId);
-                stmtPosts.bindString(38, post.getRailcarJson());
+                stmtPosts.bindString(21, post.getDatePublished());
+                stmtPosts.bindString(22, post.getDateLiked());
+                stmtPosts.bindString(23, post.getDateTagged());
+                stmtPosts.bindLong  (24, post.numReplies);
+                stmtPosts.bindLong  (25, post.numLikes);
+                stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isLikedByCurrentUser));
+                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
+                stmtPosts.bindLong  (28, SqlUtils.boolToSql(post.isCommentsOpen));
+                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isExternal));
+                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isPrivate));
+                stmtPosts.bindLong  (31, SqlUtils.boolToSql(post.isVideoPress));
+                stmtPosts.bindLong  (32, SqlUtils.boolToSql(post.isJetpack));
+                stmtPosts.bindString(33, post.getPrimaryTag());
+                stmtPosts.bindString(34, post.getSecondaryTag());
+                stmtPosts.bindString(35, post.getAttachmentsJson());
+                stmtPosts.bindString(36, post.getDiscoverJson());
+                stmtPosts.bindLong  (37, post.xpostPostId);
+                stmtPosts.bindLong  (38, post.xpostBlogId);
+                stmtPosts.bindString(39, post.getRailcarJson());
                 stmtPosts.execute();
             }
 
@@ -896,8 +900,9 @@ public class ReaderPostTable {
         post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
         post.sortIndex = c.getDouble(c.getColumnIndex("sort_index"));
-        post.setDate(c.getString(c.getColumnIndex("date")));
-        post.setPubDate(c.getString(c.getColumnIndex("published")));
+        post.setDatePublished(c.getString(c.getColumnIndex("date_published")));
+        post.setDateLiked(c.getString(c.getColumnIndex("date_liked")));
+        post.setDateTagged(c.getString(c.getColumnIndex("date_tagged")));
 
         post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
         post.numLikes = c.getInt(c.getColumnIndex("num_likes"));
