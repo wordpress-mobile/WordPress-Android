@@ -538,6 +538,9 @@ public class PostUploadService extends Service {
                     path = thumbData;
                     mediaFile.setFilePath(imageFile.getPath());
                 }
+                if (cur != null && !cur.isClosed()) {
+                    cur.close();
+                }
             } else { // file is not in media library
                 path = imageUri.toString().replace("file://", "");
                 imageFile = new File(path);
@@ -705,6 +708,9 @@ public class PostUploadService extends Service {
                             yRes = "480";
                         }
                     }
+                }
+                if (cur != null && !cur.isClosed()){
+                    cur.close();
                 }
             } else { // file is not in media library
                 String filePath = videoUri.toString().replace("file://", "");
