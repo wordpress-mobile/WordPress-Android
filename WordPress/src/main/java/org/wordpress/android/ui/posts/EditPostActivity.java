@@ -1527,6 +1527,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (cur != null && cur.moveToFirst()) {
             int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
             path = cur.getString(dataColumn);
+        }
+        if (cur != null && !cur.isClosed()) {
             cur.close();
         }
         return path;
