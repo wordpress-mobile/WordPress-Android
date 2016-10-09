@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -548,15 +549,15 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
-    private static long getGapMarkerSortIndexForTag(ReaderTag tag) {
+    private static String getGapMarkerDateForTag(ReaderTag tag) {
         ReaderBlogIdPostId ids = getGapMarkerIdsForTag(tag);
         if (ids == null) {
-            return 0;
+            return null;
         }
 
         String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
-        String sql = "SELECT sort_index FROM tbl_posts WHERE blog_id=? AND post_id=?";
-        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), sql, args);
+        String sql = "SELECT date_tagged FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     /*
@@ -565,16 +566,18 @@ public class ReaderPostTable {
      * be cleaned up by the next purge
      */
     public static void deletePostsBeforeGapMarkerForTag(ReaderTag tag) {
-        long sortIndex = getGapMarkerSortIndexForTag(tag);
-        if (sortIndex == 0) return;
+        String gapMarkerDate = getGapMarkerDateForTag(tag);
+        if (TextUtils.isEmpty(gapMarkerDate)) return;
 
-        String[] args = {Long.toString(sortIndex), tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {gapMarkerDate, tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         String where = "pseudo_id IN (SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
-                + " WHERE tbl_posts.sort_index < ?"
+                + " WHERE tbl_posts.date_tagged < ?"
                 + " AND tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                 + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?)";
         int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags", where, args);
-        AppLog.d(AppLog.T.READER, "removed " + numDeleted + " posts older than gap marker");
+        if (numDeleted > 0) {
+            AppLog.d(AppLog.T.READER, "removed " + numDeleted + " posts older than gap marker");
+        }
     }
 
     public static void setFollowStatusForPostsInBlog(long blogId, boolean isFollowed) {
