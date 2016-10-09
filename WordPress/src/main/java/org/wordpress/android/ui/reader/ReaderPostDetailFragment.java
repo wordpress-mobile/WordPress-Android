@@ -56,7 +56,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
@@ -797,7 +796,6 @@ public class ReaderPostDetailFragment extends Fragment
             TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
             TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
 
-            WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
             ReaderTagStrip tagStrip = (ReaderTagStrip) getView().findViewById(R.id.tag_strip);
             ReaderPostDetailHeaderView headerView = (ReaderPostDetailHeaderView) getView().findViewById(R.id.header_view);
             if (!canShowFooter()) {

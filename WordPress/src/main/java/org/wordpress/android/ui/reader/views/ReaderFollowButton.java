@@ -50,13 +50,17 @@ public class ReaderFollowButton extends LinearLayout {
         if (attrs != null) {
             TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ReaderFollowButton, 0, 0);
             if (array != null) {
-                mShowCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowCaption, true);
+                mShowCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowFollowButtonCaption, true);
             }
         }
 
+        // hide follow text and enlarge the follow icon if there's no caption
         if (!mShowCaption) {
             mTextFollow.setText(null);
             mTextFollow.setVisibility(View.GONE);
+            int iconSz = context.getResources().getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption);
+            mImageFollow.getLayoutParams().width = iconSz;
+            mImageFollow.getLayoutParams().height = iconSz;
         }
     }
 

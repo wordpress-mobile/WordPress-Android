@@ -68,7 +68,7 @@
         ReaderFollowButton attributes
     -->
     <declare-styleable name="ReaderFollowButton">
-        <attr name="wpShowCaption" format="boolean" />
+        <attr name="wpShowFollowButtonCaption" format="boolean" />
     </declare-styleable>
 
     <!--
