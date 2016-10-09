@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
@@ -13,8 +14,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioGroup;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
@@ -37,7 +42,7 @@ import de.greenrobot.event.EventBus;
 
 public class NotificationsListFragment extends Fragment
         implements Bucket.Listener<Note>,
-                   WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener {
+                   WPMainActivity.OnScrollToTopListener, RadioButton.OnCheckedChangeListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_INSTANT_LIKE_EXTRA = "instantLike";
@@ -52,7 +57,8 @@ public class NotificationsListFragment extends Fragment
     private RecyclerView mRecyclerView;
     private ViewGroup mEmptyView;
     private View mFilterView;
-    private RadioGroup mFilterRadioGroup;
+    private List<RadioButton> mFilterRadioButtons = new ArrayList<>();
+    private ViewGroup mFilterRadioGroup;
     private View mFilterDivider;
 
     private int mRestoredScrollPosition;
@@ -76,8 +82,17 @@ public class NotificationsListFragment extends Fragment
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
 
-        mFilterRadioGroup = (RadioGroup)view.findViewById(R.id.notifications_radio_group);
-        mFilterRadioGroup.setOnCheckedChangeListener(this);
+        mFilterRadioGroup = (ViewGroup)view.findViewById(R.id.notifications_radio_group);
+        mFilterRadioButtons.add((RadioButton) view.findViewById(R.id.notifications_filter_all));
+        mFilterRadioButtons.add((RadioButton) view.findViewById(R.id.notifications_filter_unread));
+        mFilterRadioButtons.add((RadioButton) view.findViewById(R.id.notifications_filter_comments));
+        mFilterRadioButtons.add((RadioButton) view.findViewById(R.id.notifications_filter_follows));
+        mFilterRadioButtons.add((RadioButton) view.findViewById(R.id.notifications_filter_likes));
+
+        for (RadioButton rb : mFilterRadioButtons) {
+            rb.setOnCheckedChangeListener(this);
+        }
+
         mFilterDivider = view.findViewById(R.id.notifications_filter_divider);
         mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
         mFilterView = view.findViewById(R.id.notifications_filter);
@@ -327,6 +342,16 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
+    private @IdRes int getCheckedFilterRadioButtonId() {
+        for (RadioButton rb : mFilterRadioButtons) {
+            if (rb.isChecked()) {
+                return rb.getId();
+            }
+        }
+
+        return R.id.notifications_filter_all;
+    }
+
     private void refreshNotes() {
         if (!isAdded() || mNotesAdapter == null) {
             return;
@@ -336,7 +361,7 @@ public class NotificationsListFragment extends Fragment
             @Override
             public void run() {
                 // Filter the list according to the RadioGroup selection
-                int checkedId = mFilterRadioGroup.getCheckedRadioButtonId();
+                int checkedId = getCheckedFilterRadioButtonId();
                 if (checkedId == R.id.notifications_filter_all) {
                     mNotesAdapter.queryNotes();
                 } else if (checkedId == R.id.notifications_filter_unread) {
@@ -365,7 +390,7 @@ public class NotificationsListFragment extends Fragment
     private void showEmptyViewForCurrentFilter() {
         if (!AccountHelper.isSignedInWordPressDotCom()) return;
 
-        int i = mFilterRadioGroup.getCheckedRadioButtonId();
+        int i = getCheckedFilterRadioButtonId();
         if (i == R.id.notifications_filter_all) {
             showEmptyView(
                     R.string.notifications_empty_all,
@@ -413,7 +438,7 @@ public class NotificationsListFragment extends Fragment
             return;
         }
 
-        int i = mFilterRadioGroup.getCheckedRadioButtonId();
+        int i = getCheckedFilterRadioButtonId();
         if (i == R.id.notifications_filter_unread) {// Create a new post
             ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), false);
         } else {// Switch to Reader tab
@@ -458,7 +483,17 @@ public class NotificationsListFragment extends Fragment
 
     // Notification filter methods
     @Override
-    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (!isChecked) {
+            return;
+        }
+
+        for (RadioButton rb : mFilterRadioButtons) {
+            if (rb != buttonView) {
+                rb.setChecked(false);
+            }
+        }
+
         refreshNotes();
     }
 
