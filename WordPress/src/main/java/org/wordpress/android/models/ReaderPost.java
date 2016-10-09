@@ -42,7 +42,7 @@ public class ReaderPost {
     private String dateLiked;
     private String dateTagged;
     private String datePublished;
-    public double sortIndex;    // used primarily when sorting search results
+    public double score;
 
     private String url;
     private String shortUrl;
@@ -123,8 +123,8 @@ public class ReaderPost {
         post.dateLiked = JSONUtils.getString(json, "date_liked");
         post.dateTagged = JSONUtils.getString(json, "tagged_on");
 
-        // sort index determines how posts are sorted, which is based on the date retrieved above
-        post.sortIndex = DateTimeUtils.timestampFromIso8601(post.datePublished);
+        // "score" only exists for search results
+        post.score = json.optDouble("score");
 
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt()) {

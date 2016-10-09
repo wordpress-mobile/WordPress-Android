@@ -46,7 +46,7 @@ public class ReaderPostTable {
           + "featured_image,"       // 17
           + "featured_video,"       // 18
           + "post_avatar,"          // 19
-          + "sort_index,"           // 20
+          + "score,"                // 20
           + "date_published,"       // 21
           + "date_liked,"           // 22
           + "date_tagged,"          // 23
@@ -87,7 +87,7 @@ public class ReaderPostTable {
           + "tbl_posts.url,"                  // 16
           + "tbl_posts.short_url,"            // 17
           + "tbl_posts.post_avatar,"          // 18
-          + "tbl_posts.sort_index,"           // 19
+          + "tbl_posts.score,"                // 19
           + "tbl_posts.date_published,"       // 20
           + "tbl_posts.date_liked,"           // 21
           + "tbl_posts.date_tagged,"          // 22
@@ -129,7 +129,7 @@ public class ReaderPostTable {
                 + " featured_image      TEXT,"
                 + " featured_video      TEXT,"
                 + " post_avatar         TEXT,"
-                + " sort_index          REAL DEFAULT 0,"
+                + " score               REAL DEFAULT 0,"
                 + " date_published      TEXT,"
                 + " date_liked          TEXT,"
                 + " date_tagged         TEXT,"
@@ -153,7 +153,6 @@ public class ReaderPostTable {
                 + ")");
 
         db.execSQL("CREATE UNIQUE INDEX idx_posts_post_id_blog_id ON tbl_posts(post_id, blog_id)");
-        db.execSQL("CREATE INDEX idx_posts_sort_index ON tbl_posts(sort_index)");
 
         db.execSQL("CREATE TABLE tbl_post_tags ("
                 + "   post_id           INTEGER DEFAULT 0,"
@@ -219,7 +218,7 @@ public class ReaderPostTable {
                 + "  WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                 + "  AND tbl_post_tags.tag_name=?"
                 + "  AND tbl_post_tags.tag_type=?"
-                + "  ORDER BY tbl_posts.sort_index"
+                + "  ORDER BY tbl_posts.date_tagged"
                 + "  LIMIT ?"
                 + ")";
         int numDeleted = db.delete("tbl_post_tags", where, args);
@@ -683,7 +682,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(17, post.getFeaturedImage());
                 stmtPosts.bindString(18, post.getFeaturedVideo());
                 stmtPosts.bindString(19, post.getPostAvatar());
-                stmtPosts.bindDouble(20, post.sortIndex);
+                stmtPosts.bindDouble(20, post.score);
                 stmtPosts.bindString(21, post.getDatePublished());
                 stmtPosts.bindString(22, post.getDateLiked());
                 stmtPosts.bindString(23, post.getDateTagged());
@@ -754,7 +753,7 @@ public class ReaderPostTable {
         /*
          * liked posts      sort by the date the post was liked
          * followed posts   sort by the date the post was published
-         * search results   sort by sort_index, which is set based on the search ranking
+         * search results   sort by score
          * tagged posts     sort by the date the post was tagged
          */
         String orderByField;
@@ -763,7 +762,7 @@ public class ReaderPostTable {
         } else if (tag.isFollowedSites()) {
             orderByField = "date_published";
         } else if (tag.tagType == ReaderTagType.SEARCH) {
-            orderByField = "sort_index";
+            orderByField = "score";
         } else if (tag.isTagTopic()) {
             orderByField = "date_tagged";
         } else {
@@ -786,7 +785,7 @@ public class ReaderPostTable {
 
     public static ReaderPostList getPostsInBlog(long blogId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "tbl_posts.*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.sort_index DESC";
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -802,7 +801,7 @@ public class ReaderPostTable {
 
     public static ReaderPostList getPostsInFeed(long feedId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "tbl_posts.*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE feed_id = ? ORDER BY tbl_posts.sort_index DESC";
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE feed_id = ? ORDER BY tbl_posts.date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -838,7 +837,7 @@ public class ReaderPostTable {
             }
         }
 
-        sql += " ORDER BY tbl_posts.sort_index DESC";
+        sql += " ORDER BY tbl_posts.date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -862,7 +861,7 @@ public class ReaderPostTable {
      * same as getPostsInBlog() but only returns the blogId/postId pairs
      */
     public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(long blogId, int maxPosts) {
-        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.sort_index DESC";
+        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -917,11 +916,11 @@ public class ReaderPostTable {
         post.setShortUrl(c.getString(c.getColumnIndex("short_url")));
         post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
-        post.sortIndex = c.getDouble(c.getColumnIndex("sort_index"));
         post.setDatePublished(c.getString(c.getColumnIndex("date_published")));
         post.setDateLiked(c.getString(c.getColumnIndex("date_liked")));
         post.setDateTagged(c.getString(c.getColumnIndex("date_tagged")));
 
+        post.score = c.getDouble(c.getColumnIndex("score"));
         post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
         post.numLikes = c.getInt(c.getColumnIndex("num_likes"));
 
