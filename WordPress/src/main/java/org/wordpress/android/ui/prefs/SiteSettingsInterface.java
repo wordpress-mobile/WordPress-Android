@@ -152,9 +152,15 @@ public abstract class SiteSettingsInterface {
         if (id != 0) {
             CategoryModel category = new CategoryModel();
             Cursor cursor = SiteSettingsTable.getCategory(id);
-            if (cursor != null && cursor.moveToFirst()) {
-                category.deserializeFromDatabase(cursor);
-                return category.name;
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    category.deserializeFromDatabase(cursor);
+                    return category.name;
+                }
+            } finally {
+                if (cursor != null && !cursor.isClosed()) {
+                    cursor.close();
+                }
             }
         }
 
