@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store;
 import android.support.annotation.NonNull;
 
 import com.wellsql.generated.MediaModelTable;
+import com.yarolegovich.wellsql.WellCursor;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -257,6 +258,10 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getAllSiteMedia(siteModel);
     }
 
+    public WellCursor<MediaModel> getAllSiteMediaAsCursor(SiteModel siteModel) {
+        return MediaSqlUtils.getAllSiteMediaAsCursor(siteModel);
+    }
+
     public int getSiteMediaCount(SiteModel siteModel) {
         return getAllSiteMedia(siteModel).size();
     }
@@ -274,8 +279,16 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteMediaWithIds(siteModel, mediaIds);
     }
 
+    public WellCursor<MediaModel> getSiteMediaWithIdsAsCursor(SiteModel siteModel, List<Long> mediaIds) {
+        return MediaSqlUtils.getSiteMediaWithIdsAsCursor(siteModel, mediaIds);
+    }
+
     public List<MediaModel> getSiteImages(SiteModel siteModel) {
         return MediaSqlUtils.getSiteImages(siteModel);
+    }
+
+    public WellCursor<MediaModel> getSiteImagesAsCursor(SiteModel siteModel) {
+        return MediaSqlUtils.getSiteImagesAsCursor(siteModel);
     }
 
     public int getSiteImageCount(SiteModel siteModel) {
@@ -286,8 +299,16 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteImagesExcluding(siteModel, filter);
     }
 
+    public WellCursor<MediaModel> getSiteImagesExcludingIdsAsCursor(SiteModel siteModel, List<Long> filter) {
+        return MediaSqlUtils.getSiteImagesExcludingAsCursor(siteModel, filter);
+    }
+
     public List<MediaModel> getUnattachedSiteMedia(SiteModel siteModel) {
         return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.POST_ID, 0);
+    }
+
+    public WellCursor<MediaModel> getUnattachedSiteMediaAsCursor(SiteModel siteModel) {
+        return MediaSqlUtils.matchSiteMediaAsCursor(siteModel, MediaModelTable.POST_ID, 0);
     }
 
     public int getUnattachedSiteMediaCount(SiteModel siteModel) {
@@ -312,6 +333,10 @@ public class MediaStore extends Store {
 
     public List<MediaModel> searchSiteMediaByTitle(SiteModel siteModel, String titleSearch) {
         return MediaSqlUtils.searchSiteMedia(siteModel, MediaModelTable.TITLE, titleSearch);
+    }
+
+    public WellCursor<MediaModel> searchSiteMediaByTitleAsCursor(SiteModel siteModel, String titleSearch) {
+        return MediaSqlUtils.searchSiteMediaAsCursor(siteModel, MediaModelTable.TITLE, titleSearch);
     }
 
     public MediaModel getPostMediaWithPath(long postId, String filePath) {
