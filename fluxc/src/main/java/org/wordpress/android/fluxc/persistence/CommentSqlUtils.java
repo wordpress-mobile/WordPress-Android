@@ -2,10 +2,12 @@ package org.wordpress.android.fluxc.persistence;
 
 import com.wellsql.generated.CommentModelTable;
 import com.wellsql.generated.PostModelTable;
+import com.yarolegovich.wellsql.ConditionClauseBuilder;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.Collections;
@@ -65,16 +67,36 @@ public class CommentSqlUtils {
         return results.get(0);
     }
 
-    public static List<CommentModel> getCommentsForSite(SiteModel site) {
+    private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, CommentStatus status) {
+        if (site == null) {
+            return null;
+        }
+
+        ConditionClauseBuilder<SelectQuery<CommentModel>> selectQueryBuilder =
+                WellSql.select(CommentModel.class)
+                        .where().beginGroup()
+                        .equals(CommentModelTable.LOCAL_SITE_ID, site.getId());
+        if (status != CommentStatus.ALL) {
+            selectQueryBuilder = selectQueryBuilder.equals(CommentModelTable.STATUS, status.toString());
+        }
+        return selectQueryBuilder.endGroup().endWhere();
+    }
+
+    public static List<CommentModel> getCommentsForSite(SiteModel site, CommentStatus status) {
         if (site == null) {
             return Collections.emptyList();
         }
 
-        return WellSql.select(CommentModel.class)
-                .where().beginGroup()
-                .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
-                .endGroup().endWhere()
+        return getCommentsQueryForSite(site, status)
                 .orderBy(CommentModelTable.DATE_PUBLISHED, SelectQuery.ORDER_ASCENDING)
                 .getAsModel();
+    }
+
+    public static int getCommentsCountForSite(SiteModel site, CommentStatus status) {
+        if (site == null) {
+            return 0;
+        }
+
+        return getCommentsQueryForSite(site, status).getAsCursor().getCount();
     }
 }
