@@ -154,6 +154,8 @@ public class ReaderPostTable {
                 + ")");
 
         db.execSQL("CREATE UNIQUE INDEX idx_posts_post_id_blog_id ON tbl_posts(post_id, blog_id)");
+        db.execSQL("CREATE INDEX idx_post_tags_date_published ON tbl_posts(date_published)");
+        db.execSQL("CREATE INDEX idx_post_tags_date_tagged ON tbl_posts(date_tagged)");
 
         db.execSQL("CREATE TABLE tbl_post_tags ("
                 + "   post_id           INTEGER DEFAULT 0,"
