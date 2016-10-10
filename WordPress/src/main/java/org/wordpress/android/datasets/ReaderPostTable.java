@@ -464,17 +464,19 @@ public class ReaderPostTable {
     }
 
     /*
-     * returns the iso8601 tagged date of the oldest post with the passed tag
+     * returns the iso8601 date of the oldest post with the passed tag
      */
-    public static String getOldestTaggedDateWithTag(final ReaderTag tag) {
+    public static String getOldestDateWithTag(final ReaderTag tag) {
         if (tag == null) {
             return "";
         }
 
-        String sql = "SELECT tbl_posts.date_tagged FROM tbl_posts, tbl_post_tags"
+        // date field depends on the tag
+        String dateColumn = getSortColumnForTag(tag);
+        String sql = "SELECT tbl_posts." + dateColumn + " FROM tbl_posts, tbl_post_tags"
                    + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                    + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
-                   + " ORDER BY date_tagged LIMIT 1";
+                   + " ORDER BY " + dateColumn + " LIMIT 1";
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
@@ -541,34 +543,27 @@ public class ReaderPostTable {
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
 
-    public static String getGapMarkerTaggedDateForTag(ReaderTag tag) {
-        ReaderBlogIdPostId ids = getGapMarkerIdsForTag(tag);
-        if (ids == null) {
-            return null;
-        }
-        String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
-        String sql = "SELECT date_tagged FROM tbl_posts WHERE blog_id=? AND post_id=?";
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
-    }
-
-    private static String getGapMarkerDateForTag(ReaderTag tag) {
+    public static String getGapMarkerDateForTag(ReaderTag tag) {
         ReaderBlogIdPostId ids = getGapMarkerIdsForTag(tag);
         if (ids == null) {
             return null;
         }
 
+        String dateColumn = getSortColumnForTag(tag);
         String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
-        String sql = "SELECT date_tagged FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        String sql = "SELECT " + dateColumn + " FROM tbl_posts WHERE blog_id=? AND post_id=?";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     /*
-     * liked posts      sort by the date the post was liked
-     * followed posts   sort by the date the post was published
-     * search results   sort by score
-     * tagged posts     sort by the date the post was tagged
+     * the column posts are sorted by depends on the type of tag stream being displayed:
+     *
+     *      liked posts      sort by the date the post was liked
+     *      followed posts   sort by the date the post was published
+     *      search results   sort by score
+     *      tagged posts     sort by the date the post was tagged
      */
-    private static String getSortFieldForTag(ReaderTag tag) {
+    private static String getSortColumnForTag(ReaderTag tag) {
         if (tag.isPostsILike()) {
             return "date_liked";
         } else if (tag.isFollowedSites()) {
@@ -591,9 +586,10 @@ public class ReaderPostTable {
         String gapMarkerDate = getGapMarkerDateForTag(tag);
         if (TextUtils.isEmpty(gapMarkerDate)) return;
 
+        String dateColumn = getSortColumnForTag(tag);
         String[] args = {gapMarkerDate, tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         String where = "pseudo_id IN (SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
-                + " WHERE tbl_posts.date_tagged < ?"
+                + " WHERE tbl_posts." + dateColumn + " < ?"
                 + " AND tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                 + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?)";
         int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags", where, args);
@@ -775,7 +771,7 @@ public class ReaderPostTable {
             }
         }
 
-        sql += " ORDER BY tbl_posts." + getSortFieldForTag(tag) + " DESC";
+        sql += " ORDER BY tbl_posts." + getSortColumnForTag(tag) + " DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
