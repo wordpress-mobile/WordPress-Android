@@ -31,16 +31,13 @@ public class CommentStore extends Store {
 
     public static class FetchCommentsPayload extends Payload {
         public final SiteModel site;
-        public final boolean loadMore;
+        public final int number;
+        public final int offset;
 
-        public FetchCommentsPayload(@NonNull SiteModel site) {
+        public FetchCommentsPayload(@NonNull SiteModel site, int number, int offset) {
             this.site = site;
-            this.loadMore = false;
-        }
-
-        public FetchCommentsPayload(@NonNull SiteModel site, boolean loadMore) {
-            this.site = site;
-            this.loadMore = loadMore;
+            this.number = number;
+            this.offset = offset;
         }
     }
 
@@ -301,14 +298,10 @@ public class CommentStore extends Store {
     }
 
     private void fetchComments(FetchCommentsPayload payload) {
-        int offset = 0;
-        if (payload.loadMore) {
-            offset = 20; // FIXME: do something here
-        }
         if (payload.site.isWPCom()) {
-            mCommentRestClient.fetchComments(payload.site, offset, CommentStatus.ALL);
+            mCommentRestClient.fetchComments(payload.site, payload.number, payload.offset, CommentStatus.ALL);
         } else {
-            mCommentXMLRPCClient.fetchComments(payload.site, offset, CommentStatus.ALL);
+            mCommentXMLRPCClient.fetchComments(payload.site, payload.number, payload.offset, CommentStatus.ALL);
         }
     }
 

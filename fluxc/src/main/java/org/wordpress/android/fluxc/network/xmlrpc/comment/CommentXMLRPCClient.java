@@ -33,19 +33,19 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class CommentXMLRPCClient extends BaseXMLRPCClient {
-    private static final int DEFAULT_NUMBER_COMMENTS = 20;
+import static android.R.attr.offset;
 
+public class CommentXMLRPCClient extends BaseXMLRPCClient {
     @Inject
     public CommentXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
                                UserAgent userAgent, HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
     }
 
-    public void fetchComments(final SiteModel site, int offset, CommentStatus status) {
+    public void fetchComments(final SiteModel site, int number, int offset, CommentStatus status) {
         List<Object> params = new ArrayList<>(4);
         Map<String, Object> commentParams = new HashMap<>();
-        commentParams.put("number", DEFAULT_NUMBER_COMMENTS);
+        commentParams.put("number", number);
         commentParams.put("offset", offset);
 
         params.add(site.getSiteId());
