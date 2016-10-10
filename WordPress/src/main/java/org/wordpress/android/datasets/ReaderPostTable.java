@@ -648,20 +648,18 @@ public class ReaderPostTable {
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
-                + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42)");
+                        + COLUMN_NAMES
+                        + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42)");
 
         db.beginTransaction();
         try {
-            String tagName;
-            int tagType;
-            if (tag != null) {
-                tagName = tag.getTagSlug();
-                tagType = tag.tagType.toInt();
-            } else {
-                tagName = "";
-                tagType = 0;
-            }
+            String tagName = (tag != null ? tag.getTagSlug() : "");
+            int tagType = (tag != null ? tag.tagType.toInt() : 0);
+
+            // we can safely assume there's no gap marker because any existing gap marker is
+            // already removed before posts are updated
+            boolean hasGapMarker = false;
+
             for (ReaderPost post: posts) {
                 stmtPosts.bindLong  (1,  post.postId);
                 stmtPosts.bindLong  (2,  post.blogId);
@@ -704,7 +702,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(39, post.getRailcarJson());
                 stmtPosts.bindString(40, tagName);
                 stmtPosts.bindLong  (41, tagType);
-                stmtPosts.bindLong  (42, SqlUtils.boolToSql(false));
+                stmtPosts.bindLong  (42, SqlUtils.boolToSql(hasGapMarker));
                 stmtPosts.execute();
             }
 
