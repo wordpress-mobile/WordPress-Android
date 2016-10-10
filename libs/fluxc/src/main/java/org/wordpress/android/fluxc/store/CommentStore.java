@@ -150,8 +150,12 @@ public class CommentStore extends Store {
 
     // Getters
 
-    public List<CommentModel> getCommentsForSite(SiteModel site) {
-        return CommentSqlUtils.getCommentsForSite(site);
+    public List<CommentModel> getCommentsForSite(SiteModel site, CommentStatus status) {
+        return CommentSqlUtils.getCommentsForSite(site, status);
+    }
+
+    public int getNumberOfCommentsForSite(SiteModel site, CommentStatus status) {
+        return CommentSqlUtils.getCommentsCountForSite(site, status);
     }
 
     public CommentModel getCommentByLocalId(int localId) {
