@@ -75,6 +75,13 @@ public class CommentStore extends Store {
         }
     }
 
+    public static class RemoveCommentsPayload extends Payload {
+        public final SiteModel site;
+        public RemoveCommentsPayload(@NonNull SiteModel site) {
+            this.site = site;
+        }
+    }
+
     public static class RemoteCreateCommentPayload extends Payload {
         public final SiteModel site;
         public final CommentModel comment;
@@ -200,6 +207,9 @@ public class CommentStore extends Store {
             case PUSHED_COMMENT:
                 handlePushCommentResponse((RemoteCommentResponsePayload) action.getPayload());
                 break;
+            case REMOVE_COMMENTS:
+                removeComments((SiteModel) action.getPayload());
+                break;
             case REMOVE_COMMENT:
                 removeComment((CommentModel) action.getPayload());
                 break;
@@ -257,7 +267,11 @@ public class CommentStore extends Store {
     }
 
     private void removeComment(CommentModel payload) {
-        CommentSqlUtils.deleteComment(payload);
+        CommentSqlUtils.removeComment(payload);
+    }
+
+    private void removeComments(SiteModel payload) {
+        CommentSqlUtils.removeComments(payload);
     }
 
     private void instantiateComment(InstantiateCommentPayload payload) {
@@ -288,7 +302,7 @@ public class CommentStore extends Store {
             // status. Delete twice means "farewell comment, we won't you ever again". Only delete from the DB if the
             // status is "deleted".
             if (payload.comment.getStatus().equals(CommentStatus.DELETED.toString())) {
-                CommentSqlUtils.deleteComment(payload.comment);
+                CommentSqlUtils.removeComment(payload.comment);
             } else {
                 // Update the local copy, only the status should have changed ("trash")
                 CommentSqlUtils.insertOrUpdateComment(payload.comment);
