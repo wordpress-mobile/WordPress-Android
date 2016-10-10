@@ -16,6 +16,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -254,6 +255,7 @@ public class WordPressDB {
         SiteSettingsTable.createTable(db);
         CommentTable.createTables(db);
         SuggestionTable.createTables(db);
+        NotificationsTable.createTables(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();

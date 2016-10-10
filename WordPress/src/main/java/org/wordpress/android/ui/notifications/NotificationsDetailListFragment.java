@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.CommentStatus;
@@ -148,13 +149,11 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private void setNoteWithNoteId(String noteId) {
         if (noteId == null) return;
 
-        /*try {
-            Note note = SimperiumUtils.getNotesBucket().get(noteId);
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note != null) {
             mIsUnread = note.isUnread();
             setNote(note);
-        } catch (BucketObjectMissingException e) {
-            e.printStackTrace();
-        }*/
+        }
     }
 
     @Override

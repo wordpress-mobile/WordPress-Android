@@ -26,7 +26,6 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 
@@ -236,8 +235,6 @@ public class MagicLinkSignInFragment extends SignInFragment {
 
     public void attemptLoginWithMagicLink() {
         saveUsernameAndTokenToAccount();
-
-        SimperiumUtils.configureSimperium(WordPress.getContext(), mToken);
 
         configureAccountAfterSuccessfulSignIn();
     }

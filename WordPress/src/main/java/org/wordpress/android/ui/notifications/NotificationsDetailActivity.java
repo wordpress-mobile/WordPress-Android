@@ -8,9 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONObject;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
@@ -59,8 +65,11 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 return;
             }
 
-            // Todo: Get note?
-            Note note = null; //SimperiumUtils.getNotesBucket().get(noteId);
+            final Note note = NotificationsTable.getNoteById(noteId);
+            if (note == null) {
+                showErrorToastAndFinish();
+                return;
+            }
 
             Map<String, String> properties = new HashMap<>();
             properties.put("notification_type", note.getType());
@@ -77,8 +86,19 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
             // mark the note as read if it's unread
             if (note.isUnread()) {
-                // mark as read which syncs with simperium
-                note.markAsRead();
+                WordPress.getRestClientUtilsV1_1().markNoteAsRead(note.getId(), note.getUnreadCount(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        note.setUnreadCount("0");
+                        NotificationsTable.putNote(note, false);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.e(AppLog.T.NOTIFS, "Could not mark note as read via API.");
+                    }
+                });
+
                 EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
             }
 

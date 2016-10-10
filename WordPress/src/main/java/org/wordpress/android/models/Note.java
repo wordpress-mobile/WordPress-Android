@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
@@ -67,9 +68,18 @@ public class Note {
     /**
      * Create a note using JSON from Simperium
      */
-    private Note(String key, JSONObject noteJSON) {
+    public Note(String key, JSONObject noteJSON) {
         mKey = key;
         mNoteJSON = noteJSON;
+    }
+
+    public Note(JSONObject noteJSON){
+        mNoteJSON = noteJSON;
+        mKey = mNoteJSON.optString("id", "");
+    }
+
+    public JSONObject getJSON() {
+        return mNoteJSON != null ? mNoteJSON : new JSONObject();
     }
 
     public String getId() {
@@ -163,7 +173,7 @@ public class Note {
         mLocalStatus = localStatus;
     }
 
-    private JSONObject getSubject() {
+    public JSONObject getSubject() {
         try {
             synchronized (mSyncLock) {
                 JSONArray subjectArray = mNoteJSON.getJSONArray("subject");
@@ -270,17 +280,20 @@ public class Note {
         return queryJSON("read", 0) == 1;
     }
 
-    public void markAsRead() {
-        try {
-            synchronized (mSyncLock) {
-                mNoteJSON.put("read", 1);
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, "Unable to update note read property", e);
-            return;
-        }
+    /**
+     * For some reason the unread count is a string in the JSON API but is truly represented
+     * by an Integer. We can handle a simple string.
+     */
+    public String getUnreadCount() {
+        return queryJSON("unread", "0");
+    }
 
-        // TODO: post updated read state to rest api
+    public void setUnreadCount(String count){
+        try {
+            mNoteJSON.putOpt("unread", count);
+        } catch (JSONException e){
+            AppLog.e(AppLog.T.NOTIFS, "Failed to set unread property", e);
+        }
     }
 
     /**

@@ -176,6 +176,18 @@ public class RestClientUtils {
     }
 
     /**
+     * Mark a notification as read
+     * <p/>
+     * https://developer.wordpress.com/docs/api/1/post/notifications/read/
+     */
+    public void markNoteAsRead(String noteId, String unreadCount, Listener listener, ErrorListener errorListener) {
+        String path = "notifications/read";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(String.format("counts[%s]", noteId), unreadCount);
+        post(path, params, null, listener, errorListener);
+    }
+
+    /**
      * Moderate a comment.
      * <p/>
      * http://developer.wordpress.com/docs/api/1/sites/%24site/comments/%24comment_ID/

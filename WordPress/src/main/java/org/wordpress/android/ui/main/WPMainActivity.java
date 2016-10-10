@@ -15,14 +15,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.simperium.client.Bucket;
-import com.simperium.client.BucketObjectMissingException;
-
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
@@ -36,7 +34,6 @@ import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -62,7 +59,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends AppCompatActivity implements Bucket.Listener<Note> {
+public class WPMainActivity extends AppCompatActivity {
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -291,15 +288,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     @Override
-    protected void onPause() {
-        if (SimperiumUtils.getNotesBucket() != null) {
-            SimperiumUtils.getNotesBucket().removeListener(this);
-        }
-
-        super.onPause();
-    }
-
-    @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
@@ -315,10 +303,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     protected void onResume() {
         super.onResume();
 
-        // Start listening to Simperium Note bucket
-        if (SimperiumUtils.getNotesBucket() != null) {
-            SimperiumUtils.getNotesBucket().addListener(this);
-        }
         mTabLayout.checkNoteBadge();
 
         // We need to track the current item on the screen when this activity is resumed.
@@ -421,17 +405,11 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     private void moderateCommentOnActivityResult(Intent data) {
-        try {
-            if (SimperiumUtils.getNotesBucket() != null) {
-                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
-                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
-                CommentStatus status = CommentStatus.fromString(data.getStringExtra(
-                        NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
-                NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
-            }
-        } catch (BucketObjectMissingException e) {
-            AppLog.e(T.NOTIFS, e);
-        }
+        Note note = NotificationsTable.getNoteById(StringUtils.notNullStr(data.getStringExtra
+                (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+        CommentStatus status = CommentStatus.fromString(data.getStringExtra(
+                NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
+        NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
     }
 
     @Override
@@ -507,7 +485,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     private class UpdateLastSeenTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... voids) {
-            return SimperiumUtils.updateLastSeenTime();
+            return Boolean.FALSE; //TODO: SimperiumUtils.updateLastSeenTime();
         }
 
         @Override
@@ -594,45 +572,5 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 ActivityLauncher.showSitePickerForResult(this, blogId);
             }
         }
-    }
-
-    /*
-     * Simperium Note bucket listeners
-     */
-    @Override
-    public void onNetworkChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String s) {
-        if (changeType == Bucket.ChangeType.INSERT || changeType == Bucket.ChangeType.MODIFY) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isFinishing()) return;
-
-                    if (isViewingNotificationsTab()) {
-                        new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    } else {
-                        mTabLayout.checkNoteBadge();
-                    }
-                }
-            });
-        }
-    }
-
-    private boolean isViewingNotificationsTab() {
-        return mViewPager.getCurrentItem() == WPMainTabAdapter.TAB_NOTIFS;
-    }
-
-    @Override
-    public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
-        // noop
-    }
-
-    @Override
-    public void onDeleteObject(Bucket<Note> noteBucket, Note note) {
-        // noop
-    }
-
-    @Override
-    public void onSaveObject(Bucket<Note> noteBucket, Note note) {
-        // noop
     }
 }

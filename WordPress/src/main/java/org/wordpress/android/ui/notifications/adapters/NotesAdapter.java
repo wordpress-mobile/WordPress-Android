@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.notifications.adapters;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
@@ -78,8 +80,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             Collections.sort(notes, new Note.TimeStampComparator());
             mIsAddingNotes = true;
             try {
-                if (clearBeforeAdding)
+                if (clearBeforeAdding) {
                     mNotes.clear();
+                }
                 mNotes.addAll(notes);
             } finally {
                 notifyDataSetChanged();
@@ -87,8 +90,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             }
         }
 
-        if (mDataLoadedListener != null)
+        if (mDataLoadedListener != null) {
             mDataLoadedListener.onDataLoaded(getItemCount() == 0);
+        }
     }
 
     @Override
@@ -98,7 +102,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         return new NoteViewHolder(view);
     }
 
-    public Note getNoteAtPosition(int position) {
+    private Note getNoteAtPosition(int position) {
         if (isValidPosition(position))
             return mNotes.get(position);
         return null;
@@ -116,6 +120,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     @Override
     public void onBindViewHolder(NoteViewHolder noteViewHolder, int position) {
         final Note note = getNoteAtPosition(position);
+        noteViewHolder.itemView.setTag(note.getId());
 
         // Display group header
         Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(note.getTimestamp());
@@ -226,6 +231,27 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     public void setOnNoteClickListener(NotificationsListFragment.OnNoteClickListener mNoteClickListener) {
         mOnNoteClickListener = mNoteClickListener;
+    }
+
+    public void reloadNotes() {
+        new ReloadNotesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private class ReloadNotesTask extends AsyncTask<Void, Void, ArrayList<Note>> {
+
+        @Override
+        protected ArrayList<Note> doInBackground(Void... voids) {
+            return NotificationsTable.getLatestNotes();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Note> notes) {
+            mNotes.clear();
+            mNotes.addAll(notes);
+            notifyDataSetChanged();
+
+            mDataLoadedListener.onDataLoaded(getItemCount() == 0);
+        }
     }
 
     class NoteViewHolder extends RecyclerView.ViewHolder {

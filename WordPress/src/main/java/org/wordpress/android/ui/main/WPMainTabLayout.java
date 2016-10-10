@@ -16,7 +16,6 @@ import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 
 /**
  * tab layout for main activity
@@ -64,8 +63,8 @@ public class WPMainTabLayout extends TabLayout {
      * unread notifications
      */
     void checkNoteBadge() {
-        showNoteBadge(SimperiumUtils.hasUnreadNotes());
-    }
+        showNoteBadge(false);
+    } // TODO:
 
     void showNoteBadge(boolean showBadge) {
         if (mNoteBadge == null) return;

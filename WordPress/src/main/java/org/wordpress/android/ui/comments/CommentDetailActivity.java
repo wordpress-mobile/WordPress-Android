@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.simperium.client.BucketObjectMissingException;
-
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
@@ -40,19 +38,15 @@ public class CommentDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Intent intent = getIntent();
             CommentDetailFragment commentDetailFragment = null;
-            if (intent.getStringExtra(KEY_COMMENT_DETAIL_NOTE_ID) != null && SimperiumUtils.getNotesBucket() != null) {
-                try {
-                    Note note = SimperiumUtils.getNotesBucket().get(
-                            intent.getStringExtra(KEY_COMMENT_DETAIL_NOTE_ID)
-                    );
+            if (intent.getStringExtra(KEY_COMMENT_DETAIL_NOTE_ID) != null) {
+                Note note = NotificationsTable.getNoteById(
+                        intent.getStringExtra(KEY_COMMENT_DETAIL_NOTE_ID)
+                );
 
-                    if (intent.hasExtra(KEY_COMMENT_DETAIL_IS_REMOTE)) {
-                        commentDetailFragment = CommentDetailFragment.newInstanceForRemoteNoteComment(note.getId());
-                    } else {
-                        commentDetailFragment = CommentDetailFragment.newInstance(note.getId());
-                    }
-                } catch (BucketObjectMissingException e) {
-                    AppLog.e(AppLog.T.NOTIFS, "CommentDetailActivity was passed an invalid note id.");
+                if (intent.hasExtra(KEY_COMMENT_DETAIL_IS_REMOTE)) {
+                    commentDetailFragment = CommentDetailFragment.newInstanceForRemoteNoteComment(note.getId());
+                } else {
+                    commentDetailFragment = CommentDetailFragment.newInstance(note.getId());
                 }
             } else if (intent.getIntExtra(KEY_COMMENT_DETAIL_LOCAL_TABLE_BLOG_ID, 0) > 0
                     && intent.getLongExtra(KEY_COMMENT_DETAIL_COMMENT_ID, 0) > 0) {

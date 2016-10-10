@@ -485,7 +485,7 @@ public class NotificationsUtils {
     public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final View parentView) {
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             note.setLocalStatus(CommentStatus.toRESTString(newStatus));
-            note.save();
+            // TODO note.save();
             EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), true));
             CommentActions.moderateCommentForNote(note, newStatus,
                     new CommentActions.CommentActionListener() {
@@ -494,7 +494,7 @@ public class NotificationsUtils {
                             EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), false));
                             if (!result.isSuccess()) {
                                 note.setLocalStatus(null);
-                                note.save();
+                                // TODO note.save();
                                 EventBus.getDefault().postSticky(new NoteModerationFailed());
                             }
                         }

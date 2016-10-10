@@ -16,12 +16,12 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.simperium.client.BucketObjectMissingException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
@@ -30,7 +30,6 @@ import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiv
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -90,9 +89,6 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private void handleDefaultPush(String from, @NonNull Bundle data) {
-        // Ensure Simperium is running so that notes sync
-        SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
-
         long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
         String pushUserId = data.getString(PUSH_ARG_USER);
         // pushUserId is always set server side, but better to double check it here.
@@ -217,32 +213,26 @@ public class GCMMessageService extends GcmListenerService {
         // Add some actions if this is a comment notification
 
         boolean areActionsSet = false;
-
-        if (SimperiumUtils.getNotesBucket() != null) {
-            try {
-                Note note = SimperiumUtils.getNotesBucket().get(noteId);
-                if (note != null) {
-                    //if note can be replied to, we'll always add this action first
-                    if (note.canReply()) {
-                        addCommentReplyActionForCommentNotification(builder, noteId);
-                    }
-
-                    // if the comment is lacking approval, offer moderation actions
-                    if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
-                        if (note.canModerate()) {
-                            addCommentApproveActionForCommentNotification(builder, noteId);
-                        }
-                    } else {
-                        //else offer REPLY / LIKE actions
-                        if (note.canLike()) {
-                            addCommentLikeActionForCommentNotification(builder, noteId);
-                        }
-                    }
-                }
-                areActionsSet = true;
-            } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note != null) {
+            //if note can be replied to, we'll always add this action first
+            if (note.canReply()) {
+                addCommentReplyActionForCommentNotification(builder, noteId);
             }
+
+            // if the comment is lacking approval, offer moderation actions
+            if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
+                if (note.canModerate()) {
+                    addCommentApproveActionForCommentNotification(builder, noteId);
+                }
+            } else {
+                //else offer REPLY / LIKE actions
+                if (note.canLike()) {
+                    addCommentLikeActionForCommentNotification(builder, noteId);
+                }
+            }
+
+            areActionsSet = true;
         }
 
         // if we could not set the actions, set the default ones REPLY / LIKE
