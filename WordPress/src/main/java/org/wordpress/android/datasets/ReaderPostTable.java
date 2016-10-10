@@ -659,7 +659,7 @@ public class ReaderPostTable {
                 tagName = tag.getTagSlug();
                 tagType = tag.tagType.toInt();
             } else {
-                tagName = null;
+                tagName = "";
                 tagType = 0;
             }
             for (ReaderPost post: posts) {
