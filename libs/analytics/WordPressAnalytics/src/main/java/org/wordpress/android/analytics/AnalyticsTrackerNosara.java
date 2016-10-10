@@ -298,6 +298,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_reader_tag_unfollowed";
             case READER_RELATED_POST_CLICKED:
                 return "reader_related_post_clicked";
+            case READER_VIEWPOST_INTERCEPTED:
+                return "reader_viewpost_intercepted";
             case READER_BLOG_POST_INTERCEPTED:
                 return "reader_blog_post_intercepted";
             case READER_FEED_POST_INTERCEPTED:
