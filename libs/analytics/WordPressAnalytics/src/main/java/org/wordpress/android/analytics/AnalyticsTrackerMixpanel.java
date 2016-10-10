@@ -405,6 +405,12 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_related_post_clicked");
                 instructions.setCurrentDateForPeopleProperty("last_time_reader_related_post_clicked");
                 break;
+            case READER_VIEWPOST_INTERCEPTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Intercepted viewpost");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_viewpost_intercepted");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_viewpost_intercepted");
+                break;
             case READER_BLOG_POST_INTERCEPTED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Intercepted blog post");
