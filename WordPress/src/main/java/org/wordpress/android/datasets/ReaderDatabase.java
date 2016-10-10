@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 128;
+    private static final int DB_VERSION = 129;
 
     /*
      * version history
@@ -80,6 +80,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *  126 - separate fields in tbl_posts for date_liked, date_tagged, date_published
      *  127 - changed tbl_posts.sort_index to tbl_posts.score
      *  128 - added indexes on tbl_posts.date_published and tbl_posts.date_tagged
+     *  129 - denormalized post storage, dropped tbl_post_tags
      */
 
     /*
