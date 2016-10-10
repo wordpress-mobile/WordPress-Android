@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.InstantiateCommentPayload;
@@ -33,6 +34,8 @@ public enum CommentAction implements IAction {
     PUSH_COMMENT,
     @Action(payloadType = RemoteCommentResponsePayload.class)
     PUSHED_COMMENT,
+    @Action(payloadType = SiteModel.class)
+    REMOVE_COMMENTS,
     @Action(payloadType = CommentModel.class)
     REMOVE_COMMENT,
     @Action(payloadType = RemoteCommentPayload.class)

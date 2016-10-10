@@ -48,13 +48,23 @@ public class CommentSqlUtils {
         }
     }
 
-    public static int deleteComment(CommentModel comment) {
+    public static int removeComment(CommentModel comment) {
         if (comment == null) {
             return 0;
         }
 
         return WellSql.delete(CommentModel.class)
                 .where().equals(PostModelTable.ID, comment.getId()).endWhere()
+                .execute();
+    }
+
+    public static int removeComments(SiteModel site) {
+        if (site == null) {
+            return 0;
+        }
+
+        return WellSql.delete(CommentModel.class)
+                .where().equals(CommentModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
                 .execute();
     }
 
