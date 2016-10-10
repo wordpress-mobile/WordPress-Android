@@ -100,7 +100,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                     AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
                             blogId, postId);
                 } else {
-                    AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
+                    AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
                             blogId, postId);
                 }
 
