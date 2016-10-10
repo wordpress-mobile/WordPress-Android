@@ -561,6 +561,26 @@ public class ReaderPostTable {
     }
 
     /*
+     * liked posts      sort by the date the post was liked
+     * followed posts   sort by the date the post was published
+     * search results   sort by score
+     * tagged posts     sort by the date the post was tagged
+     */
+    private static String getSortFieldForTag(ReaderTag tag) {
+        if (tag.isPostsILike()) {
+            return "date_liked";
+        } else if (tag.isFollowedSites()) {
+            return "date_published";
+        } else if (tag.tagType == ReaderTagType.SEARCH) {
+            return "score";
+        } else if (tag.isTagTopic()) {
+            return "date_tagged";
+        } else {
+            return "date_published";
+        }
+    }
+
+    /*
      * delete posts with the passed tag that come before the one with the gap marker for
      * this tag - note this may leave some stray posts in tbl_posts, but these will
      * be cleaned up by the next purge
@@ -753,25 +773,7 @@ public class ReaderPostTable {
             }
         }
 
-        /*
-         * liked posts      sort by the date the post was liked
-         * followed posts   sort by the date the post was published
-         * search results   sort by score
-         * tagged posts     sort by the date the post was tagged
-         */
-        String orderByField;
-        if (tag.isPostsILike()) {
-            orderByField = "date_liked";
-        } else if (tag.isFollowedSites()) {
-            orderByField = "date_published";
-        } else if (tag.tagType == ReaderTagType.SEARCH) {
-            orderByField = "score";
-        } else if (tag.isTagTopic()) {
-            orderByField = "date_tagged";
-        } else {
-            orderByField = "date_published";
-        }
-        sql += " ORDER BY tbl_posts." + orderByField + " DESC";
+        sql += " ORDER BY tbl_posts." + getSortFieldForTag(tag) + " DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
