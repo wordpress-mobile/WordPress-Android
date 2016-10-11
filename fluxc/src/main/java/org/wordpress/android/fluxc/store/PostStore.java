@@ -174,6 +174,7 @@ public class PostStore extends Store {
     public enum PostErrorType {
         UNKNOWN_POST,
         UNKNOWN_POST_TYPE,
+        UNAUTHORIZED,
         INVALID_RESPONSE,
         GENERIC_ERROR;
 
