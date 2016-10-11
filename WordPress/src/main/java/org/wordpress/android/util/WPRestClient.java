@@ -294,9 +294,9 @@ public class WPRestClient {
                     
                     return new JSONObject(result);
                  } catch (JSONException e) {
-                     e.printStackTrace();
+                    AppLog.e(AppLog.T.STATS, e.getMessage());
                  } catch (Exception e) {
-                    e.printStackTrace();
+                    AppLog.e(AppLog.T.STATS, e.getMessage());
                  }
                 return null;
             }
