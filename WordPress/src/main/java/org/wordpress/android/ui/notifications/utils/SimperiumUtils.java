@@ -166,7 +166,7 @@ public class SimperiumUtils {
                 Note object = getNotesBucket().insertObject(note.getId(), Note.Schema.getJSON(note));
                 object.save();
             } catch (BucketObjectNameInvalid e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.SIMPERIUM, e.getMessage());
             }
         }
     }
