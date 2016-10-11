@@ -32,16 +32,15 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
-import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
+import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
@@ -53,7 +52,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -362,39 +360,6 @@ public class ReaderPostDetailFragment extends Fragment
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mPost);
         } else {
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mPost);
-        }
-    }
-
-    /*
-     * user tapped follow button to follow/unfollow the blog this post is from
-     */
-    private void togglePostFollowed() {
-        if (!isAdded() || !hasPost()) {
-            return;
-        }
-
-        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(mPost);
-        final ReaderFollowButton followButton = (ReaderFollowButton) getView().findViewById(R.id.follow_button);
-
-        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!isAdded()) {
-                    return;
-                }
-                followButton.setEnabled(true);
-                if (!succeeded) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(getActivity(), resId);
-                    followButton.setIsFollowedAnimated(!isAskingToFollow);
-                }
-            }
-        };
-
-        followButton.setEnabled(false);
-
-        if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, listener)) {
-            followButton.setIsFollowedAnimated(isAskingToFollow);
         }
     }
 
@@ -856,16 +821,10 @@ public class ReaderPostDetailFragment extends Fragment
             mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
 
             TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
-            TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
-            TextView txtDomain = (TextView) getView().findViewById(R.id.text_domain);
             TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
 
-            WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
             ReaderTagStrip tagStrip = (ReaderTagStrip) getView().findViewById(R.id.tag_strip);
-
-            ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
-            ReaderFollowButton followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
-
+            ReaderPostDetailHeaderView headerView = (ReaderPostDetailHeaderView) getView().findViewById(R.id.header_view);
             if (!canShowFooter()) {
                 mLayoutFooter.setVisibility(View.GONE);
             }
@@ -885,47 +844,16 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            followButton.setVisibility(mIsLoggedOutReader ? View.GONE : View.VISIBLE);
-            if (!mIsLoggedOutReader) {
-                followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
-                followButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        togglePostFollowed();
-                    }
-                });
-            }
-
-            // clicking the header shows blog preview
-            if (getPostListType() != ReaderPostListType.BLOG_PREVIEW) {
-                layoutHeader.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
-                    }
-                });
-            }
-
-            if (mPost.hasBlogName()) {
-                txtBlogName.setText(mPost.getBlogName());
-            } else if (mPost.hasAuthorName()) {
-                txtBlogName.setText(mPost.getAuthorName());
-            } else {
-                txtBlogName.setText(null);
-            }
-
-            if (mPost.hasBlogUrl()) {
-                int blavatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-                String imageUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz);
-                imgBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
-                txtDomain.setText(UrlUtils.getHost(mPost.getBlogUrl()));
-            } else {
-                imgBlavatar.showDefaultBlavatarImage();
-                txtDomain.setText(null);
-            }
-
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
+
+            // don't show the header for blog preview
+            if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                headerView.setVisibility(View.GONE);
+            } else {
+                headerView.setVisibility(View.VISIBLE);
+                headerView.setPost(mPost);
+            }
 
             tagStrip.setPost(mPost);
 
