@@ -24,7 +24,6 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
