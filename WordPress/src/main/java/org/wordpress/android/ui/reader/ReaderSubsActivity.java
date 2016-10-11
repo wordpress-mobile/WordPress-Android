@@ -326,6 +326,8 @@ public class ReaderSubsActivity extends AppCompatActivity
             return;
         }
 
+        final ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
+
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -333,23 +335,18 @@ public class ReaderSubsActivity extends AppCompatActivity
 
                 getPageAdapter().refreshFollowedTagFragment();
 
-                if (!succeeded) {
+                if (succeeded) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
+                    showInfoToast(getString(R.string.reader_label_added_tag, tag.getLabel()));
+                    mLastAddedTagName = tag.getTagSlug();
+                } else {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
                     mLastAddedTagName = null;
                 }
             }
         };
 
-        ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
-
-        if (ReaderTagActions.addTag(tag, actionListener)) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
-            mLastAddedTagName = tag.getTagSlug();
-            // make sure addition is reflected on followed tags
-            getPageAdapter().refreshFollowedTagFragment();
-            String labelAddedTag = getString(R.string.reader_label_added_tag);
-            showInfoToast(String.format(labelAddedTag, tag.getLabel()));
-        }
+        ReaderTagActions.addTag(tag, actionListener);
     }
 
     /*
