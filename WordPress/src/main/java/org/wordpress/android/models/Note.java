@@ -6,6 +6,7 @@ package org.wordpress.android.models;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import com.simperium.client.BucketSchema;
@@ -17,14 +18,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 public class Note extends Syncable {
     private static final String TAG = "NoteModel";
@@ -36,10 +41,10 @@ public class Note extends Syncable {
     public static final String NOTE_FOLLOW_TYPE = "follow";
     public static final String NOTE_LIKE_TYPE = "like";
     public static final String NOTE_COMMENT_TYPE = "comment";
-    private static final String NOTE_MATCHER_TYPE = "automattcher";
-    private static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
-    private static final String NOTE_REBLOG_TYPE = "reblog";
-    private static final String NOTE_UNKNOWN_TYPE = "unknown";
+    public static final String NOTE_MATCHER_TYPE = "automattcher";
+    public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
+    public static final String NOTE_REBLOG_TYPE = "reblog";
+    public static final String NOTE_UNKNOWN_TYPE = "unknown";
 
     // JSON action keys
     private static final String ACTION_KEY_REPLY = "replyto-comment";
@@ -296,7 +301,10 @@ public class Note extends Syncable {
             Log.e(TAG, "Unable to update note read property", e);
             return;
         }
-        save();
+
+        if (getBucket() != null) {
+            save();
+        }
     }
 
     /**
@@ -482,6 +490,10 @@ public class Note extends Syncable {
         return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
     }
 
+    private JSONObject getJSON() {
+        return mNoteJSON;
+    }
+
     public String getUrl() {
         return queryJSON("url", "");
     }
@@ -583,8 +595,60 @@ public class Note extends Syncable {
             return new Note(key, properties);
         }
 
+        public Note buildFromBase64EncodedData(String noteId, String base64FullNoteData){
+            Note note = null;
+
+            if (base64FullNoteData == null) return null;
+
+            byte[] b64DecodedPayload = Base64.decode(base64FullNoteData, Base64.DEFAULT);
+
+            // Decompress the payload
+            Inflater decompresser = new Inflater();
+            decompresser.setInput(b64DecodedPayload, 0, b64DecodedPayload.length);
+            byte[] result = new byte[4096]; //max length an Android PN payload can have
+            int resultLength = 0;
+            try {
+                resultLength = decompresser.inflate(result);
+                decompresser.end();
+            } catch (DataFormatException e) {
+                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+            }
+
+
+            String out = null;
+            try {
+                out = new String(result, 0, resultLength, "UTF-8");
+            }
+            catch(UnsupportedEncodingException e) {
+                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+            }
+
+            if (out != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(out);
+                    if (jsonObject.has("notes")) {
+                        JSONArray jsonArray = jsonObject.getJSONArray("notes");
+                        if (jsonArray != null && jsonArray.length() == 1) {
+                            jsonObject = jsonArray.getJSONObject(0);
+                        }
+                    }
+                    note = build(noteId, jsonObject);
+
+                } catch (JSONException e) {
+                    AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+                }
+            }
+
+            return note;
+        }
+
         public void update(Note note, JSONObject properties) {
             note.updateJSON(properties);
         }
+
+        public static JSONObject getJSON(Note note) {
+            return note.getJSON();
+        }
+
     }
 }

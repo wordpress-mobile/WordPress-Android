@@ -94,7 +94,7 @@ class FollowHelper {
                     boolean isFollowing = response.getBoolean("is_following");
                     mFollowData.setIsFollowing(isFollowing);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    AppLog.e(AppLog.T.STATS, e.getMessage());
                 }
             }
         }

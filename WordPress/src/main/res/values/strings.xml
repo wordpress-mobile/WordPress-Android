@@ -327,6 +327,7 @@
     <string name="like">Like</string>
     <string name="approve">Approve</string>
     <string name="comment_moderated_approved">Comment approved!</string>
+    <string name="comment_moderated_unapproved">Comment unapproved</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
