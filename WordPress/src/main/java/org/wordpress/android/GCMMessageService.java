@@ -120,7 +120,7 @@ public class GCMMessageService extends GcmListenerService {
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
-    private void ensureNoteExistsInBucket(Bundle data) {
+    private void trySaveNoteIfNotAlreadyInBucket(Bundle data) {
         if (SimperiumUtils.getNotesBucket() != null) {
             Note note = null;
             String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
@@ -147,7 +147,7 @@ public class GCMMessageService extends GcmListenerService {
         if (data == null)
             return;
 
-        ensureNoteExistsInBucket(data);
+        trySaveNoteIfNotAlreadyInBucket(data);
 
         String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
