@@ -39,7 +39,7 @@
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_header_author_name"
+            android:id="@+id/text_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/reader_hyperlink"
@@ -48,7 +48,7 @@
             tools:text="text_header_author_name" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_header_blog_name"
+            android:id="@+id/text_header_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/reader_hyperlink"

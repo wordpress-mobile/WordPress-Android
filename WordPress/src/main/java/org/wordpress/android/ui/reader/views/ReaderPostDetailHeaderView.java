@@ -52,35 +52,35 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     public void setPost(@NonNull ReaderPost post) {
         mPost = post;
 
-        TextView txtBlogName = (TextView) findViewById(R.id.text_header_blog_name);
-        TextView txtAuthorName = (TextView) findViewById(R.id.text_header_author_name);
+        TextView txtTitle = (TextView) findViewById(R.id.text_header_title);
+        TextView txtSubtitle = (TextView) findViewById(R.id.text_header_subtitle);
 
         boolean hasBlogName = mPost.hasBlogName();
         boolean hasAuthorName = mPost.hasAuthorName();
 
         if (hasBlogName && hasAuthorName) {
-            txtBlogName.setText(mPost.getBlogName());
             // don't show author name if it's the same as the blog name
             if (mPost.getAuthorName().equals(mPost.getBlogName())) {
-                txtAuthorName.setVisibility(View.GONE);
+                txtTitle.setText(mPost.getAuthorName());
+                txtSubtitle.setVisibility(View.GONE);
             } else {
-                txtAuthorName.setText(mPost.getAuthorName());
-                txtAuthorName.setVisibility(View.VISIBLE);
+                txtTitle.setText(mPost.getAuthorName());
+                txtSubtitle.setText(mPost.getBlogName());
             }
         } else if (hasBlogName) {
-            txtBlogName.setText(mPost.getBlogName());
-            txtAuthorName.setVisibility(View.GONE);
+            txtTitle.setText(mPost.getBlogName());
+            txtSubtitle.setVisibility(View.GONE);
         } else if (hasAuthorName) {
-            txtAuthorName.setText(mPost.getAuthorName());
-            txtBlogName.setVisibility(View.GONE);
+            txtTitle.setText(mPost.getAuthorName());
+            txtSubtitle.setVisibility(View.GONE);
         } else {
-            txtBlogName.setText(R.string.untitled);
-            txtAuthorName.setVisibility(View.GONE);
+            txtTitle.setText(R.string.untitled);
+            txtSubtitle.setVisibility(View.GONE);
         }
 
         // show blog preview when these views are tapped
-        txtBlogName.setOnClickListener(mClickListener);
-        txtAuthorName.setOnClickListener(mClickListener);
+        txtTitle.setOnClickListener(mClickListener);
+        txtSubtitle.setOnClickListener(mClickListener);
 
         if (ReaderUtils.isLoggedOutReader()) {
             mFollowButton.setVisibility(View.GONE);
