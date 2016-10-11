@@ -128,7 +128,7 @@ public class GCMMessageService extends GcmListenerService {
                 note = SimperiumUtils.getNotesBucket().get(noteId);
                 // all good if we got here
             } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e);
                 SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
 
                 if (data != null && data.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
@@ -266,7 +266,7 @@ public class GCMMessageService extends GcmListenerService {
                 }
                 areActionsSet = true;
             } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e);
             }
         }
 
