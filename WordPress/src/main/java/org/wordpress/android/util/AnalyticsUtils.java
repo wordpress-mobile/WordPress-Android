@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -25,6 +26,7 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_OPENED;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_RELATED_POST_CLICKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER;
@@ -166,6 +168,16 @@ public class AnalyticsUtils {
      * @param railcarJson The JSON string of the railcar
      *
      */
+    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
+        trackWithReaderPostDetails(stat, ReaderPostTable.getPost(blogId, postId, true));
+    }
+
+  /**
+   * Track when a railcar item has been rendered
+   *
+   * @param post The JSON string of the railcar
+   *
+   */
     public static void trackRailcarRender(String railcarJson) {
         if (TextUtils.isEmpty(railcarJson)) return;
 
@@ -195,7 +207,8 @@ public class AnalyticsUtils {
         return stat == READER_ARTICLE_LIKED
                 || stat == READER_ARTICLE_OPENED
                 || stat == READER_SEARCH_RESULT_TAPPED
-                || stat == READER_ARTICLE_COMMENTED_ON;
+                || stat == READER_ARTICLE_COMMENTED_ON
+                || stat == READER_RELATED_POST_CLICKED;
     }
 
     /*
