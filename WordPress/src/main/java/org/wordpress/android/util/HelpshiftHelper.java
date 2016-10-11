@@ -241,6 +241,7 @@ public class HelpshiftHelper {
         addDefaultMetaData(context, siteStore, wpComUsername);
         HashMap config = new HashMap ();
         config.put(Support.CustomMetadataKey, mMetadata);
+        config.put("showSearchOnNewConversation", true);
         return config;
     }
 }

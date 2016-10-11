@@ -83,22 +83,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
             divider = view.findViewById(R.id.divider);
             isSiteHidden = null;
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int clickedPosition = getAdapterPosition();
-                    if (isValidPosition(clickedPosition)) {
-                        if (mIsMultiSelectEnabled) {
-                            toggleSelection(clickedPosition);
-                        } else if (mSiteSelectedListener != null) {
-                            mSiteSelectedListener.onSiteClick(getItem(clickedPosition));
-                        }
-                    } else {
-                        AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
-                    }
-                }
-            });
         }
     }
 
@@ -152,7 +136,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
     }
 
     @Override
-    public void onBindViewHolder(SiteViewHolder holder, int position) {
+    public void onBindViewHolder(final SiteViewHolder holder, int position) {
         SiteRecord site = getItem(position);
 
         holder.txtTitle.setText(site.getBlogNameOrHomeURL());
@@ -176,6 +160,23 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         // hide the divider for the last item
         boolean isLastItem = (position == getItemCount() - 1);
         holder.divider.setVisibility(isLastItem ?  View.INVISIBLE : View.VISIBLE);
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int clickedPosition = holder.getAdapterPosition();
+                if (isValidPosition(clickedPosition)) {
+                    if (mIsMultiSelectEnabled) {
+                        toggleSelection(clickedPosition);
+                    } else if (mSiteSelectedListener != null) {
+                        mSiteSelectedListener.onSiteClick(getItem(clickedPosition));
+                    }
+                } else {
+                    AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
+                }
+            }
+        });
     }
 
     public String getLastSearch() {

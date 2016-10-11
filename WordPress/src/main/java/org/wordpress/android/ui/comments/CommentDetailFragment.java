@@ -757,7 +757,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.OnRequestListener() {
+                ReaderPostActions.requestBlogPost(blogId, postId, new ReaderActions.OnRequestListener() {
                     @Override
                     public void onSuccess() {
                         if (!isAdded()) return;
