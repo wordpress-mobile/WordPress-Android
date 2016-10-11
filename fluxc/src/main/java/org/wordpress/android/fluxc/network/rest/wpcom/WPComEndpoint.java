@@ -22,10 +22,6 @@ public class WPComEndpoint {
         return mEndpoint;
     }
 
-    public String getUrlV1(String...args) {
-        return WPCOM_PREFIX_V1 + String.format(mEndpoint, args);
-    }
-
     public String getUrlV1_1(String...args) {
         return WPCOM_PREFIX_V1_1 + String.format(mEndpoint, args);
     }
