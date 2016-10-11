@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -531,7 +532,6 @@ public class PostsListFragment extends Fragment
             case FETCH_POSTS:
             case FETCH_PAGES:
                 mIsFetchingPosts = false;
-                // TODO: This used to validate that mSite was the same as the site reported by the EventBus event
                 if (!isAdded()) {
                     return;
                 }
@@ -542,9 +542,11 @@ public class PostsListFragment extends Fragment
                     mCanLoadMorePosts = event.canLoadMore;
                     loadPosts(LoadMode.IF_CHANGED);
                 } else {
-                    PostStore.PostError error = event.error;
+                    PostError error = event.error;
                     switch (error.type) {
-                        // TODO: Handle permission error ->updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR)
+                        case UNAUTHORIZED:
+                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
+                            break;
                         default:
                             updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
                             break;
