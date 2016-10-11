@@ -612,7 +612,7 @@ public class Note extends Syncable {
                 resultLength = decompresser.inflate(result);
                 decompresser.end();
             } catch (DataFormatException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
             }
 
 
@@ -636,7 +636,7 @@ public class Note extends Syncable {
                     note = build(noteId, jsonObject);
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    AppLog.e(AppLog.T.NOTIFS, e.getMessage());
                 }
             }
 
