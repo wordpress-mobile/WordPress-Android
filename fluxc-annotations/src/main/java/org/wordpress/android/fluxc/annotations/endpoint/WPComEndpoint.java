@@ -17,6 +17,10 @@ public class WPComEndpoint {
         this(endpoint + id + "/");
     }
 
+    public WPComEndpoint(String endpoint, String value) {
+        this(endpoint + value + "/");
+    }
+
     public String getEndpoint() {
         return mEndpoint;
     }
