@@ -44,6 +44,9 @@ public final class AnalyticsTracker {
         READER_SEARCH_PERFORMED,
         READER_SEARCH_RESULT_TAPPED,
         READER_RELATED_POST_CLICKED,
+        READER_VIEWPOST_INTERCEPTED,
+        READER_BLOG_POST_INTERCEPTED,
+        READER_FEED_POST_INTERCEPTED,
         STATS_ACCESSED,
         STATS_INSIGHTS_ACCESSED,
         STATS_PERIOD_DAYS_ACCESSED,
@@ -185,7 +188,8 @@ public final class AnalyticsTracker {
         SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR,
         ABTEST_START,
         TRAIN_TRACKS_RENDER,
-        TRAIN_TRACKS_INTERACT
+        TRAIN_TRACKS_INTERACT,
+        DEEP_LINKED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
