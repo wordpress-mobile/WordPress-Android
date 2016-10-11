@@ -18,10 +18,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
@@ -301,8 +303,9 @@ public class Note extends Syncable {
             return;
         }
 
-        if (getBucket() != null)
+        if (getBucket() != null) {
             save();
+        }
     }
 
     /**
@@ -613,7 +616,14 @@ public class Note extends Syncable {
             }
 
 
-            String out = new String(result, 0, resultLength, StandardCharsets.UTF_8);
+            String out = null;
+            try {
+                out = new String(result, 0, resultLength, "UTF-8");
+            }
+            catch(UnsupportedEncodingException e) {
+                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+            }
+
             if (out != null) {
                 try {
                     JSONObject jsonObject = new JSONObject(out);
