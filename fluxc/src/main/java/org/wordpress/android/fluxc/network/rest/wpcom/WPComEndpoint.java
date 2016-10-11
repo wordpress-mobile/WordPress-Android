@@ -22,19 +22,19 @@ public class WPComEndpoint {
         return mEndpoint;
     }
 
-    public String getUrlV1(String...args) {
-        return WPCOM_PREFIX_V1 + String.format(mEndpoint, args);
+    public String getUrlV1() {
+        return WPCOM_PREFIX_V1 + mEndpoint;
     }
 
-    public String getUrlV1_1(String...args) {
-        return WPCOM_PREFIX_V1_1 + String.format(mEndpoint, args);
+    public String getUrlV1_1() {
+        return WPCOM_PREFIX_V1_1 + mEndpoint;
     }
 
-    public String getUrlV1_2(String...args) {
-        return WPCOM_PREFIX_V1_2 + String.format(mEndpoint, args);
+    public String getUrlV1_2() {
+        return WPCOM_PREFIX_V1_2 + mEndpoint;
     }
 
-    public String getUrlV1_3(String...args) {
-        return WPCOM_PREFIX_V1_3 + String.format(mEndpoint, args);
+    public String getUrlV1_3() {
+        return WPCOM_PREFIX_V1_3 + mEndpoint;
     }
 }
