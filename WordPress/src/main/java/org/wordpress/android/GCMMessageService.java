@@ -121,6 +121,11 @@ public class GCMMessageService extends GcmListenerService {
 
     private void trySaveNoteIfNotAlreadyInBucket(Bundle data) {
         if (SimperiumUtils.getNotesBucket() != null) {
+            if (data == null) {
+                AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
+                return;
+            }
+
             String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
             try {
                 SimperiumUtils.getNotesBucket().get(noteId);
