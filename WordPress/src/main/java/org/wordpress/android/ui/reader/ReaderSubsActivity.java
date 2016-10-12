@@ -326,13 +326,17 @@ public class ReaderSubsActivity extends AppCompatActivity
             return;
         }
 
+        showAddUrlProgress();
         final ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (isFinishing()) return;
+                if (isFinishing()) {
+                    return;
+                }
 
+                hideAddUrlProgress();
                 getPageAdapter().refreshFollowedTagFragment();
 
                 if (succeeded) {
