@@ -29,6 +29,16 @@ public class WPComEndpointTest {
         assertEquals("/sites/56/media/78/delete/", WPCOMREST.sites.site(56).media.item(78).delete.getEndpoint());
         assertEquals("/sites/56/media/new/", WPCOMREST.sites.site(56).media.new_.getEndpoint());
 
+        // Sites - Taxonomies
+        assertEquals("/sites/56/taxonomies/category/terms/",
+                WPCOMREST.sites.site(56).taxonomies.taxonomy("category").terms.getEndpoint());
+        assertEquals("/sites/56/taxonomies/category/terms/new/",
+                WPCOMREST.sites.site(56).taxonomies.taxonomy("category").terms.new_.getEndpoint());
+        assertEquals("/sites/56/taxonomies/post_tag/terms/",
+                WPCOMREST.sites.site(56).taxonomies.taxonomy("post_tag").terms.getEndpoint());
+        assertEquals("/sites/56/taxonomies/post_tag/terms/new/",
+                WPCOMREST.sites.site(56).taxonomies.taxonomy("post_tag").terms.new_.getEndpoint());
+
         // Me
         assertEquals("/me/", WPCOMREST.me.getEndpoint());
         assertEquals("/me/settings/", WPCOMREST.me.settings.getEndpoint());

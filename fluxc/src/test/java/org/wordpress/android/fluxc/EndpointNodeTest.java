@@ -11,8 +11,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class EndpointNodeTest {
@@ -39,8 +40,21 @@ public class EndpointNodeTest {
         EndpointNode node = new EndpointNode("$post_ID/");
         assertEquals("post", node.getCleanEndpointName());
 
-        node.setLocalEndpoint("");
-        assertEquals("", node.getCleanEndpointName());
+        EndpointNode nodeWithType = new EndpointNode("$taxonomy#String/");
+        assertEquals("taxonomy", nodeWithType.getCleanEndpointName());
+
+        EndpointNode emptyNode = new EndpointNode("");
+        assertEquals("", emptyNode.getCleanEndpointName());
+    }
+
+    @Test
+    public void testGetEndpointTypes() {
+        EndpointNode typedNode = new EndpointNode("$taxonomy#String/");
+        assertEquals(1, typedNode.getEndpointTypes().size());
+        assertEquals("String", typedNode.getEndpointTypes().get(0));
+
+        EndpointNode normalNode = new EndpointNode("$post_ID/");
+        assertTrue(normalNode.getEndpointTypes().isEmpty());
     }
 
     @Test
