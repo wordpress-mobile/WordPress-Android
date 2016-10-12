@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.xmlrpc.media;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -10,12 +11,14 @@ import com.android.volley.VolleyError;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.network.HTTPAuthManager;
-import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
+import org.wordpress.android.fluxc.network.HTTPAuthManager;
+import org.wordpress.android.fluxc.network.HTTPAuthModel;
+import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCException;
@@ -23,14 +26,12 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
+import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-
-import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.util.MapUtils;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -50,6 +51,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.Request.Builder;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
@@ -221,10 +223,25 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 .username(site.getUsername())
                 .password(site.getPassword())
                 .build();
-        okhttp3.Request request = new okhttp3.Request.Builder()
+
+        // Use the HTTP Auth Manager to check if we need HTTP Auth for this url
+        HTTPAuthModel httpAuthModel = mHTTPAuthManager.getHTTPAuthModel(xmlrpcUrl.toString());
+        String authString = null;
+        if (httpAuthModel != null) {
+            String creds = String.format("%s:%s", httpAuthModel.getUsername(), httpAuthModel.getPassword());
+            authString = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
+        }
+
+        Builder builder = new okhttp3.Request.Builder()
                 .url(url)
                 .post(requestBody)
-                .build();
+                .addHeader("User-Agent", mUserAgent.toString());
+
+        if (authString != null) {
+            // Add the authorization header
+            builder.addHeader("Authorization", authString);
+        }
+        okhttp3.Request request = builder.build();
 
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
