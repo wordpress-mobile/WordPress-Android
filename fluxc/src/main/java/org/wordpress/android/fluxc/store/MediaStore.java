@@ -121,8 +121,13 @@ public class MediaStore extends Store {
 
     public static class MediaError implements OnChangedError {
         public MediaErrorType type;
+        public String message;
         public MediaError(MediaErrorType type) {
             this.type = type;
+        }
+        public MediaError(MediaErrorType type, String message) {
+            this.type = type;
+            this.message = message;
         }
     }
 
@@ -405,10 +410,13 @@ public class MediaStore extends Store {
             // null or empty media list -or- list contains a null value
             notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.UPLOAD_MEDIA, (MediaModel) null);
             return;
-        } else if (!isWellFormedForUpload(payload.media)) {
-            // list contained media items with insufficient data
-            notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, MediaAction.UPLOAD_MEDIA, payload.media);
-            return;
+        } else {
+            String errorMessage = isWellFormedForUpload(payload.media);
+            if (errorMessage != null){
+                // list contained media items with insufficient data
+                notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, MediaAction.UPLOAD_MEDIA, payload.media);
+                return;
+            }
         }
 
         if (payload.site.isWPCom()) {
@@ -497,21 +505,29 @@ public class MediaStore extends Store {
         emitChange(onMediaChanged);
     }
 
-    private boolean isWellFormedForUpload(@NonNull MediaModel media) {
+    private String isWellFormedForUpload(@NonNull MediaModel media) {
         String error = BaseUploadRequestBody.hasRequiredData(media);
         AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + error);
-        return error == null;
+        return error;
     }
 
     private void notifyMediaError(MediaErrorType errorType, MediaAction cause, List<MediaModel> media) {
+        notifyMediaError(errorType, null, cause, media);
+    }
+
+    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause, List<MediaModel> media) {
         OnMediaChanged mediaChange = new OnMediaChanged(cause, media);
-        mediaChange.error = new MediaError(errorType);
+        mediaChange.error = new MediaError(errorType, errorMessage);
         emitChange(mediaChange);
     }
 
     private void notifyMediaError(MediaErrorType errorType, MediaAction cause, MediaModel media) {
+        notifyMediaError(errorType, null, cause, media);
+    }
+
+    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause, MediaModel media) {
         List<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
-        notifyMediaError(errorType, cause, mediaList);
+        notifyMediaError(errorType, errorMessage, cause, mediaList);
     }
 }
