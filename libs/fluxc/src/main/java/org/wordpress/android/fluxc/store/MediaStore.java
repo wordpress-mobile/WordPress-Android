@@ -251,7 +251,7 @@ public class MediaStore extends Store {
     }
 
     //
-    // Media persistence
+    // Getters
     //
 
     public List<MediaModel> getAllSiteMedia(SiteModel siteModel) {
