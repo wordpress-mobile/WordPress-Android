@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
@@ -380,18 +381,21 @@ public class ReaderPostActions {
         new Thread() {
             @Override
             public void run() {
-                ReaderRelatedPostList allRelatedPosts = ReaderRelatedPostList.fromJson(jsonObject);
-                // split into posts from the passed site (local) and from across wp.com (global)
-                ReaderRelatedPostList localRelatedPosts = new ReaderRelatedPostList();
-                ReaderRelatedPostList globalRelatedPosts = new ReaderRelatedPostList();
-                for (ReaderRelatedPost relatedPost : allRelatedPosts) {
-                    if (relatedPost.getSiteId() == sourcePost.blogId) {
-                        localRelatedPosts.add(relatedPost);
-                    } else {
-                        globalRelatedPosts.add(relatedPost);
+                JSONArray jsonPosts = jsonObject.optJSONArray("posts");
+                if (jsonPosts != null) {
+                    ReaderRelatedPostList allRelatedPosts = ReaderRelatedPostList.fromJsonPosts(jsonPosts);
+                    // split into posts from the passed site (local) and from across wp.com (global)
+                    ReaderRelatedPostList localRelatedPosts = new ReaderRelatedPostList();
+                    ReaderRelatedPostList globalRelatedPosts = new ReaderRelatedPostList();
+                    for (ReaderRelatedPost relatedPost : allRelatedPosts) {
+                        if (relatedPost.getSiteId() == sourcePost.blogId) {
+                            localRelatedPosts.add(relatedPost);
+                        } else {
+                            globalRelatedPosts.add(relatedPost);
+                        }
                     }
+                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, localRelatedPosts, globalRelatedPosts));
                 }
-                EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, localRelatedPosts, globalRelatedPosts));
             }
         }.start();
 
