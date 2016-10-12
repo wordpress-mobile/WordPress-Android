@@ -60,7 +60,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
 
     private void initView(Context context) {
         inflate(context, R.layout.reader_related_posts_view, this);
-        mFeaturedImageWidth = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_width));
+        mFeaturedImageWidth = DisplayUtils.dpToPx(context, getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_width));
     }
 
     public void setOnRelatedPostClickListener(OnRelatedPostClickListener listener) {
