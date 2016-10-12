@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -21,9 +22,8 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SqlUtils;
 
 /**
- * tbl_posts contains all reader posts
- * tbl_post_tags stores the association between posts and tags (posts can exist in more than one tag)
- *
+ * tbl_posts contains all reader posts - note that the same post can occur multiple times in this
+ * table if it exists in multiple tag streams (ex: it exists in both followed sites and liked posts)
  */
 public class ReaderPostTable {
     private static final String COLUMN_NAMES =
@@ -46,9 +46,54 @@ public class ReaderPostTable {
           + "featured_image,"       // 17
           + "featured_video,"       // 18
           + "post_avatar,"          // 19
-          + "sort_index,"           // 20
-          + "date,"                 // 21
-          + "published,"            // 22
+          + "score,"                // 20
+          + "date_published,"       // 21
+          + "date_liked,"           // 22
+          + "date_tagged,"          // 23
+          + "num_replies,"          // 24
+          + "num_likes,"            // 25
+          + "is_liked,"             // 26
+          + "is_followed,"          // 27
+          + "is_comments_open,"     // 28
+          + "is_external,"          // 29
+          + "is_private,"           // 30
+          + "is_videopress,"        // 31
+          + "is_jetpack,"           // 32
+          + "primary_tag,"          // 33
+          + "secondary_tag,"        // 34
+          + "attachments_json,"     // 35
+          + "discover_json,"        // 36
+          + "xpost_post_id,"        // 37
+          + "xpost_blog_id,"        // 38
+          + "railcar_json,"         // 39
+          + "tag_name,"             // 40
+          + "tag_type,"             // 41
+          + "has_gap_marker";       // 42
+
+    // used when querying multiple rows and skipping text column
+    private static final String COLUMN_NAMES_NO_TEXT =
+            "post_id,"              // 1
+          + "blog_id,"              // 2
+          + "feed_id,"              // 3
+          + "feed_item_id,"         // 4
+          + "author_id,"            // 5
+          + "pseudo_id,"            // 6
+          + "author_name,"          // 7
+          + "author_first_name,"    // 8
+          + "blog_name,"            // 9
+          + "blog_url,"             // 10
+          + "excerpt,"              // 11
+          + "format,"               // 12
+          + "featured_image,"       // 13
+          + "featured_video,"       // 14
+          + "title,"                // 15
+          + "url,"                  // 16
+          + "short_url,"            // 17
+          + "post_avatar,"          // 18
+          + "score,"                // 19
+          + "date_published,"       // 20
+          + "date_liked,"           // 21
+          + "date_tagged,"          // 22
           + "num_replies,"          // 23
           + "num_likes,"            // 24
           + "is_liked,"             // 25
@@ -64,47 +109,10 @@ public class ReaderPostTable {
           + "discover_json,"        // 35
           + "xpost_post_id,"        // 36
           + "xpost_blog_id,"        // 37
-          + "railcar_json";         // 38
-
-    // used when querying multiple rows and skipping tbl_posts.text
-    private static final String COLUMN_NAMES_NO_TEXT =
-            "tbl_posts.post_id,"              // 1
-          + "tbl_posts.blog_id,"              // 2
-          + "tbl_posts.feed_id,"              // 3
-          + "tbl_posts.feed_item_id,"         // 4
-          + "tbl_posts.author_id,"            // 5
-          + "tbl_posts.pseudo_id,"            // 6
-          + "tbl_posts.author_name,"          // 7
-          + "tbl_posts.author_first_name,"    // 8
-          + "tbl_posts.blog_name,"            // 9
-          + "tbl_posts.blog_url,"             // 10
-          + "tbl_posts.excerpt,"              // 11
-          + "tbl_posts.format,"               // 12
-          + "tbl_posts.featured_image,"       // 13
-          + "tbl_posts.featured_video,"       // 14
-          + "tbl_posts.title,"                // 15
-          + "tbl_posts.url,"                  // 16
-          + "tbl_posts.short_url,"            // 17
-          + "tbl_posts.post_avatar,"          // 18
-          + "tbl_posts.sort_index,"           // 19
-          + "tbl_posts.date,"                 // 20
-          + "tbl_posts.published,"            // 21
-          + "tbl_posts.num_replies,"          // 22
-          + "tbl_posts.num_likes,"            // 23
-          + "tbl_posts.is_liked,"             // 24
-          + "tbl_posts.is_followed,"          // 25
-          + "tbl_posts.is_comments_open,"     // 26
-          + "tbl_posts.is_external,"          // 27
-          + "tbl_posts.is_private,"           // 28
-          + "tbl_posts.is_videopress,"        // 29
-          + "tbl_posts.is_jetpack,"           // 30
-          + "tbl_posts.primary_tag,"          // 31
-          + "tbl_posts.secondary_tag,"        // 32
-          + "tbl_posts.attachments_json,"     // 33
-          + "tbl_posts.discover_json,"        // 34
-          + "tbl_posts.xpost_post_id,"        // 35
-          + "tbl_posts.xpost_blog_id,"        // 36
-          + "tbl_posts.railcar_json";         // 37
+          + "railcar_json,"         // 38
+          + "tag_name,"             // 39
+          + "tag_type,"             // 40
+          + "has_gap_marker";       // 41
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -127,9 +135,10 @@ public class ReaderPostTable {
                 + " featured_image      TEXT,"
                 + " featured_video      TEXT,"
                 + " post_avatar         TEXT,"
-                + " sort_index          REAL DEFAULT 0,"
-                + " date                TEXT,"
-                + " published           TEXT,"
+                + " score               REAL DEFAULT 0,"
+                + " date_published      TEXT,"
+                + " date_liked          TEXT,"
+                + " date_tagged         TEXT,"
                 + " num_replies         INTEGER DEFAULT 0,"
                 + " num_likes           INTEGER DEFAULT 0,"
                 + " is_liked            INTEGER DEFAULT 0,"
@@ -146,29 +155,20 @@ public class ReaderPostTable {
                 + "	xpost_post_id		INTEGER DEFAULT 0,"
                 + " xpost_blog_id       INTEGER DEFAULT 0,"
                 + " railcar_json        TEXT,"
-                + " PRIMARY KEY (pseudo_id)"
+                + " tag_name            TEXT NOT NULL COLLATE NOCASE,"
+                + " tag_type            INTEGER DEFAULT 0,"
+                + " has_gap_marker      INTEGER DEFAULT 0,"
+                + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                 + ")");
 
-        db.execSQL("CREATE UNIQUE INDEX idx_posts_post_id_blog_id ON tbl_posts(post_id, blog_id)");
-        db.execSQL("CREATE INDEX idx_posts_sort_index ON tbl_posts(sort_index)");
-
-        db.execSQL("CREATE TABLE tbl_post_tags ("
-                + "   post_id           INTEGER DEFAULT 0,"
-                + "   blog_id           INTEGER DEFAULT 0,"
-                + "   feed_id           INTEGER DEFAULT 0,"
-                + "   pseudo_id         TEXT NOT NULL,"
-                + "   tag_name          TEXT NOT NULL COLLATE NOCASE,"
-                + "   tag_type          INTEGER DEFAULT 0,"
-                + "   has_gap_marker    INTEGER DEFAULT 0,"
-                + "   PRIMARY KEY (pseudo_id, tag_name, tag_type)"
-                + ")");
-
-        db.execSQL("CREATE INDEX idx_post_tags_tag_name ON tbl_post_tags(tag_name)");
+        db.execSQL("CREATE INDEX idx_posts_post_id_blog_id ON tbl_posts(post_id, blog_id)");
+        db.execSQL("CREATE INDEX idx_posts_date_published ON tbl_posts(date_published)");
+        db.execSQL("CREATE INDEX idx_posts_date_tagged ON tbl_posts(date_tagged)");
+        db.execSQL("CREATE INDEX idx_posts_tag_name ON tbl_posts(tag_name)");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_posts");
-        db.execSQL("DROP TABLE IF EXISTS tbl_post_tags");
     }
 
     protected static void reset(SQLiteDatabase db) {
@@ -181,8 +181,8 @@ public class ReaderPostTable {
      * only called from ReaderDatabase.purge() which already creates a transaction
      */
     protected static int purge(SQLiteDatabase db) {
-        // delete posts in tbl_post_tags attached to tags that no longer exist
-        int numDeleted = db.delete("tbl_post_tags", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
+        // delete posts attached to tags that no longer exist
+        int numDeleted = db.delete("tbl_posts", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
 
         // delete excess posts on a per-tag basis
         ReaderTagList tags = ReaderTagTable.getAllTags();
@@ -192,9 +192,6 @@ public class ReaderPostTable {
 
         // delete search results
         numDeleted += purgeSearchResults(db);
-
-        // delete posts in tbl_posts that no longer exist in tbl_post_tags
-        numDeleted += db.delete("tbl_posts", "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)", null);
 
         return numDeleted;
     }
@@ -211,15 +208,8 @@ public class ReaderPostTable {
 
         int numToPurge = numPosts - MAX_POSTS_PER_TAG;
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt()), Integer.toString(numToPurge)};
-        String where = "pseudo_id IN ("
-                + "  SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
-                + "  WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
-                + "  AND tbl_post_tags.tag_name=?"
-                + "  AND tbl_post_tags.tag_type=?"
-                + "  ORDER BY tbl_posts.sort_index"
-                + "  LIMIT ?"
-                + ")";
-        int numDeleted = db.delete("tbl_post_tags", where, args);
+        String where = "tag_name=? AND tag_type=? ORDER BY " + getSortColumnForTag(tag) + " LIMIT ?";
+        int numDeleted = db.delete("tbl_posts", where, args);
         AppLog.d(AppLog.T.READER, String.format("reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
         return numDeleted;
     }
@@ -229,7 +219,7 @@ public class ReaderPostTable {
      */
     private static int purgeSearchResults(SQLiteDatabase db) {
         String[] args = {Integer.toString(ReaderTagType.SEARCH.toInt())};
-        return db.delete("tbl_post_tags", "tag_type=?", args);
+        return db.delete("tbl_posts", "tag_type=?", args);
     }
 
     public static int getNumPostsInBlog(long blogId) {
@@ -256,7 +246,7 @@ public class ReaderPostTable {
         }
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                    "SELECT count(*) FROM tbl_post_tags WHERE tag_name=? AND tag_type=?",
+                    "SELECT count(*) FROM tbl_posts WHERE tag_name=? AND tag_type=?",
                     args);
     }
 
@@ -420,18 +410,11 @@ public class ReaderPostTable {
             return 0;
         }
 
-        // first delete posts from tbl_post_tags, and if any were deleted next delete posts in tbl_posts that no longer exist in tbl_post_tags
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
-        int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags",
+        return ReaderDatabase.getWritableDb().delete(
+                "tbl_posts",
                 "tag_name=? AND tag_type=?",
                 args);
-
-        if (numDeleted > 0)
-            ReaderDatabase.getWritableDb().delete("tbl_posts",
-                    "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)",
-                    null);
-
-        return numDeleted;
     }
 
     public static int deletePostsInBlog(long blogId) {
@@ -466,28 +449,29 @@ public class ReaderPostTable {
             return "";
         }
 
-        String sql = "SELECT tbl_posts.date FROM tbl_posts, tbl_post_tags"
-                   + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
-                   + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
-                   + " ORDER BY date LIMIT 1";
+        // date field depends on the tag
+        String dateColumn = getSortColumnForTag(tag);
+        String sql = "SELECT " + dateColumn + " FROM tbl_posts"
+                   + " WHERE tag_name=? AND tag_type=?"
+                   + " ORDER BY " + dateColumn + " LIMIT 1";
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     /*
-     * returns the iso8601 date of the oldest post in the passed blog
+     * returns the iso8601 pub date of the oldest post in the passed blog
      */
-    public static String getOldestDateInBlog(long blogId) {
-        String sql = "SELECT date FROM tbl_posts"
+    public static String getOldestPubDateInBlog(long blogId) {
+        String sql = "SELECT date_published FROM tbl_posts"
                   + " WHERE blog_id = ?"
-                  + " ORDER BY date LIMIT 1";
+                  + " ORDER BY date_published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(blogId)});
     }
 
-    public static String getOldestDateInFeed(long feedId) {
-        String sql = "SELECT date FROM tbl_posts"
+    public static String getOldestPubDateInFeed(long feedId) {
+        String sql = "SELECT date_published FROM tbl_posts"
                   + " WHERE feed_id = ?"
-                  + " ORDER BY date LIMIT 1";
+                  + " ORDER BY date_published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
     }
 
@@ -495,7 +479,7 @@ public class ReaderPostTable {
         if (tag == null) return;
 
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
-        String sql = "UPDATE tbl_post_tags SET has_gap_marker=0 WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
+        String sql = "UPDATE tbl_posts SET has_gap_marker=0 WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
 
@@ -508,7 +492,7 @@ public class ReaderPostTable {
         }
 
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
-        String sql = "SELECT blog_id, post_id FROM tbl_post_tags WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
+        String sql = "SELECT blog_id, post_id FROM tbl_posts WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             if (cursor.moveToFirst()) {
@@ -532,7 +516,7 @@ public class ReaderPostTable {
                 tag.getTagSlug(),
                 Integer.toString(tag.tagType.toInt())
         };
-        String sql = "UPDATE tbl_post_tags SET has_gap_marker=1 WHERE blog_id=? AND post_id=? AND tag_name=? AND tag_type=?";
+        String sql = "UPDATE tbl_posts SET has_gap_marker=1 WHERE blog_id=? AND post_id=? AND tag_name=? AND tag_type=?";
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
 
@@ -541,20 +525,33 @@ public class ReaderPostTable {
         if (ids == null) {
             return null;
         }
+
+        String dateColumn = getSortColumnForTag(tag);
         String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
-        String sql = "SELECT date FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        String sql = "SELECT " + dateColumn + " FROM tbl_posts WHERE blog_id=? AND post_id=?";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
-    private static long getGapMarkerSortIndexForTag(ReaderTag tag) {
-        ReaderBlogIdPostId ids = getGapMarkerIdsForTag(tag);
-        if (ids == null) {
-            return 0;
+    /*
+     * the column posts are sorted by depends on the type of tag stream being displayed:
+     *
+     *      liked posts      sort by the date the post was liked
+     *      followed posts   sort by the date the post was published
+     *      search results   sort by score
+     *      tagged posts     sort by the date the post was tagged
+     */
+    private static String getSortColumnForTag(ReaderTag tag) {
+        if (tag.isPostsILike()) {
+            return "date_liked";
+        } else if (tag.isFollowedSites()) {
+            return "date_published";
+        } else if (tag.tagType == ReaderTagType.SEARCH) {
+            return "score";
+        } else if (tag.isTagTopic()) {
+            return "date_tagged";
+        } else {
+            return "date_published";
         }
-
-        String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
-        String sql = "SELECT sort_index FROM tbl_posts WHERE blog_id=? AND post_id=?";
-        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     /*
@@ -563,16 +560,16 @@ public class ReaderPostTable {
      * be cleaned up by the next purge
      */
     public static void deletePostsBeforeGapMarkerForTag(ReaderTag tag) {
-        long sortIndex = getGapMarkerSortIndexForTag(tag);
-        if (sortIndex == 0) return;
+        String gapMarkerDate = getGapMarkerDateForTag(tag);
+        if (TextUtils.isEmpty(gapMarkerDate)) return;
 
-        String[] args = {Long.toString(sortIndex), tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
-        String where = "pseudo_id IN (SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
-                + " WHERE tbl_posts.sort_index < ?"
-                + " AND tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
-                + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?)";
-        int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags", where, args);
-        AppLog.d(AppLog.T.READER, "removed " + numDeleted + " posts older than gap marker");
+        String dateColumn = getSortColumnForTag(tag);
+        String[] args = {gapMarkerDate, tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String where = "tag_name=? AND tag_type=? AND " + dateColumn + " < ?";
+        int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_posts", where, args);
+        if (numDeleted > 0) {
+            AppLog.d(AppLog.T.READER, "removed " + numDeleted + " posts older than gap marker");
+        }
     }
 
     public static void setFollowStatusForPostsInBlog(long blogId, boolean isFollowed) {
@@ -600,14 +597,13 @@ public class ReaderPostTable {
             }
 
 
-            // if blog/feed is no longer followed, remove its posts tagged with "Followed Sites" in
-            // tbl_post_tags
+            // if blog/feed is no longer followed, remove its posts tagged with "Followed Sites"
             if (!isFollowed) {
                 if (blogId != 0) {
-                    db.delete("tbl_post_tags", "blog_id=? AND tag_name=?",
+                    db.delete("tbl_posts", "blog_id=? AND tag_name=?",
                             new String[]{Long.toString(blogId), ReaderTag.TAG_TITLE_FOLLOWED_SITES});
                 } else {
-                    db.delete("tbl_post_tags", "feed_id=? AND tag_name=?",
+                    db.delete("tbl_posts", "feed_id=? AND tag_name=?",
                             new String[]{Long.toString(feedId), ReaderTag.TAG_TITLE_FOLLOWED_SITES});
                 }
             }
@@ -652,14 +648,18 @@ public class ReaderPostTable {
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
-                + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38)");
-        SQLiteStatement stmtTags = db.compileStatement(
-                "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, feed_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5,?6)");
+                        + COLUMN_NAMES
+                        + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42)");
 
         db.beginTransaction();
         try {
-            // first insert into tbl_posts
+            String tagName = (tag != null ? tag.getTagSlug() : "");
+            int tagType = (tag != null ? tag.tagType.toInt() : 0);
+
+            // we can safely assume there's no gap marker because any existing gap marker is
+            // already removed before posts are updated
+            boolean hasGapMarker = false;
+
             for (ReaderPost post: posts) {
                 stmtPosts.bindLong  (1,  post.postId);
                 stmtPosts.bindLong  (2,  post.blogId);
@@ -680,41 +680,30 @@ public class ReaderPostTable {
                 stmtPosts.bindString(17, post.getFeaturedImage());
                 stmtPosts.bindString(18, post.getFeaturedVideo());
                 stmtPosts.bindString(19, post.getPostAvatar());
-                stmtPosts.bindDouble(20, post.sortIndex);
-                stmtPosts.bindString(21, post.getDate());
-                stmtPosts.bindString(22, post.getPubDate());
-                stmtPosts.bindLong  (23, post.numReplies);
-                stmtPosts.bindLong  (24, post.numLikes);
-                stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isLikedByCurrentUser));
-                stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
-                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isCommentsOpen));
-                stmtPosts.bindLong  (28, SqlUtils.boolToSql(post.isExternal));
-                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isPrivate));
-                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindLong  (31, SqlUtils.boolToSql(post.isJetpack));
-                stmtPosts.bindString(32, post.getPrimaryTag());
-                stmtPosts.bindString(33, post.getSecondaryTag());
-                stmtPosts.bindString(34, post.getAttachmentsJson());
-                stmtPosts.bindString(35, post.getDiscoverJson());
-                stmtPosts.bindLong  (36, post.xpostPostId);
-                stmtPosts.bindLong  (37, post.xpostBlogId);
-                stmtPosts.bindString(38, post.getRailcarJson());
+                stmtPosts.bindDouble(20, post.score);
+                stmtPosts.bindString(21, post.getDatePublished());
+                stmtPosts.bindString(22, post.getDateLiked());
+                stmtPosts.bindString(23, post.getDateTagged());
+                stmtPosts.bindLong  (24, post.numReplies);
+                stmtPosts.bindLong  (25, post.numLikes);
+                stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isLikedByCurrentUser));
+                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
+                stmtPosts.bindLong  (28, SqlUtils.boolToSql(post.isCommentsOpen));
+                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isExternal));
+                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isPrivate));
+                stmtPosts.bindLong  (31, SqlUtils.boolToSql(post.isVideoPress));
+                stmtPosts.bindLong  (32, SqlUtils.boolToSql(post.isJetpack));
+                stmtPosts.bindString(33, post.getPrimaryTag());
+                stmtPosts.bindString(34, post.getSecondaryTag());
+                stmtPosts.bindString(35, post.getAttachmentsJson());
+                stmtPosts.bindString(36, post.getDiscoverJson());
+                stmtPosts.bindLong  (37, post.xpostPostId);
+                stmtPosts.bindLong  (38, post.xpostBlogId);
+                stmtPosts.bindString(39, post.getRailcarJson());
+                stmtPosts.bindString(40, tagName);
+                stmtPosts.bindLong  (41, tagType);
+                stmtPosts.bindLong  (42, SqlUtils.boolToSql(hasGapMarker));
                 stmtPosts.execute();
-            }
-
-            // now add to tbl_post_tags if a tag was passed
-            if (tag != null) {
-                String tagName = tag.getTagSlug();
-                int tagType = tag.tagType.toInt();
-                for (ReaderPost post: posts) {
-                    stmtTags.bindLong  (1, post.postId);
-                    stmtTags.bindLong  (2, post.blogId);
-                    stmtTags.bindLong  (3, post.feedId);
-                    stmtTags.bindString(4, post.getPseudoId());
-                    stmtTags.bindString(5, tagName);
-                    stmtTags.bindLong  (6, tagType);
-                    stmtTags.execute();
-                }
             }
 
             db.setTransactionSuccessful();
@@ -722,7 +711,6 @@ public class ReaderPostTable {
         } finally {
             db.endTransaction();
             SqlUtils.closeStatement(stmtPosts);
-            SqlUtils.closeStatement(stmtTags);
         }
     }
 
@@ -731,23 +719,20 @@ public class ReaderPostTable {
             return new ReaderPostList();
         }
 
-        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "tbl_posts.*");
-        String sql = "SELECT " + columns + " FROM tbl_posts, tbl_post_tags"
-                   + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
-                   + " AND tbl_post_tags.tag_name=?"
-                   + " AND tbl_post_tags.tag_type=?";
+        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE tag_name=? AND tag_type=?";
 
         if (tag.tagType == ReaderTagType.DEFAULT) {
             // skip posts that are no longer liked if this is "Posts I Like", skip posts that are no
             // longer followed if this is "Followed Sites"
             if (tag.isPostsILike()) {
-                sql += " AND tbl_posts.is_liked != 0";
+                sql += " AND is_liked != 0";
             } else if (tag.isFollowedSites()) {
-                sql += " AND tbl_posts.is_followed != 0";
+                sql += " AND is_followed != 0";
             }
         }
 
-        sql += " ORDER BY tbl_posts.sort_index DESC";
+        sql += " ORDER BY " + getSortColumnForTag(tag) + " DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -763,8 +748,8 @@ public class ReaderPostTable {
     }
 
     public static ReaderPostList getPostsInBlog(long blogId, int maxPosts, boolean excludeTextColumn) {
-        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "tbl_posts.*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.sort_index DESC";
+        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id = ? ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -779,8 +764,8 @@ public class ReaderPostTable {
     }
 
     public static ReaderPostList getPostsInFeed(long feedId, int maxPosts, boolean excludeTextColumn) {
-        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "tbl_posts.*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE feed_id = ? ORDER BY tbl_posts.sort_index DESC";
+        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE feed_id = ? ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -803,20 +788,17 @@ public class ReaderPostTable {
             return idList;
         }
 
-        String sql = "SELECT tbl_posts.blog_id, tbl_posts.post_id FROM tbl_posts, tbl_post_tags"
-                + " WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
-                + " AND tbl_post_tags.tag_name=?"
-                + " AND tbl_post_tags.tag_type=?";
+        String sql = "SELECT blog_id, post_id FROM tbl_posts WHERE tag_name=? AND tag_type=?";
 
         if (tag.tagType == ReaderTagType.DEFAULT) {
             if (tag.isPostsILike()) {
-                sql += " AND tbl_posts.is_liked != 0";
+                sql += " AND is_liked != 0";
             } else if (tag.isFollowedSites()) {
-                sql += " AND tbl_posts.is_followed != 0";
+                sql += " AND is_followed != 0";
             }
         }
 
-        sql += " ORDER BY tbl_posts.sort_index DESC";
+        sql += " ORDER BY " + getSortColumnForTag(tag) + " DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -840,7 +822,7 @@ public class ReaderPostTable {
      * same as getPostsInBlog() but only returns the blogId/postId pairs
      */
     public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(long blogId, int maxPosts) {
-        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.sort_index DESC";
+        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id = ? ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -895,10 +877,11 @@ public class ReaderPostTable {
         post.setShortUrl(c.getString(c.getColumnIndex("short_url")));
         post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
-        post.sortIndex = c.getDouble(c.getColumnIndex("sort_index"));
-        post.setDate(c.getString(c.getColumnIndex("date")));
-        post.setPubDate(c.getString(c.getColumnIndex("published")));
+        post.setDatePublished(c.getString(c.getColumnIndex("date_published")));
+        post.setDateLiked(c.getString(c.getColumnIndex("date_liked")));
+        post.setDateTagged(c.getString(c.getColumnIndex("date_tagged")));
 
+        post.score = c.getDouble(c.getColumnIndex("score"));
         post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
         post.numLikes = c.getInt(c.getColumnIndex("num_likes"));
 

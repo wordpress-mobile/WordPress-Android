@@ -52,7 +52,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
             txtBlogName.setText(R.string.reader_untitled_post);
         }
 
-        java.util.Date dtPost = DateTimeUtils.dateFromIso8601(post.getDate());
+        java.util.Date dtPost = DateTimeUtils.dateFromIso8601(post.getDatePublished());
         String dateLine = DateTimeUtils.javaDateToTimeSpan(dtPost, WordPress.getContext());
         if (post.isCommentsOpen || post.numReplies > 0) {
             dateLine += "  \u2022  " + ReaderUtils.getShortCommentLabelText(getContext(), post.numReplies);

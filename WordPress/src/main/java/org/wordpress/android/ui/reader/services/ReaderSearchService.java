@@ -12,7 +12,6 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -112,15 +111,6 @@ public class ReaderSearchService extends Service {
             @Override
             public void run() {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-
-                // we want search results to be sorted based on their offset - this works because
-                // ReaderPostTable.getPostsWithTag() sorts by sort_index in descending order
-                int sortIndex = -offset - 1;
-                for (ReaderPost post: serverPosts) {
-                    post.sortIndex = sortIndex;
-                    sortIndex--;
-                }
-
                 ReaderPostTable.addOrUpdatePosts(getTagForSearchQuery(query), serverPosts);
                 EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, offset, true));
             }
