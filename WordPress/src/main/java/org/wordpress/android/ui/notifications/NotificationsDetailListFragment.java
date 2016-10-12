@@ -167,7 +167,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 mIsUnread = note.isUnread();
                 setNote(note);
             } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
             }
         }
     }
