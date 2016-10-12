@@ -63,6 +63,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_ARG_TITLE = "title";
     private static final String PUSH_ARG_MSG = "msg";
     private static final String PUSH_ARG_NOTE_ID = "note_id";
+    private static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
 
     private static final String PUSH_TYPE_COMMENT = "c";
     private static final String PUSH_TYPE_LIKE = "like";
@@ -119,10 +120,34 @@ public class GCMMessageService extends GcmListenerService {
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
+    private void trySaveNoteIfNotAlreadyInBucket(Bundle data) {
+        if (SimperiumUtils.getNotesBucket() != null) {
+            Note note = null;
+            String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
+            try {
+                note = SimperiumUtils.getNotesBucket().get(noteId);
+                // all good if we got here
+            } catch (BucketObjectMissingException e) {
+                AppLog.e(T.NOTIFS, e);
+                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
+
+                if (data != null && data.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
+                    //if note doesn't exist, try taking it from the PN payload, build it and save it
+                    // Simperium will take care of syncing local and server versions up at a later point
+                    String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
+                    note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
+                    SimperiumUtils.saveNote(note);
+                }
+            }
+        }
+    }
+
     private void buildAndShowNotificationFromNoteData(Bundle data) {
 
         if (data == null)
             return;
+
+        trySaveNoteIfNotAlreadyInBucket(data);
 
         String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
@@ -241,7 +266,7 @@ public class GCMMessageService extends GcmListenerService {
                 }
                 areActionsSet = true;
             } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e);
             }
         }
 
