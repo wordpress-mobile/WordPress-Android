@@ -63,7 +63,7 @@
 
         <ProgressBar
             android:id="@+id/edit_comment_progress"
-            style="@android:style/Widget.Holo.Light.ProgressBar.Large"
+            style="@style/Widget.AppCompat.ProgressBar"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
