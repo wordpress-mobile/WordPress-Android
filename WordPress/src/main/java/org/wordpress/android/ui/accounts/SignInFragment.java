@@ -316,6 +316,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             showSelfHostedSignInForm();
             mSelfHosted = true;
         }
+        
+        if (fieldsFilled()) {
+            mSignInButton.setEnabled(true);
+        } else {
+            mSignInButton.setEnabled(false);
+        }
     }
 
     protected void showDotComSignInForm(){
