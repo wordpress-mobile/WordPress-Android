@@ -498,7 +498,9 @@ public class MediaStore extends Store {
     }
 
     private boolean isWellFormedForUpload(@NonNull MediaModel media) {
-        return BaseUploadRequestBody.hasRequiredData(media) == null;
+        String error = BaseUploadRequestBody.hasRequiredData(media);
+        AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + error);
+        return error == null;
     }
 
     private void notifyMediaError(MediaErrorType errorType, MediaAction cause, List<MediaModel> media) {
