@@ -34,7 +34,7 @@ public class ApiHelperTest extends InstrumentationTestCase {
         // Init contexts
         XMLRPCFactoryTest.sContext = getInstrumentation().getContext();
         RestClientFactoryTest.sContext = getInstrumentation().getContext();
-        AppLog.v(T.TESTS, "Contexts set");
+        AppLog.d(T.TESTS, "Contexts set");
 
         // Set mode to Customizable
         XMLRPCFactoryTest.sMode = XMLRPCFactoryTest.Mode.CUSTOMIZABLE_JSON;
