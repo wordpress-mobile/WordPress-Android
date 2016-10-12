@@ -10,7 +10,7 @@
 	<string name="alignment_none">없음</string>
 	<string name="alignment_left">왼쪽</string>
 	<string name="alignment_right">오른쪽</string>
-	<string name="site_settings_list_editor_action_mode_title">%1$s 선택</string>
+	<string name="site_settings_list_editor_action_mode_title">%1$d 선택</string>
 	<string name="error_fetch_users_list">사이트 사용자를 가져올 수 없습니다.</string>
 	<string name="plans_manage">요금제 관리:\n워드프레스닷컴/요금제</string>
 	<string name="people_empty_list_filtered_viewers">아직 방문자가 없습니다.</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">이 팔로워가 제거된 경우 해당 팔로워는 다시 팔로우하지 않는 한 이 사이트에 대한 알림을 수신할 수 없게 됩니다.\n\n이 팔로워를 제거하시겠습니까?</string>
 	<string name="follower_subscribed_since">%1$s 이후</string>
 	<string name="reader_label_view_gallery">갤러리 보기</string>
-	<string name="reader_label_image_count">%d개의 이미지</string>
 	<string name="error_remove_follower">팔로워를 제거할 수 없습니다.</string>
 	<string name="error_remove_viewer">방문자를 제거할 수 없습니다.</string>
 	<string name="error_fetch_email_followers_list">사이트 이메일 팔로워를 가져올 수 없습니다.</string>
@@ -964,7 +963,6 @@
 	<string name="signing_in">로그인 중...</string>
 	<string name="media_add_new_media_gallery">갤러리 만들기</string>
 	<string name="select_from_media_library">미디어 라이브러리에서 선택</string>
-	<string name="reader_timespan_now">지금</string>
 	<string name="reader_btn_share">공유</string>
 	<string name="reader_btn_follow">팔로우</string>
 	<string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>

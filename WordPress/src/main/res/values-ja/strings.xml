@@ -10,7 +10,7 @@
 	<string name="alignment_none">なし</string>
 	<string name="alignment_left">左</string>
 	<string name="alignment_right">右</string>
-	<string name="site_settings_list_editor_action_mode_title">%1$s が選択されています</string>
+	<string name="site_settings_list_editor_action_mode_title">%1$d が選択されています</string>
 	<string name="error_fetch_users_list">サイトのユーザーを取得できませんでした</string>
 	<string name="plans_manage">プランの管理は次で行います\nWordPress.com/plans</string>
 	<string name="title_follower">フォロワー</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">削除すると、このフォロワーが再度フォローしない限り、このサイトの通知を受け取れなくなります。\n\n本当にこのフォロワーを削除しますか ?</string>
 	<string name="follower_subscribed_since">購読日: %1$s</string>
 	<string name="reader_label_view_gallery">ギャラリーを表示</string>
-	<string name="reader_label_image_count">%d枚の画像</string>
 	<string name="error_remove_follower">フォロワーを削除できませんでした。</string>
 	<string name="error_remove_viewer">閲覧者を削除できませんでした。</string>
 	<string name="error_fetch_email_followers_list">サイトのメールフォロワーを取得できませんでした。</string>
@@ -995,7 +994,6 @@
 	<string name="reader_empty_followed_tags">現在何もタグをフォローしていません</string>
 	<string name="create_account_wpcom">WordPress.com でアカウントを作成</string>
 	<string name="jetpack_message">統計情報を表示するには Jetpack プラグインが必要です。Jetpack をインストールしますか ?</string>
-	<string name="reader_timespan_now">今</string>
 	<string name="reader_likes_one">1人がいいねをつけました</string>
 	<string name="reader_toast_err_comment_failed">コメントを投稿できませんでした</string>
 	<string name="connecting_wpcom">WordPress.com に接続中</string>

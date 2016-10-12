@@ -682,7 +682,6 @@
 	<string name="reader_btn_unfollow">กำลังติดตาม</string>
 	<string name="jetpack_message">การใช้งานสถิติต้องใช้ปลั๊กอิน Jetpack  คุณต้องการติดตั้ง Jetpack หรือไม่</string>
 	<string name="jetpack_not_found">ไม่พบปลั๊กอิน Jetpack</string>
-	<string name="reader_timespan_now">ตอนนี้</string>
 	<string name="reader_untitled_post">(ไม่มีหัวข้อ)</string>
 	<string name="reader_share_subject">แบ่งปันจาก %s แล้ว</string>
 	<string name="media_add_popup_title">เพิ่มไปยังคลังสื่อ</string>

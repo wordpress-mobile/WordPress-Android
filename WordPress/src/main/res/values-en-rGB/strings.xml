@@ -10,7 +10,7 @@
 	<string name="alignment_none">None</string>
 	<string name="alignment_left">Left</string>
 	<string name="alignment_right">Right</string>
-	<string name="site_settings_list_editor_action_mode_title">Selected %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Selected %1$d</string>
 	<string name="error_fetch_users_list">Couldn\'t retrieve site users</string>
 	<string name="plans_manage">Manage your plan at\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">You don\'t have any viewers yet.</string>
@@ -29,7 +29,6 @@
 	<string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>
 	<string name="follower_subscribed_since">Since %1$s</string>
 	<string name="reader_label_view_gallery">View Gallery</string>
-	<string name="reader_label_image_count">%d images</string>
 	<string name="error_remove_follower">Couldn\'t remove follower</string>
 	<string name="error_remove_viewer">Couldn\'t remove viewer</string>
 	<string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>
@@ -978,7 +977,6 @@
 	<string name="select_from_media_library">Select from media library</string>
 	<string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
 	<string name="jetpack_not_found">Jetpack plugin not found</string>
-	<string name="reader_timespan_now">now</string>
 	<string name="reader_untitled_post">(Untitled)</string>
 	<string name="reader_share_subject">Shared from %s</string>
 	<string name="reader_btn_share">Share</string>

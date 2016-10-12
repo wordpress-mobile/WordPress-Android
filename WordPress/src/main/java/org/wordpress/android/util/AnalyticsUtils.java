@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.Html;
@@ -13,6 +14,7 @@ import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -25,6 +27,7 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_OPENED;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_RELATED_POST_CLICKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER;
@@ -35,6 +38,8 @@ public class AnalyticsUtils {
     private static String FEED_ID_KEY = "feed_id";
     private static String FEED_ITEM_ID_KEY = "feed_item_id";
     private static String IS_JETPACK_KEY = "is_jetpack";
+    private static String INTENT_ACTION = "intent_action";
+    private static String INTENT_DATA = "intent_data";
 
     /**
      * Utility methods to refresh Tracks and Mixpanel metadata.
@@ -166,6 +171,48 @@ public class AnalyticsUtils {
      * @param railcarJson The JSON string of the railcar
      *
      */
+    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
+        trackWithReaderPostDetails(stat, ReaderPostTable.getBlogPost(blogId, postId, true));
+    }
+
+    public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(BLOG_ID_KEY, blogId);
+        properties.put(POST_ID_KEY, postId);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    public static void trackWithFeedPostDetails(AnalyticsTracker.Stat stat, long feedId, long feedItemId) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(FEED_ID_KEY, feedId);
+        properties.put(FEED_ITEM_ID_KEY, feedItemId);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
+     * Track when app launched via deep-linking
+     *
+     * @param stat The Stat to bump
+     * @param action The Intent action the app was started with
+     * @param data The data URI the app was started with
+     *
+     */
+    public static void trackWithDeepLinkData(AnalyticsTracker.Stat stat, String action, Uri data) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(INTENT_ACTION, action);
+        properties.put(INTENT_DATA, data != null ? data.toString() : null);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+  /**
+   * Track when a railcar item has been rendered
+   *
+   * @param post The JSON string of the railcar
+   *
+   */
     public static void trackRailcarRender(String railcarJson) {
         if (TextUtils.isEmpty(railcarJson)) return;
 
@@ -195,7 +242,8 @@ public class AnalyticsUtils {
         return stat == READER_ARTICLE_LIKED
                 || stat == READER_ARTICLE_OPENED
                 || stat == READER_SEARCH_RESULT_TAPPED
-                || stat == READER_ARTICLE_COMMENTED_ON;
+                || stat == READER_ARTICLE_COMMENTED_ON
+                || stat == READER_RELATED_POST_CLICKED;
     }
 
     /*

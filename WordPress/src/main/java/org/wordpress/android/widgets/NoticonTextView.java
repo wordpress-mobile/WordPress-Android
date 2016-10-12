@@ -8,7 +8,7 @@ import android.widget.TextView;
  * TextView that uses noticon icon font
  */
 public class NoticonTextView extends TextView {
-    private static final String NOTICON_FONT_NAME = "Noticons-Regular.otf";
+    private static final String NOTICON_FONT_NAME = "Noticons.ttf";
 
     public NoticonTextView(Context context) {
         super(context, null);

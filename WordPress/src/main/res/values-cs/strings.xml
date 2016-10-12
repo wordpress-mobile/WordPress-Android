@@ -10,7 +10,7 @@
 	<string name="alignment_none">Žádné</string>
 	<string name="alignment_left">Doleva</string>
 	<string name="alignment_right">Doprava</string>
-	<string name="site_settings_list_editor_action_mode_title">Vyberte %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Vyberte %1$d</string>
 	<string name="error_fetch_users_list">Nelze načíst uživatele webu</string>
 	<string name="plans_manage">Spravuj svůj plán na\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">Nemáte ještě nějaké otázky.</string>
@@ -28,7 +28,6 @@
 	<string name="viewer_remove_confirmation_message">Chcete odstranit tento prohlížeč, pak už nikdo nebude moct navštívit tuto webovou stránku.\n\nChcete určitě odstranit tento prohlížeč?</string>
 	<string name="follower_remove_confirmation_message">Pokud odstraníte tohoto fanouška, nebude už dostávat žádné upozornění z tohoto webu..\n\nChcete určitě odstranit tohoto fanouška?</string>
 	<string name="follower_subscribed_since">Od %1$s</string>
-	<string name="reader_label_image_count">%d obrázků</string>
 	<string name="reader_label_view_gallery">Zobrazit galerii</string>
 	<string name="error_remove_follower">Nepodařilo se odstranit fanouška</string>
 	<string name="error_remove_viewer">Nepodařilo se odstranit zobrazení</string>
@@ -980,7 +979,6 @@
 	<string name="empty_list_default">Tento seznam je prázdný</string>
 	<string name="select_from_media_library">Vyberte z knihovny medií</string>
 	<string name="jetpack_not_found">Plugin Jetpack nebyl nalezen</string>
-	<string name="reader_timespan_now">nyní</string>
 	<string name="reader_untitled_post">(bez názvu)</string>
 	<string name="reader_share_subject">Sdíleno z %s</string>
 	<string name="reader_btn_follow">Sledovat</string>
