@@ -146,6 +146,27 @@ public class TaxonomyStore extends Store {
         return TaxonomySqlUtils.getTermsForSite(site, taxonomyName);
     }
 
+    /**
+     * Returns a category as a {@link TermModel} given its remote id.
+     */
+    public TermModel getCategoryByRemoteId(SiteModel site, long remoteId) {
+        return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, DEFAULT_TAXONOMY_CATEGORY);
+    }
+
+    /**
+     * Returns a category as a {@link TermModel} given its remote id.
+     */
+    public TermModel getTagByRemoteId(SiteModel site, long remoteId) {
+        return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, DEFAULT_TAXONOMY_TAG);
+    }
+
+    /**
+     * Returns a category as a {@link TermModel} given its remote id.
+     */
+    public TermModel getTermByRemoteId(SiteModel site, long remoteId, String taxonomyName) {
+        return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, taxonomyName);
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
