@@ -77,7 +77,16 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         // 404 - "Invalid post ID."
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
-                        payload.error = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        // Convert GenericErrorType to PostErrorType where applicable
+                        PostError postError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        }
+                        payload.error = postError;
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                     }
                 });
@@ -129,7 +138,15 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         // Possible non-generic errors:
                         // 403 - "The post type specified is not valid"
                         // TODO: Check the error message and flag this as INVALID_POST_TYPE if applicable
-                        PostError postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        // Convert GenericErrorType to PostErrorType where applicable
+                        PostError postError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        }
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
@@ -181,7 +198,16 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         // 404 - "Invalid attachment ID." (invalid featured image)
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         // TODO: Check the error message and flag this as one of the above specific errors if applicable
-                        payload.error = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        // Convert GenericErrorType to PostErrorType where applicable
+                        PostError postError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        }
+                        payload.error = postError;
                         mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
                     }
                 });
@@ -212,7 +238,16 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         // 404 - "Invalid post ID."
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
-                        payload.error = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        // Convert GenericErrorType to PostErrorType where applicable
+                        PostError postError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        }
+                        payload.error = postError;
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 });
