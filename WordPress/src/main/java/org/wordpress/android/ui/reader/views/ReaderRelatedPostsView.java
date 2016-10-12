@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.views;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +68,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
         mClickListener = listener;
     }
 
-    public void showRelatedPosts(ReaderRelatedPostList posts, String siteName, boolean isGlobal) {
+    public void showRelatedPosts(@NonNull ReaderRelatedPostList posts, String siteName, boolean isGlobal) {
         mRelatedPostList = posts;
         if (mRelatedPostList.size() == 0) return;
 
