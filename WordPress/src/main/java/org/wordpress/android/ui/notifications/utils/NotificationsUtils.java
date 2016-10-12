@@ -530,7 +530,7 @@ public class NotificationsUtils {
                 return ((int) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
             } catch (ClassNotFoundException | NoSuchFieldException | NoSuchMethodException |
                     IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e.getMessage());
             }
         }
 
