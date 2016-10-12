@@ -71,6 +71,7 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPLegacyMigrationUtils;
 import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
@@ -176,6 +177,7 @@ public class WordPress extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
         // Init WellSql
@@ -187,10 +189,22 @@ public class WordPress extends MultiDexApplication {
                 .build();
         component().inject(this);
 
-        // TODO: STORES: This is needed for legacy REST clients
-        OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
+        // Migrate access token AccountStore
+        if (mAccountStore.hasAccessToken()) {
+            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
+        } else {
+            // it will take some time to update the access token in the AccountStore if it was migrated
+            // so it will be set to the migrated token
+            String migratedToken = WPLegacyMigrationUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
+            if (!TextUtils.isEmpty(migratedToken)) {
+                OAuthAuthenticator.sAccessToken = migratedToken;
+                AppPrefs.setAccessTokenMigrated(true);
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+                mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+            }
+        }
 
-        mContext = this;
         ProfilingUtils.start("App Startup");
         // Enable log recording
         AppLog.enableRecording(true);

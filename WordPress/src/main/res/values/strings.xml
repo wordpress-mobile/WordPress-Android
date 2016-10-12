@@ -1300,6 +1300,7 @@
     <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
+    <string name="access_token_migration_message">Updating…</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
