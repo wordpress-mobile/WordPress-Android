@@ -796,7 +796,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         // update post in array and on screen
         int position = mPosts.indexOfPost(post);
-        ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
+        ReaderPost updatedPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, true);
         if (updatedPost != null && position > -1) {
             mPosts.set(position, updatedPost);
             showLikes(holder, updatedPost);

@@ -11,14 +11,18 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketNameInvalid;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
+import com.simperium.client.BucketObjectNameInvalid;
 import com.simperium.client.Query;
 import com.simperium.client.User;
 
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.HashMap;
 
 import de.greenrobot.event.EventBus;
 
@@ -26,6 +30,9 @@ public class SimperiumUtils {
     private static final String NOTE_TIMESTAMP = "timestamp";
     private static final String META_BUCKET_NAME = "meta";
     private static final String META_LAST_SEEN = "last_seen";
+
+    private static final String TRACK_ERROR_KEY = "error";
+    private static final String TRACK_NOTEID_KEY = "note_id";
 
     private static Simperium mSimperium;
     private static Bucket<Note> mNotesBucket;
@@ -153,6 +160,17 @@ public class SimperiumUtils {
         return false;
     }
 
+    public static void saveNote(Note note) {
+        if (note != null) {
+            try {
+                Note object = getNotesBucket().insertObject(note.getId(), Note.Schema.getJSON(note));
+                object.save();
+            } catch (BucketObjectNameInvalid e) {
+                AppLog.e(AppLog.T.SIMPERIUM, e.getMessage());
+            }
+        }
+    }
+
     // Updates the 'last_seen' field in the meta bucket with the latest note's timestamp
     public static boolean updateLastSeenTime() {
         if (getNotesBucket() == null || getMetaBucket() == null) return false;
@@ -181,4 +199,19 @@ public class SimperiumUtils {
 
         return false;
     }
+
+    // in general, we shouldn't have BucketObjectMissingExceptions but sometimes this might happen
+    // when simperium can't sync up and get up to speed to push notifications,
+    // so we're interested in tracking these
+    public static void trackBucketObjectMissingWarning(String message, String noteId) {
+        trackBucketObjectMissing(message, AnalyticsTracker.Stat.NOTIFICATIONS_MISSING_SYNC_WARNING, noteId);
+    }
+
+    private static void trackBucketObjectMissing(String message, AnalyticsTracker.Stat type, String noteId) {
+        HashMap<String, String> errorProperties = new HashMap<>();
+        errorProperties.put(TRACK_ERROR_KEY, message);
+        errorProperties.put(TRACK_NOTEID_KEY, noteId);
+        AnalyticsTracker.track(type, errorProperties);
+    }
+
 }

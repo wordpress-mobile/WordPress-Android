@@ -423,8 +423,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 setNote(note);
                 setRemoteBlogId(note.getSiteId());
             } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e.getMessage());
+                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
+                showErrorToastAndFinish();
             }
+        }
+    }
+
+    private void showErrorToastAndFinish() {
+        AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
+        if (getActivity() != null) {
+            ToastUtils.showToast(getActivity(), R.string.error_notification_open);
+            getActivity().finish();
         }
     }
 
@@ -723,7 +733,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.OnRequestListener() {
+                ReaderPostActions.requestBlogPost(blogId, postId, new ReaderActions.OnRequestListener() {
                     @Override
                     public void onSuccess() {
                         if (!isAdded()) return;
@@ -809,7 +819,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (!isAdded()) return;
 
                 if (result.isSuccess()) {
-                    ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                    if (newStatus.equals(CommentStatus.APPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                    } else if (newStatus.equals(CommentStatus.UNAPPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_unapproved, ToastUtils.Duration.SHORT);
+                    }
                 } else {
                     mComment.setStatus(CommentStatus.toString(oldStatus));
                     updateStatusViews();
