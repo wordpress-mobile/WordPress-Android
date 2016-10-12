@@ -15,6 +15,11 @@
         android:summary="@string/preference_send_usage_stats_summary"
         android:title="@string/preference_send_usage_stats" />
 
+    <Preference
+        android:key="@string/pref_key_device_settings"
+        android:layout="@layout/preference_layout"
+        android:title="@string/preference_open_device_settings" />
+
     <PreferenceCategory
         android:key="@string/pref_key_editor"
         android:layout="@layout/preference_category"

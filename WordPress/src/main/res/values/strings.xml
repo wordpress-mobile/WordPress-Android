@@ -618,6 +618,7 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
+    <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
