@@ -70,10 +70,12 @@ public class ReaderRelatedPostsView extends LinearLayout {
 
     public void showRelatedPosts(@NonNull ReaderRelatedPostList posts, String siteName, boolean isGlobal) {
         mRelatedPostList = posts;
-        if (mRelatedPostList.size() == 0) return;
 
         ViewGroup container = (ViewGroup) findViewById(R.id.container_related_posts);
         container.removeAllViews();
+
+        // nothing more to do if passed list is empty
+        if (mRelatedPostList.size() == 0) return;
 
         int avatarSize = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
 
