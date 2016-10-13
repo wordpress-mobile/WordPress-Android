@@ -10,11 +10,12 @@ import com.yarolegovich.wellsql.core.TableClass;
 import com.yarolegovich.wellsql.mapper.SQLiteMapper;
 
 import org.wordpress.android.fluxc.model.AccountModel;
-import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.network.HTTPAuthModel;
 
@@ -32,6 +33,7 @@ public class WellSqlConfig extends DefaultWellConfig {
             PostFormatModel.class,
             PostModel.class,
             CommentModel.class,
+            TaxonomyModel.class,
             TermModel.class,
             HTTPAuthModel.class
     };
