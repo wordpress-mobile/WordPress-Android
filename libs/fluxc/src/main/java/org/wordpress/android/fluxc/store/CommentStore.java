@@ -281,6 +281,10 @@ public class CommentStore extends Store {
         comment.setContent("");
         comment.setDatePublished(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
         comment.setStatus(CommentStatus.APPROVED.toString());
+        comment.setAuthorName("");
+        comment.setAuthorEmail("");
+        comment.setAuthorUrl("");
+        // Insert in the DB
         CommentSqlUtils.insertOrUpdateComment(comment);
         emitChange(new OnCommentInstantiated(comment));
     }
