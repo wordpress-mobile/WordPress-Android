@@ -145,9 +145,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from notification list for a comment notification
      */
-    public static CommentDetailFragment newInstance(final String noteId) {
+    public static CommentDetailFragment newInstance(final String noteId, final String replyText) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         fragment.setNoteWithNoteId(noteId);
+        fragment.setReplyText(replyText);
         return fragment;
     }
 
@@ -155,7 +156,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * used when called from a comment notification 'like' action
      */
     public static CommentDetailFragment newInstanceForInstantLike(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId);
+        CommentDetailFragment fragment = newInstance(noteId, null);
         //here tell the fragment to trigger the Like action when ready
         fragment.setLikeCommentWhenReady();
         return fragment;
@@ -165,7 +166,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * used when called from a comment notification 'approve' action
      */
     public static CommentDetailFragment newInstanceForInstantApprove(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId);
+        CommentDetailFragment fragment = newInstance(noteId, null);
         //here tell the fragment to trigger the Like action when ready
         fragment.setApproveCommentWhenReady();
         return fragment;
@@ -175,7 +176,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * used when called from notifications to load a comment that doesn't already exist in the note
      */
     public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId);
+        CommentDetailFragment fragment = newInstance(noteId, null);
         fragment.enableShouldRequestCommentFromNote();
         return fragment;
     }
@@ -428,6 +429,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 showErrorToastAndFinish();
             }
         }
+    }
+
+    private void setReplyText(String replyText) {
+        if (replyText == null) return;
+        mRestoredReplyText = replyText;
     }
 
     private void showErrorToastAndFinish() {
