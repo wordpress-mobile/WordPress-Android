@@ -86,4 +86,23 @@ public class TermModel extends Payload implements Identifiable, Serializable {
     public void setParentRemoteId(long parentRemoteId) {
         mParentRemoteId = parentRemoteId;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+
+        TermModel otherTerm = (TermModel) other;
+
+        return getId() == otherTerm.getId()
+                && getLocalSiteId() == otherTerm.getLocalSiteId()
+                && getRemoteTermId() == otherTerm.getRemoteTermId()
+                && getParentRemoteId() == otherTerm.getParentRemoteId()
+                && (getSlug() != null ? getSlug().equals(otherTerm.getSlug()) : otherTerm.getSlug() == null)
+                && (getName() != null ? getName().equals(otherTerm.getName()) : otherTerm.getName() == null)
+                && (getTaxonomy() != null
+                 ? getTaxonomy().equals(otherTerm.getTaxonomy()) : otherTerm.getTaxonomy() == null)
+                && (getDescription() != null
+                 ? getDescription().equals(otherTerm.getDescription()) : otherTerm.getDescription() == null);
+    }
 }
