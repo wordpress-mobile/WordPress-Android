@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.action.TaxonomyAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermsModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
@@ -20,9 +21,9 @@ import javax.inject.Inject;
 public class TaxonomyStore extends Store {
     public static class FetchTermsPayload extends Payload {
         public SiteModel site;
-        public String taxonomy;
+        public TaxonomyModel taxonomy;
 
-        public FetchTermsPayload(SiteModel site, String taxonomy) {
+        public FetchTermsPayload(SiteModel site, TaxonomyModel taxonomy) {
             this.site = site;
             this.taxonomy = taxonomy;
         }
