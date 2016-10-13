@@ -20,9 +20,9 @@ public class BaseXMLRPCClient {
     private SiteModel mSiteModel;
     private final RequestQueue mRequestQueue;
     protected final Dispatcher mDispatcher;
-    private UserAgent mUserAgent;
+    protected UserAgent mUserAgent;
     protected OnAuthFailedListener mOnAuthFailedListener;
-    private HTTPAuthManager mHTTPAuthManager;
+    protected HTTPAuthManager mHTTPAuthManager;
 
     public BaseXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
                             UserAgent userAgent, HTTPAuthManager httpAuthManager) {
