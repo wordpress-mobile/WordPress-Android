@@ -77,4 +77,21 @@ public class TaxonomyModel extends Payload implements Identifiable, Serializable
     public void setIsPublic(boolean isPublic) {
         mIsPublic = isPublic;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+
+        TaxonomyModel otherTaxonomy = (TaxonomyModel) other;
+
+        return getId() == otherTaxonomy.getId()
+                && getLocalSiteId() == otherTaxonomy.getLocalSiteId()
+                && isHierarchical() == otherTaxonomy.isHierarchical()
+                && isPublic() == otherTaxonomy.isPublic()
+                && (getName() != null ? getName().equals(otherTaxonomy.getName()) : otherTaxonomy.getName() == null)
+                && (getLabel() != null ? getLabel().equals(otherTaxonomy.getLabel()) : otherTaxonomy.getLabel() == null)
+                && (getDescription() != null
+                 ? getDescription().equals(otherTaxonomy.getDescription()) : otherTaxonomy.getDescription() == null);
+    }
 }
