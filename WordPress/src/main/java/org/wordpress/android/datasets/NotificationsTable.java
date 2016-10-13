@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +27,7 @@ public class NotificationsTable {
                 + "note_id                  TEXT,"
                 + "type                     TEXT,"
                 + "raw_note_data            TEXT,"
-                + "timestamp                INTEGER,"
-                + "placeholder              BOOLEAN)");
+                + "timestamp                INTEGER)");
     }
 
     private static void dropTables(SQLiteDatabase db) {
@@ -41,16 +39,14 @@ public class NotificationsTable {
     }
 
     public static ArrayList<Note> getLatestNotes(int limit) {
-        Cursor cursor = getDb().query(NOTIFICATIONS_TABLE, new String[] {"note_id", "raw_note_data", "placeholder"},
+        Cursor cursor = getDb().query(NOTIFICATIONS_TABLE, new String[] {"note_id", "raw_note_data"},
                 null, null, null, null, "timestamp DESC", "" + limit);
         ArrayList<Note> notes = new ArrayList<Note>();
         while (cursor.moveToNext()) {
             String note_id = cursor.getString(0);
             String raw_note_data = cursor.getString(1);
-            boolean placeholder = cursor.getInt(2) == 1;
             try {
                 Note note = new Note(new JSONObject(raw_note_data));
-                // TODO: what's the placeholder for? note.setPlaceholder(placeholder);
                 notes.add(note);
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.DB, "Can't parse notification with note_id:" + note_id + ", exception:" + e);
@@ -60,42 +56,27 @@ public class NotificationsTable {
         return notes;
     }
 
-    public static void removePlaceholderNotes() {
-        getDb().delete(NOTIFICATIONS_TABLE, "placeholder=1", null);
-    }
-
-    public static void putNote(Note note, boolean placeholder) {
+    public static void putNote(Note note) {
         ContentValues values = new ContentValues();
         values.put("type", note.getType());
         values.put("timestamp", note.getTimestamp());
-        values.put("placeholder", placeholder);
         values.put("raw_note_data", note.getJSON().toString()); // easiest way to store schema-less data
-
-        if (note.getId().equals("0") || note.getId().equals("")) {
-            values.put("id", generateIdFor(note));
-            values.put("note_id", "0");
-        } else {
-            values.put("id", note.getId());
-            values.put("note_id", note.getId());
-        }
+        values.put("note_id", note.getId());
 
         getDb().insertWithOnConflict(NOTIFICATIONS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-    }
-
-    public static int generateIdFor(Note note) {
-        if (note == null) {
-            return 0;
-        }
-        return StringUtils.getMd5IntHash(note.getSubject() + note.getType()).intValue();
     }
 
     public static void saveNotes(List<Note> notes, boolean clearBeforeSaving) {
         getDb().beginTransaction();
         try {
-            if (clearBeforeSaving)
+            if (clearBeforeSaving) {
                 clearNotes();
-            for (Note note: notes)
-                putNote(note, false);
+            }
+
+            for (Note note: notes) {
+                putNote(note);
+            }
+
             getDb().setTransactionSuccessful();
         } finally {
             getDb().endTransaction();
@@ -103,7 +84,7 @@ public class NotificationsTable {
     }
 
     public static Note getNoteById(String id) {
-        Cursor cursor = getDb().query(NOTIFICATIONS_TABLE, new String[] {"raw_note_data"},  "id=" + id, null, null, null, null);
+        Cursor cursor = getDb().query(NOTIFICATIONS_TABLE, new String[] {"raw_note_data"},  "note_id=" + id, null, null, null, null);
         cursor.moveToFirst();
 
         try {
@@ -115,6 +96,8 @@ public class NotificationsTable {
         } catch (CursorIndexOutOfBoundsException e) {
             AppLog.v(AppLog.T.DB, "No Note with this id: " + e);
             return null;
+        } finally {
+            cursor.close();
         }
     }
 

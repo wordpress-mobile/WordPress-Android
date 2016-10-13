@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
+    private static final int NOTES_PAGE_COUNT = 20;
 
     private final int mAvatarSz;
     private final int mColorRead;
@@ -34,18 +35,24 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private boolean mIsAddingNotes;
 
     private final DataLoadedListener mDataLoadedListener;
+    private final OnLoadMoreListener mOnLoadMoreListener;
     private final ArrayList<Note> mNotes = new ArrayList<>();
 
     public interface DataLoadedListener {
         void onDataLoaded(boolean isEmpty);
     }
 
+    public interface OnLoadMoreListener {
+        void onLoadMore(long timestamp);
+    }
+
     private NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
 
-    public NotesAdapter(Context context, DataLoadedListener dataLoadedListener) {
+    public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener) {
         super();
 
         mDataLoadedListener = dataLoadedListener;
+        mOnLoadMoreListener = onLoadMoreListener;
 
         setHasStableIds(true);
 
@@ -103,8 +110,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     private Note getNoteAtPosition(int position) {
-        if (isValidPosition(position))
+        if (isValidPosition(position)) {
             return mNotes.get(position);
+        }
+
         return null;
     }
 
@@ -118,8 +127,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     @Override
+    public long getItemId(int position) {
+        Note note = getNoteAtPosition(position);
+        if (note == null) {
+            return 0;
+        }
+        
+        return Long.valueOf(note.getId());
+    }
+
+    @Override
     public void onBindViewHolder(NoteViewHolder noteViewHolder, int position) {
         final Note note = getNoteAtPosition(position);
+        if (note == null) {
+            return;
+        }
         noteViewHolder.itemView.setTag(note.getId());
 
         // Display group header
@@ -215,6 +237,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             noteViewHolder.itemView.setBackgroundColor(mColorUnread);
         } else {
             noteViewHolder.itemView.setBackgroundColor(mColorRead);
+        }
+
+        // request to load more comments when we near the end
+        if (mOnLoadMoreListener != null && position >= getItemCount() - 1) {
+            mOnLoadMoreListener.onLoadMore(note.getTimestamp());
         }
     }
 
