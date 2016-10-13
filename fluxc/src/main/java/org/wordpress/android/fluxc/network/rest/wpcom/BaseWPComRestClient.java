@@ -18,7 +18,7 @@ public class BaseWPComRestClient {
     private final RequestQueue mRequestQueue;
     protected final Dispatcher mDispatcher;
     protected final Context mAppContext;
-    private UserAgent mUserAgent;
+    protected UserAgent mUserAgent;
 
     protected OnAuthFailedListener mOnAuthFailedListener;
 
