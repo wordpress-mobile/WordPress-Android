@@ -132,7 +132,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
 
@@ -146,6 +146,14 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //if coming back from a comment that has been tapped on, clear the notification icons
+        // just in case there are any new notifications
+        GCMMessageService.removeAllNotifications(this);
     }
 
     private void showErrorToastAndFinish() {
