@@ -281,10 +281,10 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        // if we could not set the actions, set the default ones REPLY / LIKE
+        // if we could not set the actions, set the default one REPLY as it' then only safe bet
+        // we can make at this point
         if (!areActionsSet) {
             addCommentReplyActionForCommentNotification(builder, noteId);
-            addCommentLikeActionForCommentNotification(builder, noteId);
         }
     }
 
