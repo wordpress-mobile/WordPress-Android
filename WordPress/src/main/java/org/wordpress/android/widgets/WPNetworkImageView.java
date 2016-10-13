@@ -316,6 +316,11 @@ public class WPNetworkImageView extends AppCompatImageView {
         int bmpWidth = bitmap.getWidth();
         int bmpHeight = bitmap.getHeight();
 
+        if (bmpWidth == 0 || bmpHeight == 0) {
+            AppLog.w(AppLog.T.READER, "WPNetworkImageView > cannot crop an empty bitmap");
+            return null;
+        }
+
         float scaleWidth = ((float) newWidth) / bmpWidth;
         float scaleHeight = ((float) newHeight) / bmpHeight;
 
