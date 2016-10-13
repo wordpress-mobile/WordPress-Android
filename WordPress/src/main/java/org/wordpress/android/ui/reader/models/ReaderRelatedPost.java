@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.models;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
@@ -27,7 +26,11 @@ public class ReaderRelatedPost {
     // that makes the call much heavier
     public static final String RELATED_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,is_following,author,featured_image,featured_media";
 
-    public static ReaderRelatedPost fromJson(@NonNull JSONObject json) {
+    public static ReaderRelatedPost fromJson(JSONObject json) {
+        if (json == null) {
+            throw new IllegalArgumentException("ReaderRelatedPost requires a non-null JSONObject");
+        }
+
         ReaderRelatedPost post = new ReaderRelatedPost();
 
         post.mPostId = json.optLong("ID");
