@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
@@ -59,6 +61,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     private int mDefaultImageResId;
     private int mErrorImageResId;
+    private Point mCropping;
 
     private static final HashSet<String> mUrlSkipList = new HashSet<>();
 
@@ -82,6 +85,10 @@ public class WPNetworkImageView extends AppCompatImageView {
 
         // The URL has potentially changed. See if we need to load it.
         loadImageIfNecessary(false, imageLoadListener);
+    }
+
+    public void setCropping(Point point) {
+        mCropping = point;
     }
 
     /*
@@ -258,6 +265,11 @@ public class WPNetworkImageView extends AppCompatImageView {
                 setVisibility(View.VISIBLE);
             }
 
+            // if cropping is requested, do it before further manipulation
+            if (mCropping != null) {
+                bitmap = cropBitmap(bitmap, mCropping.x, mCropping.y);
+            }
+
             // Apply circular rounding to avatars in a background task
             if (mImageType == ImageType.AVATAR) {
                 new ShapeBitmapTask(ShapeType.CIRCLE, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
@@ -276,6 +288,27 @@ public class WPNetworkImageView extends AppCompatImageView {
         } else {
             showDefaultImage();
         }
+    }
+
+    private static Bitmap cropBitmap(Bitmap bitmap, int newWidth, int newHeight) {
+        if (bitmap == null) {
+            return null;
+        }
+        if (newWidth <= 0 || newHeight <= 0) {
+            AppLog.w(AppLog.T.READER, "WPNetworkImageView > invalid cropping size");
+            return bitmap;
+        }
+
+        int bmpWidth = bitmap.getWidth();
+        int bmpHeight = bitmap.getHeight();
+
+        float scaleWidth = ((float) newWidth) / bmpWidth;
+        float scaleHeight = ((float) newHeight) / bmpHeight;
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        return Bitmap.createBitmap(bitmap, 0, 0, bmpWidth, bmpHeight, matrix, false);
     }
 
     public void invalidateImage() {

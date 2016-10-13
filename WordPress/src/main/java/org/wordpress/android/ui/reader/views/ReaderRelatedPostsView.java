@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
@@ -205,7 +206,9 @@ public class ReaderRelatedPostsView extends LinearLayout {
             @Override
             public void onGlobalLayout() {
                 postView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                Point pt = new Point(mFeaturedImageWidth, postView.getHeight());
                 String photonUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImageUrl(), mFeaturedImageWidth, postView.getHeight());
+                imgFeatured.setCropping(pt);
                 imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
             }
         });
