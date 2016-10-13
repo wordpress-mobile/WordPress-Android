@@ -10,19 +10,30 @@ import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 @ActionEnum
 public enum MediaAction implements IAction {
     // Remote actions
-    @Action(payloadType = MediaListPayload.class)   PUSH_MEDIA,
-    @Action(payloadType = UploadMediaPayload.class) UPLOAD_MEDIA,
-    @Action(payloadType = MediaListPayload.class)   FETCH_ALL_MEDIA,
-    @Action(payloadType = MediaListPayload.class)   FETCH_MEDIA,
-    @Action(payloadType = MediaListPayload.class)   DELETE_MEDIA,
+    @Action(payloadType = MediaListPayload.class)
+    PUSH_MEDIA,
+    @Action(payloadType = UploadMediaPayload.class)
+    UPLOAD_MEDIA,
+    @Action(payloadType = MediaListPayload.class)
+    FETCH_ALL_MEDIA,
+    @Action(payloadType = MediaListPayload.class)
+    FETCH_MEDIA,
+    @Action(payloadType = MediaListPayload.class)
+    DELETE_MEDIA,
 
     // Remote responses
-    @Action(payloadType = MediaListPayload.class)   PUSHED_MEDIA,
-    @Action(payloadType = ProgressPayload.class)    UPLOADED_MEDIA,
-    @Action(payloadType = MediaListPayload.class)   FETCHED_MEDIA,
-    @Action(payloadType = MediaListPayload.class)   DELETED_MEDIA,
+    @Action(payloadType = MediaListPayload.class)
+    PUSHED_MEDIA,
+    @Action(payloadType = ProgressPayload.class)
+    UPLOADED_MEDIA,
+    @Action(payloadType = MediaListPayload.class)
+    FETCHED_MEDIA,
+    @Action(payloadType = MediaListPayload.class)
+    DELETED_MEDIA,
 
     // Local actions
-    @Action(payloadType = MediaListPayload.class)   UPDATE_MEDIA,
-    @Action(payloadType = MediaListPayload.class)   REMOVE_MEDIA,
+    @Action(payloadType = MediaListPayload.class)
+    UPDATE_MEDIA,
+    @Action(payloadType = MediaListPayload.class)
+    REMOVE_MEDIA,
 }
