@@ -2,7 +2,9 @@ package org.wordpress.android.ui.reader.models;
 
 import android.text.TextUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
 
@@ -33,8 +35,15 @@ public class ReaderRelatedPost {
 
         ReaderRelatedPost post = new ReaderRelatedPost();
 
-        post.mPostId = json.optLong("ID");
-        post.mSiteId = json.optLong("site_ID");
+        // ID and site_ID are required, so make sure we have them
+        try {
+            post.mPostId = json.getLong("ID");
+            post.mSiteId = json.getLong("site_ID");
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.READER, e);
+            return null;
+        }
+
         post.mIsFollowing = JSONUtils.getBool(json, "is_following");
 
         post.mTitle = JSONUtils.getStringDecoded(json, "title");
