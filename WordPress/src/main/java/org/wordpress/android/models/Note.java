@@ -384,7 +384,7 @@ public class Note extends Syncable {
         if (jsonActions.has(ACTION_KEY_SPAM)) {
             actions.add(EnabledActions.ACTION_SPAM);
         }
-        if (jsonActions.has(ACTION_KEY_LIKE)) {
+        if (jsonActions.has(ACTION_KEY_LIKE) && jsonActions.optBoolean(ACTION_KEY_LIKE, false)) {
             actions.add(EnabledActions.ACTION_LIKE);
         }
 
