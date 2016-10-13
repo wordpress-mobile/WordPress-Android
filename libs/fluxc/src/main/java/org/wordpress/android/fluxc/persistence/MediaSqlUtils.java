@@ -52,11 +52,13 @@ public class MediaSqlUtils {
         return searchSiteMediaQuery(siteModel, column, searchTerm).getAsModel();
     }
 
-    public static WellCursor<MediaModel> searchSiteMediaAsCursor(SiteModel siteModel, String column, String searchTerm) {
+    public static WellCursor<MediaModel> searchSiteMediaAsCursor(SiteModel siteModel, String column,
+                                                                 String searchTerm) {
         return searchSiteMediaQuery(siteModel, column, searchTerm).getAsCursor();
     }
 
-    private static SelectQuery<MediaModel> searchSiteMediaQuery(SiteModel siteModel, String column, String searchTerm) {
+    private static SelectQuery<MediaModel> searchSiteMediaQuery(SiteModel siteModel, String column,
+                                                                String searchTerm) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteModel.getSiteId())
