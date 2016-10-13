@@ -34,13 +34,13 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
+import org.wordpress.android.ui.reader.views.ReaderRelatedPostsView;
 import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
@@ -51,14 +51,11 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
@@ -413,8 +410,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         // hide views that would show info for the previous post - these will be re-displayed
         // with the correct info once the new post loads
-        getView().findViewById(R.id.container_related_posts).setVisibility(View.GONE);
-        getView().findViewById(R.id.text_related_posts_label).setVisibility(View.GONE);
+        getView().findViewById(R.id.related_posts_view_local).setVisibility(View.GONE);
+        getView().findViewById(R.id.related_posts_view_global).setVisibility(View.GONE);
 
         mLikingUsersView.setVisibility(View.GONE);
         mLikingUsersDivider.setVisibility(View.GONE);
@@ -441,67 +438,43 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * related posts were retrieved, so show them
+     * related posts were retrieved
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.RelatedPostsUpdated event) {
         if (!isAdded() || !hasPost()) return;
 
-        // make sure this is for the current post
-        if (event.getSourcePost().postId == mPost.postId && event.getSourcePost().blogId == mPost.blogId) {
-            showRelatedPosts(event.getRelatedPosts());
+        // make sure this event is for the current post
+        if (event.getSourcePostId() == mPost.postId && event.getSourceSiteId() == mPost.blogId) {
+            if (event.hasLocalRelatedPosts()) {
+                showRelatedPosts(event.getLocalRelatedPosts(), false);
+            }
+            if (event.hasGlobalRelatedPosts()) {
+                showRelatedPosts(event.getGlobalRelatedPosts(), true);
+            }
         }
     }
 
-    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts) {
-        // locate the related posts container and remove any existing related post views
-        ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
-        container.removeAllViews();
+    /*
+     * show the passed list of related posts - can be either global (related posts from
+     * across wp.com) or local (related posts from the same site as the current post)
+     */
+    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, boolean isGlobal) {
+        // different container views for global/local related posts
+        int id = isGlobal ? R.id.related_posts_view_global : R.id.related_posts_view_local;
+        ReaderRelatedPostsView relatedPostsView = (ReaderRelatedPostsView) getView().findViewById(id);
+        relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
 
-        // add a separate view for each related post
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
-        for (int index = 0; index < relatedPosts.size(); index++) {
-            final ReaderRelatedPost relatedPost = relatedPosts.get(index);
-
-            View postView = inflater.inflate(R.layout.reader_related_post, container, false);
-            TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
-            TextView txtByline = (TextView) postView.findViewById(R.id.text_related_post_byline);
-            WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
-
-            txtTitle.setText(relatedPost.getTitle());
-            txtByline.setText(relatedPost.getByline());
-
-            imgFeatured.setVisibility(relatedPost.hasFeaturedImage() ? View.VISIBLE : View.GONE);
-            if (relatedPost.hasFeaturedImage()) {
-                String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImage(), imageSize, imageSize);
-                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_ROUNDED);
-                imgFeatured.setVisibility(View.VISIBLE);
+        // tapping a related posts should open the related post detail
+        relatedPostsView.setOnRelatedPostClickListener(new ReaderRelatedPostsView.OnRelatedPostClickListener() {
+            @Override
+            public void onRelatedPostClick(View v, long siteId, long postId) {
+                showRelatedPostDetail(siteId, postId);
             }
+        });
 
-            // tapping this view should open the related post detail
-            postView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showRelatedPostDetail(relatedPost.getBlogId(), relatedPost.getPostId());
-                }
-            });
-
-            container.addView(postView);
-
-            // add a divider below all but the last related post
-            if (index < relatedPosts.size() - 1) {
-                View dividerView = inflater.inflate(R.layout.reader_related_post_divider, container, false);
-                container.addView(dividerView);
-            }
-        }
-
-        View label = getView().findViewById(R.id.text_related_posts_label);
-        if (label.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(label, AniUtils.Duration.MEDIUM);
-        }
-        if (container.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(container, AniUtils.Duration.MEDIUM);
+        if (relatedPostsView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM);
         }
     }
 
