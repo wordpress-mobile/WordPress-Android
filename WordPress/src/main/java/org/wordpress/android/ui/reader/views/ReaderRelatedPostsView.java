@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.views;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
@@ -201,15 +200,22 @@ public class ReaderRelatedPostsView extends LinearLayout {
         }
 
         // featured image has height set to MATCH_PARENT so wait for parent view's layout to complete
-        // before loading image so we can set the image height correctly
+        // before loading image so we can set the image height correctly, then tell the imageView
+        // to crop the downloaded image to fit the exact width/height of the view
         postView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 postView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                Point pt = new Point(mFeaturedImageWidth, postView.getHeight());
-                String photonUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImageUrl(), mFeaturedImageWidth, postView.getHeight());
-                imgFeatured.setCropping(pt);
-                imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
+                int cropWidth = mFeaturedImageWidth;
+                int cropHeight = postView.getHeight();
+                String photonUrl = PhotonUtils.getPhotonImageUrl(
+                        relatedPost.getFeaturedImageUrl(), cropWidth, cropHeight);
+                imgFeatured.setImageUrl(
+                        photonUrl,
+                        WPNetworkImageView.ImageType.PHOTO,
+                        null,
+                        cropWidth,
+                        cropHeight);
             }
         });
 

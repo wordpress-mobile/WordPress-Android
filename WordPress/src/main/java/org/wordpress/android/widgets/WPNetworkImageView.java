@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
@@ -61,7 +60,9 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     private int mDefaultImageResId;
     private int mErrorImageResId;
-    private Point mCropping;
+
+    private int mCropWidth;
+    private int mCropHeight;
 
     private static final HashSet<String> mUrlSkipList = new HashSet<>();
 
@@ -80,15 +81,27 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     public void setImageUrl(String url, ImageType imageType, ImageLoadListener imageLoadListener) {
+        setImageUrl(url, imageType, imageLoadListener, 0, 0);
+    }
+
+    public void setImageUrl(String url,
+                            ImageType imageType,
+                            ImageLoadListener imageLoadListener,
+                            int cropWidth,
+                            int cropHeight) {
         mUrl = url;
         mImageType = imageType;
 
+        if (cropWidth > 0 && cropHeight > 0) {
+            mCropWidth = cropWidth;
+            mCropHeight = cropHeight;
+        } else {
+            mCropWidth = 0;
+            mCropHeight = 0;
+        }
+
         // The URL has potentially changed. See if we need to load it.
         loadImageIfNecessary(false, imageLoadListener);
-    }
-
-    public void setCropping(Point point) {
-        mCropping = point;
     }
 
     /*
@@ -266,8 +279,8 @@ public class WPNetworkImageView extends AppCompatImageView {
             }
 
             // if cropping is requested, do it before further manipulation
-            if (mCropping != null) {
-                bitmap = cropBitmap(bitmap, mCropping.x, mCropping.y);
+            if (mCropWidth > 0 && mCropHeight > 0) {
+                bitmap = cropBitmap(bitmap, mCropWidth, mCropHeight);
             }
 
             // Apply circular rounding to avatars in a background task
@@ -290,13 +303,14 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
     }
 
+    /*
+     * crops the passed bitmap to fit the passed width/height - bitmap will be resized if
+     * necessary to ensure it fills the desired size before cropping
+     */
     private static Bitmap cropBitmap(Bitmap bitmap, int newWidth, int newHeight) {
         if (bitmap == null) {
+            AppLog.w(AppLog.T.READER, "WPNetworkImageView > cannot crop a null bitmap");
             return null;
-        }
-        if (newWidth <= 0 || newHeight <= 0) {
-            AppLog.w(AppLog.T.READER, "WPNetworkImageView > invalid cropping size");
-            return bitmap;
         }
 
         int bmpWidth = bitmap.getWidth();
