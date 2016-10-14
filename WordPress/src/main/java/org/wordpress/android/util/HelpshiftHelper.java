@@ -202,9 +202,7 @@ public class HelpshiftHelper {
 
     public void addPlanTags() {
         Set<String> planTags = BlogUtils.planTags();
-        if (planTags != null) {
-            addTags(planTags.toArray(new String[planTags.size()]));
-        }
+        addTags(planTags.toArray(new String[planTags.size()]));
     }
 
     /**
