@@ -14,7 +14,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
