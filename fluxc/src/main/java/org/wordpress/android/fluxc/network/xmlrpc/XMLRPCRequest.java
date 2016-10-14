@@ -59,6 +59,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
             Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             return Response.success(obj, HttpHeaderParser.parseCacheHeaders(response));
         } catch (XMLRPCFault e) {
+            // TODO: ParseError is probably not the right choice here
             return Response.error(new ParseError(e));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
