@@ -14,12 +14,15 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
+import org.wordpress.android.fluxc.store.CommentStore.CommentError;
+import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
@@ -209,9 +212,12 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        CommentModel newComment = commentResponseToComment(response, site);
-                        newComment.setId(comment.getId()); // reconciliate local instance and newly created object
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                        if (response instanceof Integer) {
+                            comment.setRemoteCommentId((int) response);
+                        } else {
+                            payload.error = new CommentError(CommentErrorType.GENERIC_ERROR, "");
+                        }
                         mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(payload));
                     }
                 },
