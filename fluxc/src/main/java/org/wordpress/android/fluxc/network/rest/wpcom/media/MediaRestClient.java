@@ -228,6 +228,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .addHeader(WPComGsonRequest.REST_AUTHORIZATION_HEADER, authHeader)
+                .addHeader("User-Agent", mUserAgent.toString())
                 .url(url)
                 .post(body)
                 .build();
