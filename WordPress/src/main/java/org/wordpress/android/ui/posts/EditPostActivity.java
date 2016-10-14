@@ -790,10 +790,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         finish();
     }
 
-    public PostModel getPost() {
-        return mPost;
-    }
-
     private void trackEditorCreatedPost(String action, Intent intent) {
         Map<String, Object> properties = new HashMap<String, Object>();
         // Post created from the post list (new post button).
@@ -1135,12 +1131,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
         @Override
         protected Spanned doInBackground(String... params) {
-            if (params.length < 1 || getPost() == null) {
+            if (params.length < 1 || mPost == null) {
                 return null;
             }
 
             String content = StringUtils.notNullStr(params[0]);
-            return WPHtml.fromHtml(content, EditPostActivity.this, getPost(), getMaximumThumbnailWidthForEditor());
+            return WPHtml.fromHtml(content, EditPostActivity.this, mPost, getMaximumThumbnailWidthForEditor());
         }
 
         @Override
@@ -1226,28 +1222,27 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 R.string.editor_post_title_placeholder));
 
         // Set post title and content
-        PostModel post = getPost();
-        if (post != null) {
-            if (!TextUtils.isEmpty(post.getContent()) && !mHasSetPostContent) {
+        if (mPost != null) {
+            if (!TextUtils.isEmpty(mPost.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (post.isLocalDraft() && !mShowNewEditor) {
+                if (mPost.isLocalDraft() && !mShowNewEditor) {
                     // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                            post.getContent().replaceAll("\uFFFC", ""));
+                            mPost.getContent().replaceAll("\uFFFC", ""));
                 } else {
                     // TODO: Might be able to drop .replaceAll() when legacy editor is removed
-                    String content = post.getContent().replaceAll("\uFFFC", "");
+                    String content = mPost.getContent().replaceAll("\uFFFC", "");
                     // Prepare eventual legacy editor local draft for the new editor
                     content = migrateLegacyDraft(content);
                     mEditorFragment.setContent(content);
                 }
             }
-            if (!TextUtils.isEmpty(post.getTitle())) {
-                mEditorFragment.setTitle(post.getTitle());
+            if (!TextUtils.isEmpty(mPost.getTitle())) {
+                mEditorFragment.setTitle(mPost.getTitle());
             }
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
-            mEditorFragment.setLocalDraft(post.isLocalDraft());
+            mEditorFragment.setLocalDraft(mPost.isLocalDraft());
 
             mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
         }
@@ -1289,7 +1284,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (mEditorFragment instanceof EditorFragment) {
                 mEditorFragment.setContent(text);
             } else {
-                mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, getPost(),
+                mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, mPost,
                         getMaximumThumbnailWidthForEditor()));
             }
         }
@@ -1340,9 +1335,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Updates post object with content of this fragment
      */
     public void updatePostContent(boolean isAutoSave) {
-        PostModel post = getPost();
-
-        if (post == null) {
+        if (mPost == null) {
             return;
         }
         String title = StringUtils.notNullStr((String) mEditorFragment.getTitle());
@@ -1361,7 +1354,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         String content;
-        if (post.isLocalDraft()) {
+        if (mPost.isLocalDraft()) {
             // remove suggestion spans, they cause craziness in WPHtml.toHTML().
             CharacterStyle[] characterStyles = postContent.getSpans(0, postContent.length(), CharacterStyle.class);
             for (CharacterStyle characterStyle : characterStyles) {
@@ -1421,11 +1414,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             content = postContent.toString();
         }
 
-        post.setTitle(title);
-        post.setContent(content);
+        mPost.setTitle(title);
+        mPost.setContent(content);
 
-        if (!post.isLocalDraft()) {
-            post.setIsLocallyChanged(true);
+        if (!mPost.isLocalDraft()) {
+            mPost.setIsLocallyChanged(true);
         }
     }
 
@@ -1433,9 +1426,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Updates post object with given title and content
      */
     public void updatePostContentNewEditor(boolean isAutoSave, String title, String content) {
-        PostModel post = getPost();
-
-        if (post == null) {
+        if (mPost == null) {
             return;
         }
 
@@ -1443,11 +1434,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // TODO: Shortcode handling, media handling
         }
 
-        post.setTitle(title);
-        post.setContent(content);
+        mPost.setTitle(title);
+        mPost.setContent(content);
 
-        if (!post.isLocalDraft()) {
-            post.setIsLocallyChanged(true);
+        if (!mPost.isLocalDraft()) {
+            mPost.setIsLocallyChanged(true);
         }
     }
 
@@ -1570,7 +1561,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         MediaFile mediaFile = new MediaFile();
-        mediaFile.setPostID(getPost().getId());
+        mediaFile.setPostID(mPost.getId());
         mediaFile.setTitle(mediaTitle);
         mediaFile.setFilePath(mediaUri.toString());
         if (mediaUri.getEncodedPath() != null) {
@@ -1627,7 +1618,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
                         // TODO: check if it was mQuickMediaType > -1
                         // Quick Photo was cancelled, delete post and finish activity
-                        mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(getPost()));
+                        mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                         finish();
                     }
                     break;
@@ -1644,7 +1635,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
                         // TODO: check if it was mQuickMediaType > -1
                         // Quick Photo was cancelled, delete post and finish activity
-                        mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(getPost()));
+                        mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                         finish();
                     }
                     break;
@@ -1841,7 +1832,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // Notify visual editor that a normal media item has finished uploading (not part of a gallery)
         if (mEditorMediaUploadListener != null) {
             MediaFile mediaFile = new MediaFile();
-            mediaFile.setPostID(getPost().getId());
+            mediaFile.setPostID(mPost.getId());
             mediaFile.setMediaId(event.mRemoteMediaId);
             mediaFile.setFileURL(event.mRemoteMediaUrl);
             mediaFile.setVideoPressShortCode(event.mSecondaryRemoteMediaId);
