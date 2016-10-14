@@ -273,15 +273,14 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         HashMap<?, ?> commentMap = (HashMap<?, ?>) commentObject;
         CommentModel comment = new CommentModel();
 
-        comment.setRemoteCommentId(
-                Long.valueOf(XMLRPCUtils.safeGetMapValue(commentMap, "comment_id", "0")));
+        comment.setRemoteCommentId(XMLRPCUtils.safeGetMapValue(commentMap, "comment_id", 0L));
         comment.setLocalSiteId(site.getId());
         comment.setRemoteSiteId(site.getSiteId());
         comment.setStatus(XMLRPCUtils.safeGetMapValue(commentMap, "status", "approve"));
         Date datePublished = XMLRPCUtils.safeGetMapValue(commentMap, "date_created_gmt", new Date());
         comment.setDatePublished(DateTimeUtils.iso8601UTCFromDate(datePublished));
         comment.setContent(XMLRPCUtils.safeGetMapValue(commentMap, "content", ""));
-        comment.setRemoteParentCommentId(XMLRPCUtils.safeGetMapValue(commentMap, "parent", 0));
+        comment.setRemoteParentCommentId(XMLRPCUtils.safeGetMapValue(commentMap, "parent", 0L));
 
         // Author
         comment.setAuthorUrl(XMLRPCUtils.safeGetMapValue(commentMap, "author_url", ""));
@@ -290,7 +289,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         // TODO: comment.setAuthorProfileImageUrl(); - get the hash from the email address?
 
         // Post
-        comment.setRemotePostId(XMLRPCUtils.safeGetMapValue(commentMap, "post_id", 0));
+        comment.setRemotePostId(XMLRPCUtils.safeGetMapValue(commentMap, "post_id", 0L));
         comment.setPostTitle(XMLRPCUtils.safeGetMapValue(commentMap, "post_title", ""));
 
         return comment;
