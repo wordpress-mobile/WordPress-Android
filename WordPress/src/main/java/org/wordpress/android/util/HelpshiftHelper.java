@@ -145,7 +145,6 @@ public class HelpshiftHelper {
         properties.put(HELPSHIFT_ORIGIN_KEY, origin.toString());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN, properties);
         // Add tags to Helpshift metadata
-        addPlanTags();
         addTags(new Tag[]{origin});
         HashMap config = getHelpshiftConfig(activity);
         Support.showConversation(activity, config);
@@ -165,7 +164,6 @@ public class HelpshiftHelper {
         properties.put(HELPSHIFT_ORIGIN_KEY, origin.toString());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN, properties);
         // Add tags to Helpshift metadata
-        addPlanTags();
         addTags(new Tag[]{origin});
         HashMap config = getHelpshiftConfig(activity);
         Support.showFAQs(activity, config);
@@ -258,6 +256,7 @@ public class HelpshiftHelper {
         }
         Core.setNameAndEmail(name, emailAddress);
         addDefaultMetaData(context);
+        addPlanTags();
         HashMap config = new HashMap ();
         config.put(Support.CustomMetadataKey, mMetadata);
         config.put("showSearchOnNewConversation", true);
