@@ -123,10 +123,6 @@ public class PostsListFragment extends Fragment
         }
 
         if (mSite == null) {
-            mSite = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
-        }
-
-        if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }

@@ -571,15 +571,17 @@ public class PostUploadService extends Service {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
+        SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
+
         if (event.isError()) {
             AppLog.e(T.EDITOR, "Post upload failed. " + event.error.type + ": " + event.error.message);
-            mPostUploadNotifier.updateNotificationError(event.post, buildErrorMessage(event.post, event.error), false);
+            mPostUploadNotifier.updateNotificationError(event.post, site, buildErrorMessage(event.post, event.error),
+                    false);
             mFirstPublishPosts.remove(event.post.getId());
         } else {
             // TODO: MediaStore?
             // WordPress.wpDB.deleteMediaFilesForPost(mPost);
             mPostUploadNotifier.cancelNotification(event.post);
-            SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
             boolean isFirstTimePublish = mFirstPublishPosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
         }

@@ -22,7 +22,6 @@ import javax.inject.Inject;
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
-    public static final String EXTRA_SELECT_SITE_LOCAL_ID = "EXTRA_SELECT_SITE_LOCAL_ID";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
@@ -54,10 +53,6 @@ public class PostsListActivity extends AppCompatActivity {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        }
-
-        if (mSite == null) {
-            mSite = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
         }
 
         if (mSite == null) {

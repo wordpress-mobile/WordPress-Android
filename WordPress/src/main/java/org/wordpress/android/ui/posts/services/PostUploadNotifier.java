@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.SparseArray;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -115,7 +116,7 @@ public class PostUploadNotifier {
         Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_SELECT_SITE_LOCAL_ID, post.getLocalSiteId());
+        notificationIntent.putExtra(WordPress.SITE, site);
         notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -143,7 +144,7 @@ public class PostUploadNotifier {
         return post.getLocalSiteId() + remotePostId;
     }
 
-    public void updateNotificationError(PostModel post, String errorMessage, boolean isMediaError) {
+    public void updateNotificationError(PostModel post, SiteModel site, String errorMessage, boolean isMediaError) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + errorMessage);
 
         Notification.Builder notificationBuilder = new Notification.Builder(mContext.getApplicationContext());
@@ -151,6 +152,7 @@ public class PostUploadNotifier {
                 : mContext.getResources().getText(R.string.post_id));
         Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.putExtra(WordPress.SITE, site);
         notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
         notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, errorMessage);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
