@@ -120,13 +120,6 @@ public class NotificationsListFragment extends Fragment
             mBucket.addListener(this);
         }
 
-        // Removes app notifications from the system bar
-        new Thread(new Runnable() {
-            public void run() {
-                GCMMessageService.removeAllNotifications(getActivity());
-            }
-        }).start();
-
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
             AppLog.i(AppLog.T.NOTIFS, "Starting Simperium buckets");

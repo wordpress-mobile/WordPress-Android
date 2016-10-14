@@ -180,6 +180,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     case WPMainTabAdapter.TAB_NOTIFS:
                         setTabLayoutElevation(mAppBarElevation);
                         new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        // Removes app notifications from the system bar as we're looking at them right now
+                        GCMMessageService.removeAllNotifications(WPMainActivity.this);
                         break;
                 }
 
@@ -349,7 +351,14 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-        trackLastVisibleTab(mViewPager.getCurrentItem(), false);
+        int currentItem = mViewPager.getCurrentItem();
+        trackLastVisibleTab(currentItem, false);
+
+        if (currentItem == WPMainTabAdapter.TAB_NOTIFS) {
+            //if we are presenting the notifications list, it's safe to clear any outstanding
+            // notifications
+            GCMMessageService.removeAllNotifications(this);
+        }
 
         checkConnection();
 

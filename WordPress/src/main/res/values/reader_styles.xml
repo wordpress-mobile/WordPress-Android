@@ -113,7 +113,7 @@
     </style>
 
     <!-- progress bars -->
-    <style name="ReaderProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar" />
+    <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />
 
     <style name="ReaderTabStripTextAppearance">
         <item name="android:textSize">@dimen/text_sz_medium</item>

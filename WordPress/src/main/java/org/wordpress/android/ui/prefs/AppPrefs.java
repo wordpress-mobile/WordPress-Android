@@ -69,6 +69,12 @@ public class AppPrefs {
 
         // access token migrated to AccountStore, must wait for network calls to return before app access
         ACCESS_TOKEN_MIGRATED,
+
+        // wpcom ID of the last push notification received
+        PUSH_NOTIFICATIONS_LAST_NOTE_ID,
+
+        // local time of the last push notification received
+        PUSH_NOTIFICATIONS_LAST_NOTE_TIME,
     }
 
     /**
@@ -434,5 +440,21 @@ public class AppPrefs {
 
     public static void setAccessTokenMigrated(boolean migrated) {
         setBoolean(DeletablePrefKey.ACCESS_TOKEN_MIGRATED, migrated);
+    }
+
+    public static String getLastPushNotificationWpcomNoteId() {
+        return getString(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID);
+    }
+
+    public static void setLastPushNotificationWpcomNoteId(String noteID) {
+        setString(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, noteID);
+    }
+
+    public static long getLastPushNotificationTime() {
+        return getLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_TIME);
+    }
+
+    public static void setLastPushNotificationTime(long time) {
+        setLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, time);
     }
 }
