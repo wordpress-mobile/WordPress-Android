@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.persistence;
 
 import com.wellsql.generated.CommentModelTable;
-import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.ConditionClauseBuilder;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
@@ -54,7 +53,7 @@ public class CommentSqlUtils {
         }
 
         return WellSql.delete(CommentModel.class)
-                .where().equals(PostModelTable.ID, comment.getId()).endWhere()
+                .where().equals(CommentModelTable.ID, comment.getId()).endWhere()
                 .execute();
     }
 
