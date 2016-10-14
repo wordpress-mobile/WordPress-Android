@@ -24,4 +24,7 @@
 /sites/$site/comments/$comment_ID/likes/new
 /sites/$site/comments/$comment_ID/likes/mine/delete
 
+/sites/$site/taxonomies/$taxonomy#String/terms/
+/sites/$site/taxonomies/$taxonomy#String/terms/new/
+
 /users/new/
