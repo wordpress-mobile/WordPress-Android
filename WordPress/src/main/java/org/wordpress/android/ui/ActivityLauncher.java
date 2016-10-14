@@ -167,9 +167,8 @@ public class ActivityLauncher {
         if (post == null) return;
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
-        intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getId());
+        intent.putExtra(PostPreviewActivity.EXTRA_POST, post);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 

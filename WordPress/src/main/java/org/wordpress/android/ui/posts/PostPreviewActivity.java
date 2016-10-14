@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
@@ -45,18 +44,14 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class PostPreviewActivity extends AppCompatActivity {
-    public static final String ARG_LOCAL_POST_ID = "local_post_id";
-    public static final String ARG_IS_PAGE = "is_page";
+    public static final String EXTRA_POST = "postModel";
 
-    private long mLocalPostId;
-    private boolean mIsPage;
     private boolean mIsUpdatingPost;
 
     private PostModel mPost;
     private SiteModel mSite;
 
     @Inject Dispatcher mDispatcher;
-    @Inject PostStore mPostStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,11 +69,9 @@ public class PostPreviewActivity extends AppCompatActivity {
         }
 
         if (savedInstanceState != null) {
-            mLocalPostId = savedInstanceState.getInt(ARG_LOCAL_POST_ID);
-            mIsPage = savedInstanceState.getBoolean(ARG_IS_PAGE);
+            mPost = (PostModel) savedInstanceState.getSerializable(EXTRA_POST);
         } else {
-            mLocalPostId = getIntent().getIntExtra(ARG_LOCAL_POST_ID, 0);
-            mIsPage = getIntent().getBooleanExtra(ARG_IS_PAGE, false);
+            mPost = (PostModel) getIntent().getSerializableExtra(EXTRA_POST);
         }
 
         if (savedInstanceState == null) {
@@ -93,7 +86,7 @@ public class PostPreviewActivity extends AppCompatActivity {
         }
 
 
-        setTitle(mIsPage ? getString(R.string.preview_page) : getString(R.string.preview_post));
+        setTitle(mPost.isPage() ? getString(R.string.preview_page) : getString(R.string.preview_post));
     }
 
     @Override
@@ -102,7 +95,6 @@ public class PostPreviewActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
 
-        mPost = mPostStore.getPostByLocalPostId(mLocalPostId);
         if (hasPreviewFragment()) {
             refreshPreview();
         } else {
@@ -123,7 +115,7 @@ public class PostPreviewActivity extends AppCompatActivity {
         fm.executePendingTransactions();
 
         String tagForFragment = getString(R.string.fragment_tag_post_preview);
-        Fragment fragment = PostPreviewFragment.newInstance(mSite, mLocalPostId);
+        Fragment fragment = PostPreviewFragment.newInstance(mSite, mPost);
 
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment, tagForFragment)
@@ -156,9 +148,8 @@ public class PostPreviewActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putLong(ARG_LOCAL_POST_ID, mLocalPostId);
-        outState.putBoolean(ARG_IS_PAGE, mIsPage);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(EXTRA_POST, mPost);
         super.onSaveInstanceState(outState);
     }
 
