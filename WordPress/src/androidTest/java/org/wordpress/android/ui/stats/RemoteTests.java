@@ -24,7 +24,7 @@ import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.models.InsightsTodayModel;
-import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.ui.stats.models.ReferrerGroupModel;
 import org.wordpress.android.ui.stats.models.ReferrerResultModel;
@@ -453,7 +453,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertNotNull(model.getTopPostsAndPages());
                 assertEquals(model.getTopPostsAndPages().size(), 10);
 
-                PostModel postModel = model.getTopPostsAndPages().get(0);
+                StatsPostModel postModel = model.getTopPostsAndPages().get(0);
                 assertEquals(postModel.getItemID(), "39806");
                 assertEquals(postModel.getTotals(), 2420);
                 assertEquals(postModel.getTitle(), "Home");
@@ -486,7 +486,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertNotNull(model.getTopPostsAndPages());
                 assertEquals(model.getTopPostsAndPages().size(), 10);
 
-                PostModel postModel = model.getTopPostsAndPages().get(0);
+                StatsPostModel postModel = model.getTopPostsAndPages().get(0);
                 assertEquals(postModel.getItemID(), "750");
                 assertEquals(postModel.getTotals(), 7);
                 assertEquals(postModel.getTitle(), "Asynchronous unit testing Core Data with Xcode 6");

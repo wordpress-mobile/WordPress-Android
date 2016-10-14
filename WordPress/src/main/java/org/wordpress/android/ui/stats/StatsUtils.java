@@ -27,7 +27,7 @@ import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.models.InsightsTodayModel;
-import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
@@ -406,7 +406,7 @@ public class StatsUtils {
         }
     }
 
-    public static void openPostInReaderOrInAppWebview(Context ctx, final PostModel post) {
+    public static void openPostInReaderOrInAppWebview(Context ctx, final StatsPostModel post) {
         final String postType = post.getPostType();
         final String url = post.getUrl();
         final long blogID = post.getBlogID();

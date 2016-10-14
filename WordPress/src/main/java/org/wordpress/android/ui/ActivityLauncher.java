@@ -40,6 +40,7 @@ import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivit
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -283,14 +284,13 @@ public class ActivityLauncher {
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
         if (post == null) return;
 
-        org.wordpress.android.ui.stats.models.PostModel postModel =
-                new org.wordpress.android.ui.stats.models.PostModel(site.getSiteId(),
+        StatsPostModel statsPostModel = new StatsPostModel(site.getSiteId(),
                 String.valueOf(post.getRemotePostId()), post.getTitle(), post.getLink(),
                 isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
-        viewStatsSinglePostDetails(context, postModel);
+        viewStatsSinglePostDetails(context, statsPostModel);
     }
 
-    public static void viewStatsSinglePostDetails(Context context, org.wordpress.android.ui.stats.models.PostModel post) {
+    public static void viewStatsSinglePostDetails(Context context, StatsPostModel post) {
         if (post == null) return;
 
         Intent statsPostViewIntent = new Intent(context, StatsSingleItemDetailsActivity.class);
