@@ -179,7 +179,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         replyParams.put("author_url", reply.getAuthorUrl());
         replyParams.put("author_email", reply.getAuthorEmail());
 
-        newComment(site, comment.getRemotePostId(), reply, replyParams);
+        newComment(site, comment.getRemotePostId(), reply, comment.getRemoteCommentId(), replyParams);
     }
 
     /**
@@ -194,12 +194,12 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         commentParams.put("author_url", comment.getAuthorUrl());
         commentParams.put("author_email", comment.getAuthorEmail());
 
-        newComment(site, post.getRemotePostId(), comment, commentParams);
+        newComment(site, post.getRemotePostId(), comment, comment.getRemoteParentCommentId(), commentParams);
     }
 
     // Private methods
 
-    private void newComment(final SiteModel site, long remotePostId, final CommentModel comment,
+    private void newComment(final SiteModel site, long remotePostId, final CommentModel comment, final long parentId,
                             Map<String, Object> commentParams) {
         List<Object> params = new ArrayList<>(5);
         params.add(site.getSiteId());
@@ -213,6 +213,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                        comment.setRemoteParentCommentId(parentId);
                         if (response instanceof Integer) {
                             comment.setRemoteCommentId((int) response);
                         } else {
