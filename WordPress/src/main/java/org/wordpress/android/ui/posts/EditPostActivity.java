@@ -1616,8 +1616,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             AppLog.e(T.POSTS, e);
                         }
                     } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
-                        // TODO: check if it was mQuickMediaType > -1
-                        // Quick Photo was cancelled, delete post and finish activity
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                         finish();
                     }
@@ -1633,8 +1631,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                         }
                     } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
-                        // TODO: check if it was mQuickMediaType > -1
-                        // Quick Photo was cancelled, delete post and finish activity
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                         finish();
                     }
