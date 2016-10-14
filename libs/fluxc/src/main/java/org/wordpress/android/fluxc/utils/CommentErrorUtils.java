@@ -2,7 +2,9 @@ package org.wordpress.android.fluxc.utils;
 
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
 import org.wordpress.android.fluxc.store.CommentStore.CommentError;
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
@@ -44,11 +46,18 @@ public class CommentErrorUtils {
                     break;
             }
         }
+        // Duplicate comment on WPCom REST
         if (error instanceof WPComGsonNetworkError) {
             WPComGsonNetworkError wpComGsonNetworkError = (WPComGsonNetworkError) error;
             if ("comment_duplicate".equals(wpComGsonNetworkError.apiError)) {
                 errorType = CommentErrorType.DUPLICATE_COMMENT;
             }
+        }
+        // Duplicate comment on XMLRPC
+        if (error.type == GenericErrorType.PARSE_ERROR && error.hasVolleyError()
+            && error.volleyError.getCause() instanceof XMLRPCFault
+            && ((XMLRPCFault) error.volleyError.getCause()).getFaultCode() == 409) {
+            errorType = CommentErrorType.DUPLICATE_COMMENT;
         }
         return errorType;
     }
