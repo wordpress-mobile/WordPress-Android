@@ -192,12 +192,13 @@ public class BlogUtils {
 
     @NonNull
     public static Set<String> planTags() {
-        List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1",new String[]{"plan_product_id"});
-        Set<String> tags = new HashSet<String>();
+        String[] extraFields = {"plan_product_id"};
+        List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
+        Set<String> tags = new HashSet<>();
 
         for (Map<String, Object> blog : blogs) {
             Integer planId = MapUtils.getMapInt(blog, "plan_product_id");
-            if (planId == null) {
+            if (planId == 0) {
                 continue;
             }
             String tag = String.format("plan:%d", planId);
