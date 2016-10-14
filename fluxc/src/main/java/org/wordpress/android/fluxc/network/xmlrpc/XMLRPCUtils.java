@@ -27,17 +27,17 @@ public class XMLRPCUtils {
             }
 
             if (defaultValue instanceof String) {
-                return (T) MapUtils.getMapStr(map, "value");
+                return (T) MapUtils.getMapStr(map, key);
             } else if (defaultValue instanceof Boolean) {
-                return (T) Boolean.valueOf(MapUtils.getMapBool(map, "value"));
+                return (T) Boolean.valueOf(MapUtils.getMapBool(map, key));
             } else if (defaultValue instanceof Integer) {
-                return (T) Integer.valueOf(MapUtils.getMapInt(map, "value", (Integer) defaultValue));
+                return (T) Integer.valueOf(MapUtils.getMapInt(map, key, (Integer) defaultValue));
             } else if (defaultValue instanceof Long) {
-                return (T) Long.valueOf(MapUtils.getMapLong(map, "value", (Long) defaultValue));
+                return (T) Long.valueOf(MapUtils.getMapLong(map, key, (Long) defaultValue));
             } else if (defaultValue instanceof Float) {
-                return (T) Float.valueOf(MapUtils.getMapFloat(map, "value", (Float) defaultValue));
+                return (T) Float.valueOf(MapUtils.getMapFloat(map, key, (Float) defaultValue));
             } else if (defaultValue instanceof Double) {
-                return (T) Double.valueOf(MapUtils.getMapDouble(map, "value", (Double) defaultValue));
+                return (T) Double.valueOf(MapUtils.getMapDouble(map, key, (Double) defaultValue));
             }
         }
         return defaultValue;
