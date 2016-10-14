@@ -147,6 +147,15 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+                        // This is ugly but the XMLRPC response doesn't contain any info about the update comment.
+                        // So we're copying the logic here: if the comment status was "trash" before and the delete
+                        // call is successful, then we want to delete this comment. Setting the "deleted" status will
+                        // ensure the comment is deleted in the CommentStore.
+                        if (comment.getStatus().equals(CommentStatus.TRASH)) {
+                            comment.setStatus(CommentStatus.DELETED.toString());
+                        } else {
+                            comment.setStatus(CommentStatus.TRASH.toString());
+                        }
                         mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
                     }
                 },
