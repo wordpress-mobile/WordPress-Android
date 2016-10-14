@@ -235,9 +235,11 @@ public class HelpshiftHelper {
 
         // List blogs name and url
         int counter = 1;
-        for (Map<String, Object> account : WordPress.wpDB.getAllBlogs()) {
+        String[] extraFields = {"plan_product_id"};
+        for (Map<String, Object> account : WordPress.wpDB.getBlogsBy(null, extraFields)) {
             mMetadata.put("blog-name-" + counter, MapUtils.getMapStr(account, "blogName"));
             mMetadata.put("blog-url-" + counter, MapUtils.getMapStr(account, "url"));
+            mMetadata.put("blog-plan-" + counter, MapUtils.getMapInt(account, "plan_product_id"));
             counter += 1;
         }
 
