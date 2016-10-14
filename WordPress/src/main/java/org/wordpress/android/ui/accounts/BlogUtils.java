@@ -188,4 +188,20 @@ public class BlogUtils {
             s.replace(0, s.length(), lowerCase);
         }
     }
+
+    public static Set<String> planTags() {
+        List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1",new String[]{"plan_product_id"});
+        Set<String> tags = new HashSet<String>();
+
+        for (Map<String, Object> blog : blogs) {
+            Integer planId = MapUtils.getMapInt(blog, "plan_product_id");
+            if (planId == null) {
+                continue;
+            }
+            String tag = String.format("plan:%d", planId);
+            tags.add(tag);
+        }
+
+        return tags;
+    }
 }
