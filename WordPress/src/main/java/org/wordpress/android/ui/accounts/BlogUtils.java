@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 
 import org.wordpress.android.WordPress;
@@ -189,6 +190,7 @@ public class BlogUtils {
         }
     }
 
+    @NonNull
     public static Set<String> planTags() {
         List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1",new String[]{"plan_product_id"});
         Set<String> tags = new HashSet<String>();
