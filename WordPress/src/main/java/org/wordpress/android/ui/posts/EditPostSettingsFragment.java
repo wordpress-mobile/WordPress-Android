@@ -193,6 +193,7 @@ public class EditPostSettingsFragment extends Fragment
         mDay = c.get(Calendar.DAY_OF_MONTH);
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
+        // TODO: TaxonomyStore
         //mCategories = new ArrayList<String>();
 
         mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
