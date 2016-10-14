@@ -260,7 +260,10 @@ public class CommentStore extends Store {
     }
 
     private void updateComment(CommentModel payload) {
-        int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload);
+        int rowsAffected = 0;
+        if (!payload.isError()) {
+            rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload);
+        }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.UPDATE_COMMENT;
         emitChange(event);
@@ -325,8 +328,10 @@ public class CommentStore extends Store {
 
     private void handleFetchCommentsResponse(FetchCommentsResponsePayload payload) {
         int rowsAffected = 0;
-        for (CommentModel comment : payload.comments) {
-            rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
+        if (!payload.isError()) {
+            for (CommentModel comment : payload.comments) {
+                rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
+            }
         }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.FETCH_COMMENTS;
@@ -343,7 +348,10 @@ public class CommentStore extends Store {
     }
 
     private void handlePushCommentResponse(RemoteCommentResponsePayload payload) {
-        int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
+        int rowsAffected = 0;
+        if (!payload.isError()) {
+            rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
+        }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.PUSH_COMMENT;
         event.error = payload.error;
@@ -359,7 +367,10 @@ public class CommentStore extends Store {
     }
 
     private void handleFetchCommentResponse(RemoteCommentResponsePayload payload) {
-        int rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
+        int rowsAffected = 0;
+        if (!payload.isError()) {
+            rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
+        }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.FETCH_COMMENT;
         event.error = payload.error;
