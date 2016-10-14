@@ -51,6 +51,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
 
 import java.lang.reflect.Field;
@@ -108,6 +109,7 @@ public class NotificationsUtils {
         contentStruct.put("device_name", deviceName);
         contentStruct.put("device_model", Build.MANUFACTURER + " " + Build.MODEL);
         contentStruct.put("app_version", WordPress.versionName);
+        contentStruct.put("version_code", String.valueOf(PackageUtils.getVersionCode(ctx)));
         contentStruct.put("os_version", Build.VERSION.RELEASE);
         contentStruct.put("device_uuid", uuid);
         RestRequest.Listener listener = new RestRequest.Listener() {
