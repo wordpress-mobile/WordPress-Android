@@ -93,8 +93,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        CommentModel updatedComment = commentResponseToComment(response, site);
-                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(updatedComment);
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
                     }
                 },
