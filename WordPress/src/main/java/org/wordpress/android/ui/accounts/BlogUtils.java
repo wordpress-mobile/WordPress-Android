@@ -197,8 +197,9 @@ public class BlogUtils {
         Set<String> tags = new HashSet<>();
 
         for (Map<String, Object> blog : blogs) {
-            Integer planId = MapUtils.getMapInt(blog, "plan_product_id");
+            int planId = MapUtils.getMapInt(blog, "plan_product_id");
             if (planId == 0) {
+                // Skip unknown plans, MapUtils will turn any missing plan ID into 0
                 continue;
             }
             String tag = String.format("plan:%d", planId);
