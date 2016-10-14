@@ -122,10 +122,11 @@ public class EditPostSettingsFragment extends Fragment
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
 
-    public static EditPostSettingsFragment newInstance(SiteModel site) {
+    public static EditPostSettingsFragment newInstance(SiteModel site, PostModel post) {
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
+        bundle.putSerializable(EditPostActivity.EXTRA_POST, post);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -144,11 +145,14 @@ public class EditPostSettingsFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+                mPost = (PostModel) getArguments().getSerializable(EditPostActivity.EXTRA_POST);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(EditPostActivity.EXTRA_POST);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mPost = (PostModel) savedInstanceState.getSerializable(EditPostActivity.EXTRA_POST);
         }
 
         if (mSite == null) {
@@ -177,7 +181,6 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mPost = ((EditPostActivity) getActivity()).getPost();
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
 
         if (rootView == null || mPost == null) {
