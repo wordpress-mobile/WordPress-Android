@@ -151,7 +151,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                         // So we're copying the logic here: if the comment status was "trash" before and the delete
                         // call is successful, then we want to delete this comment. Setting the "deleted" status will
                         // ensure the comment is deleted in the CommentStore.
-                        if (comment.getStatus().equals(CommentStatus.TRASH)) {
+                        if (CommentStatus.TRASH.toString().equals(comment.getStatus())) {
                             comment.setStatus(CommentStatus.DELETED.toString());
                         } else {
                             comment.setStatus(CommentStatus.TRASH.toString());
