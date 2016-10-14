@@ -26,11 +26,13 @@ public class EditPostPreviewFragment extends Fragment {
     private LoadPostPreviewTask mLoadTask;
 
     private SiteModel mSite;
+    private PostModel mPost;
 
-    public static EditPostPreviewFragment newInstance(SiteModel site) {
+    public static EditPostPreviewFragment newInstance(SiteModel site, PostModel post) {
         EditPostPreviewFragment fragment = new EditPostPreviewFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
+        bundle.putSerializable(EditPostActivity.EXTRA_POST, post);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -39,6 +41,7 @@ public class EditPostPreviewFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(EditPostActivity.EXTRA_POST, mPost);
     }
 
     @Override
@@ -51,11 +54,14 @@ public class EditPostPreviewFragment extends Fragment {
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+                mPost = (PostModel) getArguments().getSerializable(EditPostActivity.EXTRA_POST);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(EditPostActivity.EXTRA_POST);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mPost = (PostModel) savedInstanceState.getSerializable(EditPostActivity.EXTRA_POST);
         }
 
         if (mSite == null) {
@@ -119,24 +125,24 @@ public class EditPostPreviewFragment extends Fragment {
                 return null;
             }
 
-            PostModel post = ((EditPostActivity) getActivity()).getPost();
-
-            if (post == null) {
+            if (mPost == null) {
                 return null;
             }
 
-            String postTitle = "<h1>" + post.getTitle() + "</h1>";
-            String postContent = postTitle + post.getContent();
+            String postTitle = "<h1>" + mPost.getTitle() + "</h1>";
+            String postContent = postTitle + mPost.getContent();
 
-            if (post.isLocalDraft()) {
+            if (mPost.isLocalDraft()) {
                 contentSpannable = WPHtml.fromHtml(
                         postContent.replaceAll("\uFFFC", ""),
                         getActivity(),
-                        post,
+                        mPost,
                         Math.min(mTextView.getWidth(), mTextView.getHeight())
                 );
             } else {
-                String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">%s</div></body></html>";
+                String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" " +
+                        "type=\"text/css\" href=\"webview.css\" /></head><body><div " +
+                        "id=\"container\">%s</div></body></html>";
                 htmlText = String.format(htmlText, StringUtils.addPTags(postContent));
                 contentSpannable = new SpannableString(htmlText);
             }
@@ -146,8 +152,8 @@ public class EditPostPreviewFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Spanned spanned) {
-            if (getActivity() != null && ((EditPostActivity) getActivity()).getPost() != null && spanned != null) {
-                if (((EditPostActivity) getActivity()).getPost().isLocalDraft()) {
+            if (mPost != null && spanned != null) {
+                if (mPost.isLocalDraft()) {
                     mTextView.setVisibility(View.VISIBLE);
                     mWebView.setVisibility(View.GONE);
                     mTextView.setText(spanned);
