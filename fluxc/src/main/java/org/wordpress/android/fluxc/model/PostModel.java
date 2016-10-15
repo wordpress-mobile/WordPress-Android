@@ -43,8 +43,8 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     @Column private long mFeaturedImageId = FEATURED_IMAGE_INIT_VALUE;
     @Column private String mPostFormat;
     @Column private String mSlug;
-    @Column private double mLatitude;
-    @Column private double mLongitude;
+    @Column private double mLatitude = PostLocation.INVALID_LATITUDE;
+    @Column private double mLongitude = PostLocation.INVALID_LONGITUDE;
 
     // Page specific
     @Column private boolean mIsPage;
