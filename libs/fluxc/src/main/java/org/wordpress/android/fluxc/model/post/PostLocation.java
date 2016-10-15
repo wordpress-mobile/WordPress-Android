@@ -16,6 +16,9 @@ public class PostLocation implements Serializable {
     public PostLocation() { }
 
     public PostLocation(double latitude, double longitude) {
+        if (!(isValidLatitude(latitude) && isValidLongitude(longitude))) {
+            return;
+        }
         setLatitude(latitude);
         setLongitude(longitude);
     }
