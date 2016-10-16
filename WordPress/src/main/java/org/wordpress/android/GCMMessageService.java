@@ -23,6 +23,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -270,7 +271,10 @@ public class GCMMessageService extends GcmListenerService {
                         }
                     } else {
                         //else offer REPLY / LIKE actions
-                        if (note.canLike()) {
+                        //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
+                        Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
+                        boolean isJetPackSite = blog != null ? blog.isJetpackPowered() : false;
+                        if (note.canLike() && !isJetPackSite) {
                             addCommentLikeActionForCommentNotification(builder, noteId);
                         }
                     }
@@ -281,7 +285,7 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        // if we could not set the actions, set the default one REPLY as it' then only safe bet
+        // if we could not set the actions, set the default one REPLY as it's then only safe bet
         // we can make at this point
         if (!areActionsSet) {
             addCommentReplyActionForCommentNotification(builder, noteId);
