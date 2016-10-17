@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
@@ -55,6 +56,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final int PUSH_NOTIFICATION_ID = 10000;
     private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
+    public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     private static final int MAX_INBOX_ITEMS = 5;
 
     private static final String PUSH_ARG_USER = "user";
@@ -300,6 +302,19 @@ public class GCMMessageService extends GcmListenerService {
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
+
+        //add wearable remoteInput to enable voice-reply
+        String replyLabel = getResources().getString(R.string.reply);
+        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
+                .setLabel(replyLabel)
+                .build();
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.ic_reply_white_24dp,
+                        getString(R.string.reply), commentReplyPendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .build();
+        builder.extend(new NotificationCompat.WearableExtender().addAction(action));
+
     }
 
     private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
