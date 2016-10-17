@@ -39,6 +39,7 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
@@ -85,6 +86,7 @@ import de.greenrobot.event.EventBus;
  * prior to this there were separate comment detail screens for each list
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
+    private static final String KEY_REMOTE_BLOG_ID = "remote_blog_id";
     private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
     private static final String KEY_COMMENT_ID = "comment_id";
     private static final String KEY_NOTE_ID = "note_id";
@@ -194,6 +196,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
                 setComment(localBlogId, commentId);
             }
+
+            mRemoteBlogId = savedInstanceState.getInt(KEY_REMOTE_BLOG_ID);
         }
 
         setHasOptionsMenu(true);
@@ -210,6 +214,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNote != null) {
             outState.putString(KEY_NOTE_ID, mNote.getId());
         }
+
+        outState.putInt(KEY_REMOTE_BLOG_ID, mRemoteBlogId);
+
     }
 
     @Override
@@ -1109,7 +1116,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // note that the local blog id won't be found if the comment is from someone else's blog
-        int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
+        int localBlogId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(mRemoteBlogId);
+
+        //adjust enabledActions if this is a Jetpack site
+        if (canLike()) {
+            Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localBlogId);
+            if (blog != null && blog.isJetpackPowered()) {
+                //delete LIKE action from enabledActions for Jetpack sites
+                mEnabledActions.remove(EnabledActions.ACTION_LIKE);
+            }
+        }
 
         setComment(localBlogId, note.buildComment());
 
