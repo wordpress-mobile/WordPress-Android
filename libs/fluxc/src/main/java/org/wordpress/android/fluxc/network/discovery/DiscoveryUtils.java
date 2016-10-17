@@ -103,7 +103,7 @@ public class DiscoveryUtils {
     /**
      * Find the XML-RPC endpoint for the WordPress API.
      *
-     * @return XML-RPC endpoint for the specified blog, or null if unable to discover endpoint.
+     * @return XML-RPC endpoint for the specified site, or null if unable to discover endpoint.
      */
     public static String getXMLRPCApiLink(String html) {
         Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"",
