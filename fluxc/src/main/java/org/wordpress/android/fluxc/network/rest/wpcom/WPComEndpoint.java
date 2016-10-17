@@ -1,5 +1,6 @@
-package org.wordpress.android.fluxc.annotations.endpoint;
+package org.wordpress.android.fluxc.network.rest.wpcom;
 
+@SuppressWarnings("unused")
 public class WPComEndpoint {
     private static final String WPCOM_REST_PREFIX = "https://public-api.wordpress.com/rest";
     private static final String WPCOM_PREFIX_V1 = WPCOM_REST_PREFIX + "/v1";
@@ -9,16 +10,12 @@ public class WPComEndpoint {
 
     private final String mEndpoint;
 
-    public WPComEndpoint(String endpoint) {
+    protected WPComEndpoint(String endpoint) {
         mEndpoint = endpoint;
     }
 
-    public WPComEndpoint(String endpoint, long id) {
+    protected WPComEndpoint(String endpoint, long id) {
         this(endpoint + id + "/");
-    }
-
-    public WPComEndpoint(String endpoint, String value) {
-        this(endpoint + value + "/");
     }
 
     public String getEndpoint() {

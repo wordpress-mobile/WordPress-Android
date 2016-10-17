@@ -10,6 +10,8 @@ import com.squareup.javapoet.TypeSpec;
 import org.wordpress.android.fluxc.annotations.Endpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.EndpointNode;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.lang.model.element.Modifier;
@@ -122,15 +124,12 @@ public class RESTPoet {
 
         if (!endpointNode.hasChildren()) {
             // Build annotated accessor method for variable endpoint and add it to the class
-            classBuilder.addMethod(generateEndpointMethodForClass(endpointNode, sBaseEndpointClass));
-        } else {
-            MethodSpec endpointConstructor = MethodSpec.constructorBuilder()
-                    .addModifiers(Modifier.PRIVATE)
-                    .addParameter(String.class, "previousEndpoint")
-                    .addParameter(long.class, endpointName + "Id")
-                    .addStatement("super($L, $L)", "previousEndpoint", endpointName + "Id")
-                    .build();
+            List<MethodSpec> endpointMethods = generateEndpointMethodsForClass(endpointNode, sBaseEndpointClass);
 
+            for (MethodSpec endpointMethod : endpointMethods) {
+                classBuilder.addMethod(endpointMethod);
+            }
+        } else {
             String innerClassName;
             if (endpointNode.getParent().getCleanEndpointName().equals(endpointName)) {
                 // Special rule for situations like '.../media/$media_ID/` where the inner class needs to be renamed
@@ -141,49 +140,71 @@ public class RESTPoet {
 
             TypeSpec.Builder endpointClassBuilder = TypeSpec.classBuilder(innerClassName)
                     .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                    .superclass(sBaseEndpointClass)
-                    .addMethod(endpointConstructor);
+                    .superclass(sBaseEndpointClass);
+
+            // Add a constructor for each type this endpoint accepts (usually long)
+            for (Class endpointType : getVariableEndpointTypes(endpointNode)) {
+                String variableName = endpointType.equals(String.class) ? endpointName : endpointName + "Id";
+
+                MethodSpec endpointConstructor = MethodSpec.constructorBuilder()
+                        .addModifiers(Modifier.PRIVATE)
+                        .addParameter(String.class, "previousEndpoint")
+                        .addParameter(endpointType, variableName)
+                        .addStatement("super($L, $L)", "previousEndpoint", variableName)
+                        .build();
+                endpointClassBuilder.addMethod(endpointConstructor);
+            }
 
             TypeName endpointClassName = ClassName.get("", innerClassName);
 
             // Build annotated accessor method for variable endpoint
-            MethodSpec endpointMethod = generateEndpointMethodForClass(endpointNode, endpointClassName);
+            List<MethodSpec> endpointMethods = generateEndpointMethodsForClass(endpointNode, endpointClassName);
 
             for (EndpointNode childEndpoint : endpointNode.getChildren()) {
                 addEndpointToBuilder(childEndpoint, endpointClassBuilder);
             }
 
-            classBuilder.addMethod(endpointMethod)
-                    .addType(endpointClassBuilder.build());
+            for (MethodSpec endpointMethod : endpointMethods) {
+                classBuilder.addMethod(endpointMethod);
+            }
+
+            classBuilder.addType(endpointClassBuilder.build());
         }
     }
 
-    private static MethodSpec generateEndpointMethodForClass(EndpointNode endpointNode, TypeName endpointClassName) {
-        String endpointName = endpointNode.getCleanEndpointName();
+    private static List<MethodSpec> generateEndpointMethodsForClass(EndpointNode endpointNode, TypeName endpointClassName) {
+        List<MethodSpec> endpointMethods = new ArrayList<>();
 
-        String methodName = endpointName;
-        if (endpointNode.getParent().getCleanEndpointName().equals(endpointName)) {
-            // Special rule for situations like '.../media/$media_ID/`
-            methodName = "item";
+        for (Class endpointType : getVariableEndpointTypes(endpointNode)) {
+            String endpointName = endpointNode.getCleanEndpointName();
+
+            String methodName = endpointName;
+            if (endpointNode.getParent().getCleanEndpointName().equals(endpointName)) {
+                // Special rule for situations like '.../media/$media_ID/`
+                methodName = "item";
+            }
+
+            String variableName = endpointType.equals(String.class) ? endpointName : endpointName + "Id";
+
+            MethodSpec.Builder endpointMethodBuilder = MethodSpec.methodBuilder(methodName)
+                    .addModifiers(Modifier.PUBLIC)
+                    .returns(endpointClassName)
+                    .addParameter(endpointType, variableName)
+                    .addAnnotation(AnnotationSpec.builder(Endpoint.class)
+                            .addMember("value", "$S", endpointNode.getFullEndpoint())
+                            .build());
+
+            if (endpointNode.getParent().isRoot()) {
+                endpointMethodBuilder.addModifiers(Modifier.STATIC)
+                        .addStatement("return new $T($S, $L)", endpointClassName, "/", variableName);
+            } else {
+                endpointMethodBuilder
+                        .addStatement("return new $T(getEndpoint(), $L)", endpointClassName, variableName);
+            }
+            endpointMethods.add(endpointMethodBuilder.build());
         }
 
-        MethodSpec.Builder endpointMethodBuilder = MethodSpec.methodBuilder(methodName)
-                .addModifiers(Modifier.PUBLIC)
-                .returns(endpointClassName)
-                .addParameter(long.class, endpointName + "Id")
-                .addAnnotation(AnnotationSpec.builder(Endpoint.class)
-                        .addMember("value", "$S", endpointNode.getFullEndpoint())
-                        .build());
-
-        if (endpointNode.getParent().isRoot()) {
-            endpointMethodBuilder.addModifiers(Modifier.STATIC)
-                    .addStatement("return new $T($S, $L)", endpointClassName, "/", endpointName + "Id");
-        } else {
-            endpointMethodBuilder
-                    .addStatement("return new $T(getEndpoint(), $L)", endpointClassName, endpointName + "Id");
-        }
-
-        return endpointMethodBuilder.build();
+        return endpointMethods;
     }
 
     private static String capitalize(String endpoint) {
@@ -197,5 +218,26 @@ public class RESTPoet {
             }
         }
         return string;
+    }
+
+    private static List<Class> getVariableEndpointTypes(EndpointNode endpointNode) {
+        List<Class> endpointTypes = new ArrayList<>();
+
+        for (String endpointType : endpointNode.getEndpointTypes()) {
+            switch (endpointType) {
+                case "String":
+                    endpointTypes.add(String.class);
+                    break;
+                case "long":
+                    endpointTypes.add(long.class);
+                    break;
+            }
+        }
+
+        if (endpointTypes.isEmpty()) {
+            endpointTypes.add(long.class);
+        }
+
+        return endpointTypes;
     }
 }

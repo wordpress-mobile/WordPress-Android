@@ -24,14 +24,15 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
-import org.wordpress.android.fluxc.utils.DateTimeUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
@@ -76,7 +77,16 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         // 404 - "Invalid post ID."
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
-                        payload.error = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        // Convert GenericErrorType to PostErrorType where applicable
+                        PostError postError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        }
+                        payload.error = postError;
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                     }
                 });
@@ -128,7 +138,15 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         // Possible non-generic errors:
                         // 403 - "The post type specified is not valid"
                         // TODO: Check the error message and flag this as INVALID_POST_TYPE if applicable
-                        PostError postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        // Convert GenericErrorType to PostErrorType where applicable
+                        PostError postError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        }
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
@@ -140,7 +158,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void pushPost(final PostModel post, final SiteModel site) {
         if (TextUtils.isEmpty(post.getStatus())) {
-            post.setStatus(PostStatus.toString(PostStatus.PUBLISHED));
+            post.setStatus(PostStatus.PUBLISHED.toString());
         }
 
         Map<String, Object> contentStruct = postModelToContentStruct(post);
@@ -180,7 +198,16 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         // 404 - "Invalid attachment ID." (invalid featured image)
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         // TODO: Check the error message and flag this as one of the above specific errors if applicable
-                        payload.error = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        // Convert GenericErrorType to PostErrorType where applicable
+                        PostError postError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        }
+                        payload.error = postError;
                         mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
                     }
                 });
@@ -211,7 +238,16 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         // 404 - "Invalid post ID."
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
-                        payload.error = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        // Convert GenericErrorType to PostErrorType where applicable
+                        PostError postError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        }
+                        payload.error = postError;
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 });
@@ -301,10 +337,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 Map<?, ?> customFieldMap = (Map<?, ?>) customField;
                 if (customFieldMap.get("key") != null && customFieldMap.get("value") != null) {
                     if (customFieldMap.get("key").equals("geo_longitude")) {
-                        postLocation.setLongitude(Long.valueOf(customFieldMap.get("value").toString()));
+                        postLocation.setLongitude(XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0));
                     }
                     if (customFieldMap.get("key").equals("geo_latitude")) {
-                        postLocation.setLatitude(Long.valueOf(customFieldMap.get("value").toString()));
+                        postLocation.setLatitude(XMLRPCUtils.safeGetMapValue(customFieldMap, 0.0));
                     }
                 }
             }
@@ -353,7 +389,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         if (post.getDateCreated() != null) {
             String dateCreated = post.getDateCreated();
-            Date date = DateTimeUtils.dateFromIso8601(dateCreated);
+            Date date = DateTimeUtils.dateUTCFromIso8601(dateCreated);
             if (date != null) {
                 contentStruct.put("post_date", date);
                 // Redundant, but left in just in case
