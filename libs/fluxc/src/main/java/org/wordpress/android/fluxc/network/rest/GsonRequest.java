@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
@@ -12,6 +13,7 @@ import com.google.gson.JsonSyntaxException;
 import org.wordpress.android.fluxc.network.BaseRequest;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 public abstract class GsonRequest<T> extends BaseRequest<T> {
@@ -22,14 +24,16 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     private final Class<T> mClass;
     private final Listener<T> mListener;
     private final Map<String, String> mParams;
+    private final Map<String, Object> mBody;
 
-    public GsonRequest(int method, Map<String, String> params, String url, Class<T> clazz, Listener<T> listener,
-                       BaseErrorListener errorListener) {
+    public GsonRequest(int method, Map<String, String> params, Map<String, Object> body, String url, Class<T> clazz,
+                       Listener<T> listener, BaseErrorListener errorListener) {
         super(method, url, errorListener);
         mClass = clazz;
         mListener = listener;
         mGson = setupGsonBuilder().create();
         mParams = params;
+        mBody = body;
     }
 
     @Override
@@ -45,6 +49,15 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     @Override
     protected Map<String, String> getParams() {
         return mParams;
+    }
+
+    @Override
+    public byte[] getBody() throws AuthFailureError {
+        if (mBody == null) {
+            return super.getBody();
+        }
+
+        return mGson.toJson(mBody).getBytes(Charset.forName("UTF-8"));
     }
 
     @Override
