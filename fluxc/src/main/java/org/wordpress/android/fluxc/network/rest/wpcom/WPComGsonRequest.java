@@ -28,13 +28,49 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
         }
     }
 
+    /**
+     * Creates a new request with the given method (one of the values from {@link Method Method}).
+     * For a request with a body of arbitrary JSON, use
+     * {@link #buildPostRequest(String, Map, Class, Listener, BaseErrorListener) postRequest}.
+     */
     public WPComGsonRequest(int method, String url, Map<String, String> params, Class<T> clazz,
                             Listener<T> listener, BaseErrorListener errorListener) {
-        super(method, params, null, url, clazz, listener, errorListener);
+        this(method, url, params, null, clazz, listener, errorListener);
+    }
+
+    private WPComGsonRequest(int method, String url, Map<String, String> params, Map<String, Object> body,
+                            Class<T> clazz, Listener<T> listener, BaseErrorListener errorListener) {
+        super(method, params, body, url, clazz, listener, errorListener);
         // If it's a GET request, add the parameters to the URL
         if (method == Method.GET) {
             addQueryParameters(params);
         }
+    }
+
+    /**
+     * Creates a new GET request.
+     * @param url the request URL
+     * @param params the parameters to append to the request URL
+     * @param clazz the class defining the expected response
+     * @param listener the success listener
+     * @param errorListener the error listener
+     */
+    public static <T> WPComGsonRequest<T> buildGetRequest(String url, Map<String, String> params, Class<T> clazz,
+                                                          Listener<T> listener, BaseErrorListener errorListener) {
+        return new WPComGsonRequest<>(Method.GET, url, params, null, clazz, listener, errorListener);
+    }
+
+    /**
+     * Creates a new JSON-formatted POST request.
+     * @param url the request URL
+     * @param body the content body, which will be converted to JSON using {@link com.google.gson.Gson Gson}
+     * @param clazz the class defining the expected response
+     * @param listener the success listener
+     * @param errorListener the error listener
+     */
+    public static <T> WPComGsonRequest<T> buildPostRequest(String url, Map<String, Object> body, Class<T> clazz,
+                                                           Listener<T> listener, BaseErrorListener errorListener) {
+        return new WPComGsonRequest<T>(Method.POST, url, null, body, clazz, listener, errorListener);
     }
 
     private String addDefaultParameters(String url) {
