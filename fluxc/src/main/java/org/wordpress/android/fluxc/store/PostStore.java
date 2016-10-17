@@ -174,6 +174,7 @@ public class PostStore extends Store {
     public enum PostErrorType {
         UNKNOWN_POST,
         UNKNOWN_POST_TYPE,
+        UNAUTHORIZED,
         INVALID_RESPONSE,
         GENERIC_ERROR;
 
@@ -414,10 +415,9 @@ public class PostStore extends Store {
 
     private void handlePushPostCompleted(RemotePostPayload payload) {
         if (payload.isError()) {
-            OnPostChanged onPostChanged = new OnPostChanged(0);
-            onPostChanged.error = payload.error;
-            onPostChanged.causeOfChange = PostAction.PUSH_POST;
-            emitChange(onPostChanged);
+            OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
+            onPostUploaded.error = payload.error;
+            emitChange(onPostUploaded);
         } else {
             emitChange(new OnPostUploaded(payload.post));
 
