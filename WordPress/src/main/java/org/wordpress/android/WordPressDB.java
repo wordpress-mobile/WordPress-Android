@@ -925,7 +925,7 @@ public class WordPressDB {
         int localId = getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
 
         if (localId == 0) {
-            localId = getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
+            localId = getLocalTableBlogIdForWpComRemoteBlogId(remoteBlogId);
         }
         return localId;
     }
@@ -977,6 +977,15 @@ public class WordPressDB {
 
     public int getLocalTableBlogIdForRemoteBlogId(int remoteBlogId) {
         int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?",
+                new String[]{Integer.toString(remoteBlogId)});
+        if (localBlogID == 0) {
+            localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
+        }
+        return localBlogID;
+    }
+
+    public int getLocalTableBlogIdForWpComRemoteBlogId(int remoteBlogId) {
+        int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=? and dotcomFlag=1",
                 new String[]{Integer.toString(remoteBlogId)});
         if (localBlogID == 0) {
             localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
