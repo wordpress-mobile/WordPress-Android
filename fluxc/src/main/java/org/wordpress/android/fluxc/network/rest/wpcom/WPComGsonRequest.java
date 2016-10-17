@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.android.volley.Request;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 
@@ -31,9 +30,9 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
 
     public WPComGsonRequest(int method, String url, Map<String, String> params, Class<T> clazz,
                             Listener<T> listener, BaseErrorListener errorListener) {
-        super(method, params, url, clazz, listener, errorListener);
-        // If it's a GET request, then add the parameters as query Parameters
-        if (method == Request.Method.GET) {
+        super(method, params, null, url, clazz, listener, errorListener);
+        // If it's a GET request, add the parameters to the URL
+        if (method == Method.GET) {
             addQueryParameters(params);
         }
     }
