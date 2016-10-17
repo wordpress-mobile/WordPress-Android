@@ -397,6 +397,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mShouldFocusReplyField = false;
     }
 
+    public void enableShouldFocusReplyField() {
+        mShouldFocusReplyField = true;
+    }
+
     private void enableShouldRequestCommentFromNote() {
         mShouldRequestCommentFromNote = true;
     }

@@ -167,11 +167,15 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             // show comment detail for comment notifications
             boolean isInstantLike = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
             boolean isInstantApprove = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
+            boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
             fragment = isInstantLike ?
                         CommentDetailFragment.newInstanceForInstantLike(note.getId()) :
                         isInstantApprove ?
                             CommentDetailFragment.newInstanceForInstantApprove(note.getId()) :
                             CommentDetailFragment.newInstance(note.getId());
+            if (isInstantReply) {
+                ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
+            }
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
