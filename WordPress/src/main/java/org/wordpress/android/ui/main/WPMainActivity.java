@@ -162,8 +162,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     case WPMainTabAdapter.TAB_NOTIFS:
                         setTabLayoutElevation(mAppBarElevation);
                         new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                        // Removes app notifications from the system bar as we're looking at them right now
-                        GCMMessageService.removeAllNotifications(WPMainActivity.this);
                         break;
                 }
 
