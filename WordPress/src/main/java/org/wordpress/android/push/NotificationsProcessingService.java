@@ -212,10 +212,9 @@ public class NotificationsProcessingService extends Service {
 
         //after 3 seconds, dismiss the temporal notification that indicated success
         Handler handler = new Handler();
-        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         handler.postDelayed(new Runnable() {
             public void run() {
-                notificationManager.cancel(ACTIONS_RESULT_NOTIFICATION_ID);
+                dismissProcessingNotification();
             }}, 3000); // show the success message for 3 seconds, then dismiss
     }
 
@@ -337,9 +336,17 @@ public class NotificationsProcessingService extends Service {
                 }
             });
         } else {
-            // just trigger the Activity to allow the user to write a reply
+            //cancel the progressing notification
+            dismissProcessingNotification();
+
+            //and just trigger the Activity to allow the user to write a reply
             startReplyToCommentActivity();
         }
+    }
+
+    private void dismissProcessingNotification() {
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.cancel(ACTIONS_RESULT_NOTIFICATION_ID);
     }
 
     private void startReplyToCommentActivity() {
