@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import com.android.volley.VolleyError;
-import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
@@ -15,8 +14,6 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
