@@ -5,6 +5,7 @@ package org.wordpress.android.models;
 
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONArray;
@@ -16,9 +17,12 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 public class Note {
     private static final String TAG = "NoteModel";
@@ -64,9 +68,6 @@ public class Note {
         GROUP_OLDER_MONTH
     }
 
-    /**
-     * Create a note using JSON from Simperium
-     */
     public Note(String key, JSONObject noteJSON) {
         mKey = key;
         mNoteJSON = noteJSON;
@@ -522,5 +523,50 @@ public class Note {
         }
 
         return new Reply(String.format("%s/replies/new", restPath), content);
+    }
+
+    public static synchronized Note buildFromBase64EncodedData(String noteId, String base64FullNoteData) {
+        Note note = null;
+
+        if (base64FullNoteData == null) return null;
+
+        byte[] b64DecodedPayload = Base64.decode(base64FullNoteData, Base64.DEFAULT);
+
+        // Decompress the payload
+        Inflater decompresser = new Inflater();
+        decompresser.setInput(b64DecodedPayload, 0, b64DecodedPayload.length);
+        byte[] result = new byte[4096]; //max length an Android PN payload can have
+        int resultLength = 0;
+        try {
+            resultLength = decompresser.inflate(result);
+            decompresser.end();
+        } catch (DataFormatException e) {
+            AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+        }
+
+        String out = null;
+        try {
+            out = new String(result, 0, resultLength, "UTF8");
+        } catch (UnsupportedEncodingException e) {
+            AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+        }
+
+        if (out != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(out);
+                if (jsonObject.has("notes")) {
+                    JSONArray jsonArray = jsonObject.getJSONArray("notes");
+                    if (jsonArray != null && jsonArray.length() == 1) {
+                        jsonObject = jsonArray.getJSONObject(0);
+                    }
+                }
+                note = new Note(noteId, jsonObject);
+
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+            }
+        }
+
+        return note;
     }
 }

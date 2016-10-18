@@ -118,33 +118,23 @@ public class GCMMessageService extends GcmListenerService {
 
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
-/*
-    private void trySaveNoteIfNotAlreadyInBucket(Bundle data) {
-        if (SimperiumUtils.getNotesBucket() != null) {
+
+    private void saveNoteIntoDB(Bundle data) {
             if (data == null) {
                 AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
                 return;
             }
 
             String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
-            try {
-                SimperiumUtils.getNotesBucket().get(noteId);
-                // all good if we got here
-            } catch (BucketObjectMissingException e) {
-                AppLog.e(T.NOTIFS, e);
-                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-
-                if (data.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-                    //if note doesn't exist, try taking it from the PN payload, build it and save it
-                    // Simperium will take care of syncing local and server versions up at a later point
-                    String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
-                    Note note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
-                    SimperiumUtils.saveNote(note);
-                }
+            Note note = NotificationsTable.getNoteById(noteId);
+            if (note == null) {
+                //if note doesn't exist, try taking it from the PN payload, build it and save it
+                String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
+                note = Note.buildFromBase64EncodedData(noteId, base64FullData);
+                NotificationsTable.saveNote(note, true);
             }
-        }
     }
-*/
+
     private void buildAndShowNotificationFromNoteData(Bundle data) {
 
         if (data == null) {
@@ -158,7 +148,7 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        //trySaveNoteIfNotAlreadyInBucket(data);
+        saveNoteIntoDB(data);
 
         String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
