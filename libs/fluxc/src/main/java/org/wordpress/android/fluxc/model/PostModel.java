@@ -24,6 +24,8 @@ import java.util.List;
 @Table
 public class PostModel extends Payload implements Cloneable, Identifiable, Serializable {
     private static final long FEATURED_IMAGE_INIT_VALUE = -2;
+    private static final long LATITUDE_REMOVED_VALUE = 8888;
+    private static final long LONGITUDE_REMOVED_VALUE = 8888;
 
     @PrimaryKey
     @Column private int mId;
@@ -415,9 +417,17 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         return getLocation() != null && getLocation().isValid();
     }
 
+    public boolean shouldDeleteLatitude() {
+        return mLatitude == LATITUDE_REMOVED_VALUE;
+    }
+
+    public boolean shouldDeleteLongitude() {
+        return mLongitude == LONGITUDE_REMOVED_VALUE;
+    }
+
     public void clearLocation() {
-        mLatitude = PostLocation.INVALID_LATITUDE;
-        mLongitude = PostLocation.INVALID_LONGITUDE;
+        mLatitude = LATITUDE_REMOVED_VALUE;
+        mLongitude = LONGITUDE_REMOVED_VALUE;
     }
 
     public boolean featuredImageHasChanged() {
