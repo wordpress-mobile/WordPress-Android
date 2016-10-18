@@ -233,7 +233,16 @@ public class NotificationsProcessingService extends Service {
 
     private void showMessageToUserAndFinish(String message) {
         String title = getString(R.string.app_name);
-        NotificationCompat.Builder builder = GCMMessageService.getNotificationBuilder(this, title, message);
+        NotificationCompat.Builder builder =
+         new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setColor(getResources().getColor(R.color.blue_wordpress))
+                .setContentTitle(title)
+                .setContentText(message)
+                .setTicker(message)
+                .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(ACTIONS_RESULT_NOTIFICATION_ID, builder.build());
     }
