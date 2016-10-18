@@ -3,7 +3,10 @@ package org.wordpress.android.push;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.RemoteInput;
+import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -17,9 +20,14 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentActionResult;
 import org.wordpress.android.ui.comments.CommentActions;
+import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
+
+import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_REPLY;
+import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
 
 /**
  * service which makes it possible to process Notifications quick actions in the background,
@@ -96,6 +104,18 @@ public class NotificationsProcessingService extends Service {
             mReplyText = intent.getStringExtra(ARG_ACTION_REPLY_TEXT);
         }
 
+        if (TextUtils.isEmpty(mReplyText)) {
+            //if voice reply is enabled in a wearable, it will come through the remoteInput
+            //extra EXTRA_VOICE_REPLY
+            Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+            if (remoteInput != null) {
+                CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
+                if (replyText != null) {
+                    mReplyText = replyText.toString();
+                }
+            }
+        }
+
         if (mActionType != null) {
             RestRequest.Listener listener =
                     new RestRequest.Listener() {
@@ -113,14 +133,14 @@ public class NotificationsProcessingService extends Service {
                     new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            requestFailed();
+                            requestFailed(mActionType);
                         }
                     };
 
             getNoteFromNoteId(mNoteId, listener, errorListener);
 
         } else {
-            requestFailed();
+            requestFailed(null);
         }
 
         return START_NOT_STICKY;
@@ -152,17 +172,22 @@ public class NotificationsProcessingService extends Service {
             } else {
                 // add other actions here
                 //no op
-                requestFailed();
+                requestFailed(null);
             }
         } else {
-            requestFailed();
+            requestFailed(null);
         }
     }
 
     /*
      * called when action has been completed successfully
      */
-    private void requestCompleted() {
+    private void requestCompleted(String actionType) {
+        if (actionType != null) {
+
+        } else {
+            //show generic sucess type here
+        }
         //TODO show a success notification
         //EventBus.getDefault().post(new PlanEvents.PlansUpdated(mLocalBlogId, mSitePlans));
     }
@@ -170,15 +195,18 @@ public class NotificationsProcessingService extends Service {
     /*
      * called when action failed
      */
-    private void requestFailed() {
-        //EventBus.getDefault().post(new PlanEvents.PlansUpdateFailed());
+    private void requestFailed(String actionType) {
+        if (actionType != null) {
+
+        } else {
+            //show generic error here
+        }
         showErrorToUserAndFinish();
     }
 
     private void showErrorToUserAndFinish() {
         //TODO implement a notification in the system dashboard to tell the user how this went
     }
-
 
     private void getNoteFromNoteId(String noteId, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
         if (noteId == null) return;
@@ -188,7 +216,6 @@ public class NotificationsProcessingService extends Service {
                 noteId, listener, errorListener
         );
     }
-
 
     // Like or unlike a comment via the REST API
     private void likeComment() {
@@ -204,17 +231,16 @@ public class NotificationsProcessingService extends Service {
                     @Override
                     public void onResponse(JSONObject response) {
                         if (response != null && response.optBoolean("success")) {
-                            requestCompleted();
+                            requestCompleted(ARG_ACTION_LIKE);
                         }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        requestFailed();
+                        requestFailed(ARG_ACTION_LIKE);
                     }
                 });
     }
-
 
     private void approveComment(){
         if (mNote == null) return;
@@ -226,15 +252,14 @@ public class NotificationsProcessingService extends Service {
             @Override
             public void onActionResult(CommentActionResult result) {
                 if (result != null && result.isSuccess()) {
-
+                    requestCompleted(ARG_ACTION_APPROVE);
                 } else {
-                    requestFailed();
+                    requestFailed(ARG_ACTION_APPROVE);
                 }
             }
         });
 
     }
-
 
     private void replyToComment(){
         if (mNote == null) return;
@@ -242,17 +267,34 @@ public class NotificationsProcessingService extends Service {
         // Bump analytics
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
 
-        CommentActions.submitReplyToCommentNote(mNote, mReplyText, new CommentActions.CommentActionListener() {
-            @Override
-            public void onActionResult(CommentActionResult result) {
-                if (result != null && result.isSuccess()) {
 
-                } else {
-                    requestFailed();
+        if (!TextUtils.isEmpty(mReplyText)) {
+            CommentActions.submitReplyToCommentNote(mNote, mReplyText, new CommentActions.CommentActionListener() {
+                @Override
+                public void onActionResult(CommentActionResult result) {
+                    if (result != null && result.isSuccess()) {
+                        requestCompleted(ARG_ACTION_REPLY);
+                    } else {
+                        requestFailed(ARG_ACTION_REPLY);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            // just trigger the Activity to allow the user to write a reply
+            startReplyToCommentActivity();
+        }
+    }
 
+    private void startReplyToCommentActivity() {
+        Intent intent = new Intent(this, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setAction("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.LAUNCHER");
+        intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
+        intent.putExtra(NOTE_INSTANT_REPLY_EXTRA, true);
+        startActivity(intent);
     }
 
 }

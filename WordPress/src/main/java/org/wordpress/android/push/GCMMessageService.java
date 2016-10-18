@@ -301,12 +301,11 @@ public class GCMMessageService extends GcmListenerService {
         // adding comment reply action
         Intent commentReplyIntent = getCommentActionIntent();
         commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
-        commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
+        commentReplyIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_REPLY);
         if (noteId != null) {
-            commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+            commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-        PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(this, 0, commentReplyIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent commentReplyPendingIntent =  PendingIntent.getService(this, 0, commentReplyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
 
@@ -328,14 +327,10 @@ public class GCMMessageService extends GcmListenerService {
         // adding comment like action
         Intent commentLikeIntent = getCommentActionIntent();
         commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
-//        commentLikeIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, true);
         commentLikeIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_LIKE);
         if (noteId != null) {
-//            commentLikeIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
             commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-//        PendingIntent commentLikePendingIntent = PendingIntent.getActivity(this, 0, commentLikeIntent,
-//                PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent commentLikePendingIntent =  PendingIntent.getService(this, 0, commentLikeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                 commentLikePendingIntent);
@@ -345,12 +340,11 @@ public class GCMMessageService extends GcmListenerService {
         // adding comment approve action
         Intent commentApproveIntent = getCommentActionIntent();
         commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
-        commentApproveIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, true);
+        commentApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_APPROVE);
         if (noteId != null) {
-            commentApproveIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+            commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-        PendingIntent commentApprovePendingIntent = PendingIntent.getActivity(this, 0, commentApproveIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent commentApprovePendingIntent =  PendingIntent.getService(this, 0, commentApproveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
                 commentApprovePendingIntent);
     }

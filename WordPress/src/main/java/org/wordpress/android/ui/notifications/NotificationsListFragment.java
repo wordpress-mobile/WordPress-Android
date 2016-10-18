@@ -2,6 +2,8 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -174,9 +176,9 @@ public class NotificationsListFragment extends Fragment
         }
     };
 
-    private static Intent getOpenNoteIntent(Activity activity,
+    private static Intent getOpenNoteIntent(Context context,
                                 String noteId) {
-        Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
+        Intent detailIntent = new Intent(context, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
         return detailIntent;
     }
