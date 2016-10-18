@@ -72,6 +72,22 @@ public class PostSqlUtils {
                 .getAsModel();
     }
 
+    public static List<PostModel> getPostsForSiteWithFormat(SiteModel site, String postFormat, boolean getPages) {
+        if (site == null) {
+            return Collections.emptyList();
+        }
+
+        return WellSql.select(PostModel.class)
+                .where().beginGroup()
+                .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(PostModelTable.POST_FORMAT, postFormat)
+                .equals(PostModelTable.IS_PAGE, getPages)
+                .endGroup().endWhere()
+                .orderBy(PostModelTable.IS_LOCAL_DRAFT, SelectQuery.ORDER_DESCENDING)
+                .orderBy(PostModelTable.DATE_CREATED, SelectQuery.ORDER_DESCENDING)
+                .getAsModel();
+    }
+
     public static List<PostModel> getUploadedPostsForSite(SiteModel site, boolean getPages) {
         if (site == null) {
             return Collections.emptyList();
