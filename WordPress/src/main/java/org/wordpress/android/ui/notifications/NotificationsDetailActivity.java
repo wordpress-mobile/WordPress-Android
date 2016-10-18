@@ -122,6 +122,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
         }
 
+        // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
+        if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        }
     }
 
     @Override
