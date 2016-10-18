@@ -9,12 +9,17 @@ import com.android.volley.VolleyError;
 import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
+
+import java.util.HashMap;
 
 /**
  * service which makes it possible to process Notifications quick actions in the background,
@@ -92,14 +97,52 @@ public class NotificationsProcessingService extends Service {
         }
 
         if (mActionType != null) {
-            mNote = obtainNoteFromNoteId(mNoteId);
-            if (mNote != null) {
-                if (mActionType.equals(ARG_ACTION_LIKE)) {
-                    likeComment();
-                }
-            } else {
-                showErrorToUserAndFinish();
-            }
+            RestRequest.Listener listener =
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (response != null && !response.optBoolean("success")) {
+                                //build the Note object here
+                                try {
+                                    if (response.has("notes")) {
+                                        JSONArray jsonArray = response.getJSONArray("notes");
+                                        if (jsonArray != null && jsonArray.length() == 1) {
+                                            response = jsonArray.getJSONObject(0);
+                                        }
+                                    }
+                                    mNote = new Note.Schema().build(mNoteId, response);
+
+                                } catch (JSONException e) {
+                                    AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+                                }
+
+                                if (mNote != null) {
+                                    if (mActionType.equals(ARG_ACTION_LIKE)) {
+                                        likeComment();
+                                    } else if (mActionType.equals(ARG_ACTION_APPROVE)) {
+                                        //TODO implement APPROVE
+                                    } else if (mActionType.equals(ARG_ACTION_REPLY)) {
+                                        //TODO implement REPLY
+                                    }
+                                } else {
+                                    requestFailed();
+                                }
+                            }
+                        }
+                    };
+
+            RestRequest.ErrorListener errorListener =
+                    new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            requestFailed();
+                        }
+                    };
+
+            getNoteFromNoteId(mNoteId, listener, errorListener);
+
+        } else {
+            requestFailed();
         }
 
         return START_NOT_STICKY;
@@ -117,29 +160,21 @@ public class NotificationsProcessingService extends Service {
      */
     private void requestFailed() {
         //EventBus.getDefault().post(new PlanEvents.PlansUpdateFailed());
+        showErrorToUserAndFinish();
     }
 
     private void showErrorToUserAndFinish() {
-        //TODO implement a note to tell the user how this went
+        //TODO implement a notification in the system dashboard to tell the user how this went
     }
 
 
-    private Note obtainNoteFromNoteId(String noteId) {
-        Note note = null;
+    private void getNoteFromNoteId(String noteId, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
+        if (noteId == null) return;
 
-        if (noteId == null) return null;
-
-        if (SimperiumUtils.getNotesBucket() != null) {
-            try {
-                note = SimperiumUtils.getNotesBucket().get(noteId);
-            } catch (BucketObjectMissingException e) {
-                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
-                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-                showErrorToUserAndFinish();
-            }
-        }
-
-        return note;
+        HashMap<String, String> params = new HashMap<>();
+        WordPress.getRestClientUtils().getNotification(params,
+                noteId, listener, errorListener
+        );
     }
 
 
