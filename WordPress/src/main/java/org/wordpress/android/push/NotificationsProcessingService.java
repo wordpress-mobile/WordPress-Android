@@ -4,7 +4,10 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.text.TextUtils;
 
@@ -14,6 +17,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
@@ -26,6 +30,7 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
 
+import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_REPLY;
 import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
 
@@ -183,29 +188,54 @@ public class NotificationsProcessingService extends Service {
      * called when action has been completed successfully
      */
     private void requestCompleted(String actionType) {
+        String successMessage = null;
         if (actionType != null) {
-
+            if (actionType.equals(ARG_ACTION_LIKE)) {
+                successMessage = getString(R.string.comment_liked);
+            } else if (actionType.equals(ARG_ACTION_APPROVE)) {
+                successMessage = getString(R.string.comment_moderated_approved);
+            } else if (actionType.equals(ARG_ACTION_REPLY)) {
+                successMessage = getString(R.string.note_reply_successful);
+            }
         } else {
-            //show generic sucess type here
+            //show generic success message here
+            successMessage = getString(R.string.comment_q_action_done_generic);
         }
-        //TODO show a success notification
-        //EventBus.getDefault().post(new PlanEvents.PlansUpdated(mLocalBlogId, mSitePlans));
+        showMessageToUserAndFinish(successMessage);
+
+        Handler handler = new Handler();
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                notificationManager.cancel(ACTIONS_RESULT_NOTIFICATION_ID);
+            }}, 3000); // show the success message for 3 seconds, then dismiss
     }
 
     /*
      * called when action failed
      */
     private void requestFailed(String actionType) {
+        String errorMessage = null;
         if (actionType != null) {
-
+            if (actionType.equals(ARG_ACTION_LIKE)) {
+                errorMessage = getString(R.string.error_generic);
+            } else if (actionType.equals(ARG_ACTION_APPROVE)) {
+                errorMessage = getString(R.string.error_notif_q_action_approve);
+            } else if (actionType.equals(ARG_ACTION_REPLY)) {
+                errorMessage = getString(R.string.error_notif_q_action_reply);
+            }
         } else {
             //show generic error here
+            errorMessage = getString(R.string.error_generic);
         }
-        showErrorToUserAndFinish();
+        showMessageToUserAndFinish(errorMessage);
     }
 
-    private void showErrorToUserAndFinish() {
-        //TODO implement a notification in the system dashboard to tell the user how this went
+    private void showMessageToUserAndFinish(String message) {
+        String title = getString(R.string.app_name);
+        NotificationCompat.Builder builder = GCMMessageService.getNotificationBuilder(this, title, message);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(ACTIONS_RESULT_NOTIFICATION_ID, builder.build());
     }
 
     private void getNoteFromNoteId(String noteId, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {

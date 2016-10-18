@@ -17,7 +17,6 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.helpshift.campaigns.services.NotificationService;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -60,6 +59,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final int PUSH_NOTIFICATION_ID = 10000;
     private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
+    public static final int ACTIONS_RESULT_NOTIFICATION_ID = 40000;
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     private static final int MAX_INBOX_ITEMS = 5;
 
@@ -242,7 +242,7 @@ public class GCMMessageService extends GcmListenerService {
                                                                 String largeIconUri, String title, String message) {
 
         // Build the new notification, add group to support wearable stacking
-        NotificationCompat.Builder builder = getNotificationBuilder(title, message);
+        NotificationCompat.Builder builder = getNotificationBuilder(this, title, message);
 
         Bitmap largeIconBitmap = getLargeIconBitmap(largeIconUri, shouldCircularizeNoteIcon(noteType));
         if (largeIconBitmap != null) {
@@ -379,11 +379,11 @@ public class GCMMessageService extends GcmListenerService {
         return largeIconBitmap;
     }
 
-    private NotificationCompat.Builder getNotificationBuilder(String title, String message){
+    public static NotificationCompat.Builder getNotificationBuilder(Context context, String title, String message){
         // Build the new notification, add group to support wearable stacking
-       return new NotificationCompat.Builder(this)
+       return new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.notification_icon)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
+                .setColor(context.getResources().getColor(R.color.blue_wordpress))
                 .setContentTitle(title)
                 .setContentText(message)
                 .setTicker(message)
@@ -536,7 +536,7 @@ public class GCMMessageService extends GcmListenerService {
                 largeIconBitmap = getLargeIconBitmap(remainingNote.getString("icon"),
                         shouldCircularizeNoteIcon(remainingNote.getString(PUSH_ARG_TYPE)));
 
-                builder = getNotificationBuilder(title, message);
+                builder = getNotificationBuilder(this, title, message);
 
                 String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                 wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
@@ -547,7 +547,7 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         if (builder == null) {
-            builder = getNotificationBuilder(title, message);
+            builder = getNotificationBuilder(this, title, message);
         }
 
         if (largeIconBitmap == null) {

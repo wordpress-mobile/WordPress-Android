@@ -328,6 +328,8 @@
     <string name="approve">Approve</string>
     <string name="comment_moderated_approved">Comment approved!</string>
     <string name="comment_moderated_unapproved">Comment unapproved</string>
+    <string name="comment_liked">Comment liked</string>
+    <string name="comment_q_action_done_generic">Action done!</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -1051,6 +1053,9 @@
     <string name="error_remove_user">Couldn\'t remove user</string>
     <string name="error_remove_follower">Couldn\'t remove follower</string>
     <string name="error_remove_viewer">Couldn\'t remove viewer</string>
+    <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
+    <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
+    <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
