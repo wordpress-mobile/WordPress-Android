@@ -909,9 +909,27 @@ public class WordPressDB {
      * self-hosted blogs that don't use jetpack)
      */
     public boolean isRemoteBlogIdDotComOrJetpack(int remoteBlogId) {
-        int localId = getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
-        Blog blog = instantiateBlogByLocalId(localId);
+        Blog blog = instantiateBlogByRemoteId(remoteBlogId);
         return blog != null && (blog.isDotcomFlag() || blog.isJetpackPowered());
+    }
+
+    public Blog instantiateBlogByRemoteId(int remoteBlogId) {
+        int localId = getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogId);
+        Blog blog = instantiateBlogByLocalId(localId);
+        return blog;
+    }
+
+    public int getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(int remoteBlogId) {
+        //first try checking if a jetpack site is configured on this device site list with that remote id
+        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
+        // the current wpcom account. We need to load the correct localID here, otherwise options are
+        // blank
+        int localId = getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
+
+        if (localId == 0) {
+            localId = getLocalTableBlogIdForWpComRemoteBlogId(remoteBlogId);
+        }
+        return localId;
     }
 
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
@@ -961,6 +979,15 @@ public class WordPressDB {
 
     public int getLocalTableBlogIdForRemoteBlogId(int remoteBlogId) {
         int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?",
+                new String[]{Integer.toString(remoteBlogId)});
+        if (localBlogID == 0) {
+            localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
+        }
+        return localBlogID;
+    }
+
+    public int getLocalTableBlogIdForWpComRemoteBlogId(int remoteBlogId) {
+        int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=? and dotcomFlag=1",
                 new String[]{Integer.toString(remoteBlogId)});
         if (localBlogID == 0) {
             localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);

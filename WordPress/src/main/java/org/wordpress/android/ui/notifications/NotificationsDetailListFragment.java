@@ -146,14 +146,14 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         mNote = note;
     }
 
-    private void setNoteWithNoteId(String noteId) {
-        if (noteId == null) return;
-
+    private boolean setNoteWithNoteId(String noteId) {
         Note note = NotificationsTable.getNoteById(noteId);
         if (note != null) {
             mIsUnread = note.isUnread();
             setNote(note);
+            return true;
         }
+        return false;
     }
 
     @Override

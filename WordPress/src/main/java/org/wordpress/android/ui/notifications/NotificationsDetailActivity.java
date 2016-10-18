@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -34,6 +35,12 @@ import org.wordpress.android.util.ToastUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
+import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
+import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
+import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
 
 public class NotificationsDetailActivity extends AppCompatActivity implements
         CommentActions.OnNoteCommentActionListener {
@@ -74,12 +81,41 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                     .add(R.id.notifications_detail_container, detailFragment)
                     .commitAllowingStateLoss();
 
+            //set title
+            if (getSupportActionBar() != null) {
+                String title = note.getTitle();
+                if (TextUtils.isEmpty(title)) {
+                    //set a deafult title if title is not set within the note
+                    switch (note.getType()) {
+                        case NOTE_FOLLOW_TYPE:
+                            title = getString(R.string.follows);
+                            break;
+                        case NOTE_COMMENT_LIKE_TYPE:
+                            title = getString(R.string.comment_likes);
+                            break;
+                        case NOTE_LIKE_TYPE:
+                            title = getString(R.string.like);
+                            break;
+                        case NOTE_COMMENT_TYPE:
+                            title = getString(R.string.comment);
+                            break;
+                    }
+                }
+                getSupportActionBar().setTitle(title);
+            }
+
+            // mark the note as read if it's unread
+            if (note.isUnread()) {
+                // mark as read
+                note.setUnreadCount("0");
+                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+            }
+
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle(note.getTitle());
             }
 
             NotificationsActions.markNoteAsRead(note);
-
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);
 
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
@@ -90,8 +126,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
-
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -131,11 +167,24 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             // show comment detail for comment notifications
             boolean isInstantLike = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
             boolean isInstantApprove = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
-            fragment = isInstantLike ?
-                        CommentDetailFragment.newInstanceForInstantLike(note.getId()) :
-                        isInstantApprove ?
-                            CommentDetailFragment.newInstanceForInstantApprove(note.getId()) :
-                            CommentDetailFragment.newInstance(note.getId());
+            boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+            if (isInstantLike) {
+                fragment = CommentDetailFragment.newInstanceForInstantLike(note.getId());
+            } else {
+                if (isInstantApprove) {
+                    fragment = CommentDetailFragment.newInstanceForInstantApprove(note.getId());
+                } else {
+                    fragment = CommentDetailFragment.newInstance(note.getId(), getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
+                }
+            }
+
+            // fragment is never null at this point, and always of CommentDetailFragment type. Just add this check for safety :)
+            if ( fragment != null && fragment instanceof  CommentDetailFragment) {
+                if (isInstantReply) {
+                    ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
+                }
+            }
+
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above

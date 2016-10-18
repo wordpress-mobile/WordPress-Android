@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,6 +85,9 @@ public class NotificationsTable {
     }
 
     public static Note getNoteById(String id) {
+        if (TextUtils.isEmpty(id)) {
+            return null;
+        }
         Cursor cursor = getDb().query(NOTIFICATIONS_TABLE, new String[] {"raw_note_data"},  "note_id=" + id, null, null, null, null);
         cursor.moveToFirst();
 
@@ -101,7 +105,7 @@ public class NotificationsTable {
         }
     }
 
-    protected static void clearNotes() {
+    private static void clearNotes() {
         getDb().delete(NOTIFICATIONS_TABLE, null, null);
     }
 }

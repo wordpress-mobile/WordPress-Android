@@ -141,10 +141,6 @@
             android:name=".ui.comments.CommentsActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
-            android:name=".ui.comments.CommentDetailActivity"
-            android:theme="@style/CalypsoTheme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name=".ui.comments.EditCommentActivity"
             android:theme="@style/CalypsoTheme" />
 
@@ -269,6 +265,18 @@
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
                     android:scheme="http" >
                 </data>
 

@@ -5,7 +5,6 @@ package org.wordpress.android.models;
 
 import android.text.Spannable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONArray;
@@ -31,10 +30,10 @@ public class Note {
     public static final String NOTE_FOLLOW_TYPE = "follow";
     public static final String NOTE_LIKE_TYPE = "like";
     public static final String NOTE_COMMENT_TYPE = "comment";
-    private static final String NOTE_MATCHER_TYPE = "automattcher";
-    private static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
-    private static final String NOTE_REBLOG_TYPE = "reblog";
-    private static final String NOTE_UNKNOWN_TYPE = "unknown";
+    public static final String NOTE_MATCHER_TYPE = "automattcher";
+    public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
+    public static final String NOTE_REBLOG_TYPE = "reblog";
+    public static final String NOTE_UNKNOWN_TYPE = "unknown";
 
     // JSON action keys
     private static final String ACTION_KEY_REPLY = "replyto-comment";
