@@ -178,8 +178,11 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 }
             }
 
-            if (isInstantReply) {
-                ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
+            // fragment is never null at this point, and always of CommentDetailFragment type. Just add this check for safety :)
+            if ( fragment != null && fragment instanceof  CommentDetailFragment) {
+                if (isInstantReply) {
+                    ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
+                }
             }
 
         } else if (note.isAutomattcherType()) {
