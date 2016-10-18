@@ -405,6 +405,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mShouldFocusReplyField = false;
     }
 
+    public void enableShouldFocusReplyField() {
+        mShouldFocusReplyField = true;
+    }
+
     private void enableShouldRequestCommentFromNote() {
         mShouldRequestCommentFromNote = true;
     }
@@ -665,7 +669,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mLayoutReply.getVisibility() != View.VISIBLE && canReply()) {
             AniUtils.animateBottomBar(mLayoutReply, true);
             if (mEditReply != null && mShouldFocusReplyField) {
-                mEditReply.requestFocus();
+                mEditReply.performClick();
                 disableShouldFocusReplyField();
             }
         }
