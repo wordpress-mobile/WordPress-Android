@@ -116,6 +116,23 @@ public class PostStoreUnitTest {
     }
 
     @Test
+    public void testGetPostsWithFormatForSite() {
+        PostModel textPost = PostTestUtils.generateSampleUploadedPost();
+        PostModel imagePost = PostTestUtils.generateSampleUploadedPost("image");
+        PostSqlUtils.insertPostForResult(textPost);
+        PostSqlUtils.insertPostForResult(imagePost);
+
+        SiteModel site = new SiteModel();
+        site.setId(textPost.getLocalSiteId());
+
+        List<PostModel> postList = mPostStore.getPostsForSiteWithFormat(site, "image");
+
+        assertEquals(1, postList.size());
+        assertEquals(imagePost, postList.get(0));
+        assertNotEquals(textPost, postList.get(0));
+    }
+
+    @Test
     public void testGetPublishedPosts() {
         SiteModel site = new SiteModel();
         site.setId(6);
