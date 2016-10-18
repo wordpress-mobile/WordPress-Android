@@ -126,7 +126,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
-        
+
     }
 
     @Override
