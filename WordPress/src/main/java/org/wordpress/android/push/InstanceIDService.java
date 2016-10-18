@@ -1,8 +1,10 @@
-package org.wordpress.android;
+package org.wordpress.android.push;
 
 import android.content.Intent;
 
 import com.google.android.gms.iid.InstanceIDListenerService;
+
+import org.wordpress.android.push.GCMRegistrationIntentService;
 
 public class InstanceIDService extends InstanceIDListenerService {
     @Override

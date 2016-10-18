@@ -19,8 +19,8 @@ import android.widget.TextView;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
-import org.wordpress.android.GCMMessageService;
-import org.wordpress.android.GCMRegistrationIntentService;
+import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -60,7 +60,7 @@ import org.wordpress.android.widgets.WPViewPager;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.GCMMessageService.EXTRA_VOICE_REPLY;
+import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_REPLY;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs

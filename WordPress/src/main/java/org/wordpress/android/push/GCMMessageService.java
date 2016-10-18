@@ -1,5 +1,5 @@
 
-package org.wordpress.android;
+package org.wordpress.android.push;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -20,6 +20,8 @@ import com.google.android.gms.gcm.GcmListenerService;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
