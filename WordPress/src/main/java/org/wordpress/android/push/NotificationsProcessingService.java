@@ -103,30 +103,8 @@ public class NotificationsProcessingService extends Service {
                         public void onResponse(JSONObject response) {
                             if (response != null && !response.optBoolean("success")) {
                                 //build the Note object here
-                                try {
-                                    if (response.has("notes")) {
-                                        JSONArray jsonArray = response.getJSONArray("notes");
-                                        if (jsonArray != null && jsonArray.length() == 1) {
-                                            response = jsonArray.getJSONObject(0);
-                                        }
-                                    }
-                                    mNote = new Note.Schema().build(mNoteId, response);
-
-                                } catch (JSONException e) {
-                                    AppLog.e(AppLog.T.NOTIFS, e.getMessage());
-                                }
-
-                                if (mNote != null) {
-                                    if (mActionType.equals(ARG_ACTION_LIKE)) {
-                                        likeComment();
-                                    } else if (mActionType.equals(ARG_ACTION_APPROVE)) {
-                                        //TODO implement APPROVE
-                                    } else if (mActionType.equals(ARG_ACTION_REPLY)) {
-                                        //TODO implement REPLY
-                                    }
-                                } else {
-                                    requestFailed();
-                                }
+                                buildNoteFromJSONObject(response);
+                                performRequestedAction();
                             }
                         }
                     };
@@ -146,6 +124,35 @@ public class NotificationsProcessingService extends Service {
         }
 
         return START_NOT_STICKY;
+    }
+
+    private void buildNoteFromJSONObject(JSONObject jsonObject) {
+        try {
+            if (jsonObject.has("notes")) {
+                JSONArray jsonArray = jsonObject.getJSONArray("notes");
+                if (jsonArray != null && jsonArray.length() == 1) {
+                    jsonObject = jsonArray.getJSONObject(0);
+                }
+            }
+            mNote = new Note.Schema().build(mNoteId, jsonObject);
+
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+        }
+    }
+
+    private void performRequestedAction(){
+        if (mNote != null) {
+            if (mActionType.equals(ARG_ACTION_LIKE)) {
+                likeComment();
+            } else if (mActionType.equals(ARG_ACTION_APPROVE)) {
+                //TODO implement APPROVE
+            } else if (mActionType.equals(ARG_ACTION_REPLY)) {
+                //TODO implement REPLY
+            }
+        } else {
+            requestFailed();
+        }
     }
 
     /*
