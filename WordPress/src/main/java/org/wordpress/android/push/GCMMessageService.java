@@ -350,12 +350,6 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private Intent getCommentActionIntent(){
-//        Intent intent = new Intent(this, WPMainActivity.class);
-//        intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-//                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        intent.setAction("android.intent.action.MAIN");
-//        intent.addCategory("android.intent.category.LAUNCHER");
         Intent intent = new Intent(this, NotificationsProcessingService.class);
         return intent;
     }

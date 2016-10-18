@@ -121,6 +121,8 @@ public class NotificationsProcessingService extends Service {
             }
         }
 
+        showIntermediateMessageToUser(getString(R.string.comment_q_action_updating));
+
         if (mActionType != null) {
             RestRequest.Listener listener =
                     new RestRequest.Listener() {
@@ -201,8 +203,14 @@ public class NotificationsProcessingService extends Service {
             //show generic success message here
             successMessage = getString(R.string.comment_q_action_done_generic);
         }
-        showMessageToUserAndFinish(successMessage);
 
+        //show temporal notification indicating the operation succeeded
+        showFinalMessageToUser(successMessage);
+
+        //remove the original notification from the system bar
+        GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, mNoteId);
+
+        //after 3 seconds, dismiss the temporal notification that indicated success
         Handler handler = new Handler();
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         handler.postDelayed(new Runnable() {
@@ -228,25 +236,35 @@ public class NotificationsProcessingService extends Service {
             //show generic error here
             errorMessage = getString(R.string.error_generic);
         }
-        showMessageToUserAndFinish(errorMessage);
+        showFinalMessageToUser(errorMessage);
     }
 
-    private void showMessageToUserAndFinish(String message) {
-        String title = getString(R.string.app_name);
-        NotificationCompat.Builder builder =
-         new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setContentTitle(title)
-                .setContentText(message)
-                .setTicker(message)
-                .setAutoCancel(true)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+    private void showIntermediateMessageToUser(String message) {
+        showMessageToUser(message, true);
+    }
+
+    private void showFinalMessageToUser(String message) {
+        showMessageToUser(message, false);
+    }
+
+    private void showMessageToUser(String message, boolean intermediateMessage) {
+        NotificationCompat.Builder builder = getBuilder().setContentText(message).setTicker(message);
+        builder.setProgress(0, 0, intermediateMessage);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(ACTIONS_RESULT_NOTIFICATION_ID, builder.build());
     }
 
+    private NotificationCompat.Builder getBuilder() {
+        String title = getString(R.string.app_name);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setColor(getResources().getColor(R.color.blue_wordpress))
+                .setContentTitle(title)
+                .setAutoCancel(true);
+                //.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+        return builder;
+    }
     private void getNoteFromNoteId(String noteId, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
         if (noteId == null) return;
 
