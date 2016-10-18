@@ -292,22 +292,6 @@ public class StatsUtils {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
     }
 
-    public static int getLocalBlogIdFromRemoteBlogId(int remoteBlogID) {
-        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
-        // the current wpcom account. We need to load the correct localID here, otherwise options are
-        // blank
-        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackRemoteID(
-                remoteBlogID,
-                null);
-        if (localId == 0) {
-            localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                    remoteBlogID
-            );
-        }
-
-        return localId;
-    }
-
     public static synchronized void logVolleyErrorDetails(final VolleyError volleyError) {
         if (volleyError == null) {
             AppLog.e(T.STATS, "Tried to log a VolleyError, but the error obj was null!");
