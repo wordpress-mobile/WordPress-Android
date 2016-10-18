@@ -107,7 +107,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             // mark the note as read if it's unread
             if (note.isUnread()) {
                 // mark as read
-                note.setUnreadCount("0");
+                NotificationsActions.markNoteAsRead(note);
                 EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
             }
 
