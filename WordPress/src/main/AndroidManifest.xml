@@ -442,6 +442,10 @@
             android:name=".ui.plans.PlanUpdateService"
             android:exported="false"
             android:label="Plans Update Service" />
+        <service
+            android:name=".push.NotificationsProcessingService"
+            android:exported="false"
+            android:label="Notifications Quick Actions processing Service" />
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"

@@ -31,12 +31,12 @@ import java.util.HashMap;
 
 public class NotificationsProcessingService extends Service {
 
-    private static final String ARG_ACTION_TYPE = "action_type";
-    private static final String ARG_ACTION_LIKE = "action_like";
-    private static final String ARG_ACTION_REPLY = "action_reply";
-    private static final String ARG_ACTION_APPROVE = "action_approve";
-    private static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
-    private static final String ARG_NOTE_ID = "note_id";
+    public static final String ARG_ACTION_TYPE = "action_type";
+    public static final String ARG_ACTION_LIKE = "action_like";
+    public static final String ARG_ACTION_REPLY = "action_reply";
+    public static final String ARG_ACTION_APPROVE = "action_approve";
+    public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
+    public static final String ARG_NOTE_ID = "note_id";
     private String mNoteId;
     private String mReplyText;
     private String mActionType;
@@ -150,6 +150,7 @@ public class NotificationsProcessingService extends Service {
             } else if (mActionType.equals(ARG_ACTION_REPLY)) {
                 replyToComment();
             } else {
+                // add other actions here
                 //no op
                 requestFailed();
             }
@@ -202,7 +203,7 @@ public class NotificationsProcessingService extends Service {
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        if (response != null && !response.optBoolean("success")) {
+                        if (response != null && response.optBoolean("success")) {
                             requestCompleted();
                         }
                     }

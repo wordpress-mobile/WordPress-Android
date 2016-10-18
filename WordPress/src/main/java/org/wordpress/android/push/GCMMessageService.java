@@ -17,6 +17,7 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.helpshift.campaigns.services.NotificationService;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -327,12 +328,15 @@ public class GCMMessageService extends GcmListenerService {
         // adding comment like action
         Intent commentLikeIntent = getCommentActionIntent();
         commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
-        commentLikeIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, true);
+//        commentLikeIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, true);
+        commentLikeIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_LIKE);
         if (noteId != null) {
-            commentLikeIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+//            commentLikeIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+            commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-        PendingIntent commentLikePendingIntent = PendingIntent.getActivity(this, 0, commentLikeIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+//        PendingIntent commentLikePendingIntent = PendingIntent.getActivity(this, 0, commentLikeIntent,
+//                PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent commentLikePendingIntent =  PendingIntent.getService(this, 0, commentLikeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                 commentLikePendingIntent);
     }
@@ -352,12 +356,13 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private Intent getCommentActionIntent(){
-        Intent intent = new Intent(this, WPMainActivity.class);
-        intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setAction("android.intent.action.MAIN");
-        intent.addCategory("android.intent.category.LAUNCHER");
+//        Intent intent = new Intent(this, WPMainActivity.class);
+//        intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+//                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.setAction("android.intent.action.MAIN");
+//        intent.addCategory("android.intent.category.LAUNCHER");
+        Intent intent = new Intent(this, NotificationsProcessingService.class);
         return intent;
     }
 
