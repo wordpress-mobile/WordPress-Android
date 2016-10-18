@@ -13,7 +13,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.comments.CommentActionResult;
+import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
@@ -143,9 +146,12 @@ public class NotificationsProcessingService extends Service {
             if (mActionType.equals(ARG_ACTION_LIKE)) {
                 likeComment();
             } else if (mActionType.equals(ARG_ACTION_APPROVE)) {
-                //TODO implement APPROVE
+                approveComment();
             } else if (mActionType.equals(ARG_ACTION_REPLY)) {
-                //TODO implement REPLY
+                replyToComment();
+            } else {
+                //no op
+                requestFailed();
             }
         } else {
             requestFailed();
@@ -156,6 +162,7 @@ public class NotificationsProcessingService extends Service {
      * called when action has been completed successfully
      */
     private void requestCompleted() {
+        //TODO show a success notification
         //EventBus.getDefault().post(new PlanEvents.PlansUpdated(mLocalBlogId, mSitePlans));
     }
 
@@ -187,7 +194,7 @@ public class NotificationsProcessingService extends Service {
         if (mNote == null) return;
 
         // Bump analytics
-        AnalyticsTracker.track(true ? AnalyticsTracker.Stat.NOTIFICATION_LIKED : AnalyticsTracker.Stat.NOTIFICATION_UNLIKED);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_LIKED);
 
         WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
                 String.valueOf(mNote.getCommentId()),
@@ -205,6 +212,46 @@ public class NotificationsProcessingService extends Service {
                         requestFailed();
                     }
                 });
+    }
+
+
+    private void approveComment(){
+        if (mNote == null) return;
+
+        // Bump analytics
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
+
+        CommentActions.moderateCommentForNote(mNote, CommentStatus.APPROVED, new CommentActions.CommentActionListener() {
+            @Override
+            public void onActionResult(CommentActionResult result) {
+                if (result != null && result.isSuccess()) {
+
+                } else {
+                    requestFailed();
+                }
+            }
+        });
+
+    }
+
+
+    private void replyToComment(){
+        if (mNote == null) return;
+
+        // Bump analytics
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
+
+        CommentActions.submitReplyToCommentNote(mNote, mReplyText, new CommentActions.CommentActionListener() {
+            @Override
+            public void onActionResult(CommentActionResult result) {
+                if (result != null && result.isSuccess()) {
+
+                } else {
+                    requestFailed();
+                }
+            }
+        });
+
     }
 
 }
