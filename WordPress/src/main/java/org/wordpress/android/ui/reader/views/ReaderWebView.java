@@ -18,7 +18,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.WPRestClient;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.io.IOException;
@@ -48,6 +47,9 @@ public class ReaderWebView extends WebView {
     public interface ReaderWebViewPageFinishedListener {
         void onPageFinished(WebView view, String url);
     }
+
+    /** Timeout in milliseconds for read / connect timeouts */
+    private static final int TIMEOUT_MS = 30000;
 
     private ReaderWebChromeClient mReaderChromeClient;
     private ReaderCustomViewListener mCustomViewListener;
@@ -247,8 +249,8 @@ public class ReaderWebView extends WebView {
                 try {
                     HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
-                    conn.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
-                    conn.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);
+                    conn.setReadTimeout(TIMEOUT_MS);
+                    conn.setConnectTimeout(TIMEOUT_MS);
                     conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
                     conn.setRequestProperty("Connection", "Keep-Alive");
                     return new WebResourceResponse(conn.getContentType(),
