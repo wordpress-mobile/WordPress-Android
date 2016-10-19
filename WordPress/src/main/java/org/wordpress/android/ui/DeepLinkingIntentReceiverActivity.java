@@ -16,6 +16,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -24,6 +26,7 @@ import java.util.List;
  * wordpress://viewpost?blogId={blogId}&postId={postId}
  * http[s]://wordpress.com/read/blogs/{blogId}/posts/{postId}
  * http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}
  *
  * Redirects users to the reader activity along with IDs passed in the intent
  */
@@ -33,7 +36,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private enum InterceptType {
         VIEWPOST,
         READER_BLOG,
-        READER_FEED
+        READER_FEED,
+        READER_POST_SLUG
     }
 
     private InterceptType mInterceptType;
@@ -64,19 +68,30 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
                     // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
                     //  with the first segment being 'read'.
-                    if (segments != null && segments.get(0).equals("read")) {
-                        if (segments.size() > 2) {
-                            mBlogId = segments.get(2);
+                    if (segments != null) {
+                        if (segments.get(0).equals("read")) {
+                            if (segments.size() > 2) {
+                                mBlogId = segments.get(2);
 
-                            if (segments.get(1).equals("blogs")) {
-                                mInterceptType = InterceptType.READER_BLOG;
-                            } else if (segments.get(1).equals("feeds")) {
-                                mInterceptType = InterceptType.READER_FEED;
+                                if (segments.get(1).equals("blogs")) {
+                                    mInterceptType = InterceptType.READER_BLOG;
+                                } else if (segments.get(1).equals("feeds")) {
+                                    mInterceptType = InterceptType.READER_FEED;
+                                }
                             }
-                        }
 
-                        if (segments.size() > 4 && segments.get(3).equals("posts")) {
-                            mPostId = segments.get(4);
+                            if (segments.size() > 4 && segments.get(3).equals("posts")) {
+                                mPostId = segments.get(4);
+                            }
+                        } else if (segments.size() == 4) {
+                            mBlogId = uri.getHost();
+                            try {
+                                mPostId = URLEncoder.encode(segments.get(3), "UTF-8");
+                            } catch (UnsupportedEncodingException e) {
+                                AppLog.e(T.READER, e);
+                                ToastUtils.showToast(this, R.string.error_generic);
+                            }
+                            mInterceptType = InterceptType.READER_POST_SLUG;
                         }
                     }
                     break;
@@ -105,31 +120,35 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
     private void showPost() {
         if (!TextUtils.isEmpty(mBlogId) && !TextUtils.isEmpty(mPostId)) {
-            try {
-                final long blogId = Long.parseLong(mBlogId);
-                final long postId = Long.parseLong(mPostId);
-
-                if (mInterceptType != null) {
-                    switch (mInterceptType) {
-                        case VIEWPOST:
-                            AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED,
-                                    blogId, postId);
-                            break;
-                        case READER_BLOG:
-                            AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
-                                    blogId, postId);
-                            break;
-                        case READER_FEED:
-                            AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
-                                    blogId, postId);
-                            break;
-                    }
+            if (mInterceptType != null) {
+                switch (mInterceptType) {
+                    case VIEWPOST:
+                        AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED,
+                                mBlogId, mPostId);
+                        break;
+                    case READER_BLOG:
+                        AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
+                                mBlogId, mPostId);
+                        break;
+                    case READER_FEED:
+                        AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
+                                mBlogId, mPostId);
+                        break;
                 }
+            }
 
-                ReaderActivityLauncher.showReaderPostDetail(this, InterceptType.READER_FEED.equals(mInterceptType),
+            if (mInterceptType == InterceptType.READER_POST_SLUG) {
+                ReaderActivityLauncher.showReaderPostDetail(this, mBlogId, mPostId, false);
+            } else {
+                try {
+                    final long blogId = Long.parseLong(mBlogId);
+                    final long postId = Long.parseLong(mPostId);
+
+                    ReaderActivityLauncher.showReaderPostDetail(this, InterceptType.READER_FEED.equals(mInterceptType),
                         blogId, postId, false);
-            } catch (NumberFormatException e) {
-                AppLog.e(T.READER, e);
+                } catch (NumberFormatException e) {
+                    AppLog.e(T.READER, e);
+                }
             }
         } else {
             ToastUtils.showToast(this, R.string.error_generic);

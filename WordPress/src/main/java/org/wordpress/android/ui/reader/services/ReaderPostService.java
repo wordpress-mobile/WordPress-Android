@@ -38,6 +38,7 @@ public class ReaderPostService extends Service {
     private static final String ARG_TAG     = "tag";
     private static final String ARG_ACTION  = "action";
     private static final String ARG_BLOG_ID = "blog_id";
+    private static final String ARG_BLOG_SLUG = "blog_slug";
     private static final String ARG_FEED_ID = "feed_id";
 
     public enum UpdateAction {
@@ -62,6 +63,16 @@ public class ReaderPostService extends Service {
     public static void startServiceForBlog(Context context, long blogId, UpdateAction action) {
         Intent intent = new Intent(context, ReaderPostService.class);
         intent.putExtra(ARG_BLOG_ID, blogId);
+        intent.putExtra(ARG_ACTION, action);
+        context.startService(intent);
+    }
+
+    /*
+     * update posts in the passed blog slug
+     */
+    public static void startServiceForBlog(Context context, String blogSlug, UpdateAction action) {
+        Intent intent = new Intent(context, ReaderPostService.class);
+        intent.putExtra(ARG_BLOG_SLUG, blogSlug);
         intent.putExtra(ARG_ACTION, action);
         context.startService(intent);
     }
@@ -114,6 +125,9 @@ public class ReaderPostService extends Service {
         } else if (intent.hasExtra(ARG_BLOG_ID)) {
             long blogId = intent.getLongExtra(ARG_BLOG_ID, 0);
             updatePostsInBlog(blogId, action);
+        } else if (intent.hasExtra(ARG_BLOG_SLUG)) {
+            String blogSlug = intent.getStringExtra(ARG_BLOG_SLUG);
+            updatePostsInBlog(blogSlug, action);
         } else if (intent.hasExtra(ARG_FEED_ID)) {
             long feedId = intent.getLongExtra(ARG_FEED_ID, 0);
             updatePostsInFeed(feedId, action);
@@ -144,6 +158,17 @@ public class ReaderPostService extends Service {
             }
         };
         requestPostsForBlog(blogId, action, listener);
+    }
+
+    private void updatePostsInBlog(String blogSlug, final UpdateAction action) {
+        UpdateResultListener listener = new UpdateResultListener() {
+            @Override
+            public void onUpdateResult(UpdateResult result) {
+                EventBus.getDefault().post(new ReaderEvents.UpdatePostsEnded(result, action));
+                stopSelf();
+            }
+        };
+        requestPostsForBlog(blogSlug, action, listener);
     }
 
     private void updatePostsInFeed(long feedId, final UpdateAction action) {
@@ -240,6 +265,36 @@ public class ReaderPostService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "updating posts in blog " + blogId);
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+    }
+
+    private static void requestPostsForBlog(final String blogSlug,
+            final UpdateAction updateAction,
+            final UpdateResultListener resultListener) {
+        String path = "read/sites/" + blogSlug + "/posts/?meta=site,likes";
+
+        // append the date of the oldest cached post in this blog when requesting older posts
+        if (updateAction == UpdateAction.REQUEST_OLDER) {
+            String dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogSlug);
+            if (!TextUtils.isEmpty(dateOldest)) {
+                path += "&before=" + UrlUtils.urlEncode(dateOldest);
+            }
+        }
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleUpdatePostsResponse(null, jsonObject, updateAction, resultListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.READER, volleyError);
+                resultListener.onUpdateResult(UpdateResult.FAILED);
+            }
+        };
+        AppLog.d(AppLog.T.READER, "updating posts in blog " + blogSlug);
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 

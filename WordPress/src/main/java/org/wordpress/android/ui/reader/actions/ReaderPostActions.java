@@ -227,6 +227,12 @@ public class ReaderPostActions {
         requestPost(false, blogId, postId, requestListener);
     }
 
+    public static void requestBlogPost(final String blogSlug,
+            final String postSlug,
+            final ReaderActions.OnRequestListener requestListener) {
+        requestPost(blogSlug, postSlug, requestListener);
+    }
+
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
@@ -284,6 +290,48 @@ public class ReaderPostActions {
         }
     }
 
+    private static void requestPost(
+            final String blogSlug,
+            final String postSlug,
+            final ReaderActions.OnRequestListener requestListener) {
+        String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                ReaderPost post = ReaderPost.fromJson(jsonObject);
+                ReaderPostTable.addOrUpdatePost(post);
+                handlePostLikes(post, jsonObject);
+                if (requestListener != null) {
+                    requestListener.onSuccess();
+                }
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (requestListener != null) {
+                    int statusCode = 0;
+                    // first try to get the error code from the JSON response, example:
+                    //   {"code":403,"headers":[{"name":"Content-Type","value":"application\/json"}],
+                    //    "body":{"error":"unauthorized","message":"User cannot access this private blog."}}
+                    JSONObject jsonObject = VolleyUtils.volleyErrorToJSON(volleyError);
+                    if (jsonObject != null && jsonObject.has("code")) {
+                        statusCode = jsonObject.optInt("code");
+                    }
+                    if (statusCode == 0) {
+                        statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                    }
+                    requestListener.onFailure(statusCode);
+                }
+            }
+        };
+
+        AppLog.d(T.READER, "requesting post");
+        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+    }
+
     private static String getTrackingPixelForPost(@NonNull ReaderPost post) {
         return "https://pixel.wp.com/g.gif?v=wpcom&reader=1"
                 + "&blog=" + post.blogId
@@ -296,6 +344,11 @@ public class ReaderPostActions {
     public static void bumpPageViewForPost(long blogId, long postId) {
         bumpPageViewForPost(ReaderPostTable.getBlogPost(blogId, postId, true));
     }
+
+    public static void bumpPageViewForPost(String blogSlug, String postSlug) {
+        bumpPageViewForPost(ReaderPostTable.getBlogPost(blogSlug, postSlug, true));
+    }
+
     public static void bumpPageViewForPost(ReaderPost post) {
         if (post == null) {
             return;

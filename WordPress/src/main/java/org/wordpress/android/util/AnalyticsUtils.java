@@ -218,7 +218,7 @@ public class AnalyticsUtils {
         trackWithReaderPostDetails(stat, ReaderPostTable.getBlogPost(blogId, postId, true));
     }
 
-    public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
+    public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, String blogId, String postId) {
         Map<String, Object> properties =  new HashMap<>();
         properties.put(BLOG_ID_KEY, blogId);
         properties.put(POST_ID_KEY, postId);
@@ -226,7 +226,7 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
-    public static void trackWithFeedPostDetails(AnalyticsTracker.Stat stat, long feedId, long feedItemId) {
+    public static void trackWithFeedPostDetails(AnalyticsTracker.Stat stat, String feedId, String feedItemId) {
         Map<String, Object> properties =  new HashMap<>();
         properties.put(FEED_ID_KEY, feedId);
         properties.put(FEED_ITEM_ID_KEY, feedItemId);

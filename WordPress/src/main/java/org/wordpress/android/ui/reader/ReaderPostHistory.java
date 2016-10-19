@@ -14,6 +14,8 @@ import java.util.Stack;
  */
 class ReaderPostHistory extends Stack<ReaderBlogIdPostId> {
     private static final String HISTORY_KEY_NAME = "reader_post_history";
+    private static final String IS_ID_FLAG = "IS_ID";
+    private static final String IS_SLUG_FLAG = "IS_SLUG";
 
     void restoreInstance(Bundle bundle) {
         clear();
@@ -34,7 +36,9 @@ class ReaderPostHistory extends Stack<ReaderBlogIdPostId> {
     private ArrayList<String> toArrayList() {
         ArrayList<String> list = new ArrayList<>();
         for (ReaderBlogIdPostId ids : this) {
-            list.add(ids.getBlogId() + ":" + ids.getPostId());
+            boolean isSlug = ids.getBlogSlug() != null;
+            list.add((isSlug ? IS_SLUG_FLAG : IS_ID_FLAG) + ":" + (isSlug ? ids.getBlogSlug() : ids
+                    .getBlogId()) + ":" + (isSlug ? ids.getPostSlug() : ids.getPostId()));
         }
         return list;
     }
@@ -44,9 +48,16 @@ class ReaderPostHistory extends Stack<ReaderBlogIdPostId> {
 
         for (String idPair: list) {
             String[] split = idPair.split(":");
-            long blogId = StringUtils.stringToLong(split[0]);
-            long postId = StringUtils.stringToLong(split[1]);
-            this.add(new ReaderBlogIdPostId(blogId, postId));
+            boolean isSlug = split[0].equals(IS_SLUG_FLAG);
+            if (!isSlug) {
+                long blogId = StringUtils.stringToLong(split[0]);
+                long postId = StringUtils.stringToLong(split[1]);
+                this.add(new ReaderBlogIdPostId(blogId, postId));
+            } else {
+                String blogSlug = split[0];
+                String postSlug = split[1];
+                this.add(new ReaderBlogIdPostId(blogSlug, postSlug));
+            }
         }
     }
 }

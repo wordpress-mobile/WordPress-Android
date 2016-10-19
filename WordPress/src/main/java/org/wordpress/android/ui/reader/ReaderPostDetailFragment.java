@@ -78,6 +78,8 @@ public class ReaderPostDetailFragment extends Fragment
 
     private long mPostId;
     private long mBlogId;
+    private String mPostSlug;
+    private String mBlogSlug;
     private boolean mIsFeed;
     private ReaderPost mPost;
     private ReaderPostRenderer mRenderer;
@@ -134,6 +136,27 @@ public class ReaderPostDetailFragment extends Fragment
         return fragment;
     }
 
+    public static ReaderPostDetailFragment newInstance(
+            String blogSlug,
+            String postSlug,
+            boolean isRelatedPost,
+            ReaderPostListType postListType) {
+        AppLog.d(T.READER, "reader post detail > newInstance");
+
+        Bundle args = new Bundle();
+        args.putString(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
+        args.putString(ReaderConstants.ARG_POST_SLUG, postSlug);
+        args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+        if (postListType != null) {
+            args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
+        }
+
+        ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,6 +173,8 @@ public class ReaderPostDetailFragment extends Fragment
             mIsFeed = args.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
+            mBlogSlug = args.getString(ReaderConstants.ARG_BLOG_SLUG);
+            mPostSlug = args.getString(ReaderConstants.ARG_POST_SLUG);
             mIsRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
@@ -271,6 +296,8 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.ARG_IS_FEED, mIsFeed);
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
+        outState.putString(ReaderConstants.ARG_BLOG_ID, mBlogSlug);
+        outState.putString(ReaderConstants.ARG_POST_ID, mPostSlug);
 
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
@@ -299,6 +326,8 @@ public class ReaderPostDetailFragment extends Fragment
             mIsFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+            mBlogSlug = savedInstanceState.getString(ReaderConstants.ARG_BLOG_SLUG);
+            mPostSlug = savedInstanceState.getString(ReaderConstants.ARG_POST_SLUG);
             mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
@@ -444,6 +473,8 @@ public class ReaderPostDetailFragment extends Fragment
         mIsFeed = false;
         mBlogId = blogId;
         mPostId = postId;
+        mBlogSlug = null;
+        mPostSlug = null;
         mHasAlreadyRequestedPost = false;
         mHasAlreadyUpdatedPost = false;
 
@@ -759,7 +790,11 @@ public class ReaderPostDetailFragment extends Fragment
         if (mIsFeed) {
             ReaderPostActions.requestFeedPost(mBlogId, mPostId, listener);
         } else {
-            ReaderPostActions.requestBlogPost(mBlogId, mPostId, listener);
+            if (mBlogSlug == null) {
+                ReaderPostActions.requestBlogPost(mBlogId, mPostId, listener);
+            } else {
+                ReaderPostActions.requestBlogPost(mBlogSlug, mPostSlug, listener);
+            }
         }
     }
 
@@ -805,7 +840,8 @@ public class ReaderPostDetailFragment extends Fragment
         @Override
         protected Boolean doInBackground(Void... params) {
             mPost = mIsFeed ? ReaderPostTable.getFeedPost(mBlogId, mPostId, false)
-                    : ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
+                    : (mBlogSlug == null ? ReaderPostTable.getBlogPost(mBlogId, mPostId, false)
+                            : ReaderPostTable.getBlogPost(mBlogSlug, mPostSlug, false));
             if (mPost == null) {
                 return false;
             }

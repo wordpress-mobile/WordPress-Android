@@ -1,5 +1,6 @@
 package org.wordpress.android.models;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
@@ -593,8 +594,9 @@ public class ReaderPost {
 
     public boolean hasIds(ReaderBlogIdPostId ids) {
         return ids != null
-                && ids.getBlogId() == this.blogId
-                && ids.getPostId() == this.postId;
+                && ((ids.getBlogId() == this.blogId && ids.getPostId() == this.postId)
+                        || (ids.getBlogSlug() == Uri.parse(this.blogUrl).getHost()
+                                && ids.getPostSlug() == Uri.parse(this.url).getLastPathSegment()));
     }
 
     /*

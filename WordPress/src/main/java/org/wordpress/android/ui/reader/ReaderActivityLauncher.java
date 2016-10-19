@@ -16,7 +16,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -38,6 +37,10 @@ public class ReaderActivityLauncher {
         showReaderPostDetail(context, false, blogId, postId, false);
     }
 
+    public static void showReaderPostDetail(Context context, String blogSlug, String postSlug) {
+        showReaderPostDetail(context, blogSlug, postSlug, false);
+    }
+
     public static void showReaderPostDetail(Context context,
                                             boolean isFeed,
                                             long blogId,
@@ -47,6 +50,19 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
+        intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+        context.startActivity(intent);
+    }
+
+    public static void showReaderPostDetail(Context context,
+                                            String blogSlug,
+                                            String postSlug,
+                                            boolean isRelatedPost) {
+        Intent intent = new Intent(context, ReaderPostPagerActivity.class);
+        intent.putExtra(ReaderConstants.ARG_IS_FEED, false);
+        intent.putExtra(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
+        intent.putExtra(ReaderConstants.ARG_POST_SLUG, postSlug);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         context.startActivity(intent);
