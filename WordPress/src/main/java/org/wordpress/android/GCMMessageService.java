@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
@@ -22,7 +23,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -57,6 +60,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final int PUSH_NOTIFICATION_ID = 10000;
     private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
+    public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     private static final int MAX_INBOX_ITEMS = 5;
 
     private static final String PUSH_ARG_USER = "user";
@@ -76,6 +80,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_BADGE_RESET = "badge-reset";
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     private static final String KEY_CATEGORY_COMMENT_LIKE = "comment-like";
     private static final String KEY_CATEGORY_COMMENT_REPLY = "comment-reply";
@@ -278,8 +283,10 @@ public class GCMMessageService extends GcmListenerService {
                             addCommentApproveActionForCommentNotification(builder, noteId);
                         }
                     } else {
-                        //else offer REPLY / LIKE actions
-                        if (note.canLike()) {
+                        // else offer REPLY / LIKE actions
+                        // LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
+                        SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
+                        if (note.canLike() && !site.isJetpack()) {
                             addCommentLikeActionForCommentNotification(builder, noteId);
                         }
                     }
@@ -290,10 +297,10 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        // if we could not set the actions, set the default ones REPLY / LIKE
+        // if we could not set the actions, set the default one REPLY as it's then only safe bet
+        // we can make at this point
         if (!areActionsSet) {
             addCommentReplyActionForCommentNotification(builder, noteId);
-            addCommentLikeActionForCommentNotification(builder, noteId);
         }
     }
 
@@ -309,6 +316,19 @@ public class GCMMessageService extends GcmListenerService {
                 PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
+
+        //add wearable remoteInput to enable voice-reply
+        String replyLabel = getResources().getString(R.string.reply);
+        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
+                .setLabel(replyLabel)
+                .build();
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.ic_reply_white_24dp,
+                        getString(R.string.reply), commentReplyPendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .build();
+        builder.extend(new NotificationCompat.WearableExtender().addAction(action));
+
     }
 
     private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {

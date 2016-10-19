@@ -206,7 +206,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         AppLog.d(AppLog.T.STATS, "updateWidgets called for the blogID " + site.getSiteId());
 
         int[] widgetIDs = getWidgetIDsFromRemoteBlogID(site.getSiteId());
-        if (widgetIDs.length == 0){
+        if (widgetIDs.length == 0) {
             return;
         }
 
@@ -500,7 +500,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             int[] currentWidgets = ArrayUtils.toPrimitive(widgetsList.toArray(new Integer[widgetsList.size()]));
             SiteModel site = siteStore.getSiteBySiteId(remoteBlogID);
             if (site == null) {
-                // No blog in the app
+                // No site in the app
                 showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_readd_widget), siteStore);
                 continue;
             }
