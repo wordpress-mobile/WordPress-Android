@@ -533,14 +533,14 @@ public class Note {
             resultLength = decompresser.inflate(result);
             decompresser.end();
         } catch (DataFormatException e) {
-            AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+            AppLog.e(AppLog.T.NOTIFS, "Can't decompress the PN Payload. It could be > 4K", e);
         }
 
         String out = null;
         try {
             out = new String(result, 0, resultLength, "UTF8");
         } catch (UnsupportedEncodingException e) {
-            AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+            AppLog.e(AppLog.T.NOTIFS, "Notification data contains non UTF8 characters.", e);
         }
 
         if (out != null) {
@@ -555,7 +555,7 @@ public class Note {
                 note = new Note(noteId, jsonObject);
 
             } catch (JSONException e) {
-                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
+                AppLog.e(AppLog.T.NOTIFS, "Can't parse the Note JSON received in the PN", e);
             }
         }
 

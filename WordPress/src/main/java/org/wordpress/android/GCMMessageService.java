@@ -119,18 +119,16 @@ public class GCMMessageService extends GcmListenerService {
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
-    private void saveNoteIntoDB(Bundle data) {
+    private void buildNoteObjectFromPNPayloadAndSaveIt(Bundle data) {
             if (data == null) {
                 AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
                 return;
             }
 
             String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
-            Note note = NotificationsTable.getNoteById(noteId);
-            if (note == null) {
-                //if note doesn't exist, try taking it from the PN payload, build it and save it
-                String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
-                note = Note.buildFromBase64EncodedData(noteId, base64FullData);
+            String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
+            Note note = Note.buildFromBase64EncodedData(noteId, base64FullData);
+            if (note != null) {
                 NotificationsTable.saveNote(note, true);
             }
     }
@@ -148,7 +146,8 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        saveNoteIntoDB(data);
+        // Always do this, since a note can be updated!! The PN payload 99% of times contains the most recent version of the note.
+        buildNoteObjectFromPNPayloadAndSaveIt(data);
 
         String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
