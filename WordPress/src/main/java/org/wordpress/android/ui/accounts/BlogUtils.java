@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 
 import org.wordpress.android.WordPress;
@@ -187,5 +188,24 @@ public class BlogUtils {
         if (!lowerCase.equals(s.toString())) {
             s.replace(0, s.length(), lowerCase);
         }
+    }
+
+    @NonNull
+    public static Set<String> planTags() {
+        String[] extraFields = {"plan_product_id"};
+        List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
+        Set<String> tags = new HashSet<>();
+
+        for (Map<String, Object> blog : blogs) {
+            int planId = MapUtils.getMapInt(blog, "plan_product_id");
+            if (planId == 0) {
+                // Skip unknown plans, MapUtils will turn any missing plan ID into 0
+                continue;
+            }
+            String tag = String.format("plan:%d", planId);
+            tags.add(tag);
+        }
+
+        return tags;
     }
 }

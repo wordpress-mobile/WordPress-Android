@@ -18,11 +18,13 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class HelpshiftHelper {
     public static String ORIGIN_KEY = "ORIGIN_KEY";
@@ -179,13 +181,26 @@ public class HelpshiftHelper {
     }
 
     public void setTags(Tag[] tags) {
-        mMetadata.put(Support.TagsKey, Tag.toString(tags));
+        setTags(Tag.toString(tags));
+    }
+
+    public void setTags(String[] tags) {
+        mMetadata.put(Support.TagsKey, tags);
     }
 
     public void addTags(Tag[] tags) {
+        addTags(Tag.toString(tags));
+    }
+
+    public void addTags(String[] tags) {
         String[] oldTags = (String[]) mMetadata.get(Support.TagsKey);
         // Concatenate arrays
-        mMetadata.put(Support.TagsKey, ArrayUtils.addAll(oldTags, Tag.toString(tags)));
+        mMetadata.put(Support.TagsKey, ArrayUtils.addAll(oldTags, tags));
+    }
+
+    public void addPlanTags() {
+        Set<String> planTags = BlogUtils.planTags();
+        addTags(planTags.toArray(new String[planTags.size()]));
     }
 
     /**
@@ -216,9 +231,11 @@ public class HelpshiftHelper {
 
         // List blogs name and url
         int counter = 1;
-        for (Map<String, Object> account : WordPress.wpDB.getAllBlogs()) {
+        String[] extraFields = {"plan_product_id"};
+        for (Map<String, Object> account : WordPress.wpDB.getBlogsBy(null, extraFields)) {
             mMetadata.put("blog-name-" + counter, MapUtils.getMapStr(account, "blogName"));
             mMetadata.put("blog-url-" + counter, MapUtils.getMapStr(account, "url"));
+            mMetadata.put("blog-plan-" + counter, MapUtils.getMapInt(account, "plan_product_id"));
             counter += 1;
         }
 
@@ -239,6 +256,7 @@ public class HelpshiftHelper {
         }
         Core.setNameAndEmail(name, emailAddress);
         addDefaultMetaData(context);
+        addPlanTags();
         HashMap config = new HashMap ();
         config.put(Support.CustomMetadataKey, mMetadata);
         return config;
