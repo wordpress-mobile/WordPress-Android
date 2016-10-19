@@ -5,8 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -280,7 +280,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
             // if cropping is requested, do it before further manipulation
             if (mCropWidth > 0 && mCropHeight > 0) {
-                bitmap = cropBitmap(bitmap, mCropWidth, mCropHeight);
+                bitmap = ThumbnailUtils.extractThumbnail(bitmap, mCropWidth, mCropHeight);
             }
 
             // Apply circular rounding to avatars in a background task
@@ -301,33 +301,6 @@ public class WPNetworkImageView extends AppCompatImageView {
         } else {
             showDefaultImage();
         }
-    }
-
-    /*
-     * crops the passed bitmap to fit the passed width/height - bitmap will be resized if
-     * necessary to ensure it fills the desired size before cropping
-     */
-    private static Bitmap cropBitmap(Bitmap bitmap, int newWidth, int newHeight) {
-        if (bitmap == null) {
-            AppLog.w(AppLog.T.READER, "WPNetworkImageView > cannot crop a null bitmap");
-            return null;
-        }
-
-        int bmpWidth = bitmap.getWidth();
-        int bmpHeight = bitmap.getHeight();
-
-        if (bmpWidth == 0 || bmpHeight == 0) {
-            AppLog.w(AppLog.T.READER, "WPNetworkImageView > cannot crop an empty bitmap");
-            return null;
-        }
-
-        float scaleWidth = ((float) newWidth) / bmpWidth;
-        float scaleHeight = ((float) newHeight) / bmpHeight;
-
-        Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        return Bitmap.createBitmap(bitmap, 0, 0, bmpWidth, bmpHeight, matrix, false);
     }
 
     public void invalidateImage() {
