@@ -1168,8 +1168,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
         if (galleryId == mUploadingMediaGallery.getUniqueId()) {
-            ArrayList<Long> mediaIds = mUploadingMediaGallery.getIds();
-            mediaIds.add(remoteMediaId);
+            // TODO: media IDs are Long's; should we update to use ArrayList<Long>?
+            ArrayList<String> mediaIds = mUploadingMediaGallery.getIds();
+            mediaIds.add(String.valueOf(remoteMediaId));
             mUploadingMediaGallery.setIds(mediaIds);
 
             if (remaining == 0) {

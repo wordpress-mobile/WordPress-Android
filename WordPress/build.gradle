@@ -107,7 +107,9 @@ dependencies {
     compile 'org.wordpress:persistentedittext:1.0.1'
     compile 'org.wordpress:emailchecker2:1.1.0'
 
-    compile 'com.yalantis:ucrop:2.2.0'
+    compile ('com.yalantis:ucrop:2.2.0') {
+        exclude group: 'com.squareup.okhttp3'
+    }
     compile 'com.github.xizzhu:simple-tool-tip:0.5.0'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
