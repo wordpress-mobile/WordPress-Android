@@ -655,7 +655,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 PostUploadService.setLegacyMode(!mShowNewEditor);
                 startService(new Intent(EditPostActivity.this, PostUploadService.class));
                 setResult(RESULT_OK);
-                finish();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.showToast(EditPostActivity.this, R.string.editor_toast_changes_saved);
+                    }
+                });
             }
         }).start();
         return true;
