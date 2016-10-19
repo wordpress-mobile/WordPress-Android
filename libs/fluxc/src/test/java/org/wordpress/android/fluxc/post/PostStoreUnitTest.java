@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -125,7 +126,9 @@ public class PostStoreUnitTest {
         SiteModel site = new SiteModel();
         site.setId(textPost.getLocalSiteId());
 
-        List<PostModel> postList = mPostStore.getPostsForSiteWithFormat(site, "image");
+        ArrayList<String> postFormat = new ArrayList<>();
+        postFormat.add("image");
+        List<PostModel> postList = mPostStore.getPostsForSiteWithFormat(site, postFormat);
 
         assertEquals(1, postList.size());
         assertEquals(imagePost, postList.get(0));
