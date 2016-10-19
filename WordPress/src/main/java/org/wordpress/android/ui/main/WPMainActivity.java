@@ -272,30 +272,19 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
                 GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
-                boolean doLikeNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
-                if (doLikeNote) {
-                    NotificationsListFragment.openNoteForLike(this, noteId);
-                } else {
-                    boolean doApproveNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
-                    if (doApproveNote) {
-                        NotificationsListFragment.openNoteForApprove(this, noteId);
-                    } else {
-
-                        //if voice reply is enabled in a wearable, it will come through the remoteInput
-                        //extra EXTRA_VOICE_REPLY
-                        String voiceReply = null;
-                        Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
-                        if (remoteInput != null) {
-                            CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
-                            if (replyText != null) {
-                                voiceReply = replyText.toString();
-                            }
-                        }
-
-                        boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
+                //if voice reply is enabled in a wearable, it will come through the remoteInput
+                //extra EXTRA_VOICE_REPLY
+                String voiceReply = null;
+                Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                if (remoteInput != null) {
+                    CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
+                    if (replyText != null) {
+                        voiceReply = replyText.toString();
                     }
                 }
+
+                boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+                NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
             } else {
                 SimperiumUtils.trackBucketObjectMissingWarning("No note id found in PN", "");
             }

@@ -231,7 +231,7 @@ public class NotificationsProcessingService extends Service {
         String errorMessage = null;
         if (actionType != null) {
             if (actionType.equals(ARG_ACTION_LIKE)) {
-                errorMessage = getString(R.string.error_generic);
+                errorMessage = getString(R.string.error_notif_q_action_like);
             } else if (actionType.equals(ARG_ACTION_APPROVE)) {
                 errorMessage = getString(R.string.error_notif_q_action_approve);
             } else if (actionType.equals(ARG_ACTION_REPLY)) {
