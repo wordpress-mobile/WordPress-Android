@@ -16,9 +16,13 @@ import android.support.v4.app.RemoteInput;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
+import com.android.volley.VolleyError;
 import com.google.android.gms.gcm.GcmListenerService;
+import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
@@ -31,8 +35,8 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -45,6 +49,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -119,18 +124,19 @@ public class GCMMessageService extends GcmListenerService {
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
-    private void buildNoteObjectFromPNPayloadAndSaveIt(Bundle data) {
-            if (data == null) {
+    private boolean buildNoteObjectFromPNPayloadAndSaveIt(Bundle data) {
+           if (data == null) {
                 AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
-                return;
+                return false;
             }
 
             String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
             String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
             Note note = Note.buildFromBase64EncodedData(noteId, base64FullData);
             if (note != null) {
-                NotificationsTable.saveNote(note, true);
+                return NotificationsTable.saveNote(note, true);
             }
+        return false;
     }
 
     private void buildAndShowNotificationFromNoteData(Bundle data) {
@@ -140,14 +146,42 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        if (TextUtils.isEmpty(data.getString(PUSH_ARG_NOTE_ID, ""))) {
+        final String wpcomNoteID = data.getString(PUSH_ARG_NOTE_ID, "");
+        if (TextUtils.isEmpty(wpcomNoteID)) {
             // At this point 'note_id' is always available in the notification bundle.
             AppLog.e(T.NOTIFS, "Push notification received without a valid note_id in in payload!");
             return;
         }
 
-        // Always do this, since a note can be updated!! The PN payload 99% of times contains the most recent version of the note.
-        buildNoteObjectFromPNPayloadAndSaveIt(data);
+        // Always do this, since a note can be updated!!
+        // The PN payload 99% of times contains the most recent version of the note.
+        if (!buildNoteObjectFromPNPayloadAndSaveIt(data)) {
+            // PN payload doesn't have the note or there was an error.
+            // Retrieve the Note obj by calling the REST API
+
+            WordPress.getRestClientUtilsV1_1().getNotification(
+                    wpcomNoteID,
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (response == null) {
+                                //Not sure this could ever happen, but make sure we're catching all response types
+                                AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
+                            }
+                            try {
+                                List<Note> notes = NotificationsActions.parseNotes(response);
+                                NotificationsTable.saveNotes(notes, true);
+                            } catch (JSONException e) {
+                                AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response for the note_id " + wpcomNoteID , e);
+                            }
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.e(AppLog.T.NOTIFS, "Error retrieving note with ID " + wpcomNoteID, error);
+                        }
+                    });
+        }
 
         String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
@@ -156,7 +190,6 @@ public class GCMMessageService extends GcmListenerService {
             title = getString(R.string.app_name);
         }
         String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
-        String wpcomNoteID = data.getString(PUSH_ARG_NOTE_ID, "");
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification

@@ -59,14 +59,20 @@ public class NotificationsTable {
         return notes;
     }
 
-    public static void putNote(Note note) {
+    public static boolean putNote(Note note) {
         ContentValues values = new ContentValues();
         values.put("type", note.getType());
         values.put("timestamp", note.getTimestamp());
         values.put("raw_note_data", note.getJSON().toString()); // easiest way to store schema-less data
         values.put("note_id", note.getId());
 
-        getDb().insertWithOnConflict(NOTIFICATIONS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        long result = getDb().insertWithOnConflict(NOTIFICATIONS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        if (result == -1) {
+            AppLog.e(AppLog.T.DB, "An error occurred while saving the note into the DB -  note_id:" + note.getId());
+        }
+
+        return result != -1;
     }
 
     public static void saveNotes(List<Note> notes, boolean clearBeforeSaving) {
@@ -88,17 +94,18 @@ public class NotificationsTable {
 
     public static boolean saveNote(Note note, boolean shouldUpdate) {
         getDb().beginTransaction();
+        boolean saved = false;
         try {
              if (!shouldUpdate && NotificationsTable.getNoteById(note.getId()) != null) {
                  // there is already a note with this ID in the database!
                  return false;
              }
-             putNote(note);
+             saved = putNote(note);
              getDb().setTransactionSuccessful();
         } finally {
             getDb().endTransaction();
         }
-        return true;
+        return saved;
     }
 
     public static Note getNoteById(String id) {

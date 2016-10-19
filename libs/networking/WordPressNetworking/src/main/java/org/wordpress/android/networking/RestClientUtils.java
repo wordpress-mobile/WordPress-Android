@@ -165,6 +165,18 @@ public class RestClientUtils {
     }
 
     /**
+     * Get the notification identified by ID with default params.
+     * <p/>
+     * https://developer.wordpress.com/docs/api/1/get/notifications/%s
+     */
+    public void getNotification(String note_id, Listener listener, ErrorListener errorListener) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("fields", NOTIFICATION_FIELDS);
+        String path = String.format("notifications/%s", note_id);
+        get(path, params, null, listener, errorListener);
+    }
+
+    /**
      * Update the seen timestamp.
      * <p/>
      * https://developer.wordpress.com/docs/api/1/post/notifications/seen
