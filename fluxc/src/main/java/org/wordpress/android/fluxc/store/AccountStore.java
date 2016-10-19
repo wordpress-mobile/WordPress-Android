@@ -53,7 +53,7 @@ public class AccountStore extends Store {
     }
 
     public static class PushAccountSettingsPayload extends Payload {
-        public Map<String, String> params;
+        public Map<String, Object> params;
         public PushAccountSettingsPayload() {
         }
     }

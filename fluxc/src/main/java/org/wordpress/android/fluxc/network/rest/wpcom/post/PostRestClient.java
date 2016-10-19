@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
@@ -52,8 +51,8 @@ public class PostRestClient extends BaseWPComRestClient {
 
         params.put("context", "edit");
 
-        final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
-                url, params, PostWPComRestResponse.class,
+        final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                PostWPComRestResponse.class,
                 new Listener<PostWPComRestResponse>() {
                     @Override
                     public void onResponse(PostWPComRestResponse response) {
@@ -101,8 +100,8 @@ public class PostRestClient extends BaseWPComRestClient {
             params.put("offset", String.valueOf(offset));
         }
 
-        final WPComGsonRequest<PostsResponse> request = new WPComGsonRequest<>(Method.GET,
-                url, params, PostsResponse.class,
+        final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                PostsResponse.class,
                 new Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
@@ -143,10 +142,10 @@ public class PostRestClient extends BaseWPComRestClient {
             url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
         }
 
-        Map<String, String> params = postModelToParams(post);
+        Map<String, Object> body = postModelToParams(post);
 
-        final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
-                url, params, PostWPComRestResponse.class,
+        final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, body,
+                PostWPComRestResponse.class,
                 new Listener<PostWPComRestResponse>() {
                     @Override
                     public void onResponse(PostWPComRestResponse response) {
@@ -183,8 +182,8 @@ public class PostRestClient extends BaseWPComRestClient {
     public void deletePost(final PostModel post, final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).delete.getUrlV1_1();
 
-        final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
-                url, null, PostWPComRestResponse.class,
+        final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                PostWPComRestResponse.class,
                 new Listener<PostWPComRestResponse>() {
                     @Override
                     public void onResponse(PostWPComRestResponse response) {
@@ -266,8 +265,8 @@ public class PostRestClient extends BaseWPComRestClient {
         return post;
     }
 
-    private Map<String, String> postModelToParams(PostModel post) {
-        Map<String, String> params = new HashMap<>();
+    private Map<String, Object> postModelToParams(PostModel post) {
+        Map<String, Object> params = new HashMap<>();
 
         params.put("status", StringUtils.notNullStr(post.getStatus()));
         params.put("title", StringUtils.notNullStr(post.getTitle()));
