@@ -17,7 +17,7 @@
         android:layout_width="@dimen/reader_related_post_image_width"
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/margin_large"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:visibility="gone"
         tools:src="@drawable/box_with_pages_top"
         tools:visibility="visible" />
