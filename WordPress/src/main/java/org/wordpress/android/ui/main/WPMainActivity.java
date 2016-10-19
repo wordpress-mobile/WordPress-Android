@@ -16,6 +16,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONObject;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
@@ -54,6 +58,8 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
+
+import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
@@ -506,20 +512,25 @@ public class WPMainActivity extends AppCompatActivity {
         return null;
     }
 
-    // Updates `last_seen` notifications flag in Simperium and removes tab indicator
+    // Updates `last_seen` notifications flag and removes tab indicator on response
     private class UpdateLastSeenTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... voids) {
-            return Boolean.FALSE; //TODO: SimperiumUtils.updateLastSeenTime();
-        }
+            ArrayList<Note> latestNotes = NotificationsTable.getLatestNotes(1);
+            if (latestNotes.size() == 0) return Boolean.FALSE;
+            WordPress.getRestClientUtilsV1_1().markNotificationsSeen(latestNotes.get(0).getTimestampString(), new RestRequest.Listener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+                }
+            }, new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    AppLog.e(AppLog.T.NOTIFS, "Could not mark 'notifications/seen' value via API.", error);
+                }
+            });
 
-        @Override
-        protected void onPostExecute(Boolean lastSeenTimeUpdated) {
-            if (isFinishing()) return;
-
-            if (lastSeenTimeUpdated) {
-                mTabLayout.showNoteBadge(false);
-            }
+            return Boolean.TRUE;
         }
     }
 
