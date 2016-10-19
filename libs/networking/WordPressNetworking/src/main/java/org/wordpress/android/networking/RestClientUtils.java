@@ -177,13 +177,15 @@ public class RestClientUtils {
 
     /**
      * Mark a notification as read
+     * Decrement the unread count for a notification. Key=note_ID, Value=decrement amount.
+     *
      * <p/>
      * https://developer.wordpress.com/docs/api/1/post/notifications/read/
      */
-    public void markNoteAsRead(String noteId, String unreadCount, Listener listener, ErrorListener errorListener) {
+    public void decrementUnreadCount(String noteId, String decrementAmount, Listener listener, ErrorListener errorListener) {
         String path = "notifications/read";
         Map<String, String> params = new HashMap<String, String>();
-        params.put(String.format("counts[%s]", noteId), unreadCount);
+        params.put(String.format("counts[%s]", noteId), decrementAmount);
         post(path, params, null, listener, errorListener);
     }
 

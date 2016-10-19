@@ -56,11 +56,12 @@ public class NotificationsActions {
 
         // mark the note as read if it's unread
         if (note.isUnread()) {
-            WordPress.getRestClientUtilsV1_1().markNoteAsRead(note.getId(), note.getUnreadCount(), new RestRequest.Listener() {
+            WordPress.getRestClientUtilsV1_1().decrementUnreadCount(note.getId(), "1", new RestRequest.Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    note.setUnreadCount("0");
+                    note.setRead();
                     NotificationsTable.putNote(note);
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
                 }
             }, new RestRequest.ErrorListener() {
                 @Override
@@ -69,7 +70,6 @@ public class NotificationsActions {
                 }
             });
 
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
         }
     }
 }

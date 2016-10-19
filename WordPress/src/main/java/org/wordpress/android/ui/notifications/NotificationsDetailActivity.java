@@ -104,19 +104,13 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 getSupportActionBar().setTitle(title);
             }
 
-            // mark the note as read if it's unread
-            if (note.isUnread()) {
-                // mark as read
-                NotificationsActions.markNoteAsRead(note);
-                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-            }
-
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle(note.getTitle());
             }
 
             NotificationsActions.markNoteAsRead(note);
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
 
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));

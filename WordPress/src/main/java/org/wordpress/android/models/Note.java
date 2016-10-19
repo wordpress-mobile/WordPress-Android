@@ -280,19 +280,11 @@ public class Note {
         return queryJSON("read", 0) == 1;
     }
 
-    /**
-     * For some reason the unread count is a string in the JSON API but is truly represented
-     * by an Integer. We can handle a simple string.
-     */
-    public String getUnreadCount() {
-        return queryJSON("unread", "0");
-    }
-
-    public void setUnreadCount(String count){
+    public void setRead(){
         try {
-            mNoteJSON.putOpt("unread", count);
+            mNoteJSON.putOpt("read", 1);
         } catch (JSONException e){
-            AppLog.e(AppLog.T.NOTIFS, "Failed to set unread property", e);
+            AppLog.e(AppLog.T.NOTIFS, "Failed to set 'read' property", e);
         }
     }
 
