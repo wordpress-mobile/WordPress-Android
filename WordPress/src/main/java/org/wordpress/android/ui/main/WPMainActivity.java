@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -58,6 +59,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.GCMMessageService.EXTRA_VOICE_REPLY;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -277,8 +280,20 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     if (doApproveNote) {
                         NotificationsListFragment.openNoteForApprove(this, noteId);
                     } else {
+
+                        //if voice reply is enabled in a wearable, it will come through the remoteInput
+                        //extra EXTRA_VOICE_REPLY
+                        String voiceReply = null;
+                        Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                        if (remoteInput != null) {
+                            CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
+                            if (replyText != null) {
+                                voiceReply = replyText.toString();
+                            }
+                        }
+
                         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard);
+                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
                     }
                 }
             } else {
@@ -325,7 +340,14 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-        trackLastVisibleTab(mViewPager.getCurrentItem(), false);
+        int currentItem = mViewPager.getCurrentItem();
+        trackLastVisibleTab(currentItem, false);
+
+        if (currentItem == WPMainTabAdapter.TAB_NOTIFS) {
+            //if we are presenting the notifications list, it's safe to clear any outstanding
+            // notifications
+            GCMMessageService.removeAllNotifications(this);
+        }
 
         checkConnection();
 
