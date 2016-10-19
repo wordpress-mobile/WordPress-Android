@@ -103,6 +103,12 @@ public class NotificationsProcessingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        //first, dismiss any final failure processing notification as the user
+        //initiated a new action now
+
+        dismissProcessingNotification();
+
         mNoteId = intent.getStringExtra(ARG_NOTE_ID);
         mActionType = intent.getStringExtra(ARG_ACTION_TYPE);
         if (intent.hasExtra(ARG_ACTION_REPLY_TEXT)) {
