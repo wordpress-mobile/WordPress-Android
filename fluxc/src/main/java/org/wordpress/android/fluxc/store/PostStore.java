@@ -215,7 +215,7 @@ public class PostStore extends Store {
     /**
      * Returns posts with given format in the store for the given site as a {@link PostModel} list.
      */
-    public List<PostModel> getPostsForSiteWithFormat(SiteModel site, String postFormat) {
+    public List<PostModel> getPostsForSiteWithFormat(SiteModel site, List<String> postFormat) {
         return PostSqlUtils.getPostsForSiteWithFormat(site, postFormat, false);
     }
 
