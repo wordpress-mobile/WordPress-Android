@@ -119,7 +119,7 @@ class ReferrerSpamHelper {
                 boolean success = response.optBoolean("success");
                 if (success) {
                     mReferrerGroup.isMarkedAsSpam = isMarkingAsSpamInProgress;
-                    int localBlogID = StatsUtils.getLocalBlogIdFromRemoteBlogId(
+                    int localBlogID = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(
                             Integer.parseInt(mReferrerGroup.getBlogId())
                     );
                     StatsTable.deleteStatsForBlog(mActivityRef.get(), localBlogID, StatsService.StatsEndpointsEnum.REFERRERS);
