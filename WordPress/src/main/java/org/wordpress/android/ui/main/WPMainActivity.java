@@ -180,6 +180,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     case WPMainTabAdapter.TAB_NOTIFS:
                         setTabLayoutElevation(mAppBarElevation);
                         new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        // Removes app notifications from the system bar as we're looking at them right now
+                        GCMMessageService.removeAllNotifications(WPMainActivity.this);
                         break;
                 }
 
@@ -202,7 +204,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         });
 
         if (savedInstanceState == null) {
-            if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (!AppPrefs.wasAccessTokenMigrated()
+                && WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
@@ -299,6 +302,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                         NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard);
                     }
                 }
+            } else {
+                SimperiumUtils.trackBucketObjectMissingWarning("No note id found in PN", "");
             }
         } else {
           // mark all tapped here
@@ -346,7 +351,14 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-        trackLastVisibleTab(mViewPager.getCurrentItem(), false);
+        int currentItem = mViewPager.getCurrentItem();
+        trackLastVisibleTab(currentItem, false);
+
+        if (currentItem == WPMainTabAdapter.TAB_NOTIFS) {
+            //if we are presenting the notifications list, it's safe to clear any outstanding
+            // notifications
+            GCMMessageService.removeAllNotifications(this);
+        }
 
         checkConnection();
 
@@ -445,16 +457,18 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     private void moderateCommentOnActivityResult(Intent data) {
+        String noteId = StringUtils.notNullStr(data.getStringExtra
+                (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA));
         try {
             if (SimperiumUtils.getNotesBucket() != null) {
-                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
-                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+                Note note = SimperiumUtils.getNotesBucket().get(noteId);
                 CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                         NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
                 NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, e);
+            SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
         }
     }
 
@@ -708,9 +722,13 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         // "Reload" selected site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        if (getSelectedSite() == null && mSiteStore.hasSite()) {
+            setSelectedSite(mSiteStore.getSites().get(0));
+        }
         if (getSelectedSite() == null) {
             return;
         }
+
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
             mSelectedSite = site;
