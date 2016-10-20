@@ -156,7 +156,7 @@ public class PostUtils {
                 && newPost.getTagIdList().containsAll(oldPost.getTagIdList())
                 && oldPost.getCategoryIdList().containsAll(newPost.getCategoryIdList())
                 && newPost.getCategoryIdList().containsAll(oldPost.getCategoryIdList())
-                && PostLocation.equals(oldPost.getPostLocation(), newPost.getPostLocation())
+                && PostLocation.equals(oldPost.getLocation(), newPost.getLocation())
         );
     }
 

@@ -670,7 +670,11 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         if (mPost.supportsLocation()) {
-            mPost.setPostLocation(mPostLocation);
+            if (mPostLocation == null) {
+                mPost.clearLocation();
+            } else {
+                mPost.setLocation(mPostLocation);
+            }
         }
 
         // TODO: Implement when we have TaxonomyStore
@@ -852,7 +856,7 @@ public class EditPostSettingsFragment extends Fragment
         // if this post has location attached to it, look up the location address
         if (mPost.hasLocation()) {
             showLocationView();
-            PostLocation location = mPost.getPostLocation();
+            PostLocation location = mPost.getLocation();
             setLocation(location.getLatitude(), location.getLongitude());
         } else {
             // Search for current location to geotag post if preferences allow
@@ -947,7 +951,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void removeLocation() {
         mPostLocation = null;
-        mPost.setPostLocation(null);
+        mPost.clearLocation();
 
         updateLocationText("");
         setLocationStatus(LocationStatus.NONE);
