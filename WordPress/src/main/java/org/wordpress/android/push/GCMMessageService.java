@@ -305,7 +305,7 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-        PendingIntent commentReplyPendingIntent =  PendingIntent.getService(this, 0, commentReplyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent commentReplyPendingIntent =  PendingIntent.getService(this, 0, commentReplyIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
 
