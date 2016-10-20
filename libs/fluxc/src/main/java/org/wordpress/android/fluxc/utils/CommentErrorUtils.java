@@ -17,20 +17,20 @@ public class CommentErrorUtils {
                                                                                  CommentModel comment) {
         RemoteCommentResponsePayload payload = new org.wordpress.android.fluxc.store.CommentStore
                 .RemoteCommentResponsePayload(comment);
-        payload.error = new CommentError(genericToCommentError(error), "");
+        payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
     }
 
     public static FetchCommentsResponsePayload commentErrorToFetchCommentsPayload(BaseNetworkError error) {
         FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(new ArrayList<CommentModel>());
-        payload.error = new CommentError(genericToCommentError(error), "");
+        payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
     }
 
     public static RemoteCommentResponsePayload commentErrorToPushCommentPayload(BaseNetworkError error,
                                                                                 CommentModel comment) {
         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
-        payload.error = new CommentError(genericToCommentError(error), "");
+        payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
     }
 
@@ -52,6 +52,9 @@ public class CommentErrorUtils {
             if ("comment_duplicate".equals(wpComGsonNetworkError.apiError)) {
                 errorType = CommentErrorType.DUPLICATE_COMMENT;
             }
+            if ("unauthorized".equals(wpComGsonNetworkError.apiError)) {
+                errorType = CommentErrorType.AUTHORIZATION_REQUIRED;
+            }
         }
         // Duplicate comment on XMLRPC
         if (error.type == GenericErrorType.PARSE_ERROR && error.hasVolleyError()
@@ -60,5 +63,9 @@ public class CommentErrorUtils {
             errorType = CommentErrorType.DUPLICATE_COMMENT;
         }
         return errorType;
+    }
+
+    private static String getErrorMessage(BaseNetworkError error) {
+        return error.message;
     }
 }
