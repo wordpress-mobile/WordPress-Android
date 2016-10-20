@@ -70,6 +70,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
@@ -194,6 +195,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+    private boolean mSaveWithoutLeaving;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -455,6 +457,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             settingsMenuItem.setVisible(showMenuItems);
         }
 
+        mSaveWithoutLeaving = false;
+
         // Set text of the save button in the ActionBar
         if (mPost != null) {
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
@@ -469,6 +473,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             saveMenuItem.setTitle(R.string.publish_post);
                         } else {
                             saveMenuItem.setTitle(R.string.update_verb);
+                            mSaveWithoutLeaving = true;
                         }
                         break;
                     default:
@@ -477,6 +482,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         } else {
                             saveMenuItem.setTitle(R.string.update_verb);
                         }
+                        mSaveWithoutLeaving = true;
                 }
             }
         }
@@ -656,12 +662,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 startService(new Intent(EditPostActivity.this, PostUploadService.class));
                 setResult(RESULT_OK);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtils.showToast(EditPostActivity.this, R.string.editor_toast_changes_saved);
-                    }
-                });
+                if (mSaveWithoutLeaving) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showToast(EditPostActivity.this, R.string.editor_toast_changes_saved);
+                        }
+                    });
+                } else {
+                    finish();
+                }
             }
         }).start();
         return true;
