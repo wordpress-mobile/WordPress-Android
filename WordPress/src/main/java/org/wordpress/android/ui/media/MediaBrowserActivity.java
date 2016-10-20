@@ -545,8 +545,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
         if (event.isError()) {
-            // TODO: Convert error.type to an actual error message
-            ToastUtils.showToast(this, "Media error occurred: " + event.error.type, ToastUtils.Duration.LONG);
+            ToastUtils.showToast(this, "Media error occurred: " + event.error.message, ToastUtils.Duration.LONG);
             return;
         }
 
