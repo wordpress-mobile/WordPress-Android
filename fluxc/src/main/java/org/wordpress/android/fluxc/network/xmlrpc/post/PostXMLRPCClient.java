@@ -68,6 +68,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                             PostModel postModel = postResponseObjectToPostModel(response, site, post.isPage());
                             FetchPostResponsePayload payload;
                             if (postModel != null) {
+                                if (origin == PostAction.PUSH_POST) {
+                                    postModel.setId(post.getId());
+                                }
                                 payload = new FetchPostResponsePayload(postModel, site);
                             } else {
                                 payload = new FetchPostResponsePayload(post, site);
