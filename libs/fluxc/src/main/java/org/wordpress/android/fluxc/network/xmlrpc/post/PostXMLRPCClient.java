@@ -345,7 +345,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 }
             }
             if (postLocation.isValid()) {
-                post.setPostLocation(postLocation);
+                post.setLocation(postLocation);
             }
         }
         post.setCustomFields(jsonCustomFieldsArray.toString());
@@ -454,7 +454,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 }
 
                 if (post.hasLocation()) {
-                    PostLocation location = post.getPostLocation();
+                    PostLocation location = post.getLocation();
                     hLatitude.put("key", "geo_latitude");
                     hLongitude.put("key", "geo_longitude");
                     hPublic.put("key", "geo_public");
