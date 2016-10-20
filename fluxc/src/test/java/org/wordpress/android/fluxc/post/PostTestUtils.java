@@ -8,11 +8,16 @@ import java.util.List;
 
 public class PostTestUtils {
     public static PostModel generateSampleUploadedPost() {
+        return generateSampleUploadedPost("text");
+    }
+
+    public static PostModel generateSampleUploadedPost(String postFormat) {
         PostModel example = new PostModel();
         example.setLocalSiteId(6);
         example.setRemotePostId(5);
         example.setTitle("A test post");
         example.setContent("Bunch of content here");
+        example.setPostFormat(postFormat);
         return example;
     }
 
