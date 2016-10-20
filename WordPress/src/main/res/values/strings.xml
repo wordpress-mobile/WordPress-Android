@@ -327,6 +327,7 @@
     <string name="like">Like</string>
     <string name="approve">Approve</string>
     <string name="comment_moderated_approved">Comment approved!</string>
+    <string name="comment_moderated_unapproved">Comment unapproved</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -617,6 +618,7 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
+    <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
@@ -1298,6 +1300,7 @@
     <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
+    <string name="access_token_migration_message">Updating…</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -1359,6 +1362,7 @@
     <!-- Static URLs -->
     <string name="privacy_settings_url" translatable="false">https://en.support.wordpress.com/privacy-settings</string>
     <string name="language_settings_url" translatable="false">https://en.support.wordpress.com/language-settings</string>
+    <string name="role_info_url" translatable="false">https://en.support.wordpress.com/user-roles/</string>
 
     <string name="date_range_start_date">Start Date</string>
     <string name="date_range_end_date">End Date</string>
@@ -1575,6 +1579,5 @@
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state. Would you like to remove all failed media?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
-    <string name="role_info_url">https://en.support.wordpress.com/user-roles/</string>
 
 </resources>

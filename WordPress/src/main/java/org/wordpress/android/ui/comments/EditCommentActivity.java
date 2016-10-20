@@ -108,6 +108,7 @@ public class EditCommentActivity extends AppCompatActivity {
                     mNote = SimperiumUtils.getNotesBucket().get(noteId);
                     requestFullCommentForNote(mNote);
                 } catch (BucketObjectMissingException e) {
+                    SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
                     showErrorAndFinish();
                 }
             }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.helpshift.Core;
@@ -22,7 +23,10 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class HelpshiftHelper {
     public static String ORIGIN_KEY = "ORIGIN_KEY";
@@ -179,13 +183,43 @@ public class HelpshiftHelper {
     }
 
     public void setTags(Tag[] tags) {
-        mMetadata.put(Support.TagsKey, Tag.toString(tags));
+        setTags(Tag.toString(tags));
+    }
+
+    public void setTags(String[] tags) {
+        mMetadata.put(Support.TagsKey, tags);
     }
 
     public void addTags(Tag[] tags) {
+        addTags(Tag.toString(tags));
+    }
+
+    public void addTags(String[] tags) {
         String[] oldTags = (String[]) mMetadata.get(Support.TagsKey);
         // Concatenate arrays
-        mMetadata.put(Support.TagsKey, ArrayUtils.addAll(oldTags, Tag.toString(tags)));
+        mMetadata.put(Support.TagsKey, ArrayUtils.addAll(oldTags, tags));
+    }
+
+    @NonNull
+    private Set<String> getPlanTags(@NonNull SiteStore siteStore) {
+        Set<String> tags = new HashSet<>();
+
+        for (SiteModel site: siteStore.getSites()) {
+            if (site.getPlanId() == 0) {
+                // Skip unknown plans, missing or unknown plan ID is 0
+                continue;
+            }
+            String tag = String.format(Locale.US, "plan:%d", site.getPlanId());
+            tags.add(tag);
+        }
+
+        return tags;
+    }
+
+
+    private void addPlanTags(@NonNull SiteStore siteStore) {
+        Set<String> planTags = getPlanTags(siteStore);
+        addTags(planTags.toArray(new String[planTags.size()]));
     }
 
     /**
@@ -219,6 +253,7 @@ public class HelpshiftHelper {
         for (SiteModel site: siteStore.getSites()) {
             mMetadata.put("blog-name-" + counter, site.getName());
             mMetadata.put("blog-url-" + counter, site.getUrl());
+            mMetadata.put("blog-plan-" + counter, site.getPlanId());
             counter += 1;
         }
 
@@ -239,8 +274,10 @@ public class HelpshiftHelper {
         }
         Core.setNameAndEmail(name, emailAddress);
         addDefaultMetaData(context, siteStore, wpComUsername);
-        HashMap config = new HashMap ();
+        addPlanTags(siteStore);
+        HashMap config = new HashMap();
         config.put(Support.CustomMetadataKey, mMetadata);
+        config.put("showSearchOnNewConversation", true);
         return config;
     }
 }

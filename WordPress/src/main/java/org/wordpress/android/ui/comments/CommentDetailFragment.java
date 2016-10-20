@@ -83,12 +83,15 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static com.android.volley.Request.Method.HEAD;
+
 /**
  * comment detail displayed from both the notification list and the comment list
  * prior to this there were separate comment detail screens for each list
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
     private static final String KEY_MODE = "KEY_MODE";
+    private static final String KEY_REMOTE_BLOG_ID = "remote_blog_id";
     private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
     private static final String KEY_COMMENT_ID = "comment_id";
     private static final String KEY_NOTE_ID = "note_id";
@@ -164,12 +167,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from notification list for a comment notification
      */
-    public static CommentDetailFragment newInstance(final String noteId) {
+    public static CommentDetailFragment newInstance(final String noteId, final String replyText) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
         args.putInt(KEY_MODE, FROM_NOTE);
-        args.putString(KEY_NOTE_ID, noteId);
         fragment.setArguments(args);
+        fragment.setNoteWithNoteId(noteId);
+        fragment.setReplyText(replyText);
         return fragment;
     }
 
@@ -177,7 +181,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * used when called from a comment notification 'like' action
      */
     public static CommentDetailFragment newInstanceForInstantLike(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId);
+        CommentDetailFragment fragment = newInstance(noteId, null);
         //here tell the fragment to trigger the Like action when ready
         fragment.setLikeCommentWhenReady();
         return fragment;
@@ -187,7 +191,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * used when called from a comment notification 'approve' action
      */
     public static CommentDetailFragment newInstanceForInstantApprove(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId);
+        CommentDetailFragment fragment = newInstance(noteId, null);
         //here tell the fragment to trigger the Like action when ready
         fragment.setApproveCommentWhenReady();
         return fragment;
@@ -197,11 +201,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * used when called from notifications to load a comment that doesn't already exist in the note
      */
     public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId) {
-        CommentDetailFragment fragment = new CommentDetailFragment();
+        CommentDetailFragment fragment = newInstance(noteId, null);
         Bundle args = new Bundle();
         args.putInt(KEY_MODE, FROM_NOTE_REMOTE);
         args.putString(KEY_NOTE_ID, noteId);
         fragment.setArguments(args);
+        fragment.enableShouldRequestCommentFromNote();
         return fragment;
     }
 
@@ -234,6 +239,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
                 setComment(localBlogId, commentId);
             }
+
+            mRemoteBlogId = savedInstanceState.getLong(KEY_REMOTE_BLOG_ID);
         }
 
         setHasOptionsMenu(true);
@@ -250,6 +257,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNote != null) {
             outState.putString(KEY_NOTE_ID, mNote.getId());
         }
+
+        outState.putLong(KEY_REMOTE_BLOG_ID, mRemoteBlogId);
     }
 
     @Override
@@ -429,6 +438,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mShouldFocusReplyField = false;
     }
 
+    public void enableShouldFocusReplyField() {
+        mShouldFocusReplyField = true;
+    }
+
     private void enableShouldRequestCommentFromNote() {
         mShouldRequestCommentFromNote = true;
     }
@@ -455,8 +468,23 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 setNote(note);
                 setRemoteBlogId(note.getSiteId());
             } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e.getMessage());
+                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
+                showErrorToastAndFinish();
             }
+        }
+    }
+
+    private void setReplyText(String replyText) {
+        if (replyText == null) return;
+        mRestoredReplyText = replyText;
+    }
+
+    private void showErrorToastAndFinish() {
+        AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
+        if (getActivity() != null) {
+            ToastUtils.showToast(getActivity(), R.string.error_notification_open);
+            getActivity().finish();
         }
     }
 
@@ -675,7 +703,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mLayoutReply.getVisibility() != View.VISIBLE && canReply()) {
             AniUtils.animateBottomBar(mLayoutReply, true);
             if (mEditReply != null && mShouldFocusReplyField) {
-                mEditReply.requestFocus();
+                mEditReply.performClick();
                 disableShouldFocusReplyField();
             }
         }
@@ -757,7 +785,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.OnRequestListener() {
+                ReaderPostActions.requestBlogPost(blogId, postId, new ReaderActions.OnRequestListener() {
                     @Override
                     public void onSuccess() {
                         if (!isAdded()) return;
@@ -844,7 +872,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (!isAdded()) return;
 
                 if (result.isSuccess()) {
-                    ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                    if (newStatus.equals(CommentStatus.APPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
+                    } else if (newStatus.equals(CommentStatus.UNAPPROVED)) {
+                        ToastUtils.showToast(getActivity(), R.string.comment_moderated_unapproved, ToastUtils.Duration.SHORT);
+                    }
                 } else {
                     mComment.setStatus(CommentStatus.toString(oldStatus));
                     updateStatusViews();
@@ -1124,9 +1156,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mEditReply.setHint(String.format(getString(R.string.comment_reply_to_user), mNote.getCommentAuthorName()));
         }
 
-        // note that the local blog id won't be found if the comment is from someone else's blog
-        int localBlogId = mSiteStore.getLocalIdForRemoteSiteId(mRemoteBlogId);
-        setComment(localBlogId, note.buildComment());
+        // note that the site won't be found if the comment is from someone else's blog
+        SiteModel site = mSiteStore.getSiteBySiteId(mRemoteBlogId);
+
+        // adjust enabledActions if this is a Jetpack site
+        if (canLike() && site != null && site.isJetpack()) {
+            // delete LIKE action from enabledActions for Jetpack sites
+            mEnabledActions.remove(EnabledActions.ACTION_LIKE);
+        }
+
+        if (site != null) {
+            setComment(site.getId(), note.buildComment());
+        }
         getFragmentManager().invalidateOptionsMenu();
     }
 

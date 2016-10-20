@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -69,6 +70,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.GCMMessageService.EXTRA_VOICE_REPLY;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -202,7 +205,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         });
 
         if (savedInstanceState == null) {
-            if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (!AppPrefs.wasAccessTokenMigrated()
+                && WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
@@ -295,10 +299,24 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     if (doApproveNote) {
                         NotificationsListFragment.openNoteForApprove(this, noteId);
                     } else {
+
+                        //if voice reply is enabled in a wearable, it will come through the remoteInput
+                        //extra EXTRA_VOICE_REPLY
+                        String voiceReply = null;
+                        Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                        if (remoteInput != null) {
+                            CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
+                            if (replyText != null) {
+                                voiceReply = replyText.toString();
+                            }
+                        }
+
                         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard);
+                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
                     }
                 }
+            } else {
+                SimperiumUtils.trackBucketObjectMissingWarning("No note id found in PN", "");
             }
         } else {
           // mark all tapped here
@@ -346,7 +364,14 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
-        trackLastVisibleTab(mViewPager.getCurrentItem(), false);
+        int currentItem = mViewPager.getCurrentItem();
+        trackLastVisibleTab(currentItem, false);
+
+        if (currentItem == WPMainTabAdapter.TAB_NOTIFS) {
+            //if we are presenting the notifications list, it's safe to clear any outstanding
+            // notifications
+            GCMMessageService.removeAllNotifications(this);
+        }
 
         checkConnection();
 
@@ -445,16 +470,18 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     private void moderateCommentOnActivityResult(Intent data) {
+        String noteId = StringUtils.notNullStr(data.getStringExtra
+                (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA));
         try {
             if (SimperiumUtils.getNotesBucket() != null) {
-                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
-                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+                Note note = SimperiumUtils.getNotesBucket().get(noteId);
                 CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                         NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
                 NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, e);
+            SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
         }
     }
 
@@ -708,9 +735,13 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         // "Reload" selected site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        if (getSelectedSite() == null && mSiteStore.hasSite()) {
+            setSelectedSite(mSiteStore.getSites().get(0));
+        }
         if (getSelectedSite() == null) {
             return;
         }
+
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
             mSelectedSite = site;
