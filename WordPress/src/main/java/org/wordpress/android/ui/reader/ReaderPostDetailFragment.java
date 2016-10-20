@@ -296,8 +296,8 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.ARG_IS_FEED, mIsFeed);
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
-        outState.putString(ReaderConstants.ARG_BLOG_ID, mBlogSlug);
-        outState.putString(ReaderConstants.ARG_POST_ID, mPostSlug);
+        outState.putString(ReaderConstants.ARG_BLOG_SLUG, mBlogSlug);
+        outState.putString(ReaderConstants.ARG_POST_SLUG, mPostSlug);
 
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
