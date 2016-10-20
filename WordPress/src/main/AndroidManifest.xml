@@ -243,7 +243,8 @@
         <!-- Deep Linking Activity -->
         <activity
             android:name=".ui.DeepLinkingIntentReceiverActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/Calypso.NoActionBar"
+            android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -307,6 +308,7 @@
         </activity>
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
+            android:excludeFromRecents="true"
             android:label="@string/reader_title_post_detail"
             android:theme="@style/Calypso.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
