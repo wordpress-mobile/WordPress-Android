@@ -289,33 +289,16 @@ public class GCMMessageService extends GcmListenerService {
                 }
             } else {
                 //else offer REPLY / LIKE actions
+                //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
                 if (note.canLike()) {
-                    addCommentLikeActionForCommentNotification(builder, noteId);
-                }
-
-                if (note != null) {
-                    //if note can be replied to, we'll always add this action first
-                    if (note.canReply()) {
-                        addCommentReplyActionForCommentNotification(builder, noteId);
-                    }
-
-                    // if the comment is lacking approval, offer moderation actions
-                    if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
-                        if (note.canModerate()) {
-                            addCommentApproveActionForCommentNotification(builder, noteId);
-                        }
-                    } else {
-                        //else offer REPLY / LIKE actions
-                        //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
-                        Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
-                        boolean isJetPackSite = blog != null ? blog.isJetpackPowered() : false;
-                        if (note.canLike() && !isJetPackSite) {
-                            addCommentLikeActionForCommentNotification(builder, noteId);
-                        }
+                    Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
+                    boolean isJetPackSite = (blog != null) && blog.isJetpackPowered();
+                    if (note.canLike() && !isJetPackSite) {
+                        addCommentLikeActionForCommentNotification(builder, noteId);
                     }
                 }
-                areActionsSet = true;
             }
+            areActionsSet = true;
         }
 
         // if we could not set the actions, set the default one REPLY as it's then only safe bet
