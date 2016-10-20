@@ -348,7 +348,7 @@ public class NotificationsProcessingService extends Service {
         } else {
             //cancel the progressing notification
             dismissProcessingNotification();
-
+            hideStatusBar();
             //and just trigger the Activity to allow the user to write a reply
             startReplyToCommentActivity();
         }
@@ -369,6 +369,11 @@ public class NotificationsProcessingService extends Service {
         intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
         intent.putExtra(NOTE_INSTANT_REPLY_EXTRA, true);
         startActivity(intent);
+    }
+
+    private void hideStatusBar() {
+        Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        sendBroadcast(closeIntent);
     }
 
 }
