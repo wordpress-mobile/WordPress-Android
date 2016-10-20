@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.site;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -70,8 +69,8 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void pullSites() {
         String url = WPCOMREST.me.sites.getUrlV1_1();
-        final WPComGsonRequest<SitesResponse> request = new WPComGsonRequest<>(Method.GET,
-                url, null, SitesResponse.class,
+        final WPComGsonRequest<SitesResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                SitesResponse.class,
                 new Listener<SitesResponse>() {
                     @Override
                     public void onResponse(SitesResponse response) {
@@ -97,8 +96,8 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void pullSite(final SiteModel site) {
         String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
-        final WPComGsonRequest<SiteWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
-                url, null, SiteWPComRestResponse.class,
+        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                SiteWPComRestResponse.class,
                 new Listener<SiteWPComRestResponse>() {
                     @Override
                     public void onResponse(SiteWPComRestResponse response) {
@@ -121,16 +120,16 @@ public class SiteRestClient extends BaseWPComRestClient {
     public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
                         @NonNull SiteVisibility visibility, final boolean dryRun) {
         String url = WPCOMREST.sites.new_.getUrlV1();
-        Map<String, String> params = new HashMap<>();
-        params.put(SITE_NAME_KEY, siteName);
-        params.put(SITE_TITLE_KEY, siteTitle);
-        params.put(LANGUAGE_ID_KEY, language);
-        params.put(PUBLIC_KEY, visibility.toString());
-        params.put(VALIDATE_KEY, dryRun ? "1" : "0");
-        params.put(CLIENT_ID_KEY, mAppSecrets.getAppId());
-        params.put(CLIENT_SECRET_KEY, mAppSecrets.getAppSecret());
+        Map<String, Object> body = new HashMap<>();
+        body.put(SITE_NAME_KEY, siteName);
+        body.put(SITE_TITLE_KEY, siteTitle);
+        body.put(LANGUAGE_ID_KEY, language);
+        body.put(PUBLIC_KEY, visibility.toString());
+        body.put(VALIDATE_KEY, dryRun ? "1" : "0");
+        body.put(CLIENT_ID_KEY, mAppSecrets.getAppId());
+        body.put(CLIENT_SECRET_KEY, mAppSecrets.getAppSecret());
 
-        WPComGsonRequest<NewAccountResponse> request = new WPComGsonRequest<>(Method.POST, url, params,
+        WPComGsonRequest<NewAccountResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 NewAccountResponse.class,
                 new Listener<NewAccountResponse>() {
                     @Override
@@ -156,8 +155,8 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void pullPostFormats(@NonNull final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).post_formats.getUrlV1_1();
-        final WPComGsonRequest<PostFormatsResponse> request = new WPComGsonRequest<>(Method.GET,
-                url, null, PostFormatsResponse.class,
+        final WPComGsonRequest<PostFormatsResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                PostFormatsResponse.class,
                 new Listener<PostFormatsResponse>() {
                     @Override
                     public void onResponse(PostFormatsResponse response) {
