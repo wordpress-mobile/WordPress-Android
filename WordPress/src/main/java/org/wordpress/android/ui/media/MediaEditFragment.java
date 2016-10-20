@@ -22,11 +22,8 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -48,7 +45,6 @@ public class MediaEditFragment extends Fragment {
     public static final String TAG = "MediaEditFragment";
     public static final int MISSING_MEDIA_ID = -1;
 
-    @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
 
     private NetworkImageView mNetworkImageView;
@@ -110,18 +106,6 @@ public class MediaEditFragment extends Fragment {
 
         // retain this fragment across configuration changes
         setRetainInstance(true);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        mDispatcher.unregister(this);
-        super.onStop();
     }
 
     @Override
@@ -390,10 +374,5 @@ public class MediaEditFragment extends Fragment {
                 task.execute(filePath);
             }
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        // no-op
     }
 }
