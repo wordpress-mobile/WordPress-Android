@@ -28,7 +28,7 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
 
     private final MultipartBody mMultipartBody;
 
-    public RestUploadRequestBody(MediaModel media, Map<String, String> params, ProgressListener listener) {
+    public RestUploadRequestBody(MediaModel media, Map<String, Object> params, ProgressListener listener) {
         super(media, listener);
         mMultipartBody = buildMultipartBody(params);
     }
@@ -61,13 +61,13 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
         bufferedSink.flush();
     }
 
-    private MultipartBody buildMultipartBody(Map<String, String> params) {
+    private MultipartBody buildMultipartBody(Map<String, Object> params) {
         MediaModel media = getMedia();
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         // add media attributes
         for (String key : params.keySet()) {
-            builder.addFormDataPart(String.format(MEDIA_PARAM_FORMAT, key), params.get(key));
+            builder.addFormDataPart(String.format(MEDIA_PARAM_FORMAT, key), params.get(key).toString());
         }
 
         // add media file data
