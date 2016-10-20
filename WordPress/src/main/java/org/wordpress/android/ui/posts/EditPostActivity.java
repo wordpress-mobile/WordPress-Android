@@ -473,7 +473,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             saveMenuItem.setTitle(R.string.publish_post);
                         } else {
                             saveMenuItem.setTitle(R.string.update_verb);
-                            mSaveWithoutLeaving = true;
                         }
                         break;
                     default:
