@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.comment;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
@@ -45,7 +44,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         params.put("status", status.toString());
         params.put("offset", String.valueOf(offset));
         params.put("number", String.valueOf(number));
-        final WPComGsonRequest<CommentsWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
+        final WPComGsonRequest<CommentsWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
                 url, params, CommentsWPComRestResponse.class,
                 new Listener<CommentsWPComRestResponse>() {
                     @Override
@@ -69,11 +68,11 @@ public class CommentRestClient extends BaseWPComRestClient {
 
     public void pushComment(final SiteModel site, final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).getUrlV1_1();
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("content", comment.getContent());
         params.put("date", comment.getDatePublished());
         params.put("status", comment.getStatus());
-        final WPComGsonRequest<CommentWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
+        final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, params, CommentWPComRestResponse.class,
                 new Listener<CommentWPComRestResponse>() {
                     @Override
@@ -98,9 +97,8 @@ public class CommentRestClient extends BaseWPComRestClient {
 
     public void fetchComment(final SiteModel site, final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).getUrlV1_1();
-        Map<String, String> params = new HashMap<>();
-        final WPComGsonRequest<CommentWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
-                url, params, CommentWPComRestResponse.class,
+        final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
+                url, null, CommentWPComRestResponse.class,
                 new Listener<CommentWPComRestResponse>() {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
@@ -124,9 +122,8 @@ public class CommentRestClient extends BaseWPComRestClient {
     public void deleteComment(final SiteModel site, final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).delete
                 .getUrlV1_1();
-        Map<String, String> params = new HashMap<>();
-        final WPComGsonRequest<CommentWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
-                url, params, CommentWPComRestResponse.class,
+        final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
+                url, null, CommentWPComRestResponse.class,
                 new Listener<CommentWPComRestResponse>() {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
@@ -151,9 +148,9 @@ public class CommentRestClient extends BaseWPComRestClient {
     public void createNewReply(final SiteModel site, final CommentModel comment, final CommentModel reply) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId())
                 .replies.new_.getUrlV1_1();
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("content", reply.getContent());
-        final WPComGsonRequest<CommentWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
+        final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, params, CommentWPComRestResponse.class,
                 new Listener<CommentWPComRestResponse>() {
                     @Override
@@ -179,9 +176,9 @@ public class CommentRestClient extends BaseWPComRestClient {
     public void createNewComment(final SiteModel site, final PostModel post, final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId())
                 .replies.new_.getUrlV1_1();
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("content", comment.getContent());
-        final WPComGsonRequest<CommentWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
+        final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, params, CommentWPComRestResponse.class,
                 new Listener<CommentWPComRestResponse>() {
                     @Override
