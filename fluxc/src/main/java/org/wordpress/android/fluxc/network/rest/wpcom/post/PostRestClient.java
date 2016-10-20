@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -298,6 +299,45 @@ public class PostRestClient extends BaseWPComRestClient {
             } else {
                 params.put("post_thumbnail", String.valueOf(post.getFeaturedImageId()));
             }
+        }
+
+        if (post.hasLocation()) {
+            // Location data was added to the post
+            List<Map<String, Object>> metadata = new ArrayList<>();
+            PostLocation location = post.getLocation();
+
+            Map<String, Object> latitudeParams = new HashMap<>();
+            latitudeParams.put("key", "geo_latitude");
+            latitudeParams.put("value", location.getLatitude());
+            latitudeParams.put("operation", "update");
+
+            Map<String, Object> longitudeParams = new HashMap<>();
+            longitudeParams.put("key", "geo_longitude");
+            longitudeParams.put("value", location.getLongitude());
+            latitudeParams.put("operation", "update");
+
+            metadata.add(latitudeParams);
+            metadata.add(longitudeParams);
+            params.put("metadata", metadata);
+        } else if (post.shouldDeleteLatitude() || post.shouldDeleteLongitude()) {
+            // The post used to have location data, but the user deleted it - clear location data on the server
+            List<Map<String, Object>> metadata = new ArrayList<>();
+
+            if (post.shouldDeleteLatitude()) {
+                Map<String, Object> latitudeParams = new HashMap<>();
+                latitudeParams.put("key", "geo_latitude");
+                latitudeParams.put("operation", "delete");
+                metadata.add(latitudeParams);
+            }
+
+            if (post.shouldDeleteLongitude()) {
+                Map<String, Object> longitudeParams = new HashMap<>();
+                longitudeParams.put("key", "geo_longitude");
+                longitudeParams.put("operation", "delete");
+                metadata.add(longitudeParams);
+            }
+
+            params.put("metadata", metadata);
         }
 
         return params;

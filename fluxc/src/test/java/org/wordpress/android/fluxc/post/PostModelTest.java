@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest;
 
@@ -13,6 +14,8 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.wordpress.android.fluxc.post.PostTestUtils.EXAMPLE_LATITUDE;
+import static org.wordpress.android.fluxc.post.PostTestUtils.EXAMPLE_LONGITUDE;
 
 @RunWith(RobolectricTestRunner.class)
 public class PostModelTest {
@@ -67,5 +70,44 @@ public class PostModelTest {
         assertEquals(2, testPost.getCategoryIdList().size());
         assertTrue(categoryIds.containsAll(testPost.getCategoryIdList()) &&
                 testPost.getCategoryIdList().containsAll(categoryIds));
+    }
+
+    @Test
+    public void testLocation() {
+        PostModel testPost = PostTestUtils.generateSampleLocalDraftPost();
+
+        // Expect no location if none was set
+        assertFalse(testPost.hasLocation());
+        assertFalse(testPost.getLocation().isValid());
+        assertFalse(testPost.shouldDeleteLatitude());
+        assertFalse(testPost.shouldDeleteLongitude());
+
+        // Verify state when location is set
+        testPost.setLocation(new PostLocation(EXAMPLE_LATITUDE, EXAMPLE_LONGITUDE));
+
+        assertTrue(testPost.hasLocation());
+        assertEquals(EXAMPLE_LATITUDE, testPost.getLatitude(), 0);
+        assertEquals(EXAMPLE_LONGITUDE, testPost.getLongitude(), 0);
+        assertEquals(new PostLocation(EXAMPLE_LATITUDE, EXAMPLE_LONGITUDE), testPost.getLocation());
+        assertFalse(testPost.shouldDeleteLatitude());
+        assertFalse(testPost.shouldDeleteLongitude());
+
+        // (0, 0) is a valid location
+        testPost.setLocation(0, 0);
+
+        assertTrue(testPost.hasLocation());
+        assertEquals(0, testPost.getLatitude(), 0);
+        assertEquals(0, testPost.getLongitude(), 0);
+        assertEquals(new PostLocation(0, 0), testPost.getLocation());
+        assertFalse(testPost.shouldDeleteLatitude());
+        assertFalse(testPost.shouldDeleteLongitude());
+
+        // Clearing the location should remove the location, and flag it for deletion on the server
+        testPost.clearLocation();
+
+        assertFalse(testPost.hasLocation());
+        assertFalse(testPost.getLocation().isValid());
+        assertTrue(testPost.shouldDeleteLatitude());
+        assertTrue(testPost.shouldDeleteLongitude());
     }
 }
