@@ -31,7 +31,7 @@ public class AccountModel extends Payload implements Identifiable {
     @Column private String mDate;
     @Column private String mNewEmail;
     @Column private boolean mPendingEmailChange;
-    @Column private String mWebAddress; // WPCOM rest API: user_URL
+    @Column private String mWebAddress; // WPCom rest API: user_URL
 
     public AccountModel() {
         init();
