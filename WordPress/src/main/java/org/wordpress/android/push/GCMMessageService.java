@@ -305,32 +305,14 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
+
         PendingIntent commentReplyPendingIntent =  PendingIntent.getService(this, 0, commentReplyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
-                commentReplyPendingIntent);
 
-//        /*
-//        The following code adds the behavior for Direct reply, available on Android N (7.0) and on.
-//        Using backward compatibility with NotificationCompat.
-//         */
-//        // now add the remoteInput corresponding to direct-reply
+        /*
+        The following code adds the behavior for Direct reply, available on Android N (7.0) and on.
+        Using backward compatibility with NotificationCompat.
+         */
         String replyLabel = getResources().getString(R.string.reply);
-//        RemoteInput remoteInputInlineReply = new RemoteInput.Builder(EXTRA_VOICE_OR_INLINE_REPLY)
-//                .setLabel(replyLabel)
-//                .build();
-//
-//        // Create the reply action and add the remote input.
-//        NotificationCompat.Action inlineAction =
-//                new NotificationCompat.Action.Builder(R.drawable.ic_reply_white_24dp,
-//                        getString(R.string.reply), commentReplyPendingIntent)
-//                        .addRemoteInput(remoteInputInlineReply)
-//                        .build();
-//
-//        builder.addAction(inlineAction);
-
-
-
-        //add wearable remoteInput to enable voice-reply
         RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_OR_INLINE_REPLY)
                 .setLabel(replyLabel)
                 .build();
@@ -339,8 +321,11 @@ public class GCMMessageService extends GcmListenerService {
                         getString(R.string.reply), commentReplyPendingIntent)
                         .addRemoteInput(remoteInput)
                         .build();
-        builder.extend(new NotificationCompat.WearableExtender().addAction(action));
+        // now add the action corresponding to direct-reply
+        builder.addAction(action);
 
+        //also add wearable remoteInput to enable voice-reply
+        builder.extend(new NotificationCompat.WearableExtender().addAction(action));
 
     }
 
