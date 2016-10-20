@@ -31,7 +31,7 @@ import org.wordpress.android.util.AppLog;
 import java.util.HashMap;
 
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
-import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_REPLY;
+import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
 import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
 
 /**
@@ -117,13 +117,10 @@ public class NotificationsProcessingService extends Service {
 
         if (TextUtils.isEmpty(mReplyText)) {
             //if voice reply is enabled in a wearable, it will come through the remoteInput
-            //extra EXTRA_VOICE_REPLY
+            //extra EXTRA_VOICE_OR_INLINE_REPLY
             Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
             if (remoteInput != null) {
-                CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
-                if (replyText != null) {
-                    mReplyText = replyText.toString();
-                }
+                obtainReplyTextFromRemoteInputBundle(remoteInput);
             }
         }
 
@@ -157,6 +154,13 @@ public class NotificationsProcessingService extends Service {
         }
 
         return START_NOT_STICKY;
+    }
+
+    private void obtainReplyTextFromRemoteInputBundle(Bundle bundle) {
+        CharSequence replyText = bundle.getCharSequence(EXTRA_VOICE_OR_INLINE_REPLY);
+        if (replyText != null) {
+            mReplyText = replyText.toString();
+        }
     }
 
     private void buildNoteFromJSONObject(JSONObject jsonObject) {

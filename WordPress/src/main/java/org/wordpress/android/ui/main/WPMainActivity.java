@@ -60,7 +60,7 @@ import org.wordpress.android.widgets.WPViewPager;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_REPLY;
+import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -273,11 +273,11 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             if (!TextUtils.isEmpty(noteId)) {
                 GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
                 //if voice reply is enabled in a wearable, it will come through the remoteInput
-                //extra EXTRA_VOICE_REPLY
+                //extra EXTRA_VOICE_OR_INLINE_REPLY
                 String voiceReply = null;
                 Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
                 if (remoteInput != null) {
-                    CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
+                    CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_OR_INLINE_REPLY);
                     if (replyText != null) {
                         voiceReply = replyText.toString();
                     }

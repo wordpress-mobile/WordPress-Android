@@ -60,7 +60,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
     public static final int ACTIONS_RESULT_NOTIFICATION_ID = 40000;
-    public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
+    public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
     private static final int MAX_INBOX_ITEMS = 5;
 
     private static final String PUSH_ARG_USER = "user";
@@ -309,9 +309,29 @@ public class GCMMessageService extends GcmListenerService {
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
 
-        //add wearable remoteInput to enable voice-reply
+//        /*
+//        The following code adds the behavior for Direct reply, available on Android N (7.0) and on.
+//        Using backward compatibility with NotificationCompat.
+//         */
+//        // now add the remoteInput corresponding to direct-reply
         String replyLabel = getResources().getString(R.string.reply);
-        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
+//        RemoteInput remoteInputInlineReply = new RemoteInput.Builder(EXTRA_VOICE_OR_INLINE_REPLY)
+//                .setLabel(replyLabel)
+//                .build();
+//
+//        // Create the reply action and add the remote input.
+//        NotificationCompat.Action inlineAction =
+//                new NotificationCompat.Action.Builder(R.drawable.ic_reply_white_24dp,
+//                        getString(R.string.reply), commentReplyPendingIntent)
+//                        .addRemoteInput(remoteInputInlineReply)
+//                        .build();
+//
+//        builder.addAction(inlineAction);
+
+
+
+        //add wearable remoteInput to enable voice-reply
+        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_OR_INLINE_REPLY)
                 .setLabel(replyLabel)
                 .build();
         NotificationCompat.Action action =
@@ -320,6 +340,7 @@ public class GCMMessageService extends GcmListenerService {
                         .addRemoteInput(remoteInput)
                         .build();
         builder.extend(new NotificationCompat.WearableExtender().addAction(action));
+
 
     }
 
