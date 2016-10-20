@@ -43,6 +43,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private InterceptType mInterceptType;
     private String mBlogId;
     private String mPostId;
+    private String mFallbackUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                     break;
                 case "http":
                 case "https":
+                    mFallbackUri = uri.toString();
+
                     List<String> segments = uri.getPathSegments();
 
                     // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
@@ -138,14 +141,14 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
             }
 
             if (mInterceptType == InterceptType.READER_POST_SLUG) {
-                ReaderActivityLauncher.showReaderPostDetail(this, mBlogId, mPostId, false);
+                ReaderActivityLauncher.showReaderPostDetail(this, mBlogId, mPostId, false, mFallbackUri);
             } else {
                 try {
                     final long blogId = Long.parseLong(mBlogId);
                     final long postId = Long.parseLong(mPostId);
 
                     ReaderActivityLauncher.showReaderPostDetail(this, InterceptType.READER_FEED.equals(mInterceptType),
-                        blogId, postId, false);
+                        blogId, postId, false, mFallbackUri);
                 } catch (NumberFormatException e) {
                     AppLog.e(T.READER, e);
                 }

@@ -16,6 +16,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -34,37 +35,41 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
-        showReaderPostDetail(context, false, blogId, postId, false);
+        showReaderPostDetail(context, false, blogId, postId, false, null);
     }
 
     public static void showReaderPostDetail(Context context, String blogSlug, String postSlug) {
-        showReaderPostDetail(context, blogSlug, postSlug, false);
+        showReaderPostDetail(context, blogSlug, postSlug, false, null);
     }
 
     public static void showReaderPostDetail(Context context,
                                             boolean isFeed,
                                             long blogId,
                                             long postId,
-                                            boolean isRelatedPost) {
+                                            boolean isRelatedPost,
+                                            String fallbackUri) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+        intent.putExtra(ReaderConstants.ARG_FALLBACK_URI, fallbackUri);
         context.startActivity(intent);
     }
 
     public static void showReaderPostDetail(Context context,
                                             String blogSlug,
                                             String postSlug,
-                                            boolean isRelatedPost) {
+                                            boolean isRelatedPost,
+                                            String fallbackUri) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IS_FEED, false);
         intent.putExtra(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
         intent.putExtra(ReaderConstants.ARG_POST_SLUG, postSlug);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+        intent.putExtra(ReaderConstants.ARG_FALLBACK_URI, fallbackUri);
         context.startActivity(intent);
     }
 
@@ -271,9 +276,15 @@ public class ReaderActivityLauncher {
      */
     private static void openUrlExternal(Context context, @NonNull String url) {
         try {
+            // disable deeplinking activity so to not catch WP URLs
+            ActivityLauncher.disableDeepLinking(context);
+
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(intent);
             AppLockManager.getInstance().setExtendedTimeout();
+
+            // re-enable deeplinking
+            ActivityLauncher.enableDeepLinking(context);
         } catch (ActivityNotFoundException e) {
             String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
             ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);

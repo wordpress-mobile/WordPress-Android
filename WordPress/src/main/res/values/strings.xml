@@ -1189,6 +1189,7 @@
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
     <string name="reader_err_get_post_not_authorized">You\'re not authorized to view this post</string>
+    <string name="reader_err_get_post_not_authorized_fallback">You\'re not authorized to view this post. Tap the action button to open it in a browser instead.</string>
     <string name="reader_err_get_post_not_found">This post no longer exists</string>
 
     <!-- empty list/grid text -->

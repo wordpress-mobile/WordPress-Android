@@ -81,6 +81,7 @@ public class ReaderPostDetailFragment extends Fragment
     private String mPostSlug;
     private String mBlogSlug;
     private boolean mIsFeed;
+    private String mFallbackUri;
     private ReaderPost mPost;
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
@@ -111,13 +112,14 @@ public class ReaderPostDetailFragment extends Fragment
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(false, blogId, postId, false, null);
+        return newInstance(false, blogId, postId, false, null, null);
     }
 
     public static ReaderPostDetailFragment newInstance(boolean isFeed,
                                                        long blogId,
                                                        long postId,
                                                        boolean isRelatedPost,
+                                                       String fallbackUri,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
@@ -126,6 +128,7 @@ public class ReaderPostDetailFragment extends Fragment
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
         args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+        args.putString(ReaderConstants.ARG_FALLBACK_URI, fallbackUri);
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -140,6 +143,7 @@ public class ReaderPostDetailFragment extends Fragment
             String blogSlug,
             String postSlug,
             boolean isRelatedPost,
+            String fallbackUri,
             ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
@@ -147,6 +151,7 @@ public class ReaderPostDetailFragment extends Fragment
         args.putString(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
         args.putString(ReaderConstants.ARG_POST_SLUG, postSlug);
         args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+        args.putString(ReaderConstants.ARG_FALLBACK_URI, fallbackUri);
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -176,6 +181,7 @@ public class ReaderPostDetailFragment extends Fragment
             mBlogSlug = args.getString(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = args.getString(ReaderConstants.ARG_POST_SLUG);
             mIsRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
+            mFallbackUri = args.getString(ReaderConstants.ARG_FALLBACK_URI);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -262,7 +268,7 @@ public class ReaderPostDetailFragment extends Fragment
         boolean postHasUrl = hasPost() && mPost.hasUrl();
         MenuItem mnuBrowse = menu.findItem(R.id.menu_browse);
         if (mnuBrowse != null) {
-            mnuBrowse.setVisible(postHasUrl);
+            mnuBrowse.setVisible(postHasUrl || (mFallbackUri != null));
         }
         MenuItem mnuShare = menu.findItem(R.id.menu_share);
         if (mnuShare != null) {
@@ -276,6 +282,8 @@ public class ReaderPostDetailFragment extends Fragment
         if (i == R.id.menu_browse) {
             if (hasPost()) {
                 ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
+            } else if (mFallbackUri != null) {
+                ReaderActivityLauncher.openUrl(getActivity(), mFallbackUri, OpenUrlType.EXTERNAL);
             }
             return true;
         } else if (i == R.id.menu_share) {
@@ -300,6 +308,7 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putString(ReaderConstants.ARG_POST_SLUG, mPostSlug);
 
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
+        outState.putString(ReaderConstants.ARG_FALLBACK_URI, mFallbackUri);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
 
@@ -329,6 +338,7 @@ public class ReaderPostDetailFragment extends Fragment
             mBlogSlug = savedInstanceState.getString(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = savedInstanceState.getString(ReaderConstants.ARG_POST_SLUG);
             mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
+            mFallbackUri = savedInstanceState.getString(ReaderConstants.ARG_FALLBACK_URI);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
@@ -585,7 +595,7 @@ public class ReaderPostDetailFragment extends Fragment
             mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
             replacePost(blogId, postId);
         } else {
-            ReaderActivityLauncher.showReaderPostDetail(getActivity(), false, blogId, postId, true);
+            ReaderActivityLauncher.showReaderPostDetail(getActivity(), false, blogId, postId, true, mFallbackUri);
         }
     }
 
@@ -773,7 +783,8 @@ public class ReaderPostDetailFragment extends Fragment
                         switch (statusCode) {
                             case 401:
                             case 403:
-                                errMsgResId = R.string.reader_err_get_post_not_authorized;
+                                errMsgResId = (mFallbackUri == null) ? R.string.reader_err_get_post_not_authorized
+                                        : R.string.reader_err_get_post_not_authorized_fallback;
                                 break;
                             case 404:
                                 errMsgResId = R.string.reader_err_get_post_not_found;

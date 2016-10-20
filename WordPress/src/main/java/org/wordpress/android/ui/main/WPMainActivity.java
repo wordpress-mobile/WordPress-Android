@@ -332,6 +332,9 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     protected void onResume() {
         super.onResume();
 
+        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
+        ActivityLauncher.enableDeepLinking(this);
+
         // Start listening to Simperium Note bucket
         if (SimperiumUtils.getNotesBucket() != null) {
             SimperiumUtils.getNotesBucket().addListener(this);
