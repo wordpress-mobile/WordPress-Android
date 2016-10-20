@@ -18,7 +18,7 @@ public class RequestQueryParametersTest {
     public void testBaseRequestAddQueryParameters() {
         String baseUrl = "https://public-api.wordpress.com/rest/v1.1/sites/56/posts/";
 
-        WPComGsonRequest wpComGsonRequest = new WPComGsonRequest<Object>(Method.HEAD, baseUrl, null, null, null, null);
+        WPComGsonRequest<Object> wpComGsonRequest = WPComGsonRequest.buildGetRequest(baseUrl, null, null, null, null);
 
         wpComGsonRequest.addQueryParameter("type", "post");
         assertEquals(baseUrl + "?type=post", wpComGsonRequest.getUrl());
@@ -45,7 +45,7 @@ public class RequestQueryParametersTest {
         params.put("offset", "20");
         params.put("favorite_pet", "pony");
 
-        WPComGsonRequest wpComGsonRequest = new WPComGsonRequest<>(Method.GET, baseUrl, params, null, null, null);
+        WPComGsonRequest wpComGsonRequest = WPComGsonRequest.buildGetRequest(baseUrl, params, null, null, null);
         assertEquals(baseUrl + "?offset=20&favorite_pet=pony", wpComGsonRequest.getUrl());
     }
 
@@ -53,11 +53,11 @@ public class RequestQueryParametersTest {
     public void testWPComGsonRequestConstructorPost() {
         String baseUrl = "https://public-api.wordpress.com/rest/v1.1/sites/56/posts/";
 
-        Map<String, String> params = new HashMap<>();
-        params.put("offset", "20");
-        params.put("favorite_pet", "pony");
+        Map<String, Object> body = new HashMap<>();
+        body.put("offset", "20");
+        body.put("favorite_pet", "pony");
 
-        WPComGsonRequest wpComGsonRequest = new WPComGsonRequest<>(Method.POST, baseUrl, params, null, null, null);
+        WPComGsonRequest wpComGsonRequest = WPComGsonRequest.buildPostRequest(baseUrl, body, null, null, null);
         // No change if the request != GET
         assertEquals(baseUrl, wpComGsonRequest.getUrl());
     }
