@@ -50,10 +50,6 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_APPROVE = "action_approve";
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
     public static final String ARG_NOTE_ID = "note_id";
-    private String mNoteId;
-    private String mReplyText;
-    private String mActionType;
-    private Note mNote;
 
     public static void startServiceForLike(Context context, String noteId) {
         Intent intent = new Intent(context, NotificationsProcessingService.class);
@@ -104,276 +100,321 @@ public class NotificationsProcessingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        //first, dismiss any final failure processing notification as the user
-        //initiated a new action now
-
-        dismissProcessingNotification();
-
-        mNoteId = intent.getStringExtra(ARG_NOTE_ID);
-        mActionType = intent.getStringExtra(ARG_ACTION_TYPE);
-        if (intent.hasExtra(ARG_ACTION_REPLY_TEXT)) {
-            mReplyText = intent.getStringExtra(ARG_ACTION_REPLY_TEXT);
-        }
-
-        if (TextUtils.isEmpty(mReplyText)) {
-            //if voice reply is enabled in a wearable, it will come through the remoteInput
-            //extra EXTRA_VOICE_OR_INLINE_REPLY
-            Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
-            if (remoteInput != null) {
-                obtainReplyTextFromRemoteInputBundle(remoteInput);
+        // Offload to a separate thread.
+        final QuickActionProcessor proc = new QuickActionProcessor(this, intent, startId);
+        new Thread(new Runnable() {
+            public void run() {
+                proc.process();
             }
-        }
-
-        showIntermediateMessageToUser(getString(R.string.comment_q_action_updating));
-
-        if (mActionType != null) {
-            RestRequest.Listener listener =
-                    new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if (response != null && !response.optBoolean("success")) {
-                                //build the Note object here
-                                buildNoteFromJSONObject(response);
-                                performRequestedAction();
-                            }
-                        }
-                    };
-
-            RestRequest.ErrorListener errorListener =
-                    new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            requestFailed(mActionType);
-                        }
-                    };
-
-            getNoteFromNoteId(mNoteId, listener, errorListener);
-
-        } else {
-            requestFailed(null);
-        }
+        }).start();
 
         return START_NOT_STICKY;
     }
 
-    private void obtainReplyTextFromRemoteInputBundle(Bundle bundle) {
-        CharSequence replyText = bundle.getCharSequence(EXTRA_VOICE_OR_INLINE_REPLY);
-        if (replyText != null) {
-            mReplyText = replyText.toString();
-        }
-    }
+    private class QuickActionProcessor {
+        private String mNoteId;
+        private String mReplyText;
+        private String mActionType;
+        private Note mNote;
+        private int mTaskId;
+        private Context mContext;
+        private Intent mIntent;
 
-    private void buildNoteFromJSONObject(JSONObject jsonObject) {
-        try {
-            if (jsonObject.has("notes")) {
-                JSONArray jsonArray = jsonObject.getJSONArray("notes");
-                if (jsonArray != null && jsonArray.length() == 1) {
-                    jsonObject = jsonArray.getJSONObject(0);
+        public QuickActionProcessor(Context ctx, Intent intent, int taskId) {
+            mContext = ctx;
+            mIntent = intent;
+            mTaskId = taskId;
+        }
+
+        public void process() {
+
+            //first, dismiss any final failure processing notification as the user
+            //initiated a new action now
+            dismissProcessingNotification();
+
+            mNoteId = mIntent.getStringExtra(ARG_NOTE_ID);
+            mActionType = mIntent.getStringExtra(ARG_ACTION_TYPE);
+            if (mIntent.hasExtra(ARG_ACTION_REPLY_TEXT)) {
+                mReplyText = mIntent.getStringExtra(ARG_ACTION_REPLY_TEXT);
+            }
+
+            if (TextUtils.isEmpty(mReplyText)) {
+                //if voice reply is enabled in a wearable, it will come through the remoteInput
+                //extra EXTRA_VOICE_OR_INLINE_REPLY
+                //same thing with direct-reply in Android 7
+                Bundle remoteInput = RemoteInput.getResultsFromIntent(mIntent);
+                if (remoteInput != null) {
+                    obtainReplyTextFromRemoteInputBundle(remoteInput);
                 }
             }
-            mNote = new Note.Schema().build(mNoteId, jsonObject);
 
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.NOTIFS, e.getMessage());
-        }
-    }
+            showIntermediateMessageToUser(getString(R.string.comment_q_action_updating));
 
-    private void performRequestedAction(){
-        if (mNote != null) {
-            if (mActionType.equals(ARG_ACTION_LIKE)) {
-                likeComment();
-            } else if (mActionType.equals(ARG_ACTION_APPROVE)) {
-                approveComment();
-            } else if (mActionType.equals(ARG_ACTION_REPLY)) {
-                replyToComment();
+            if (mActionType != null) {
+                RestRequest.Listener listener =
+                        new RestRequest.Listener() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                if (response != null && !response.optBoolean("success")) {
+                                    //build the Note object here
+                                    buildNoteFromJSONObject(response);
+                                    performRequestedAction();
+                                }
+                            }
+                        };
+
+                RestRequest.ErrorListener errorListener =
+                        new RestRequest.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                requestFailed(mActionType);
+                            }
+                        };
+
+                getNoteFromNoteId(mNoteId, listener, errorListener);
+
             } else {
-                // add other actions here
-                //no op
                 requestFailed(null);
             }
-        } else {
-            requestFailed(null);
-        }
-    }
 
-    /*
-     * called when action has been completed successfully
-     */
-    private void requestCompleted(String actionType) {
-        String successMessage = null;
-        if (actionType != null) {
-            if (actionType.equals(ARG_ACTION_LIKE)) {
-                successMessage = getString(R.string.comment_liked);
-            } else if (actionType.equals(ARG_ACTION_APPROVE)) {
-                successMessage = getString(R.string.comment_moderated_approved);
-            } else if (actionType.equals(ARG_ACTION_REPLY)) {
-                successMessage = getString(R.string.note_reply_successful);
+        }
+
+        private void obtainReplyTextFromRemoteInputBundle(Bundle bundle) {
+            CharSequence replyText = bundle.getCharSequence(EXTRA_VOICE_OR_INLINE_REPLY);
+            if (replyText != null) {
+                mReplyText = replyText.toString();
             }
-        } else {
-            //show generic success message here
-            successMessage = getString(R.string.comment_q_action_done_generic);
         }
 
-        //show temporal notification indicating the operation succeeded
-        showFinalMessageToUser(successMessage);
-
-        //remove the original notification from the system bar
-        GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, mNoteId);
-
-        //after 3 seconds, dismiss the temporal notification that indicated success
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                dismissProcessingNotification();
-            }}, 3000); // show the success message for 3 seconds, then dismiss
-    }
-
-    /*
-     * called when action failed
-     */
-    private void requestFailed(String actionType) {
-        String errorMessage = null;
-        if (actionType != null) {
-            if (actionType.equals(ARG_ACTION_LIKE)) {
-                errorMessage = getString(R.string.error_notif_q_action_like);
-            } else if (actionType.equals(ARG_ACTION_APPROVE)) {
-                errorMessage = getString(R.string.error_notif_q_action_approve);
-            } else if (actionType.equals(ARG_ACTION_REPLY)) {
-                errorMessage = getString(R.string.error_notif_q_action_reply);
-            }
-        } else {
-            //show generic error here
-            errorMessage = getString(R.string.error_generic);
-        }
-        showFinalMessageToUser(errorMessage);
-    }
-
-    private void showIntermediateMessageToUser(String message) {
-        showMessageToUser(message, true);
-    }
-
-    private void showFinalMessageToUser(String message) {
-        showMessageToUser(message, false);
-    }
-
-    private void showMessageToUser(String message, boolean intermediateMessage) {
-        NotificationCompat.Builder builder = getBuilder().setContentText(message).setTicker(message);
-        builder.setProgress(0, 0, intermediateMessage);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(ACTIONS_RESULT_NOTIFICATION_ID, builder.build());
-    }
-
-    private NotificationCompat.Builder getBuilder() {
-        String title = getString(R.string.app_name);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setContentTitle(title)
-                .setAutoCancel(true);
-                //.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-        return builder;
-    }
-    private void getNoteFromNoteId(String noteId, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
-        if (noteId == null) return;
-
-        HashMap<String, String> params = new HashMap<>();
-        WordPress.getRestClientUtils().getNotification(params,
-                noteId, listener, errorListener
-        );
-    }
-
-    // Like or unlike a comment via the REST API
-    private void likeComment() {
-        if (mNote == null) return;
-
-        // Bump analytics
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_LIKED);
-
-        WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
-                String.valueOf(mNote.getCommentId()),
-                true,
-                new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if (response != null && response.optBoolean("success")) {
-                            requestCompleted(ARG_ACTION_LIKE);
-                        }
+        private void buildNoteFromJSONObject(JSONObject jsonObject) {
+            try {
+                if (jsonObject.has("notes")) {
+                    JSONArray jsonArray = jsonObject.getJSONArray("notes");
+                    if (jsonArray != null && jsonArray.length() == 1) {
+                        jsonObject = jsonArray.getJSONObject(0);
                     }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        requestFailed(ARG_ACTION_LIKE);
-                    }
-                });
-    }
-
-    private void approveComment(){
-        if (mNote == null) return;
-
-        // Bump analytics
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
-
-        CommentActions.moderateCommentForNote(mNote, CommentStatus.APPROVED, new CommentActions.CommentActionListener() {
-            @Override
-            public void onActionResult(CommentActionResult result) {
-                if (result != null && result.isSuccess()) {
-                    requestCompleted(ARG_ACTION_APPROVE);
-                } else {
-                    requestFailed(ARG_ACTION_APPROVE);
                 }
+                mNote = new Note.Schema().build(mNoteId, jsonObject);
+
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
             }
-        });
+        }
 
-    }
+        private void performRequestedAction(){
+            if (mNote != null) {
+                if (mActionType.equals(ARG_ACTION_LIKE)) {
+                    likeComment();
+                } else if (mActionType.equals(ARG_ACTION_APPROVE)) {
+                    approveComment();
+                } else if (mActionType.equals(ARG_ACTION_REPLY)) {
+                    replyToComment();
+                } else {
+                    // add other actions here
+                    //no op
+                    requestFailed(null);
+                }
+            } else {
+                requestFailed(null);
+            }
+        }
 
-    private void replyToComment(){
-        if (mNote == null) return;
+        /*
+         * called when action has been completed successfully
+         */
+        private void requestCompleted(String actionType) {
+            String successMessage = null;
+            if (actionType != null) {
+                if (actionType.equals(ARG_ACTION_LIKE)) {
+                    successMessage = getString(R.string.comment_liked);
+                } else if (actionType.equals(ARG_ACTION_APPROVE)) {
+                    successMessage = getString(R.string.comment_moderated_approved);
+                } else if (actionType.equals(ARG_ACTION_REPLY)) {
+                    successMessage = getString(R.string.note_reply_successful);
+                }
+            } else {
+                //show generic success message here
+                successMessage = getString(R.string.comment_q_action_done_generic);
+            }
 
-        // Bump analytics
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
+            //show temporal notification indicating the operation succeeded
+            showFinalMessageToUser(successMessage);
 
+            //remove the original notification from the system bar
+            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(mContext, mNoteId);
 
-        if (!TextUtils.isEmpty(mReplyText)) {
-            CommentActions.submitReplyToCommentNote(mNote, mReplyText, new CommentActions.CommentActionListener() {
+            //after 3 seconds, dismiss the temporal notification that indicated success
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    dismissProcessingNotification();
+                }}, 3000); // show the success message for 3 seconds, then dismiss
+
+            stopSelf(mTaskId);
+        }
+
+        /*
+         * called when action failed
+         */
+        private void requestFailed(String actionType) {
+            String errorMessage = null;
+            if (actionType != null) {
+                if (actionType.equals(ARG_ACTION_LIKE)) {
+                    errorMessage = getString(R.string.error_notif_q_action_like);
+                } else if (actionType.equals(ARG_ACTION_APPROVE)) {
+                    errorMessage = getString(R.string.error_notif_q_action_approve);
+                } else if (actionType.equals(ARG_ACTION_REPLY)) {
+                    errorMessage = getString(R.string.error_notif_q_action_reply);
+                }
+            } else {
+                //show generic error here
+                errorMessage = getString(R.string.error_generic);
+            }
+            showFinalMessageToUser(errorMessage);
+
+            stopSelf(mTaskId);
+        }
+
+        private void requestFailedWithMessage(String actionType, String errorMessage) {
+            if (errorMessage == null) {
+                //show generic error here
+                errorMessage = getString(R.string.error_generic);
+            }
+            showFinalMessageToUser(errorMessage);
+
+            stopSelf(mTaskId);
+        }
+
+        private void showIntermediateMessageToUser(String message) {
+            showMessageToUser(message, true);
+        }
+
+        private void showFinalMessageToUser(String message) {
+            showMessageToUser(message, false);
+        }
+
+        private void showMessageToUser(String message, boolean intermediateMessage) {
+            NotificationCompat.Builder builder = getBuilder().setContentText(message).setTicker(message);
+            builder.setProgress(0, 0, intermediateMessage);
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
+            notificationManager.notify(ACTIONS_RESULT_NOTIFICATION_ID, builder.build());
+        }
+
+        private NotificationCompat.Builder getBuilder() {
+            String title = getString(R.string.app_name);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setColor(getResources().getColor(R.color.blue_wordpress))
+                    .setContentTitle(title)
+                    .setAutoCancel(true);
+            return builder;
+        }
+        private void getNoteFromNoteId(String noteId, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
+            if (noteId == null) return;
+
+            HashMap<String, String> params = new HashMap<>();
+            WordPress.getRestClientUtils().getNotification(params,
+                    noteId, listener, errorListener
+            );
+        }
+
+        // Like or unlike a comment via the REST API
+        private void likeComment() {
+            if (mNote == null) return;
+
+            // Bump analytics
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_LIKED);
+
+            WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
+                    String.valueOf(mNote.getCommentId()),
+                    true,
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (response != null && response.optBoolean("success")) {
+                                requestCompleted(ARG_ACTION_LIKE);
+                            }
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            requestFailed(ARG_ACTION_LIKE);
+                        }
+                    });
+        }
+
+        private void approveComment(){
+            if (mNote == null) return;
+
+            // Bump analytics
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
+
+            CommentActions.moderateCommentForNote(mNote, CommentStatus.APPROVED, new CommentActions.CommentActionListener() {
                 @Override
                 public void onActionResult(CommentActionResult result) {
                     if (result != null && result.isSuccess()) {
-                        requestCompleted(ARG_ACTION_REPLY);
+                        requestCompleted(ARG_ACTION_APPROVE);
                     } else {
-                        requestFailed(ARG_ACTION_REPLY);
+                        requestFailed(ARG_ACTION_APPROVE);
                     }
                 }
             });
-        } else {
-            //cancel the progressing notification
-            dismissProcessingNotification();
-            hideStatusBar();
-            //and just trigger the Activity to allow the user to write a reply
-            startReplyToCommentActivity();
+
         }
-    }
 
-    private void dismissProcessingNotification() {
-        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.cancel(ACTIONS_RESULT_NOTIFICATION_ID);
-    }
+        private void replyToComment(){
+            if (mNote == null) return;
 
-    private void startReplyToCommentActivity() {
-        Intent intent = new Intent(this, WPMainActivity.class);
-        intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setAction("android.intent.action.MAIN");
-        intent.addCategory("android.intent.category.LAUNCHER");
-        intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
-        intent.putExtra(NOTE_INSTANT_REPLY_EXTRA, true);
-        startActivity(intent);
-    }
+            // Bump analytics
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
 
-    private void hideStatusBar() {
-        Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        sendBroadcast(closeIntent);
-    }
 
+            if (!TextUtils.isEmpty(mReplyText)) {
+                CommentActions.submitReplyToCommentNote(mNote, mReplyText, new CommentActions.CommentActionListener() {
+                    @Override
+                    public void onActionResult(CommentActionResult result) {
+                        if (result != null && result.isSuccess()) {
+                            requestCompleted(ARG_ACTION_REPLY);
+                        } else {
+                            if (result != null && result.getMessage() != null) {
+                                requestFailedWithMessage(ARG_ACTION_REPLY, result.getMessage());
+                            } else {
+                                requestFailed(ARG_ACTION_REPLY);
+                            }
+                        }
+                    }
+                });
+            } else {
+                //cancel the progressing notification
+                dismissProcessingNotification();
+                hideStatusBar();
+                //and just trigger the Activity to allow the user to write a reply
+                startReplyToCommentActivity();
+            }
+        }
+
+        private void dismissProcessingNotification() {
+            final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
+            notificationManager.cancel(ACTIONS_RESULT_NOTIFICATION_ID);
+        }
+
+        private void startReplyToCommentActivity() {
+            Intent intent = new Intent(mContext, WPMainActivity.class);
+            intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setAction("android.intent.action.MAIN");
+            intent.addCategory("android.intent.category.LAUNCHER");
+            intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
+            intent.putExtra(NOTE_INSTANT_REPLY_EXTRA, true);
+            startActivity(intent);
+        }
+
+        private void hideStatusBar() {
+            Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            sendBroadcast(closeIntent);
+        }
+
+    }
 }

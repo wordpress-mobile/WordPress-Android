@@ -268,7 +268,9 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
-        if (GCMMessageService.getNotificationsCount() == 1) {
+        //it could be that a notification has been tapped but has been removed by the time we reach
+        //here. It's ok to compare to <=1 as it could be zero then.
+        if (GCMMessageService.getNotificationsCount() <= 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
                 GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);

@@ -306,7 +306,7 @@ public class GCMMessageService extends GcmListenerService {
             commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
 
-        PendingIntent commentReplyPendingIntent =  PendingIntent.getService(this, 0, commentReplyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent commentReplyPendingIntent =  PendingIntent.getService(this, 0, commentReplyIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         /*
         The following code adds the behavior for Direct reply, available on Android N (7.0) and on.
