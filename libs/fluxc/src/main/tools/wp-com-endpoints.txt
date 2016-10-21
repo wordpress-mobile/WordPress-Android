@@ -9,6 +9,7 @@
 /sites/$site/posts/
 /sites/$site/posts/$post_ID/
 /sites/$site/posts/$post_ID/delete/
+/sites/$site/posts/$post_ID/replies/new
 /sites/$site/posts/new/
 
 /sites/$site/media/
@@ -16,6 +17,14 @@
 /sites/$site/media/$media_ID/delete/
 /sites/$site/media/new/
 
+/sites/$site/comments/
+/sites/$site/comments/$comment_ID
+/sites/$site/comments/$comment_ID/delete
+/sites/$site/comments/$comment_ID/replies/new
+/sites/$site/comments/$comment_ID/likes/new
+/sites/$site/comments/$comment_ID/likes/mine/delete
+
 /sites/$site/taxonomies/$taxonomy#String/terms/
 /sites/$site/taxonomies/$taxonomy#String/terms/new/
+
 /users/new/
