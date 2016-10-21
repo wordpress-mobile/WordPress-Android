@@ -14,25 +14,25 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
 
 public class EditPostPreviewFragment extends Fragment {
-    // TODO: remove mActivity and rely on getActivity()
-    private EditPostActivity mActivity;
     private WebView mWebView;
     private TextView mTextView;
     private LoadPostPreviewTask mLoadTask;
 
     private SiteModel mSite;
+    private PostModel mPost;
 
-    public static EditPostPreviewFragment newInstance(SiteModel site) {
+    public static EditPostPreviewFragment newInstance(SiteModel site, PostModel post) {
         EditPostPreviewFragment fragment = new EditPostPreviewFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
+        bundle.putSerializable(EditPostActivity.EXTRA_POST, post);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -41,6 +41,7 @@ public class EditPostPreviewFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(EditPostActivity.EXTRA_POST, mPost);
     }
 
     @Override
@@ -53,11 +54,14 @@ public class EditPostPreviewFragment extends Fragment {
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+                mPost = (PostModel) getArguments().getSerializable(EditPostActivity.EXTRA_POST);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(EditPostActivity.EXTRA_POST);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mPost = (PostModel) savedInstanceState.getSerializable(EditPostActivity.EXTRA_POST);
         }
 
         if (mSite == null) {
@@ -67,10 +71,7 @@ public class EditPostPreviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mActivity = (EditPostActivity)getActivity();
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.edit_post_preview_fragment, container, false);
         mWebView = (WebView) rootView.findViewById(R.id.post_preview_webview);
@@ -78,7 +79,7 @@ public class EditPostPreviewFragment extends Fragment {
         mTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (mActivity != null) {
+                if (getActivity() != null) {
                     loadPost();
                 }
                 mTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
@@ -92,7 +93,7 @@ public class EditPostPreviewFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (mActivity != null && !mTextView.isLayoutRequested()) {
+        if (getActivity() != null && !mTextView.isLayoutRequested()) {
             loadPost();
         }
     }
@@ -120,24 +121,28 @@ public class EditPostPreviewFragment extends Fragment {
         protected Spanned doInBackground(Void... params) {
             Spanned contentSpannable;
 
-            if (mActivity == null || mActivity.getPost() == null) {
+            if (getActivity() == null) {
                 return null;
             }
 
-            Post post = mActivity.getPost();
+            if (mPost == null) {
+                return null;
+            }
 
-            String postTitle = "<h1>" + post.getTitle() + "</h1>";
-            String postContent = postTitle + post.getDescription() + "\n\n" + post.getMoreText();
+            String postTitle = "<h1>" + mPost.getTitle() + "</h1>";
+            String postContent = postTitle + mPost.getContent();
 
-            if (post.isLocalDraft()) {
+            if (mPost.isLocalDraft()) {
                 contentSpannable = WPHtml.fromHtml(
                         postContent.replaceAll("\uFFFC", ""),
-                        mActivity,
-                        post,
+                        getActivity(),
+                        mPost,
                         Math.min(mTextView.getWidth(), mTextView.getHeight())
                 );
             } else {
-                String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"webview.css\" /></head><body><div id=\"container\">%s</div></body></html>";
+                String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" " +
+                        "type=\"text/css\" href=\"webview.css\" /></head><body><div " +
+                        "id=\"container\">%s</div></body></html>";
                 htmlText = String.format(htmlText, StringUtils.addPTags(postContent));
                 contentSpannable = new SpannableString(htmlText);
             }
@@ -147,8 +152,8 @@ public class EditPostPreviewFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Spanned spanned) {
-            if (mActivity != null && mActivity.getPost() != null && spanned != null) {
-                if (mActivity.getPost().isLocalDraft()) {
+            if (mPost != null && spanned != null) {
+                if (mPost.isLocalDraft()) {
                     mTextView.setVisibility(View.VISIBLE);
                     mWebView.setVisibility(View.GONE);
                     mTextView.setText(spanned);

@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Post;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -38,26 +38,27 @@ import javax.inject.Inject;
 
 /**
  * Activity for opening external WordPress links in a webview.
- *
+ * <p/>
  * Try to use one of the methods below to open the webview:
  * - openURL
  * - openUrlByUsingMainWPCOMCredentials
  * - openUrlByUsingWPCOMCredentials
  * - openUrlByUsingBlogCredentials (for self hosted sites)
- *
- * If you need to start the activity with delay, start activity with result, or none of the methods above are enough for your needs,
+ * <p/>
+ * If you need to start the activity with delay, start activity with result, or none of the methods above are enough
+ * for your needs,
  * you can start the activity by passing the required parameters, depending on what you need to do.
- *
+ * <p/>
  * 1. Load a simple URL (without any kind of authentication)
  * - Start the activity with the parameter URL_TO_LOAD set to the URL to load.
- *
+ * <p/>
  * 2. Load a WordPress.com URL
  * Start the activity with the following parameters:
  * - URL_TO_LOAD: target URL to load in the webview.
  * - AUTHENTICATION_URL: The address of the WordPress.com authentication endpoint. Please use WPCOM_LOGIN_URL.
  * - AUTHENTICATION_USER: username.
  * - AUTHENTICATION_PASSWD: password.
- *
+ * <p/>
  * 3. Load a WordPress.org URL with authentication
  * - URL_TO_LOAD: target URL to load in the webview.
  * - AUTHENTICATION_URL: The address of the authentication endpoint. Please use the value of getSiteLoginUrl()
@@ -67,7 +68,6 @@ import javax.inject.Inject;
  * - LOCAL_BLOG_ID: local id of the blog in the app database. This is required since some blogs could have HTTP Auth,
  * or self-signed certs in place.
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
- *
  */
 public class WPWebViewActivity extends WebViewActivity {
     public static final String AUTHENTICATION_URL = "authenticated_url";
@@ -101,7 +101,7 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     // Note: The webview has links disabled
-    public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, Post post, String url) {
+    public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -136,6 +136,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static void openURL(Context context, String url) {
         openURL(context, url, null);
     }
+
     public static void openURL(Context context, String url, String referrer) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
@@ -296,7 +297,6 @@ public class WPWebViewActivity extends WebViewActivity {
 
     /**
      * Login to the WordPress.com and load the specified URL.
-     *
      */
     protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password) {
         String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password,
@@ -305,7 +305,8 @@ public class WPWebViewActivity extends WebViewActivity {
         mWebView.postUrl(authenticationURL, postData.getBytes());
     }
 
-    public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username, String password, String token) {
+    public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username,
+            String password, String token) {
         if (TextUtils.isEmpty(authenticationUrl)) return "";
 
         try {
@@ -335,9 +336,7 @@ public class WPWebViewActivity extends WebViewActivity {
      * @return URL of the login page.
      */
     public static String getSiteLoginUrl(SiteModel site) {
-        String loginURL = null;
-        // TODO: STORES: missing with getLoginUrl() in SiteStore
-        // String loginURL = site.getLoginUrl();
+        String loginURL = site.getLoginUrl();
 
         // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
         if (loginURL == null) {

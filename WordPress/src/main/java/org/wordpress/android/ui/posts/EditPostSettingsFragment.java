@@ -42,17 +42,17 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.json.JSONArray;
+import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostLocation;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostLocation;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
@@ -64,10 +64,10 @@ import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManag
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
@@ -89,14 +89,13 @@ public class EditPostSettingsFragment extends Fragment
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
     private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
 
-    private Post mPost;
+    private PostModel mPost;
+    private SiteModel mSite;
 
     private Spinner mStatusSpinner, mPostFormatSpinner;
     private EditText mPasswordEditText, mExcerptEditText;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
-    private ViewGroup mRootView;
-    private TextView mFeaturedImageLabel;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
     private SuggestionAutoCompleteText mTagsEditText;
@@ -105,28 +104,29 @@ public class EditPostSettingsFragment extends Fragment
 
     private long mFeaturedImageId;
 
+    // TODO: Should be List<TaxonomyModel>
     private ArrayList<String> mCategories;
 
     private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private long mCustomPubDate = 0;
+    private String mCustomPubDate = "";
     private boolean mIsCustomPubDate;
 
     private String[] mPostFormats;
     private String[] mPostFormatTitles;
 
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
-    private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
 
-    public static EditPostSettingsFragment newInstance(SiteModel site) {
+    public static EditPostSettingsFragment newInstance(SiteModel site, PostModel post) {
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
+        bundle.putSerializable(EditPostActivity.EXTRA_POST, post);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -145,11 +145,14 @@ public class EditPostSettingsFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+                mPost = (PostModel) getArguments().getSerializable(EditPostActivity.EXTRA_POST);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(EditPostActivity.EXTRA_POST);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mPost = (PostModel) savedInstanceState.getSerializable(EditPostActivity.EXTRA_POST);
         }
 
         if (mSite == null) {
@@ -178,10 +181,9 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mPost = ((EditPostActivity) getActivity()).getPost();
-        mRootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
 
-        if (mRootView == null || mPost == null) {
+        if (rootView == null || mPost == null) {
             return null;
         }
 
@@ -191,13 +193,14 @@ public class EditPostSettingsFragment extends Fragment
         mDay = c.get(Calendar.DAY_OF_MONTH);
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
-        mCategories = new ArrayList<String>();
+        // TODO: TaxonomyStore
+        //mCategories = new ArrayList<String>();
 
-        mExcerptEditText = (EditText) mRootView.findViewById(R.id.postExcerpt);
-        mPasswordEditText = (EditText) mRootView.findViewById(R.id.post_password);
-        mPubDateText = (TextView) mRootView.findViewById(R.id.pubDate);
+        mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
+        mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
+        mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
-        mStatusSpinner = (Spinner) mRootView.findViewById(R.id.status);
+        mStatusSpinner = (Spinner) rootView.findViewById(R.id.status);
         mStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -209,11 +212,11 @@ public class EditPostSettingsFragment extends Fragment
 
             }
         });
-        mSectionCategories = ((ViewGroup) mRootView.findViewById(R.id.sectionCategories));
+        mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
 
-        mFeaturedImageLabel = (TextView) mRootView.findViewById(R.id.featuredImageLabel);
-        mFeaturedImageView = (NetworkImageView) mRootView.findViewById(R.id.featuredImage);
-        mFeaturedImageButton = (Button) mRootView.findViewById(R.id.addFeaturedImage);
+        TextView featuredImageLabel = (TextView) rootView.findViewById(R.id.featuredImageLabel);
+        mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.featuredImage);
+        mFeaturedImageButton = (Button) rootView.findViewById(R.id.addFeaturedImage);
 
         if (AppPrefs.isVisualEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
@@ -231,17 +234,17 @@ public class EditPostSettingsFragment extends Fragment
                 }
             });
         } else {
-            mFeaturedImageLabel.setVisibility(View.GONE);
+            featuredImageLabel.setVisibility(View.GONE);
             mFeaturedImageView.setVisibility(View.GONE);
             mFeaturedImageButton.setVisibility(View.GONE);
         }
 
         if (mPost.isPage()) { // remove post specific views
             mExcerptEditText.setVisibility(View.GONE);
-            mRootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
-            mRootView.findViewById(R.id.sectionCategories).setVisibility(View.GONE);
-            mRootView.findViewById(R.id.postFormatLabel).setVisibility(View.GONE);
-            mRootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
+            rootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
+            rootView.findViewById(R.id.sectionCategories).setVisibility(View.GONE);
+            rootView.findViewById(R.id.postFormatLabel).setVisibility(View.GONE);
+            rootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
         } else {
             // Default values
             mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
@@ -263,7 +266,7 @@ public class EditPostSettingsFragment extends Fragment
                     mPostFormatTitles[i] = getResources().getString(R.string.post_format_standard);
                     i += 1;
                 }
-                for (PostFormatModel postFormatModel: postFormatModels) {
+                for (PostFormatModel postFormatModel : postFormatModels) {
                     mPostFormats[i] = postFormatModel.getSlug();
                     mPostFormatTitles[i] = postFormatModel.getDisplayName();
                     i += 1;
@@ -271,7 +274,7 @@ public class EditPostSettingsFragment extends Fragment
             }
 
             // Set up the Post Format spinner
-            mPostFormatSpinner = (Spinner) mRootView.findViewById(R.id.postFormat);
+            mPostFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
             ArrayAdapter<String> pfAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item,
                     mPostFormatTitles);
             pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -296,7 +299,7 @@ public class EditPostSettingsFragment extends Fragment
                     }
             );
 
-            mTagsEditText = (SuggestionAutoCompleteText) mRootView.findViewById(R.id.tags);
+            mTagsEditText = (SuggestionAutoCompleteText) rootView.findViewById(R.id.tags);
             if (mTagsEditText != null) {
                 mTagsEditText.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
 
@@ -306,8 +309,8 @@ public class EditPostSettingsFragment extends Fragment
 
         initSettingsFields();
         populateSelectedCategories();
-        initLocation(mRootView);
-        return mRootView;
+        initLocation(rootView);
+        return rootView;
     }
 
     @Override
@@ -345,12 +348,12 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        mExcerptEditText.setText(mPost.getPostExcerpt());
+        mExcerptEditText.setText(mPost.getExcerpt());
 
-        String[] items = new String[]{ getResources().getString(R.string.publish_post),
-                                       getResources().getString(R.string.draft),
-                                       getResources().getString(R.string.pending_review),
-                                       getResources().getString(R.string.post_private) };
+        String[] items = new String[]{getResources().getString(R.string.publish_post),
+                getResources().getString(R.string.draft),
+                getResources().getString(R.string.pending_review),
+                getResources().getString(R.string.post_private)};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -364,16 +367,16 @@ public class EditPostSettingsFragment extends Fragment
                 }
         );
 
-        long pubDate = mPost.getDate_created_gmt();
-        if (pubDate != 0) {
+        String pubDate = mPost.getDateCreated();
+        if (StringUtils.isNotEmpty(pubDate)) {
             try {
                 int flags = 0;
                 flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
                 flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
                 flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
                 flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-                String formattedDate = DateUtils.formatDateTime(getActivity(), pubDate,
-                        flags);
+                String formattedDate = DateUtils.formatDateTime(getActivity(),
+                        DateTimeUtils.timestampFromIso8601Millis(pubDate), flags);
                 mPubDateText.setText(formattedDate);
             } catch (RuntimeException e) {
                 AppLog.e(T.POSTS, e);
@@ -384,7 +387,7 @@ public class EditPostSettingsFragment extends Fragment
             mPasswordEditText.setText(mPost.getPassword());
         }
 
-        switch (mPost.getStatusEnum()) {
+        switch (PostStatus.fromPost(mPost)) {
             case PUBLISHED:
             case SCHEDULED:
             case UNKNOWN:
@@ -401,15 +404,14 @@ public class EditPostSettingsFragment extends Fragment
                 break;
         }
 
-        if (!mPost.isPage()) {
-            if (mPost.getJSONCategories() != null) {
-                mCategories = JSONUtils.fromJSONArrayToStringList(mPost.getJSONCategories());
-            }
-        }
-        String tags = mPost.getKeywords();
-        if (!tags.equals("")) {
-            mTagsEditText.setText(tags);
-        }
+        // TODO: Re-implement when we can have access to category names from IDs via TaxonomyStore
+//        if (!mPost.isPage()) {
+//            mCategories = mPost.getCategoryIdList();
+//        }
+//        String tags = mPost.getKeywords();
+//        if (!tags.equals("")) {
+//            mTagsEditText.setText(tags);
+//        }
 
         if (AppPrefs.isVisualEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
@@ -453,18 +455,18 @@ public class EditPostSettingsFragment extends Fragment
         ActivityLauncher.viewMediaGalleryPickerForSite(getActivity(), mSite);
     }
 
-    private String getPostStatusForSpinnerPosition(int position) {
+    private PostStatus getPostStatusForSpinnerPosition(int position) {
         switch (position) {
             case 0:
-                return PostStatus.toString(PostStatus.PUBLISHED);
+                return PostStatus.PUBLISHED;
             case 1:
-                return PostStatus.toString(PostStatus.DRAFT);
+                return PostStatus.DRAFT;
             case 2:
-                return PostStatus.toString(PostStatus.PENDING);
+                return PostStatus.PENDING;
             case 3:
-                return PostStatus.toString(PostStatus.PRIVATE);
+                return PostStatus.PRIVATE;
             default:
-                return PostStatus.toString(PostStatus.UNKNOWN);
+                return PostStatus.UNKNOWN;
         }
     }
 
@@ -595,8 +597,8 @@ public class EditPostSettingsFragment extends Fragment
                         mHour = timePicker.getCurrentHour();
                         mMinute = timePicker.getCurrentMinute();
 
-                        Date d = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
-                        long timestamp = d.getTime();
+                        Date javaDate = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
+                        long javaTimestamp = javaDate.getTime();
 
                         try {
                             int flags = 0;
@@ -604,8 +606,8 @@ public class EditPostSettingsFragment extends Fragment
                             flags |= DateUtils.FORMAT_ABBREV_MONTH;
                             flags |= DateUtils.FORMAT_SHOW_YEAR;
                             flags |= DateUtils.FORMAT_SHOW_TIME;
-                            String formattedDate = DateUtils.formatDateTime(getActivity(), timestamp, flags);
-                            mCustomPubDate = timestamp;
+                            String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, flags);
+                            mCustomPubDate = DateTimeUtils.iso8601FromDate(javaDate);
                             mPubDateText.setText(formattedDate);
                             mIsCustomPubDate = true;
 
@@ -633,22 +635,21 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         String password = EditTextUtils.getText(mPasswordEditText);
-        String pubDate = EditTextUtils.getText(mPubDateText);
         String excerpt = EditTextUtils.getText(mExcerptEditText);
+        boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
-        long pubDateTimestamp = 0;
-        if (mIsCustomPubDate && pubDate.equals(getText(R.string.immediately)) && !mPost.isLocalDraft()) {
-            Date d = new Date();
-            pubDateTimestamp = d.getTime();
-        } else if (!pubDate.equals(getText(R.string.immediately))) {
-            if (mIsCustomPubDate)
-                pubDateTimestamp = mCustomPubDate;
-            else if (mPost.getDate_created_gmt() > 0)
-                pubDateTimestamp = mPost.getDate_created_gmt();
-        } else if (pubDate.equals(getText(R.string.immediately)) && mPost.isLocalDraft()) {
-            mPost.setDate_created_gmt(0);
-            mPost.setDateCreated(0);
+        String publicationDateIso8601 = "";
+        if (mIsCustomPubDate && publishImmediately && !mPost.isLocalDraft()) {
+            publicationDateIso8601 = DateTimeUtils.iso8601FromDate(new Date());
+        } else if (!publishImmediately) {
+            if (mIsCustomPubDate) {
+                publicationDateIso8601 = mCustomPubDate;
+            } else if (StringUtils.isNotEmpty(mPost.getDateCreated())) {
+                publicationDateIso8601 = mPost.getDateCreated();
+            }
         }
+
+        mPost.setDateCreated(publicationDateIso8601);
 
         String tags = "", postFormat = "";
         if (!mPost.isPage()) {
@@ -656,41 +657,39 @@ public class EditPostSettingsFragment extends Fragment
 
             // post format
             if (mPostFormats != null && mPostFormatSpinner != null &&
-                mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
+                    mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
                 postFormat = mPostFormats[mPostFormatSpinner.getSelectedItemPosition()];
             }
         }
 
         String status;
         if (mStatusSpinner != null) {
-            status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
+            status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition()).toString();
         } else {
-            status = mPost.getPostStatus();
-        }
-
-        // We want to flag this post as having changed statuses from draft to published so that we
-        // properly track stats we care about for when users first publish posts.
-        if (!mPost.isLocalDraft() && mPost.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
-                && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
-            mPost.setChangedFromDraftToPublished(true);
+            status = mPost.getStatus();
         }
 
         if (mPost.supportsLocation()) {
-            mPost.setLocation(mPostLocation);
+            if (mPostLocation == null) {
+                mPost.clearLocation();
+            } else {
+                mPost.setLocation(mPostLocation);
+            }
         }
 
-        if (mCategories != null) {
-            mPost.setJSONCategories(new JSONArray(mCategories));
-        }
+        // TODO: Implement when we have TaxonomyStore
+//        if (mCategories != null) {
+//            mPost.setJSONCategories(new JSONArray(mCategories));
+//        }
 
         if (AppPrefs.isVisualEditorEnabled()) {
             mPost.setFeaturedImageId(mFeaturedImageId);
         }
 
-        mPost.setPostExcerpt(excerpt);
-        mPost.setDate_created_gmt(pubDateTimestamp);
-        mPost.setKeywords(tags);
-        mPost.setPostStatus(status);
+        mPost.setExcerpt(excerpt);
+        // TODO: Implement when we have TaxonomyStore
+        //mPost.setKeywords(tags);
+        mPost.setStatus(status);
         mPost.setPassword(password);
         mPost.setPostFormat(postFormat);
     }
@@ -896,7 +895,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     public void searchLocation() {
-        if(!isAdded() || mLocationEditText == null) return;
+        if (!isAdded() || mLocationEditText == null) return;
 
         EditTextUtils.hideSoftInput(mLocationEditText);
         String location = EditTextUtils.getText(mLocationEditText);
@@ -952,7 +951,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void removeLocation() {
         mPostLocation = null;
-        mPost.unsetLocation();
+        mPost.clearLocation();
 
         updateLocationText("");
         setLocationStatus(LocationStatus.NONE);
@@ -1073,7 +1072,8 @@ public class EditPostSettingsFragment extends Fragment
 
         if (mCategories != null) {
             for (String categoryName : mCategories) {
-                AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button, null);
+                AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button,
+                        null);
                 if (categoryName != null && buttonCategory != null) {
                     buttonCategory.setText(Html.fromHtml(categoryName));
                     buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);

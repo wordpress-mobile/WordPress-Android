@@ -424,7 +424,7 @@ public class NotificationsListFragment extends Fragment
 
         int i = mFilterRadioGroup.getCheckedRadioButtonId();
         if (i == R.id.notifications_filter_unread) { // Create a new post
-            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), getSelectedSite(), false);
+            ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false);
         } else {// Switch to Reader tab
             if (getActivity() instanceof WPMainActivity) {
                 ((WPMainActivity) getActivity()).setReaderTabActive();
