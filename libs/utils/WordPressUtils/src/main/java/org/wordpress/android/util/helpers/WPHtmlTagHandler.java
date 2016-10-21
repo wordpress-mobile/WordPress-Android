@@ -7,7 +7,8 @@ import android.text.style.LeadingMarginSpan;
 
 import org.xml.sax.XMLReader;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handle tags that the Html class doesn't understand
@@ -15,7 +16,7 @@ import java.util.Vector;
  */
 public class WPHtmlTagHandler implements Html.TagHandler {
     private int mListItemCount = 0;
-    private Vector<String> mListParents = new Vector<String>();
+    private List<String> mListParents = new ArrayList<>();
 
     @Override
     public void handleTag(final boolean opening, final String tag, Editable output,
@@ -33,27 +34,30 @@ public class WPHtmlTagHandler implements Html.TagHandler {
     }
 
     private void handleListTag(Editable output) {
-        if (mListParents.lastElement().equals("ul")) {
-            output.append("\n");
-            String[] split = output.toString().split("\n");
-            int start = 0;
-            if (split.length != 1) {
-                int lastIndex = split.length - 1;
-                start = output.length() - split[lastIndex].length() - 1;
+        int size = mListParents.size();
+        if (size > 0) {
+            if (mListParents.get(size - 1).equals("ul")) {
+                output.append("\n");
+                String[] split = output.toString().split("\n");
+                int start = 0;
+                if (split.length != 1) {
+                    int lastIndex = split.length - 1;
+                    start = output.length() - split[lastIndex].length() - 1;
+                }
+                output.setSpan(new BulletSpan(15 * mListParents.size()), start, output.length(), 0);
+            } else if (mListParents.get(size - 1).equals("ol")) {
+                mListItemCount++;
+                output.append("\n");
+                String[] split = output.toString().split("\n");
+                int start = 0;
+                if (split.length != 1) {
+                    int lastIndex = split.length - 1;
+                    start = output.length() - split[lastIndex].length() - 1;
+                }
+                output.insert(start, mListItemCount + ". ");
+                output.setSpan(new LeadingMarginSpan.Standard(15 * mListParents.size()), start,
+                        output.length(), 0);
             }
-            output.setSpan(new BulletSpan(15 * mListParents.size()), start, output.length(), 0);
-        } else if (mListParents.lastElement().equals("ol")) {
-            mListItemCount++;
-            output.append("\n");
-            String[] split = output.toString().split("\n");
-            int start = 0;
-            if (split.length != 1) {
-                int lastIndex = split.length - 1;
-                start = output.length() - split[lastIndex].length() - 1;
-            }
-            output.insert(start, mListItemCount + ". ");
-            output.setSpan(new LeadingMarginSpan.Standard(15 * mListParents.size()), start,
-                    output.length(), 0);
         }
     }
 }

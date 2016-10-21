@@ -565,7 +565,7 @@ public class WordPressDB {
     public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields,
                                                 int limit, boolean hideJetpackWithoutCredentials) {
         if (db == null) {
-            return new Vector<>();
+            return new ArrayList<>();
         }
 
         if (hideJetpackWithoutCredentials) {
@@ -591,7 +591,7 @@ public class WordPressDB {
         Cursor c = db.query(BLOGS_TABLE, allFields, byString, null, null, null, null, limitStr);
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> blogs = new Vector<>();
+        List<Map<String, Object>> blogs = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
             int id = c.getInt(0);
             String blogName = c.getString(1);
@@ -947,16 +947,16 @@ public class WordPressDB {
 
         c.moveToFirst();
 
-        List<String> returnVector = new Vector<String>();
+        List<String> list = new ArrayList<>();
         if (c.getString(0) != null) {
-            returnVector.add(c.getString(0));
-            returnVector.add(decryptPassword(c.getString(1)));
+            list.add(c.getString(0));
+            list.add(decryptPassword(c.getString(1)));
         } else {
-            returnVector = null;
+            list = null;
         }
         c.close();
 
-        return returnVector;
+        return list;
     }
 
     /*
@@ -1397,17 +1397,17 @@ public class WordPressDB {
                 "category_name" }, "blog_id=" + Integer.toString(id), null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
-        List<String> returnVector = new Vector<String>();
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < numRows; ++i) {
             String category_name = c.getString(2);
             if (category_name != null) {
-                returnVector.add(category_name);
+                list.add(category_name);
             }
             c.moveToNext();
         }
         c.close();
 
-        return returnVector;
+        return list;
     }
 
     public int getCategoryId(int id, String category) {
@@ -1468,12 +1468,12 @@ public class WordPressDB {
         String id, name;
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> blogs = new Vector<Map<String, Object>>();
+        List<Map<String, Object>> blogs = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
             id = c.getString(0);
             name = c.getString(2);
             if (id != null) {
-                Map<String, Object> thisHash = new HashMap<String, Object>();
+                Map<String, Object> thisHash = new HashMap<>();
 
                 thisHash.put("id", id);
                 thisHash.put("name", name);
