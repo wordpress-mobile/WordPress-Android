@@ -113,6 +113,7 @@ public class CommentStore extends Store {
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
         INVALID_COMMENT,
+        UNKNOWN_POST,
         DUPLICATE_COMMENT
     }
 
