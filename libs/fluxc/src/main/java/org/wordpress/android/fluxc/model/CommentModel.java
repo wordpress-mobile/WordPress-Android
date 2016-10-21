@@ -20,13 +20,13 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
     @Column private int mLocalSiteId;
     @Column private long mRemoteSiteId;
 
-    // Author
+    // Comment author
     @Column private String mAuthorUrl;
     @Column private String mAuthorName;
     @Column private String mAuthorEmail;
     @Column private String mAuthorProfileImageUrl;
 
-    //
+    // Comment data
     @Column private String mPostTitle;
     @Column private String mStatus;
     @Column private String mDatePublished;

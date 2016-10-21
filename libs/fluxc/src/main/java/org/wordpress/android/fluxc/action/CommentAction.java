@@ -38,7 +38,7 @@ public enum CommentAction implements IAction {
     @Action(payloadType = RemoteCommentResponsePayload.class)
     DELETED_COMMENT,
 
-    // Locale actions
+    // Local actions
     @Action(payloadType = InstantiateCommentPayload.class)
     INSTANTIATE_COMMENT,
     @Action(payloadType = CommentModel.class)
