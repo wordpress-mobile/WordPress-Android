@@ -51,6 +51,9 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
     public static final String ARG_NOTE_ID = "note_id";
 
+    /*
+    * Use this if you want the service to handle a background note Like.
+    * */
     public static void startServiceForLike(Context context, String noteId) {
         Intent intent = new Intent(context, NotificationsProcessingService.class);
         intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_LIKE);
@@ -58,6 +61,9 @@ public class NotificationsProcessingService extends Service {
         context.startService(intent);
     }
 
+    /*
+    * Use this if you want the service to handle a background note Approve.
+    * */
     public static void startServiceForApprove(Context context, String noteId) {
         Intent intent = new Intent(context, NotificationsProcessingService.class);
         intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_APPROVE);
@@ -65,6 +71,9 @@ public class NotificationsProcessingService extends Service {
         context.startService(intent);
     }
 
+    /*
+    * Use this if you want the service to handle a background note reply.
+    * */
     public static void startServiceForReply(Context context, String noteId, String replyToComment) {
         Intent intent = new Intent(context, NotificationsProcessingService.class);
         intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_REPLY);
@@ -302,13 +311,11 @@ public class NotificationsProcessingService extends Service {
         }
 
         private NotificationCompat.Builder getBuilder() {
-            String title = getString(R.string.app_name);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
+            return new NotificationCompat.Builder(mContext)
                     .setSmallIcon(R.drawable.notification_icon)
                     .setColor(getResources().getColor(R.color.blue_wordpress))
-                    .setContentTitle(title)
+                    .setContentTitle(getString(R.string.app_name))
                     .setAutoCancel(true);
-            return builder;
         }
         private void getNoteFromNoteId(String noteId, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
             if (noteId == null) return;
