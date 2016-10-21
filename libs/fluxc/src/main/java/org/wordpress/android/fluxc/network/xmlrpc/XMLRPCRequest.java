@@ -8,6 +8,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
@@ -59,8 +60,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
             Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             return Response.success(obj, HttpHeaderParser.parseCacheHeaders(response));
         } catch (XMLRPCFault e) {
-            // TODO: ParseError is probably not the right choice here
-            return Response.error(new ParseError(e));
+            return Response.error(new VolleyError(e));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
         } catch (IOException e) {
