@@ -287,13 +287,11 @@ public class NotificationsProcessingService extends Service {
         }
 
         private NotificationCompat.Builder getBuilder() {
-            String title = getString(R.string.app_name);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
+            return new NotificationCompat.Builder(mContext)
                     .setSmallIcon(R.drawable.notification_icon)
                     .setColor(getResources().getColor(R.color.blue_wordpress))
-                    .setContentTitle(title)
+                    .setContentTitle(getString(R.string.app_name))
                     .setAutoCancel(true);
-            return builder;
         }
         private void getNoteFromNoteId(String noteId, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
             if (noteId == null) return;
