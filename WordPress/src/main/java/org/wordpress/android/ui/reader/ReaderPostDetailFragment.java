@@ -820,14 +820,8 @@ public class ReaderPostDetailFragment extends Fragment
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
 
-            // don't show the header for blog preview
-            if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                headerView.setVisibility(View.GONE);
-            } else {
-                headerView.setVisibility(View.VISIBLE);
-                headerView.setPost(mPost);
-            }
 
+            headerView.setPost(mPost);
             tagStrip.setPost(mPost);
 
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
