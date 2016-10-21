@@ -112,7 +112,7 @@ public class CommentStore extends Store {
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
-        INVALID_COMMENT,
+        UNKNOWN_COMMENT,
         UNKNOWN_POST,
         DUPLICATE_COMMENT
     }
