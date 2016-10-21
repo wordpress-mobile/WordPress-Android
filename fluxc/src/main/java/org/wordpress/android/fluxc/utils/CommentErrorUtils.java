@@ -38,22 +38,22 @@ public class CommentErrorUtils {
         CommentErrorType errorType = CommentErrorType.GENERIC_ERROR;
         if (error.isGeneric()) {
             switch (error.type) {
-                case NOT_FOUND:
-                    errorType = CommentErrorType.INVALID_COMMENT;
-                    break;
                 case INVALID_RESPONSE:
                     errorType = CommentErrorType.INVALID_RESPONSE;
                     break;
             }
         }
-        // Duplicate comment on WPCom REST
         if (error instanceof WPComGsonNetworkError) {
             WPComGsonNetworkError wpComGsonNetworkError = (WPComGsonNetworkError) error;
+            // Duplicate comment on WPCom REST
             if ("comment_duplicate".equals(wpComGsonNetworkError.apiError)) {
                 errorType = CommentErrorType.DUPLICATE_COMMENT;
             }
             if ("unauthorized".equals(wpComGsonNetworkError.apiError)) {
                 errorType = CommentErrorType.AUTHORIZATION_REQUIRED;
+            }
+            if ("unknown_comment".equals(wpComGsonNetworkError.apiError)) {
+                errorType = CommentErrorType.INVALID_COMMENT;
             }
         }
         // Duplicate comment on XMLRPC
@@ -62,6 +62,9 @@ public class CommentErrorUtils {
             && ((XMLRPCFault) error.volleyError.getCause()).getFaultCode() == 409) {
             errorType = CommentErrorType.DUPLICATE_COMMENT;
         }
+        // Note: We get a 404 error reply via XMLRPC if the comment or post ids are invalid, there is no way to know
+        // the exact underlying error. It's described in the error message "Invalid post ID" for instance, but that
+        // error message is localized, so not great for parsing.
         return errorType;
     }
 
