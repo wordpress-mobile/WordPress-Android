@@ -33,7 +33,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
     }
 
-    public void pullSites(final String xmlrpcUrl, final String username, final String password) {
+    public void fetchSites(final String xmlrpcUrl, final String username, final String password) {
         List<Object> params = new ArrayList<>(2);
         params.add(username);
         params.add(password);
@@ -78,7 +78,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         XMLRPC_BLOG_OPTIONS.put("time_zone", "time_zone");
     }
 
-    public void pullSite(final SiteModel site) {
+    public void fetchSite(final SiteModel site) {
         List<Object> params = new ArrayList<>(2);
         params.add(site.getSiteId());
         params.add(site.getUsername());
@@ -105,8 +105,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    // TODO: rename s/pull/fetch/ methods in this file
-    public void pullPostFormats(final SiteModel site) {
+    public void fetchPostFormats(final SiteModel site) {
         List<Object> params = new ArrayList<>(2);
         params.add(site.getSiteId());
         params.add(site.getUsername());
