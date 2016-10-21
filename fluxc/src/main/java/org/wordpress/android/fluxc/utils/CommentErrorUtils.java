@@ -52,9 +52,12 @@ public class CommentErrorUtils {
             if ("unauthorized".equals(wpComGsonNetworkError.apiError)) {
                 errorType = CommentErrorType.AUTHORIZATION_REQUIRED;
             }
-            // Note: we also get this "unknown_comment" error when we try to comment on an unknown post.
+            // Note: we also get this "unknown_comment" error we we try to comment on the post with id=0.
             if ("unknown_comment".equals(wpComGsonNetworkError.apiError)) {
                 errorType = CommentErrorType.INVALID_COMMENT;
+            }
+            if ("unknown_post".equals(wpComGsonNetworkError.apiError)) {
+                errorType = CommentErrorType.UNKNOWN_POST;
             }
         }
         // Duplicate comment on XMLRPC
