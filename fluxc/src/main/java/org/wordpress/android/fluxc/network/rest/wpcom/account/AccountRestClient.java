@@ -135,7 +135,7 @@ public class AccountRestClient extends BaseWPComRestClient {
      *
      * No HTTP POST call is made if the given parameter map is null or contains no entries.
      */
-    public void postAccountSettings(Map<String, Object> body) {
+    public void pushAccountSettings(Map<String, Object> body) {
         if (body == null || body.isEmpty()) return;
         String url = WPCOMREST.me.settings.getUrlV1_1();
         // Note: we have to use a HashMap as a response here because the API response format is different depending
