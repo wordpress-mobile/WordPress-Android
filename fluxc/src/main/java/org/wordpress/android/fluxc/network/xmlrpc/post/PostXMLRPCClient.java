@@ -191,7 +191,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         if (method.equals(XMLRPC.NEW_POST) && response instanceof String) {
-                            post.setRemotePostId(Integer.valueOf((String) response));
+                            post.setRemotePostId(Long.valueOf((String) response));
                         }
                         post.setIsLocalDraft(false);
                         post.setIsLocallyChanged(false);
@@ -308,7 +308,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
 
         post.setLocalSiteId(site.getId());
-        post.setRemotePostId(Integer.valueOf(postID));
+        post.setRemotePostId(Long.valueOf(postID));
         post.setTitle(MapUtils.getMapStr(postMap, "post_title"));
 
         Date dateCreatedGmt = MapUtils.getMapDate(postMap, "post_date_gmt");

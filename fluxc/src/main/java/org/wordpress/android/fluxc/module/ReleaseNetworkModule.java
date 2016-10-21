@@ -17,9 +17,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
+import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
+import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.util.AppLog;
@@ -168,6 +170,23 @@ public class ReleaseNetworkModule {
                                                     AccessToken token,
                                                     UserAgent userAgent, HTTPAuthManager httpAuthManager) {
         return new PostXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+    }
+
+    @Singleton
+    @Provides
+    public CommentRestClient provideCommentRestClient(Context appContext, Dispatcher dispatcher,
+                                                      @Named("regular") RequestQueue requestQueue,
+                                                      AccessToken token, UserAgent userAgent) {
+        return new CommentRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public CommentXMLRPCClient provideCommentXMLRPCClient(Dispatcher dispatcher,
+                                                       @Named("custom-ssl") RequestQueue requestQueue,
+                                                       AccessToken token,
+                                                       UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+        return new CommentXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
     }
 
     @Singleton
