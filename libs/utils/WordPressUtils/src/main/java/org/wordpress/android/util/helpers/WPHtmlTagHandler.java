@@ -15,28 +15,33 @@ import java.util.List;
  * Tweaked from source at http://stackoverflow.com/questions/4044509/android-how-to-use-the-html-taghandler
  */
 public class WPHtmlTagHandler implements Html.TagHandler {
+
+    private static final int SPAN_INDENT_WIDTH = 15;
+
     private int mListItemCount = 0;
     private List<String> mListParents = new ArrayList<>();
 
     @Override
     public void handleTag(final boolean opening, final String tag, Editable output,
                           final XMLReader xmlReader) {
-        if (tag.equals("ul") || tag.equals("ol") || tag.equals("dd")) {
-            if (opening) {
-                mListParents.add(tag);
-            } else {
-                mListParents.remove(tag);
+        if (tag != null) {
+            if (tag.equals("ul") || tag.equals("ol") || tag.equals("dd")) {
+                if (opening) {
+                    mListParents.add(tag);
+                } else {
+                    mListParents.remove(tag);
+                }
+                mListItemCount = 0;
+            } else if (tag.equals("li") && !opening) {
+                handleListTag(output);
             }
-            mListItemCount = 0;
-        } else if (tag.equals("li") && !opening) {
-            handleListTag(output);
         }
     }
 
     private void handleListTag(Editable output) {
         int size = mListParents.size();
-        if (size > 0) {
-            if (mListParents.get(size - 1).equals("ul")) {
+        if (size > 0 && output != null) {
+            if ("ul".equals(mListParents.get(size - 1))) {
                 output.append("\n");
                 String[] split = output.toString().split("\n");
                 int start = 0;
@@ -44,8 +49,8 @@ public class WPHtmlTagHandler implements Html.TagHandler {
                     int lastIndex = split.length - 1;
                     start = output.length() - split[lastIndex].length() - 1;
                 }
-                output.setSpan(new BulletSpan(15 * mListParents.size()), start, output.length(), 0);
-            } else if (mListParents.get(size - 1).equals("ol")) {
+                output.setSpan(new BulletSpan(SPAN_INDENT_WIDTH * mListParents.size()), start, output.length(), 0);
+            } else if ("ol".equals(mListParents.get(size - 1))) {
                 mListItemCount++;
                 output.append("\n");
                 String[] split = output.toString().split("\n");
@@ -55,7 +60,7 @@ public class WPHtmlTagHandler implements Html.TagHandler {
                     start = output.length() - split[lastIndex].length() - 1;
                 }
                 output.insert(start, mListItemCount + ". ");
-                output.setSpan(new LeadingMarginSpan.Standard(15 * mListParents.size()), start,
+                output.setSpan(new LeadingMarginSpan.Standard(SPAN_INDENT_WIDTH * mListParents.size()), start,
                         output.length(), 0);
             }
         }
