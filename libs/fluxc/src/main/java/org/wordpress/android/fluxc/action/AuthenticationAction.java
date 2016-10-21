@@ -10,12 +10,15 @@ import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 
 @ActionEnum
 public enum AuthenticationAction implements IAction {
+    // Remote actions
     @Action(payloadType = AuthenticatePayload.class)
     AUTHENTICATE,
-    @Action(payloadType = AuthenticateErrorPayload.class)
-    AUTHENTICATE_ERROR,
     @Action(payloadType = RefreshSitesXMLRPCPayload.class)
     DISCOVER_ENDPOINT,
+
+    // Remote responses
+    @Action(payloadType = AuthenticateErrorPayload.class)
+    AUTHENTICATE_ERROR,
     @Action(payloadType = DiscoveryResultPayload.class)
-    DISCOVERY_RESULT,
+    DISCOVERY_RESULT
 }
