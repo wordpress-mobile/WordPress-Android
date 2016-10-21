@@ -144,7 +144,6 @@ public class GCMMessageService extends GcmListenerService {
             //get the corresponding bundle for this noteId
             for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry<Integer, Bundle> row = it.next();
-                Integer pushId = row.getKey();
                 Bundle noteBundle = row.getValue();
                 if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                     sNotificationHelpers.rebuildAndUpdateNotificationsOnSystemBar(noteBundle);
