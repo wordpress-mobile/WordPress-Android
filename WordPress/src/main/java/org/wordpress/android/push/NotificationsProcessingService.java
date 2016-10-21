@@ -125,9 +125,9 @@ public class NotificationsProcessingService extends Service {
         private String mReplyText;
         private String mActionType;
         private Note mNote;
-        private int mTaskId;
-        private Context mContext;
-        private Intent mIntent;
+        private final int mTaskId;
+        private final Context mContext;
+        private final Intent mIntent;
 
         public QuickActionProcessor(Context ctx, Intent intent, int taskId) {
             mContext = ctx;
@@ -279,16 +279,18 @@ public class NotificationsProcessingService extends Service {
                 //show generic error here
                 errorMessage = getString(R.string.error_generic);
             }
+            resetOriginalNotification();
             showFinalMessageToUser(errorMessage);
 
             stopSelf(mTaskId);
         }
 
-        private void requestFailedWithMessage(String actionType, String errorMessage) {
+        private void requestFailedWithMessage(String errorMessage) {
             if (errorMessage == null) {
                 //show generic error here
                 errorMessage = getString(R.string.error_generic);
             }
+            resetOriginalNotification();
             showFinalMessageToUser(errorMessage);
 
             stopSelf(mTaskId);
@@ -385,7 +387,7 @@ public class NotificationsProcessingService extends Service {
                             requestCompleted(ARG_ACTION_REPLY);
                         } else {
                             if (result != null && result.getMessage() != null) {
-                                requestFailedWithMessage(ARG_ACTION_REPLY, result.getMessage());
+                                requestFailedWithMessage(result.getMessage());
                             } else {
                                 requestFailed(ARG_ACTION_REPLY);
                             }
@@ -421,6 +423,10 @@ public class NotificationsProcessingService extends Service {
         private void hideStatusBar() {
             Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             sendBroadcast(closeIntent);
+        }
+
+        private void resetOriginalNotification(){
+            GCMMessageService.rebuildAndUpdateNotificationsOnSystemBarForThisNote(mNoteId);
         }
 
     }

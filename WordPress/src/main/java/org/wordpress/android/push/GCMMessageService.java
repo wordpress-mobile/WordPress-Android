@@ -54,6 +54,7 @@ import de.greenrobot.event.EventBus;
 
 public class GCMMessageService extends GcmListenerService {
     private static final ArrayMap<Integer, Bundle> sActiveNotificationsMap = new ArrayMap<>();
+    private static NotificationHelper sNotificationHelpers;
 
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
     private static final int PUSH_NOTIFICATION_ID = 10000;
@@ -91,547 +92,15 @@ public class GCMMessageService extends GcmListenerService {
     private void synchronizedHandleDefaultPush(String from, @NonNull Bundle data) {
         // sActiveNotificationsMap being static, we can't just synchronize the method
         synchronized (GCMMessageService.class) {
-            handleDefaultPush(from, data);
+            getHelperInstace(this).handleDefaultPush(from, data);
         }
     }
 
-    private void handleDefaultPush(String from, @NonNull Bundle data) {
-        // Ensure Simperium is running so that notes sync
-        SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
-
-        long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
-        String pushUserId = data.getString(PUSH_ARG_USER);
-        // pushUserId is always set server side, but better to double check it here.
-        if (!String.valueOf(wpcomUserId).equals(pushUserId)) {
-            AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
-            return;
+    private NotificationHelper getHelperInstace(Context context) {
+        if (sNotificationHelpers == null) {
+            sNotificationHelpers = new NotificationHelper(context);
         }
-
-        String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
-
-        // Check for wpcom auth push, if so we will process this push differently
-        if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
-            handlePushAuth(from, data);
-            return;
-        }
-
-        if (noteType.equals(PUSH_TYPE_BADGE_RESET)) {
-            handleBadgeResetPN(data);
-            return;
-        }
-
-        buildAndShowNotificationFromNoteData(data);
-
-        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-    }
-
-    private void trySaveNoteIfNotAlreadyInBucket(Bundle data) {
-        if (SimperiumUtils.getNotesBucket() != null) {
-            if (data == null) {
-                AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
-                return;
-            }
-
-            String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
-            try {
-                SimperiumUtils.getNotesBucket().get(noteId);
-                // all good if we got here
-            } catch (BucketObjectMissingException e) {
-                AppLog.e(T.NOTIFS, e);
-                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-
-                if (data.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-                    //if note doesn't exist, try taking it from the PN payload, build it and save it
-                    // Simperium will take care of syncing local and server versions up at a later point
-                    String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
-                    Note note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
-                    SimperiumUtils.saveNote(note);
-                }
-            }
-        }
-    }
-
-    private void buildAndShowNotificationFromNoteData(Bundle data) {
-
-        if (data == null) {
-            AppLog.e(T.NOTIFS, "Push notification received without a valid Bundle!");
-            return;
-        }
-
-        if (TextUtils.isEmpty(data.getString(PUSH_ARG_NOTE_ID, ""))) {
-            // At this point 'note_id' is always available in the notification bundle.
-            AppLog.e(T.NOTIFS, "Push notification received without a valid note_id in in payload!");
-            return;
-        }
-
-        trySaveNoteIfNotAlreadyInBucket(data);
-
-        String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
-
-        String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
-        if (title == null) {
-            title = getString(R.string.app_name);
-        }
-        String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
-        String wpcomNoteID = data.getString(PUSH_ARG_NOTE_ID, "");
-
-        /*
-         * if this has the same note_id as the previous notification, and the previous notification
-         * was received within the last second, then skip showing it - this handles duplicate
-         * notifications being shown due to the device being registered multiple times with different tokens.
-         * (still investigating how this could happen - 21-Oct-13)
-         *
-         * this also handles the (rare) case where the user receives rapid-fire sub-second like notifications
-         * due to sudden popularity (post gets added to FP and is liked by many people all at once, etc.),
-         * which we also want to avoid since it would drain the battery and annoy the user
-         *
-         * NOTE: different comments on the same post will have a different note_id, but different likes
-         * on the same post will have the same note_id, so don't assume that the note_id is unique
-         */
-        long thisTime = System.currentTimeMillis();
-        if (AppPrefs.getLastPushNotificationWpcomNoteId().equals(wpcomNoteID)) {
-            long seconds = TimeUnit.MILLISECONDS.toSeconds(thisTime - AppPrefs.getLastPushNotificationTime());
-            if (seconds <= 1) {
-                AppLog.w(T.NOTIFS, "skipped potential duplicate notification");
-                return;
-            }
-        }
-
-        AppPrefs.setLastPushNotificationTime(thisTime);
-        AppPrefs.setLastPushNotificationWpcomNoteId(wpcomNoteID);
-
-        // Update notification content for the same noteId if it is already showing
-        int pushId = 0;
-        for (Integer id : sActiveNotificationsMap.keySet()) {
-            if (id == null) {
-                continue;
-            }
-            Bundle noteBundle = sActiveNotificationsMap.get(id);
-            if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(wpcomNoteID)) {
-                pushId = id;
-                sActiveNotificationsMap.put(pushId, data);
-                break;
-            }
-        }
-
-        if (pushId == 0) {
-            pushId = PUSH_NOTIFICATION_ID + sActiveNotificationsMap.size();
-            sActiveNotificationsMap.put(pushId, data);
-        }
-
-        // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
-        if (NotificationsUtils.isNotificationsEnabled(this)) {
-            Map<String, Object> properties = new HashMap<>();
-            if (!TextUtils.isEmpty(noteType)) {
-                // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
-                if (noteType.equals(PUSH_TYPE_COMMENT)) {
-                    properties.put("notification_type", "comment");
-                } else {
-                    properties.put("notification_type", noteType);
-                }
-            }
-
-            bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_RECEIVED, data, properties);
-            AnalyticsTracker.flush();
-        }
-
-        showGroupNotificationForActiveNotificationsMap(pushId, wpcomNoteID, noteType, data.getString("icon"), title, message);
-    }
-
-    private void showGroupNotificationForActiveNotificationsMap(int pushId, String wpcomNoteID, String noteType,
-                                                                String largeIconUri, String title, String message) {
-
-        // Build the new notification, add group to support wearable stacking
-        NotificationCompat.Builder builder = getNotificationBuilder(title, message);
-
-        Bitmap largeIconBitmap = getLargeIconBitmap(largeIconUri, shouldCircularizeNoteIcon(noteType));
-        if (largeIconBitmap != null) {
-            builder.setLargeIcon(largeIconBitmap);
-        }
-
-        showIndividualNotificationForBuilder(builder, noteType, wpcomNoteID, pushId);
-
-        // Also add a group summary notification, which is required for non-wearable devices
-        showGroupNotificationForBuilder(builder, wpcomNoteID, message);
-    }
-
-    private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId) {
-        // Add some actions if this is a comment notification
-
-        boolean areActionsSet = false;
-
-        if (SimperiumUtils.getNotesBucket() != null) {
-            try {
-                Note note = SimperiumUtils.getNotesBucket().get(noteId);
-                if (note != null) {
-                    //if note can be replied to, we'll always add this action first
-                    if (note.canReply()) {
-                        addCommentReplyActionForCommentNotification(builder, noteId);
-                    }
-
-                    // if the comment is lacking approval, offer moderation actions
-                    if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
-                        if (note.canModerate()) {
-                            addCommentApproveActionForCommentNotification(builder, noteId);
-                        }
-                    } else {
-                        //else offer REPLY / LIKE actions
-                        //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
-                        Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
-                        boolean isJetPackSite = blog != null ? blog.isJetpackPowered() : false;
-                        if (note.canLike() && !isJetPackSite) {
-                            addCommentLikeActionForCommentNotification(builder, noteId);
-                        }
-                    }
-                }
-                areActionsSet = true;
-            } catch (BucketObjectMissingException e) {
-                AppLog.e(T.NOTIFS, e);
-            }
-        }
-
-        // if we could not set the actions, set the default one REPLY as it's then only safe bet
-        // we can make at this point
-        if (!areActionsSet) {
-            addCommentReplyActionForCommentNotification(builder, noteId);
-        }
-    }
-
-    private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
-        // adding comment reply action
-        Intent commentReplyIntent = getCommentActionIntent();
-        commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
-        commentReplyIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_REPLY);
-        if (noteId != null) {
-            commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
-        }
-
-        PendingIntent commentReplyPendingIntent =  PendingIntent.getService(this, 0, commentReplyIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        /*
-        The following code adds the behavior for Direct reply, available on Android N (7.0) and on.
-        Using backward compatibility with NotificationCompat.
-         */
-        String replyLabel = getResources().getString(R.string.reply);
-        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_OR_INLINE_REPLY)
-                .setLabel(replyLabel)
-                .build();
-        NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.ic_reply_white_24dp,
-                        getString(R.string.reply), commentReplyPendingIntent)
-                        .addRemoteInput(remoteInput)
-                        .build();
-        // now add the action corresponding to direct-reply
-        builder.addAction(action);
-
-        //also add wearable remoteInput to enable voice-reply
-        builder.extend(new NotificationCompat.WearableExtender().addAction(action));
-
-    }
-
-    private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
-        // adding comment like action
-        Intent commentLikeIntent = getCommentActionIntent();
-        commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
-        commentLikeIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_LIKE);
-        if (noteId != null) {
-            commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
-        }
-        PendingIntent commentLikePendingIntent =  PendingIntent.getService(this, 0, commentLikeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
-                commentLikePendingIntent);
-    }
-
-    private void addCommentApproveActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
-        // adding comment approve action
-        Intent commentApproveIntent = getCommentActionIntent();
-        commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
-        commentApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_APPROVE);
-        if (noteId != null) {
-            commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
-        }
-        PendingIntent commentApprovePendingIntent =  PendingIntent.getService(this, 0, commentApproveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
-                commentApprovePendingIntent);
-    }
-
-    private Intent getCommentActionIntent(){
-        Intent intent = new Intent(this, NotificationsProcessingService.class);
-        return intent;
-    }
-
-    private Bitmap getLargeIconBitmap(String iconUrl, boolean shouldCircularizeIcon){
-        Bitmap largeIconBitmap = null;
-        if (iconUrl != null) {
-            try {
-                iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
-                int largeIconSize = getResources().getDimensionPixelSize(
-                        android.R.dimen.notification_large_icon_height);
-                String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
-                largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
-                if (largeIconBitmap != null && shouldCircularizeIcon) {
-                    largeIconBitmap = ImageUtils.getCircularBitmap(largeIconBitmap);
-                }
-            } catch (UnsupportedEncodingException e) {
-                AppLog.e(T.NOTIFS, e);
-            }
-        }
-        return largeIconBitmap;
-    }
-
-    private NotificationCompat.Builder getNotificationBuilder(String title, String message){
-        // Build the new notification, add group to support wearable stacking
-       return new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setContentTitle(title)
-                .setContentText(message)
-                .setTicker(message)
-                .setAutoCancel(true)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                .setGroup(NOTIFICATION_GROUP_KEY);
-    }
-
-    private void showGroupNotificationForBuilder(NotificationCompat.Builder builder, String wpcomNoteID, String message) {
-
-        if (builder == null) {
-            return;
-        }
-
-        if (sActiveNotificationsMap.size() > 1) {
-            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-            int noteCtr = 1;
-            for (Bundle pushBundle : sActiveNotificationsMap.values()) {
-                // InboxStyle notification is limited to 5 lines
-                if (noteCtr > MAX_INBOX_ITEMS) {
-                    break;
-                }
-                if (pushBundle == null || pushBundle.getString(PUSH_ARG_MSG) == null) {
-                    continue;
-                }
-
-                if (pushBundle.getString(PUSH_ARG_TYPE, "").equals(PUSH_TYPE_COMMENT)) {
-                    String pnTitle = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_TITLE)));
-                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_MSG)));
-                    inboxStyle.addLine(pnTitle + ": " + pnMessage);
-                } else {
-                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_MSG)));
-                    inboxStyle.addLine(pnMessage);
-                }
-
-                noteCtr++;
-            }
-
-            if (sActiveNotificationsMap.size() > MAX_INBOX_ITEMS) {
-                inboxStyle.setSummaryText(String.format(getString(R.string.more_notifications),
-                        sActiveNotificationsMap.size() - MAX_INBOX_ITEMS));
-            }
-
-            String subject = String.format(getString(R.string.new_notifications), sActiveNotificationsMap.size());
-            NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.notification_icon)
-                    .setColor(getResources().getColor(R.color.blue_wordpress))
-                    .setGroup(NOTIFICATION_GROUP_KEY)
-                    .setGroupSummary(true)
-                    .setAutoCancel(true)
-                    .setTicker(message)
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText(subject)
-                    .setStyle(inboxStyle);
-
-            showNotificationForBuilder(groupBuilder, this, wpcomNoteID, GROUP_NOTIFICATION_ID);
-
-        } else {
-            // Set the individual notification we've already built as the group summary
-            builder.setGroupSummary(true);
-            showNotificationForBuilder(builder, this, wpcomNoteID, GROUP_NOTIFICATION_ID);
-        }
-    }
-
-    private void showIndividualNotificationForBuilder(NotificationCompat.Builder builder, String noteType, String wpcomNoteID, int pushId) {
-        if (builder == null) {
-            return;
-        }
-
-        if (noteType.equals(PUSH_TYPE_COMMENT)) {
-            addActionsForCommentNotification(builder, wpcomNoteID);
-        }
-        showNotificationForBuilder(builder, this, wpcomNoteID, pushId);
-    }
-
-    // Displays a notification to the user
-    private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context, String wpcomNoteID, int pushId) {
-        if (builder == null || context == null) {
-            return;
-        }
-
-        Intent resultIntent = new Intent(this, WPMainActivity.class);
-        resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        resultIntent.setAction("android.intent.action.MAIN");
-        resultIntent.addCategory("android.intent.category.LAUNCHER");
-        resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        boolean shouldPlaySound = prefs.getBoolean("wp_pref_notification_sound", false);
-        boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
-        boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", false);
-        String notificationSound = prefs.getString("wp_pref_custom_notification_sound", null); //"" if None is selected
-
-
-        // use default sound if the legacy sound preference was ON but the custom sound was not selected (null)
-        if (shouldPlaySound && notificationSound == null) {
-            builder.setSound(Uri.parse("content://settings/system/notification_sound"));
-        } else if (!TextUtils.isEmpty(notificationSound)) {
-            builder.setSound(Uri.parse(notificationSound));
-        }
-
-        if (shouldVibrate) {
-            builder.setVibrate(new long[]{500, 500, 500});
-        }
-        if (shouldBlinkLight) {
-            builder.setLights(0xff0000ff, 1000, 5000);
-        }
-
-        // Call broadcast receiver when notification is dismissed
-        Intent notificationDeletedIntent = new Intent(this, NotificationDismissBroadcastReceiver.class);
-        notificationDeletedIntent.putExtra("notificationId", pushId);
-        notificationDeletedIntent.setAction(String.valueOf(pushId));
-        PendingIntent pendingDeleteIntent =
-                PendingIntent.getBroadcast(context, pushId, notificationDeletedIntent, 0);
-        builder.setDeleteIntent(pendingDeleteIntent);
-
-        builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, pushId, resultIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(pendingIntent);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(pushId, builder.build());
-    }
-
-    private void rebuildAndUpdateNotificationsOnSystemBar(Bundle data) {
-        Bitmap largeIconBitmap = null;
-        // here notify the existing group notification by eliminating the line that is now gone
-        String title = getNotificationTitleOrAppNameFromBundle(data);
-        String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
-
-        NotificationCompat.Builder builder = null;
-        String wpcomNoteID = null;
-
-        if (sActiveNotificationsMap.size() == 1) {
-            //only one notification remains, so get the proper message for it and re-instate in the system dashboard
-            Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
-            if (remainingNote != null) {
-                String remainingNoteTitle = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_TITLE));
-                if (!TextUtils.isEmpty(remainingNoteTitle)) {
-                    title = remainingNoteTitle;
-                }
-                String remainingNoteMessage = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_MSG));
-                if (!TextUtils.isEmpty(remainingNoteMessage)) {
-                    message = remainingNoteMessage;
-                }
-                largeIconBitmap = getLargeIconBitmap(remainingNote.getString("icon"),
-                        shouldCircularizeNoteIcon(remainingNote.getString(PUSH_ARG_TYPE)));
-
-                builder = getNotificationBuilder(title, message);
-
-                String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
-                wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
-                if (!sActiveNotificationsMap.isEmpty()) {
-                    showIndividualNotificationForBuilder(builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0));
-                }
-            }
-        }
-
-        if (builder == null) {
-            builder = getNotificationBuilder(title, message);
-        }
-
-        if (largeIconBitmap == null) {
-            largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(PUSH_TYPE_BADGE_RESET));
-        }
-
-        if (wpcomNoteID == null) {
-            wpcomNoteID = AppPrefs.getLastPushNotificationWpcomNoteId();
-        }
-
-        if (largeIconBitmap != null) {
-            builder.setLargeIcon(largeIconBitmap);
-        }
-
-        showGroupNotificationForBuilder(builder,  wpcomNoteID, message);
-    }
-
-    private String getNotificationTitleOrAppNameFromBundle(Bundle data){
-        String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
-        if (title == null) {
-            title = getString(R.string.app_name);
-        }
-        return title;
-    }
-
-    // Clear all notifications
-    private void handleBadgeResetPN(Bundle data) {
-        if (data == null || !data.containsKey(PUSH_ARG_NOTE_ID))  {
-            // ignore the reset-badge PN if it's a global one
-            return;
-        }
-
-        removeNotificationWithNoteIdFromSystemBar(this, data.getString(PUSH_ARG_NOTE_ID, ""));
-        //now that we cleared the specific notif, we can check and make any visual updates
-        if (sActiveNotificationsMap.size() > 0) {
-            rebuildAndUpdateNotificationsOnSystemBar(data);
-        }
-
-        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-    }
-
-    // Show a notification for two-step auth users who sign in from a web browser
-    private void handlePushAuth(String from, Bundle data) {
-        if (data == null) {
-            return;
-        }
-
-        String pushAuthToken = data.getString("push_auth_token", "");
-        String title = data.getString("title", "");
-        String message = data.getString("msg", "");
-        long expirationTimestamp = Long.valueOf(data.getString("expires", "0"));
-
-        // No strings, no service
-        if (TextUtils.isEmpty(pushAuthToken) || TextUtils.isEmpty(title) || TextUtils.isEmpty(message)) {
-            return;
-        }
-
-        // Show authorization intent
-        Intent pushAuthIntent = new Intent(this, WPMainActivity.class);
-        pushAuthIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-        pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
-        pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
-        pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
-        pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
-        pushAuthIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        pushAuthIntent.setAction("android.intent.action.MAIN");
-        pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setContentTitle(title)
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                .setPriority(NotificationCompat.PRIORITY_MAX);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, pushAuthIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(pendingIntent);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
+        return sNotificationHelpers;
     }
 
     @Override
@@ -670,22 +139,18 @@ public class GCMMessageService extends GcmListenerService {
         synchronizedHandleDefaultPush(from, data);
     }
 
-    // Returns true if the note type is known to have a gravatar
-    public boolean shouldCircularizeNoteIcon(String noteType) {
-        if (TextUtils.isEmpty(noteType)) {
-            return false;
-        }
-
-        switch (noteType) {
-            case PUSH_TYPE_COMMENT:
-            case PUSH_TYPE_LIKE:
-            case PUSH_TYPE_COMMENT_LIKE:
-            case PUSH_TYPE_AUTOMATTCHER:
-            case PUSH_TYPE_FOLLOW:
-            case PUSH_TYPE_REBLOG:
-                return true;
-            default:
-                return false;
+    public static synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(String noteId){
+        if (sNotificationHelpers != null && sActiveNotificationsMap.size() > 0) {
+            //get the corresponding bundle for this noteId
+            for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
+                Map.Entry<Integer, Bundle> row = it.next();
+                Integer pushId = row.getKey();
+                Bundle noteBundle = row.getValue();
+                if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
+                    sNotificationHelpers.rebuildAndUpdateNotificationsOnSystemBar(noteBundle);
+                    return;
+                }
+            }
         }
     }
 
@@ -789,5 +254,572 @@ public class GCMMessageService extends GcmListenerService {
             properties.put("push_notification_token", lastRegisteredGCMToken);
             AnalyticsTracker.track(stat, properties);
         }
+    }
+
+    private class NotificationHelper {
+
+        final Context mContext;
+
+        public NotificationHelper(Context context){
+            mContext = context;
+        }
+
+        private void handleDefaultPush(String from, @NonNull Bundle data) {
+            // Ensure Simperium is running so that notes sync
+            SimperiumUtils.configureSimperium(mContext, AccountHelper.getDefaultAccount().getAccessToken());
+
+            long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
+            String pushUserId = data.getString(PUSH_ARG_USER);
+            // pushUserId is always set server side, but better to double check it here.
+            if (!String.valueOf(wpcomUserId).equals(pushUserId)) {
+                AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+                return;
+            }
+
+            String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
+
+            // Check for wpcom auth push, if so we will process this push differently
+            if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+                handlePushAuth(from, data);
+                return;
+            }
+
+            if (noteType.equals(PUSH_TYPE_BADGE_RESET)) {
+                handleBadgeResetPN(data);
+                return;
+            }
+
+            buildAndShowNotificationFromNoteData(data);
+
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+        }
+
+        private void trySaveNoteIfNotAlreadyInBucket(Bundle data) {
+            if (SimperiumUtils.getNotesBucket() != null) {
+                if (data == null) {
+                    AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
+                    return;
+                }
+
+                String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
+                try {
+                    SimperiumUtils.getNotesBucket().get(noteId);
+                    // all good if we got here
+                } catch (BucketObjectMissingException e) {
+                    AppLog.e(T.NOTIFS, e);
+                    SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
+
+                    if (data.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
+                        //if note doesn't exist, try taking it from the PN payload, build it and save it
+                        // Simperium will take care of syncing local and server versions up at a later point
+                        String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
+                        Note note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
+                        SimperiumUtils.saveNote(note);
+                    }
+                }
+            }
+        }
+
+        private void buildAndShowNotificationFromNoteData(Bundle data) {
+
+            if (data == null) {
+                AppLog.e(T.NOTIFS, "Push notification received without a valid Bundle!");
+                return;
+            }
+
+            if (TextUtils.isEmpty(data.getString(PUSH_ARG_NOTE_ID, ""))) {
+                // At this point 'note_id' is always available in the notification bundle.
+                AppLog.e(T.NOTIFS, "Push notification received without a valid note_id in in payload!");
+                return;
+            }
+
+            trySaveNoteIfNotAlreadyInBucket(data);
+
+            String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
+
+            String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
+            if (title == null) {
+                title = getString(R.string.app_name);
+            }
+            String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
+            String wpcomNoteID = data.getString(PUSH_ARG_NOTE_ID, "");
+
+            /*
+             * if this has the same note_id as the previous notification, and the previous notification
+             * was received within the last second, then skip showing it - this handles duplicate
+             * notifications being shown due to the device being registered multiple times with different tokens.
+             * (still investigating how this could happen - 21-Oct-13)
+             *
+             * this also handles the (rare) case where the user receives rapid-fire sub-second like notifications
+             * due to sudden popularity (post gets added to FP and is liked by many people all at once, etc.),
+             * which we also want to avoid since it would drain the battery and annoy the user
+             *
+             * NOTE: different comments on the same post will have a different note_id, but different likes
+             * on the same post will have the same note_id, so don't assume that the note_id is unique
+             */
+            long thisTime = System.currentTimeMillis();
+            if (AppPrefs.getLastPushNotificationWpcomNoteId().equals(wpcomNoteID)) {
+                long seconds = TimeUnit.MILLISECONDS.toSeconds(thisTime - AppPrefs.getLastPushNotificationTime());
+                if (seconds <= 1) {
+                    AppLog.w(T.NOTIFS, "skipped potential duplicate notification");
+                    return;
+                }
+            }
+
+            AppPrefs.setLastPushNotificationTime(thisTime);
+            AppPrefs.setLastPushNotificationWpcomNoteId(wpcomNoteID);
+
+            // Update notification content for the same noteId if it is already showing
+            int pushId = 0;
+            for (Integer id : sActiveNotificationsMap.keySet()) {
+                if (id == null) {
+                    continue;
+                }
+                Bundle noteBundle = sActiveNotificationsMap.get(id);
+                if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(wpcomNoteID)) {
+                    pushId = id;
+                    sActiveNotificationsMap.put(pushId, data);
+                    break;
+                }
+            }
+
+            if (pushId == 0) {
+                pushId = PUSH_NOTIFICATION_ID + sActiveNotificationsMap.size();
+                sActiveNotificationsMap.put(pushId, data);
+            }
+
+            // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
+            if (NotificationsUtils.isNotificationsEnabled(mContext)) {
+                Map<String, Object> properties = new HashMap<>();
+                if (!TextUtils.isEmpty(noteType)) {
+                    // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
+                    if (noteType.equals(PUSH_TYPE_COMMENT)) {
+                        properties.put("notification_type", "comment");
+                    } else {
+                        properties.put("notification_type", noteType);
+                    }
+                }
+
+                bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_RECEIVED, data, properties);
+                AnalyticsTracker.flush();
+            }
+
+            showGroupNotificationForActiveNotificationsMap(pushId, wpcomNoteID, noteType, data.getString("icon"), title, message);
+        }
+
+        private void showGroupNotificationForActiveNotificationsMap(int pushId, String wpcomNoteID, String noteType,
+                                                                    String largeIconUri, String title, String message) {
+
+            // Build the new notification, add group to support wearable stacking
+            NotificationCompat.Builder builder = getNotificationBuilder(title, message);
+
+            Bitmap largeIconBitmap = getLargeIconBitmap(largeIconUri, shouldCircularizeNoteIcon(noteType));
+            if (largeIconBitmap != null) {
+                builder.setLargeIcon(largeIconBitmap);
+            }
+
+            showIndividualNotificationForBuilder(builder, noteType, wpcomNoteID, pushId);
+
+            // Also add a group summary notification, which is required for non-wearable devices
+            showGroupNotificationForBuilder(builder, wpcomNoteID, message);
+        }
+
+        private void addActionsForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+            // Add some actions if this is a comment notification
+
+            boolean areActionsSet = false;
+
+            if (SimperiumUtils.getNotesBucket() != null) {
+                try {
+                    Note note = SimperiumUtils.getNotesBucket().get(noteId);
+                    if (note != null) {
+                        //if note can be replied to, we'll always add this action first
+                        if (note.canReply()) {
+                            addCommentReplyActionForCommentNotification(builder, noteId);
+                        }
+
+                        // if the comment is lacking approval, offer moderation actions
+                        if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
+                            if (note.canModerate()) {
+                                addCommentApproveActionForCommentNotification(builder, noteId);
+                            }
+                        } else {
+                            //else offer REPLY / LIKE actions
+                            //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
+                            Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
+                            boolean isJetPackSite = blog != null && blog.isJetpackPowered();
+                            if (note.canLike() && !isJetPackSite) {
+                                addCommentLikeActionForCommentNotification(builder, noteId);
+                            }
+                        }
+                    }
+                    areActionsSet = true;
+                } catch (BucketObjectMissingException e) {
+                    AppLog.e(T.NOTIFS, e);
+                }
+            }
+
+            // if we could not set the actions, set the default one REPLY as it's then only safe bet
+            // we can make at this point
+            if (!areActionsSet) {
+                addCommentReplyActionForCommentNotification(builder, noteId);
+            }
+        }
+
+        private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+            // adding comment reply action
+            Intent commentReplyIntent = getCommentActionIntent();
+            commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
+            commentReplyIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_REPLY);
+            if (noteId != null) {
+                commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
+            }
+
+            PendingIntent commentReplyPendingIntent =  PendingIntent.getService(mContext, 0, commentReplyIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            /*
+            The following code adds the behavior for Direct reply, available on Android N (7.0) and on.
+            Using backward compatibility with NotificationCompat.
+             */
+            String replyLabel = getResources().getString(R.string.reply);
+            RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_OR_INLINE_REPLY)
+                    .setLabel(replyLabel)
+                    .build();
+            NotificationCompat.Action action =
+                    new NotificationCompat.Action.Builder(R.drawable.ic_reply_white_24dp,
+                            getString(R.string.reply), commentReplyPendingIntent)
+                            .addRemoteInput(remoteInput)
+                            .build();
+            // now add the action corresponding to direct-reply
+            builder.addAction(action);
+
+            //also add wearable remoteInput to enable voice-reply
+            builder.extend(new NotificationCompat.WearableExtender().addAction(action));
+
+        }
+
+        private void addCommentLikeActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+            // adding comment like action
+            Intent commentLikeIntent = getCommentActionIntent();
+            commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
+            commentLikeIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_LIKE);
+            if (noteId != null) {
+                commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
+            }
+            PendingIntent commentLikePendingIntent =  PendingIntent.getService(mContext, 0, commentLikeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
+                    commentLikePendingIntent);
+        }
+
+        private void addCommentApproveActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
+            // adding comment approve action
+            Intent commentApproveIntent = getCommentActionIntent();
+            commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
+            commentApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_APPROVE);
+            if (noteId != null) {
+                commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
+            }
+            PendingIntent commentApprovePendingIntent =  PendingIntent.getService(mContext, 0, commentApproveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
+                    commentApprovePendingIntent);
+        }
+
+        private Intent getCommentActionIntent(){
+            return new Intent(mContext, NotificationsProcessingService.class);
+        }
+
+        private Bitmap getLargeIconBitmap(String iconUrl, boolean shouldCircularizeIcon){
+            Bitmap largeIconBitmap = null;
+            if (iconUrl != null) {
+                try {
+                    iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
+                    int largeIconSize = getResources().getDimensionPixelSize(
+                            android.R.dimen.notification_large_icon_height);
+                    String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
+                    largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
+                    if (largeIconBitmap != null && shouldCircularizeIcon) {
+                        largeIconBitmap = ImageUtils.getCircularBitmap(largeIconBitmap);
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    AppLog.e(T.NOTIFS, e);
+                }
+            }
+            return largeIconBitmap;
+        }
+
+        private NotificationCompat.Builder getNotificationBuilder(String title, String message){
+            // Build the new notification, add group to support wearable stacking
+           return new NotificationCompat.Builder(mContext)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setColor(getResources().getColor(R.color.blue_wordpress))
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setTicker(message)
+                    .setAutoCancel(true)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                    .setGroup(NOTIFICATION_GROUP_KEY);
+        }
+
+        private void showGroupNotificationForBuilder(NotificationCompat.Builder builder, String wpcomNoteID, String message) {
+
+            if (builder == null) {
+                return;
+            }
+
+            if (sActiveNotificationsMap.size() > 1) {
+                NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+                int noteCtr = 1;
+                for (Bundle pushBundle : sActiveNotificationsMap.values()) {
+                    // InboxStyle notification is limited to 5 lines
+                    if (noteCtr > MAX_INBOX_ITEMS) {
+                        break;
+                    }
+                    if (pushBundle == null || pushBundle.getString(PUSH_ARG_MSG) == null) {
+                        continue;
+                    }
+
+                    if (pushBundle.getString(PUSH_ARG_TYPE, "").equals(PUSH_TYPE_COMMENT)) {
+                        String pnTitle = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_TITLE)));
+                        String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_MSG)));
+                        inboxStyle.addLine(pnTitle + ": " + pnMessage);
+                    } else {
+                        String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_MSG)));
+                        inboxStyle.addLine(pnMessage);
+                    }
+
+                    noteCtr++;
+                }
+
+                if (sActiveNotificationsMap.size() > MAX_INBOX_ITEMS) {
+                    inboxStyle.setSummaryText(String.format(getString(R.string.more_notifications),
+                            sActiveNotificationsMap.size() - MAX_INBOX_ITEMS));
+                }
+
+                String subject = String.format(getString(R.string.new_notifications), sActiveNotificationsMap.size());
+                NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(mContext)
+                        .setSmallIcon(R.drawable.notification_icon)
+                        .setColor(getResources().getColor(R.color.blue_wordpress))
+                        .setGroup(NOTIFICATION_GROUP_KEY)
+                        .setGroupSummary(true)
+                        .setAutoCancel(true)
+                        .setTicker(message)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText(subject)
+                        .setStyle(inboxStyle);
+
+                showNotificationForBuilder(groupBuilder, mContext, wpcomNoteID, GROUP_NOTIFICATION_ID);
+
+            } else {
+                // Set the individual notification we've already built as the group summary
+                builder.setGroupSummary(true);
+                showNotificationForBuilder(builder, mContext, wpcomNoteID, GROUP_NOTIFICATION_ID);
+            }
+        }
+
+        private void showIndividualNotificationForBuilder(NotificationCompat.Builder builder, String noteType, String wpcomNoteID, int pushId) {
+            if (builder == null) {
+                return;
+            }
+
+            if (noteType.equals(PUSH_TYPE_COMMENT)) {
+                addActionsForCommentNotification(builder, wpcomNoteID);
+            }
+            showNotificationForBuilder(builder, mContext, wpcomNoteID, pushId);
+        }
+
+        // Displays a notification to the user
+        private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context, String wpcomNoteID, int pushId) {
+            if (builder == null || context == null) {
+                return;
+            }
+
+            Intent resultIntent = new Intent(mContext, WPMainActivity.class);
+            resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+            resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            resultIntent.setAction("android.intent.action.MAIN");
+            resultIntent.addCategory("android.intent.category.LAUNCHER");
+            resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+            boolean shouldPlaySound = prefs.getBoolean("wp_pref_notification_sound", false);
+            boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
+            boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", false);
+            String notificationSound = prefs.getString("wp_pref_custom_notification_sound", null); //"" if None is selected
+
+
+            // use default sound if the legacy sound preference was ON but the custom sound was not selected (null)
+            if (shouldPlaySound && notificationSound == null) {
+                builder.setSound(Uri.parse("content://settings/system/notification_sound"));
+            } else if (!TextUtils.isEmpty(notificationSound)) {
+                builder.setSound(Uri.parse(notificationSound));
+            }
+
+            if (shouldVibrate) {
+                builder.setVibrate(new long[]{500, 500, 500});
+            }
+            if (shouldBlinkLight) {
+                builder.setLights(0xff0000ff, 1000, 5000);
+            }
+
+            // Call broadcast receiver when notification is dismissed
+            Intent notificationDeletedIntent = new Intent(mContext, NotificationDismissBroadcastReceiver.class);
+            notificationDeletedIntent.putExtra("notificationId", pushId);
+            notificationDeletedIntent.setAction(String.valueOf(pushId));
+            PendingIntent pendingDeleteIntent =
+                    PendingIntent.getBroadcast(context, pushId, notificationDeletedIntent, 0);
+            builder.setDeleteIntent(pendingDeleteIntent);
+
+            builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, pushId, resultIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(pendingIntent);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
+            notificationManager.notify(pushId, builder.build());
+        }
+
+        private void rebuildAndUpdateNotificationsOnSystemBar(Bundle data) {
+            Bitmap largeIconBitmap = null;
+            // here notify the existing group notification by eliminating the line that is now gone
+            String title = getNotificationTitleOrAppNameFromBundle(data);
+            String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
+
+            NotificationCompat.Builder builder = null;
+            String wpcomNoteID = null;
+
+            if (sActiveNotificationsMap.size() == 1) {
+                //only one notification remains, so get the proper message for it and re-instate in the system dashboard
+                Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
+                if (remainingNote != null) {
+                    String remainingNoteTitle = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_TITLE));
+                    if (!TextUtils.isEmpty(remainingNoteTitle)) {
+                        title = remainingNoteTitle;
+                    }
+                    String remainingNoteMessage = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_MSG));
+                    if (!TextUtils.isEmpty(remainingNoteMessage)) {
+                        message = remainingNoteMessage;
+                    }
+                    largeIconBitmap = getLargeIconBitmap(remainingNote.getString("icon"),
+                            shouldCircularizeNoteIcon(remainingNote.getString(PUSH_ARG_TYPE)));
+
+                    builder = getNotificationBuilder(title, message);
+
+                    String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
+                    wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
+                    if (!sActiveNotificationsMap.isEmpty()) {
+                        showIndividualNotificationForBuilder(builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0));
+                    }
+                }
+            }
+
+            if (builder == null) {
+                builder = getNotificationBuilder(title, message);
+            }
+
+            if (largeIconBitmap == null) {
+                largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(PUSH_TYPE_BADGE_RESET));
+            }
+
+            if (wpcomNoteID == null) {
+                wpcomNoteID = AppPrefs.getLastPushNotificationWpcomNoteId();
+            }
+
+            if (largeIconBitmap != null) {
+                builder.setLargeIcon(largeIconBitmap);
+            }
+
+            showGroupNotificationForBuilder(builder,  wpcomNoteID, message);
+        }
+
+        private String getNotificationTitleOrAppNameFromBundle(Bundle data){
+            String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
+            if (title == null) {
+                title = getString(R.string.app_name);
+            }
+            return title;
+        }
+
+        // Clear all notifications
+        private void handleBadgeResetPN(Bundle data) {
+            if (data == null || !data.containsKey(PUSH_ARG_NOTE_ID))  {
+                // ignore the reset-badge PN if it's a global one
+                return;
+            }
+
+            removeNotificationWithNoteIdFromSystemBar(mContext, data.getString(PUSH_ARG_NOTE_ID, ""));
+            //now that we cleared the specific notif, we can check and make any visual updates
+            if (sActiveNotificationsMap.size() > 0) {
+                rebuildAndUpdateNotificationsOnSystemBar(data);
+            }
+
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+        }
+
+        // Show a notification for two-step auth users who sign in from a web browser
+        private void handlePushAuth(String from, Bundle data) {
+            if (data == null) {
+                return;
+            }
+
+            String pushAuthToken = data.getString("push_auth_token", "");
+            String title = data.getString("title", "");
+            String message = data.getString("msg", "");
+            long expirationTimestamp = Long.valueOf(data.getString("expires", "0"));
+
+            // No strings, no service
+            if (TextUtils.isEmpty(pushAuthToken) || TextUtils.isEmpty(title) || TextUtils.isEmpty(message)) {
+                return;
+            }
+
+            // Show authorization intent
+            Intent pushAuthIntent = new Intent(mContext, WPMainActivity.class);
+            pushAuthIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+            pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
+            pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
+            pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
+            pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
+            pushAuthIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            pushAuthIntent.setAction("android.intent.action.MAIN");
+            pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setColor(getResources().getColor(R.color.blue_wordpress))
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                    .setPriority(NotificationCompat.PRIORITY_MAX);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 1, pushAuthIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(pendingIntent);
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
+            notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
+        }
+
+        // Returns true if the note type is known to have a gravatar
+        public boolean shouldCircularizeNoteIcon(String noteType) {
+            if (TextUtils.isEmpty(noteType)) {
+                return false;
+            }
+
+            switch (noteType) {
+                case PUSH_TYPE_COMMENT:
+                case PUSH_TYPE_LIKE:
+                case PUSH_TYPE_COMMENT_LIKE:
+                case PUSH_TYPE_AUTOMATTCHER:
+                case PUSH_TYPE_FOLLOW:
+                case PUSH_TYPE_REBLOG:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
     }
 }
