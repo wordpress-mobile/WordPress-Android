@@ -85,8 +85,6 @@ public class PostStore extends Store {
         public PostModel post;
         public SiteModel site;
 
-        public RemotePostPayload() {}
-
         public RemotePostPayload(PostModel post, SiteModel site) {
             this.post = post;
             this.site = site;
@@ -95,6 +93,14 @@ public class PostStore extends Store {
         @Override
         public boolean isError() {
             return error != null;
+        }
+    }
+
+    public static class FetchPostResponsePayload extends RemotePostPayload {
+        public PostAction origin = PostAction.FETCH_POST; // Only used to track fetching newly uploaded XML-RPC posts
+
+        public FetchPostResponsePayload(PostModel post, SiteModel site) {
+            super(post, site);
         }
     }
 
@@ -305,7 +311,7 @@ public class PostStore extends Store {
                 fetchPost((RemotePostPayload) action.getPayload());
                 break;
             case FETCHED_POST:
-                handleFetchSinglePostCompleted((RemotePostPayload) action.getPayload());
+                handleFetchSinglePostCompleted((FetchPostResponsePayload) action.getPayload());
                 break;
             case INSTANTIATE_POST:
                 instantiatePost((InstantiatePostPayload) action.getPayload());
@@ -407,11 +413,20 @@ public class PostStore extends Store {
         emitChange(onPostChanged);
     }
 
-    private void handleFetchSinglePostCompleted(RemotePostPayload payload) {
-        OnPostChanged event;
+    private void handleFetchSinglePostCompleted(FetchPostResponsePayload payload) {
+        if (payload.origin == PostAction.PUSH_POST) {
+            OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
+            if (payload.isError()) {
+                onPostUploaded.error = payload.error;
+            } else {
+                updatePost(payload.post);
+            }
+            emitChange(onPostUploaded);
+            return;
+        }
 
         if (payload.isError()) {
-            event = new OnPostChanged(0);
+            OnPostChanged event = new OnPostChanged(0);
             event.error = payload.error;
             event.causeOfChange = PostAction.UPDATE_POST;
             emitChange(event);
@@ -426,18 +441,17 @@ public class PostStore extends Store {
             onPostUploaded.error = payload.error;
             emitChange(onPostUploaded);
         } else {
-            emitChange(new OnPostUploaded(payload.post));
-
             if (payload.site.isWPCom()) {
                 // The WP.COM REST API response contains the modified post, so we're already in sync with the server
                 // All we need to do is store it and emit OnPostChanged
                 updatePost(payload.post);
+                emitChange(new OnPostUploaded(payload.post));
             } else {
                 // XML-RPC does not respond to new/edit post calls with the modified post
                 // Update the post locally to reflect its uploaded status, but also request a fresh copy
                 // from the server to ensure local copy matches server
                 PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
-                mPostXMLRPCClient.fetchPost(payload.post, payload.site);
+                mPostXMLRPCClient.fetchPost(payload.post, payload.site, PostAction.PUSH_POST);
             }
         }
     }
