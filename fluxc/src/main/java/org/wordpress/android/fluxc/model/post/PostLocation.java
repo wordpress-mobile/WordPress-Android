@@ -3,8 +3,8 @@ package org.wordpress.android.fluxc.model.post;
 import java.io.Serializable;
 
 public class PostLocation implements Serializable {
-    static final double INVALID_LATITUDE = 9999;
-    static final double INVALID_LONGITUDE = 9999;
+    public static final double INVALID_LATITUDE = 9999;
+    public static final double INVALID_LONGITUDE = 9999;
     static final double MIN_LATITUDE = -90;
     static final double MAX_LATITUDE = 90;
     static final double MIN_LONGITUDE = -180;
@@ -16,6 +16,9 @@ public class PostLocation implements Serializable {
     public PostLocation() { }
 
     public PostLocation(double latitude, double longitude) {
+        if (!(isValidLatitude(latitude) && isValidLongitude(longitude))) {
+            return;
+        }
         setLatitude(latitude);
         setLongitude(longitude);
     }
