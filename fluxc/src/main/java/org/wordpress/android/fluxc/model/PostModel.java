@@ -24,6 +24,8 @@ import java.util.List;
 @Table
 public class PostModel extends Payload implements Cloneable, Identifiable, Serializable {
     private static final long FEATURED_IMAGE_INIT_VALUE = -2;
+    private static final long LATITUDE_REMOVED_VALUE = 8888;
+    private static final long LONGITUDE_REMOVED_VALUE = 8888;
 
     @PrimaryKey
     @Column private int mId;
@@ -43,8 +45,8 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     @Column private long mFeaturedImageId = FEATURED_IMAGE_INIT_VALUE;
     @Column private String mPostFormat;
     @Column private String mSlug;
-    @Column private double mLatitude;
-    @Column private double mLongitude;
+    @Column private double mLatitude = PostLocation.INVALID_LATITUDE;
+    @Column private double mLongitude = PostLocation.INVALID_LONGITUDE;
 
     // Page specific
     @Column private boolean mIsPage;
@@ -247,16 +249,16 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mLatitude = latitude;
     }
 
-    public PostLocation getPostLocation() {
+    public PostLocation getLocation() {
         return new PostLocation(mLatitude, mLongitude);
     }
 
-    public void setPostLocation(PostLocation postLocation) {
+    public void setLocation(@NonNull PostLocation postLocation) {
         mLatitude = postLocation.getLatitude();
         mLongitude = postLocation.getLongitude();
     }
 
-    public void setPostLocation(double latitude, double longitude) {
+    public void setLocation(double latitude, double longitude) {
         mLatitude = latitude;
         mLongitude = longitude;
     }
@@ -412,7 +414,20 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     }
 
     public boolean hasLocation() {
-        return getPostLocation() != null && getPostLocation().isValid();
+        return getLocation() != null && getLocation().isValid();
+    }
+
+    public boolean shouldDeleteLatitude() {
+        return mLatitude == LATITUDE_REMOVED_VALUE;
+    }
+
+    public boolean shouldDeleteLongitude() {
+        return mLongitude == LONGITUDE_REMOVED_VALUE;
+    }
+
+    public void clearLocation() {
+        mLatitude = LATITUDE_REMOVED_VALUE;
+        mLongitude = LONGITUDE_REMOVED_VALUE;
     }
 
     public boolean featuredImageHasChanged() {
