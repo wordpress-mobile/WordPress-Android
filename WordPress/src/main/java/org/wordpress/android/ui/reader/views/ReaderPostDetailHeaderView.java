@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,6 +16,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -127,40 +129,72 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     }
 
     private void showBlogInfo(ReaderBlog blogInfo) {
-        if (blogInfo == null) return;
-
-        boolean hasBlavatar = blogInfo.hasImageUrl();
-        WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
-        if (hasBlavatar) {
-            int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
-            String blavatarUrl = PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), blavatarSz, blavatarSz);
-            imgBlavatar.setVisibility(View.VISIBLE);
-            imgBlavatar.setImageUrl(blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
-        } else {
-            imgBlavatar.setVisibility(View.GONE);
-
-        }
-
-        // show the author's avatar now that we know whether there's a blavatar
-        showAvatar(hasBlavatar);
+        String blavatarUrl = blogInfo != null ? blogInfo.getImageUrl() : null;
+        String avatarUrl = mPost != null ? mPost.getPostAvatar() : null;
+        showBlavatarAndAvatar(blavatarUrl, avatarUrl);
     }
 
-    private void showAvatar(boolean hasBlavatar) {
-        // avatar size depends on whether there's a blavatar
-        int resId = hasBlavatar ? R.dimen.reader_detail_header_avatar : R.dimen.reader_detail_header_avatar_frame;
-        int avatarSz = getContext().getResources().getDimensionPixelSize(resId);
+    private void showBlavatarAndAvatar(String blavatarUrl, String avatarUrl) {
+        boolean hasBlavatar = !TextUtils.isEmpty(blavatarUrl);
+        boolean hasAvatar = !TextUtils.isEmpty(avatarUrl);
 
+        AppLog.w(AppLog.T.READER, avatarUrl);
+
+        int frameSize = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar_frame);
+
+        View avatarFrame = findViewById(R.id.frame_avatar);
+        WPNetworkImageView imgBlavatar = (WPNetworkImageView) findViewById(R.id.image_header_blavatar);
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
-        imgAvatar.getLayoutParams().height = avatarSz;
-        imgAvatar.getLayoutParams().width = avatarSz;
 
-        if (mPost != null && mPost.hasPostAvatar()) {
-            String avatarUrl = GravatarUtils.fixGravatarUrl(mPost.getPostAvatar(), avatarSz);
-            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+        /*
+         *  - if there's a blavatar and an avatar, show both of them overlaid using default sizing
+         *  - if there's only a blavatar, show it the full size of the parent frame and hide the avatar
+         *  - if there's only an avatar, show it the full size of the parent frame and hide the blavatar
+         *  - if there's neither a blavatar nor an avatar, hide them both
+         */
+        if (hasBlavatar && hasAvatar) {
+            int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
+            imgBlavatar.getLayoutParams().height = blavatarSz;
+            imgBlavatar.getLayoutParams().width = blavatarSz;
+            imgBlavatar.setImageUrl(
+                    PhotonUtils.getPhotonImageUrl(blavatarUrl, blavatarSz, blavatarSz),
+                    WPNetworkImageView.ImageType.BLAVATAR);
+            imgBlavatar.setVisibility(View.VISIBLE);
+
+            int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar);
+            imgAvatar.getLayoutParams().height = avatarSz;
+            imgAvatar.getLayoutParams().width = avatarSz;
+            imgAvatar.setImageUrl(
+                    GravatarUtils.fixGravatarUrl(avatarUrl, avatarSz),
+                    WPNetworkImageView.ImageType.AVATAR);
+            imgAvatar.setVisibility(View.VISIBLE);
+        } else if (hasBlavatar) {
+            imgBlavatar.getLayoutParams().height = frameSize;
+            imgBlavatar.getLayoutParams().width = frameSize;
+            imgBlavatar.setImageUrl(
+                    PhotonUtils.getPhotonImageUrl(blavatarUrl, frameSize, frameSize),
+                    WPNetworkImageView.ImageType.BLAVATAR);
+            imgBlavatar.setVisibility(View.VISIBLE);
+
+            imgAvatar.setVisibility(View.GONE);
+        } else if (hasAvatar) {
+            imgBlavatar.setVisibility(View.GONE);
+
+            imgAvatar.getLayoutParams().height = frameSize;
+            imgAvatar.getLayoutParams().width = frameSize;
+            imgAvatar.setImageUrl(
+                    GravatarUtils.fixGravatarUrl(avatarUrl, frameSize),
+                    WPNetworkImageView.ImageType.AVATAR);
+            imgAvatar.setVisibility(View.VISIBLE);
         } else {
-            imgAvatar.showDefaultGravatarImage();
+            imgBlavatar.setVisibility(View.GONE);
+            imgAvatar.setVisibility(View.GONE);
         }
 
+        // hide the frame if there's neither a blavatar nor an avatar
+        avatarFrame.setVisibility(hasAvatar || hasBlavatar ? View.VISIBLE : View.GONE);
+
+        imgBlavatar.setOnClickListener(mClickListener);
         imgAvatar.setOnClickListener(mClickListener);
     }
 

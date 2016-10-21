@@ -243,8 +243,20 @@ public class ReaderPost {
 
         post.authorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
         post.authorFirstName = JSONUtils.getStringDecoded(jsonAuthor, "first_name");
-        post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
         post.authorId = jsonAuthor.optLong("ID");
+
+        // v1.2 endpoint contains a "has_avatar" boolean which tells us whether the author
+        // has a valid avatar - if this field exists and is set to false, skip setting
+        // the avatar URL
+        boolean hasAvatar;
+        if (jsonAuthor.has("has_avatar")) {
+            hasAvatar = jsonAuthor.optBoolean("has_avatar");
+        } else {
+            hasAvatar = true;
+        }
+        if (hasAvatar) {
+            post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
+        }
 
         // site_URL doesn't exist for /sites/ endpoints, so get it from the author
         if (TextUtils.isEmpty(post.blogUrl)) {
