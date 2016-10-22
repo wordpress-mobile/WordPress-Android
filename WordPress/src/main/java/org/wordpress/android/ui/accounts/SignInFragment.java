@@ -335,9 +335,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     public boolean canAutofillUsernameAndPassword() {
         return EditTextUtils.getText(mUsernameEditText).isEmpty()
-               && EditTextUtils.getText(mPasswordEditText).isEmpty()
-               && mUsernameEditText != null
-               && mPasswordEditText != null;
+                && EditTextUtils.getText(mPasswordEditText).isEmpty()
+                && mUsernameEditText != null
+                && mPasswordEditText != null;
     }
 
     public void onCredentialRetrieved(Credential credential) {

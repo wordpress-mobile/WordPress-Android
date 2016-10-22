@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -68,7 +69,9 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         }
 
         mSmartLockHelper = new SmartLockHelper(this);
-        mSmartLockHelper.initSmartLockForPasswords();
+        if (!AppPrefs.wasAccessTokenMigrated()) {
+            mSmartLockHelper.initSmartLockForPasswords();
+        }
 
         ActivityId.trackLastActivity(ActivityId.LOGIN);
     }
