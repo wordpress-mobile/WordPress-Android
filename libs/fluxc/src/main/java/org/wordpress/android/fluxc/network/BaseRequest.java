@@ -22,8 +22,6 @@ import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
 
-import static org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN;
-
 public abstract class BaseRequest<T> extends Request<T> {
     public Uri mUri;
 
@@ -64,7 +62,7 @@ public abstract class BaseRequest<T> extends Request<T> {
             this.volleyError = volleyError;
         }
         public BaseNetworkError(@NonNull VolleyError volleyError) {
-            this.type = UNKNOWN;
+            this.type = GenericErrorType.UNKNOWN;
             this.message = "";
             this.volleyError = volleyError;
         }

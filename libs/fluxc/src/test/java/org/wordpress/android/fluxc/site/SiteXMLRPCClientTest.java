@@ -128,7 +128,7 @@ public class SiteXMLRPCClientTest {
                 "    </param>\n" +
                 "  </params>\n" +
                 "</methodResponse>\n";
-        mSiteXMLRPCClient.pullSite(site);
+        mSiteXMLRPCClient.fetchSite(site);
         assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 }

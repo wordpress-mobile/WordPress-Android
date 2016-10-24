@@ -67,7 +67,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         mAppSecrets = appSecrets;
     }
 
-    public void pullSites() {
+    public void fetchSites() {
         String url = WPCOMREST.me.sites.getUrlV1_1();
         final WPComGsonRequest<SitesResponse> request = WPComGsonRequest.buildGetRequest(url, null,
                 SitesResponse.class,
@@ -94,7 +94,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void pullSite(final SiteModel site) {
+    public void fetchSite(final SiteModel site) {
         String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
         final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
                 SiteWPComRestResponse.class,
@@ -153,7 +153,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void pullPostFormats(@NonNull final SiteModel site) {
+    public void fetchPostFormats(@NonNull final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).post_formats.getUrlV1_1();
         final WPComGsonRequest<PostFormatsResponse> request = WPComGsonRequest.buildGetRequest(url, null,
                 PostFormatsResponse.class,
