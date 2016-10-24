@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -26,6 +27,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
@@ -48,6 +50,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void fetchPost(final PostModel post, final SiteModel site) {
+        fetchPost(post, site, PostAction.FETCH_POST);
+    }
+
+    public void fetchPost(final PostModel post, final SiteModel site, final PostAction origin) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
@@ -60,14 +66,19 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     public void onResponse(Object response) {
                         if (response != null && response instanceof Map) {
                             PostModel postModel = postResponseObjectToPostModel(response, site, post.isPage());
+                            FetchPostResponsePayload payload;
                             if (postModel != null) {
-                                RemotePostPayload payload = new RemotePostPayload(postModel, site);
-                                mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
+                                if (origin == PostAction.PUSH_POST) {
+                                    postModel.setId(post.getId());
+                                }
+                                payload = new FetchPostResponsePayload(postModel, site);
                             } else {
-                                RemotePostPayload payload = new RemotePostPayload(post, site);
+                                payload = new FetchPostResponsePayload(post, site);
                                 payload.error = new PostError(PostErrorType.INVALID_RESPONSE);
-                                mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                             }
+                            payload.origin = origin;
+
+                            mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                         }
                     }
                 }, new BaseErrorListener() {
@@ -75,7 +86,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // Possible non-generic errors:
                         // 404 - "Invalid post ID."
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
                         // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
                         // Convert GenericErrorType to PostErrorType where applicable
                         PostError postError;
@@ -87,6 +98,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                                 postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
                         }
                         payload.error = postError;
+                        payload.origin = origin;
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                     }
                 });
@@ -179,7 +191,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         if (method.equals(XMLRPC.NEW_POST) && response instanceof String) {
-                            post.setRemotePostId(Integer.valueOf((String) response));
+                            post.setRemotePostId(Long.valueOf((String) response));
                         }
                         post.setIsLocalDraft(false);
                         post.setIsLocallyChanged(false);
@@ -296,7 +308,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
 
         post.setLocalSiteId(site.getId());
-        post.setRemotePostId(Integer.valueOf(postID));
+        post.setRemotePostId(Long.valueOf(postID));
         post.setTitle(MapUtils.getMapStr(postMap, "post_title"));
 
         Date dateCreatedGmt = MapUtils.getMapDate(postMap, "post_date_gmt");
