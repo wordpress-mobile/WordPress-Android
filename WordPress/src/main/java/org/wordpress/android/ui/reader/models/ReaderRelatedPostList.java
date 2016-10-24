@@ -2,17 +2,25 @@ package org.wordpress.android.ui.reader.models;
 
 import android.support.annotation.NonNull;
 
-import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class ReaderRelatedPostList extends ArrayList<ReaderRelatedPost> {
 
-    public ReaderRelatedPostList(@NonNull ReaderPostList posts) {
-        for (ReaderPost post: posts) {
-            add(new ReaderRelatedPost(post));
+    public static ReaderRelatedPostList fromJsonPosts(@NonNull JSONArray jsonPosts) {
+        ReaderRelatedPostList posts = new ReaderRelatedPostList();
+        for (int i = 0; i < jsonPosts.length(); i++) {
+            JSONObject jsonRelatedPost = jsonPosts.optJSONObject(i);
+            if (jsonRelatedPost != null) {
+                ReaderRelatedPost relatedPost = ReaderRelatedPost.fromJson(jsonRelatedPost);
+                if (relatedPost != null) {
+                    posts.add(relatedPost);
+                }
+            }
         }
+        return posts;
     }
 
 }
