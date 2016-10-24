@@ -17,7 +17,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;

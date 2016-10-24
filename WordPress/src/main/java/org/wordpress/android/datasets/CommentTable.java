@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteStatement;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;

@@ -14,7 +14,6 @@ import com.simperium.client.Bucket;
 import com.simperium.client.Query;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;

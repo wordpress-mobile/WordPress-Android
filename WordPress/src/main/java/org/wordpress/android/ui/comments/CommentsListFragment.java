@@ -22,7 +22,6 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
