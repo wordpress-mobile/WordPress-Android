@@ -6,10 +6,10 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/margin_small"
-    android:paddingLeft="@dimen/margin_small"
-    android:paddingRight="@dimen/margin_small"
-    android:paddingTop="@dimen/margin_small">
+    android:paddingBottom="@dimen/reader_follow_button_padding"
+    android:paddingLeft="@dimen/reader_follow_button_padding"
+    android:paddingRight="@dimen/reader_follow_button_padding"
+    android:paddingTop="@dimen/reader_follow_button_padding">
 
     <ImageView
         android:id="@+id/image_follow_button"
