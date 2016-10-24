@@ -392,25 +392,6 @@ public class WordPressDB {
         return blogs;
     }
 
-    public int getUnmoderatedCommentCount(int blogID) {
-        int commentCount = 0;
-
-        Cursor c = db
-                .rawQuery(
-                        "select count(*) from comments where blogID=? AND status='hold'",
-                        new String[]{String.valueOf(blogID)});
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        if (numRows > 0) {
-            commentCount = c.getInt(0);
-        }
-
-        c.close();
-
-        return commentCount;
-    }
-
     public void saveMediaFile(MediaFile mf) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_POST_ID, mf.getPostID());
