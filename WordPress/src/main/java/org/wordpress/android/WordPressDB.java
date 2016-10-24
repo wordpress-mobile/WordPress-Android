@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.text.TextUtils;
 
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.PeopleTable;
@@ -18,9 +17,6 @@ import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.LanguageUtils;
-import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -30,8 +26,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -484,48 +478,6 @@ public class WordPressDB {
     public Cursor getMediaImagesForBlog(String blogId) {
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND "
                 + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) AND mimeType LIKE ? ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "image%", "uploading"});
-    }
-
-    public MediaFile getMediaFile(String src, Post post) {
-        Cursor c = db.query(MEDIA_TABLE, null, "postID=? AND filePath=?",
-                new String[]{String.valueOf(post.getLocalTablePostId()), src}, null, null, null);
-
-        try {
-            if (c.moveToFirst()) {
-                MediaFile mf = new MediaFile();
-                mf.setId(c.getInt(0));
-                mf.setPostID(c.getInt(1));
-                mf.setFilePath(c.getString(2));
-                mf.setFileName(c.getString(3));
-                mf.setTitle(c.getString(4));
-                mf.setDescription(c.getString(5));
-                mf.setCaption(c.getString(6));
-                mf.setHorizontalAlignment(c.getInt(7));
-                mf.setWidth(c.getInt(8));
-                mf.setHeight(c.getInt(9));
-                mf.setMimeType(c.getString(10));
-                mf.setFeatured(c.getInt(11) > 0);
-                mf.setVideo(c.getInt(12) > 0);
-                mf.setFeaturedInPost(c.getInt(13) > 0);
-                mf.setFileURL(c.getString(14));
-                mf.setThumbnailURL(c.getString(15));
-                mf.setMediaId(c.getString(16));
-                mf.setBlogId(c.getString(17));
-                mf.setDateCreatedGMT(c.getLong(18));
-                mf.setUploadState(c.getString(19));
-                mf.setVideoPressShortCode(c.getString(20));
-
-                return mf;
-            } else {
-                return null;
-            }
-        } finally {
-            c.close();
-        }
-    }
-
-    public void deleteMediaFilesForPost(Post post) {
-        db.delete(MEDIA_TABLE, "blogId='" + post.getLocalTableBlogId() + "' AND postID=" + post.getLocalTablePostId(), null);
     }
 
     /** Get the queued media files for upload for a given blogId **/
