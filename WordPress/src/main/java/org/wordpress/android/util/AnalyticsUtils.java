@@ -250,6 +250,20 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
+    /**
+     * Track when app launched via deep-linking but then fell back to external browser
+     *
+     * @param stat The Stat to bump
+     * @param fallbackUri The fallback URI the app was started with
+     *
+     */
+    public static void trackWithDeepLinkFallbackData(AnalyticsTracker.Stat stat, String fallbackUri) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(INTENT_DATA, fallbackUri);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
   /**
    * Track when a railcar item has been rendered
    *

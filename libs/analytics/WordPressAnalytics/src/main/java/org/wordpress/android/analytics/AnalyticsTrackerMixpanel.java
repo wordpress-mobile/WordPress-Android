@@ -1090,6 +1090,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Deep linked");
                 break;
+            case DEEP_LINKED_FALLBACK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Deep linked fallback");
+                break;
             default:
                 instructions = null;
                 break;

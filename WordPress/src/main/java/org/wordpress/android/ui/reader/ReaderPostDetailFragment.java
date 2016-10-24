@@ -283,6 +283,7 @@ public class ReaderPostDetailFragment extends Fragment
             if (hasPost()) {
                 ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
             } else if (mFallbackUri != null) {
+                AnalyticsUtils.trackWithDeepLinkFallbackData(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mFallbackUri);
                 ReaderActivityLauncher.openUrl(getActivity(), mFallbackUri, OpenUrlType.EXTERNAL);
             }
             return true;
