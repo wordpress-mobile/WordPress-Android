@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.webkit.URLUtil;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -33,7 +32,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,38 +180,6 @@ public class ApiHelper {
         }
 
         return comments;
-    }
-
-    /**
-     * Delete a single post or page via XML-RPC API parameters follow those of FetchSinglePostTask
-     */
-    public static class DeleteSinglePostTask extends HelperAsyncTask<Object, Boolean, Boolean> {
-        SiteModel mSite;
-        String mPostId;
-        boolean mIsPage;
-
-        public DeleteSinglePostTask(SiteModel site, String postId, boolean isPage) {
-            mSite = site;
-            mPostId = postId;
-            mIsPage = isPage;
-        }
-
-        @Override
-        protected Boolean doInBackground(Object... arguments) {
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
-            Object[] params = {
-                    String.valueOf(mSite.getSiteId()),
-                    StringUtils.notNullStr(mSite.getUsername()),
-                    StringUtils.notNullStr(mSite.getPassword()),
-                    mPostId};
-            try {
-                client.call(mIsPage ? Method.DELETE_PAGE : Method.DELETE_POST, params);
-                return true;
-            } catch (XMLRPCException | IOException | XmlPullParserException e) {
-                mErrorMessage = e.getMessage();
-                return false;
-            }
-        }
     }
 
     public static class SyncMediaLibraryTask extends HelperAsyncTask<Void, Void, Integer> {
@@ -677,52 +643,6 @@ public class ApiHelper {
             }
         }
         return null;
-    }
-
-    /*
-     * fetches a single post saves it to the db - note that this should NOT be called from main thread
-     */
-    public static boolean updateSinglePost(SiteModel site, String remotePostId, boolean isPage) {
-        if (TextUtils.isEmpty(remotePostId)) {
-            return false;
-        }
-
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
-
-        Object[] apiParams;
-        if (isPage) {
-            apiParams = new Object[]{
-                    String.valueOf(site.getSiteId()),
-                    remotePostId,
-                    StringUtils.notNullStr(site.getUsername()),
-                    StringUtils.notNullStr(site.getPassword()),
-            };
-        } else {
-            apiParams = new Object[]{
-                    remotePostId,
-                    StringUtils.notNullStr(site.getUsername()),
-                    StringUtils.notNullStr(site.getPassword()),
-            };
-        }
-
-        try {
-            Object result = client.call(isPage ? Method.GET_PAGE : "metaWeblog.getPost", apiParams);
-
-            if (result != null && result instanceof Map) {
-                Map postMap = (HashMap) result;
-                List<Map<?, ?>> postsList = new ArrayList<>();
-                postsList.add(postMap);
-
-                WordPress.wpDB.savePosts(postsList, site.getId(), isPage, true);
-                return true;
-            } else {
-                return false;
-            }
-
-        } catch (XMLRPCException | IOException | XmlPullParserException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-            return false;
-        }
     }
 
     public static boolean editComment(SiteModel site, Comment comment, CommentStatus newStatus) {

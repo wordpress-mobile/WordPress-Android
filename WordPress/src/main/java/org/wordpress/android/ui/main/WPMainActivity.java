@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -69,6 +70,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.GCMMessageService.EXTRA_VOICE_REPLY;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -180,8 +183,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     case WPMainTabAdapter.TAB_NOTIFS:
                         setTabLayoutElevation(mAppBarElevation);
                         new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                        // Removes app notifications from the system bar as we're looking at them right now
-                        GCMMessageService.removeAllNotifications(WPMainActivity.this);
                         break;
                 }
 
@@ -298,8 +299,20 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     if (doApproveNote) {
                         NotificationsListFragment.openNoteForApprove(this, noteId);
                     } else {
+
+                        //if voice reply is enabled in a wearable, it will come through the remoteInput
+                        //extra EXTRA_VOICE_REPLY
+                        String voiceReply = null;
+                        Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                        if (remoteInput != null) {
+                            CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
+                            if (replyText != null) {
+                                voiceReply = replyText.toString();
+                            }
+                        }
+
                         boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard);
+                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
                     }
                 }
             } else {

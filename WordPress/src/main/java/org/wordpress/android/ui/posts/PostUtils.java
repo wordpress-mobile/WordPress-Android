@@ -1,19 +1,32 @@
 package org.wordpress.android.ui.posts;
 
+import android.text.TextUtils;
+import android.text.format.DateUtils;
+
+import org.apache.commons.lang.StringUtils;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostLocation;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.HtmlUtils;
 
+import java.text.BreakIterator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.wordpress.android.util.StringUtils.notNullStr;
+
 public class PostUtils {
+    private static final int MAX_EXCERPT_LEN = 150;
 
     private static final HashSet<String> mShortcodeTable = new HashSet<>();
 
@@ -88,8 +101,8 @@ public class PostUtils {
         return mShortcodeTable.contains(shortCode);
     }
 
-    public static void trackSavePostAnalytics(Post post, SiteModel site) {
-        PostStatus status = post.getStatusEnum();
+    public static void trackSavePostAnalytics(PostModel post, SiteModel site) {
+        PostStatus status = PostStatus.fromPost(post);
         switch (status) {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
@@ -102,7 +115,7 @@ public class PostUtils {
                 if (!post.isLocalDraft()) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site);
                 } else {
-                    Map<String, Object> properties = new HashMap<String, Object>();
+                    Map<String, Object> properties = new HashMap<>();
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
                             properties);
@@ -114,5 +127,147 @@ public class PostUtils {
             default:
                 // No-op
         }
+    }
+
+    public static boolean isPublishable(PostModel post) {
+        return !(post.getContent().isEmpty() && post.getExcerpt().isEmpty() && post.getTitle().isEmpty());
+    }
+
+    public static boolean hasEmptyContentFields(PostModel post) {
+        return TextUtils.isEmpty(post.getTitle()) && TextUtils.isEmpty(post.getContent());
+    }
+
+    /**
+     * Checks if two posts have differing data
+     */
+    public static boolean postHasEdits(PostModel oldPost, PostModel newPost) {
+        if (oldPost == null) {
+            return newPost != null;
+        }
+
+        return newPost == null || !(StringUtils.equals(oldPost.getTitle(), newPost.getTitle())
+                && StringUtils.equals(oldPost.getContent(), newPost.getContent())
+                && StringUtils.equals(oldPost.getExcerpt(), newPost.getExcerpt())
+                && StringUtils.equals(oldPost.getStatus(), newPost.getStatus())
+                && StringUtils.equals(oldPost.getPassword(), newPost.getPassword())
+                && StringUtils.equals(oldPost.getPostFormat(), newPost.getPostFormat())
+                && StringUtils.equals(oldPost.getDateCreated(), newPost.getDateCreated())
+                && oldPost.getTagIdList().containsAll(newPost.getTagIdList())
+                && newPost.getTagIdList().containsAll(oldPost.getTagIdList())
+                && oldPost.getCategoryIdList().containsAll(newPost.getCategoryIdList())
+                && newPost.getCategoryIdList().containsAll(oldPost.getCategoryIdList())
+                && PostLocation.equals(oldPost.getLocation(), newPost.getLocation())
+        );
+    }
+
+    public static String getPostListExcerptFromPost(PostModel post) {
+        if (StringUtils.isEmpty(post.getExcerpt())) {
+            return makeExcerpt(post.getContent());
+        } else {
+            return makeExcerpt(post.getExcerpt());
+        }
+    }
+
+
+    /*
+     * Java's string.trim() doesn't handle non-breaking space chars (#160), which may appear at the
+     * end of post content - work around this by converting them to standard spaces before trimming
+     */
+    private static final String NBSP = String.valueOf((char) 160);
+
+    private static String trimEx(final String s) {
+        return s.replace(NBSP, " ").trim();
+    }
+
+    private static String makeExcerpt(String description) {
+        if (TextUtils.isEmpty(description)) {
+            return null;
+        }
+
+        String s = HtmlUtils.fastStripHtml(description);
+        if (s.length() < MAX_EXCERPT_LEN) {
+            return trimEx(s);
+        }
+
+        StringBuilder result = new StringBuilder();
+        BreakIterator wordIterator = BreakIterator.getWordInstance();
+        wordIterator.setText(s);
+        int start = wordIterator.first();
+        int end = wordIterator.next();
+        int totalLen = 0;
+        while (end != BreakIterator.DONE) {
+            String word = s.substring(start, end);
+            result.append(word);
+            totalLen += word.length();
+            if (totalLen >= MAX_EXCERPT_LEN) {
+                break;
+            }
+            start = end;
+            end = wordIterator.next();
+        }
+
+        if (totalLen == 0) {
+            return null;
+        }
+        return trimEx(result.toString()) + "...";
+    }
+
+    public static String getFormattedDate(PostModel post) {
+        if (PostStatus.fromPost(post) == PostStatus.SCHEDULED) {
+            return DateUtils.formatDateTime(WordPress.getContext(),
+                    DateTimeUtils.timestampFromIso8601Millis(post.getDateCreated()), DateUtils.FORMAT_ABBREV_ALL);
+        } else {
+            return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateUTCFromIso8601(post.getDateCreated()),
+                    WordPress.getContext());
+        }
+    }
+
+    public static boolean postListsAreEqual(List<PostModel> lhs, List<PostModel> rhs) {
+        if (lhs == null || rhs == null || lhs.size() != rhs.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < rhs.size(); i++) {
+            PostModel newPost = rhs.get(i);
+            PostModel currentPost = lhs.get(i);
+
+            boolean postsAreEqual = newPost.getRemotePostId() == currentPost.getRemotePostId()
+                    && newPost.isLocalDraft() == currentPost.isLocalDraft()
+                    && newPost.isLocallyChanged() == currentPost.isLocallyChanged()
+                    && notNullStr(newPost.getTitle()).equals(notNullStr(currentPost.getTitle()))
+                    && notNullStr(newPost.getContent()).equals(notNullStr(currentPost.getContent()))
+                    && notNullStr(newPost.getDateCreated()).equals(notNullStr(currentPost.getDateCreated()))
+                    && notNullStr(newPost.getStatus()).equals(notNullStr(currentPost.getStatus()));
+
+            if (!postsAreEqual) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static int indexOfPostInList(final PostModel post, final List<PostModel> posts) {
+        if (post == null) {
+            return -1;
+        }
+        for (int i = 0; i < posts.size(); i++) {
+            if (posts.get(i).getId() == post.getId() &&
+                    posts.get(i).getLocalSiteId() == post.getLocalSiteId()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int indexOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
+        if (mediaId == 0) {
+            return -1;
+        }
+        for (int i = 0; i < posts.size(); i++) {
+            if (posts.get(i).getFeaturedImageId() == mediaId) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
