@@ -285,6 +285,7 @@ public class ReaderPostDetailFragment extends Fragment
             } else if (mFallbackUri != null) {
                 AnalyticsUtils.trackWithDeepLinkFallbackData(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mFallbackUri);
                 ReaderActivityLauncher.openUrl(getActivity(), mFallbackUri, OpenUrlType.EXTERNAL);
+                getActivity().finish();
             }
             return true;
         } else if (i == R.id.menu_share) {
