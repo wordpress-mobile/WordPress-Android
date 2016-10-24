@@ -170,9 +170,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
-    @Inject Dispatcher mDispatcher;
-    @Inject MediaStore mMediaStore;
-
     private Handler mHandler;
     private boolean mShowNewEditor;
 
@@ -220,6 +217,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
+    @Inject MediaStore mMediaStore;
 
     private SiteModel mSite;
 
