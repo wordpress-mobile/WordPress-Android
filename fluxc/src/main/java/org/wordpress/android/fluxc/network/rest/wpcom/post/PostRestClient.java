@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
@@ -61,7 +62,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         fetchedPost.setId(post.getId());
                         fetchedPost.setLocalSiteId(site.getId());
 
-                        RemotePostPayload payload = new RemotePostPayload();
+                        FetchPostResponsePayload payload = new FetchPostResponsePayload(fetchedPost, site);
                         payload.post = fetchedPost;
 
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
@@ -71,7 +72,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // Possible non-generic errors: 404 unknown_post (invalid post ID)
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
                         payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                     }
