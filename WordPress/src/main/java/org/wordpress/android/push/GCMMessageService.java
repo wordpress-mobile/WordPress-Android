@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -51,6 +52,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
 
 public class GCMMessageService extends GcmListenerService {
     private static final ArrayMap<Integer, Bundle> sActiveNotificationsMap = new ArrayMap<>();
@@ -467,14 +470,13 @@ public class GCMMessageService extends GcmListenerService {
 
         private void addCommentReplyActionForCommentNotification(NotificationCompat.Builder builder, String noteId) {
             // adding comment reply action
-            Intent commentReplyIntent = getCommentActionIntent();
+            Intent commentReplyIntent = getCommentActionReplyIntent(noteId);
             commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
             commentReplyIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_REPLY);
             if (noteId != null) {
                 commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
-
-            PendingIntent commentReplyPendingIntent =  PendingIntent.getService(mContext, 0, commentReplyIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent commentReplyPendingIntent = getCommentActionPendingIntent(commentReplyIntent);
 
             /*
             The following code adds the behavior for Direct reply, available on Android N (7.0) and on.
@@ -505,7 +507,7 @@ public class GCMMessageService extends GcmListenerService {
             if (noteId != null) {
                 commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
-            PendingIntent commentLikePendingIntent =  PendingIntent.getService(mContext, 0, commentLikeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent commentLikePendingIntent =  getCommentActionPendingIntenForService(commentLikeIntent);
             builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                     commentLikePendingIntent);
         }
@@ -518,13 +520,53 @@ public class GCMMessageService extends GcmListenerService {
             if (noteId != null) {
                 commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
-            PendingIntent commentApprovePendingIntent =  PendingIntent.getService(mContext, 0, commentApproveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntenForService(commentApproveIntent);
             builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
                     commentApprovePendingIntent);
         }
 
+        private PendingIntent getCommentActionPendingIntent(Intent intent){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                return getCommentActionPendingIntenForService(intent);
+            } else {
+                return getCommentActionPendingIntenForActivity(intent);
+            }
+        }
+
+        private PendingIntent getCommentActionPendingIntenForService(Intent intent){
+            return PendingIntent.getService(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        }
+
+        private PendingIntent getCommentActionPendingIntenForActivity(Intent intent){
+            return PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        }
+
+        private Intent getCommentActionReplyIntent(String noteId){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                return getCommentActionIntentForService();
+            } else {
+                return getCommentActionIntentForActivity(noteId);
+            }
+        }
+
         private Intent getCommentActionIntent(){
+            return getCommentActionIntentForService();
+        }
+
+        private Intent getCommentActionIntentForService(){
             return new Intent(mContext, NotificationsProcessingService.class);
+        }
+
+        private Intent getCommentActionIntentForActivity(String noteId){
+            Intent intent = new Intent(mContext, WPMainActivity.class);
+            intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setAction("android.intent.action.MAIN");
+            intent.addCategory("android.intent.category.LAUNCHER");
+            intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+            intent.putExtra(NOTE_INSTANT_REPLY_EXTRA, true);
+            return intent;
         }
 
         private Bitmap getLargeIconBitmap(String iconUrl, boolean shouldCircularizeIcon){

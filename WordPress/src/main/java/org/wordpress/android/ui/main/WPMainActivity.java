@@ -30,6 +30,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -285,8 +286,16 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     }
                 }
 
-                boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
+                if (voiceReply != null) {
+                    NotificationsProcessingService.startServiceForReply(this, noteId, voiceReply);
+                    finish();
+                    return; //we don't want this notification to be dismissed as we still have to make sure
+                    // we processed the voice reply, so we exit this function immediately
+                } else {
+                    boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
+                }
+
             } else {
                 SimperiumUtils.trackBucketObjectMissingWarning("No note id found in PN", "");
             }
