@@ -24,10 +24,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
@@ -64,6 +66,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
+import org.wordpress.android.widgets.WPTextView;
 
 import java.util.EnumSet;
 
@@ -75,6 +78,7 @@ public class ReaderPostDetailFragment extends Fragment
                    ReaderCustomViewListener,
                    ReaderWebViewPageFinishedListener,
                    ReaderWebViewUrlClickListener {
+    private static final int INTENT_WELCOME = 0;
 
     private long mPostId;
     private long mBlogId;
@@ -95,6 +99,8 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderLikingUsersView mLikingUsersView;
     private View mLikingUsersDivider;
     private View mLikingUsersLabel;
+    private WPTextView mSignInButton;
+
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
@@ -238,8 +244,26 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutFooter.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
 
+        mSignInButton = (WPTextView) view.findViewById(R.id.nux_sign_in_button);
+        mSignInButton.setOnClickListener(mSignInClickListener);
+
         return view;
     }
+
+    private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // make sure we reload the post upon return
+            mHasAlreadyRequestedPost = false;
+
+            // hide the error screen
+            showError(null);
+
+            Intent parentIntent = getActivity().getIntent();
+            parentIntent.setClass(getActivity(), SignInActivity.class);
+            startActivityForResult(parentIntent, INTENT_WELCOME);
+        }
+    };
 
     @Override
     public void onDestroy() {
@@ -268,7 +292,7 @@ public class ReaderPostDetailFragment extends Fragment
         boolean postHasUrl = hasPost() && mPost.hasUrl();
         MenuItem mnuBrowse = menu.findItem(R.id.menu_browse);
         if (mnuBrowse != null) {
-            mnuBrowse.setVisible(postHasUrl || (mFallbackUri != null));
+            mnuBrowse.setVisible(postHasUrl || ((mFallbackUri != null) && AccountHelper.isSignedIn()));
         }
         MenuItem mnuShare = menu.findItem(R.id.menu_share);
         if (mnuShare != null) {
@@ -356,6 +380,12 @@ public class ReaderPostDetailFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
         if (!hasPost()) {
             showPost();
         }
@@ -785,8 +815,14 @@ public class ReaderPostDetailFragment extends Fragment
                         switch (statusCode) {
                             case 401:
                             case 403:
-                                errMsgResId = (mFallbackUri == null) ? R.string.reader_err_get_post_not_authorized
-                                        : R.string.reader_err_get_post_not_authorized_fallback;
+                                if (AccountHelper.isSignedIn()) {
+                                    errMsgResId = (mFallbackUri == null) ? R.string.reader_err_get_post_not_authorized
+                                            : R.string.reader_err_get_post_not_authorized_fallback;
+                                    mSignInButton.setVisibility(View.GONE);
+                                } else {
+                                    errMsgResId = R.string.reader_err_get_post_not_authorized;
+                                    mSignInButton.setVisibility(View.VISIBLE);
+                                }
                                 break;
                             case 404:
                                 errMsgResId = R.string.reader_err_get_post_not_found;
@@ -800,6 +836,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             }
         };
+
         if (mIsFeed) {
             ReaderPostActions.requestFeedPost(mBlogId, mPostId, listener);
         } else {
@@ -821,6 +858,10 @@ public class ReaderPostDetailFragment extends Fragment
         txtError.setText(errorMessage);
         if (txtError.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(txtError, AniUtils.Duration.MEDIUM);
+        } else {
+            if (errorMessage == null) {
+                txtError.setVisibility(View.GONE);
+            }
         }
         mErrorMessage = errorMessage;
     }
@@ -1230,4 +1271,13 @@ public class ReaderPostDetailFragment extends Fragment
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            if (isAdded()) {
+                getActivity().finish();
+            }
+        }
+    }
 }

@@ -62,7 +62,16 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                     mInterceptType = InterceptType.VIEWPOST;
                     mBlogId = uri.getQueryParameter("blogId");
                     mPostId = uri.getQueryParameter("postId");
-                    break;
+
+                    // if user is logged in, show the post right away - otherwise show welcome activity
+                    // and then show the post once the user has logged in
+                    if (AccountHelper.isSignedInWordPressDotCom()) {
+                        showPost();
+                    } else {
+                        Intent intent = new Intent(this, SignInActivity.class);
+                        startActivityForResult(intent, INTENT_WELCOME);
+                    }
+                    return;
                 case "http":
                 case "https":
                     mFallbackUri = uri.toString();
@@ -86,6 +95,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                             if (segments.size() > 4 && segments.get(3).equals("posts")) {
                                 mPostId = segments.get(4);
                             }
+                            showPost();
+                            return;
                         } else if (segments.size() == 4) {
                             mBlogId = uri.getHost();
                             try {
@@ -95,22 +106,21 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                                 ToastUtils.showToast(this, R.string.error_generic);
                             }
                             mInterceptType = InterceptType.READER_POST_SLUG;
+                            showPost();
+                            return;
                         }
                     }
+
                     break;
             }
 
-            // if user is logged in, show the post right away - otherwise show welcome activity
-            // and then show the post once the user has logged in
-            if (AccountHelper.isSignedInWordPressDotCom()) {
-                showPost();
-            } else {
-                Intent intent = new Intent(this, SignInActivity.class);
-                startActivityForResult(intent, INTENT_WELCOME);
-            }
-        } else {
-            finish();
+            // at this point, just show the entry screen
+            Intent intent = new Intent(this, WPLaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
+
+        finish();
     }
 
     @Override
