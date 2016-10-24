@@ -381,6 +381,7 @@
 	<string name="location">Sted</string>
 	<string name="media">Media</string>
 	<string name="delete">Slett</string>
+	<string name="approve">Godkjenn</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Blogger</string>
 	<string name="select_photo">Velg et foto fra galleriet</string>
