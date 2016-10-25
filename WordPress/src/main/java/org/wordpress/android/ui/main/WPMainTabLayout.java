@@ -63,8 +63,9 @@ public class WPMainTabLayout extends TabLayout {
      * unread notifications
      */
     void checkNoteBadge() {
+        // TODO: Check if the user has unread notes and update the badge
         showNoteBadge(false);
-    } // TODO:
+    }
 
     void showNoteBadge(boolean showBadge) {
         if (mNoteBadge == null) return;
