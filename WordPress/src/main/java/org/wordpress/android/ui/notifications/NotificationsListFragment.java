@@ -2,6 +2,8 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,7 +21,6 @@ import android.widget.TextView;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
-import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
@@ -41,8 +42,6 @@ public class NotificationsListFragment extends Fragment
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
-    public static final String NOTE_INSTANT_LIKE_EXTRA = "instantLike";
-    public static final String NOTE_INSTANT_APPROVE_EXTRA = "instantApprove";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
 
@@ -175,9 +174,9 @@ public class NotificationsListFragment extends Fragment
         }
     };
 
-    private static Intent getOpenNoteIntent(Activity activity,
+    private static Intent getOpenNoteIntent(Context context,
                                 String noteId) {
-        Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
+        Intent detailIntent = new Intent(context, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
         return detailIntent;
     }
@@ -202,42 +201,6 @@ public class NotificationsListFragment extends Fragment
         if (!TextUtils.isEmpty(replyText)) {
             detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText);
         }
-        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
-    }
-
-    /**
-     * Open a note fragment based on the type of note, signaling to issue a like action immediately
-     */
-    public static void openNoteForLike(Activity activity,
-                                       String noteId) {
-        if (noteId == null || activity == null) {
-            return;
-        }
-
-        if (activity.isFinishing()) {
-            return;
-        }
-
-        Intent detailIntent = getOpenNoteIntent(activity, noteId);
-        detailIntent.putExtra(NOTE_INSTANT_LIKE_EXTRA, true);
-        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
-    }
-
-    /**
-     * Open a note fragment based on the type of note, signaling to issue a moderate:approve action immediately
-     */
-    public static void openNoteForApprove(Activity activity,
-                                       String noteId) {
-        if (noteId == null || activity == null) {
-            return;
-        }
-
-        if (activity.isFinishing()) {
-            return;
-        }
-
-        Intent detailIntent = getOpenNoteIntent(activity, noteId);
-        detailIntent.putExtra(NOTE_INSTANT_APPROVE_EXTRA, true);
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 

@@ -1,5 +1,5 @@
 
-package org.wordpress.android;
+package org.wordpress.android.push;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -20,6 +20,8 @@ import com.google.android.gms.gcm.GcmListenerService;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
@@ -57,6 +59,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final int PUSH_NOTIFICATION_ID = 10000;
     private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
+    public static final int ACTIONS_RESULT_NOTIFICATION_ID = 40000;
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     private static final int MAX_INBOX_ITEMS = 5;
 
@@ -298,12 +301,11 @@ public class GCMMessageService extends GcmListenerService {
         // adding comment reply action
         Intent commentReplyIntent = getCommentActionIntent();
         commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
-        commentReplyIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
+        commentReplyIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_REPLY);
         if (noteId != null) {
-            commentReplyIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+            commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-        PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(this, 0, commentReplyIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent commentReplyPendingIntent =  PendingIntent.getService(this, 0, commentReplyIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
 
@@ -325,12 +327,11 @@ public class GCMMessageService extends GcmListenerService {
         // adding comment like action
         Intent commentLikeIntent = getCommentActionIntent();
         commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
-        commentLikeIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, true);
+        commentLikeIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_LIKE);
         if (noteId != null) {
-            commentLikeIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+            commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-        PendingIntent commentLikePendingIntent = PendingIntent.getActivity(this, 0, commentLikeIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent commentLikePendingIntent =  PendingIntent.getService(this, 0, commentLikeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                 commentLikePendingIntent);
     }
@@ -339,23 +340,17 @@ public class GCMMessageService extends GcmListenerService {
         // adding comment approve action
         Intent commentApproveIntent = getCommentActionIntent();
         commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
-        commentApproveIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, true);
+        commentApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_APPROVE);
         if (noteId != null) {
-            commentApproveIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+            commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-        PendingIntent commentApprovePendingIntent = PendingIntent.getActivity(this, 0, commentApproveIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent commentApprovePendingIntent =  PendingIntent.getService(this, 0, commentApproveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
                 commentApprovePendingIntent);
     }
 
     private Intent getCommentActionIntent(){
-        Intent intent = new Intent(this, WPMainActivity.class);
-        intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setAction("android.intent.action.MAIN");
-        intent.addCategory("android.intent.category.LAUNCHER");
+        Intent intent = new Intent(this, NotificationsProcessingService.class);
         return intent;
     }
 
