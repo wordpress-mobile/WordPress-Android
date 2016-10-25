@@ -9,11 +9,10 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.simperium.client.BucketObjectMissingException;
-
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
@@ -22,7 +21,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
@@ -36,7 +35,6 @@ import org.wordpress.android.util.ToastUtils;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
@@ -68,55 +66,51 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 return;
             }
 
-            if (SimperiumUtils.getNotesBucket() != null) {
-                try {
-                    Note note = SimperiumUtils.getNotesBucket().get(noteId);
-
-                    Map<String, String> properties = new HashMap<>();
-                    properties.put("notification_type", note.getType());
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
-
-                    Fragment detailFragment = getDetailFragmentForNote(note);
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.notifications_detail_container, detailFragment)
-                            .commitAllowingStateLoss();
-
-                    //set title
-                    if (getSupportActionBar() != null) {
-                        String title = note.getTitle();
-                        if (TextUtils.isEmpty(title)) {
-                            //set a deafult title if title is not set within the note
-                            switch(note.getType()) {
-                                case NOTE_FOLLOW_TYPE:
-                                    title = getString(R.string.follows);
-                                    break;
-                                case NOTE_COMMENT_LIKE_TYPE:
-                                    title = getString(R.string.comment_likes);
-                                    break;
-                                case NOTE_LIKE_TYPE:
-                                    title = getString(R.string.like);
-                                    break;
-                                case NOTE_COMMENT_TYPE:
-                                    title = getString(R.string.comment);
-                                    break;
-                            }
-                        }
-                        getSupportActionBar().setTitle(title);
-                    }
-
-                    // mark the note as read if it's unread
-                    if (note.isUnread()) {
-                        // mark as read which syncs with simperium
-                        note.markAsRead();
-                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-                    }
-                } catch (BucketObjectMissingException e) {
-                    showErrorToastAndFinish();
-                    return;
-                }
+            final Note note = NotificationsTable.getNoteById(noteId);
+            if (note == null) {
+                showErrorToastAndFinish();
+                return;
             }
 
-            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);//clearNotifications();
+            Map<String, String> properties = new HashMap<>();
+            properties.put("notification_type", note.getType());
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+
+            Fragment detailFragment = getDetailFragmentForNote(note);
+            getFragmentManager().beginTransaction()
+                    .add(R.id.notifications_detail_container, detailFragment)
+                    .commitAllowingStateLoss();
+
+            //set title
+            if (getSupportActionBar() != null) {
+                String title = note.getTitle();
+                if (TextUtils.isEmpty(title)) {
+                    //set a deafult title if title is not set within the note
+                    switch (note.getType()) {
+                        case NOTE_FOLLOW_TYPE:
+                            title = getString(R.string.follows);
+                            break;
+                        case NOTE_COMMENT_LIKE_TYPE:
+                            title = getString(R.string.comment_likes);
+                            break;
+                        case NOTE_LIKE_TYPE:
+                            title = getString(R.string.like);
+                            break;
+                        case NOTE_COMMENT_TYPE:
+                            title = getString(R.string.comment);
+                            break;
+                    }
+                }
+                getSupportActionBar().setTitle(title);
+            }
+
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(note.getTitle());
+            }
+
+            NotificationsActions.markNoteAsRead(note);
+            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
 
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
@@ -126,8 +120,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
-
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

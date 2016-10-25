@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -15,29 +16,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.simperium.client.Bucket;
-import com.simperium.client.BucketObjectMissingException;
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
 public class NotificationsListFragment extends Fragment
-        implements Bucket.Listener<Note>,
-                   WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener {
+        implements WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
@@ -49,6 +59,7 @@ public class NotificationsListFragment extends Fragment
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
     private NotesAdapter mNotesAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerView mRecyclerView;
     private ViewGroup mEmptyView;
@@ -57,8 +68,6 @@ public class NotificationsListFragment extends Fragment
     private View mFilterDivider;
 
     private int mRestoredScrollPosition;
-
-    private Bucket<Note> mBucket;
 
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
@@ -77,7 +86,7 @@ public class NotificationsListFragment extends Fragment
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notes);
 
-        mFilterRadioGroup = (RadioGroup)view.findViewById(R.id.notifications_radio_group);
+        mFilterRadioGroup = (RadioGroup) view.findViewById(R.id.notifications_radio_group);
         mFilterRadioGroup.setOnCheckedChangeListener(this);
         mFilterDivider = view.findViewById(R.id.notifications_filter_divider);
         mEmptyView = (ViewGroup) view.findViewById(R.id.empty_view);
@@ -86,6 +95,14 @@ public class NotificationsListFragment extends Fragment
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_notifications);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchNotes();
+            }
+        });
+
         return view;
     }
 
@@ -93,71 +110,70 @@ public class NotificationsListFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mRecyclerView.setAdapter(getNotesAdapter());
+
         if (savedInstanceState != null) {
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
         }
+
+        fetchNotes();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        configureBucketAndAdapter();
         refreshNotes();
 
-        // start listening to bucket change events
-        if (mBucket != null) {
-            mBucket.addListener(this);
-        }
-
-        if (SimperiumUtils.isUserAuthorized()) {
-            SimperiumUtils.startBuckets();
-            AppLog.i(AppLog.T.NOTIFS, "Starting Simperium buckets");
-        }
+        // Removes app notifications from the system bar
+        new Thread(new Runnable() {
+            public void run() {
+                GCMMessageService.removeAllNotifications(getActivity());
+            }
+        }).start();
     }
 
     @Override
-    public void onPause() {
-        // unregister the listener
-        if (mBucket != null) {
-            mBucket.removeListener(this);
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        // Close Simperium cursor
-        if (mNotesAdapter != null) {
-            mNotesAdapter.closeCursor();
-        }
-
-        super.onDestroy();
-    }
-
-    // Sets up the notes bucket and list adapter
-    private void configureBucketAndAdapter() {
-        mBucket = SimperiumUtils.getNotesBucket();
-        if (mBucket != null) {
-            if (mNotesAdapter == null) {
-                mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
-                mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
-            }
-
-            if (mRecyclerView.getAdapter() == null) {
-                mRecyclerView.setAdapter(mNotesAdapter);
-            }
-        } else {
-            if (!AccountHelper.isSignedInWordPressDotCom()) {
-                // let user know that notifications require a wp.com account and enable sign-in
-                showEmptyView(R.string.notifications_account_required, 0, R.string.sign_in);
-                mFilterRadioGroup.setVisibility(View.GONE);
-            } else {
-                // failed for some other reason
-                showEmptyView(R.string.error_refresh_notifications);
-            }
+    public void onDataLoaded(boolean isEmpty) {
+        if (isEmpty) {
+            fetchNotes();
         }
     }
+
+    private void refreshNotes() {
+        mNotesAdapter.reloadNotes();
+    }
+
+    private RecyclerView.Adapter getNotesAdapter() {
+        if (mNotesAdapter == null) {
+            mNotesAdapter = new NotesAdapter(getActivity(), this, mOnLoadMoreListener);
+            mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
+        }
+
+        return mNotesAdapter;
+    }
+
+    private final NotesAdapter.OnLoadMoreListener mOnLoadMoreListener = new NotesAdapter.OnLoadMoreListener() {
+        @Override
+        public void onLoadMore(long noteTimestamp) {
+            Map<String, String> params = new HashMap<>();
+            AppLog.d(AppLog.T.NOTIFS, String.format("Requesting more notes before %s", noteTimestamp));
+            params.put("before", String.valueOf(noteTimestamp));
+            NotesResponseHandler notesHandler = new NotesResponseHandler() {
+                @Override
+                public void onNotes(List<Note> notes) {
+                    // API returns 'on or before' timestamp, so remove first item
+                    if (notes.size() >= 1) {
+                        notes.remove(0);
+                    }
+                    //mNotesAdapter.setAllNotesLoaded(notes.size() == 0);
+                    mNotesAdapter.addAll(notes, false);
+                }
+            };
+            WordPress.getRestClientUtilsV1_1().getNotifications(params, notesHandler, notesHandler);
+
+        }
+    };
 
     private final OnNoteClickListener mOnNoteClickListener = new OnNoteClickListener() {
         @Override
@@ -176,7 +192,7 @@ public class NotificationsListFragment extends Fragment
     };
 
     private static Intent getOpenNoteIntent(Activity activity,
-                                String noteId) {
+                                            String noteId) {
         Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
         return detailIntent;
@@ -227,7 +243,7 @@ public class NotificationsListFragment extends Fragment
      * Open a note fragment based on the type of note, signaling to issue a moderate:approve action immediately
      */
     public static void openNoteForApprove(Activity activity,
-                                       String noteId) {
+                                          String noteId) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -286,7 +302,7 @@ public class NotificationsListFragment extends Fragment
                 descriptionTextView.setVisibility(View.GONE);
             }
 
-            TextView btnAction = (TextView)mEmptyView.findViewById(R.id.button_empty_action);
+            TextView btnAction = (TextView) mEmptyView.findViewById(R.id.button_empty_action);
             if (buttonResId > 0) {
                 btnAction.setText(buttonResId);
                 btnAction.setVisibility(View.VISIBLE);
@@ -308,8 +324,8 @@ public class NotificationsListFragment extends Fragment
             AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mFilterView.getLayoutParams();
             if (isScrollable) {
                 params.setScrollFlags(
-                        AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL|
-                        AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+                        AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL |
+                                AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
                 );
             } else {
                 params.setScrollFlags(0);
@@ -317,6 +333,7 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
+    // TODO Needs impementation
     private void hideEmptyView() {
         if (isAdded() && mEmptyView != null) {
             setFilterViewScrollable(true);
@@ -325,40 +342,51 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
-    private void refreshNotes() {
-        if (!isAdded() || mNotesAdapter == null) {
+    public void fetchNotes() {
+        if (getActivity() == null) {
             return;
         }
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Filter the list according to the RadioGroup selection
-                int checkedId = mFilterRadioGroup.getCheckedRadioButtonId();
-                if (checkedId == R.id.notifications_filter_all) {
-                    mNotesAdapter.queryNotes();
-                } else if (checkedId == R.id.notifications_filter_unread) {
-                    mNotesAdapter.queryNotes(Note.Schema.UNREAD_INDEX, 1);
-                } else if (checkedId == R.id.notifications_filter_comments) {
-                    mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_COMMENT_TYPE);
-                } else if (checkedId == R.id.notifications_filter_follows) {
-                    mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_FOLLOW_TYPE);
-                } else if (checkedId == R.id.notifications_filter_likes) {
-                    mNotesAdapter.queryNotes(Note.Schema.TYPE_INDEX, Note.NOTE_LIKE_TYPE);
-                } else {
-                    mNotesAdapter.queryNotes();
-                }
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            mSwipeRefreshLayout.setRefreshing(true);
+            return;
+        }
 
-                restoreListScrollPosition();
-                if (mNotesAdapter.getCount() > 0) {
-                    hideEmptyView();
-                } else {
-                    showEmptyViewForCurrentFilter();
-                }
-            }
-        });
+        NotificationsActions.refreshNotifications(mNotesResponseHandler, mNotesResponseHandler);
     }
 
+    private NotesResponseHandler mNotesResponseHandler = new NotesResponseHandler() {
+        @Override
+        public void onNotes(final List<Note> notes) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            // nbradbury - saving notes can be slow, so do it in the background
+            new Thread() {
+                @Override
+                public void run() {
+                    NotificationsTable.saveNotes(notes, true);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mNotesAdapter.addAll(notes, true);
+                        }
+                    });
+                }
+            }.start();
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (!isAdded()) {
+                return;
+            }
+
+            mNotesAdapter.addAll(new ArrayList<Note>(), true);
+            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_notifications));
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    };
+
+    // TODO Needs impementation
     // Show different empty list message and action button based on the active filter
     private void showEmptyViewForCurrentFilter() {
         if (!AccountHelper.isSignedInWordPressDotCom()) return;
@@ -421,9 +449,10 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
+    // TODO Needs impementation
     private void restoreListScrollPosition() {
         if (isAdded() && mRecyclerView != null && mRestoredScrollPosition != RecyclerView.NO_POSITION
-                && mRestoredScrollPosition < mNotesAdapter.getCount()) {
+                && mRestoredScrollPosition < mNotesAdapter.getItemCount()) {
             // Restore scroll position in list
             mLinearLayoutManager.scrollToPosition(mRestoredScrollPosition);
             mRestoredScrollPosition = RecyclerView.NO_POSITION;
@@ -454,46 +483,48 @@ public class NotificationsListFragment extends Fragment
         mRestoredScrollPosition = listPosition;
     }
 
-    // Notification filter methods
-    @Override
-    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-        refreshNotes();
-    }
+    abstract class NotesResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener {
+        abstract void onNotes(List<Note> notes);
 
-    /**
-     * Simperium bucket listener methods
-     */
-    @Override
-    public void onSaveObject(Bucket<Note> bucket, final Note object) {
-        refreshNotes();
-    }
+        @Override
+        public void onResponse(JSONObject response) {
+            if (response == null) {
+                //Not sure this could ever happen, but make sure we're catching all response types
+                AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
+                onNotes(new ArrayList<Note>(0));
+                return;
+            }
 
-    @Override
-    public void onDeleteObject(Bucket<Note> bucket, final Note object) {
-        refreshNotes();
-    }
-
-    @Override
-    public void onNetworkChange(Bucket<Note> bucket, final Bucket.ChangeType type, final String key) {
-        // Reset the note's local status when a remote change is received
-        if (type == Bucket.ChangeType.MODIFY) {
             try {
-                Note note = bucket.get(key);
-                if (note.isCommentType()) {
-                    note.setLocalStatus(null);
-                    note.save();
-                }
-            } catch (BucketObjectMissingException e) {
-                AppLog.e(AppLog.T.NOTIFS, "Could not create note after receiving change.");
+                List<Note> notes = NotificationsActions.parseNotes(response);
+                onNotes(notes);
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response", e);
+                showError(getString(R.string.error_generic));
             }
         }
 
-        refreshNotes();
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            showError();
+            AppLog.d(AppLog.T.NOTIFS, String.format("Error retrieving notes: %s", error));
+        }
+
+        void showError(final String errorMessage) {
+            if (isAdded()) {
+                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        void showError() {
+            showError(getString(R.string.error_generic));
+        }
     }
 
+    // Notification filter methods
     @Override
-    public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
-        //noop
+    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+        fetchNotes();
     }
 
     @Override

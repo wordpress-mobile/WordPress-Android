@@ -16,13 +16,17 @@ import android.support.v4.app.RemoteInput;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
+import com.android.volley.VolleyError;
 import com.google.android.gms.gcm.GcmListenerService;
-import com.simperium.client.BucketObjectMissingException;
+import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
@@ -31,8 +35,8 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -45,6 +49,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -93,9 +98,6 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private void handleDefaultPush(String from, @NonNull Bundle data) {
-        // Ensure Simperium is running so that notes sync
-        SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
-
         long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
         String pushUserId = data.getString(PUSH_ARG_USER);
         // pushUserId is always set server side, but better to double check it here.
@@ -122,30 +124,22 @@ public class GCMMessageService extends GcmListenerService {
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
-    private void trySaveNoteIfNotAlreadyInBucket(Bundle data) {
-        if (SimperiumUtils.getNotesBucket() != null) {
-            if (data == null) {
+    private boolean buildNoteObjectFromPNPayloadAndSaveIt(Bundle data) {
+           if (data == null) {
                 AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
-                return;
-            }
+            } else {
+               String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
+               String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
+               Note note = Note.buildFromBase64EncodedData(noteId, base64FullData);
+               if (note != null) {
+                   return NotificationsTable.saveNote(note, true);
+               }
+           }
 
-            String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
-            try {
-                SimperiumUtils.getNotesBucket().get(noteId);
-                // all good if we got here
-            } catch (BucketObjectMissingException e) {
-                AppLog.e(T.NOTIFS, e);
-                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-
-                if (data.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-                    //if note doesn't exist, try taking it from the PN payload, build it and save it
-                    // Simperium will take care of syncing local and server versions up at a later point
-                    String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
-                    Note note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
-                    SimperiumUtils.saveNote(note);
-                }
-            }
-        }
+        // At this point we don't have the note :(
+        AppLog.w(T.NOTIFS, "Cannot build the Note object by using info available in the PN payload. Please see " +
+                "previous log messages for detailed information about the error.");
+        return false;
     }
 
     private void buildAndShowNotificationFromNoteData(Bundle data) {
@@ -155,13 +149,42 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        if (TextUtils.isEmpty(data.getString(PUSH_ARG_NOTE_ID, ""))) {
+        final String wpcomNoteID = data.getString(PUSH_ARG_NOTE_ID, "");
+        if (TextUtils.isEmpty(wpcomNoteID)) {
             // At this point 'note_id' is always available in the notification bundle.
             AppLog.e(T.NOTIFS, "Push notification received without a valid note_id in in payload!");
             return;
         }
 
-        trySaveNoteIfNotAlreadyInBucket(data);
+        // Always do this, since a note can be updated!!
+        // The PN payload 99% of times contains the most recent version of the note.
+        if (!buildNoteObjectFromPNPayloadAndSaveIt(data)) {
+            // PN payload doesn't have the note or there was an error.
+            // Retrieve the Note obj by calling the REST API
+
+            WordPress.getRestClientUtilsV1_1().getNotification(
+                    wpcomNoteID,
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (response == null) {
+                                //Not sure this could ever happen, but make sure we're catching all response types
+                                AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
+                            }
+                            try {
+                                List<Note> notes = NotificationsActions.parseNotes(response);
+                                NotificationsTable.saveNotes(notes, true);
+                            } catch (JSONException e) {
+                                AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response for the note_id " + wpcomNoteID , e);
+                            }
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.e(AppLog.T.NOTIFS, "Error retrieving note with ID " + wpcomNoteID, error);
+                        }
+                    });
+        }
 
         String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
@@ -170,7 +193,6 @@ public class GCMMessageService extends GcmListenerService {
             title = getString(R.string.app_name);
         }
         String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
-        String wpcomNoteID = data.getString(PUSH_ARG_NOTE_ID, "");
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification
@@ -256,35 +278,30 @@ public class GCMMessageService extends GcmListenerService {
         // Add some actions if this is a comment notification
 
         boolean areActionsSet = false;
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note != null) {
+            //if note can be replied to, we'll always add this action first
+            if (note.canReply()) {
+                addCommentReplyActionForCommentNotification(builder, noteId);
+            }
 
-        if (SimperiumUtils.getNotesBucket() != null) {
-            try {
-                Note note = SimperiumUtils.getNotesBucket().get(noteId);
-                if (note != null) {
-                    //if note can be replied to, we'll always add this action first
-                    if (note.canReply()) {
-                        addCommentReplyActionForCommentNotification(builder, noteId);
-                    }
-
-                    // if the comment is lacking approval, offer moderation actions
-                    if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
-                        if (note.canModerate()) {
-                            addCommentApproveActionForCommentNotification(builder, noteId);
-                        }
-                    } else {
-                        //else offer REPLY / LIKE actions
-                        //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
-                        Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
-                        boolean isJetPackSite = blog != null ? blog.isJetpackPowered() : false;
-                        if (note.canLike() && !isJetPackSite) {
-                            addCommentLikeActionForCommentNotification(builder, noteId);
-                        }
+            // if the comment is lacking approval, offer moderation actions
+            if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
+                if (note.canModerate()) {
+                    addCommentApproveActionForCommentNotification(builder, noteId);
+                }
+            } else {
+                //else offer REPLY / LIKE actions
+                //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
+                if (note.canLike()) {
+                    Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
+                    boolean isJetPackSite = (blog != null) && blog.isJetpackPowered();
+                    if (note.canLike() && !isJetPackSite) {
+                        addCommentLikeActionForCommentNotification(builder, noteId);
                     }
                 }
-                areActionsSet = true;
-            } catch (BucketObjectMissingException e) {
-                AppLog.e(T.NOTIFS, e);
             }
+            areActionsSet = true;
         }
 
         // if we could not set the actions, set the default one REPLY as it's then only safe bet

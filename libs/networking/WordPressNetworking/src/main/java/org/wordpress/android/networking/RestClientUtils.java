@@ -165,6 +165,18 @@ public class RestClientUtils {
     }
 
     /**
+     * Get the notification identified by ID with default params.
+     * <p/>
+     * https://developer.wordpress.com/docs/api/1/get/notifications/%s
+     */
+    public void getNotification(String note_id, Listener listener, ErrorListener errorListener) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("fields", NOTIFICATION_FIELDS);
+        String path = String.format("notifications/%s", note_id);
+        get(path, params, null, listener, errorListener);
+    }
+
+    /**
      * Update the seen timestamp.
      * <p/>
      * https://developer.wordpress.com/docs/api/1/post/notifications/seen
@@ -173,6 +185,20 @@ public class RestClientUtils {
         Map<String, String> params = new HashMap<String, String>();
         params.put("time", timestamp);
         post("notifications/seen", params, null, listener, errorListener);
+    }
+
+    /**
+     * Mark a notification as read
+     * Decrement the unread count for a notification. Key=note_ID, Value=decrement amount.
+     *
+     * <p/>
+     * https://developer.wordpress.com/docs/api/1/post/notifications/read/
+     */
+    public void decrementUnreadCount(String noteId, String decrementAmount, Listener listener, ErrorListener errorListener) {
+        String path = "notifications/read";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(String.format("counts[%s]", noteId), decrementAmount);
+        post(path, params, null, listener, errorListener);
     }
 
     /**

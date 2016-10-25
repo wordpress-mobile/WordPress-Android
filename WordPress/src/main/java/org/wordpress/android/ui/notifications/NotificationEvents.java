@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
 public class NotificationEvents {
-    public static class SimperiumNotAuthorized {}
     public static class NotificationsChanged {}
     public static class NoteModerationFailed {}
     public static class NoteModerationStatusChanged {
@@ -28,6 +27,12 @@ public class NotificationEvents {
 
         public String getMessage() {
             return mMessage;
+        }
+    }
+    public static class NotificationsUnseenStatus {
+        public boolean hasUnseenNotes;
+        public NotificationsUnseenStatus(boolean hasUnseenNotes) {
+            this.hasUnseenNotes = hasUnseenNotes;
         }
     }
 }

@@ -1,92 +1,65 @@
 package org.wordpress.android.ui.notifications.adapters;
 
 import android.content.Context;
-import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.simperium.client.Bucket;
-import com.simperium.client.Query;
-
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.SqlUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.NoticonTextView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteViewHolder> {
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
+    private static final int NOTES_PAGE_COUNT = 20;
 
     private final int mAvatarSz;
-    private final Bucket<Note> mNotesBucket;
     private final int mColorRead;
     private final int mColorUnread;
     private final int mTextIndentSize;
     private final List<String> mHiddenNoteIds = new ArrayList<>();
     private final List<String> mModeratingNoteIds = new ArrayList<>();
+    private boolean mIsAddingNotes;
 
-    private Query mQuery;
+    private final DataLoadedListener mDataLoadedListener;
+    private final OnLoadMoreListener mOnLoadMoreListener;
+    private final ArrayList<Note> mNotes = new ArrayList<>();
+
+    public interface DataLoadedListener {
+        void onDataLoaded(boolean isEmpty);
+    }
+
+    public interface OnLoadMoreListener {
+        void onLoadMore(long timestamp);
+    }
 
     private NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
 
-    public NotesAdapter(Context context, Bucket<Note> bucket) {
-        super(context, null);
+    public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener) {
+        super();
+
+        mDataLoadedListener = dataLoadedListener;
+        mOnLoadMoreListener = onLoadMoreListener;
 
         setHasStableIds(true);
-
-        mNotesBucket = bucket;
-        // build a query that sorts by timestamp descending
-        mQuery = new Query();
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
         mColorRead = context.getResources().getColor(R.color.white);
         mColorUnread = context.getResources().getColor(R.color.grey_light);
         mTextIndentSize = context.getResources().getDimensionPixelSize(R.dimen.notifications_text_indent_sz);
-    }
-
-    public void closeCursor() {
-        Cursor cursor = getCursor();
-        if (cursor != null) {
-            cursor.close();
-        }
-    }
-
-    private Query getQueryDefaults() {
-        return mNotesBucket.query()
-                .include(
-                        Note.Schema.TIMESTAMP_INDEX,
-                        Note.Schema.SUBJECT_INDEX,
-                        Note.Schema.SNIPPET_INDEX,
-                        Note.Schema.UNREAD_INDEX,
-                        Note.Schema.ICON_URL_INDEX,
-                        Note.Schema.NOTICON_INDEX,
-                        Note.Schema.IS_UNAPPROVED_INDEX,
-                        Note.Schema.COMMENT_SUBJECT_NOTICON,
-                        Note.Schema.LOCAL_STATUS)
-                .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
-    }
-
-    public void queryNotes() {
-        mQuery = getQueryDefaults();
-        changeCursor(mQuery.execute());
-    }
-
-    public void queryNotes(String columnName, Object value) {
-        mQuery = getQueryDefaults();
-        mQuery.where(columnName, Query.ComparisonType.EQUAL_TO, value);
-        changeCursor(mQuery.execute());
     }
 
     public void addHiddenNoteId(String noteId) {
@@ -109,36 +82,24 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         notifyDataSetChanged();
     }
 
-    private String getStringForColumnName(Cursor cursor, String columnName) {
-        if (columnName == null || cursor == null || cursor.getColumnIndex(columnName) == -1) {
-            return "";
+    public void addAll(List<Note> notes, boolean clearBeforeAdding) {
+        if (notes.size() > 0) {
+            Collections.sort(notes, new Note.TimeStampComparator());
+            mIsAddingNotes = true;
+            try {
+                if (clearBeforeAdding) {
+                    mNotes.clear();
+                }
+                mNotes.addAll(notes);
+            } finally {
+                notifyDataSetChanged();
+                mIsAddingNotes = false;
+            }
         }
 
-        return StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(columnName)));
-    }
-
-    private int getIntForColumnName(Cursor cursor, String columnName) {
-        if (columnName == null || cursor == null || cursor.getColumnIndex(columnName) == -1) {
-            return -1;
+        if (mDataLoadedListener != null) {
+            mDataLoadedListener.onDataLoaded(getItemCount() == 0);
         }
-
-        return cursor.getInt(cursor.getColumnIndex(columnName));
-    }
-
-    private long getLongForColumnName(Cursor cursor, String columnName) {
-        if (columnName == null || cursor == null || cursor.getColumnIndex(columnName) == -1) {
-            return -1;
-        }
-
-        return cursor.getLong(cursor.getColumnIndex(columnName));
-    }
-
-    public int getCount() {
-        if (getCursor() != null) {
-            return getCursor().getCount();
-        }
-
-        return 0;
     }
 
     @Override
@@ -148,18 +109,48 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         return new NoteViewHolder(view);
     }
 
+    private Note getNoteAtPosition(int position) {
+        if (isValidPosition(position)) {
+            return mNotes.get(position);
+        }
+
+        return null;
+    }
+
+    private boolean isValidPosition(int position) {
+        return (position >= 0 && position < mNotes.size());
+    }
+
     @Override
-    public void onBindViewHolder(NoteViewHolder noteViewHolder, Cursor cursor) {
-        final Bucket.ObjectCursor<Note> objectCursor = (Bucket.ObjectCursor<Note>) cursor;
-        noteViewHolder.itemView.setTag(objectCursor.getSimperiumKey());
+    public int getItemCount() {
+        return mNotes.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        Note note = getNoteAtPosition(position);
+        if (note == null) {
+            return 0;
+        }
+        
+        return Long.valueOf(note.getId());
+    }
+
+    @Override
+    public void onBindViewHolder(NoteViewHolder noteViewHolder, int position) {
+        final Note note = getNoteAtPosition(position);
+        if (note == null) {
+            return;
+        }
+        noteViewHolder.itemView.setTag(note.getId());
 
         // Display group header
-        Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(getLongForColumnName(objectCursor, Note.Schema.TIMESTAMP_INDEX));
+        Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(note.getTimestamp());
 
         Note.NoteTimeGroup previousTimeGroup = null;
-        if (objectCursor.getPosition() > 0 && objectCursor.moveToPrevious()) {
-            previousTimeGroup = Note.getTimeGroupForTimestamp(getLongForColumnName(objectCursor, Note.Schema.TIMESTAMP_INDEX));
-            objectCursor.moveToNext();
+        if (position > 0) {
+            Note previousNote = getNoteAtPosition(position - 1);
+            previousTimeGroup = Note.getTimeGroupForTimestamp(previousNote.getTimestamp());
         }
 
         if (previousTimeGroup != null && previousTimeGroup == timeGroup) {
@@ -180,7 +171,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
             noteViewHolder.headerView.setVisibility(View.VISIBLE);
         }
 
-        if (mHiddenNoteIds.size() > 0 && mHiddenNoteIds.contains(objectCursor.getSimperiumKey())) {
+        if (mHiddenNoteIds.size() > 0 && mHiddenNoteIds.contains(note.getId())) {
             noteViewHolder.contentView.setVisibility(View.GONE);
             noteViewHolder.headerView.setVisibility(View.GONE);
         } else {
@@ -188,29 +179,27 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         }
 
         CommentStatus commentStatus = CommentStatus.UNKNOWN;
-        if (SqlUtils.sqlToBool(getIntForColumnName(objectCursor, Note.Schema.IS_UNAPPROVED_INDEX))) {
+        if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
             commentStatus = CommentStatus.UNAPPROVED;
         }
 
-        String localStatus = getStringForColumnName(objectCursor, Note.Schema.LOCAL_STATUS);
-        if (!TextUtils.isEmpty(localStatus)) {
-            commentStatus = CommentStatus.fromString(localStatus);
+        if (!TextUtils.isEmpty(note.getLocalStatus())) {
+            commentStatus = CommentStatus.fromString(note.getLocalStatus());
         }
 
-        if (mModeratingNoteIds.size() > 0 && mModeratingNoteIds.contains(objectCursor.getSimperiumKey())) {
+        if (mModeratingNoteIds.size() > 0 && mModeratingNoteIds.contains(note.getId())) {
             noteViewHolder.progressBar.setVisibility(View.VISIBLE);
         } else {
             noteViewHolder.progressBar.setVisibility(View.GONE);
         }
 
         // Subject is stored in db as html to preserve text formatting
-        String noteSubjectHtml = getStringForColumnName(objectCursor, Note.Schema.SUBJECT_INDEX).trim();
-        CharSequence noteSubjectSpanned = Html.fromHtml(noteSubjectHtml);
+        CharSequence noteSubjectSpanned = note.getFormattedSubject();
         // Trim the '\n\n' added by Html.fromHtml()
         noteSubjectSpanned = noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
         noteViewHolder.txtSubject.setText(noteSubjectSpanned);
 
-        String noteSubjectNoticon = getStringForColumnName(objectCursor, Note.Schema.COMMENT_SUBJECT_NOTICON);
+        String noteSubjectNoticon = note.getCommentSubjectNoticon();
         if (!TextUtils.isEmpty(noteSubjectNoticon)) {
             CommentUtils.indentTextViewFirstLine(noteViewHolder.txtSubject, mTextIndentSize);
             noteViewHolder.txtSubjectNoticon.setText(noteSubjectNoticon);
@@ -219,7 +208,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
             noteViewHolder.txtSubjectNoticon.setVisibility(View.GONE);
         }
 
-        String noteSnippet = getStringForColumnName(objectCursor, Note.Schema.SNIPPET_INDEX);
+        String noteSnippet = note.getCommentSubject();
         if (!TextUtils.isEmpty(noteSnippet)) {
             noteViewHolder.txtSubject.setMaxLines(2);
             noteViewHolder.txtDetail.setText(noteSnippet);
@@ -229,12 +218,12 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
             noteViewHolder.txtDetail.setVisibility(View.GONE);
         }
 
-        String avatarUrl = GravatarUtils.fixGravatarUrl(getStringForColumnName(objectCursor, Note.Schema.ICON_URL_INDEX), mAvatarSz);
+        String avatarUrl = GravatarUtils.fixGravatarUrl(note.getIconURL(), mAvatarSz);
         noteViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
-        boolean isUnread = SqlUtils.sqlToBool(getIntForColumnName(objectCursor, Note.Schema.UNREAD_INDEX));
+        boolean isUnread = note.isUnread();
 
-        String noticonCharacter = getStringForColumnName(objectCursor, Note.Schema.NOTICON_INDEX);
+        String noticonCharacter = note.getNoticonCharacter();
         noteViewHolder.noteIcon.setText(noticonCharacter);
         if (commentStatus == CommentStatus.UNAPPROVED) {
             noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_orange);
@@ -249,17 +238,18 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         } else {
             noteViewHolder.itemView.setBackgroundColor(mColorRead);
         }
+
+        // request to load more comments when we near the end
+        if (mOnLoadMoreListener != null && position >= getItemCount() - 1) {
+            mOnLoadMoreListener.onLoadMore(note.getTimestamp());
+        }
     }
 
     public int getPositionForNote(String noteId) {
-        Bucket.ObjectCursor<Note> cursor = (Bucket.ObjectCursor<Note>) getCursor();
-        if (cursor != null) {
-            for (int i = 0; i < cursor.getCount(); i++) {
-                cursor.moveToPosition(i);
-                String noteKey = cursor.getSimperiumKey();
-                if (noteKey != null && noteKey.equals(noteId)) {
-                    return i;
-                }
+        for (int i = 0; i < mNotes.size(); i++) {
+            String noteKey = mNotes.get(i).getId();
+            if (noteKey != null && noteKey.equals(noteId)) {
+                return i;
             }
         }
 
@@ -268,6 +258,27 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
 
     public void setOnNoteClickListener(NotificationsListFragment.OnNoteClickListener mNoteClickListener) {
         mOnNoteClickListener = mNoteClickListener;
+    }
+
+    public void reloadNotes() {
+        new ReloadNotesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private class ReloadNotesTask extends AsyncTask<Void, Void, ArrayList<Note>> {
+
+        @Override
+        protected ArrayList<Note> doInBackground(Void... voids) {
+            return NotificationsTable.getLatestNotes();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Note> notes) {
+            mNotes.clear();
+            mNotes.addAll(notes);
+            notifyDataSetChanged();
+
+            mDataLoadedListener.onDataLoaded(getItemCount() == 0);
+        }
     }
 
     class NoteViewHolder extends RecyclerView.ViewHolder {
@@ -282,7 +293,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         private final NoticonTextView noteIcon;
         private final View progressBar;
 
-        public NoteViewHolder(View view) {
+        NoteViewHolder(View view) {
             super(view);
             headerView = view.findViewById(R.id.time_header);
             contentView = view.findViewById(R.id.note_content_container);
