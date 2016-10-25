@@ -426,7 +426,7 @@ public class NotificationsProcessingService extends Service {
         }
 
         private void resetOriginalNotification(){
-            GCMMessageService.rebuildAndUpdateNotificationsOnSystemBarForThisNote(mNoteId);
+            GCMMessageService.rebuildAndUpdateNotificationsOnSystemBarForThisNote(mContext, mNoteId);
         }
 
     }
