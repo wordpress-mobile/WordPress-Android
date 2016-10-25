@@ -292,7 +292,7 @@ public class ReaderPostDetailFragment extends Fragment
         boolean postHasUrl = hasPost() && mPost.hasUrl();
         MenuItem mnuBrowse = menu.findItem(R.id.menu_browse);
         if (mnuBrowse != null) {
-            mnuBrowse.setVisible(postHasUrl || ((mFallbackUri != null) && AccountHelper.isSignedIn()));
+            mnuBrowse.setVisible(postHasUrl || (mFallbackUri != null));
         }
         MenuItem mnuShare = menu.findItem(R.id.menu_share);
         if (mnuShare != null) {
