@@ -823,7 +823,8 @@ public class ReaderPostDetailFragment extends Fragment
                                             : R.string.reader_err_get_post_not_authorized_fallback;
                                     mSignInButton.setVisibility(View.GONE);
                                 } else {
-                                    errMsgResId = R.string.reader_err_get_post_not_authorized;
+                                    errMsgResId = (mFallbackUri == null) ? R.string.reader_err_get_post_not_authorized
+                                            : R.string.reader_err_get_post_not_authorized_signin_fallback;
                                     mSignInButton.setVisibility(View.VISIBLE);
                                 }
                                 break;
