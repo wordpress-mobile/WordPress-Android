@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.BlockType;

@@ -23,13 +23,16 @@ import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.w3c.dom.Comment;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.Note;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
@@ -52,18 +55,18 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class EditCommentActivity extends AppCompatActivity {
-    static final String ARG_LOCAL_BLOG_ID = "blog_id";
-    static final String ARG_COMMENT_ID = "comment_id";
-    static final String ARG_NOTE_ID = "note_id";
+    static final String ARG_COMMENT = "ARG_COMMENT";
+    static final String ARG_NOTE_ID = "ARG_NOTE_ID";
 
     private static final int ID_DIALOG_SAVING = 0;
 
-    private int mLocalBlogId;
-    private long mCommentId;
-    private Comment mComment;
+    private SiteModel mSite;
+    private CommentModel mComment;
     private Note mNote;
 
+    @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject CommentStore mCommentStore;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -84,22 +87,32 @@ public class EditCommentActivity extends AppCompatActivity {
         ActivityId.trackLastActivity(ActivityId.COMMENT_EDITOR);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
+    }
+
     private void loadComment(Intent intent) {
         if (intent == null) {
             showErrorAndFinish();
             return;
         }
 
-        mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
-        mCommentId = intent.getLongExtra(ARG_COMMENT_ID, 0);
+        mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+        mComment = (CommentModel) intent.getSerializableExtra(ARG_COMMENT);
         final String noteId = intent.getStringExtra(ARG_NOTE_ID);
         if (noteId == null) {
-            mComment = CommentTable.getComment(mLocalBlogId, mCommentId);
             if (mComment == null) {
                 showErrorAndFinish();
                 return;
             }
-
             configureViews();
         } else {
             if (SimperiumUtils.getNotesBucket() != null) {
@@ -137,7 +150,7 @@ public class EditCommentActivity extends AppCompatActivity {
         }
 
         final EditText editContent = (EditText) this.findViewById(R.id.edit_comment_content);
-        editContent.setText(mComment.getCommentText());
+        editContent.setText(mComment.getContent());
 
         // show error when comment content is empty
         editContent.addTextChangedListener(new TextWatcher() {
@@ -252,7 +265,7 @@ public class EditCommentActivity extends AppCompatActivity {
         return !(authorName.equals(mComment.getAuthorName())
                 && authorEmail.equals(mComment.getAuthorEmail())
                 && authorUrl.equals(mComment.getAuthorUrl())
-                && content.equals(mComment.getCommentText()));
+                && content.equals(mComment.getContent()));
     }
 
     @Override
@@ -296,9 +309,8 @@ public class EditCommentActivity extends AppCompatActivity {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            SiteModel site = mSiteStore.getSiteByLocalId(mLocalBlogId);
-            if (site == null) {
-                AppLog.e(AppLog.T.COMMENTS, "Invalid local blog id:" + mLocalBlogId);
+            if (mSite == null) {
+                AppLog.e(AppLog.T.COMMENTS, "Invalid local blog id:" + mSite.getSiteId());
                 return false;
             }
             final String authorName = getEditTextStr(R.id.author_name);

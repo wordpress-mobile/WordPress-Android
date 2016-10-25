@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
@@ -51,7 +51,7 @@ public class CommentsListFragment extends Fragment {
     private boolean mCanLoadMoreComments = true;
     boolean mHasAutoRefreshedComments = false;
 
-    private final CommentStatus[] commentStatuses = {CommentStatus.UNKNOWN, CommentStatus.UNAPPROVED,
+    private final CommentStatus[] commentStatuses = {CommentStatus.ALL, CommentStatus.UNAPPROVED,
             CommentStatus.APPROVED, CommentStatus.TRASH, CommentStatus.SPAM};
 
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
@@ -243,7 +243,6 @@ public class CommentsListFragment extends Fragment {
 
             @Override
             public void onFilterSelected(int position, FilterCriteria criteria) {
-                //trackCommentsAnalytics();
                 AppPrefs.setCommentsStatusFilter((CommentStatus) criteria);
                 mCommentStatusFilter = (CommentStatus) criteria;
             }
@@ -344,9 +343,10 @@ public class CommentsListFragment extends Fragment {
         final CommentList updateComments = new CommentList();
 
         // build list of comments whose status is different than passed
-        for (Comment comment: selectedComments) {
-            if (comment.getStatusEnum() != newStatus)
+        for (Comment comment : selectedComments) {
+            if (CommentStatus.valueOf(comment.getStatus()) != newStatus) {
                 updateComments.add(comment);
+            }
         }
         if (updateComments.size() == 0) return;
 
