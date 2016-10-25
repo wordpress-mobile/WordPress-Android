@@ -3,6 +3,7 @@ package org.wordpress.android.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.fluxc.model.CommentStatus;
 
 import java.util.ArrayList;
 
@@ -45,9 +46,10 @@ public class CommentList extends ArrayList<Comment> {
      * returns true if any comments in this list have the passed status
      */
     public boolean hasAnyWithStatus(CommentStatus status) {
-        for (Comment comment: this) {
-            if (comment.getStatusEnum().equals(status))
+        for (Comment comment : this) {
+            if (status.toString().equals(comment.getStatus())) {
                 return true;
+            }
         }
         return false;
     }
@@ -56,9 +58,10 @@ public class CommentList extends ArrayList<Comment> {
      * returns true if any comments in this list do NOT have the passed status
      */
     public boolean hasAnyWithoutStatus(CommentStatus status) {
-        for (Comment comment: this) {
-            if (!comment.getStatusEnum().equals(status))
+        for (Comment comment : this) {
+            if (!status.toString().equals(comment.getStatus())) {
                 return true;
+            }
         }
         return false;
     }

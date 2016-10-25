@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AniUtils;
@@ -173,8 +173,9 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         // status is only shown for comments that haven't been approved
         final boolean showStatus;
-        switch (comment.getStatusEnum()) {
-            case SPAM :
+        CommentStatus commentStatus = CommentStatus.valueOf(comment.getStatus());
+        switch (commentStatus) {
+            case SPAM:
                 showStatus = true;
                 holder.txtStatus.setText(mStatusTextSpam);
                 holder.txtStatus.setTextColor(mStatusColorSpam);
@@ -184,7 +185,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 holder.txtStatus.setText(mStatusTextUnapproved);
                 holder.txtStatus.setTextColor(mStatusColorUnapproved);
                 break;
-            default :
+            default:
                 showStatus = false;
                 break;
         }
