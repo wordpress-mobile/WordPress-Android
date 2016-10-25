@@ -242,7 +242,7 @@ public class AppLog {
         PackageManager packageManager = context.getPackageManager();
         PackageInfo pkInfo = PackageUtils.getPackageInfo(context);
 
-        ApplicationInfo applicationInfo =  pkInfo != null ? pkInfo.applicationInfo : null;
+        ApplicationInfo applicationInfo = pkInfo != null ? pkInfo.applicationInfo : null;
         String appName;
         if (applicationInfo != null && packageManager.getApplicationLabel(applicationInfo) != null) {
             appName =  packageManager.getApplicationLabel(applicationInfo).toString();
@@ -272,7 +272,7 @@ public class AppLog {
         PackageManager packageManager = context.getPackageManager();
         PackageInfo pkInfo = PackageUtils.getPackageInfo(context);
 
-        ApplicationInfo applicationInfo =  pkInfo != null ? pkInfo.applicationInfo : null;
+        ApplicationInfo applicationInfo = pkInfo != null ? pkInfo.applicationInfo : null;
         String appName;
         if (applicationInfo != null && packageManager.getApplicationLabel(applicationInfo) != null) {
             appName =  packageManager.getApplicationLabel(applicationInfo).toString();
