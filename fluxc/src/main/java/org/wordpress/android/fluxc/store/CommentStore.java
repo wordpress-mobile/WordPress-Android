@@ -163,6 +163,10 @@ public class CommentStore extends Store {
         return CommentSqlUtils.getCommentsCountForSite(site, status);
     }
 
+    public CommentModel getCommentBySiteAndRemoteId(SiteModel site, long remoteCommentId) {
+        return CommentSqlUtils.getCommentBySiteAndRemoteId(site, remoteCommentId);
+    }
+
     public CommentModel getCommentByLocalId(int localId) {
         return CommentSqlUtils.getCommentByLocalCommentId(localId);
     }
