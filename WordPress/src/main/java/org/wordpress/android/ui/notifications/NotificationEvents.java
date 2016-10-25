@@ -29,4 +29,10 @@ public class NotificationEvents {
             return mMessage;
         }
     }
+    public static class NotificationsUnseenStatus {
+        public boolean hasUnseenNotes;
+        public NotificationsUnseenStatus(boolean hasUnseenNotes) {
+            this.hasUnseenNotes = hasUnseenNotes;
+        }
+    }
 }

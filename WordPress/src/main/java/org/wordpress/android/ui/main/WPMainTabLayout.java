@@ -41,7 +41,6 @@ public class WPMainTabLayout extends TabLayout {
         addTab(R.drawable.main_tab_reader, R.string.reader, false);
         addTab(R.drawable.main_tab_me, R.string.tabbar_accessibility_label_me, false);
         addTab(R.drawable.main_tab_notifications, R.string.notifications, true);
-        checkNoteBadge();
     }
 
     private void addTab(@DrawableRes int iconId, @StringRes int contentDescriptionId, boolean isNoteTab) {
@@ -61,12 +60,7 @@ public class WPMainTabLayout extends TabLayout {
     /*
      * adds or removes the badge on the notifications tab depending on whether there are
      * unread notifications
-     */
-    void checkNoteBadge() {
-        // TODO: Check if the user has unread notes and update the badge
-        showNoteBadge(false);
-    }
-
+    */
     void showNoteBadge(boolean showBadge) {
         if (mNoteBadge == null) return;
 

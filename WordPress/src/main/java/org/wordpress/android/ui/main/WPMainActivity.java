@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
@@ -327,7 +328,7 @@ public class WPMainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        mTabLayout.checkNoteBadge();
+        new CheckUnseenNotesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
@@ -521,12 +522,42 @@ public class WPMainActivity extends AppCompatActivity {
             WordPress.getRestClientUtilsV1_1().markNotificationsSeen(latestNotes.get(0).getTimestampString(), new RestRequest.Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+                    // Assuming that we've marked the most recent notification as seen. (Beware, seen != read).
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(false));
                 }
             }, new RestRequest.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    AppLog.e(AppLog.T.NOTIFS, "Could not mark 'notifications/seen' value via API.", error);
+                    AppLog.e(AppLog.T.NOTIFS, "Could not mark notifications/seen' value via API.", error);
+                }
+            });
+
+            return Boolean.TRUE;
+        }
+    }
+
+    // Read `unseen` notifications flag from the `me` endpoint and update the badge
+    private class CheckUnseenNotesTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            WordPress.getRestClientUtils().get("/me", new RestRequest.Listener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (response == null) {
+                        AppLog.e(AppLog.T.NOTIFS, "Could not read the `has_unseen_notes` flag. Empty response from the /me endpoint value via API.");
+                        return;
+                    }
+                    try {
+                        boolean hasUnseenNotes = response.getBoolean("has_unseen_notes");
+                        EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(hasUnseenNotes));
+                    } catch (JSONException error) {
+                        AppLog.e(AppLog.T.NOTIFS, "Could not read the `has_unseen_notes` flag. Parsing error of the response from the /me endpoint", error);
+                    }
+                }
+            }, new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    AppLog.e(AppLog.T.NOTIFS, "Could not read `has_unseen_notes` from the /me endpoint value via API.", error);
                 }
             });
 
@@ -573,7 +604,11 @@ public class WPMainActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        mTabLayout.checkNoteBadge();
+        new CheckUnseenNotesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
+        mTabLayout.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
