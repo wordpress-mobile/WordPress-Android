@@ -17,6 +17,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -427,7 +428,7 @@ public class Note extends Syncable {
                 getCommentAuthorName(),
                 DateTimeUtils.iso8601FromTimestamp(getTimestamp()),
                 getCommentText(),
-                CommentStatus.toString(getCommentStatus()),
+                getCommentStatus().toString(),
                 "", // post title is unavailable in note model
                 getCommentAuthorUrl(),
                 "", // user email is unavailable in note model
@@ -482,7 +483,7 @@ public class Note extends Syncable {
             return CommentStatus.UNAPPROVED;
         }
 
-        return CommentStatus.UNKNOWN;
+        return CommentStatus.ALL;
     }
 
     public boolean hasLikedComment() {
