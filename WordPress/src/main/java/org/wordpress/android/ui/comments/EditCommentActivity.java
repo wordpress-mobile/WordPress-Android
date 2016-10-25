@@ -97,6 +97,8 @@ public class EditCommentActivity extends AppCompatActivity {
             mNote = NotificationsTable.getNoteById(noteId);
             if (mNote != null) {
                 requestFullCommentForNote(mNote);
+            } else {
+                showErrorAndFinish();
             }
         }
     }
