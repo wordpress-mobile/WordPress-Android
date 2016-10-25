@@ -251,7 +251,7 @@ public class AppLog {
         }
 
         // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
-        items.add("<strong>" + appName + " - " + PackageUtils.getVersionName(context) + " - Version code:" +   PackageUtils.getVersionCode(context) + "</strong>");
+        items.add("<strong>" + appName + " - " + PackageUtils.getVersionName(context) + " - Version code: " +   PackageUtils.getVersionCode(context) + "</strong>");
         items.add("<strong>Android device name: " + DeviceUtils.getInstance().getDeviceName(context) + "</strong>");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
@@ -282,7 +282,7 @@ public class AppLog {
 
         // add version & device info
         sb.append(appName).append(" - ").append(PackageUtils.getVersionName(context))
-                .append(" - Version code:").append(PackageUtils.getVersionCode(context)).append("\n")
+                .append(" - Version code: ").append(PackageUtils.getVersionCode(context)).append("\n")
                 .append("Android device name: ").append(DeviceUtils.getInstance().getDeviceName(context)).append("\n\n");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
