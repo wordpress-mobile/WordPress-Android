@@ -231,14 +231,9 @@ public class AppLog {
         return errors.toString();
     }
 
-    /**
-     * Returns entire log as html for display (see AppLogViewerActivity)
-     * @param  context
-     * @return Arraylist of Strings containing log messages
-     */
-    public static ArrayList<String> toHtmlList(Context context) {
-        ArrayList<String> items = new ArrayList<String>();
 
+    private static String getAppInfoHeaderText(Context context) {
+        StringBuilder sb = new StringBuilder();
         PackageManager packageManager = context.getPackageManager();
         PackageInfo pkInfo = PackageUtils.getPackageInfo(context);
 
@@ -249,10 +244,26 @@ public class AppLog {
         } else {
             appName = "Unknown";
         }
+        sb.append(appName).append(" - ").append(PackageUtils.getVersionName(context))
+                .append(" - Version code: ").append(PackageUtils.getVersionCode(context));
+        return sb.toString();
+    }
+
+    private static String getDeviceInfoHeaderText(Context context) {
+        return "Android device name: " + DeviceUtils.getInstance().getDeviceName(context);
+    }
+
+    /**
+     * Returns entire log as html for display (see AppLogViewerActivity)
+     * @param  context
+     * @return Arraylist of Strings containing log messages
+     */
+    public static ArrayList<String> toHtmlList(Context context) {
+        ArrayList<String> items = new ArrayList<String>();
 
         // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
-        items.add("<strong>" + appName + " - " + PackageUtils.getVersionName(context) + " - Version code: " +   PackageUtils.getVersionCode(context) + "</strong>");
-        items.add("<strong>Android device name: " + DeviceUtils.getInstance().getDeviceName(context) + "</strong>");
+        items.add("<strong>" + getAppInfoHeaderText(context) + "</strong>");
+        items.add("<strong>" + getDeviceInfoHeaderText(context) + "</strong>");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
         while (it.hasNext()) {
@@ -269,21 +280,9 @@ public class AppLog {
     public static String toPlainText(Context context) {
         StringBuilder sb = new StringBuilder();
 
-        PackageManager packageManager = context.getPackageManager();
-        PackageInfo pkInfo = PackageUtils.getPackageInfo(context);
-
-        ApplicationInfo applicationInfo = pkInfo != null ? pkInfo.applicationInfo : null;
-        String appName;
-        if (applicationInfo != null && packageManager.getApplicationLabel(applicationInfo) != null) {
-            appName =  packageManager.getApplicationLabel(applicationInfo).toString();
-        } else {
-            appName = "Unknown";
-        }
-
         // add version & device info
-        sb.append(appName).append(" - ").append(PackageUtils.getVersionName(context))
-                .append(" - Version code: ").append(PackageUtils.getVersionCode(context)).append("\n")
-                .append("Android device name: ").append(DeviceUtils.getInstance().getDeviceName(context)).append("\n\n");
+        sb.append(getAppInfoHeaderText(context)).append("\n")
+                .append(getDeviceInfoHeaderText(context)).append("\n\n");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
         int lineNum = 1;
