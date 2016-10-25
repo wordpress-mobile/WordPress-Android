@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +97,7 @@ public class NotificationsTable {
         getDb().beginTransaction();
         boolean saved = false;
         try {
-             if (!shouldUpdate && NotificationsTable.getNoteById(note.getId()) != null) {
+             if (!shouldUpdate && isNoteAvailable(note.getId())) {
                  // there is already a note with this ID in the database!
                  return false;
              }
@@ -106,6 +107,18 @@ public class NotificationsTable {
             getDb().endTransaction();
         }
         return saved;
+    }
+
+    private static boolean isNoteAvailable(String noteID) {
+        if (TextUtils.isEmpty(noteID)) {
+            AppLog.e(AppLog.T.DB, "Asking for a note with null Id. Really?" + noteID);
+            return false;
+        }
+
+        String[] args = {noteID};
+        return SqlUtils.boolForQuery(getDb(),
+                "SELECT 1 FROM " + NOTIFICATIONS_TABLE + " WHERE note_id=?1",
+                args);
     }
 
     public static Note getNoteById(String id) {
