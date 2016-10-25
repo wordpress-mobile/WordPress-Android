@@ -259,6 +259,9 @@ public class ReaderPostDetailFragment extends Fragment
             // hide the error screen
             showError(null);
 
+            // hide the sign in button
+            mSignInButton.setVisibility(View.GONE);
+
             Intent parentIntent = getActivity().getIntent();
             parentIntent.setClass(getActivity(), SignInActivity.class);
             startActivityForResult(parentIntent, INTENT_WELCOME);
