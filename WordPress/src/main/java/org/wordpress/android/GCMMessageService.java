@@ -127,15 +127,18 @@ public class GCMMessageService extends GcmListenerService {
     private boolean buildNoteObjectFromPNPayloadAndSaveIt(Bundle data) {
            if (data == null) {
                 AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
-                return false;
-            }
+            } else {
+               String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
+               String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
+               Note note = Note.buildFromBase64EncodedData(noteId, base64FullData);
+               if (note != null) {
+                   return NotificationsTable.saveNote(note, true);
+               }
+           }
 
-            String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
-            String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
-            Note note = Note.buildFromBase64EncodedData(noteId, base64FullData);
-            if (note != null) {
-                return NotificationsTable.saveNote(note, true);
-            }
+        // At this point we don't have the note :(
+        AppLog.w(T.NOTIFS, "Cannot build the Note object by using info available in the PN payload. Please see " +
+                "previous log messages for detailed information about the error.");
         return false;
     }
 
