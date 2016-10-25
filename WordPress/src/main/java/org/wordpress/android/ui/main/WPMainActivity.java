@@ -604,7 +604,7 @@ public class WPMainActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        new CheckUnseenNotesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        // TODO: check if we should do something here. No need to update the badge here though.
     }
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
