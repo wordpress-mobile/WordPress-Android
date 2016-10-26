@@ -147,6 +147,10 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                         AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
                                 mBlogId, mPostId);
                         break;
+                    case WPCOM_POST_SLUG:
+                        AnalyticsUtils.trackWithBlogPostDetails(
+                                AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED, mBlogId, mPostId);
+                        break;
                 }
             }
 
