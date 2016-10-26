@@ -54,6 +54,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private long mPostId;
     private String mBlogSlug;
     private String mPostSlug;
+    private int mCommentId;
     private String mInterceptedUri;
     private int mLastSelectedPosition = -1;
     private ReaderPostListType mPostListType;
@@ -87,6 +88,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mBlogSlug = savedInstanceState.getString(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = savedInstanceState.getString(ReaderConstants.ARG_POST_SLUG);
+            mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
             mIsRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
@@ -102,6 +104,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             mBlogSlug = getIntent().getStringExtra(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = getIntent().getStringExtra(ReaderConstants.ARG_POST_SLUG);
+            mCommentId = getIntent().getIntExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
             mIsRelatedPostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
@@ -580,6 +583,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         mIsFeed,
                         mIdList.get(position).getBlogId(),
                         mIdList.get(position).getPostId(),
+                        mCommentId,
                         mIsRelatedPostView,
                         mInterceptedUri,
                         getPostListType());
@@ -587,6 +591,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 return ReaderPostDetailFragment.newInstance(
                         mIdList.get(position).getBlogSlug(),
                         mIdList.get(position).getPostSlug(),
+                        mCommentId,
                         mIsRelatedPostView,
                         mInterceptedUri,
                         getPostListType());

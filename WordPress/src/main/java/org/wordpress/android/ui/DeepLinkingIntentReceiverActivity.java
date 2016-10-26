@@ -19,6 +19,8 @@ import org.wordpress.android.util.ToastUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * An activity to handle deep linking and intercepting
@@ -44,6 +46,9 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private String mBlogId;
     private String mPostId;
     private String mInterceptedUri;
+    private int mCommentId;
+
+    private static final Pattern COMMENT_ID_PATTERN = Pattern.compile("comment-(\\d+)$", Pattern.CASE_INSENSITIVE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +110,12 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                                 AppLog.e(T.READER, e);
                                 ToastUtils.showToast(this, R.string.error_generic);
                             }
+
+                            Matcher commentIdMatcher = COMMENT_ID_PATTERN.matcher(uri.getFragment());
+                            while (commentIdMatcher.find() && commentIdMatcher.groupCount() > 0) {
+                                mCommentId = Integer.valueOf(commentIdMatcher.group(1));
+                            }
+
                             mInterceptType = InterceptType.WPCOM_POST_SLUG;
                             showPost();
                             return;
@@ -149,13 +160,13 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                         break;
                     case WPCOM_POST_SLUG:
                         AnalyticsUtils.trackWithBlogPostDetails(
-                                AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED, mBlogId, mPostId);
+                                AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED, mBlogId, mPostId, mCommentId);
                         break;
                 }
             }
 
             if (mInterceptType == InterceptType.WPCOM_POST_SLUG) {
-                ReaderActivityLauncher.showReaderPostDetail(this, mBlogId, mPostId, false, mInterceptedUri);
+                ReaderActivityLauncher.showReaderPostDetail(this, mBlogId, mPostId, mCommentId, false, mInterceptedUri);
             } else {
                 try {
                     final long blogId = Long.parseLong(mBlogId);

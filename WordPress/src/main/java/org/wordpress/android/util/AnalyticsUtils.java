@@ -34,6 +34,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS
 public class AnalyticsUtils {
     private static String BLOG_ID_KEY = "blog_id";
     private static String POST_ID_KEY = "post_id";
+    private static String COMMENT_ID_KEY = "comment_id";
     private static String FEED_ID_KEY = "feed_id";
     private static String FEED_ITEM_ID_KEY = "feed_item_id";
     private static String IS_JETPACK_KEY = "is_jetpack";
@@ -223,6 +224,16 @@ public class AnalyticsUtils {
         Map<String, Object> properties =  new HashMap<>();
         properties.put(BLOG_ID_KEY, blogId);
         properties.put(POST_ID_KEY, postId);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, String blogId, String postId, int
+            commentId) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(BLOG_ID_KEY, blogId);
+        properties.put(POST_ID_KEY, postId);
+        properties.put(COMMENT_ID_KEY, commentId);
 
         AnalyticsTracker.track(stat, properties);
     }

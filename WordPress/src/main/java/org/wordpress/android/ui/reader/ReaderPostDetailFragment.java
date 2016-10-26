@@ -79,6 +79,7 @@ public class ReaderPostDetailFragment extends Fragment
     private long mBlogId;
     private String mPostSlug;
     private String mBlogSlug;
+    private int mCommentId;
     private boolean mIsFeed;
     private String mInterceptedUri;
     private ReaderPost mPost;
@@ -113,12 +114,13 @@ public class ReaderPostDetailFragment extends Fragment
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(false, blogId, postId, false, null, null);
+        return newInstance(false, blogId, postId, 0, false, null, null);
     }
 
     public static ReaderPostDetailFragment newInstance(boolean isFeed,
                                                        long blogId,
                                                        long postId,
+                                                       int commentId,
                                                        boolean isRelatedPost,
                                                        String interceptedUri,
                                                        ReaderPostListType postListType) {
@@ -129,6 +131,7 @@ public class ReaderPostDetailFragment extends Fragment
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
         args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+        args.putInt(ReaderConstants.ARG_COMMENT_ID, commentId);
         args.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
@@ -143,6 +146,7 @@ public class ReaderPostDetailFragment extends Fragment
     public static ReaderPostDetailFragment newInstance(
             String blogSlug,
             String postSlug,
+            int commentId,
             boolean isRelatedPost,
             String interceptedUri,
             ReaderPostListType postListType) {
@@ -151,6 +155,7 @@ public class ReaderPostDetailFragment extends Fragment
         Bundle args = new Bundle();
         args.putString(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
         args.putString(ReaderConstants.ARG_POST_SLUG, postSlug);
+        args.putInt(ReaderConstants.ARG_COMMENT_ID, commentId);
         args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         args.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
         if (postListType != null) {
@@ -181,6 +186,7 @@ public class ReaderPostDetailFragment extends Fragment
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
             mBlogSlug = args.getString(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = args.getString(ReaderConstants.ARG_POST_SLUG);
+            mCommentId = args.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = args.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
@@ -332,6 +338,7 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
         outState.putString(ReaderConstants.ARG_BLOG_SLUG, mBlogSlug);
         outState.putString(ReaderConstants.ARG_POST_SLUG, mPostSlug);
+        outState.putInt(ReaderConstants.ARG_COMMENT_ID, mCommentId);
 
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
@@ -363,6 +370,7 @@ public class ReaderPostDetailFragment extends Fragment
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mBlogSlug = savedInstanceState.getString(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = savedInstanceState.getString(ReaderConstants.ARG_POST_SLUG);
+            mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
@@ -484,6 +492,7 @@ public class ReaderPostDetailFragment extends Fragment
         mPostId = postId;
         mBlogSlug = null;
         mPostSlug = null;
+        mCommentId = 0;
         mHasAlreadyRequestedPost = false;
         mHasAlreadyUpdatedPost = false;
 
@@ -889,6 +898,13 @@ public class ReaderPostDetailFragment extends Fragment
                     // post has already been requested and failed, so restore previous error message
                     showError(mErrorMessage);
                 }
+                return;
+            }
+
+            if (mCommentId > 0) {
+                // redirect to the comments screen directly
+                ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId, mCommentId);
+                getActivity().finish();
                 return;
             }
 

@@ -38,10 +38,6 @@ public class ReaderActivityLauncher {
         showReaderPostDetail(context, false, blogId, postId, false, null);
     }
 
-    public static void showReaderPostDetail(Context context, String blogSlug, String postSlug) {
-        showReaderPostDetail(context, blogSlug, postSlug, false, null);
-    }
-
     public static void showReaderPostDetail(Context context,
                                             boolean isFeed,
                                             long blogId,
@@ -61,12 +57,14 @@ public class ReaderActivityLauncher {
     public static void showReaderPostDetail(Context context,
                                             String blogSlug,
                                             String postSlug,
+                                            int commentId,
                                             boolean isRelatedPost,
                                             String interceptedUri) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IS_FEED, false);
         intent.putExtra(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
         intent.putExtra(ReaderConstants.ARG_POST_SLUG, postSlug);
+        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
