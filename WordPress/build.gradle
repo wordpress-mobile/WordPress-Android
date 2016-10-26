@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
@@ -36,8 +36,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-24"
-        versionCode 311
+        versionName "alpha-25"
+        versionCode 314
         minSdkVersion 16
         targetSdkVersion 24
 
@@ -119,7 +119,7 @@ dependencies {
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
-    compile 'org.wordpress:passcodelock:1.3.0'
+    compile 'org.wordpress:passcodelock:1.4.0'
 
     // Dagger
     compile 'com.google.dagger:dagger:2.0.2'

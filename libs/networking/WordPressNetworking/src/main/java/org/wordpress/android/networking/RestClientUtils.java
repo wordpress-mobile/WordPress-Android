@@ -157,6 +157,16 @@ public class RestClientUtils {
     }
 
     /**
+     * Get a specific notification given its noteId.
+     * <p/>
+     */
+    public void getNotification(Map<String, String> params, String noteId, Listener listener, ErrorListener errorListener) {
+        params.put("fields", NOTIFICATION_FIELDS);
+        String path = String.format("notifications/%s/", noteId);
+        get(path, params, null, listener, errorListener);
+    }
+
+    /**
      * Get notifications with default params.
      * <p/>
      * https://developer.wordpress.com/docs/api/1/get/notifications/

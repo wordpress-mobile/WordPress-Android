@@ -6,7 +6,7 @@ import android.test.RenamingDelegatingContext;
 import android.test.ServiceTestCase;
 
 import org.wordpress.android.FactoryUtils;
-import org.wordpress.android.GCMMessageService;
+import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.TestUtils;
 
 public class GCMIntentServiceTest extends ServiceTestCase<GCMMessageService> {

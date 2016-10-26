@@ -1,12 +1,12 @@
 package org.wordpress.android.modules;
 
-import org.wordpress.android.GCMMessageService;
-import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseStoreModule;
+import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;

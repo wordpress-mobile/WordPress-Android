@@ -34,8 +34,8 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.inject.Inject;
 
@@ -46,7 +46,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     public int[] siteIds;
     public String[] accountUsers;
     public String[] blavatars;
-    public List<String> accountNames = new Vector<String>();
+    public List<String> accountNames = new ArrayList<>();
 
     @Inject SiteStore mSiteStore;
 

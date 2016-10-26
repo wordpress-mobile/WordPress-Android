@@ -22,8 +22,8 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.GCMMessageService;
-import org.wordpress.android.GCMRegistrationIntentService;
+import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -71,7 +71,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.GCMMessageService.EXTRA_VOICE_REPLY;
+import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_REPLY;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -287,34 +287,25 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
-        if (GCMMessageService.getNotificationsCount() == 1) {
+        //it could be that a notification has been tapped but has been removed by the time we reach
+        //here. It's ok to compare to <=1 as it could be zero then.
+        if (GCMMessageService.getNotificationsCount() <= 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
                 GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
-                boolean doLikeNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
-                if (doLikeNote) {
-                    NotificationsListFragment.openNoteForLike(this, noteId);
-                } else {
-                    boolean doApproveNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
-                    if (doApproveNote) {
-                        NotificationsListFragment.openNoteForApprove(this, noteId);
-                    } else {
-
-                        //if voice reply is enabled in a wearable, it will come through the remoteInput
-                        //extra EXTRA_VOICE_REPLY
-                        String voiceReply = null;
-                        Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
-                        if (remoteInput != null) {
-                            CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
-                            if (replyText != null) {
-                                voiceReply = replyText.toString();
-                            }
-                        }
-
-                        boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
+                //if voice reply is enabled in a wearable, it will come through the remoteInput
+                //extra EXTRA_VOICE_REPLY
+                String voiceReply = null;
+                Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                if (remoteInput != null) {
+                    CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
+                    if (replyText != null) {
+                        voiceReply = replyText.toString();
                     }
                 }
+
+                boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+                NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
             } else {
                 SimperiumUtils.trackBucketObjectMissingWarning("No note id found in PN", "");
             }

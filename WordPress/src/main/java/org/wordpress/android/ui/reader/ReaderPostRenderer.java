@@ -364,9 +364,10 @@ class ReaderPostRenderer {
         .append("        padding: ").append(mResourceVars.marginMediumPx).append("px; }")
 
         // add a left border to blockquotes
-        .append("  blockquote { margin-left: ").append(mResourceVars.marginMediumPx).append("px; ")
-        .append("               padding-left: ").append(mResourceVars.marginMediumPx).append("px; ")
-        .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }")
+        .append("  blockquote { color: ").append(mResourceVars.greyMediumDarkStr).append("; ")
+        .append("               padding-left: 32px; ")
+        .append("               margin-left: 0px; ")
+        .append("               border-left: 3px solid ").append(mResourceVars.greyExtraLightStr).append("; }")
 
         // show links in the same color they are elsewhere in the app
         .append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }")
