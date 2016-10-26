@@ -71,6 +71,7 @@
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="sign_in">Sign in</string>
     <string name="signing_out">Signing out…</string>
+    <string name="sign_in_wpcom">Sign in to WordPress.com</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
@@ -1189,8 +1190,9 @@
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
     <string name="reader_err_get_post_not_authorized">You\'re not authorized to view this post</string>
-    <string name="reader_err_get_post_not_authorized_fallback">You\'re not authorized to view this post. Tap the action button to open it in a browser instead.</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorized to view this post. Sign in or tap the action button to open it in a browser instead.</string>
+    <string name="reader_err_get_post_not_authorized_fallback">You\'re not authorized to view this post. Use the top action button to try a browser instead.</string>
+    <string name="reader_err_get_post_not_authorized_signin">You\'re not authorized to view this post. Try signing in to WordPress.com first.</string>
+    <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorized to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
     <string name="reader_err_get_post_not_found">This post no longer exists</string>
 
     <!-- empty list/grid text -->

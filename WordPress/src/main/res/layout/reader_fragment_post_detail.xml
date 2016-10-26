@@ -131,7 +131,7 @@
         android:layout_below="@+id/text_error"
         android:clickable="true"
         android:gravity="center"
-        android:text="@string/sign_in"
+        android:text="@string/sign_in_wpcom"
         android:visibility="gone" />
 
     <!-- container for webView custom view - this is where fullscreen video will appear -->

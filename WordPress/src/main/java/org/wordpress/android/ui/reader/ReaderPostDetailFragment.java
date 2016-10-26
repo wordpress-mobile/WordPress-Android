@@ -61,6 +61,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -818,12 +819,17 @@ public class ReaderPostDetailFragment extends Fragment
                         switch (statusCode) {
                             case 401:
                             case 403:
-                                if (AccountHelper.isSignedIn()) {
-                                    errMsgResId = (mFallbackUri == null) ? R.string.reader_err_get_post_not_authorized
+                                final boolean offerSignIn = WPUrlUtils.isWordPressCom(mFallbackUri)
+                                        && !AccountHelper.isSignedInWordPressDotCom();
+
+                                if (!offerSignIn) {
+                                    errMsgResId = (mFallbackUri == null)
+                                            ? R.string.reader_err_get_post_not_authorized
                                             : R.string.reader_err_get_post_not_authorized_fallback;
                                     mSignInButton.setVisibility(View.GONE);
                                 } else {
-                                    errMsgResId = (mFallbackUri == null) ? R.string.reader_err_get_post_not_authorized
+                                    errMsgResId = (mFallbackUri == null)
+                                            ? R.string.reader_err_get_post_not_authorized_signin
                                             : R.string.reader_err_get_post_not_authorized_signin_fallback;
                                     mSignInButton.setVisibility(View.VISIBLE);
                                 }
