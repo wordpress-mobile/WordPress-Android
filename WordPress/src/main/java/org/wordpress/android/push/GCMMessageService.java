@@ -260,16 +260,14 @@ public class GCMMessageService extends GcmListenerService {
 
     private boolean canAddActionsToNotifications() {
         AppLockManager appLockManager = AppLockManager.getInstance();
+        // Make sure PasscodeLock isn't already in place
         if(!appLockManager.isAppLockFeatureEnabled()) {
-            // Make sure PasscodeLock isn't already in place
             appLockManager.enableDefaultAppLockIfAvailable(this.getApplication());
         }
-        AbstractAppLock abstractAppLock = appLockManager.getAppLock();
-        if (abstractAppLock instanceof DefaultAppLock) {
-            DefaultAppLock dLock = (DefaultAppLock) abstractAppLock;
-            if (appLockManager.isAppLockFeatureEnabled() && dLock.isPasswordLocked()) {
-                return Boolean.FALSE;
-            }
+
+        // Make sure the locker was correctly enabled, and it's active
+        if (appLockManager.isAppLockFeatureEnabled() && appLockManager.getAppLock().isPasswordLocked()) {
+            return Boolean.FALSE;
         }
         return Boolean.TRUE;
     }
