@@ -564,6 +564,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     }
                 }, null);
             } else {
+                // Clear the URL on successful login so it's not persisted the next time we add a self-hosted site
+                mUrlEditText.setText("");
                 finishCurrentActivity(userBlogList);
             }
         }
