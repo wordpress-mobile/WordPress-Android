@@ -28,8 +28,8 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/margin_large">
 
-                    <include
-                        layout="@layout/reader_include_post_detail_header"
+                    <org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
+                        android:id="@+id/header_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/layout_post_detail_content"
@@ -39,41 +39,38 @@
 
                     <include
                         layout="@layout/reader_include_post_detail_content"
-                        android:layout_below="@+id/layout_post_detail_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/header_view"
                         android:layout_centerHorizontal="true"
                         android:layout_marginLeft="@dimen/reader_detail_margin"
                         android:layout_marginRight="@dimen/reader_detail_margin" />
-
-                    <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/text_related_posts_label"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/layout_post_detail_content"
-                        android:layout_alignLeft="@+id/layout_post_detail_content"
-                        android:layout_alignRight="@+id/layout_post_detail_content"
-                        android:layout_marginBottom="@dimen/reader_related_post_margin"
-                        android:layout_marginTop="@dimen/reader_related_post_margin"
-                        android:text="@string/reader_label_related_posts"
-                        android:textAllCaps="true"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/text_sz_large"
-                        android:textStyle="bold"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/container_related_posts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/text_related_posts_label"
                         android:layout_alignLeft="@+id/layout_post_detail_content"
                         android:layout_alignRight="@+id/layout_post_detail_content"
-                        android:background="@drawable/reader_related_posts_background"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
+                        android:layout_below="@+id/layout_post_detail_content"
+                        android:orientation="vertical">
+
+                        <org.wordpress.android.ui.reader.views.ReaderRelatedPostsView
+                            android:id="@+id/related_posts_view_local"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_extra_large"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                        <org.wordpress.android.ui.reader.views.ReaderRelatedPostsView
+                            android:id="@+id/related_posts_view_global"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                    </LinearLayout>
 
                     <View
                         android:id="@+id/footer_spacer"

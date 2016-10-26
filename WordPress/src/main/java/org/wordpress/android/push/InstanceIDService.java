@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.push;
 
 import android.content.Intent;
 
