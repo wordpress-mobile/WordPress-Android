@@ -39,6 +39,7 @@ public class AnalyticsUtils {
     private static String IS_JETPACK_KEY = "is_jetpack";
     private static String INTENT_ACTION = "intent_action";
     private static String INTENT_DATA = "intent_data";
+    private static String INTERCEPTED_URI = "intercepted_uri";
 
     /**
      * Utility method to refresh mixpanel metadata.
@@ -257,9 +258,9 @@ public class AnalyticsUtils {
      * @param interceptedUri The fallback URI the app was started with
      *
      */
-    public static void trackWithDeepLinkInterceptedData(AnalyticsTracker.Stat stat, String interceptedUri) {
+    public static void trackWithInterceptedUri(AnalyticsTracker.Stat stat, String interceptedUri) {
         Map<String, Object> properties =  new HashMap<>();
-        properties.put(INTENT_DATA, interceptedUri);
+        properties.put(INTERCEPTED_URI, interceptedUri);
 
         AnalyticsTracker.track(stat, properties);
     }

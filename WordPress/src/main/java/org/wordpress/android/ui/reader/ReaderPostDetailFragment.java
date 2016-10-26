@@ -263,6 +263,8 @@ public class ReaderPostDetailFragment extends Fragment
             // hide the sign in button
             mSignInButton.setVisibility(View.GONE);
 
+            AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
+
             Intent parentIntent = getActivity().getIntent();
             parentIntent.setClass(getActivity(), SignInActivity.class);
             startActivityForResult(parentIntent, INTENT_WELCOME);
@@ -311,8 +313,7 @@ public class ReaderPostDetailFragment extends Fragment
             if (hasPost()) {
                 ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
             } else if (mInterceptedUri != null) {
-                AnalyticsUtils
-                        .trackWithDeepLinkInterceptedData(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mInterceptedUri);
+                AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mInterceptedUri);
                 ReaderActivityLauncher.openUrl(getActivity(), mInterceptedUri, OpenUrlType.EXTERNAL);
                 getActivity().finish();
             }

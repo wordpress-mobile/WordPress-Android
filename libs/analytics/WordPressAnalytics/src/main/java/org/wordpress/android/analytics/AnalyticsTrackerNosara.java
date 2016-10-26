@@ -306,6 +306,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_feed_post_intercepted";
             case READER_WPCOM_BLOG_POST_INTERCEPTED:
                 return "reader_wpcom_blog_post_intercepted";
+            case READER_SIGN_IN_INITIATED:
+                return "reader_sign_in_initiated";
             case EDITOR_CREATED_POST:
                 return "editor_post_created";
             case EDITOR_SAVED_DRAFT:
