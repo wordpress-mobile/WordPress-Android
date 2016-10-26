@@ -613,6 +613,7 @@
 	<string name="location">Placering</string>
 	<string name="media">Medier</string>
 	<string name="delete">Slet</string>
+	<string name="approve">Godkend</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Blogs</string>
 	<string name="select_photo">Vælg et billede fra galleri</string>

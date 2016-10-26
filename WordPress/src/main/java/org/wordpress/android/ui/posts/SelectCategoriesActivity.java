@@ -10,8 +10,6 @@ import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,20 +73,6 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         mEmptyView = (TextView) findViewById(R.id.empty_view);
         mListView.setEmptyView(mEmptyView);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                if (getCheckedItemCount(mListView) > 1) {
-                    boolean uncategorizedNeedToBeSelected = false;
-                    for (int i = 0; i < mCategoryLevels.size(); i++) {
-                        if (mCategoryLevels.get(i).getName().equalsIgnoreCase("uncategorized")) {
-                            mListView.setItemChecked(i, uncategorizedNeedToBeSelected);
-                        }
-                    }
-                }
-            }
-        });
 
         mSelectedCategories = new HashSet<String>();
 

@@ -327,6 +327,7 @@
     <string name="like">Like</string>
     <string name="approve">Approve</string>
     <string name="comment_moderated_approved">Comment approved!</string>
+    <string name="comment_moderated_unapproved">Comment unapproved</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -617,6 +618,7 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
+    <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
@@ -1143,7 +1145,8 @@
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">Search all public WordPress.com blogs</string>
     <string name="reader_label_post_search_running">Searching…</string>
-    <string name="reader_label_related_posts">Related Reading</string>
+    <string name="reader_label_local_related_posts">More in %s</string>
+    <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_view_gallery">View Gallery</string>
     <string name="reader_label_image_count_one">1 image</string>
     <string name="reader_label_image_count_multi">%d images</string>

@@ -23,6 +23,7 @@ public class ReaderConstants {
 
     // intent arguments / keys
     static final String ARG_TAG               = "tag";
+    static final String ARG_IS_FEED           = "is_feed";
     static final String ARG_BLOG_ID           = "blog_id";
     static final String ARG_FEED_ID           = "feed_id";
     static final String ARG_POST_ID           = "post_id";

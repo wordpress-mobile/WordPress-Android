@@ -256,7 +256,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     }
 
     private boolean loadPost() {
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId, true);
+        mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, true);
         if (mPost == null) {
             return false;
         }

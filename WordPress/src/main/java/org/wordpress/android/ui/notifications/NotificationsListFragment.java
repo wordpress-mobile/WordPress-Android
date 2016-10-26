@@ -40,6 +40,7 @@ public class NotificationsListFragment extends Fragment
                    WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
+    public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
     public static final String NOTE_INSTANT_LIKE_EXTRA = "instantLike";
     public static final String NOTE_INSTANT_APPROVE_EXTRA = "instantApprove";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
@@ -109,13 +110,6 @@ public class NotificationsListFragment extends Fragment
             mBucket.addListener(this);
         }
 
-        // Removes app notifications from the system bar
-        new Thread(new Runnable() {
-            public void run() {
-                GCMMessageService.removeAllNotifications(getActivity());
-            }
-        }).start();
-
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
             AppLog.i(AppLog.T.NOTIFS, "Starting Simperium buckets");
@@ -177,7 +171,7 @@ public class NotificationsListFragment extends Fragment
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNoteForReply(getActivity(), noteId, false);
+            openNoteForReply(getActivity(), noteId, false, null);
         }
     };
 
@@ -193,7 +187,8 @@ public class NotificationsListFragment extends Fragment
      */
     public static void openNoteForReply(Activity activity,
                                         String noteId,
-                                        boolean shouldShowKeyboard) {
+                                        boolean shouldShowKeyboard,
+                                        String replyText) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -204,6 +199,9 @@ public class NotificationsListFragment extends Fragment
 
         Intent detailIntent = getOpenNoteIntent(activity, noteId);
         detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
+        if (!TextUtils.isEmpty(replyText)) {
+            detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText);
+        }
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 

@@ -39,17 +39,10 @@ public class ReaderPost {
     private String primaryTag;    // most popular tag on this post based on usage in blog
     private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
-    /*
-     * the "date" field is a generic date which depends on the stream the post is from:
-     *   - for tagged posts, this is the date the post was tagged
-     *   - for liked posts, this is the date the post was liked
-     *   - for other posts, this is the date the post was published
-     * this date is used when requesting older posts from the backend, and is also used
-     * to generate the sortIndex below (which determines how posts are sorted for display)
-     */
-    private String date;
-    private String pubDate;
-    public double sortIndex;
+    private String dateLiked;
+    private String dateTagged;
+    private String datePublished;
+    public double score;
 
     private String url;
     private String shortUrl;
@@ -125,20 +118,13 @@ public class ReaderPost {
 
         post.featuredImage = JSONUtils.getString(json, "featured_image");
         post.blogName = JSONUtils.getStringDecoded(json, "site_name");
-        post.pubDate = JSONUtils.getString(json, "date");
 
-        // a post's date is the liked date for liked posts, tagged date for tag streams, and
-        // published date for all others
-        if (json.has("date_liked")) {
-            post.date = JSONUtils.getString(json, "date_liked");
-        } else if (json.has("tagged_on")) {
-            post.date = JSONUtils.getString(json, "tagged_on");
-        } else {
-            post.date = post.pubDate;
-        }
+        post.datePublished = JSONUtils.getString(json, "date");
+        post.dateLiked = JSONUtils.getString(json, "date_liked");
+        post.dateTagged = JSONUtils.getString(json, "tagged_on");
 
-        // sort index determines how posts are sorted, which is based on the date retrieved above
-        post.sortIndex = DateTimeUtils.timestampFromIso8601(post.date);
+        // "score" only exists for search results
+        post.score = json.optDouble("score");
 
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt()) {
@@ -257,8 +243,20 @@ public class ReaderPost {
 
         post.authorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
         post.authorFirstName = JSONUtils.getStringDecoded(jsonAuthor, "first_name");
-        post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
         post.authorId = jsonAuthor.optLong("ID");
+
+        // v1.2 endpoint contains a "has_avatar" boolean which tells us whether the author
+        // has a valid avatar - if this field exists and is set to false, skip setting
+        // the avatar URL
+        boolean hasAvatar;
+        if (jsonAuthor.has("has_avatar")) {
+            hasAvatar = jsonAuthor.optBoolean("has_avatar");
+        } else {
+            hasAvatar = true;
+        }
+        if (hasAvatar) {
+            post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
+        }
 
         // site_URL doesn't exist for /sites/ endpoints, so get it from the author
         if (TextUtils.isEmpty(post.blogUrl)) {
@@ -286,6 +284,7 @@ public class ReaderPost {
 
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
+            String thisTagName = JSONUtils.getStringDecoded(jsonThisTag, "slug");
 
             // if the number of posts on this blog that use this tag is higher than previous,
             // set this as the most popular tag, and set the second most popular tag to
@@ -293,8 +292,10 @@ public class ReaderPost {
             int postCount = jsonThisTag.optInt("post_count");
             if (postCount > popularCount) {
                 nextMostPopularTag = mostPopularTag;
-                mostPopularTag = JSONUtils.getStringDecoded(jsonThisTag, "slug");
+                mostPopularTag = thisTagName;
                 popularCount = postCount;
+            } else if (nextMostPopularTag == null) {
+                nextMostPopularTag = thisTagName;
             }
         }
 
@@ -445,18 +446,25 @@ public class ReaderPost {
         this.pseudoId = StringUtils.notNullStr(pseudoId);
     }
 
-    public String getDate() {
-        return StringUtils.notNullStr(date);
+    public String getDatePublished() {
+        return StringUtils.notNullStr(datePublished);
     }
-    public void setDate(String dateStr) {
-        this.date = StringUtils.notNullStr(dateStr);
+    public void setDatePublished(String dateStr) {
+        this.datePublished = StringUtils.notNullStr(dateStr);
     }
 
-    public String getPubDate() {
-        return StringUtils.notNullStr(pubDate);
+    public String getDateLiked() {
+        return StringUtils.notNullStr(dateLiked);
     }
-    public void setPubDate(String published) {
-        this.pubDate = StringUtils.notNullStr(published);
+    public void setDateLiked(String dateStr) {
+        this.dateLiked = StringUtils.notNullStr(dateStr);
+    }
+
+    public String getDateTagged() {
+        return StringUtils.notNullStr(dateTagged);
+    }
+    public void setDateTagged(String dateStr) {
+        this.dateTagged = StringUtils.notNullStr(dateStr);
     }
 
     public String getPrimaryTag() {
@@ -468,7 +476,7 @@ public class ReaderPost {
             this.primaryTag = StringUtils.notNullStr(tagName);
         }
     }
-    boolean hasPrimaryTag() {
+    public boolean hasPrimaryTag() {
         return !TextUtils.isEmpty(primaryTag);
     }
 
@@ -479,6 +487,9 @@ public class ReaderPost {
         if (!ReaderTag.isDefaultTagTitle(tagName)) {
             this.secondaryTag = StringUtils.notNullStr(tagName);
         }
+    }
+    public boolean hasSecondaryTag() {
+        return !TextUtils.isEmpty(secondaryTag);
     }
 
     /*
@@ -677,7 +688,7 @@ public class ReaderPost {
     private transient java.util.Date dtDisplay;
     public java.util.Date getDisplayDate() {
         if (dtDisplay == null) {
-            dtDisplay = DateTimeUtils.dateFromIso8601(this.pubDate);
+            dtDisplay = DateTimeUtils.dateFromIso8601(this.datePublished);
         }
         return dtDisplay;
     }
