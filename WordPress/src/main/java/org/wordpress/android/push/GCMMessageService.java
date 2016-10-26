@@ -332,7 +332,7 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-        PendingIntent commentReplyPendingIntent =  PendingIntent.getService(this, 0, commentReplyIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent commentReplyPendingIntent = PendingIntent.getService(this, 0, commentReplyIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_reply_white_24dp, getText(R.string.reply),
                 commentReplyPendingIntent);
 
@@ -362,7 +362,7 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-        PendingIntent commentLikePendingIntent =  PendingIntent.getService(this, 0, commentLikeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent commentLikePendingIntent = PendingIntent.getService(this, 0, commentLikeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                 commentLikePendingIntent);
     }
@@ -379,7 +379,7 @@ public class GCMMessageService extends GcmListenerService {
         if (noteId != null) {
             commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
         }
-        PendingIntent commentApprovePendingIntent =  PendingIntent.getService(this, 0, commentApproveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent commentApprovePendingIntent = PendingIntent.getService(this, 0, commentApproveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
                 commentApprovePendingIntent);
     }
