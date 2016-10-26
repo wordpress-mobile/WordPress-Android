@@ -34,18 +34,6 @@ public class GCMIntentServiceTest extends ServiceTestCase<GCMMessageService> {
         super.tearDown();
     }
 
-    public void testShouldCircularizeNoteIcon() {
-        GCMMessageService intentService = new GCMMessageService();
-
-        String type = "c";
-        assertTrue(intentService.shouldCircularizeNoteIcon(type));
-
-        assertFalse(intentService.shouldCircularizeNoteIcon(null));
-
-        type = "invalidType";
-        assertFalse(intentService.shouldCircularizeNoteIcon(type));
-    }
-
     public void testOnMessageReceived() throws InterruptedException {
         org.wordpress.android.models.Account account = AccountHelper.getDefaultAccount();
         account.setAccessToken("secret token");

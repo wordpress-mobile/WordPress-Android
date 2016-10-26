@@ -1151,7 +1151,8 @@
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">Search all public WordPress.com blogs</string>
     <string name="reader_label_post_search_running">Searching…</string>
-    <string name="reader_label_related_posts">Related Reading</string>
+    <string name="reader_label_local_related_posts">More in %s</string>
+    <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_view_gallery">View Gallery</string>
     <string name="reader_label_image_count_one">1 image</string>
     <string name="reader_label_image_count_multi">%d images</string>
