@@ -86,7 +86,7 @@ public class ReaderPostDetailFragment extends Fragment
     private String mPostSlug;
     private String mBlogSlug;
     private boolean mIsFeed;
-    private String mFallbackUri;
+    private String mInterceptedUri;
     private ReaderPost mPost;
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
@@ -126,7 +126,7 @@ public class ReaderPostDetailFragment extends Fragment
                                                        long blogId,
                                                        long postId,
                                                        boolean isRelatedPost,
-                                                       String fallbackUri,
+                                                       String interceptedUri,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
@@ -135,7 +135,7 @@ public class ReaderPostDetailFragment extends Fragment
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
         args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
-        args.putString(ReaderConstants.ARG_FALLBACK_URI, fallbackUri);
+        args.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -150,7 +150,7 @@ public class ReaderPostDetailFragment extends Fragment
             String blogSlug,
             String postSlug,
             boolean isRelatedPost,
-            String fallbackUri,
+            String interceptedUri,
             ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
@@ -158,7 +158,7 @@ public class ReaderPostDetailFragment extends Fragment
         args.putString(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
         args.putString(ReaderConstants.ARG_POST_SLUG, postSlug);
         args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
-        args.putString(ReaderConstants.ARG_FALLBACK_URI, fallbackUri);
+        args.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -188,7 +188,7 @@ public class ReaderPostDetailFragment extends Fragment
             mBlogSlug = args.getString(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = args.getString(ReaderConstants.ARG_POST_SLUG);
             mIsRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
-            mFallbackUri = args.getString(ReaderConstants.ARG_FALLBACK_URI);
+            mInterceptedUri = args.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -296,7 +296,7 @@ public class ReaderPostDetailFragment extends Fragment
         boolean postHasUrl = hasPost() && mPost.hasUrl();
         MenuItem mnuBrowse = menu.findItem(R.id.menu_browse);
         if (mnuBrowse != null) {
-            mnuBrowse.setVisible(postHasUrl || (mFallbackUri != null));
+            mnuBrowse.setVisible(postHasUrl || (mInterceptedUri != null));
         }
         MenuItem mnuShare = menu.findItem(R.id.menu_share);
         if (mnuShare != null) {
@@ -310,9 +310,10 @@ public class ReaderPostDetailFragment extends Fragment
         if (i == R.id.menu_browse) {
             if (hasPost()) {
                 ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
-            } else if (mFallbackUri != null) {
-                AnalyticsUtils.trackWithDeepLinkFallbackData(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mFallbackUri);
-                ReaderActivityLauncher.openUrl(getActivity(), mFallbackUri, OpenUrlType.EXTERNAL);
+            } else if (mInterceptedUri != null) {
+                AnalyticsUtils
+                        .trackWithDeepLinkInterceptedData(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mInterceptedUri);
+                ReaderActivityLauncher.openUrl(getActivity(), mInterceptedUri, OpenUrlType.EXTERNAL);
                 getActivity().finish();
             }
             return true;
@@ -338,7 +339,7 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putString(ReaderConstants.ARG_POST_SLUG, mPostSlug);
 
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
-        outState.putString(ReaderConstants.ARG_FALLBACK_URI, mFallbackUri);
+        outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
 
@@ -368,7 +369,7 @@ public class ReaderPostDetailFragment extends Fragment
             mBlogSlug = savedInstanceState.getString(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = savedInstanceState.getString(ReaderConstants.ARG_POST_SLUG);
             mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
-            mFallbackUri = savedInstanceState.getString(ReaderConstants.ARG_FALLBACK_URI);
+            mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
@@ -631,7 +632,7 @@ public class ReaderPostDetailFragment extends Fragment
             mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
             replacePost(blogId, postId);
         } else {
-            ReaderActivityLauncher.showReaderPostDetail(getActivity(), false, blogId, postId, true, mFallbackUri);
+            ReaderActivityLauncher.showReaderPostDetail(getActivity(), false, blogId, postId, true, mInterceptedUri);
         }
     }
 
@@ -819,16 +820,16 @@ public class ReaderPostDetailFragment extends Fragment
                         switch (statusCode) {
                             case 401:
                             case 403:
-                                final boolean offerSignIn = WPUrlUtils.isWordPressCom(mFallbackUri)
+                                final boolean offerSignIn = WPUrlUtils.isWordPressCom(mInterceptedUri)
                                         && !AccountHelper.isSignedInWordPressDotCom();
 
                                 if (!offerSignIn) {
-                                    errMsgResId = (mFallbackUri == null)
+                                    errMsgResId = (mInterceptedUri == null)
                                             ? R.string.reader_err_get_post_not_authorized
                                             : R.string.reader_err_get_post_not_authorized_fallback;
                                     mSignInButton.setVisibility(View.GONE);
                                 } else {
-                                    errMsgResId = (mFallbackUri == null)
+                                    errMsgResId = (mInterceptedUri == null)
                                             ? R.string.reader_err_get_post_not_authorized_signin
                                             : R.string.reader_err_get_post_not_authorized_signin_fallback;
                                     mSignInButton.setVisibility(View.VISIBLE);

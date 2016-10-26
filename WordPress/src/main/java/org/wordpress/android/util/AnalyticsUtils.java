@@ -254,12 +254,12 @@ public class AnalyticsUtils {
      * Track when app launched via deep-linking but then fell back to external browser
      *
      * @param stat The Stat to bump
-     * @param fallbackUri The fallback URI the app was started with
+     * @param interceptedUri The fallback URI the app was started with
      *
      */
-    public static void trackWithDeepLinkFallbackData(AnalyticsTracker.Stat stat, String fallbackUri) {
+    public static void trackWithDeepLinkInterceptedData(AnalyticsTracker.Stat stat, String interceptedUri) {
         Map<String, Object> properties =  new HashMap<>();
-        properties.put(INTENT_DATA, fallbackUri);
+        properties.put(INTENT_DATA, interceptedUri);
 
         AnalyticsTracker.track(stat, properties);
     }

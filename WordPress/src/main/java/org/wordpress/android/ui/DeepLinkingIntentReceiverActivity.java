@@ -37,13 +37,13 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         VIEWPOST,
         READER_BLOG,
         READER_FEED,
-        READER_POST_SLUG
+        WPCOM_POST_SLUG
     }
 
     private InterceptType mInterceptType;
     private String mBlogId;
     private String mPostId;
-    private String mFallbackUri;
+    private String mInterceptedUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                     return;
                 case "http":
                 case "https":
-                    mFallbackUri = uri.toString();
+                    mInterceptedUri = uri.toString();
 
                     List<String> segments = uri.getPathSegments();
 
@@ -105,7 +105,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                                 AppLog.e(T.READER, e);
                                 ToastUtils.showToast(this, R.string.error_generic);
                             }
-                            mInterceptType = InterceptType.READER_POST_SLUG;
+                            mInterceptType = InterceptType.WPCOM_POST_SLUG;
                             showPost();
                             return;
                         }
@@ -150,15 +150,15 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                 }
             }
 
-            if (mInterceptType == InterceptType.READER_POST_SLUG) {
-                ReaderActivityLauncher.showReaderPostDetail(this, mBlogId, mPostId, false, mFallbackUri);
+            if (mInterceptType == InterceptType.WPCOM_POST_SLUG) {
+                ReaderActivityLauncher.showReaderPostDetail(this, mBlogId, mPostId, false, mInterceptedUri);
             } else {
                 try {
                     final long blogId = Long.parseLong(mBlogId);
                     final long postId = Long.parseLong(mPostId);
 
                     ReaderActivityLauncher.showReaderPostDetail(this, InterceptType.READER_FEED.equals(mInterceptType),
-                        blogId, postId, false, mFallbackUri);
+                        blogId, postId, false, mInterceptedUri);
                 } catch (NumberFormatException e) {
                     AppLog.e(T.READER, e);
                 }

@@ -54,7 +54,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private long mPostId;
     private String mBlogSlug;
     private String mPostSlug;
-    private String mFallbackUri;
+    private String mInterceptedUri;
     private int mLastSelectedPosition = -1;
     private ReaderPostListType mPostListType;
 
@@ -89,7 +89,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostSlug = savedInstanceState.getString(ReaderConstants.ARG_POST_SLUG);
             mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
             mIsRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
-            mFallbackUri = savedInstanceState.getString(ReaderConstants.ARG_FALLBACK_URI);
+            mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -104,7 +104,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostSlug = getIntent().getStringExtra(ReaderConstants.ARG_POST_SLUG);
             mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
             mIsRelatedPostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false);
-            mFallbackUri = getIntent().getStringExtra(ReaderConstants.ARG_FALLBACK_URI);
+            mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -206,7 +206,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPostView);
-        outState.putString(ReaderConstants.ARG_FALLBACK_URI, mFallbackUri);
+        outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
 
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
@@ -581,14 +581,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         mIdList.get(position).getBlogId(),
                         mIdList.get(position).getPostId(),
                         mIsRelatedPostView,
-                        mFallbackUri,
+                        mInterceptedUri,
                         getPostListType());
             } else {
                 return ReaderPostDetailFragment.newInstance(
                         mIdList.get(position).getBlogSlug(),
                         mIdList.get(position).getPostSlug(),
                         mIsRelatedPostView,
-                        mFallbackUri,
+                        mInterceptedUri,
                         getPostListType());
             }
         }
