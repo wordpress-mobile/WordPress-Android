@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.Html;
@@ -226,11 +227,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
      * edit box
      */
-    public void forceSelfHostedMode(String prefillUrl) {
+    public void forceSelfHostedMode(@NonNull String prefillUrl) {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
-        mUrlEditText.setText(prefillUrl);
+        if (!prefillUrl.isEmpty()) {
+            mUrlEditText.setText(prefillUrl);
+        }
         mSelfHosted = true;
     }
 
