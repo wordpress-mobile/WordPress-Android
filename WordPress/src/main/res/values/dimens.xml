@@ -115,6 +115,7 @@
     <dimen name="reader_more_icon">48dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_follow_icon_no_caption">24dp</dimen>
+    <dimen name="reader_follow_button_padding">@dimen/margin_small</dimen>
 
     <dimen name="reader_detail_tag_height">48dp</dimen>
 

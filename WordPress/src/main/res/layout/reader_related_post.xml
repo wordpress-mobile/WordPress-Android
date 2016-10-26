@@ -38,6 +38,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_medium"
+            android:padding="@dimen/reader_follow_button_padding"
             app:wpShowFollowButtonCaption="false" />
 
         <org.wordpress.android.widgets.WPNetworkImageView
