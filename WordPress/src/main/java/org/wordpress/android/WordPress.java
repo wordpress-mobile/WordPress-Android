@@ -200,7 +200,12 @@ public class WordPress extends MultiDexApplication {
         // Volley networking setup
         setupVolleyQueue();
 
-        AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
+        // PasscodeLock setup
+        if(!AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+            // Make sure that PasscodeLock isn't already in place.
+            // Notifications services can enable it before the app is started.
+            AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
+        }
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
             AppLockManager.getInstance().getAppLock().setExemptActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
