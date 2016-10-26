@@ -293,6 +293,18 @@
                     android:scheme="http" >
                 </data>
 
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/19../../../.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/19../../../.*"
+                    android:scheme="http" >
+                </data>
+
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
