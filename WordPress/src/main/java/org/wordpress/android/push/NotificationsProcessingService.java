@@ -31,7 +31,7 @@ import org.wordpress.android.util.AppLog;
 import java.util.HashMap;
 
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
-import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_REPLY;
+import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
 import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
 
 /**
@@ -125,9 +125,9 @@ public class NotificationsProcessingService extends Service {
         private String mReplyText;
         private String mActionType;
         private Note mNote;
-        private int mTaskId;
-        private Context mContext;
-        private Intent mIntent;
+        private final int mTaskId;
+        private final Context mContext;
+        private final Intent mIntent;
 
         public QuickActionProcessor(Context ctx, Intent intent, int taskId) {
             mContext = ctx;
@@ -149,13 +149,11 @@ public class NotificationsProcessingService extends Service {
 
             if (TextUtils.isEmpty(mReplyText)) {
                 //if voice reply is enabled in a wearable, it will come through the remoteInput
-                //extra EXTRA_VOICE_REPLY
+                //extra EXTRA_VOICE_OR_INLINE_REPLY
+                //same thing with direct-reply in Android 7
                 Bundle remoteInput = RemoteInput.getResultsFromIntent(mIntent);
                 if (remoteInput != null) {
-                    CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
-                    if (replyText != null) {
-                        mReplyText = replyText.toString();
-                    }
+                    obtainReplyTextFromRemoteInputBundle(remoteInput);
                 }
             }
 
@@ -188,6 +186,13 @@ public class NotificationsProcessingService extends Service {
                 requestFailed(null);
             }
 
+        }
+
+        private void obtainReplyTextFromRemoteInputBundle(Bundle bundle) {
+            CharSequence replyText = bundle.getCharSequence(EXTRA_VOICE_OR_INLINE_REPLY);
+            if (replyText != null) {
+                mReplyText = replyText.toString();
+            }
         }
 
         private void buildNoteFromJSONObject(JSONObject jsonObject) {
@@ -274,6 +279,18 @@ public class NotificationsProcessingService extends Service {
                 //show generic error here
                 errorMessage = getString(R.string.error_generic);
             }
+            resetOriginalNotification();
+            showFinalMessageToUser(errorMessage);
+
+            stopSelf(mTaskId);
+        }
+
+        private void requestFailedWithMessage(String errorMessage) {
+            if (errorMessage == null) {
+                //show generic error here
+                errorMessage = getString(R.string.error_generic);
+            }
+            resetOriginalNotification();
             showFinalMessageToUser(errorMessage);
 
             stopSelf(mTaskId);
@@ -369,7 +386,11 @@ public class NotificationsProcessingService extends Service {
                         if (result != null && result.isSuccess()) {
                             requestCompleted(ARG_ACTION_REPLY);
                         } else {
-                            requestFailed(ARG_ACTION_REPLY);
+                            if (result != null && result.getMessage() != null) {
+                                requestFailedWithMessage(result.getMessage());
+                            } else {
+                                requestFailed(ARG_ACTION_REPLY);
+                            }
                         }
                     }
                 });
@@ -404,6 +425,9 @@ public class NotificationsProcessingService extends Service {
             sendBroadcast(closeIntent);
         }
 
-    }
+        private void resetOriginalNotification(){
+            GCMMessageService.rebuildAndUpdateNotificationsOnSystemBarForThisNote(mContext, mNoteId);
+        }
 
+    }
 }
