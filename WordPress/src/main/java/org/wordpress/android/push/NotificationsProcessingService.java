@@ -203,7 +203,7 @@ public class NotificationsProcessingService extends Service {
                         jsonObject = jsonArray.getJSONObject(0);
                     }
                 }
-                mNote = new Note.Schema().build(mNoteId, jsonObject);
+                mNote = new Note(mNoteId, jsonObject);
 
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.NOTIFS, e.getMessage());
