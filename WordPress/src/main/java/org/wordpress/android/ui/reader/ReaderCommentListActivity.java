@@ -147,6 +147,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(getCommentAdapter());
 
+        // hilight the comment if an id was provided
+        if (mCommentId > 0) {
+            getCommentAdapter().setHighlightCommentId(mCommentId, false);
+        }
+
         if (savedInstanceState != null) {
             setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID));
         }
