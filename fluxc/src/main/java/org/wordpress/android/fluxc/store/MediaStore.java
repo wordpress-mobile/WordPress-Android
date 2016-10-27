@@ -492,7 +492,7 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaDeleted(@NonNull MediaListPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETED_MEDIA, payload.media);
+        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETE_MEDIA, payload.media);
 
         if (payload.isError()) {
             onMediaChanged.error = payload.error;
