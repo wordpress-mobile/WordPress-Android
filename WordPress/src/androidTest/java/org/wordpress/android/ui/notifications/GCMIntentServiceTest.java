@@ -33,18 +33,6 @@ public class GCMIntentServiceTest extends ServiceTestCase<GCMMessageService> {
         super.tearDown();
     }
 
-    public void testShouldCircularizeNoteIcon() {
-        GCMMessageService intentService = new GCMMessageService();
-
-        String type = "c";
-        assertTrue(intentService.shouldCircularizeNoteIcon(type));
-
-        assertFalse(intentService.shouldCircularizeNoteIcon(null));
-
-        type = "invalidType";
-        assertFalse(intentService.shouldCircularizeNoteIcon(type));
-    }
-
     public void testOnMessageReceived() throws InterruptedException {
         final Bundle bundle = new Bundle();
         bundle.putString("user", "1");
