@@ -111,9 +111,12 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                                 ToastUtils.showToast(this, R.string.error_generic);
                             }
 
-                            Matcher commentIdMatcher = COMMENT_ID_PATTERN.matcher(uri.getFragment());
-                            while (commentIdMatcher.find() && commentIdMatcher.groupCount() > 0) {
-                                mCommentId = Integer.valueOf(commentIdMatcher.group(1));
+                            final String fragment = uri.getFragment();
+                            if (fragment != null) {
+                                Matcher commentIdMatcher = COMMENT_ID_PATTERN.matcher(uri.getFragment());
+                                while (commentIdMatcher.find() && commentIdMatcher.groupCount() > 0) {
+                                    mCommentId = Integer.valueOf(commentIdMatcher.group(1));
+                                }
                             }
 
                             mInterceptType = InterceptType.WPCOM_POST_SLUG;
