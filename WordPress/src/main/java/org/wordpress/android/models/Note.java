@@ -37,6 +37,7 @@ public class Note {
     public static final String NOTE_MATCHER_TYPE = "automattcher";
     public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
     public static final String NOTE_REBLOG_TYPE = "reblog";
+    public static final String NOTE_NEW_POST_TYPE = "new_post";
     public static final String NOTE_UNKNOWN_TYPE = "unknown";
 
     // JSON action keys
@@ -103,6 +104,10 @@ public class Note {
 
     public Boolean isAutomattcherType() {
         return isType(NOTE_MATCHER_TYPE);
+    }
+
+    public Boolean isNewPostType() {
+        return isType(NOTE_NEW_POST_TYPE);
     }
 
     public Boolean isFollowType() {
