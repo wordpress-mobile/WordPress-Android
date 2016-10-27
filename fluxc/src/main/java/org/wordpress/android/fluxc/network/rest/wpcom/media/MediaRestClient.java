@@ -184,7 +184,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         for (final MediaModel media : mediaToDelete) {
             String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).delete.getUrlV1_1();
-            add(WPComGsonRequest.buildGetRequest(url, null, MediaWPComRestResponse.class,
+            add(WPComGsonRequest.buildPostRequest(url, null, MediaWPComRestResponse.class,
                     new Listener<MediaWPComRestResponse>() {
                         @Override
                         public void onResponse(MediaWPComRestResponse response) {
