@@ -47,6 +47,7 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -263,6 +264,21 @@ public class GCMMessageService extends GcmListenerService {
         }
     }
 
+    private boolean canAddActionsToNotifications() {
+        AppLockManager appLockManager = AppLockManager.getInstance();
+        // Make sure PasscodeLock isn't already in place
+        if (!appLockManager.isAppLockFeatureEnabled()) {
+            appLockManager.enableDefaultAppLockIfAvailable(this.getApplication());
+        }
+
+        // Make sure the locker was correctly enabled, and it's active
+        if (appLockManager.isAppLockFeatureEnabled() && appLockManager.getAppLock().isPasswordLocked()) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+
     private class NotificationHelper {
 
         private void handleDefaultPush(Context context, @NonNull Bundle data) {
@@ -443,8 +459,11 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
-            // Add some actions if this is a comment notification
+            if (!canAddActionsToNotifications()) {
+                return;
+            }
 
+            // Add some actions if this is a comment notification
             boolean areActionsSet = false;
 
             Note note = NotificationsTable.getNoteById(noteId);
@@ -479,6 +498,10 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void addCommentReplyActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
+            if (!canAddActionsToNotifications()) {
+                return;
+            }
+
             // adding comment reply action
             Intent commentReplyIntent = getCommentActionReplyIntent(context, noteId);
             commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
@@ -510,6 +533,10 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void addCommentLikeActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
+            if (!canAddActionsToNotifications()) {
+                return;
+            }
+
             // adding comment like action
             Intent commentLikeIntent = getCommentActionIntent(context);
             commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
@@ -523,6 +550,10 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void addCommentApproveActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
+            if (!canAddActionsToNotifications()) {
+                return;
+            }
+
             // adding comment approve action
             Intent commentApproveIntent = getCommentActionIntent(context);
             commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);

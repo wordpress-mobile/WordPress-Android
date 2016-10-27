@@ -552,6 +552,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     public void onResponse(JSONObject jsonObject) {
                         // Set primary blog
                         setPrimaryBlog(jsonObject);
+                        // Clear the URL on login so it's not persisted the next time we add a self-hosted site
+                        mUrlEditText.setText("");
                         finishCurrentActivity(userBlogList);
                         String displayName = JSONUtils.getStringDecoded(jsonObject, "display_name");
                         Uri profilePicture = Uri.parse(JSONUtils.getString(jsonObject, "avatar_URL"));
@@ -564,6 +566,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     }
                 }, null);
             } else {
+                // Clear the URL on login so it's not persisted the next time we add a self-hosted site
+                mUrlEditText.setText("");
                 finishCurrentActivity(userBlogList);
             }
         }
