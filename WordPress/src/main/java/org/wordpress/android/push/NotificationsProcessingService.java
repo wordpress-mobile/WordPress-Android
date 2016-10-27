@@ -32,6 +32,7 @@ import java.util.HashMap;
 
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
+import static org.wordpress.android.push.GCMMessageService.PUSH_ARG_NOTE_FULL_DATA;
 import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
 
 /**
@@ -50,6 +51,10 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_APPROVE = "action_approve";
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
     public static final String ARG_NOTE_ID = "note_id";
+
+    //bundle and push ID, as they are held in the system dashboard
+    public static final String ARG_NOTE_BUNDLE = "note_bundle";
+    public static final String ARG_PUSH_ID= "push_id";
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -160,27 +165,44 @@ public class NotificationsProcessingService extends Service {
             showIntermediateMessageToUser(getString(R.string.comment_q_action_updating));
 
             if (mActionType != null) {
-                RestRequest.Listener listener =
-                        new RestRequest.Listener() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                if (response != null && !response.optBoolean("success")) {
-                                    //build the Note object here
-                                    buildNoteFromJSONObject(response);
-                                    performRequestedAction();
+
+                //we probably have the note in the PN payload and such it's passed in the intent extras
+                // bundle. If we have it, no need to go fetch it through REST API.
+                if (mIntent.hasExtra(ARG_NOTE_BUNDLE)) {
+                    Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
+                    if (payload.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
+                        String base64FullData = payload.getString(PUSH_ARG_NOTE_FULL_DATA);
+                        mNote = new Note.Schema().buildFromBase64EncodedData(mNoteId, base64FullData);
+                    }
+                }
+
+                //if we still don't have a Note, go get it from the REST API
+                if (mNote == null) {
+                    RestRequest.Listener listener =
+                            new RestRequest.Listener() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    if (response != null && !response.optBoolean("success")) {
+                                        //build the Note object here
+                                        buildNoteFromJSONObject(response);
+                                        performRequestedAction();
+                                    }
                                 }
-                            }
-                        };
+                            };
 
-                RestRequest.ErrorListener errorListener =
-                        new RestRequest.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                requestFailed(mActionType);
-                            }
-                        };
+                    RestRequest.ErrorListener errorListener =
+                            new RestRequest.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    requestFailed(mActionType);
+                                }
+                            };
 
-                getNoteFromNoteId(mNoteId, listener, errorListener);
+                    getNoteFromNoteId(mNoteId, listener, errorListener);
+                } else {
+                    //we have a Note! just go ahead and perform the requested action
+                    performRequestedAction();
+                }
 
             } else {
                 requestFailed(null);
