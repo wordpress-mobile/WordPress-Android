@@ -61,10 +61,9 @@ public class GCMMessageService extends GcmListenerService {
     private static NotificationHelper sNotificationHelpers;
 
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
-    private static final int PUSH_NOTIFICATION_ID = 10000;
-    private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
+    public static final int PUSH_NOTIFICATION_ID = 10000;
+    public static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
-    public static final int ACTIONS_RESULT_NOTIFICATION_ID = 40000;
     public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
     private static final int MAX_INBOX_ITEMS = 5;
 
