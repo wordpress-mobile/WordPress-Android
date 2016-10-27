@@ -162,13 +162,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     getCommentAdapter().setHighlightCommentId(mCommentId, false);
                     break;
                 case REPLY:
-                    setReplyToCommentId(mCommentId);
+                    setReplyToCommentId(mCommentId, true);
                     break;
             }
         }
 
         if (savedInstanceState != null) {
-            setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID));
+            setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID), false);
         }
 
         refreshComments();
@@ -223,17 +223,29 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    private void setReplyToCommentId(long commentId) {
+    private void setReplyToCommentId(long commentId, boolean doFocus) {
         mReplyToCommentId = commentId;
         mEditComment.setHint(mReplyToCommentId == 0 ?
                 R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
+
+        if (doFocus) {
+            mEditComment.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    final boolean isFocusableInTouchMode = mEditComment.isFocusableInTouchMode();
+
+                    mEditComment.setFocusableInTouchMode(true);
+                    EditTextUtils.showSoftInput(mEditComment);
+
+                    mEditComment.setFocusableInTouchMode(isFocusableInTouchMode);
+                }
+            }, 200);
+        }
 
         // if a comment is being replied to, highlight it and scroll it to the top so the user can
         // see which comment they're replying to - note that scrolling is delayed to give time for
         // listView to reposition due to soft keyboard appearing
         if (mReplyToCommentId != 0) {
-            mEditComment.requestFocus();
-            EditTextUtils.showSoftInput(mEditComment);
             getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false);
             mRecyclerView.postDelayed(new Runnable() {
                 @Override
@@ -248,7 +260,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 @Override
                 public void onEditTextBack() {
                     if (EditTextUtils.isEmpty(mEditComment)) {
-                        setReplyToCommentId(0);
+                        setReplyToCommentId(0, false);
                     }
                 }
             });
@@ -333,7 +345,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mCommentAdapter.setReplyListener(new ReaderCommentAdapter.RequestReplyListener() {
                 @Override
                 public void onRequestReply(long commentId) {
-                    setReplyToCommentId(commentId);
+                    setReplyToCommentId(commentId, true);
                 }
             });
 
@@ -522,7 +534,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     // stop highlighting the fake comment and replace it with the real one
                     getCommentAdapter().setHighlightCommentId(0, false);
                     getCommentAdapter().replaceComment(fakeCommentId, newComment);
-                    setReplyToCommentId(0);
+                    setReplyToCommentId(0, false);
                     mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
                 } else {
                     mEditComment.setText(commentText);
