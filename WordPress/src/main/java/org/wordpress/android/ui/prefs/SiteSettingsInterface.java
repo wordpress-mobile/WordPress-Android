@@ -14,6 +14,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.xmlrpc.android.ApiHelper.Method;
@@ -158,9 +159,7 @@ public abstract class SiteSettingsInterface {
                     return category.name;
                 }
             } finally {
-                if (cursor != null && !cursor.isClosed()) {
-                    cursor.close();
-                }
+                SqlUtils.closeCursor(cursor);
             }
         }
 
