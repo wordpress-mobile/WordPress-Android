@@ -330,7 +330,10 @@
     <string name="comment_moderated_unapproved">Comment unapproved</string>
     <string name="comment_liked">Comment liked</string>
     <string name="comment_q_action_done_generic">Action done!</string>
-    <string name="comment_q_action_updating">Updating…</string>
+    <string name="comment_q_action_processing">Processing…</string>
+    <string name="comment_q_action_liking">Liking…</string>
+    <string name="comment_q_action_approving">Approving…</string>
+    <string name="comment_q_action_replying">Replying…</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>

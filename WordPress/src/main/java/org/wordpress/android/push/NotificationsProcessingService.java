@@ -163,9 +163,9 @@ public class NotificationsProcessingService extends Service {
                 }
             }
 
-            showIntermediateMessageToUser(getString(R.string.comment_q_action_updating));
-
             if (mActionType != null) {
+
+                showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
 
                 //we probably have the note in the PN payload and such it's passed in the intent extras
                 // bundle. If we have it, no need to go fetch it through REST API.
@@ -209,6 +209,19 @@ public class NotificationsProcessingService extends Service {
                 requestFailed(null);
             }
 
+        }
+
+        private String getProcessingTitleForAction(String actionType) {
+            if (actionType.equals(ARG_ACTION_LIKE)) {
+                return getString(R.string.comment_q_action_liking);
+            } else if (actionType.equals(ARG_ACTION_APPROVE)) {
+                return getString(R.string.comment_q_action_approving);
+            } else if (actionType.equals(ARG_ACTION_REPLY)) {
+                return getString(R.string.comment_q_action_replying);
+            } else {
+                //default, generic  "processing"
+                return getString(R.string.comment_q_action_processing);
+            }
         }
 
         private void obtainReplyTextFromRemoteInputBundle(Bundle bundle) {
