@@ -95,6 +95,7 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -1528,9 +1529,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
             path = cur.getString(dataColumn);
         }
-        if (cur != null && !cur.isClosed()) {
-            cur.close();
-        }
+        SqlUtils.closeCursor(cur);
         return path;
     }
 
