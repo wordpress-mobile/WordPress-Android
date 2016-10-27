@@ -825,7 +825,7 @@ public class GCMMessageService extends GcmListenerService {
             EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
         }
 
-        // Show a notification for two-step auth users who sign in from a web browser
+        // Show a notification for two-step auth users who log in from a web browser
         private void handlePushAuth(Context context, Bundle data) {
             if (data == null) {
                 return;
