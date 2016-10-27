@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.support.annotation.NonNull;
 
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
@@ -119,17 +118,35 @@ public class ReaderEvents {
     }
 
     public static class RelatedPostsUpdated {
-        private final ReaderPost mSourcePost;
-        private final ReaderRelatedPostList mRelatedPosts;
-        public RelatedPostsUpdated(@NonNull ReaderPost sourcePost, @NonNull ReaderPostList relatedPosts) {
-            mSourcePost = sourcePost;
-            mRelatedPosts = new ReaderRelatedPostList(relatedPosts);
+        private final long mSourcePostId;
+        private final long mSourceSiteId;
+        private final ReaderRelatedPostList mLocalRelatedPosts;
+        private final ReaderRelatedPostList mGlobalRelatedPosts;
+        public RelatedPostsUpdated(@NonNull ReaderPost sourcePost,
+                                   @NonNull ReaderRelatedPostList localRelatedPosts,
+                                   @NonNull ReaderRelatedPostList globalRelatedPosts) {
+            mSourcePostId = sourcePost.postId;
+            mSourceSiteId = sourcePost.blogId;
+            mLocalRelatedPosts = localRelatedPosts;
+            mGlobalRelatedPosts = globalRelatedPosts;
         }
-        public ReaderPost getSourcePost() {
-            return mSourcePost;
+        public long getSourcePostId() {
+            return mSourcePostId;
         }
-        public ReaderRelatedPostList getRelatedPosts() {
-            return mRelatedPosts;
+        public long getSourceSiteId() {
+            return mSourceSiteId;
+        }
+        public ReaderRelatedPostList getLocalRelatedPosts() {
+            return mLocalRelatedPosts;
+        }
+        public ReaderRelatedPostList getGlobalRelatedPosts() {
+            return mGlobalRelatedPosts;
+        }
+        public boolean hasLocalRelatedPosts() {
+            return mLocalRelatedPosts.size() > 0;
+        }
+        public boolean hasGlobalRelatedPosts() {
+            return mGlobalRelatedPosts.size() > 0;
         }
     }
 }

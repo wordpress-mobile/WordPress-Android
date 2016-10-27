@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/frame_avatar"
+        android:layout_width="@dimen/reader_detail_header_avatar_frame"
+        android:layout_height="@dimen/reader_detail_header_avatar_frame"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_extra_large">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_header_blavatar"
+            android:layout_width="@dimen/reader_detail_header_blavatar"
+            android:layout_height="@dimen/reader_detail_header_blavatar"
+            android:layout_gravity="top|left"
+            tools:src="@drawable/blavatar_placeholder" />
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_header_avatar"
+            android:layout_width="@dimen/reader_detail_header_avatar"
+            android:layout_height="@dimen/reader_detail_header_avatar"
+            android:layout_gravity="bottom|right"
+            android:background="@drawable/shape_oval_white"
+            android:padding="2dp"
+            tools:src="@drawable/gravatar_placeholder" />
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_post_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/frame_avatar"
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
+            tools:text="text_header_author_name" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_header_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_header_blog_name" />
+
+        <org.wordpress.android.ui.reader.views.ReaderFollowButton
+            android:id="@+id/header_follow_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+</RelativeLayout>

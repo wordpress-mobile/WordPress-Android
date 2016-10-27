@@ -21,8 +21,8 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.GCMMessageService;
-import org.wordpress.android.GCMRegistrationIntentService;
+import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -33,6 +33,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -64,7 +65,7 @@ import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.GCMMessageService.EXTRA_VOICE_REPLY;
+import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -272,34 +273,33 @@ public class WPMainActivity extends AppCompatActivity {
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
-        if (GCMMessageService.getNotificationsCount() == 1) {
+        //it could be that a notification has been tapped but has been removed by the time we reach
+        //here. It's ok to compare to <=1 as it could be zero then.
+        if (GCMMessageService.getNotificationsCount() <= 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
                 GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
-                boolean doLikeNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
-                if (doLikeNote) {
-                    NotificationsListFragment.openNoteForLike(this, noteId);
-                } else {
-                    boolean doApproveNote = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
-                    if (doApproveNote) {
-                        NotificationsListFragment.openNoteForApprove(this, noteId);
-                    } else {
-
-                        //if voice reply is enabled in a wearable, it will come through the remoteInput
-                        //extra EXTRA_VOICE_REPLY
-                        String voiceReply = null;
-                        Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
-                        if (remoteInput != null) {
-                            CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
-                            if (replyText != null) {
-                                voiceReply = replyText.toString();
-                            }
-                        }
-
-                        boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                        NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
+                //if voice reply is enabled in a wearable, it will come through the remoteInput
+                //extra EXTRA_VOICE_OR_INLINE_REPLY
+                String voiceReply = null;
+                Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                if (remoteInput != null) {
+                    CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_OR_INLINE_REPLY);
+                    if (replyText != null) {
+                        voiceReply = replyText.toString();
                     }
                 }
+
+                if (voiceReply != null) {
+                    NotificationsProcessingService.startServiceForReply(this, noteId, voiceReply);
+                    finish();
+                    return; //we don't want this notification to be dismissed as we still have to make sure
+                    // we processed the voice reply, so we exit this function immediately
+                } else {
+                    boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
+                }
+
             } else {
                 AppLog.e(T.NOTIFS, "app launched from a PN that doesn't have a note_id in it!!");
                return;
