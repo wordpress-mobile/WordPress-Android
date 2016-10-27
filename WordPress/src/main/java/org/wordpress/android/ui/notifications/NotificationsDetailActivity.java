@@ -41,6 +41,7 @@ import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
 import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
 import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
+import static org.wordpress.android.models.Note.NOTE_NEW_POST_TYPE;
 
 public class NotificationsDetailActivity extends AppCompatActivity implements
         CommentActions.OnNoteCommentActionListener {
@@ -85,7 +86,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             if (getSupportActionBar() != null) {
                 String title = note.getTitle();
                 if (TextUtils.isEmpty(title)) {
-                    //set a deafult title if title is not set within the note
+                    //set a default title if title is not set within the note
                     switch (note.getType()) {
                         case NOTE_FOLLOW_TYPE:
                             title = getString(R.string.follows);
@@ -101,11 +102,13 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                             break;
                     }
                 }
-                getSupportActionBar().setTitle(title);
-            }
 
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(note.getTitle());
+                // Force change the Action Bar title for 'new_post' notifications.
+                if (note.isNewPostType()) {
+                    title = getString(R.string.reader_title_post_detail);
+                }
+
+                getSupportActionBar().setTitle(title);
             }
 
             NotificationsActions.markNoteAsRead(note);
@@ -178,6 +181,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             } else {
                 fragment = NotificationsDetailListFragment.newInstance(note.getId());
             }
+        } else if (note.isNewPostType()) {
+            fragment = ReaderPostDetailFragment.newInstance(note.getSiteId(), note.getPostId());
         } else {
             fragment = NotificationsDetailListFragment.newInstance(note.getId());
         }
