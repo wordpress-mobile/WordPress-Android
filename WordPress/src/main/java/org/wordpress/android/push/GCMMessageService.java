@@ -171,20 +171,6 @@ public class GCMMessageService extends GcmListenerService {
         return null;
     }
 
-    public static synchronized Integer getCurrentPushIdForNoteId(String noteId){
-        if (sActiveNotificationsMap.size() > 0) {
-            //get the corresponding push id for this noteId
-            for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
-                Map.Entry<Integer, Bundle> row = it.next();
-                Bundle noteBundle = row.getValue();
-                if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
-                    return row.getKey();
-                }
-            }
-        }
-        return null;
-    }
-
     public static synchronized void clearNotifications() {
         sActiveNotificationsMap.clear();
     }
