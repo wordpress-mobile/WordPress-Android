@@ -18,6 +18,24 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class NotificationsActions {
+
+    public static void updateSeenNotes() {
+        ArrayList<Note> latestNotes = NotificationsTable.getLatestNotes(1);
+        if (latestNotes.size() == 0) return;
+        WordPress.getRestClientUtilsV1_1().markNotificationsSeen(latestNotes.get(0).getTimestampString(), new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                // Assuming that we've marked the most recent notification as seen. (Beware, seen != read).
+                EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(false));
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AppLog.e(AppLog.T.NOTIFS, "Could not mark notifications/seen' value via API.", error);
+            }
+        });
+    }
+
     public static void refreshNotifications(final RestRequest.Listener listener,
                                             final RestRequest.ErrorListener errorListener) {
         WordPress.getRestClientUtilsV1_1().getNotifications(new RestRequest.Listener() {

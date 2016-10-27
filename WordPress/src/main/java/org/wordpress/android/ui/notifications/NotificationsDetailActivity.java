@@ -41,7 +41,6 @@ import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
 import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
 import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
-import static org.wordpress.android.models.Note.NOTE_NEW_POST_TYPE;
 
 public class NotificationsDetailActivity extends AppCompatActivity implements
         CommentActions.OnNoteCommentActionListener {
