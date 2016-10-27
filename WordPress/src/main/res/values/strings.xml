@@ -378,7 +378,7 @@
     <string name="uploading_total">Uploading %1$d of %2$d</string>
 
     <!-- new account view -->
-    <string name="signing_in">Signing in…</string>
+    <string name="signing_in">Logging in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
 
     <!-- media selection -->
@@ -474,7 +474,7 @@
     <string name="site_settings_send_pingbacks_title">Send Pingbacks</string>
     <string name="site_settings_receive_pingbacks_title">Receive Pingbacks</string>
     <string name="site_settings_identity_required_title">Must include name and email</string>
-    <string name="site_settings_account_required_title">Users must be signed in</string>
+    <string name="site_settings_account_required_title">Users must be logged in</string>
     <string name="site_settings_close_after_title" translatable="false">@string/close_after</string>
     <string name="site_settings_sort_by_title">Sort by</string>
     <string name="site_settings_threading_title">Threading</string>
@@ -1296,7 +1296,7 @@
     <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
     <string name="sign_in_jetpack">Log in to your WordPress.com account to connect to Jetpack.</string>
     <string name="auth_required">Log in again to continue.</string>
-    <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we signed you
+    <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we loggged you
         in. Try to log in with your newly created username and password.</string>
     <string name="send_link">Send link</string>
     <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to log in instantly</string>
