@@ -227,7 +227,7 @@ public class ReaderPostTable {
             return 0;
         }
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT count(*) FROM tbl_posts WHERE blog_id=?",
+                "SELECT count(*) FROM tbl_posts WHERE blog_id=? AND tag_name=''",
                 new String[]{Long.toString(blogId)});
     }
 
@@ -236,7 +236,7 @@ public class ReaderPostTable {
             return 0;
         }
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT count(*) FROM tbl_posts WHERE feed_id=?",
+                "SELECT count(*) FROM tbl_posts WHERE feed_id=? AND tag_name=''",
                 new String[]{Long.toString(feedId)});
     }
 
