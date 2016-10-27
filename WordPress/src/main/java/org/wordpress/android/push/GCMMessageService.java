@@ -64,6 +64,7 @@ public class GCMMessageService extends GcmListenerService {
     public static final int PUSH_NOTIFICATION_ID = 10000;
     public static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
+    public static final int ACTIONS_RESULT_NOTIFICATION_ID = 40000;
     public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
     private static final int MAX_INBOX_ITEMS = 5;
 
@@ -522,7 +523,6 @@ public class GCMMessageService extends GcmListenerService {
                 commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
             commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
-            commentReplyIntent.putExtra(NotificationsProcessingService.ARG_PUSH_ID, getCurrentPushIdForNoteId(noteId));
 
 
             PendingIntent commentReplyPendingIntent = getCommentActionPendingIntent(context, commentReplyIntent);
@@ -561,7 +561,6 @@ public class GCMMessageService extends GcmListenerService {
                 commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
             commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
-            commentLikeIntent.putExtra(NotificationsProcessingService.ARG_PUSH_ID, getCurrentPushIdForNoteId(noteId));
 
             PendingIntent commentLikePendingIntent =  getCommentActionPendingIntenForService(context, commentLikeIntent);
             builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
@@ -581,7 +580,6 @@ public class GCMMessageService extends GcmListenerService {
                 commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
             commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
-            commentApproveIntent.putExtra(NotificationsProcessingService.ARG_PUSH_ID, getCurrentPushIdForNoteId(noteId));
 
             PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntenForService(context, commentApproveIntent);
             builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),

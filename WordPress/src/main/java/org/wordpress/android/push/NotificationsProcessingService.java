@@ -3,6 +3,7 @@ package org.wordpress.android.push;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -10,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -27,14 +29,13 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.HashMap;
 
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
+import static org.wordpress.android.push.GCMMessageService.GROUP_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.PUSH_ARG_NOTE_FULL_DATA;
-import static org.wordpress.android.push.GCMMessageService.PUSH_NOTIFICATION_ID;
 import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
 
 /**
@@ -147,8 +148,9 @@ public class NotificationsProcessingService extends Service {
 
             mNoteId = mIntent.getStringExtra(ARG_NOTE_ID);
             mActionType = mIntent.getStringExtra(ARG_ACTION_TYPE);
-            //default value for push notification ID is likely PUSH_NOTIFICATION_ID + 1
-            mPushId = mIntent.getIntExtra(ARG_PUSH_ID, PUSH_NOTIFICATION_ID+1);
+            //default value for push notification ID is likely GROUP_NOTIFICATION_ID for the only
+            // notif in active notifs map (there is only one notif if quick actions are available)
+            mPushId = GROUP_NOTIFICATION_ID;
             if (mIntent.hasExtra(ARG_ACTION_REPLY_TEXT)) {
                 mReplyText = mIntent.getStringExtra(ARG_ACTION_REPLY_TEXT);
             }
@@ -165,7 +167,14 @@ public class NotificationsProcessingService extends Service {
 
             if (mActionType != null) {
 
-                showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActionType.equals(ARG_ACTION_REPLY)) {
+                    //we don't need showing the infinite progress bar in case of REPLY on Android N,
+                    //because we've got inline-reply there with its own spinner to show progress
+                    // no op
+                } else {
+                    showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
+                }
+
 
                 //we probably have the note in the PN payload and such it's passed in the intent extras
                 // bundle. If we have it, no need to go fetch it through REST API.
@@ -283,7 +292,7 @@ public class NotificationsProcessingService extends Service {
             }
 
             //update notification indicating the operation succeeded
-            showFinalMessageToUser(successMessage);
+            showFinalMessageToUser(successMessage, GROUP_NOTIFICATION_ID);
 
             //after 3 seconds, dismiss the notification that indicated success
             Handler handler = new Handler();
@@ -314,9 +323,15 @@ public class NotificationsProcessingService extends Service {
                 errorMessage = getString(R.string.error_generic);
             }
             resetOriginalNotification();
-            ToastUtils.showToast(mContext, errorMessage);
-            //FIXME delete next line
-            //showFinalMessageToUser(errorMessage);
+            showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
+
+            //after 3 seconds, dismiss the error message notification
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    //remove the error notification from the system bar
+                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                }}, 3000); // show the success message for 3 seconds, then dismiss
 
             stopSelf(mTaskId);
         }
@@ -327,27 +342,33 @@ public class NotificationsProcessingService extends Service {
                 errorMessage = getString(R.string.error_generic);
             }
             resetOriginalNotification();
-            ToastUtils.showToast(mContext, errorMessage);
-            //FIXME delete next line
-            //showFinalMessageToUser(errorMessage);
+            showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
+
+            //after 3 seconds, dismiss the error message notification
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    //remove the error notification from the system bar
+                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                }}, 3000); // show the success message for 3 seconds, then dismiss
 
             stopSelf(mTaskId);
         }
 
         private void showIntermediateMessageToUser(String message) {
-            showMessageToUser(message, true);
+            showMessageToUser(message, true, GROUP_NOTIFICATION_ID);
         }
 
-        private void showFinalMessageToUser(String message) {
-            showMessageToUser(message, false);
+        private void showFinalMessageToUser(String message, int pushId) {
+            showMessageToUser(message, false, pushId);
         }
 
-        private void showMessageToUser(String message, boolean intermediateMessage) {
+        private void showMessageToUser(String message, boolean intermediateMessage, int pushId) {
             NotificationCompat.Builder builder = getBuilder().setContentText(message).setTicker(message);
             builder.setProgress(0, 0, intermediateMessage);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-            notificationManager.notify(mPushId, builder.build());
+            notificationManager.notify(pushId, builder.build());
         }
 
         private NotificationCompat.Builder getBuilder() {
@@ -425,7 +446,7 @@ public class NotificationsProcessingService extends Service {
                         if (result != null && result.isSuccess()) {
                             requestCompleted(ARG_ACTION_REPLY);
                         } else {
-                            if (result != null && result.getMessage() != null) {
+                            if (result != null && !TextUtils.isEmpty(result.getMessage())) {
                                 requestFailedWithMessage(result.getMessage());
                             } else {
                                 requestFailed(ARG_ACTION_REPLY);
@@ -435,16 +456,16 @@ public class NotificationsProcessingService extends Service {
                 });
             } else {
                 //cancel the current notification
-                dismissNotification();
+                dismissNotification(mPushId);
                 hideStatusBar();
                 //and just trigger the Activity to allow the user to write a reply
                 startReplyToCommentActivity();
             }
         }
 
-        private void dismissNotification() {
+        private void dismissNotification(int pushId) {
             final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-            notificationManager.cancel(mPushId);
+            notificationManager.cancel(pushId);
         }
 
         private void startReplyToCommentActivity() {
