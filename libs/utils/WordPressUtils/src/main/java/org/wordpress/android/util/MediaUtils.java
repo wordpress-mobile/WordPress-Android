@@ -113,7 +113,7 @@ public class MediaUtils {
         Cursor cursor = loader.loadInBackground();
         cursor.moveToFirst();
         long value = cursor.getLong(0);
-        cursor.close();
+        SqlUtils.closeCursor(cursor);
 
         return Uri.parse(contentUri.toString() + "/" + value);
     }
