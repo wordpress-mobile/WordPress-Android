@@ -11,6 +11,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderCommentListActivity.COMMENT_OPERATION;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -46,9 +47,12 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private String mBlogId;
     private String mPostId;
     private String mInterceptedUri;
+    private COMMENT_OPERATION mCommentOperation;
     private int mCommentId;
 
-    private static final Pattern COMMENT_ID_PATTERN = Pattern.compile("comment-(\\d+)$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern FRAGMENT_COMMENTS_PATTERN = Pattern.compile("comments", Pattern.CASE_INSENSITIVE);
+    private static final Pattern FRAGMENT_COMMENT_ID_PATTERN = Pattern.compile("comment-(\\d+)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern FRAGMENT_RESPOND_PATTERN = Pattern.compile("respond", Pattern.CASE_INSENSITIVE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +104,9 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                             if (segments.size() > 4 && segments.get(3).equals("posts")) {
                                 mPostId = segments.get(4);
                             }
+
+                            parseFragment(uri);
+
                             showPost();
                             return;
                         } else if (segments.size() == 4) {
@@ -111,13 +118,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                                 ToastUtils.showToast(this, R.string.error_generic);
                             }
 
-                            final String fragment = uri.getFragment();
-                            if (fragment != null) {
-                                Matcher commentIdMatcher = COMMENT_ID_PATTERN.matcher(uri.getFragment());
-                                while (commentIdMatcher.find() && commentIdMatcher.groupCount() > 0) {
-                                    mCommentId = Integer.valueOf(commentIdMatcher.group(1));
-                                }
-                            }
+                            parseFragment(uri);
 
                             mInterceptType = InterceptType.WPCOM_POST_SLUG;
                             showPost();
@@ -135,6 +136,50 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         }
 
         finish();
+    }
+
+    private void parseFragment(Uri uri) {
+        // default to do-nothing w.r.t. comments
+        mCommentOperation = null;
+
+        if (uri == null || uri.getFragment() == null) {
+            return;
+        }
+
+        final String fragment = uri.getFragment();
+
+        // check for the general "#comments" fragment to jump to the comments section
+        Matcher commentsMatcher = FRAGMENT_COMMENTS_PATTERN.matcher(fragment);
+        if (commentsMatcher.matches()) {
+            mCommentOperation = COMMENT_OPERATION.JUMP;
+            mCommentId = 0;
+            return;
+        }
+
+        // check for the "#respond" fragment to jump to the reply box
+        Matcher respondMatcher = FRAGMENT_RESPOND_PATTERN.matcher(fragment);
+        if (respondMatcher.matches()) {
+            mCommentOperation = COMMENT_OPERATION.REPLY;
+
+            // check whether we are to reply to a specific comment
+            final String replyToCommentId = uri.getQueryParameter("replytocom");
+            if (replyToCommentId != null) {
+                try {
+                    mCommentId = Integer.parseInt(replyToCommentId);
+                } catch (NumberFormatException e) {
+                    AppLog.e(T.UTILS, "replytocom cannot be converted to int" + replyToCommentId, e);
+                }
+            }
+
+            return;
+        }
+
+        // check for the "#comment-xyz" fragment to jump to a specific comment
+        Matcher commentIdMatcher = FRAGMENT_COMMENT_ID_PATTERN.matcher(fragment);
+        if (commentIdMatcher.find() && commentIdMatcher.groupCount() > 0) {
+            mCommentId = Integer.valueOf(commentIdMatcher.group(1));
+            mCommentOperation = COMMENT_OPERATION.JUMP;
+        }
     }
 
     @Override
@@ -169,14 +214,15 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
             }
 
             if (mInterceptType == InterceptType.WPCOM_POST_SLUG) {
-                ReaderActivityLauncher.showReaderPostDetail(this, mBlogId, mPostId, mCommentId, false, mInterceptedUri);
+                ReaderActivityLauncher.showReaderPostDetail(
+                        this, mBlogId, mPostId, mCommentOperation, mCommentId, false, mInterceptedUri);
             } else {
                 try {
                     final long blogId = Long.parseLong(mBlogId);
                     final long postId = Long.parseLong(mPostId);
 
                     ReaderActivityLauncher.showReaderPostDetail(this, InterceptType.READER_FEED.equals(mInterceptType),
-                        blogId, postId, false, mInterceptedUri);
+                        blogId, postId, mCommentOperation, mCommentId, false, mInterceptedUri);
                 } catch (NumberFormatException e) {
                     AppLog.e(T.READER, e);
                 }

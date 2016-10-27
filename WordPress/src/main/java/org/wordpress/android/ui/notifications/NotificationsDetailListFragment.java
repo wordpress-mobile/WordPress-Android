@@ -37,6 +37,7 @@ import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderCommentListActivity.COMMENT_OPERATION;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -231,7 +232,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         public void showReaderPostComments() {
             if (!isAdded() || mNote == null || mNote.getCommentId() == 0) return;
 
-            ReaderActivityLauncher.showReaderComments(getActivity(), mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
+            ReaderActivityLauncher.showReaderComments(getActivity(), mNote.getSiteId(), mNote.getPostId(),
+                    COMMENT_OPERATION.JUMP, mNote.getCommentId());
         }
 
         @Override

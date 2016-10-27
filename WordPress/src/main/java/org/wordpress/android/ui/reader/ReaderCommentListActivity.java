@@ -57,6 +57,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
 
+    public enum COMMENT_OPERATION {
+        JUMP,
+        REPLY,
+    }
+
     private long mPostId;
     private long mBlogId;
     private ReaderPost mPost;
@@ -99,6 +104,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        COMMENT_OPERATION commentOperation = null;
+
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
@@ -107,6 +114,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+            commentOperation = (COMMENT_OPERATION) getIntent()
+                    .getSerializableExtra(ReaderConstants.ARG_COMMENT_OPERATION);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             // we need to re-request comments every time this activity is shown in order to
             // correctly reflect deletions and nesting changes - skipped when there's no
@@ -147,9 +156,15 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(getCommentAdapter());
 
-        // hilight the comment if an id was provided
-        if (mCommentId > 0) {
-            getCommentAdapter().setHighlightCommentId(mCommentId, false);
+        if (commentOperation != null) {
+            switch (commentOperation) {
+                case JUMP:
+                    getCommentAdapter().setHighlightCommentId(mCommentId, false);
+                    break;
+                case REPLY:
+                    setReplyToCommentId(mCommentId);
+                    break;
+            }
         }
 
         if (savedInstanceState != null) {

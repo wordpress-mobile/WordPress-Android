@@ -24,6 +24,7 @@ import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderCommentListActivity.COMMENT_OPERATION;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
@@ -238,7 +239,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     public void showReaderCommentsList(long siteId, long postId, long commentId) {
         if (isFinishing()) return;
 
-        ReaderActivityLauncher.showReaderComments(this, siteId, postId, commentId);
+        ReaderActivityLauncher.showReaderComments(this, siteId, postId, COMMENT_OPERATION.JUMP, commentId);
     }
 
     @Override

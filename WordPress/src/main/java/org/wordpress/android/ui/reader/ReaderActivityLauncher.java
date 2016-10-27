@@ -18,6 +18,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.reader.ReaderCommentListActivity.COMMENT_OPERATION;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -35,19 +36,23 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
-        showReaderPostDetail(context, false, blogId, postId, false, null);
+        showReaderPostDetail(context, false, blogId, postId, null, 0, false, null);
     }
 
     public static void showReaderPostDetail(Context context,
                                             boolean isFeed,
                                             long blogId,
                                             long postId,
+                                            COMMENT_OPERATION commentOperation,
+                                            int commentId,
                                             boolean isRelatedPost,
                                             String interceptedUri) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        intent.putExtra(ReaderConstants.ARG_COMMENT_OPERATION, commentOperation);
+        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
@@ -57,6 +62,7 @@ public class ReaderActivityLauncher {
     public static void showReaderPostDetail(Context context,
                                             String blogSlug,
                                             String postSlug,
+                                            COMMENT_OPERATION commentOperation,
                                             int commentId,
                                             boolean isRelatedPost,
                                             String interceptedUri) {
@@ -64,6 +70,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_IS_FEED, false);
         intent.putExtra(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
         intent.putExtra(ReaderConstants.ARG_POST_SLUG, postSlug);
+        intent.putExtra(ReaderConstants.ARG_COMMENT_OPERATION, commentOperation);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
@@ -163,17 +170,19 @@ public class ReaderActivityLauncher {
      * show comments for the passed Ids
      */
     public static void showReaderComments(Context context, long blogId, long postId) {
-        showReaderComments(context, blogId, postId, 0);
+        showReaderComments(context, blogId, postId, null, 0);
     }
 
 
     /*
      * Show comments for passed Ids. Passing a commentId will scroll that comment into view
      */
-    public static void showReaderComments(Context context, long blogId, long postId, long commentId) {
+    public static void showReaderComments(Context context, long blogId, long postId, COMMENT_OPERATION
+            commentOperation, long commentId) {
         Intent intent = new Intent(context, ReaderCommentListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        intent.putExtra(ReaderConstants.ARG_COMMENT_OPERATION, commentOperation);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         context.startActivity(intent);
     }
