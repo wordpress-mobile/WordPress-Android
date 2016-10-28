@@ -117,7 +117,7 @@ dependencies {
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
-    compile 'org.wordpress:passcodelock:1.4.0'
+    compile 'org.wordpress:passcodelock:1.5.0'
 
     // Simperium
     compile 'com.simperium.android:simperium:0.6.8'
