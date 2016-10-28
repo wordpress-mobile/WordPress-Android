@@ -206,9 +206,9 @@ public class ReaderPostTable {
             return 0;
         }
 
-        int numToPurge = numPosts - MAX_POSTS_PER_TAG;
-        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt()), Integer.toString(numToPurge)};
-        String where = "tag_name=? AND tag_type=? ORDER BY " + getSortColumnForTag(tag) + " LIMIT ?";
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt()), Integer.toString(MAX_POSTS_PER_TAG)};
+        String where = "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_posts WHERE tag_name=? AND "
+                       + "tag_type=? ORDER BY " + getSortColumnForTag(tag) + " DESC LIMIT ?)";
         int numDeleted = db.delete("tbl_posts", where, args);
         AppLog.d(AppLog.T.READER, String.format("reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
         return numDeleted;
