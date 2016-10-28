@@ -496,6 +496,9 @@ class ReaderPostRenderer {
         .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
         .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
 
+        // hide legacy RSS sharing links
+        .append("   div.feedflare { display: none; }")
+
         .append("</style>");
 
         // add a custom CSS class to (any) tiled gallery elements to make them easier selectable for various rules
