@@ -40,6 +40,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -60,8 +61,6 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
-
-import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
@@ -169,7 +168,7 @@ public class WPMainActivity extends AppCompatActivity {
                     break;
                     case WPMainTabAdapter.TAB_NOTIFS:
                         setTabLayoutElevation(mAppBarElevation);
-                        new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        NotificationsActions.updateSeenNotes();
                         break;
                 }
 
@@ -511,29 +510,6 @@ public class WPMainActivity extends AppCompatActivity {
             return (MySiteFragment) fragment;
         }
         return null;
-    }
-
-    // Updates `last_seen` notifications flag and removes tab indicator on response
-    private class UpdateLastSeenTask extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            ArrayList<Note> latestNotes = NotificationsTable.getLatestNotes(1);
-            if (latestNotes.size() == 0) return Boolean.FALSE;
-            WordPress.getRestClientUtilsV1_1().markNotificationsSeen(latestNotes.get(0).getTimestampString(), new RestRequest.Listener() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    // Assuming that we've marked the most recent notification as seen. (Beware, seen != read).
-                    EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(false));
-                }
-            }, new RestRequest.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    AppLog.e(AppLog.T.NOTIFS, "Could not mark notifications/seen' value via API.", error);
-                }
-            });
-
-            return Boolean.TRUE;
-        }
     }
 
     // Read `unseen` notifications flag from the `me` endpoint and update the badge

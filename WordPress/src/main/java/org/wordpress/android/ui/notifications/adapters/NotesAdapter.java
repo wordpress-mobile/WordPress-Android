@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
-    private static final int NOTES_PAGE_COUNT = 20;
 
     private final int mAvatarSz;
     private final int mColorRead;
@@ -32,14 +31,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private final int mTextIndentSize;
     private final List<String> mHiddenNoteIds = new ArrayList<>();
     private final List<String> mModeratingNoteIds = new ArrayList<>();
-    private boolean mIsAddingNotes;
 
     private final DataLoadedListener mDataLoadedListener;
     private final OnLoadMoreListener mOnLoadMoreListener;
     private final ArrayList<Note> mNotes = new ArrayList<>();
+    private final ArrayList<Note> mFilteredNotes = new ArrayList<>();
+
+    public enum FILTERS {
+        FILTER_ALL, FILTER_LIKE, FILTER_COMMENT, FILTER_UNREAD,
+        FILTER_FOLLOW
+    }
+
+    private FILTERS currentFilter = FILTERS.FILTER_ALL;
 
     public interface DataLoadedListener {
-        void onDataLoaded(boolean isEmpty);
+        void onDataLoaded(int itemsCount);
     }
 
     public interface OnLoadMoreListener {
@@ -62,43 +68,52 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         mTextIndentSize = context.getResources().getDimensionPixelSize(R.dimen.notifications_text_indent_sz);
     }
 
+    public void setFilter(FILTERS newFilter) {
+        currentFilter = newFilter;
+        buildFilteredNotesList();
+        notifyDataSetChanged();
+    }
+
     public void addHiddenNoteId(String noteId) {
         mHiddenNoteIds.add(noteId);
+        buildFilteredNotesList();
         notifyDataSetChanged();
     }
 
     public void removeHiddenNoteId(String noteId) {
         mHiddenNoteIds.remove(noteId);
+        buildFilteredNotesList();
         notifyDataSetChanged();
     }
 
     public void addModeratingNoteId(String noteId) {
         mModeratingNoteIds.add(noteId);
+        buildFilteredNotesList();
         notifyDataSetChanged();
     }
 
     public void removeModeratingNoteId(String noteId) {
         mModeratingNoteIds.remove(noteId);
+        buildFilteredNotesList();
         notifyDataSetChanged();
     }
 
     public void addAll(List<Note> notes, boolean clearBeforeAdding) {
         if (notes.size() > 0) {
             Collections.sort(notes, new Note.TimeStampComparator());
-            mIsAddingNotes = true;
             try {
                 if (clearBeforeAdding) {
                     mNotes.clear();
                 }
                 mNotes.addAll(notes);
             } finally {
+                buildFilteredNotesList();
                 notifyDataSetChanged();
-                mIsAddingNotes = false;
             }
         }
 
         if (mDataLoadedListener != null) {
-            mDataLoadedListener.onDataLoaded(getItemCount() == 0);
+            mDataLoadedListener.onDataLoaded(getItemCount());
         }
     }
 
@@ -109,21 +124,55 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         return new NoteViewHolder(view);
     }
 
+    // Instead of building the filterd notes list dinamically, create it once and re-use it.
+    // Otherwise it's re-created so many times during layout.
+    private void buildFilteredNotesList() {
+        mFilteredNotes.clear();
+        if (mNotes.isEmpty() || currentFilter == FILTERS.FILTER_ALL) {
+            mFilteredNotes.addAll(mNotes);
+            return;
+        }
+        for( Note currentNote : mNotes) {
+            switch (currentFilter) {
+                case FILTER_COMMENT:
+                    if (currentNote.isCommentType()) {
+                        mFilteredNotes.add(currentNote);
+                    }
+                    break;
+                case FILTER_FOLLOW:
+                    if (currentNote.isFollowType()) {
+                        mFilteredNotes.add(currentNote);
+                    }
+                    break;
+                case FILTER_UNREAD:
+                    if (currentNote.isUnread()) {
+                        mFilteredNotes.add(currentNote);
+                    }
+                    break;
+                case FILTER_LIKE:
+                    if (currentNote.isLikeType()) {
+                        mFilteredNotes.add(currentNote);
+                    }
+                    break;
+            }
+        }
+    }
+
     private Note getNoteAtPosition(int position) {
         if (isValidPosition(position)) {
-            return mNotes.get(position);
+            return mFilteredNotes.get(position);
         }
 
         return null;
     }
 
     private boolean isValidPosition(int position) {
-        return (position >= 0 && position < mNotes.size());
+        return (position >= 0 && position < mFilteredNotes.size());
     }
 
     @Override
     public int getItemCount() {
-        return mNotes.size();
+        return mFilteredNotes.size();
     }
 
     @Override
@@ -246,8 +295,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     public int getPositionForNote(String noteId) {
-        for (int i = 0; i < mNotes.size(); i++) {
-            String noteKey = mNotes.get(i).getId();
+        for (int i = 0; i < mFilteredNotes.size(); i++) {
+            String noteKey = mFilteredNotes.get(i).getId();
             if (noteKey != null && noteKey.equals(noteId)) {
                 return i;
             }
@@ -260,11 +309,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         mOnNoteClickListener = mNoteClickListener;
     }
 
-    public void reloadNotes() {
-        new ReloadNotesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    public void reloadNotesFromDBAsync() {
+        new ReloadNotesFromDBTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private class ReloadNotesTask extends AsyncTask<Void, Void, ArrayList<Note>> {
+    private class ReloadNotesFromDBTask extends AsyncTask<Void, Void, ArrayList<Note>> {
 
         @Override
         protected ArrayList<Note> doInBackground(Void... voids) {
@@ -275,9 +324,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         protected void onPostExecute(ArrayList<Note> notes) {
             mNotes.clear();
             mNotes.addAll(notes);
+            buildFilteredNotesList();
             notifyDataSetChanged();
 
-            mDataLoadedListener.onDataLoaded(getItemCount() == 0);
+            mDataLoadedListener.onDataLoaded(getItemCount());
         }
     }
 
@@ -309,7 +359,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
-    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (mOnNoteClickListener != null && v.getTag() instanceof String) {

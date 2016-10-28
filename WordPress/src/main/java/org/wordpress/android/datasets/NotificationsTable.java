@@ -39,7 +39,7 @@ public class NotificationsTable {
     }
 
     public static ArrayList<Note> getLatestNotes() {
-        return getLatestNotes(20);
+        return getLatestNotes(200);
     }
 
     public static ArrayList<Note> getLatestNotes(int limit) {
