@@ -227,6 +227,9 @@ public class NotificationsProcessingService extends Service {
                         return getString(R.string.comment_q_action_approving);
                     case ARG_ACTION_REPLY:
                         return getString(R.string.comment_q_action_replying);
+                    default:
+                        //default, generic  "processing"
+                        return getString(R.string.comment_q_action_processing);
                 }
             } else {
                 //default, generic  "processing"
@@ -262,10 +265,17 @@ public class NotificationsProcessingService extends Service {
                     switch (mActionType) {
                         case ARG_ACTION_LIKE:
                             likeComment();
+                            break;
                         case ARG_ACTION_APPROVE:
                             approveComment();
+                            break;
                         case ARG_ACTION_REPLY:
                             replyToComment();
+                            break;
+                        default:
+                            //no op
+                            requestFailed(null);
+                            break;
                     }
                 } else {
                     // add other actions here
@@ -295,6 +305,8 @@ public class NotificationsProcessingService extends Service {
                 successMessage = getString(R.string.comment_q_action_done_generic);
             }
 
+            //dismiss any other pending result notification
+            dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
             //update notification indicating the operation succeeded
             showFinalMessageToUser(successMessage, GROUP_NOTIFICATION_ID);
 
