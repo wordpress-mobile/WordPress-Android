@@ -529,9 +529,6 @@ public class GCMMessageService extends GcmListenerService {
             // now add the action corresponding to direct-reply
             builder.addAction(action);
 
-            //also add wearable remoteInput to enable voice-reply
-            builder.extend(new NotificationCompat.WearableExtender().addAction(action));
-
         }
 
         private void addCommentLikeActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
