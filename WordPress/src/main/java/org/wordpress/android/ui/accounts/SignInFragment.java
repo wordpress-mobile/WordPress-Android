@@ -224,7 +224,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     /**
-     * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
+     * Hide toggle button "add self hosted / log in with WordPress.com" and show self hosted URL
      * edit box
      */
     public void forceSelfHostedMode(@NonNull String prefillUrl) {
@@ -558,7 +558,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         String displayName = JSONUtils.getStringDecoded(jsonObject, "display_name");
                         Uri profilePicture = Uri.parse(JSONUtils.getString(jsonObject, "avatar_URL"));
                         SmartLockHelper smartLockHelper = getSmartLockHelper();
-                        // mUsername and mPassword are null when the user sign in with a magic link
+                        // mUsername and mPassword are null when the user log in with a magic link
                         if (smartLockHelper != null && mUsername != null && mPassword != null) {
                             smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, displayName,
                                     profilePicture);
@@ -721,12 +721,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPassword = EditTextUtils.getText(mPasswordEditText).trim();
         mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
         if (isWPComLogin()) {
-            AppLog.i(T.NUX, "User tries to sign in on WordPress.com with username: " + mUsername);
+            AppLog.i(T.NUX, "User tries to log in on WordPress.com with username: " + mUsername);
             startProgress(getString(R.string.connecting_wpcom));
             signInAndFetchBlogListWPCom();
         } else {
             String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
-            AppLog.i(T.NUX, "User tries to sign in on Self Hosted: " + selfHostedUrl + " with username: " + mUsername);
+            AppLog.i(T.NUX, "User tries to log in on Self Hosted: " + selfHostedUrl + " with username: " + mUsername);
             startProgress(getString(R.string.signing_in));
             signInAndFetchBlogListWPOrg();
         }

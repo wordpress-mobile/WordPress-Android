@@ -14,6 +14,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.xmlrpc.android.ApiHelper.Method;
@@ -152,9 +153,13 @@ public abstract class SiteSettingsInterface {
         if (id != 0) {
             CategoryModel category = new CategoryModel();
             Cursor cursor = SiteSettingsTable.getCategory(id);
-            if (cursor != null && cursor.moveToFirst()) {
-                category.deserializeFromDatabase(cursor);
-                return category.name;
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    category.deserializeFromDatabase(cursor);
+                    return category.name;
+                }
+            } finally {
+                SqlUtils.closeCursor(cursor);
             }
         }
 
