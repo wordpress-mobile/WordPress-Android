@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 public class RestClientUtils {
-    private static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
+    public static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
     private static final String COMMENT_REPLY_CONTENT_FIELD = "content";
     private static String sUserAgent = "WordPress Networking Android";
 
@@ -149,9 +149,6 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
     public void getNotifications(Map<String, String> params, Listener listener, ErrorListener errorListener) {
-        params.put("number", "40");
-        params.put("num_note_items", "20");
-        params.put("fields", NOTIFICATION_FIELDS);
         get("notifications", params, null, listener, errorListener);
     }
 
@@ -171,6 +168,10 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
     public void getNotifications(Listener listener, ErrorListener errorListener) {
+        Map<String, String> params = new HashMap<>();
+        params.put("number", "40");
+        params.put("num_note_items", "20");
+        params.put("fields", NOTIFICATION_FIELDS);
         getNotifications(new HashMap<String, String>(), listener, errorListener);
     }
 

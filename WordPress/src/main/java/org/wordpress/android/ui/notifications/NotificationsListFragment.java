@@ -2,8 +2,6 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,9 +40,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -99,7 +95,7 @@ public class NotificationsListFragment extends Fragment
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchNotes();
+                fetchNotesFromRemote();
             }
         });
 
@@ -116,14 +112,14 @@ public class NotificationsListFragment extends Fragment
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
         }
 
-        fetchNotes();
+        fetchNotesFromRemote();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        refreshNotes();
+        mNotesAdapter.reloadNotesFromDBAsync();
 
         // Removes app notifications from the system bar
         new Thread(new Runnable() {
@@ -134,25 +130,25 @@ public class NotificationsListFragment extends Fragment
     }
 
     @Override
-    public void onDataLoaded(boolean isEmpty) {
-        if (isEmpty) {
-            fetchNotes();
+    public void onDataLoaded(int itemsCount) {
+        if (itemsCount > 0) {
+            hideEmptyView();
+        } else {
+            showEmptyViewForCurrentFilter();
         }
     }
 
-    private void refreshNotes() {
-        mNotesAdapter.reloadNotes();
-    }
-
-    private RecyclerView.Adapter getNotesAdapter() {
+    private NotesAdapter getNotesAdapter() {
         if (mNotesAdapter == null) {
-            mNotesAdapter = new NotesAdapter(getActivity(), this, mOnLoadMoreListener);
+            mNotesAdapter = new NotesAdapter(getActivity(), this, null);
             mNotesAdapter.setOnNoteClickListener(mOnNoteClickListener);
         }
 
         return mNotesAdapter;
     }
 
+    // TODO: Maybe reintroduce infinite scrolling later.
+    /*
     private final NotesAdapter.OnLoadMoreListener mOnLoadMoreListener = new NotesAdapter.OnLoadMoreListener() {
         @Override
         public void onLoadMore(long noteTimestamp) {
@@ -174,7 +170,7 @@ public class NotificationsListFragment extends Fragment
 
         }
     };
-
+*/
     private final OnNoteClickListener mOnNoteClickListener = new OnNoteClickListener() {
         @Override
         public void onClickNote(String noteId) {
@@ -256,6 +252,7 @@ public class NotificationsListFragment extends Fragment
         if (isAdded() && mEmptyView != null) {
             mEmptyView.setVisibility(View.VISIBLE);
             mFilterDivider.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
             setFilterViewScrollable(false);
             ((TextView) mEmptyView.findViewById(R.id.text_empty)).setText(titleResId);
 
@@ -297,17 +294,18 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
-    // TODO Needs impementation
+    // TODO Needs implementation
     private void hideEmptyView() {
         if (isAdded() && mEmptyView != null) {
             setFilterViewScrollable(true);
             mEmptyView.setVisibility(View.GONE);
             mFilterDivider.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 
-    public void fetchNotes() {
-        if (getActivity() == null) {
+    private void fetchNotesFromRemote() {
+        if (!isAdded() || mNotesAdapter == null) {
             return;
         }
 
@@ -316,10 +314,10 @@ public class NotificationsListFragment extends Fragment
             return;
         }
 
-        NotificationsActions.refreshNotifications(mNotesResponseHandler, mNotesResponseHandler);
+        NotificationsActions.getNotifications(mNotesResponseHandler, mNotesResponseHandler);
     }
 
-    private NotesResponseHandler mNotesResponseHandler = new NotesResponseHandler() {
+    private final NotesResponseHandler mNotesResponseHandler = new NotesResponseHandler() {
         @Override
         public void onNotes(final List<Note> notes) {
             mSwipeRefreshLayout.setRefreshing(false);
@@ -328,6 +326,7 @@ public class NotificationsListFragment extends Fragment
                 @Override
                 public void run() {
                     NotificationsTable.saveNotes(notes, true);
+                    NotificationsActions.updateSeenNotes(); // Refresh launched by the user. Update the last seen time.
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -350,7 +349,6 @@ public class NotificationsListFragment extends Fragment
         }
     };
 
-    // TODO Needs impementation
     // Show different empty list message and action button based on the active filter
     private void showEmptyViewForCurrentFilter() {
         if (!AccountHelper.isSignedInWordPressDotCom()) return;
@@ -488,13 +486,40 @@ public class NotificationsListFragment extends Fragment
     // Notification filter methods
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-        fetchNotes();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Filter the list according to the RadioGroup selection
+                int checkedId = mFilterRadioGroup.getCheckedRadioButtonId();
+                if (checkedId == R.id.notifications_filter_all) {
+                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_ALL);
+                } else if (checkedId == R.id.notifications_filter_unread) {
+                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_UNREAD);
+                } else if (checkedId == R.id.notifications_filter_comments) {
+                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_COMMENT);
+                } else if (checkedId == R.id.notifications_filter_follows) {
+                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_FOLLOW);
+                } else if (checkedId == R.id.notifications_filter_likes) {
+                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_LIKE);
+                } else {
+                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_ALL);
+                }
+
+                restoreListScrollPosition();
+                if (mNotesAdapter.getItemCount() > 0) {
+                    hideEmptyView();
+                } else {
+                    showEmptyViewForCurrentFilter();
+                }
+            }
+        });
     }
 
     @Override
     public void onScrollToTop() {
         if (isAdded() && getScrollPosition() > 0) {
             mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
+            NotificationsActions.updateSeenNotes();
         }
     }
 
