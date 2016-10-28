@@ -54,7 +54,10 @@ public class ReaderRelatedPost {
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor != null) {
             post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
-            post.mAuthorAvatarUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
+            // don't read the avatar field unless "has_avatar" is true
+            if (JSONUtils.getBool(jsonAuthor, "has_avatar")) {
+                post.mAuthorAvatarUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
+            }
         }
 
         // if there's no featured image, check if featured media has been set to an image

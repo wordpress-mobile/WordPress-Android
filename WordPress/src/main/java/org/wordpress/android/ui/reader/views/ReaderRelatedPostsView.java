@@ -107,10 +107,11 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 txtSiteName.setText(relatedPost.getSiteName());
                 txtAuthorName.setText(relatedPost.getAuthorName());
                 if (relatedPost.hasAuthorAvatarUrl()) {
+                    imgAvatar.setVisibility(View.VISIBLE);
                     String avatarUrl = GravatarUtils.fixGravatarUrl(relatedPost.getAuthorAvatarUrl(), avatarSize);
                     imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
                 } else {
-                    imgAvatar.showDefaultGravatarImage();
+                    imgAvatar.setVisibility(View.GONE);
                 }
 
                 final ReaderFollowButton btnFollow = (ReaderFollowButton) siteHeader.findViewById(R.id.related_post_follow_button);
