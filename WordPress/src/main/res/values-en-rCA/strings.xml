@@ -537,7 +537,7 @@
 	<string name="stats_insights">Insights</string>
 	<string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
-	<string name="me_disconnect_from_wordpress_com">Disconnect from WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Log out from WordPress.com</string>
 	<string name="me_btn_login_logout">Login/Logout</string>
 	<string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" wasn\'t hidden because it\'s the current site</string>
