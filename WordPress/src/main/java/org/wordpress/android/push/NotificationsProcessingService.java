@@ -340,7 +340,7 @@ public class NotificationsProcessingService extends Service {
             showFinalMessageToUser(successMessage, GROUP_NOTIFICATION_ID);
 
             //after 3 seconds, dismiss the notification that indicated success
-            Handler handler = new Handler();
+            Handler handler = new Handler(getMainLooper());
             handler.postDelayed(new Runnable() {
                 public void run() {
                     //remove the original notification from the system bar
@@ -371,7 +371,7 @@ public class NotificationsProcessingService extends Service {
             showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
 
             //after 3 seconds, dismiss the error message notification
-            Handler handler = new Handler();
+            Handler handler = new Handler(getMainLooper());
             handler.postDelayed(new Runnable() {
                 public void run() {
                     //remove the error notification from the system bar
@@ -381,7 +381,7 @@ public class NotificationsProcessingService extends Service {
             stopSelf(mTaskId);
         }
 
-        private void requestFailedWithMessage(String errorMessage) {
+        private void requestFailedWithMessage(String errorMessage, boolean autoDismiss) {
             if (errorMessage == null) {
                 //show generic error here
                 errorMessage = getString(R.string.error_generic);
@@ -389,13 +389,15 @@ public class NotificationsProcessingService extends Service {
             resetOriginalNotification();
             showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
 
-            //after 3 seconds, dismiss the error message notification
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    //remove the error notification from the system bar
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                }}, 3000); // show the success message for 3 seconds, then dismiss
+            if (autoDismiss) {
+                //after 3 seconds, dismiss the error message notification
+                Handler handler = new Handler(getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        //remove the error notification from the system bar
+                        dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                    }}, 3000); // show the success message for 3 seconds, then dismiss
+            }
 
             stopSelf(mTaskId);
         }
@@ -410,6 +412,9 @@ public class NotificationsProcessingService extends Service {
 
         private void showMessageToUser(String message, boolean intermediateMessage, int pushId) {
             NotificationCompat.Builder builder = getBuilder().setContentText(message).setTicker(message);
+            if (!intermediateMessage) {
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            }
             builder.setProgress(0, 0, intermediateMessage);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
@@ -492,7 +497,7 @@ public class NotificationsProcessingService extends Service {
                             requestCompleted(ARG_ACTION_REPLY);
                         } else {
                             if (result != null && !TextUtils.isEmpty(result.getMessage())) {
-                                requestFailedWithMessage(result.getMessage());
+                                requestFailedWithMessage(result.getMessage(), true);
                             } else {
                                 requestFailed(ARG_ACTION_REPLY);
                             }
@@ -546,12 +551,18 @@ public class NotificationsProcessingService extends Service {
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
                     dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+
+                    stopSelf(mTaskId);
                 }
 
                 @Override
                 public void onTokenInvalid() {
-                    requestFailedWithMessage(getString(R.string.push_auth_expired));
                     AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+                    //dismiss notifs
+                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
+                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                    dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+                    requestFailedWithMessage(getString(R.string.push_auth_expired), false);
                 }
             });
         }
