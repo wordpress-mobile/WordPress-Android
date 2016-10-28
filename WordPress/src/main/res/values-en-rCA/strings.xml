@@ -294,7 +294,7 @@
 	<string name="error_post_remote_site_settings">Couldn\'t save site info</string>
 	<string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
 	<string name="error_media_upload_connection">A connection error occurred while uploading media</string>
-	<string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
+	<string name="site_settings_disconnected_toast">Logged out, editing disabled.</string>
 	<string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
 	<string name="site_settings_multiple_links_dialog_description">Require approval for comments that include more than this number of links.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Automatically close</string>
@@ -539,7 +539,7 @@
 	<string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
 	<string name="me_disconnect_from_wordpress_com">Log out from WordPress.com</string>
 	<string name="me_btn_login_logout">Login/Logout</string>
-	<string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" wasn\'t hidden because it\'s the current site</string>
 	<string name="me_btn_support">Help &amp; Support</string>
 	<string name="account_settings">Account Settings</string>
@@ -559,9 +559,9 @@
 	<string name="my_site_header_configuration">Configuration</string>
 	<string name="notifications_account_required">Log in to WordPress.com for notifications</string>
 	<string name="stats_unknown_author">Unknown Author</string>
-	<string name="signout">Disconnect</string>
+	<string name="signout">Log out</string>
 	<string name="image_added">Image added</string>
-	<string name="sign_out_wpcom_confirm">Disconnecting your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
+	<string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
 	<string name="select_all">Select all</string>
 	<string name="hide">Hide</string>
 	<string name="show">Show</string>
@@ -981,7 +981,7 @@
 	<string name="nux_tutorial_get_started_title">Get started!</string>
 	<string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
 	<string name="username_invalid">Invalid username</string>
-	<string name="connecting_wpcom">Connecting to WordPress.com</string>
+	<string name="connecting_wpcom">Logging in to WordPress.com</string>
 	<string name="button_next">Next</string>
 	<string name="create_account_wpcom">Create an account on WordPress.com</string>
 	<string name="reader_empty_followed_tags">You don\'t follow any tags</string>
