@@ -11,7 +11,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -57,7 +56,6 @@ public class NotificationsProcessingService extends Service {
 
     //bundle and push ID, as they are held in the system dashboard
     public static final String ARG_NOTE_BUNDLE = "note_bundle";
-    public static final String ARG_PUSH_ID= "push_id";
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -221,12 +219,15 @@ public class NotificationsProcessingService extends Service {
         }
 
         private String getProcessingTitleForAction(String actionType) {
-            if (actionType.equals(ARG_ACTION_LIKE)) {
-                return getString(R.string.comment_q_action_liking);
-            } else if (actionType.equals(ARG_ACTION_APPROVE)) {
-                return getString(R.string.comment_q_action_approving);
-            } else if (actionType.equals(ARG_ACTION_REPLY)) {
-                return getString(R.string.comment_q_action_replying);
+            if (actionType != null) {
+                switch (actionType) {
+                    case ARG_ACTION_LIKE:
+                        return getString(R.string.comment_q_action_liking);
+                    case ARG_ACTION_APPROVE:
+                        return getString(R.string.comment_q_action_approving);
+                    case ARG_ACTION_REPLY:
+                        return getString(R.string.comment_q_action_replying);
+                }
             } else {
                 //default, generic  "processing"
                 return getString(R.string.comment_q_action_processing);
@@ -257,12 +258,15 @@ public class NotificationsProcessingService extends Service {
 
         private void performRequestedAction(){
             if (mNote != null) {
-                if (mActionType.equals(ARG_ACTION_LIKE)) {
-                    likeComment();
-                } else if (mActionType.equals(ARG_ACTION_APPROVE)) {
-                    approveComment();
-                } else if (mActionType.equals(ARG_ACTION_REPLY)) {
-                    replyToComment();
+                if (mActionType != null) {
+                    switch (mActionType) {
+                        case ARG_ACTION_LIKE:
+                            likeComment();
+                        case ARG_ACTION_APPROVE:
+                            approveComment();
+                        case ARG_ACTION_REPLY:
+                            replyToComment();
+                    }
                 } else {
                     // add other actions here
                     //no op
