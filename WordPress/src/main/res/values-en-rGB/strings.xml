@@ -559,7 +559,7 @@
 	<string name="my_site_header_configuration">Configuration</string>
 	<string name="notifications_account_required">Log in to WordPress.com for notifications</string>
 	<string name="stats_unknown_author">Unknown Author</string>
-	<string name="signout">Logged out</string>
+	<string name="signout">Log out</string>
 	<string name="image_added">Image added</string>
 	<string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
 	<string name="select_all">Select all</string>
