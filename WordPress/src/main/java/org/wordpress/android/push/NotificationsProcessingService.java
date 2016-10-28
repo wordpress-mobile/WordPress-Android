@@ -27,11 +27,14 @@ import org.wordpress.android.ui.comments.CommentActionResult;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
+import static org.wordpress.android.push.GCMMessageService.AUTH_PUSH_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
 import static org.wordpress.android.push.GCMMessageService.GROUP_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.PUSH_ARG_NOTE_FULL_DATA;
@@ -51,8 +54,11 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_LIKE = "action_like";
     public static final String ARG_ACTION_REPLY = "action_reply";
     public static final String ARG_ACTION_APPROVE = "action_approve";
+    public static final String ARG_ACTION_AUTH_APPROVE = "action_auth_aprove";
+    public static final String ARG_ACTION_AUTH_IGNORE = "action_auth_ignore";
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
     public static final String ARG_NOTE_ID = "note_id";
+
 
     //bundle and push ID, as they are held in the system dashboard
     public static final String ARG_NOTE_BUNDLE = "note_bundle";
@@ -144,6 +150,73 @@ public class NotificationsProcessingService extends Service {
 
         public void process() {
 
+            getDataFromIntent();
+
+            //now handle each action
+            if (mActionType != null) {
+
+                // check special cases for authorization push
+                if (mActionType.equals(ARG_ACTION_AUTH_IGNORE)) {
+                    //dismiss notifs
+                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
+                    return;
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActionType.equals(ARG_ACTION_REPLY)) {
+                    //we don't need showing the infinite progress bar in case of REPLY on Android N,
+                    //because we've got inline-reply there with its own spinner to show progress
+                    // no op
+                } else {
+                    showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
+                }
+
+                if (mActionType.equals(ARG_ACTION_AUTH_APPROVE)) {
+                    approveAuth();
+                } else { //all remaining actions are Comment REPLY, APPROVE, and LIKE
+
+                    //we probably have the note in the PN payload and such it's passed in the intent extras
+                    // bundle. If we have it, no need to go fetch it through REST API.
+                    getNoteFromBundleIfExists();
+
+                    //if we still don't have a Note, go get it from the REST API
+                    if (mNote == null) {
+                        RestRequest.Listener listener =
+                                new RestRequest.Listener() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        if (response != null && !response.optBoolean("success")) {
+                                            //build the Note object here
+                                            buildNoteFromJSONObject(response);
+                                            performRequestedAction();
+                                        }
+                                    }
+                                };
+
+                        RestRequest.ErrorListener errorListener =
+                                new RestRequest.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        requestFailed(mActionType);
+                                    }
+                                };
+
+                        getNoteFromNoteId(mNoteId, listener, errorListener);
+                    } else {
+                        //we have a Note! just go ahead and perform the requested action
+                        performRequestedAction();
+                    }
+                }
+
+            } else {
+                requestFailed(null);
+            }
+
+        }
+
+        private void getDataFromIntent() {
+            // get all needed data from intent
             mNoteId = mIntent.getStringExtra(ARG_NOTE_ID);
             mActionType = mIntent.getStringExtra(ARG_ACTION_TYPE);
             //default value for push notification ID is likely GROUP_NOTIFICATION_ID for the only
@@ -162,60 +235,16 @@ public class NotificationsProcessingService extends Service {
                     obtainReplyTextFromRemoteInputBundle(remoteInput);
                 }
             }
+        }
 
-            if (mActionType != null) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActionType.equals(ARG_ACTION_REPLY)) {
-                    //we don't need showing the infinite progress bar in case of REPLY on Android N,
-                    //because we've got inline-reply there with its own spinner to show progress
-                    // no op
-                } else {
-                    showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
+        private void getNoteFromBundleIfExists() {
+            if (mIntent.hasExtra(ARG_NOTE_BUNDLE)) {
+                Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
+                if (payload.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
+                    String base64FullData = payload.getString(PUSH_ARG_NOTE_FULL_DATA);
+                    mNote = new Note.Schema().buildFromBase64EncodedData(mNoteId, base64FullData);
                 }
-
-
-                //we probably have the note in the PN payload and such it's passed in the intent extras
-                // bundle. If we have it, no need to go fetch it through REST API.
-                if (mIntent.hasExtra(ARG_NOTE_BUNDLE)) {
-                    Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
-                    if (payload.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-                        String base64FullData = payload.getString(PUSH_ARG_NOTE_FULL_DATA);
-                        mNote = new Note.Schema().buildFromBase64EncodedData(mNoteId, base64FullData);
-                    }
-                }
-
-                //if we still don't have a Note, go get it from the REST API
-                if (mNote == null) {
-                    RestRequest.Listener listener =
-                            new RestRequest.Listener() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    if (response != null && !response.optBoolean("success")) {
-                                        //build the Note object here
-                                        buildNoteFromJSONObject(response);
-                                        performRequestedAction();
-                                    }
-                                }
-                            };
-
-                    RestRequest.ErrorListener errorListener =
-                            new RestRequest.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    requestFailed(mActionType);
-                                }
-                            };
-
-                    getNoteFromNoteId(mNoteId, listener, errorListener);
-                } else {
-                    //we have a Note! just go ahead and perform the requested action
-                    performRequestedAction();
-                }
-
-            } else {
-                requestFailed(null);
             }
-
         }
 
         private String getProcessingTitleForAction(String actionType) {
@@ -503,6 +532,28 @@ public class NotificationsProcessingService extends Service {
 
         private void resetOriginalNotification(){
             GCMMessageService.rebuildAndUpdateNotificationsOnSystemBarForThisNote(mContext, mNoteId);
+        }
+
+        private void approveAuth(){
+            NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(mIntent,
+                    new NotificationsUtils.TwoFactorAuthCallback() {
+                @Override
+                public void onTokenValid(String token, String title, String message) {
+                    // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                    NotificationsUtils.sendTwoFactorAuthToken(token);
+
+                    //dismiss notifs
+                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
+                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                    dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+                }
+
+                @Override
+                public void onTokenInvalid() {
+                    requestFailedWithMessage(getString(R.string.push_auth_expired));
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+                }
+            });
         }
 
     }
