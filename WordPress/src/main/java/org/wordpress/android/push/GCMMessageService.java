@@ -887,25 +887,27 @@ public class GCMMessageService extends GcmListenerService {
             builder.setContentIntent(pendingIntent);
 
 
-            // adding ignore / approve quick actions
-            Intent authApproveIntent = new Intent(context, NotificationsProcessingService.class);
-            authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
-            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
-            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
-            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
-            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
-            PendingIntent authApprovePendingIntent =  PendingIntent.getService(context,
-                    AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
-                    authApprovePendingIntent);
+            if (canAddActionsToNotifications()) {
+                // adding ignore / approve quick actions
+                Intent authApproveIntent = new Intent(context, NotificationsProcessingService.class);
+                authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
+                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
+                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
+                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
+                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
+                PendingIntent authApprovePendingIntent =  PendingIntent.getService(context,
+                        AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
+                        authApprovePendingIntent);
 
 
-            Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
-            authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
-            PendingIntent authIgnorePendingIntent =  PendingIntent.getService(context,
-                    AUTH_PUSH_REQUEST_CODE_IGNORE, authIgnoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.addAction(R.drawable.ic_close_white_24dp, getText(R.string.ignore),
-                    authIgnorePendingIntent);
+                Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
+                authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
+                PendingIntent authIgnorePendingIntent =  PendingIntent.getService(context,
+                        AUTH_PUSH_REQUEST_CODE_IGNORE, authIgnoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                builder.addAction(R.drawable.ic_close_white_24dp, getText(R.string.ignore),
+                        authIgnorePendingIntent);
+            }
 
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
