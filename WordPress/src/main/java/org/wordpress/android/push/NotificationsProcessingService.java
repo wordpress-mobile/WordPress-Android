@@ -180,7 +180,7 @@ public class NotificationsProcessingService extends Service {
                     Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
                     if (payload.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
                         String base64FullData = payload.getString(PUSH_ARG_NOTE_FULL_DATA);
-                        mNote = new Note.Schema().buildFromBase64EncodedData(mNoteId, base64FullData);
+                        mNote = Note.buildFromBase64EncodedData(mNoteId, base64FullData);
                     }
                 }
 
@@ -190,6 +190,10 @@ public class NotificationsProcessingService extends Service {
                             new RestRequest.Listener() {
                                 @Override
                                 public void onResponse(JSONObject response) {
+                                    if (response == null) {
+                                        //Not sure this could ever happen, but make sure we're catching all response types
+                                        AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
+                                    }
                                     if (response != null && !response.optBoolean("success")) {
                                         //build the Note object here
                                         buildNoteFromJSONObject(response);
