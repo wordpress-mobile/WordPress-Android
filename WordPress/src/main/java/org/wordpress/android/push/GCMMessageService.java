@@ -66,8 +66,8 @@ public class GCMMessageService extends GcmListenerService {
     private static NotificationHelper sNotificationHelpers;
 
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
-    private static final int PUSH_NOTIFICATION_ID = 10000;
-    private static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
+    public static final int PUSH_NOTIFICATION_ID = 10000;
+    public static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
     public static final int ACTIONS_RESULT_NOTIFICATION_ID = 40000;
     public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
@@ -78,7 +78,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_ARG_TITLE = "title";
     private static final String PUSH_ARG_MSG = "msg";
     private static final String PUSH_ARG_NOTE_ID = "note_id";
-    private static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
+    public static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
 
     private static final String PUSH_TYPE_COMMENT = "c";
     private static final String PUSH_TYPE_LIKE = "like";
@@ -160,6 +160,20 @@ public class GCMMessageService extends GcmListenerService {
                 }
             }
         }
+    }
+
+    public static synchronized Bundle getCurrentNoteBundleForNoteId(String noteId){
+        if (sActiveNotificationsMap.size() > 0) {
+            //get the corresponding bundle for this noteId
+            for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
+                Map.Entry<Integer, Bundle> row = it.next();
+                Bundle noteBundle = row.getValue();
+                if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
+                    return noteBundle;
+                }
+            }
+        }
+        return null;
     }
 
     public static synchronized void clearNotifications() {
@@ -509,6 +523,9 @@ public class GCMMessageService extends GcmListenerService {
             if (noteId != null) {
                 commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
+            commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
+
+
             PendingIntent commentReplyPendingIntent = getCommentActionPendingIntent(context, commentReplyIntent);
 
             /*
@@ -544,6 +561,8 @@ public class GCMMessageService extends GcmListenerService {
             if (noteId != null) {
                 commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
+            commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
+
             PendingIntent commentLikePendingIntent =  getCommentActionPendingIntenForService(context, commentLikeIntent);
             builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                     commentLikePendingIntent);
@@ -561,6 +580,8 @@ public class GCMMessageService extends GcmListenerService {
             if (noteId != null) {
                 commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
+            commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
+
             PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntenForService(context, commentApproveIntent);
             builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
                     commentApprovePendingIntent);
