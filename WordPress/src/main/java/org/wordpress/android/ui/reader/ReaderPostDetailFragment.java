@@ -103,7 +103,6 @@ public class ReaderPostDetailFragment extends Fragment
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
-    private boolean mIsLoggedOutReader;
     private boolean mIsWebViewPaused;
     private boolean mIsRelatedPost;
 
@@ -178,7 +177,6 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
         if (savedInstanceState != null) {
             mPostHistory.restoreInstance(savedInstanceState);
         }
@@ -670,7 +668,7 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setCount(mPost.numLikes);
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
-            if (mIsLoggedOutReader) {
+            if (ReaderUtils.isLoggedOutReader()) {
                 countLikes.setEnabled(false);
             } else if (mPost.canLikePost()) {
                 countLikes.setOnClickListener(new View.OnClickListener() {
@@ -1159,7 +1157,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost == null) {
             return false;
         }
-        if (mIsLoggedOutReader) {
+        if (ReaderUtils.isLoggedOutReader()) {
             return mPost.numReplies > 0;
         }
         return mPost.isWP()
@@ -1172,7 +1170,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost == null) {
             return false;
         }
-        if (mIsLoggedOutReader) {
+        if (ReaderUtils.isLoggedOutReader()) {
             return mPost.numLikes > 0;
         }
         return mPost.canLikePost() || mPost.numLikes > 0;
