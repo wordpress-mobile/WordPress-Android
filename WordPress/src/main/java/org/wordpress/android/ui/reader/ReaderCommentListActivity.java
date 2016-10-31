@@ -57,9 +57,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
 
-    public enum COMMENT_OPERATION {
-        JUMP,
-        REPLY,
+    public enum DirectOperation {
+        COMMENT_JUMP,
+        COMMENT_REPLY,
     }
 
     private long mPostId;
@@ -104,7 +104,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        COMMENT_OPERATION commentOperation = null;
+        DirectOperation directOperation = null;
 
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
@@ -114,8 +114,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            commentOperation = (COMMENT_OPERATION) getIntent()
-                    .getSerializableExtra(ReaderConstants.ARG_COMMENT_OPERATION);
+            directOperation = (DirectOperation) getIntent()
+                    .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             // we need to re-request comments every time this activity is shown in order to
             // correctly reflect deletions and nesting changes - skipped when there's no
@@ -156,12 +156,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(getCommentAdapter());
 
-        if (commentOperation != null) {
-            switch (commentOperation) {
-                case JUMP:
+        if (directOperation != null) {
+            switch (directOperation) {
+                case COMMENT_JUMP:
                     getCommentAdapter().setHighlightCommentId(mCommentId, false);
                     break;
-                case REPLY:
+                case COMMENT_REPLY:
                     setReplyToCommentId(mCommentId, true);
                     break;
             }

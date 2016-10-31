@@ -20,7 +20,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.reader.ReaderCommentListActivity.COMMENT_OPERATION;
+import org.wordpress.android.ui.reader.ReaderCommentListActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -56,7 +56,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private String mBlogSlug;
     private String mPostSlug;
     private int mCommentId;
-    private COMMENT_OPERATION mCommentOperation;
+    private DirectOperation mDirectOperation;
     private String mInterceptedUri;
     private int mLastSelectedPosition = -1;
     private ReaderPostListType mPostListType;
@@ -90,8 +90,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mBlogSlug = savedInstanceState.getString(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = savedInstanceState.getString(ReaderConstants.ARG_POST_SLUG);
-            mCommentOperation = (COMMENT_OPERATION) savedInstanceState
-                    .getSerializable(ReaderConstants.ARG_COMMENT_OPERATION);
+            mDirectOperation = (DirectOperation) savedInstanceState
+                    .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
             mIsRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
@@ -108,8 +108,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             mBlogSlug = getIntent().getStringExtra(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = getIntent().getStringExtra(ReaderConstants.ARG_POST_SLUG);
-            mCommentOperation = (COMMENT_OPERATION) getIntent()
-                    .getSerializableExtra(ReaderConstants.ARG_COMMENT_OPERATION);
+            mDirectOperation = (DirectOperation) getIntent()
+                    .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getIntExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
             mIsRelatedPostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false);
@@ -217,7 +217,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPostView);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
 
-        outState.putSerializable(ReaderConstants.ARG_COMMENT_OPERATION, mCommentOperation);
+        outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, mDirectOperation);
         outState.putInt(ReaderConstants.ARG_COMMENT_ID, mCommentId);
 
         if (hasCurrentTag()) {
@@ -592,7 +592,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         mIsFeed,
                         mIdList.get(position).getBlogId(),
                         mIdList.get(position).getPostId(),
-                        mCommentOperation,
+                        mDirectOperation,
                         mCommentId,
                         mIsRelatedPostView,
                         mInterceptedUri,
@@ -601,7 +601,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 return ReaderPostDetailFragment.newInstance(
                         mIdList.get(position).getBlogSlug(),
                         mIdList.get(position).getPostSlug(),
-                        mCommentOperation,
+                        mDirectOperation,
                         mCommentId,
                         mIsRelatedPostView,
                         mInterceptedUri,

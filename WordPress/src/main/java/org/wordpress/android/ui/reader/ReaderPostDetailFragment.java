@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -31,7 +32,7 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
-import org.wordpress.android.ui.reader.ReaderCommentListActivity.COMMENT_OPERATION;
+import org.wordpress.android.ui.reader.ReaderCommentListActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -80,7 +81,7 @@ public class ReaderPostDetailFragment extends Fragment
     private long mBlogId;
     private String mPostSlug;
     private String mBlogSlug;
-    private COMMENT_OPERATION mCommentOperation;
+    private DirectOperation mDirectOperation;
     private int mCommentId;
     private boolean mIsFeed;
     private String mInterceptedUri;
@@ -122,7 +123,7 @@ public class ReaderPostDetailFragment extends Fragment
     public static ReaderPostDetailFragment newInstance(boolean isFeed,
                                                        long blogId,
                                                        long postId,
-                                                       COMMENT_OPERATION commentOperation,
+                                                       DirectOperation directOperation,
                                                        int commentId,
                                                        boolean isRelatedPost,
                                                        String interceptedUri,
@@ -134,7 +135,7 @@ public class ReaderPostDetailFragment extends Fragment
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
         args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
-        args.putSerializable(ReaderConstants.ARG_COMMENT_OPERATION, commentOperation);
+        args.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
         args.putInt(ReaderConstants.ARG_COMMENT_ID, commentId);
         args.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
         if (postListType != null) {
@@ -150,7 +151,7 @@ public class ReaderPostDetailFragment extends Fragment
     public static ReaderPostDetailFragment newInstance(
             String blogSlug,
             String postSlug,
-            COMMENT_OPERATION commentOperation,
+            DirectOperation directOperation,
             int commentId,
             boolean isRelatedPost,
             String interceptedUri,
@@ -160,7 +161,7 @@ public class ReaderPostDetailFragment extends Fragment
         Bundle args = new Bundle();
         args.putString(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
         args.putString(ReaderConstants.ARG_POST_SLUG, postSlug);
-        args.putSerializable(ReaderConstants.ARG_COMMENT_OPERATION, commentOperation);
+        args.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
         args.putInt(ReaderConstants.ARG_COMMENT_ID, commentId);
         args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         args.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
@@ -192,7 +193,7 @@ public class ReaderPostDetailFragment extends Fragment
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
             mBlogSlug = args.getString(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = args.getString(ReaderConstants.ARG_POST_SLUG);
-            mCommentOperation = (COMMENT_OPERATION) args.getSerializable(ReaderConstants.ARG_COMMENT_OPERATION);
+            mDirectOperation = (DirectOperation) args.getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = args.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = args.getString(ReaderConstants.ARG_INTERCEPTED_URI);
@@ -345,7 +346,7 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
         outState.putString(ReaderConstants.ARG_BLOG_SLUG, mBlogSlug);
         outState.putString(ReaderConstants.ARG_POST_SLUG, mPostSlug);
-        outState.putSerializable(ReaderConstants.ARG_COMMENT_OPERATION, mCommentOperation);
+        outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, mDirectOperation);
         outState.putInt(ReaderConstants.ARG_COMMENT_ID, mCommentId);
 
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
@@ -378,8 +379,8 @@ public class ReaderPostDetailFragment extends Fragment
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mBlogSlug = savedInstanceState.getString(ReaderConstants.ARG_BLOG_SLUG);
             mPostSlug = savedInstanceState.getString(ReaderConstants.ARG_POST_SLUG);
-            mCommentOperation = (COMMENT_OPERATION) savedInstanceState
-                    .getSerializable(ReaderConstants.ARG_COMMENT_OPERATION);
+            mDirectOperation = (DirectOperation) savedInstanceState
+                    .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
@@ -502,7 +503,7 @@ public class ReaderPostDetailFragment extends Fragment
         mPostId = postId;
         mBlogSlug = null;
         mPostSlug = null;
-        mCommentOperation = null;
+        mDirectOperation = null;
         mCommentId = 0;
         mHasAlreadyRequestedPost = false;
         mHasAlreadyUpdatedPost = false;
@@ -913,8 +914,8 @@ public class ReaderPostDetailFragment extends Fragment
                 return;
             }
 
-            if (mCommentOperation != null) {
-                ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId, mCommentOperation,
+            if (mDirectOperation != null) {
+                ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId, mDirectOperation,
                         mCommentId);
                 getActivity().finish();
                 return;

@@ -11,7 +11,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderCommentListActivity.COMMENT_OPERATION;
+import org.wordpress.android.ui.reader.ReaderCommentListActivity.DirectOperation;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -47,7 +47,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private String mBlogId;
     private String mPostId;
     private String mInterceptedUri;
-    private COMMENT_OPERATION mCommentOperation;
+    private DirectOperation mDirectOperation;
     private int mCommentId;
 
     private static final Pattern FRAGMENT_COMMENTS_PATTERN = Pattern.compile("comments", Pattern.CASE_INSENSITIVE);
@@ -140,7 +140,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
     private void parseFragment(Uri uri) {
         // default to do-nothing w.r.t. comments
-        mCommentOperation = null;
+        mDirectOperation = null;
 
         if (uri == null || uri.getFragment() == null) {
             return;
@@ -151,7 +151,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         // check for the general "#comments" fragment to jump to the comments section
         Matcher commentsMatcher = FRAGMENT_COMMENTS_PATTERN.matcher(fragment);
         if (commentsMatcher.matches()) {
-            mCommentOperation = COMMENT_OPERATION.JUMP;
+            mDirectOperation = DirectOperation.COMMENT_JUMP;
             mCommentId = 0;
             return;
         }
@@ -159,7 +159,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         // check for the "#respond" fragment to jump to the reply box
         Matcher respondMatcher = FRAGMENT_RESPOND_PATTERN.matcher(fragment);
         if (respondMatcher.matches()) {
-            mCommentOperation = COMMENT_OPERATION.REPLY;
+            mDirectOperation = DirectOperation.COMMENT_REPLY;
 
             // check whether we are to reply to a specific comment
             final String replyToCommentId = uri.getQueryParameter("replytocom");
@@ -178,7 +178,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         Matcher commentIdMatcher = FRAGMENT_COMMENT_ID_PATTERN.matcher(fragment);
         if (commentIdMatcher.find() && commentIdMatcher.groupCount() > 0) {
             mCommentId = Integer.valueOf(commentIdMatcher.group(1));
-            mCommentOperation = COMMENT_OPERATION.JUMP;
+            mDirectOperation = DirectOperation.COMMENT_JUMP;
         }
     }
 
@@ -215,14 +215,14 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
             if (mInterceptType == InterceptType.WPCOM_POST_SLUG) {
                 ReaderActivityLauncher.showReaderPostDetail(
-                        this, mBlogId, mPostId, mCommentOperation, mCommentId, false, mInterceptedUri);
+                        this, mBlogId, mPostId, mDirectOperation, mCommentId, false, mInterceptedUri);
             } else {
                 try {
                     final long blogId = Long.parseLong(mBlogId);
                     final long postId = Long.parseLong(mPostId);
 
                     ReaderActivityLauncher.showReaderPostDetail(this, InterceptType.READER_FEED.equals(mInterceptType),
-                        blogId, postId, mCommentOperation, mCommentId, false, mInterceptedUri);
+                        blogId, postId, mDirectOperation, mCommentId, false, mInterceptedUri);
                 } catch (NumberFormatException e) {
                     AppLog.e(T.READER, e);
                 }
