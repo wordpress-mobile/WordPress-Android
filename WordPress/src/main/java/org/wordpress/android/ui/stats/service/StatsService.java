@@ -567,7 +567,7 @@ public class StatsService extends Service {
                     // Check here if this is an authentication error
                     // .com authentication errors are handled automatically by the app
                     if (volleyError instanceof com.android.volley.AuthFailureError) {
-                        int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(
+                        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(
                                 Integer.parseInt(mRequestBlogId)
                         );
                         Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);

@@ -11,7 +11,7 @@ import android.view.WindowManager;
 
 import com.simperium.client.BucketObjectMissingException;
 
-import org.wordpress.android.GCMMessageService;
+import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
@@ -165,13 +165,16 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            boolean isInstantLike = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_LIKE_EXTRA, false);
-            boolean isInstantApprove = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_APPROVE_EXTRA, false);
-            fragment = isInstantLike ?
-                        CommentDetailFragment.newInstanceForInstantLike(note.getId()) :
-                        isInstantApprove ?
-                            CommentDetailFragment.newInstanceForInstantApprove(note.getId()) :
-                            CommentDetailFragment.newInstance(note.getId());
+            boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+            fragment = CommentDetailFragment.newInstance(note.getId(), getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
+
+            // fragment is never null at this point, and always of CommentDetailFragment type. Just add this check for safety :)
+            if ( fragment != null && fragment instanceof  CommentDetailFragment) {
+                if (isInstantReply) {
+                    ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
+                }
+            }
+
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above

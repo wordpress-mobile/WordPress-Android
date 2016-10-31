@@ -288,7 +288,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
                         // User has been created. From this point, all errors should close this screen and display the
-                        // sign in screen
+                        // log in screen
                         AnalyticsUtils.refreshMetadata(mUsername, email);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
@@ -328,7 +328,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             @Override
             public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired,
                                 boolean erroneousSslCertificate) {
-                // Should not happen (excepted for a timeout), go back to the sign in screen
+                // Should not happen (excepted for a timeout), go back to the log in screen
                 finishAndShowSignInScreen();
             }
         });
@@ -348,7 +348,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
     /**
      * In case an error happened after the user creation steps, we don't want to show the sign up screen.
-     * Show the sign in screen with username and password prefilled, plus a toast message to explain what happened.
+     * Show the log in screen with username and password prefilled, plus a toast message to explain what happened.
      *
      * Note: this should be called only if the user has been created.
      */
@@ -366,7 +366,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         } catch (IllegalStateException e) {
             // Catch the ISE exception, because we can't check for the fragment state here
             // finishAndShowSignInScreen will be called in an Network onError callback so we can't guarantee, the
-            // fragment transaction will be executed. In that case the user already is back on the Sign In screen.
+            // fragment transaction will be executed. In that case the user already is back on the Log In screen.
             AppLog.e(T.NUX, e);
         }
         ToastUtils.showToast(getActivity(), R.string.signup_succeed_signin_failed, Duration.LONG);
@@ -393,7 +393,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         @Override
         public void onError(final int messageId, final boolean twoStepCodeRequired, final boolean httpAuthRequired,
                             final boolean erroneousSslCertificate, final String clientResponse) {
-            // Should not happen (excepted for a timeout), go back to the sign in screen
+            // Should not happen (excepted for a timeout), go back to the log in screen
             finishAndShowSignInScreen();
         }
     };

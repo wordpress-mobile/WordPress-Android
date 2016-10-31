@@ -2,6 +2,8 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,7 +21,6 @@ import android.widget.TextView;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
-import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
@@ -40,8 +41,7 @@ public class NotificationsListFragment extends Fragment
                    WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
-    public static final String NOTE_INSTANT_LIKE_EXTRA = "instantLike";
-    public static final String NOTE_INSTANT_APPROVE_EXTRA = "instantApprove";
+    public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
 
@@ -109,13 +109,6 @@ public class NotificationsListFragment extends Fragment
             mBucket.addListener(this);
         }
 
-        // Removes app notifications from the system bar
-        new Thread(new Runnable() {
-            public void run() {
-                GCMMessageService.removeAllNotifications(getActivity());
-            }
-        }).start();
-
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
             AppLog.i(AppLog.T.NOTIFS, "Starting Simperium buckets");
@@ -177,13 +170,13 @@ public class NotificationsListFragment extends Fragment
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNoteForReply(getActivity(), noteId, false);
+            openNoteForReply(getActivity(), noteId, false, null);
         }
     };
 
-    private static Intent getOpenNoteIntent(Activity activity,
+    private static Intent getOpenNoteIntent(Context context,
                                 String noteId) {
-        Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
+        Intent detailIntent = new Intent(context, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
         return detailIntent;
     }
@@ -193,7 +186,8 @@ public class NotificationsListFragment extends Fragment
      */
     public static void openNoteForReply(Activity activity,
                                         String noteId,
-                                        boolean shouldShowKeyboard) {
+                                        boolean shouldShowKeyboard,
+                                        String replyText) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -204,42 +198,9 @@ public class NotificationsListFragment extends Fragment
 
         Intent detailIntent = getOpenNoteIntent(activity, noteId);
         detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
-        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
-    }
-
-    /**
-     * Open a note fragment based on the type of note, signaling to issue a like action immediately
-     */
-    public static void openNoteForLike(Activity activity,
-                                       String noteId) {
-        if (noteId == null || activity == null) {
-            return;
+        if (!TextUtils.isEmpty(replyText)) {
+            detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText);
         }
-
-        if (activity.isFinishing()) {
-            return;
-        }
-
-        Intent detailIntent = getOpenNoteIntent(activity, noteId);
-        detailIntent.putExtra(NOTE_INSTANT_LIKE_EXTRA, true);
-        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
-    }
-
-    /**
-     * Open a note fragment based on the type of note, signaling to issue a moderate:approve action immediately
-     */
-    public static void openNoteForApprove(Activity activity,
-                                       String noteId) {
-        if (noteId == null || activity == null) {
-            return;
-        }
-
-        if (activity.isFinishing()) {
-            return;
-        }
-
-        Intent detailIntent = getOpenNoteIntent(activity, noteId);
-        detailIntent.putExtra(NOTE_INSTANT_APPROVE_EXTRA, true);
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 

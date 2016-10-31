@@ -22,8 +22,10 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SqlUtils;
 
 /**
- * tbl_posts contains all reader posts - note that the same post can occur multiple times in this
- * table if it exists in multiple tag streams (ex: it exists in both followed sites and liked posts)
+ * tbl_posts contains all reader posts - the primary key is pseudo_id + tag_name + tag_type,
+ * which allows the same post to appear in multiple streams (ex: it can exist in followed
+ * sites, liked posts, and tag streams). note that posts in a specific blog or feed are
+ * stored here with an empty tag_name.
  */
 public class ReaderPostTable {
     private static final String COLUMN_NAMES =
@@ -206,9 +208,9 @@ public class ReaderPostTable {
             return 0;
         }
 
-        int numToPurge = numPosts - MAX_POSTS_PER_TAG;
-        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt()), Integer.toString(numToPurge)};
-        String where = "tag_name=? AND tag_type=? ORDER BY " + getSortColumnForTag(tag) + " LIMIT ?";
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt()), Integer.toString(MAX_POSTS_PER_TAG)};
+        String where = "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_posts WHERE tag_name=? AND "
+                       + "tag_type=? ORDER BY " + getSortColumnForTag(tag) + " DESC LIMIT ?)";
         int numDeleted = db.delete("tbl_posts", where, args);
         AppLog.d(AppLog.T.READER, String.format("reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
         return numDeleted;
@@ -227,7 +229,7 @@ public class ReaderPostTable {
             return 0;
         }
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT count(*) FROM tbl_posts WHERE blog_id=?",
+                "SELECT count(*) FROM tbl_posts WHERE blog_id=? AND tag_name=''",
                 new String[]{Long.toString(blogId)});
     }
 
@@ -236,7 +238,7 @@ public class ReaderPostTable {
             return 0;
         }
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT count(*) FROM tbl_posts WHERE feed_id=?",
+                "SELECT count(*) FROM tbl_posts WHERE feed_id=? AND tag_name=''",
                 new String[]{Long.toString(feedId)});
     }
 
@@ -463,14 +465,14 @@ public class ReaderPostTable {
      */
     public static String getOldestPubDateInBlog(long blogId) {
         String sql = "SELECT date_published FROM tbl_posts"
-                  + " WHERE blog_id = ?"
+                  + " WHERE blog_id=? AND tag_name=''"
                   + " ORDER BY date_published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(blogId)});
     }
 
     public static String getOldestPubDateInFeed(long feedId) {
         String sql = "SELECT date_published FROM tbl_posts"
-                  + " WHERE feed_id = ?"
+                  + " WHERE feed_id=? AND tag_name=''"
                   + " ORDER BY date_published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
     }
@@ -749,7 +751,7 @@ public class ReaderPostTable {
 
     public static ReaderPostList getPostsInBlog(long blogId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id = ? ORDER BY date_published DESC";
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id=? AND tag_name='' ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -765,7 +767,7 @@ public class ReaderPostTable {
 
     public static ReaderPostList getPostsInFeed(long feedId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE feed_id = ? ORDER BY date_published DESC";
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE feed_id=? AND tag_name='' ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -822,7 +824,7 @@ public class ReaderPostTable {
      * same as getPostsInBlog() but only returns the blogId/postId pairs
      */
     public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(long blogId, int maxPosts) {
-        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id = ? ORDER BY date_published DESC";
+        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id=? AND tag_name='' ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
