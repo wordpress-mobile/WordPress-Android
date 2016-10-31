@@ -864,7 +864,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN) && mListener != null) {
                         mListener.onMagicLinkRequestSuccess(mUsername);
                     } else {
-                        showPasswordFieldAndFocus();
+                        if (isUsernameEmail()) {
+                            showSelfHostedSignInForm();
+                        } else {
+                            showPasswordFieldAndFocus();
+                        }
                     }
                 } catch (JSONException error) {
                     AppLog.e(AppLog.T.MAIN, error);
