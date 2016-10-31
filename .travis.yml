@@ -17,8 +17,8 @@ android:
     - extra-android-support
     - platform-tools
     - tools
-    - build-tools-24.0.2
-    - android-24
+    - build-tools-25.0.0
+    - android-25
 
 env:
   global:
