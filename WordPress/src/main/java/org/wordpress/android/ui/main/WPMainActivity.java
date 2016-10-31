@@ -249,23 +249,20 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     private void launchWithNoteId() {
         if (isFinishing() || getIntent() == null) return;
 
-        // Check for push authorization request
-        if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
-            Bundle extras = getIntent().getExtras();
-            String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
-            String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
-            String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
-            long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
-
-            long now = System.currentTimeMillis() / 1000;
-            if (expires > 0 && now > expires) {
-                // Show a toast if the user took too long to open the notification
-                ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-            } else {
-                NotificationsUtils.showPushAuthAlert(this, token, title, message);
+        NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(getIntent(),
+                new NotificationsUtils.TwoFactorAuthCallback() {
+            @Override
+            public void onTokenValid(String token, String title, String message) {
+                NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
             }
-        }
+
+            @Override
+            public void onTokenInvalid() {
+                // Show a toast if the user took too long to open the notification
+                ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+            }
+        });
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 

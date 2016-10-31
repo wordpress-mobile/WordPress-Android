@@ -77,7 +77,7 @@ public class AuthenticationDialogUtils {
             return;
         }
 
-        // WP.com errors will show the sign in activity
+        // WP.com errors will show the log in activity
         if (WordPress.getCurrentBlog() == null || (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag())) {
             Intent signInIntent = new Intent(activity, SignInActivity.class);
             signInIntent.putExtra(SignInActivity.EXTRA_IS_AUTH_ERROR, true);
