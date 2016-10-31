@@ -335,6 +335,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void showSelfHostedSignInForm(){
+        endProgress();
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
         showPasswordField();
@@ -882,7 +883,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     }
                 } catch (JSONException error) {
                     AppLog.e(AppLog.T.MAIN, error);
-                    showPasswordFieldAndFocus();
+                    if (isUsernameEmail()) {
+                        showSelfHostedSignInForm();
+                    } else {
+                        showPasswordFieldAndFocus();
+                    }
                 }
             }
         }, new RestRequest.ErrorListener() {
