@@ -282,6 +282,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      */
     public void forceSelfHostedMode(@NonNull String prefillUrl) {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
+        mPasswordLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
         if (!prefillUrl.isEmpty()) {
