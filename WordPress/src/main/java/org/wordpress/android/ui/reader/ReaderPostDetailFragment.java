@@ -825,12 +825,10 @@ public class ReaderPostDetailFragment extends Fragment
 
         TextView txtError = (TextView) getView().findViewById(R.id.text_error);
         txtError.setText(errorMessage);
-        if (txtError.getVisibility() != View.VISIBLE) {
+        if (errorMessage == null) {
+            txtError.setVisibility(View.GONE);
+        } else if (txtError.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(txtError, AniUtils.Duration.MEDIUM);
-        } else {
-            if (errorMessage == null) {
-                txtError.setVisibility(View.GONE);
-            }
         }
         mErrorMessage = errorMessage;
     }
