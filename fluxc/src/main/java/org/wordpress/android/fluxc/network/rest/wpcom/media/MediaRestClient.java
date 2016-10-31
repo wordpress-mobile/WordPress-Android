@@ -295,13 +295,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     private void notifyMediaProgress(MediaModel media, float progress, MediaError error) {
-        AppLog.v(AppLog.T.MEDIA, "Progress update on upload of " + media.getTitle() + ": " + progress);
+        AppLog.v(AppLog.T.MEDIA, "Progress update on upload of " + media.getFilePath() + ": " + progress);
         MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, progress, false);
         payload.error = error;
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
+        AppLog.v(AppLog.T.MEDIA, "Notify media uploaded: " + media.getFilePath());
         MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, 1.f, error == null);
         payload.error = error;
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
