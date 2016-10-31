@@ -403,9 +403,7 @@ public class ReaderPostDetailFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        if (!hasPost()) {
-            showPost();
-        }
+        showPost();
     }
 
     @Override
@@ -691,6 +689,25 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+    private void doLikePost() {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (ReaderUtils.isLoggedOutReader()) {
+            Snackbar.make(getView(), R.string.reader_snackbar_err_cannot_like_post_logged_out, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.sign_in, mSignInClickListener).show();
+            return;
+        }
+
+        if (!mPost.canLikePost()) {
+            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_cannot_like_post);
+            return;
+        }
+
+        togglePostLike();
+    }
+
     /*
      * show latest likes for this post
      */
@@ -911,10 +928,17 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             if (mDirectOperation != null) {
-                ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId, mDirectOperation,
-                        mCommentId);
-                getActivity().finish();
-                return;
+                switch (mDirectOperation) {
+                    case COMMENT_JUMP:
+                    case COMMENT_REPLY:
+                        ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId, mDirectOperation,
+                                mCommentId);
+                        getActivity().finish();
+                        return;
+                    case POST_LIKE:
+                        doLikePost();
+                        break;
+                }
             }
 
             mReaderWebView.setIsPrivatePost(mPost.isPrivate);

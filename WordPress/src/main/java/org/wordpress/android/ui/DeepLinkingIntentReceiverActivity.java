@@ -119,6 +119,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                             }
 
                             parseFragment(uri);
+                            detectLike(uri);
 
                             mInterceptType = InterceptType.WPCOM_POST_SLUG;
                             showPost();
@@ -179,6 +180,26 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         if (commentIdMatcher.find() && commentIdMatcher.groupCount() > 0) {
             mCommentId = Integer.valueOf(commentIdMatcher.group(1));
             mDirectOperation = DirectOperation.COMMENT_JUMP;
+        }
+    }
+
+    private void detectLike(Uri uri) {
+        // check whether we are to like something
+        final boolean doLike = "1".equals(uri.getQueryParameter("like"));
+        final String likeActor = uri.getQueryParameter("like_actor");
+
+        if (doLike && likeActor != null && likeActor.trim().length() > 0) {
+            mDirectOperation = DirectOperation.POST_LIKE;
+
+            // check whether we are to like a specific comment
+            final String likeCommentId = uri.getQueryParameter("commentid");
+            if (likeCommentId != null) {
+                try {
+                    mCommentId = Integer.parseInt(likeCommentId);
+                } catch (NumberFormatException e) {
+                    AppLog.e(T.UTILS, "commentid cannot be converted to int" + likeCommentId, e);
+                }
+            }
         }
     }
 
