@@ -27,6 +27,10 @@ env:
     - ANDROID_SDKS=android-14
     - ANDROID_TARGET=android-14
 
+before_install:
+  # TODO: Remove the following line when Travis' platform-tools are updated to v24+
+  - echo yes | android update sdk -a --filter platform-tools --no-ui --force
+
 install:
   # Setup gradle.properties
   - cp WordPress/gradle.properties-example WordPress/gradle.properties
