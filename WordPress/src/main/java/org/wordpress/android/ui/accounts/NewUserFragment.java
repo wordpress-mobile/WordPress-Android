@@ -449,7 +449,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mProgressBarSignIn = (RelativeLayout) rootView.findViewById(R.id.nux_sign_in_progress_bar);
 
         mEmailTextField = (EditText) rootView.findViewById(R.id.email_address);
-        mEmailTextField.addTextChangedListener(new WPLowerCaseTextWatcher());
         mEmailTextField.setText(UserEmailUtils.getPrimaryEmail(getActivity()));
         mEmailTextField.setSelection(EditTextUtils.getText(mEmailTextField).length());
         mPasswordTextField = (EditText) rootView.findViewById(R.id.password);
