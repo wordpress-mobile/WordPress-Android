@@ -12,6 +12,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 repositories {
+    mavenLocal()
     jcenter()
 }
 
@@ -49,6 +50,7 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'org.wordpress:utils:1.11.0'
+    compile 'org.wordpress:aztec:0.0.1'
 }
 
 signing {

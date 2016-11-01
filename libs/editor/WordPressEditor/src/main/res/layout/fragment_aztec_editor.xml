@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aztec="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <org.wordpress.aztec.toolbar.AztecToolbar
+        android:id="@+id/formatting_toolbar"
+        android:layout_alignParentBottom="true"
+        android:layout_height="@dimen/format_bar_height"
+        android:layout_width="match_parent" >
+    </org.wordpress.aztec.toolbar.AztecToolbar>
+
+    <ScrollView
+        android:layout_above="@+id/formatting_toolbar"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <org.wordpress.aztec.AztecText
+                android:id="@+id/aztec"
+                android:hint="@string/edit_hint"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingEnd="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:scrollbars="vertical"
+                android:textCursorDrawable="?attr/textColor"
+                aztec:backgroundColor="@android:color/transparent"
+                aztec:bulletColor="@color/blue_medium"
+                aztec:bulletMargin="@dimen/bullet_margin"
+                aztec:bulletPadding="@dimen/bullet_padding"
+                aztec:bulletWidth="@dimen/bullet_width"
+                aztec:historyEnable="true"
+                aztec:historySize="10"
+                aztec:lineSpacingExtra="@dimen/spacing_extra"
+                aztec:lineSpacingMultiplier="@dimen/spacing_multiplier"
+                aztec:linkColor="@color/blue_wordpress"
+                aztec:linkUnderline="false"
+                aztec:quoteBackground="@color/blue_wordpress"
+                aztec:quoteColor="@color/blue_medium"
+                aztec:quoteMargin="@dimen/quote_margin"
+                aztec:quotePadding="@dimen/quote_padding"
+                aztec:quoteWidth="@dimen/quote_width"
+                aztec:textColor="@android:color/white"
+                aztec:textColorHint="@android:color/darker_gray" />
+
+            <org.wordpress.aztec.source.SourceViewEditText
+                android:id="@+id/source"
+                android:hint="@string/source_hint"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
+                android:gravity="top|start"
+                android:scrollbars="vertical"
+                android:textSize="14sp"
+                android:visibility="gone"
+                android:inputType="textNoSuggestions|textMultiLine"
+                aztec:codeTextColor="@android:color/white"
+                aztec:codeBackgroundColor="@android:color/transparent" />
+
+        </FrameLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

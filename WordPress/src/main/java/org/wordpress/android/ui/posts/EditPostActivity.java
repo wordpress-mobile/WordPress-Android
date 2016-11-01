@@ -55,6 +55,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
@@ -925,9 +926,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     // TODO: switch between legacy and new editor here (AB test?)
                     if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
-                        return new EditorFragment();
+                        return new AztecEditorFragment();
+//                        return new EditorFragment();
                     } else {
-                        return new LegacyEditorFragment();
+                        return new EditorFragment();
+//                        return new LegacyEditorFragment();
                     }
                 case 1:
                     return new EditPostSettingsFragment();

@@ -94,4 +94,6 @@
     <string name="editor_dropped_title_images_not_allowed">Dropping images in the Title is not allowed</string>
     <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
     <string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
+    <string name="edit_hint">Your post</string>
+    <string name="source_hint">Your code</string>
 </resources>
