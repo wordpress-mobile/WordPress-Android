@@ -252,6 +252,12 @@ public class AccountRestClient extends BaseWPComRestClient {
                             if (response.error.equals("taken")) {
                                 // We consider "taken" not to be an error, and we report that the item is unavailable
                                 payload.isAvailable = false;
+                            } else if (response.error.equals("invalid") && type.equals(IsAvailable.BLOG)
+                                    && response.message.contains("reserved")) {
+                                // Special case for /is-available/blog, which returns 'invalid' instead of 'taken'
+                                // The messages from the server are not localized at the time of writing, but that may
+                                // change in the future and cause this to be registered as a generic error
+                                payload.isAvailable = false;
                             } else {
                                 // Genuine error (probably a malformed item)
                                 payload.error = new IsAvailableError(response.error, response.message);
