@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -105,6 +106,7 @@ public class AccountStore extends Store {
         public IsAvailable type;
         public String value;
         public boolean isAvailable;
+        public List<String> suggestions;
 
         public OnAvailabilityChecked(IsAvailable type, String value, boolean isAvailable) {
             this.type = type;
@@ -414,6 +416,7 @@ public class AccountStore extends Store {
 
     private void handleCheckedIsAvailable(IsAvailableResponsePayload payload) {
         OnAvailabilityChecked event = new OnAvailabilityChecked(payload.type, payload.value, payload.isAvailable);
+        event.suggestions = payload.suggestions;
 
         if (payload.isError()) {
             event.error = payload.error;

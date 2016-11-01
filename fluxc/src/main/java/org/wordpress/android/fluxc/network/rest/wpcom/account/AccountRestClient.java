@@ -29,6 +29,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -72,6 +73,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         public IsAvailable type;
         public String value;
         public boolean isAvailable;
+        public List<String> suggestions;
         public IsAvailableError error;
 
         @Override
@@ -252,6 +254,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                             if (response.error.equals("taken")) {
                                 // We consider "taken" not to be an error, and we report that the item is unavailable
                                 payload.isAvailable = false;
+                                payload.suggestions = response.suggestions; // These are only supplied by /domain/
                             } else if (response.error.equals("invalid") && type.equals(IsAvailable.BLOG)
                                     && response.message.contains("reserved")) {
                                 // Special case for /is-available/blog, which returns 'invalid' instead of 'taken'
