@@ -327,12 +327,14 @@ public class NotificationsListFragment extends Fragment
                 public void run() {
                     NotificationsTable.saveNotes(notes, true);
                     NotificationsActions.updateSeenNotes(); // Refresh launched by the user. Update the last seen time.
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mNotesAdapter.addAll(notes, true);
-                        }
-                    });
+                    if (isAdded() && getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mNotesAdapter.addAll(notes, true);
+                            }
+                        });
+                    }
                 }
             }.start();
         }
