@@ -314,9 +314,9 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
     }
 
-    public static void removeUrlFromSkiplist(String url) {
-        if (!TextUtils.isEmpty(url)) {
-            mUrlSkipList.remove(url);
+    public void removeCurrentUrlFromSkiplist() {
+        if (!TextUtils.isEmpty(mUrl)) {
+            mUrlSkipList.remove(mUrl);
         }
     }
 

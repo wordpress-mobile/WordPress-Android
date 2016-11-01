@@ -1,12 +1,5 @@
 package org.wordpress.android.ui.main;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.github.xizzhu.simpletooltip.ToolTip;
-import com.github.xizzhu.simpletooltip.ToolTipView;
-import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropActivity;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,6 +29,13 @@ import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Cache;
+import com.android.volley.Request;
+import com.github.xizzhu.simpletooltip.ToolTip;
+import com.github.xizzhu.simpletooltip.ToolTipView;
+import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.UCropActivity;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
@@ -386,7 +386,7 @@ public class MeFragment extends Fragment {
 
             // reset the WPNetworkImageView
             mAvatarImageView.resetImage();
-            WPNetworkImageView.removeUrlFromSkiplist(avatarUrl);
+            mAvatarImageView.removeCurrentUrlFromSkiplist();
         }
 
         mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, new WPNetworkImageView
