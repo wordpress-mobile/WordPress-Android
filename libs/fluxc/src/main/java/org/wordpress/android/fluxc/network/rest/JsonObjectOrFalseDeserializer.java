@@ -10,6 +10,15 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
+/**
+ * Deserializes a response that is either an arbitrary JSON object, or an arbitrary JSON primitive.
+ * For example, if we want to use CustomServerResponse.class to represent the result of an API call that returns either
+ * an object or 'false', this will deserialize the JSON object into CustomServerResponse.class, or return a null
+ * MyServerResponse if the server response was 'false'.
+ * Note that we don't distinguish between, e.g., 'true' or 'false' - any JSON primitive that was returned will be
+ * deserialized into a null object.
+ * So, this class is only useful if we don't care about the actual value of the primitive, only of the object.
+ */
 public class JsonObjectOrFalseDeserializer implements JsonDeserializer<JsonObjectOrFalse> {
     @Override
     public JsonObjectOrFalse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -22,7 +31,8 @@ public class JsonObjectOrFalseDeserializer implements JsonDeserializer<JsonObjec
             result = (JsonObjectOrFalse) constructor.newInstance();
 
             if (json.isJsonPrimitive()) {
-                // If the value is a JSON primitive (it should be 'false', specifically), it signifies a null object
+                // If the value is a JSON primitive (generally, 'false', though any static value will have the same
+                // result), we represent it as null
                 return null;
             }
 

@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.Di
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
@@ -99,6 +101,18 @@ public class AccountStore extends Store {
         public boolean dryRun;
     }
 
+    public class OnAvailabilityChecked extends OnChanged<IsAvailableError> {
+        public IsAvailable type;
+        public String value;
+        public boolean isAvailable;
+
+        public OnAvailabilityChecked(IsAvailable type, String value, boolean isAvailable) {
+            this.type = type;
+            this.value = value;
+            this.isAvailable = isAvailable;
+        }
+    }
+
     public static class AuthenticationError implements OnChangedError {
         public AuthenticationErrorType type;
         public String message;
@@ -160,6 +174,32 @@ public class AccountStore extends Store {
         SETTINGS_FETCH_ERROR,
         SETTINGS_POST_ERROR,
         GENERIC_ERROR
+    }
+
+    public static class IsAvailableError implements OnChangedError {
+        public IsAvailableErrorType type;
+        public String message;
+
+        public IsAvailableError(@NonNull String type, @NonNull String message) {
+            this.type = IsAvailableErrorType.fromString(type);
+            this.message = message;
+        }
+    }
+
+    public enum IsAvailableErrorType {
+        INVALID,
+        GENERIC_ERROR;
+
+        public static IsAvailableErrorType fromString(String string) {
+            if (string != null) {
+                for (IsAvailableErrorType v : IsAvailableErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public static class NewUserError implements OnChangedError {
@@ -272,6 +312,21 @@ public class AccountStore extends Store {
             case FETCHED_ACCOUNT:
                 handleFetchAccountCompleted((AccountRestPayload) payload);
                 break;
+            case IS_AVAILABLE_BLOG:
+                mAccountRestClient.isAvailable((String) payload, IsAvailable.BLOG);
+                break;
+            case IS_AVAILABLE_DOMAIN:
+                mAccountRestClient.isAvailable((String) payload, IsAvailable.DOMAIN);
+                break;
+            case IS_AVAILABLE_EMAIL:
+                mAccountRestClient.isAvailable((String) payload, IsAvailable.EMAIL);
+                break;
+            case IS_AVAILABLE_USERNAME:
+                mAccountRestClient.isAvailable((String) payload, IsAvailable.USERNAME);
+                break;
+            case CHECKED_IS_AVAILABLE:
+                handleCheckedIsAvailable((IsAvailableResponsePayload) payload);
+                break;
         }
     }
 
@@ -355,6 +410,16 @@ public class AccountStore extends Store {
         onNewUserCreated.error = payload.error;
         onNewUserCreated.dryRun = payload.dryRun;
         emitChange(onNewUserCreated);
+    }
+
+    private void handleCheckedIsAvailable(IsAvailableResponsePayload payload) {
+        OnAvailabilityChecked event = new OnAvailabilityChecked(payload.type, payload.value, payload.isAvailable);
+
+        if (payload.isError()) {
+            event.error = payload.error;
+        }
+
+        emitChange(event);
     }
 
     private void emitAccountChangeError(AccountErrorType errorType) {
