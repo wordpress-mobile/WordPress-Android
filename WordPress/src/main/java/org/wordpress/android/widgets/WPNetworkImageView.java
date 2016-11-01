@@ -303,9 +303,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
     }
 
-    public void invalidateImage() {
-        mUrlSkipList.clear();
-
+    public void resetImage() {
         if (mImageContainer != null) {
             // If the view was bound to an image request, cancel it and clear
             // out the image from the view.
@@ -313,6 +311,12 @@ public class WPNetworkImageView extends AppCompatImageView {
             setImageBitmap(null);
             // also clear out the container so we can reload the image if necessary.
             mImageContainer = null;
+        }
+    }
+
+    public void removeCurrentUrlFromSkiplist() {
+        if (!TextUtils.isEmpty(mUrl)) {
+            mUrlSkipList.remove(mUrl);
         }
     }
 
@@ -326,7 +330,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     @Override
     protected void onDetachedFromWindow() {
-        invalidateImage();
+        resetImage();
 
         super.onDetachedFromWindow();
     }
