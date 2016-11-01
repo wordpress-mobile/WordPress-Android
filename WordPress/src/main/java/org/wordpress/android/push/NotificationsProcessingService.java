@@ -1,5 +1,6 @@
 package org.wordpress.android.push;
 
+import android.app.KeyguardManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -157,10 +158,16 @@ public class NotificationsProcessingService extends Service {
 
                 // check special cases for authorization push
                 if (mActionType.equals(ARG_ACTION_AUTH_IGNORE)) {
-                    //dismiss notifs
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
+                    if (!isDeviceLocked()) {
+                        //dismiss notifs
+                        dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                        dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
+                    } else {
+                        //show a new temporal notification to the user indicating they need to unlock
+                        //the device in order to approve/ignore a 2fa PN
+                        requestFailedWithMessage(getString(R.string.error_notif_2fa_device_locked), true);
+                    }
                     return;
                 }
 
@@ -540,31 +547,46 @@ public class NotificationsProcessingService extends Service {
         }
 
         private void approveAuth(){
-            NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(mIntent,
-                    new NotificationsUtils.TwoFactorAuthCallback() {
-                @Override
-                public void onTokenValid(String token, String title, String message) {
-                    // ping the push auth endpoint with the token, wp.com will take care of the rest!
-                    NotificationsUtils.sendTwoFactorAuthToken(token);
 
-                    //dismiss notifs
-                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+            if (!isDeviceLocked()) {
+                NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(mIntent,
+                        new NotificationsUtils.TwoFactorAuthCallback() {
+                    @Override
+                    public void onTokenValid(String token, String title, String message) {
+                        // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                        NotificationsUtils.sendTwoFactorAuthToken(token);
 
-                    stopSelf(mTaskId);
-                }
+                        //dismiss notifs
+                        dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
+                        dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                        dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
 
-                @Override
-                public void onTokenInvalid() {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-                    //dismiss notifs
-                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
-                    requestFailedWithMessage(getString(R.string.push_auth_expired), false);
-                }
-            });
+                        stopSelf(mTaskId);
+                    }
+
+                    @Override
+                    public void onTokenInvalid() {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+                        //dismiss notifs
+                        dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
+                        dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                        dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+                        requestFailedWithMessage(getString(R.string.push_auth_expired), false);
+                    }
+                });
+            } else {
+                //dismiss notifs
+                dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+
+                //show a new temporal notification to the user indicating they need to unlock
+                //the device in order to approve/ignore a 2fa PN
+                requestFailedWithMessage(getString(R.string.error_notif_2fa_device_locked), true);
+            }
+        }
+
+        private boolean isDeviceLocked(){
+            KeyguardManager myKM = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
+            return myKM.inKeyguardRestrictedInputMode();
         }
 
     }
