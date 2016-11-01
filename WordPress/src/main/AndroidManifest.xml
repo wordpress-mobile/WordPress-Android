@@ -475,6 +475,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
         </receiver>
+        <receiver android:name=".ui.notifications.UserPresentBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
 
         <!-- Google Cloud Messaging receiver and services -->
         <meta-data

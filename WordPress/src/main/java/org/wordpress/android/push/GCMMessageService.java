@@ -39,6 +39,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -159,6 +160,14 @@ public class GCMMessageService extends GcmListenerService {
         }
     }
 
+    public static synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context){
+        if (sNotificationHelpers != null && sActiveNotificationsMap.size() == 1) {
+            //get the corresponding bundle for this noteId
+            Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
+            sNotificationHelpers.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
+        }
+    }
+
     public static synchronized Bundle getCurrentNoteBundleForNoteId(String noteId){
         if (sActiveNotificationsMap.size() > 0) {
             //get the corresponding bundle for this noteId
@@ -276,6 +285,10 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private boolean canAddActionsToNotifications() {
+        return (!isDeviceLocked() && !isWPPinLockEnabled());
+    }
+
+    private boolean isWPPinLockEnabled() {
         AppLockManager appLockManager = AppLockManager.getInstance();
         // Make sure PasscodeLock isn't already in place
         if (!appLockManager.isAppLockFeatureEnabled()) {
@@ -284,11 +297,14 @@ public class GCMMessageService extends GcmListenerService {
 
         // Make sure the locker was correctly enabled, and it's active
         if (appLockManager.isAppLockFeatureEnabled() && appLockManager.getAppLock().isPasswordLocked()) {
-            return Boolean.FALSE;
+            return Boolean.TRUE;
         }
-        return Boolean.TRUE;
+        return Boolean.FALSE;
     }
 
+    private boolean isDeviceLocked() {
+        return DeviceUtils.getInstance().isDeviceLocked(this);
+    }
 
     private class NotificationHelper {
 

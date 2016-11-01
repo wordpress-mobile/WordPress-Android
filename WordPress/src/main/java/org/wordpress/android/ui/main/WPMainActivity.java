@@ -3,7 +3,10 @@ package org.wordpress.android.ui.main;
 import android.animation.ObjectAnimator;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -73,6 +76,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
     private int  mAppBarElevation;
+    private BroadcastReceiver mScreenOffBroadcastReceiver;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -187,6 +191,16 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             }
         });
 
+        if (mScreenOffBroadcastReceiver == null) {
+            mScreenOffBroadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    GCMMessageService.rebuildAndUpdateNotifsOnSystemBarForRemainingNote(WPMainActivity.this);
+                }
+            };
+        }
+        registerReceiver(mScreenOffBroadcastReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+
         if (savedInstanceState == null) {
             if (AccountHelper.isSignedIn()) {
                 // open note detail if activity called from a push, otherwise return to the tab
@@ -207,6 +221,12 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 ActivityLauncher.showSignInForResult(this);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mScreenOffBroadcastReceiver);
+        super.onDestroy();
     }
 
     private void setTabLayoutElevation(float newElevation){
