@@ -645,6 +645,10 @@ public class ReaderPostDetailFragment extends Fragment
                 }
 
                 setRefreshing(false);
+
+                if (mDirectOperation != null && mDirectOperation == DirectOperation.POST_LIKE) {
+                    doLikePost();
+                }
             }
         };
         ReaderPostActions.updatePost(mPost, resultListener);
@@ -946,7 +950,8 @@ public class ReaderPostDetailFragment extends Fragment
                         getActivity().finish();
                         return;
                     case POST_LIKE:
-                        doLikePost();
+                        // Liking needs to be handled "later" after the post has been updated from the server so,
+                        // nothing special to do here
                         break;
                 }
             }
