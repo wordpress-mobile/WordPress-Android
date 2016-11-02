@@ -112,6 +112,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
             NotificationsActions.markNoteAsRead(note);
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);
+            // Mark the note as seen and refresh the UI.
+            note.setRead();
+            NotificationsTable.putNote(note);
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
         }
