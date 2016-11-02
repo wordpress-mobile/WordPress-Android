@@ -195,7 +195,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PostHeaderHolder) {
             PostHeaderHolder headerHolder = (PostHeaderHolder) holder;
             headerHolder.mHeaderView.setPost(mPost);
@@ -298,7 +298,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 commentHolder.countLikes.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        setLike(commentHolder.countLikes.getContext(), commentHolder, position, true);
+                        setLike(commentHolder.countLikes.getContext(), commentHolder, commentHolder
+                                .getAdapterPosition(), true);
                     }
                 }, 400);
 
