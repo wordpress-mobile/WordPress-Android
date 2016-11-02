@@ -21,9 +21,11 @@ import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -113,6 +115,29 @@ public class PostStoreUnitTest {
 
         assertEquals(1, mPostStore.getPostsCountForSite(site1));
         assertEquals(1, mPostStore.getPostsCountForSite(site2));
+    }
+
+    @Test
+    public void testGetPostsWithFormatForSite() {
+        PostModel textPost = PostTestUtils.generateSampleUploadedPost();
+        PostModel imagePost = PostTestUtils.generateSampleUploadedPost("image");
+        PostModel videoPost = PostTestUtils.generateSampleUploadedPost("video");
+        PostSqlUtils.insertPostForResult(textPost);
+        PostSqlUtils.insertPostForResult(imagePost);
+        PostSqlUtils.insertPostForResult(videoPost);
+
+        SiteModel site = new SiteModel();
+        site.setId(textPost.getLocalSiteId());
+
+        ArrayList<String> postFormat = new ArrayList<>();
+        postFormat.add("image");
+        postFormat.add("video");
+        List<PostModel> postList = mPostStore.getPostsForSiteWithFormat(site, postFormat);
+
+        assertEquals(2, postList.size());
+        assertTrue(postList.contains(imagePost));
+        assertTrue(postList.contains(videoPost));
+        assertFalse(postList.contains(textPost));
     }
 
     @Test

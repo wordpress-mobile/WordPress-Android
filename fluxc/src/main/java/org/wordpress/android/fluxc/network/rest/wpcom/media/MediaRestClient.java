@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
@@ -77,7 +76,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     public void pushMedia(final SiteModel site, final List<MediaModel> mediaToPush) {
         for (final MediaModel media : mediaToPush) {
             String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).getUrlV1_1();
-            add(new WPComGsonRequest<>(Method.POST, url, getEditRequestParams(media),
+            add(WPComGsonRequest.buildPostRequest(url, getEditRequestParams(media),
                     MediaWPComRestResponse.class, new Listener<MediaWPComRestResponse>() {
                 @Override
                 public void onResponse(MediaWPComRestResponse response) {
@@ -120,7 +119,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     public void fetchAllMedia(final SiteModel site, final MediaFilter filter) {
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         Map<String, String> params = getQueryParams(filter);
-        add(new WPComGsonRequest<>(Method.GET, url, params, MultipleMediaResponse.class,
+        add(WPComGsonRequest.buildGetRequest(url, params, MultipleMediaResponse.class,
                 new Listener<MultipleMediaResponse>() {
                     @Override
                     public void onResponse(MultipleMediaResponse response) {
@@ -152,7 +151,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         for (final MediaModel media: mediaToFetch) {
             String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).getUrlV1_1();
-            add(new WPComGsonRequest<>(Method.GET, url, null, MediaWPComRestResponse.class,
+            add(WPComGsonRequest.buildGetRequest(url, null, MediaWPComRestResponse.class,
                     new Listener<MediaWPComRestResponse>() {
                         @Override
                         public void onResponse(MediaWPComRestResponse response) {
@@ -185,7 +184,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         for (final MediaModel media : mediaToDelete) {
             String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).delete.getUrlV1_1();
-            add(new WPComGsonRequest<>(Method.GET, url, null, MediaWPComRestResponse.class,
+            add(WPComGsonRequest.buildPostRequest(url, null, MediaWPComRestResponse.class,
                     new Listener<MediaWPComRestResponse>() {
                         @Override
                         public void onResponse(MediaWPComRestResponse response) {
@@ -296,13 +295,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     private void notifyMediaProgress(MediaModel media, float progress, MediaError error) {
-        AppLog.v(AppLog.T.MEDIA, "Progress update on upload of " + media.getTitle() + ": " + progress);
+        AppLog.v(AppLog.T.MEDIA, "Progress update on upload of " + media.getFilePath() + ": " + progress);
         MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, progress, false);
         payload.error = error;
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
+        AppLog.v(AppLog.T.MEDIA, "Notify media uploaded: " + media.getFilePath());
         MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, 1.f, error == null);
         payload.error = error;
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
@@ -391,10 +391,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      *
      * ref https://developer.wordpress.com/docs/api/1.1/post/sites/%24site/media/new/
      */
-    private Map<String, String> getEditRequestParams(final MediaModel media) {
+    private Map<String, Object> getEditRequestParams(final MediaModel media) {
         if (media == null) return null;
 
-        final Map<String, String> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         if (!TextUtils.isEmpty(media.getTitle())) {
             params.put(TITLE_EDIT_KEY, media.getTitle());
         }

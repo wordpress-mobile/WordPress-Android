@@ -520,7 +520,7 @@ public class SiteStore extends Store {
                 fetchSite((SiteModel) action.getPayload());
                 break;
             case FETCH_SITES:
-                mSiteRestClient.pullSites();
+                mSiteRestClient.fetchSites();
                 break;
             case FETCH_SITES_XML_RPC:
                 fetchSitesXmlRpc((RefreshSitesXMLRPCPayload) action.getPayload());
@@ -567,7 +567,7 @@ public class SiteStore extends Store {
     }
 
     private void removeWPComSites() {
-        // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were pulled over the WP.com
+        // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were fetched over the WP.com
         // REST API only (they don't have a .org site id)
         List<SiteModel> wpcomSites = SiteSqlUtils.getAllWPComSites();
         int rowsAffected = removeSites(wpcomSites);
@@ -589,21 +589,21 @@ public class SiteStore extends Store {
 
     private void fetchSite(SiteModel site) {
         if (site.isWPCom()) {
-            mSiteRestClient.pullSite(site);
+            mSiteRestClient.fetchSite(site);
         } else {
-            mSiteXMLRPCClient.pullSite(site);
+            mSiteXMLRPCClient.fetchSite(site);
         }
     }
 
     private void fetchSitesXmlRpc(RefreshSitesXMLRPCPayload payload) {
-        mSiteXMLRPCClient.pullSites(payload.url, payload.username, payload.password);
+        mSiteXMLRPCClient.fetchSites(payload.url, payload.username, payload.password);
     }
 
     private void fetchPostFormats(SiteModel site) {
         if (site.isWPCom()) {
-            mSiteRestClient.pullPostFormats(site);
+            mSiteRestClient.fetchPostFormats(site);
         } else {
-            mSiteXMLRPCClient.pullPostFormats(site);
+            mSiteXMLRPCClient.fetchPostFormats(site);
         }
     }
 

@@ -53,7 +53,7 @@ public class AccountStore extends Store {
     }
 
     public static class PushAccountSettingsPayload extends Payload {
-        public Map<String, String> params;
+        public Map<String, Object> params;
         public PushAccountSettingsPayload() {
         }
     }
@@ -246,7 +246,7 @@ public class AccountStore extends Store {
                 mAccountRestClient.fetchAccountSettings();
                 break;
             case PUSH_SETTINGS:
-                mAccountRestClient.postAccountSettings(((PushAccountSettingsPayload) payload).params);
+                mAccountRestClient.pushAccountSettings(((PushAccountSettingsPayload) payload).params);
                 break;
             case UPDATE_ACCOUNT:
                 updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);

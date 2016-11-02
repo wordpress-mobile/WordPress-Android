@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.account;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -82,7 +81,7 @@ public class AccountRestClient extends BaseWPComRestClient {
      */
     public void fetchAccount() {
         String url = WPCOMREST.me.getUrlV1_1();
-        add(new WPComGsonRequest<>(Method.GET, url, null, AccountResponse.class,
+        add(WPComGsonRequest.buildGetRequest(url, null, AccountResponse.class,
                 new Listener<AccountResponse>() {
                     @Override
                     public void onResponse(AccountResponse response) {
@@ -109,7 +108,7 @@ public class AccountRestClient extends BaseWPComRestClient {
      */
     public void fetchAccountSettings() {
         String url = WPCOMREST.me.settings.getUrlV1_1();
-        add(new WPComGsonRequest<>(Method.GET, url, null, AccountSettingsResponse.class,
+        add(WPComGsonRequest.buildGetRequest(url, null, AccountSettingsResponse.class,
                 new Listener<AccountSettingsResponse>() {
                     @Override
                     public void onResponse(AccountSettingsResponse response) {
@@ -136,12 +135,12 @@ public class AccountRestClient extends BaseWPComRestClient {
      *
      * No HTTP POST call is made if the given parameter map is null or contains no entries.
      */
-    public void postAccountSettings(Map<String, String> params) {
-        if (params == null || params.isEmpty()) return;
+    public void pushAccountSettings(Map<String, Object> body) {
+        if (body == null || body.isEmpty()) return;
         String url = WPCOMREST.me.settings.getUrlV1_1();
         // Note: we have to use a HashMap as a response here because the API response format is different depending
         // of the request we do.
-        add(new WPComGsonRequest<>(Method.POST, url, params, HashMap.class,
+        add(WPComGsonRequest.buildPostRequest(url, body, HashMap.class,
                 new Listener<HashMap>() {
                     @Override
                     public void onResponse(HashMap response) {
@@ -163,15 +162,15 @@ public class AccountRestClient extends BaseWPComRestClient {
     public void newAccount(@NonNull String username, @NonNull String password, @NonNull String email,
                            final boolean dryRun) {
         String url = WPCOMREST.users.new_.getUrlV1();
-        Map<String, String> params = new HashMap<>();
-        params.put("username", username);
-        params.put("password", password);
-        params.put("email", email);
-        params.put("validate", dryRun ? "1" : "0");
-        params.put("client_id", mAppSecrets.getAppId());
-        params.put("client_secret", mAppSecrets.getAppSecret());
+        Map<String, Object> body = new HashMap<>();
+        body.put("username", username);
+        body.put("password", password);
+        body.put("email", email);
+        body.put("validate", dryRun ? "1" : "0");
+        body.put("client_id", mAppSecrets.getAppId());
+        body.put("client_secret", mAppSecrets.getAppSecret());
 
-        WPComGsonRequest<NewAccountResponse> request = new WPComGsonRequest<>(Method.POST, url, params,
+        WPComGsonRequest<NewAccountResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 NewAccountResponse.class,
                 new Listener<NewAccountResponse>() {
                     @Override
