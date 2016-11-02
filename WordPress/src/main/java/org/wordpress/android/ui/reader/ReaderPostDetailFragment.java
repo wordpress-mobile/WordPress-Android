@@ -425,25 +425,35 @@ public class ReaderPostDetailFragment extends Fragment
      * changes the like on the passed post
      */
     private void togglePostLike() {
+        if (hasPost()) {
+            setPostLike(!mPost.isLikedByCurrentUser);
+        }
+    }
+
+    /*
+     * changes the like on the passed post
+     */
+    private void setPostLike(boolean isAskingToLike) {
         if (!isAdded() || !hasPost() || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
-        boolean isAskingToLike = !mPost.isLikedByCurrentUser;
-        ReaderIconCountView likeCount = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
-        likeCount.setSelected(isAskingToLike);
-        ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
+        if (isAskingToLike != ReaderPostTable.isPostLikedByCurrentUser(mPost)) {
+            ReaderIconCountView likeCount = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
+            likeCount.setSelected(isAskingToLike);
+            ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
-        boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike);
-        if (!success) {
-            likeCount.setSelected(!isAskingToLike);
-            return;
+            boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike);
+            if (!success) {
+                likeCount.setSelected(!isAskingToLike);
+                return;
+            }
+
+            // get the post again since it has changed, then refresh to show changes
+            mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
+            refreshLikes();
+            refreshIconCounts();
         }
-
-        // get the post again since it has changed, then refresh to show changes
-        mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
-        refreshLikes();
-        refreshIconCounts();
 
         if (isAskingToLike) {
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mPost);
@@ -705,7 +715,7 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        togglePostLike();
+        setPostLike(true);
     }
 
     /*
