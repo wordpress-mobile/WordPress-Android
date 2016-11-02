@@ -89,6 +89,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
+    private static final Pattern DOT_COM_RESERVED_NAMES =
+            Pattern.compile("^(?:admin|administrator|invite|main|root|web|www|[^@]*wordpress[^@]*)$");
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -125,6 +127,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected WPTextView mJetpackAuthLabel;
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
+
+    private final Matcher mReservedNameMatcher = DOT_COM_RESERVED_NAMES.matcher("");
 
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
@@ -183,6 +187,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     autocorrectUsername();
+
+                    // Show the self-hosted sign-in form if the user entered a username that can't be for WordPress.com
+                    if (!mSelfHosted) {
+                        mReservedNameMatcher.reset(mUsernameEditText.getText().toString());
+                        if (mReservedNameMatcher.matches()) {
+                            mSelfHosted = true;
+                            showSelfHostedSignInForm();
+                        }
+                    }
                 }
             }
         });
