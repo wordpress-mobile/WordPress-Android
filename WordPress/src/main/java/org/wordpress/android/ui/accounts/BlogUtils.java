@@ -16,6 +16,7 @@ import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -202,7 +203,7 @@ public class BlogUtils {
                 // Skip unknown plans, MapUtils will turn any missing plan ID into 0
                 continue;
             }
-            String tag = String.format("plan:%d", planId);
+            String tag = String.format(Locale.US, "plan:%d", planId);
             tags.add(tag);
         }
 
