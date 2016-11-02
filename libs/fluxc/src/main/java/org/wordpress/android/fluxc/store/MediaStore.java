@@ -414,7 +414,8 @@ public class MediaStore extends Store {
             String errorMessage = isWellFormedForUpload(payload.media);
             if (errorMessage != null) {
                 // list contained media items with insufficient data
-                notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, MediaAction.UPLOAD_MEDIA, payload.media);
+                notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, MediaAction.UPLOAD_MEDIA,
+                        payload.media);
                 return;
             }
         }
@@ -517,7 +518,8 @@ public class MediaStore extends Store {
         notifyMediaError(errorType, null, cause, media);
     }
 
-    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause, List<MediaModel> media) {
+    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause,
+                                  List<MediaModel> media) {
         OnMediaChanged mediaChange = new OnMediaChanged(cause, media);
         mediaChange.error = new MediaError(errorType, errorMessage);
         emitChange(mediaChange);
