@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -528,9 +529,9 @@ public class Note extends Syncable {
     public Reply buildReply(String content) {
         String restPath;
         if (this.isCommentType()) {
-            restPath = String.format("sites/%d/comments/%d", getSiteId(), getCommentId());
+            restPath = String.format(Locale.US, "sites/%d/comments/%d", getSiteId(), getCommentId());
         } else {
-            restPath = String.format("sites/%d/posts/%d", getSiteId(), getPostId());
+            restPath = String.format(Locale.US, "sites/%d/posts/%d", getSiteId(), getPostId());
         }
 
         return new Reply(String.format("%s/replies/new", restPath), content);
