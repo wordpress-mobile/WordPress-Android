@@ -22,8 +22,10 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SqlUtils;
 
 /**
- * tbl_posts contains all reader posts - note that the same post can occur multiple times in this
- * table if it exists in multiple tag streams (ex: it exists in both followed sites and liked posts)
+ * tbl_posts contains all reader posts - the primary key is pseudo_id + tag_name + tag_type,
+ * which allows the same post to appear in multiple streams (ex: it can exist in followed
+ * sites, liked posts, and tag streams). note that posts in a specific blog or feed are
+ * stored here with an empty tag_name.
  */
 public class ReaderPostTable {
     private static final String COLUMN_NAMES =

@@ -65,6 +65,8 @@ public class GCMMessageService extends GcmListenerService {
     public static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
     public static final int ACTIONS_RESULT_NOTIFICATION_ID = 40000;
+    private static final int AUTH_PUSH_REQUEST_CODE_APPROVE = 0;
+    private static final int AUTH_PUSH_REQUEST_CODE_IGNORE = 1;
     public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
     private static final int MAX_INBOX_ITEMS = 5;
 
@@ -529,9 +531,6 @@ public class GCMMessageService extends GcmListenerService {
             // now add the action corresponding to direct-reply
             builder.addAction(action);
 
-            //also add wearable remoteInput to enable voice-reply
-            builder.extend(new NotificationCompat.WearableExtender().addAction(action));
-
         }
 
         private void addCommentLikeActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
@@ -886,6 +885,30 @@ public class GCMMessageService extends GcmListenerService {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, pushAuthIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(pendingIntent);
+
+
+            if (canAddActionsToNotifications()) {
+                // adding ignore / approve quick actions
+                Intent authApproveIntent = new Intent(context, NotificationsProcessingService.class);
+                authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
+                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
+                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
+                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
+                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
+                PendingIntent authApprovePendingIntent =  PendingIntent.getService(context,
+                        AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
+                        authApprovePendingIntent);
+
+
+                Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
+                authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
+                PendingIntent authIgnorePendingIntent =  PendingIntent.getService(context,
+                        AUTH_PUSH_REQUEST_CODE_IGNORE, authIgnoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                builder.addAction(R.drawable.ic_close_white_24dp, getText(R.string.ignore),
+                        authIgnorePendingIntent);
+            }
+
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
