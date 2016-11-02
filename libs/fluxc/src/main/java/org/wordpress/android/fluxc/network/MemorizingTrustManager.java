@@ -64,7 +64,8 @@ public class MemorizingTrustManager implements X509TrustManager {
         executorService.execute(mTrustManagerFutureTask);
     }
 
-    private @NonNull X509TrustManager getDefaultTrustManager() {
+    @NonNull
+    private X509TrustManager getDefaultTrustManager() {
         try {
             return mTrustManagerFutureTask.get(TRUST_MANAGER_FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
