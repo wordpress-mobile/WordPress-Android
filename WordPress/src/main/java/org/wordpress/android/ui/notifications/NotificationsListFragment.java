@@ -118,6 +118,7 @@ public class NotificationsListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
+        NotificationsActions.updateSeenNotes();
         mNotesAdapter.reloadNotesFromDBAsync();
 
         // Removes app notifications from the system bar

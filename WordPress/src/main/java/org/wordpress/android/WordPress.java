@@ -837,6 +837,9 @@ public class WordPress extends MultiDexApplication {
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
+                // Refresh notifications
+                NotificationsUpdateService.startService(getContext());
+
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
 
