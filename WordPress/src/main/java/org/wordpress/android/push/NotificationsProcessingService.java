@@ -162,6 +162,8 @@ public class NotificationsProcessingService extends Service {
                     //dismiss notifs
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
+                    GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
+
                     AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
                     return;
                 }
@@ -553,6 +555,7 @@ public class NotificationsProcessingService extends Service {
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
                     dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+                    GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
 
                     stopSelf(mTaskId);
                 }
@@ -564,6 +567,7 @@ public class NotificationsProcessingService extends Service {
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
                     dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+                    GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
                     requestFailedWithMessage(getString(R.string.push_auth_expired), false);
                 }
             });

@@ -728,6 +728,7 @@ public class GCMMessageService extends GcmListenerService {
             if (noteType.equals(PUSH_TYPE_COMMENT)) {
                 addActionsForCommentNotification(context, builder, wpcomNoteID);
             }
+
             showNotificationForBuilder(builder, context, wpcomNoteID, pushId);
         }
 
@@ -785,6 +786,15 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void rebuildAndUpdateNotificationsOnSystemBar(Context context, Bundle data) {
+
+            String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
+
+            // Check for wpcom auth push, if so we will process this push differently
+            if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+                handlePushAuth(context, data);
+                return;
+            }
+
             Bitmap largeIconBitmap = null;
             // here notify the existing group notification by eliminating the line that is now gone
             String title = getNotificationTitleOrAppNameFromBundle(data);
@@ -810,7 +820,7 @@ public class GCMMessageService extends GcmListenerService {
 
                     builder = getNotificationBuilder(context, title, message);
 
-                    String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
+                    noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
                     if (!sActiveNotificationsMap.isEmpty()) {
                         showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0));
@@ -866,6 +876,8 @@ public class GCMMessageService extends GcmListenerService {
             if (data == null) {
                 return;
             }
+
+            addAuthPushNotificationToNotificationMap(data);
 
             String pushAuthToken = data.getString("push_auth_token", "");
             String title = data.getString("title", "");
@@ -925,9 +937,20 @@ public class GCMMessageService extends GcmListenerService {
                         authIgnorePendingIntent);
             }
 
+            // Call broadcast receiver when notification is dismissed
+            Intent notificationDeletedIntent = new Intent(context, NotificationDismissBroadcastReceiver.class);
+            notificationDeletedIntent.putExtra("notificationId", AUTH_PUSH_NOTIFICATION_ID);
+            notificationDeletedIntent.setAction(String.valueOf(AUTH_PUSH_NOTIFICATION_ID));
+            PendingIntent pendingDeleteIntent =
+                    PendingIntent.getBroadcast(context, AUTH_PUSH_NOTIFICATION_ID, notificationDeletedIntent, 0);
+            builder.setDeleteIntent(pendingDeleteIntent);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
+        }
+
+        private void addAuthPushNotificationToNotificationMap(Bundle data) {
+            sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
         }
 
         // Returns true if the note type is known to have a gravatar
