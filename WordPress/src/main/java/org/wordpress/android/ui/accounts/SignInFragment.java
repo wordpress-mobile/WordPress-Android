@@ -316,10 +316,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected void toggleSignInMode(){
         if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
             configureMagicLinkUI();
-            mSelfHosted = false;
         } else {
             showSelfHostedSignInForm();
-            mSelfHosted = true;
         }
         
         if (fieldsFilled()) {
@@ -499,6 +497,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private void configureMagicLinkUI() {
         showDotComSignInForm();
+        mSelfHosted = false;
         mPasswordLayout.setVisibility(View.GONE);
         mForgotPassword.setVisibility(View.GONE);
         mSignInButton.setText(getString(R.string.button_next));
