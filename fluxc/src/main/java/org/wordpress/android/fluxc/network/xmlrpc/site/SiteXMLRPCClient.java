@@ -55,7 +55,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
     }
 
-    public void pullSites(final String xmlrpcUrl, final String username, final String password) {
+    public void fetchSites(final String xmlrpcUrl, final String username, final String password) {
         List<Object> params = new ArrayList<>(2);
         params.add(username);
         params.add(password);
@@ -86,7 +86,21 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void pullSite(final SiteModel site) {
+    public static final Map<String, String> XMLRPC_BLOG_OPTIONS = new HashMap<>();
+
+    static {
+        XMLRPC_BLOG_OPTIONS.put("software_version", "software_version");
+        XMLRPC_BLOG_OPTIONS.put("post_thumbnail", "post_thumbnail");
+        XMLRPC_BLOG_OPTIONS.put("jetpack_client_id", "jetpack_client_id");
+        XMLRPC_BLOG_OPTIONS.put("blog_public", "blog_public");
+        XMLRPC_BLOG_OPTIONS.put("home_url", "home_url");
+        XMLRPC_BLOG_OPTIONS.put("admin_url", "admin_url");
+        XMLRPC_BLOG_OPTIONS.put("login_url", "login_url");
+        XMLRPC_BLOG_OPTIONS.put("blog_title", "blog_title");
+        XMLRPC_BLOG_OPTIONS.put("time_zone", "time_zone");
+    }
+
+    public void fetchSite(final SiteModel site) {
         List<Object> params = new ArrayList<>(2);
         params.add(site.getSiteId());
         params.add(site.getUsername());
@@ -115,8 +129,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    // TODO: rename s/pull/fetch/ methods in this file
-    public void pullPostFormats(final SiteModel site) {
+    public void fetchPostFormats(final SiteModel site) {
         List<Object> params = new ArrayList<>(2);
         params.add(site.getSiteId());
         params.add(site.getUsername());
