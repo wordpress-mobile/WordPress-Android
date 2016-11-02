@@ -192,7 +192,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     if (!mSelfHosted) {
                         mReservedNameMatcher.reset(mUsernameEditText.getText().toString());
                         if (mReservedNameMatcher.matches()) {
-                            mSelfHosted = true;
                             showSelfHostedSignInForm();
                         }
                     }
