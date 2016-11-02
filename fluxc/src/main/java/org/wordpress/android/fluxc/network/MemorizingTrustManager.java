@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.util.AppLog;
@@ -16,16 +17,24 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 public class MemorizingTrustManager implements X509TrustManager {
-    public static final String KEYSTORE_FILENAME = "wpstore_certs_truststore.bks";
-    public static final String KEYSTORE_PASSWORD = "secret";
+    private static final String KEYSTORE_FILENAME = "wpstore_certs_truststore.bks";
+    private static final String KEYSTORE_PASSWORD = "secret";
+    private static final long TRUST_MANAGER_FUTURE_TASK_TIMEOUT_SECONDS = 5;
 
-    private X509TrustManager mDefaultTrustManager;
+    private FutureTask<X509TrustManager> mTrustManagerFutureTask;
     private KeyStore mLocalKeyStore;
     private X509Certificate mLastFailure;
     private Context mContext;
@@ -46,9 +55,21 @@ public class MemorizingTrustManager implements X509TrustManager {
             AppLog.e(T.API, e);
             throw new IllegalStateException(e);
         }
-        mDefaultTrustManager = getTrustManager(null);
-        if (mDefaultTrustManager == null) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        mTrustManagerFutureTask = new FutureTask<>(new Callable<X509TrustManager>() {
+            public X509TrustManager call() {
+                return getTrustManager(null);
+            }
+        });
+        executorService.execute(mTrustManagerFutureTask);
+    }
+
+    private @NonNull X509TrustManager getDefaultTrustManager() {
+        try {
+            return mTrustManagerFutureTask.get(TRUST_MANAGER_FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new IllegalStateException("Couldn't find X509TrustManager");
+            // no op
         }
     }
 
@@ -137,12 +158,12 @@ public class MemorizingTrustManager implements X509TrustManager {
     }
 
     public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-        mDefaultTrustManager.checkClientTrusted(chain, authType);
+        getDefaultTrustManager().checkClientTrusted(chain, authType);
     }
 
     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         try {
-            mDefaultTrustManager.checkServerTrusted(chain, authType);
+            getDefaultTrustManager().checkServerTrusted(chain, authType);
         } catch (CertificateException ce) {
             mLastFailure = chain[0];
             if (isCertificateAccepted(chain[0])) {
