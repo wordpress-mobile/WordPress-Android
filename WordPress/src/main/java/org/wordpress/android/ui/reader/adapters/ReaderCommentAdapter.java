@@ -49,6 +49,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final int mContentWidth;
 
     private long mHighlightCommentId = 0;
+    private long mDoLikeCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
     private final boolean mIsLoggedOutReader;
@@ -194,7 +195,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof PostHeaderHolder) {
             PostHeaderHolder headerHolder = (PostHeaderHolder) holder;
             headerHolder.mHeaderView.setPost(mPost);
@@ -214,7 +215,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
 
-        CommentHolder commentHolder = (CommentHolder) holder;
+        final CommentHolder commentHolder = (CommentHolder) holder;
         commentHolder.txtAuthor.setText(comment.getAuthorName());
 
         java.util.Date dtPublished = DateTimeUtils.dateFromIso8601(comment.getPublished());
@@ -279,16 +280,31 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (mIsLoggedOutReader) {
             commentHolder.txtReply.setVisibility(View.GONE);
             commentHolder.imgReply.setVisibility(View.GONE);
-        } else if (mReplyListener != null) {
-            // tapping reply icon tells activity to show reply box
-            View.OnClickListener replyClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mReplyListener.onRequestReply(comment.commentId);
-                }
-            };
-            commentHolder.txtReply.setOnClickListener(replyClickListener);
-            commentHolder.imgReply.setOnClickListener(replyClickListener);
+        } else {
+            if (mReplyListener != null) {
+                // tapping reply icon tells activity to show reply box
+                View.OnClickListener replyClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mReplyListener.onRequestReply(comment.commentId);
+                    }
+                };
+                commentHolder.txtReply.setOnClickListener(replyClickListener);
+                commentHolder.imgReply.setOnClickListener(replyClickListener);
+            }
+
+            if (mDoLikeCommentId != 0 && mDoLikeCommentId == comment.commentId) {
+                // simulate tapping on the "Like" button. Add a delay to help the user notice it.
+                commentHolder.countLikes.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setLike(commentHolder.countLikes.getContext(), commentHolder, position, true);
+                    }
+                }, 400);
+
+                // clear the "command" to like a comment
+                mDoLikeCommentId = 0;
+            }
         }
 
         showLikeStatus(commentHolder, position);
@@ -343,6 +359,22 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
+    private void setLike(Context context, CommentHolder holder, int position, boolean isAskingToLike) {
+        if (!NetworkUtils.checkConnection(context)) {
+            return;
+        }
+
+        ReaderComment comment = getItem(position);
+        if (comment == null) {
+            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
+            return;
+        }
+
+        if (isAskingToLike != comment.isLikedByCurrentUser) {
+            doLike(context, holder, position, comment, isAskingToLike);
+        }
+    }
+
     private void toggleLike(Context context, CommentHolder holder, int position) {
         if (!NetworkUtils.checkConnection(context)) {
             return;
@@ -355,6 +387,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
+        doLike(context, holder, position, comment, isAskingToLike);
+    }
+
+    private void doLike(Context context, CommentHolder holder, int position, ReaderComment comment, boolean
+            isAskingToLike) {
         ReaderAnim.animateLikeButton(holder.countLikes.getImageView(), isAskingToLike);
 
         if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike)) {
@@ -430,6 +467,13 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public int positionOfCommentId(long commentId) {
         int index = mComments.indexOfCommentId(commentId);
         return index == -1 ? -1 : index + NUM_HEADERS;
+    }
+
+    /*
+     * sets the passed comment as the one to perform a "Like" on when the list comment list has completed loading
+     */
+    public void setDoLikeCommentId(long commentId) {
+        mDoLikeCommentId = commentId;
     }
 
     /*

@@ -196,6 +196,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
             if (likeCommentId != null) {
                 try {
                     mCommentId = Integer.parseInt(likeCommentId);
+                    mDirectOperation = DirectOperation.COMMENT_LIKE;
                 } catch (NumberFormatException e) {
                     AppLog.e(T.UTILS, "commentid cannot be converted to int" + likeCommentId, e);
                 }

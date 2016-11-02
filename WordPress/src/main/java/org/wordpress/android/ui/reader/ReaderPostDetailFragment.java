@@ -945,8 +945,9 @@ public class ReaderPostDetailFragment extends Fragment
                 switch (mDirectOperation) {
                     case COMMENT_JUMP:
                     case COMMENT_REPLY:
-                        ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId, mDirectOperation,
-                                mCommentId);
+                    case COMMENT_LIKE:
+                        ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId,
+                                mDirectOperation, mCommentId);
                         getActivity().finish();
                         return;
                     case POST_LIKE:

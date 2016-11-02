@@ -60,7 +60,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     public enum DirectOperation {
         COMMENT_JUMP,
         COMMENT_REPLY,
-        POST_LIKE
+        COMMENT_LIKE,
+        POST_LIKE,
     }
 
     private long mPostId;
@@ -164,6 +165,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     break;
                 case COMMENT_REPLY:
                     setReplyToCommentId(mCommentId, true);
+                    break;
+                case COMMENT_LIKE:
+                    getCommentAdapter().setDoLikeCommentId(mCommentId);
                     break;
                 case POST_LIKE:
                     // nothing special to do in this case
