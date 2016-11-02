@@ -106,6 +106,7 @@ dependencies {
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
     compile 'org.wordpress:emailchecker2:1.1.0'
+    compile 'com.squareup.okio:okio:1.9.0'
 
     compile ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'
@@ -131,7 +132,7 @@ dependencies {
     // Simperium
     compile 'com.simperium.android:simperium:0.6.8'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:feature~39-media-store-SNAPSHOT') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:develop-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 
