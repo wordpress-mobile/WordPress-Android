@@ -384,8 +384,9 @@ public class MeFragment extends Fragment {
                 EventBus.getDefault().post(new GravatarLoadFinished(false));
             }
 
-            // invalidate the WPNetworkImageView
-            mAvatarImageView.invalidateImage();
+            // reset the WPNetworkImageView
+            mAvatarImageView.resetImage();
+            mAvatarImageView.removeCurrentUrlFromSkiplist();
         }
 
         mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, new WPNetworkImageView
