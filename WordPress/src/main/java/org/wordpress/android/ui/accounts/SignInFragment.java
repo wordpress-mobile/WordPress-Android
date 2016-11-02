@@ -336,6 +336,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     protected void showSelfHostedSignInForm(){
         endProgress();
+        mSelfHosted = true;
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
         showPasswordField();
