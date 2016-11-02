@@ -128,11 +128,15 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     private void refreshViews() {
-        Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
+        final Cursor cursor;
+        if (mFilteredItems != null) {
+            cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
+        } else {
+            cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
+            mGridAdapter.swapCursor(cursor);
+        }
         if (cursor.getCount() == 0) {
             refreshMediaFromServer(0);
-        } else {
-            mGridAdapter.swapCursor(cursor);
         }
     }
 
