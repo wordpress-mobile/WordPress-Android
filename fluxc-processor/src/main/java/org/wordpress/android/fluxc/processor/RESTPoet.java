@@ -124,7 +124,7 @@ public class RESTPoet {
 
         if (!endpointNode.hasChildren()) {
             // Build annotated accessor method for variable endpoint and add it to the class
-            List<MethodSpec> endpointMethods = generateEndpointMethodsForClass(endpointNode, sBaseEndpointClass);
+            List<MethodSpec> endpointMethods = generateEndpointMethods(endpointNode, sBaseEndpointClass);
 
             for (MethodSpec endpointMethod : endpointMethods) {
                 classBuilder.addMethod(endpointMethod);
@@ -158,7 +158,7 @@ public class RESTPoet {
             TypeName endpointClassName = ClassName.get("", innerClassName);
 
             // Build annotated accessor method for variable endpoint
-            List<MethodSpec> endpointMethods = generateEndpointMethodsForClass(endpointNode, endpointClassName);
+            List<MethodSpec> endpointMethods = generateEndpointMethods(endpointNode, endpointClassName);
 
             for (EndpointNode childEndpoint : endpointNode.getChildren()) {
                 addEndpointToBuilder(childEndpoint, endpointClassBuilder);
@@ -172,7 +172,7 @@ public class RESTPoet {
         }
     }
 
-    private static List<MethodSpec> generateEndpointMethodsForClass(EndpointNode endpointNode, TypeName endpointClassName) {
+    private static List<MethodSpec> generateEndpointMethods(EndpointNode endpointNode, TypeName endpointClassName) {
         List<MethodSpec> endpointMethods = new ArrayList<>();
 
         for (Class endpointType : getVariableEndpointTypes(endpointNode)) {
