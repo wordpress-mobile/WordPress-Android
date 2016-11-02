@@ -373,7 +373,11 @@ public class GCMMessageService extends GcmListenerService {
                                 }
                                 try {
                                     List<Note> notes = NotificationsActions.parseNotes(response);
-                                    NotificationsTable.saveNotes(notes, true);
+                                    if (notes.size() > 0) {
+                                        NotificationsTable.saveNote(notes.get(0), true);
+                                    } else {
+                                        AppLog.e(AppLog.T.NOTIFS, "Success, but no note!!!???");
+                                    }
                                 } catch (JSONException e) {
                                     AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response for the note_id " + wpcomNoteID , e);
                                 }

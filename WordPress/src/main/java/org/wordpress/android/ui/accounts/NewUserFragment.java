@@ -28,6 +28,7 @@ import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AlertUtils;
@@ -387,6 +388,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             // uses the application context since the activity is finished immediately below
             ReaderUpdateService.startService(getActivity().getApplicationContext(),
                     EnumSet.of(UpdateTask.TAGS));
+            NotificationsUpdateService.startService(getActivity().getApplicationContext());
             finishCurrentActivity();
         }
 

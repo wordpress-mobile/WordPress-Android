@@ -41,31 +41,6 @@ public class NotificationsActions {
                 });
     }
 
-    public static void getNotifications(final RestRequest.Listener listener,
-                                        final RestRequest.ErrorListener errorListener) {
-
-        Map<String, String> params = new HashMap<>();
-        params.put("number", "200");
-        params.put("num_note_items", "20");
-        params.put("fields", RestClientUtils.NOTIFICATION_FIELDS);
-        WordPress.getRestClientUtilsV1_1().getNotifications(params, new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if (listener != null) {
-                            listener.onResponse(response);
-                        }
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (errorListener != null) {
-                            errorListener.onErrorResponse(error);
-                        }
-                    }
-                }
-        );
-    }
-
     public static List<Note> parseNotes(JSONObject response) throws JSONException {
         List<Note> notes;
         JSONArray notesJSON = response.getJSONArray("notes");

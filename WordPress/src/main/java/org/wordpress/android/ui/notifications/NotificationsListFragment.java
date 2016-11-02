@@ -33,6 +33,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -111,8 +112,6 @@ public class NotificationsListFragment extends Fragment
         if (savedInstanceState != null) {
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
         }
-
-        fetchNotesFromRemote();
     }
 
     @Override
@@ -314,41 +313,8 @@ public class NotificationsListFragment extends Fragment
             return;
         }
 
-        NotificationsActions.getNotifications(mNotesResponseHandler, mNotesResponseHandler);
+        NotificationsUpdateService.startService(getActivity());
     }
-
-    private final NotesResponseHandler mNotesResponseHandler = new NotesResponseHandler() {
-        @Override
-        public void onNotes(final List<Note> notes) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            // nbradbury - saving notes can be slow, so do it in the background
-            new Thread() {
-                @Override
-                public void run() {
-                    NotificationsTable.saveNotes(notes, true);
-                    NotificationsActions.updateSeenNotes(); // Refresh launched by the user. Update the last seen time.
-                    if (isAdded() && getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mNotesAdapter.addAll(notes, true);
-                            }
-                        });
-                    }
-                }
-            }.start();
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            if (!isAdded()) {
-                return;
-            }
-
-            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_notifications));
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
-    };
 
     // Show different empty list message and action button based on the active filter
     private void showEmptyViewForCurrentFilter() {
@@ -445,44 +411,6 @@ public class NotificationsListFragment extends Fragment
         mRestoredScrollPosition = listPosition;
     }
 
-    abstract class NotesResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener {
-        abstract void onNotes(List<Note> notes);
-
-        @Override
-        public void onResponse(JSONObject response) {
-            if (response == null) {
-                //Not sure this could ever happen, but make sure we're catching all response types
-                AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
-                onNotes(new ArrayList<Note>(0));
-                return;
-            }
-
-            try {
-                List<Note> notes = NotificationsActions.parseNotes(response);
-                onNotes(notes);
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response", e);
-                showError(getString(R.string.error_generic));
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            showError();
-            AppLog.d(AppLog.T.NOTIFS, String.format("Error retrieving notes: %s", error));
-        }
-
-        void showError(final String errorMessage) {
-            if (isAdded()) {
-                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-            }
-        }
-
-        void showError() {
-            showError(getString(R.string.error_generic));
-        }
-    }
-
     // Notification filter methods
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
@@ -528,6 +456,23 @@ public class NotificationsListFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().registerSticky(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_notifications));
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(final NotificationEvents.NotificationsRefreshCompleted event) {
+        if (!isAdded()) {
+            return;
+        }
+        mSwipeRefreshLayout.setRefreshing(false);
+        NotificationsActions.updateSeenNotes(); // Refresh launched by the user. Update the last seen time.
+        mNotesAdapter.addAll(event.notes, true);
     }
 
     @SuppressWarnings("unused")
