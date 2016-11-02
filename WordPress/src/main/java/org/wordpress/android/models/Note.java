@@ -534,7 +534,7 @@ public class Note extends Syncable {
             restPath = String.format(Locale.US, "sites/%d/posts/%d", getSiteId(), getPostId());
         }
 
-        return new Reply(String.format("%s/replies/new", restPath), content);
+        return new Reply(String.format(Locale.US, "%s/replies/new", restPath), content);
     }
 
     /**
