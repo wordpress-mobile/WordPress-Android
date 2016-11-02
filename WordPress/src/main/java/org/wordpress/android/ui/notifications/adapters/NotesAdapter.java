@@ -70,48 +70,44 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     public void setFilter(FILTERS newFilter) {
         currentFilter = newFilter;
-        buildFilteredNotesList();
-        notifyDataSetChanged();
+        myNotifyDatasetChanged();
     }
 
     public void addHiddenNoteId(String noteId) {
         mHiddenNoteIds.add(noteId);
-        buildFilteredNotesList();
-        notifyDataSetChanged();
+        myNotifyDatasetChanged();
     }
 
     public void removeHiddenNoteId(String noteId) {
         mHiddenNoteIds.remove(noteId);
-        buildFilteredNotesList();
-        notifyDataSetChanged();
+        myNotifyDatasetChanged();
     }
 
     public void addModeratingNoteId(String noteId) {
         mModeratingNoteIds.add(noteId);
-        buildFilteredNotesList();
-        notifyDataSetChanged();
+        myNotifyDatasetChanged();
     }
 
     public void removeModeratingNoteId(String noteId) {
         mModeratingNoteIds.remove(noteId);
-        buildFilteredNotesList();
-        notifyDataSetChanged();
+        myNotifyDatasetChanged();
     }
 
     public void addAll(List<Note> notes, boolean clearBeforeAdding) {
-        if (notes.size() > 0) {
-            Collections.sort(notes, new Note.TimeStampComparator());
-            try {
-                if (clearBeforeAdding) {
-                    mNotes.clear();
-                }
-                mNotes.addAll(notes);
-            } finally {
-                buildFilteredNotesList();
-                notifyDataSetChanged();
+        Collections.sort(notes, new Note.TimeStampComparator());
+        try {
+            if (clearBeforeAdding) {
+                mNotes.clear();
             }
+            mNotes.addAll(notes);
+        } finally {
+            myNotifyDatasetChanged();
         }
+    }
 
+    private void myNotifyDatasetChanged() {
+        buildFilteredNotesList();
+        notifyDataSetChanged();
         if (mDataLoadedListener != null) {
             mDataLoadedListener.onDataLoaded(getItemCount());
         }

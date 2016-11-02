@@ -345,7 +345,6 @@ public class NotificationsListFragment extends Fragment
                 return;
             }
 
-            mNotesAdapter.addAll(new ArrayList<Note>(), true);
             ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_notifications));
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -413,7 +412,6 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
-    // TODO Needs impementation
     private void restoreListScrollPosition() {
         if (isAdded() && mRecyclerView != null && mRestoredScrollPosition != RecyclerView.NO_POSITION
                 && mRestoredScrollPosition < mNotesAdapter.getItemCount()) {
@@ -508,11 +506,6 @@ public class NotificationsListFragment extends Fragment
                 }
 
                 restoreListScrollPosition();
-                if (mNotesAdapter.getItemCount() > 0) {
-                    hideEmptyView();
-                } else {
-                    showEmptyViewForCurrentFilter();
-                }
             }
         });
     }
