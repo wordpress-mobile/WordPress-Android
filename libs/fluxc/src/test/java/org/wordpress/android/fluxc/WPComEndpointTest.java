@@ -22,6 +22,7 @@ public class WPComEndpointTest {
         assertEquals("/sites/56/posts/78/", WPCOMREST.sites.site(56).posts.post(78).getEndpoint());
         assertEquals("/sites/56/posts/78/delete/", WPCOMREST.sites.site(56).posts.post(78).delete.getEndpoint());
         assertEquals("/sites/56/posts/new/", WPCOMREST.sites.site(56).posts.new_.getEndpoint());
+        assertEquals("/sites/56/posts/slug:fluxc/", WPCOMREST.sites.site(56).posts.slug("fluxc").getEndpoint());
 
         // Sites - Media
         assertEquals("/sites/56/media/", WPCOMREST.sites.site(56).media.getEndpoint());
@@ -34,6 +35,8 @@ public class WPComEndpointTest {
                 WPCOMREST.sites.site(56).taxonomies.taxonomy("category").terms.getEndpoint());
         assertEquals("/sites/56/taxonomies/category/terms/new/",
                 WPCOMREST.sites.site(56).taxonomies.taxonomy("category").terms.new_.getEndpoint());
+        assertEquals("/sites/56/taxonomies/category/terms/slug:fluxc/",
+                WPCOMREST.sites.site(56).taxonomies.taxonomy("category").terms.slug("fluxc").getEndpoint());
         assertEquals("/sites/56/taxonomies/post_tag/terms/",
                 WPCOMREST.sites.site(56).taxonomies.taxonomy("post_tag").terms.getEndpoint());
         assertEquals("/sites/56/taxonomies/post_tag/terms/new/",
