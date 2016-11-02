@@ -112,6 +112,7 @@ public class NotificationsListFragment extends Fragment
         if (savedInstanceState != null) {
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
         }
+        mNotesAdapter.reloadNotesFromDBAsync();
     }
 
     @Override
@@ -119,7 +120,6 @@ public class NotificationsListFragment extends Fragment
         super.onResume();
 
         NotificationsActions.updateSeenNotes();
-        mNotesAdapter.reloadNotesFromDBAsync();
 
         // Removes app notifications from the system bar
         new Thread(new Runnable() {
@@ -497,5 +497,13 @@ public class NotificationsListFragment extends Fragment
         }
 
         EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
+        if (!isAdded()) {
+            return;
+        }
+        getNotesAdapter().reloadNotesFromDBAsync();
     }
 }
