@@ -26,8 +26,6 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -36,16 +34,16 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
-import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
+import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
+import org.wordpress.android.ui.reader.views.ReaderRelatedPostsView;
+import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
@@ -55,15 +53,11 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
@@ -377,39 +371,6 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * user tapped follow button to follow/unfollow the blog this post is from
-     */
-    private void togglePostFollowed() {
-        if (!isAdded() || !hasPost()) {
-            return;
-        }
-
-        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(mPost);
-        final ReaderFollowButton followButton = (ReaderFollowButton) getView().findViewById(R.id.follow_button);
-
-        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!isAdded()) {
-                    return;
-                }
-                followButton.setEnabled(true);
-                if (!succeeded) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(getActivity(), resId);
-                    followButton.setIsFollowedAnimated(!isAskingToFollow);
-                }
-            }
-        };
-
-        followButton.setEnabled(false);
-
-        if (ReaderBlogActions.followBlogForPost(mPost, isAskingToFollow, listener)) {
-            followButton.setIsFollowedAnimated(isAskingToFollow);
-        }
-    }
-
-    /*
      * display the standard Android share chooser to share this post
      */
     private static final int MAX_SHARE_TITLE_LEN = 100;
@@ -459,8 +420,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         // hide views that would show info for the previous post - these will be re-displayed
         // with the correct info once the new post loads
-        getView().findViewById(R.id.container_related_posts).setVisibility(View.GONE);
-        getView().findViewById(R.id.text_related_posts_label).setVisibility(View.GONE);
+        getView().findViewById(R.id.related_posts_view_local).setVisibility(View.GONE);
+        getView().findViewById(R.id.related_posts_view_global).setVisibility(View.GONE);
 
         mLikingUsersView.setVisibility(View.GONE);
         mLikingUsersDivider.setVisibility(View.GONE);
@@ -487,67 +448,43 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * related posts were retrieved, so show them
+     * related posts were retrieved
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.RelatedPostsUpdated event) {
         if (!isAdded() || !hasPost()) return;
 
-        // make sure this is for the current post
-        if (event.getSourcePost().postId == mPost.postId && event.getSourcePost().blogId == mPost.blogId) {
-            showRelatedPosts(event.getRelatedPosts());
+        // make sure this event is for the current post
+        if (event.getSourcePostId() == mPost.postId && event.getSourceSiteId() == mPost.blogId) {
+            if (event.hasLocalRelatedPosts()) {
+                showRelatedPosts(event.getLocalRelatedPosts(), false);
+            }
+            if (event.hasGlobalRelatedPosts()) {
+                showRelatedPosts(event.getGlobalRelatedPosts(), true);
+            }
         }
     }
 
-    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts) {
-        // locate the related posts container and remove any existing related post views
-        ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
-        container.removeAllViews();
+    /*
+     * show the passed list of related posts - can be either global (related posts from
+     * across wp.com) or local (related posts from the same site as the current post)
+     */
+    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, boolean isGlobal) {
+        // different container views for global/local related posts
+        int id = isGlobal ? R.id.related_posts_view_global : R.id.related_posts_view_local;
+        ReaderRelatedPostsView relatedPostsView = (ReaderRelatedPostsView) getView().findViewById(id);
+        relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
 
-        // add a separate view for each related post
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
-        for (int index = 0; index < relatedPosts.size(); index++) {
-            final ReaderRelatedPost relatedPost = relatedPosts.get(index);
-
-            View postView = inflater.inflate(R.layout.reader_related_post, container, false);
-            TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
-            TextView txtByline = (TextView) postView.findViewById(R.id.text_related_post_byline);
-            WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
-
-            txtTitle.setText(relatedPost.getTitle());
-            txtByline.setText(relatedPost.getByline());
-
-            imgFeatured.setVisibility(relatedPost.hasFeaturedImage() ? View.VISIBLE : View.GONE);
-            if (relatedPost.hasFeaturedImage()) {
-                String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImage(), imageSize, imageSize);
-                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_ROUNDED);
-                imgFeatured.setVisibility(View.VISIBLE);
+        // tapping a related posts should open the related post detail
+        relatedPostsView.setOnRelatedPostClickListener(new ReaderRelatedPostsView.OnRelatedPostClickListener() {
+            @Override
+            public void onRelatedPostClick(View v, long siteId, long postId) {
+                showRelatedPostDetail(siteId, postId);
             }
+        });
 
-            // tapping this view should open the related post detail
-            postView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showRelatedPostDetail(relatedPost.getBlogId(), relatedPost.getPostId());
-                }
-            });
-
-            container.addView(postView);
-
-            // add a divider below all but the last related post
-            if (index < relatedPosts.size() - 1) {
-                View dividerView = inflater.inflate(R.layout.reader_related_post_divider, container, false);
-                container.addView(dividerView);
-            }
-        }
-
-        View label = getView().findViewById(R.id.text_related_posts_label);
-        if (label.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(label, AniUtils.Duration.MEDIUM);
-        }
-        if (container.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(container, AniUtils.Duration.MEDIUM);
+        if (relatedPostsView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM);
         }
     }
 
@@ -867,17 +804,10 @@ public class ReaderPostDetailFragment extends Fragment
             mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
 
             TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
-            TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
-            TextView txtDomain = (TextView) getView().findViewById(R.id.text_domain);
             TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
-            TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
 
-            WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
-            WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
-
-            ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
-            ReaderFollowButton followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
-
+            ReaderTagStrip tagStrip = (ReaderTagStrip) getView().findViewById(R.id.tag_strip);
+            ReaderPostDetailHeaderView headerView = (ReaderPostDetailHeaderView) getView().findViewById(R.id.header_view);
             if (!canShowFooter()) {
                 mLayoutFooter.setVisibility(View.GONE);
             }
@@ -897,72 +827,12 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
-            followButton.setVisibility(mIsLoggedOutReader ? View.GONE : View.VISIBLE);
-            if (!mIsLoggedOutReader) {
-                followButton.setIsFollowed(mPost.isFollowedByCurrentUser);
-                followButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        togglePostFollowed();
-                    }
-                });
-            }
-
-            // clicking the header shows blog preview
-            if (getPostListType() != ReaderPostListType.BLOG_PREVIEW) {
-                layoutHeader.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
-                    }
-                });
-            }
-
-            if (mPost.hasBlogName()) {
-                txtBlogName.setText(mPost.getBlogName());
-            } else if (mPost.hasAuthorName()) {
-                txtBlogName.setText(mPost.getAuthorName());
-            } else {
-                txtBlogName.setText(null);
-            }
-
-            if (mPost.hasBlogUrl()) {
-                int blavatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-                String imageUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz);
-                imgBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
-                txtDomain.setText(UrlUtils.getHost(mPost.getBlogUrl()));
-            } else {
-                imgBlavatar.showDefaultBlavatarImage();
-                txtDomain.setText(null);
-            }
-
-            if (mPost.hasPostAvatar()) {
-                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_tiny);
-                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
-            } else {
-                imgAvatar.showDefaultGravatarImage();
-            }
-
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
-            if (mPost.hasAuthorName()) {
-                txtDateline.setText(mPost.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
-            } else if (mPost.hasBlogName()) {
-                txtDateline.setText(mPost.getBlogName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
-            } else {
-                txtDateline.setText(timestamp);
-            }
+            txtDateline.setText(timestamp);
 
-            final String tagToDisplay = mPost.getTagForDisplay(null);
-            if (!TextUtils.isEmpty(tagToDisplay)) {
-                txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
-                txtTag.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderTag tag = ReaderUtils.getTagFromTagName(tagToDisplay, ReaderTagType.FOLLOWED);
-                        ReaderActivityLauncher.showReaderTagPreview(v.getContext(), tag);
-                    }
-                });
-            }
+
+            headerView.setPost(mPost, mAccountStore.hasAccessToken());
+            tagStrip.setPost(mPost);
 
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
                 AniUtils.fadeIn(mLayoutFooter, AniUtils.Duration.LONG);

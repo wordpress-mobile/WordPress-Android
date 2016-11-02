@@ -2,11 +2,13 @@ package org.wordpress.android;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
@@ -17,6 +19,9 @@ import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -26,11 +31,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import de.greenrobot.event.EventBus;
 
@@ -299,17 +305,17 @@ public class WordPressDB {
                 "category_name" }, "blog_id=" + Integer.toString(id), null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
-        List<String> returnVector = new Vector<String>();
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < numRows; ++i) {
             String category_name = c.getString(2);
             if (category_name != null) {
-                returnVector.add(category_name);
+                list.add(category_name);
             }
             c.moveToNext();
         }
         c.close();
 
-        return returnVector;
+        return list;
     }
 
     public int getCategoryId(int id, String category) {
@@ -370,12 +376,12 @@ public class WordPressDB {
         String id, name;
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> blogs = new Vector<Map<String, Object>>();
+        List<Map<String, Object>> blogs = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
             id = c.getString(0);
             name = c.getString(2);
             if (id != null) {
-                Map<String, Object> thisHash = new HashMap<String, Object>();
+                Map<String, Object> thisHash = new HashMap<>();
 
                 thisHash.put("id", id);
                 thisHash.put("name", name);

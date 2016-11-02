@@ -67,6 +67,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
@@ -247,11 +248,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
      * edit box
      */
-    public void forceSelfHostedMode(String prefillUrl) {
+    public void forceSelfHostedMode(@NonNull String prefillUrl) {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
-        mUrlEditText.setText(prefillUrl);
+        if (!prefillUrl.isEmpty()) {
+            mUrlEditText.setText(prefillUrl);
+        }
         mSelfHosted = true;
     }
 
@@ -280,6 +283,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
+        mUrlEditText.setText("");
+
         if (!isAdded()) {
             return;
         }
@@ -408,7 +413,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private boolean isWPComLogin() {
         String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
-        return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) || WPUrlUtils.isWordPressCom(selfHostedUrl);
+        return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) ||
+                WPUrlUtils.isWordPressCom(UrlUtils.addUrlSchemeIfNeeded(selfHostedUrl, false));
     }
 
     private boolean isJetpackAuth() {

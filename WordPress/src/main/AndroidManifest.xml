@@ -438,6 +438,10 @@
             android:name=".ui.plans.PlanUpdateService"
             android:exported="false"
             android:label="Plans Update Service" />
+        <service
+            android:name=".push.NotificationsProcessingService"
+            android:exported="false"
+            android:label="Notifications Quick Actions processing Service" />
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"
@@ -484,20 +488,20 @@
         </receiver>
 
         <service
-            android:name=".GCMRegistrationIntentService"
+            android:name=".push.GCMRegistrationIntentService"
             android:exported="false" />
 
         <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
         <service
-            android:name=".GCMMessageService"
+            android:name=".push.GCMMessageService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".InstanceIDService"
+            android:name=".push.InstanceIDService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />

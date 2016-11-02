@@ -126,8 +126,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private String mRestoredNoteId;
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
-    private boolean mShouldLikeInstantly;
-    private boolean mShouldApproveInstantly;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -174,26 +172,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         fragment.setArguments(args);
         fragment.setNoteWithNoteId(noteId);
         fragment.setReplyText(replyText);
-        return fragment;
-    }
-
-    /*
-     * used when called from a comment notification 'like' action
-     */
-    public static CommentDetailFragment newInstanceForInstantLike(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId, null);
-        //here tell the fragment to trigger the Like action when ready
-        fragment.setLikeCommentWhenReady();
-        return fragment;
-    }
-
-    /*
-     * used when called from a comment notification 'approve' action
-     */
-    public static CommentDetailFragment newInstanceForInstantApprove(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId, null);
-        //here tell the fragment to trigger the Like action when ready
-        fragment.setApproveCommentWhenReady();
         return fragment;
     }
 
@@ -392,15 +370,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             setNoteWithNoteId(mRestoredNoteId);
             mRestoredNoteId = null;
         }
-
-        if (mShouldLikeInstantly) {
-            mShouldLikeInstantly = false;
-            likeComment(true);
-        } else if (mShouldApproveInstantly) {
-            mShouldApproveInstantly = false;
-            performModerateAction();
-        }
-
     }
 
     private void setupSuggestionServiceAndAdapter() {
@@ -1169,14 +1138,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             setComment(site.getId(), note.buildComment());
         }
         getFragmentManager().invalidateOptionsMenu();
-    }
-
-    private void setLikeCommentWhenReady() {
-        mShouldLikeInstantly = true;
-    }
-
-    private void setApproveCommentWhenReady() {
-        mShouldApproveInstantly = true;
     }
 
     // Like or unlike a comment via the REST API

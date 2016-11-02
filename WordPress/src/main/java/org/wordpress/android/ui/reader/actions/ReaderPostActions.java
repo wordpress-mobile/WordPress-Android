@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
@@ -18,13 +19,14 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -41,6 +43,8 @@ public class ReaderPostActions {
 
     private static final String TRACKING_REFERRER = "https://wordpress.com/";
     private static final Random mRandom = new Random();
+
+    private static final int NUM_RELATED_POSTS_TO_REQUEST = 2;
 
     private ReaderPostActions() {
         throw new AssertionError();
@@ -346,7 +350,8 @@ public class ReaderPostActions {
     }
 
     /*
-     * request posts related to the passed one
+     * request posts related to the passed one, endpoint returns a combined list of related posts
+     * posts from across wp.com and related posts from the same site as the passed post
      */
     public static void requestRelatedPosts(final ReaderPost sourcePost) {
         if (sourcePost == null) return;
@@ -366,20 +371,36 @@ public class ReaderPostActions {
             }
         };
 
-        String path = "/read/site/" + sourcePost.blogId + "/post/" + sourcePost.postId + "/related";
+        String path = "/read/site/" + sourcePost.blogId
+                + "/post/" + sourcePost.postId
+                + "/related"
+                + "?size_local=" + NUM_RELATED_POSTS_TO_REQUEST
+                + "&size_global=" + NUM_RELATED_POSTS_TO_REQUEST
+                + "&fields=" + ReaderRelatedPost.RELATED_POST_FIELDS;
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleRelatedPostsResponse(final ReaderPost sourcePost, final JSONObject jsonObject) {
+    private static void handleRelatedPostsResponse(final ReaderPost sourcePost,
+                                                   final JSONObject jsonObject) {
         if (jsonObject == null) return;
 
         new Thread() {
             @Override
             public void run() {
-                ReaderPostList relatedPosts = ReaderPostList.fromJson(jsonObject);
-                if (relatedPosts != null && relatedPosts.size() > 0) {
-                    ReaderPostTable.addOrUpdatePosts(null, relatedPosts);
-                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, relatedPosts));
+                JSONArray jsonPosts = jsonObject.optJSONArray("posts");
+                if (jsonPosts != null) {
+                    ReaderRelatedPostList allRelatedPosts = ReaderRelatedPostList.fromJsonPosts(jsonPosts);
+                    // split into posts from the passed site (local) and from across wp.com (global)
+                    ReaderRelatedPostList localRelatedPosts = new ReaderRelatedPostList();
+                    ReaderRelatedPostList globalRelatedPosts = new ReaderRelatedPostList();
+                    for (ReaderRelatedPost relatedPost : allRelatedPosts) {
+                        if (relatedPost.getSiteId() == sourcePost.blogId) {
+                            localRelatedPosts.add(relatedPost);
+                        } else {
+                            globalRelatedPosts.add(relatedPost);
+                        }
+                    }
+                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, localRelatedPosts, globalRelatedPosts));
                 }
             }
         }.start();
