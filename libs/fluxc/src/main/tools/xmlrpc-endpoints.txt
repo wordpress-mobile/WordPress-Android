@@ -9,4 +9,9 @@ wp.newPost
 wp.editPost
 wp.deletePost
 wp.uploadFile
+wp.newComment
+wp.getComment
+wp.getComments
+wp.deleteComment
+wp.editComment
 system.listMethods

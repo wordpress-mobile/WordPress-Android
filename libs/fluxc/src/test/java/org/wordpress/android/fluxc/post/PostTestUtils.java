@@ -7,12 +7,20 @@ import org.wordpress.android.fluxc.model.PostModel;
 import java.util.List;
 
 public class PostTestUtils {
+    public static final double EXAMPLE_LATITUDE = 44.8378;
+    public static final double EXAMPLE_LONGITUDE = -0.5792;
+
     public static PostModel generateSampleUploadedPost() {
+        return generateSampleUploadedPost("text");
+    }
+
+    public static PostModel generateSampleUploadedPost(String postFormat) {
         PostModel example = new PostModel();
         example.setLocalSiteId(6);
         example.setRemotePostId(5);
         example.setTitle("A test post");
         example.setContent("Bunch of content here");
+        example.setPostFormat(postFormat);
         return example;
     }
 
