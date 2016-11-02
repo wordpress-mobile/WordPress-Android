@@ -154,7 +154,9 @@ public class MemorizingTrustManager implements X509TrustManager {
     }
 
     public X509Certificate[] getAcceptedIssuers() {
-        return mDefaultTrustManager.getAcceptedIssuers();
+        // return mDefaultTrustManager.getAcceptedIssuers();
+        // ^ Original code is super slow (~1200 msecs) - Return an empty list since it seems unused by OkHttp.
+        return new X509Certificate[0];
     }
 
     public X509Certificate getLastFailure() {
