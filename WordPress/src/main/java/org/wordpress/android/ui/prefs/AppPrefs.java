@@ -63,6 +63,12 @@ public class AppPrefs {
 
         // index of the last active people list filter in People Management activity
         PEOPLE_LIST_FILTER_INDEX,
+
+        // wpcom ID of the last push notification received
+        PUSH_NOTIFICATIONS_LAST_NOTE_ID,
+
+        // local time of the last push notification received
+        PUSH_NOTIFICATIONS_LAST_NOTE_TIME,
     }
 
     /**
@@ -403,5 +409,18 @@ public class AppPrefs {
     }
     public static void setInAppPurchaseRefreshRequired(boolean required) {
         setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
+    }
+
+    public static String getLastPushNotificationWpcomNoteId() {
+        return getString(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID);
+    }
+    public static void setLastPushNotificationWpcomNoteId(String noteID) {
+        setString(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, noteID);
+    }
+    public static long getLastPushNotificationTime() {
+        return getLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_TIME);
+    }
+    public static void setLastPushNotificationTime(long time) {
+        setLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, time);
     }
 }

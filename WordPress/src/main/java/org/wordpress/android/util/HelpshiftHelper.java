@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.helpshift.Core;
+import com.helpshift.InstallConfig;
+import com.helpshift.exceptions.InstallException;
 import com.helpshift.support.Support;
 import com.helpshift.support.Support.Delegate;
 
@@ -16,10 +18,13 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.accounts.BlogUtils;
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class HelpshiftHelper {
     public static String ORIGIN_KEY = "ORIGIN_KEY";
@@ -84,11 +89,16 @@ public class HelpshiftHelper {
     }
 
     public static void init(Application application) {
-        HashMap<String, Boolean> config = new HashMap<String, Boolean>();
-        config.put("enableInAppNotification", false);
+        InstallConfig installConfig = new InstallConfig.Builder()
+                .setEnableInAppNotification(true)
+                .build();
         Core.init(Support.getInstance());
-        Core.install(application, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
-                BuildConfig.HELPSHIFT_API_ID, config);
+        try {
+            Core.install(application, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
+                    BuildConfig.HELPSHIFT_API_ID, installConfig);
+        } catch (InstallException e) {
+            AppLog.e(T.UTILS, e);
+        }
         Support.setDelegate(new Delegate() {
             @Override
             public void sessionBegan() {
@@ -171,13 +181,26 @@ public class HelpshiftHelper {
     }
 
     public void setTags(Tag[] tags) {
-        mMetadata.put(Support.TagsKey, Tag.toString(tags));
+        setTags(Tag.toString(tags));
+    }
+
+    public void setTags(String[] tags) {
+        mMetadata.put(Support.TagsKey, tags);
     }
 
     public void addTags(Tag[] tags) {
+        addTags(Tag.toString(tags));
+    }
+
+    public void addTags(String[] tags) {
         String[] oldTags = (String[]) mMetadata.get(Support.TagsKey);
         // Concatenate arrays
-        mMetadata.put(Support.TagsKey, ArrayUtils.addAll(oldTags, Tag.toString(tags)));
+        mMetadata.put(Support.TagsKey, ArrayUtils.addAll(oldTags, tags));
+    }
+
+    public void addPlanTags() {
+        Set<String> planTags = BlogUtils.planTags();
+        addTags(planTags.toArray(new String[planTags.size()]));
     }
 
     /**
@@ -208,9 +231,11 @@ public class HelpshiftHelper {
 
         // List blogs name and url
         int counter = 1;
-        for (Map<String, Object> account : WordPress.wpDB.getAllBlogs()) {
+        String[] extraFields = {"plan_product_id"};
+        for (Map<String, Object> account : WordPress.wpDB.getBlogsBy(null, extraFields)) {
             mMetadata.put("blog-name-" + counter, MapUtils.getMapStr(account, "blogName"));
             mMetadata.put("blog-url-" + counter, MapUtils.getMapStr(account, "url"));
+            mMetadata.put("blog-plan-" + counter, MapUtils.getMapInt(account, "plan_product_id"));
             counter += 1;
         }
 
@@ -231,8 +256,10 @@ public class HelpshiftHelper {
         }
         Core.setNameAndEmail(name, emailAddress);
         addDefaultMetaData(context);
+        addPlanTags();
         HashMap config = new HashMap ();
         config.put(Support.CustomMetadataKey, mMetadata);
+        config.put("showSearchOnNewConversation", true);
         return config;
     }
 }

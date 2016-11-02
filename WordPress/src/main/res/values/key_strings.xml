@@ -16,6 +16,7 @@
     <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
     <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
+    <string name="pref_key_device_settings" translatable="false">wp_pref_device_settings</string>
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>

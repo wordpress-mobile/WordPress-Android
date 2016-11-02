@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.3'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -33,8 +33,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-21"
-        versionCode 303
+        versionName "alpha-26"
+        versionCode 316
         minSdkVersion 16
         targetSdkVersion 24
 
@@ -83,39 +83,40 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.+'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    compile 'com.android.support:support-compat:24.2.0'
-    compile 'com.android.support:support-core-ui:24.2.0'
-    compile 'com.android.support:support-fragment:24.2.0'
+    compile 'com.android.support:support-compat:24.2.1'
+    compile 'com.android.support:support-core-ui:24.2.1'
+    compile 'com.android.support:support-fragment:24.2.1'
 
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.android.support:cardview-v7:24.2.0'
-    compile 'com.android.support:recyclerview-v7:24.2.0'
-    compile 'com.android.support:design:24.2.0'
-    compile 'com.android.support:percent:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:percent:24.2.1'
 
     compile 'com.google.android.gms:play-services-gcm:9.0.2'
     compile 'com.google.android.gms:play-services-auth:9.0.2'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.helpshift:android-helpshift-aar:4.4.0'
+    compile 'com.helpshift:android-helpshift-aar:4.7.0'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.automattic:rest:1.0.7'
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
     compile 'org.wordpress:emailchecker2:1.1.0'
 
-    compile 'com.yalantis:ucrop:1.5.0'
+    compile 'com.yalantis:ucrop:2.2.0'
     compile 'com.github.xizzhu:simple-tool-tip:0.5.0'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
     androidTestCompile 'org.mockito:mockito-core:+'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
+    androidTestCompile 'com.squareup.okio:okio:1.9.0' // explicitly compile okio to match the version needed by ucrop
 
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
-    compile 'org.wordpress:passcodelock:1.3.0'
+    compile 'org.wordpress:passcodelock:1.5.0'
 
     // Simperium
     compile 'com.simperium.android:simperium:0.6.8'

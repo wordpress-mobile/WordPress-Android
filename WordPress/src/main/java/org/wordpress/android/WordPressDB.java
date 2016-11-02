@@ -574,7 +574,7 @@ public class WordPressDB {
     public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields,
                                                 int limit, boolean hideJetpackWithoutCredentials) {
         if (db == null) {
-            return new Vector<>();
+            return new ArrayList<>();
         }
 
         if (hideJetpackWithoutCredentials) {
@@ -600,7 +600,7 @@ public class WordPressDB {
         Cursor c = db.query(BLOGS_TABLE, allFields, byString, null, null, null, null, limitStr);
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> blogs = new Vector<>();
+        List<Map<String, Object>> blogs = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
             int id = c.getInt(0);
             String blogName = c.getString(1);
@@ -916,9 +916,27 @@ public class WordPressDB {
      * self-hosted blogs that don't use jetpack)
      */
     public boolean isRemoteBlogIdDotComOrJetpack(int remoteBlogId) {
-        int localId = getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
-        Blog blog = instantiateBlogByLocalId(localId);
+        Blog blog = instantiateBlogByRemoteId(remoteBlogId);
         return blog != null && (blog.isDotcomFlag() || blog.isJetpackPowered());
+    }
+
+    public Blog instantiateBlogByRemoteId(int remoteBlogId) {
+        int localId = getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogId);
+        Blog blog = instantiateBlogByLocalId(localId);
+        return blog;
+    }
+
+    public int getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(int remoteBlogId) {
+        //first try checking if a jetpack site is configured on this device site list with that remote id
+        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
+        // the current wpcom account. We need to load the correct localID here, otherwise options are
+        // blank
+        int localId = getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
+
+        if (localId == 0) {
+            localId = getLocalTableBlogIdForWpComRemoteBlogId(remoteBlogId);
+        }
+        return localId;
     }
 
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
@@ -938,16 +956,16 @@ public class WordPressDB {
 
         c.moveToFirst();
 
-        List<String> returnVector = new Vector<String>();
+        List<String> list = new ArrayList<>();
         if (c.getString(0) != null) {
-            returnVector.add(c.getString(0));
-            returnVector.add(decryptPassword(c.getString(1)));
+            list.add(c.getString(0));
+            list.add(decryptPassword(c.getString(1)));
         } else {
-            returnVector = null;
+            list = null;
         }
         c.close();
 
-        return returnVector;
+        return list;
     }
 
     /*
@@ -968,6 +986,15 @@ public class WordPressDB {
 
     public int getLocalTableBlogIdForRemoteBlogId(int remoteBlogId) {
         int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?",
+                new String[]{Integer.toString(remoteBlogId)});
+        if (localBlogID == 0) {
+            localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
+        }
+        return localBlogID;
+    }
+
+    public int getLocalTableBlogIdForWpComRemoteBlogId(int remoteBlogId) {
+        int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=? and dotcomFlag=1",
                 new String[]{Integer.toString(remoteBlogId)});
         if (localBlogID == 0) {
             localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
@@ -1379,17 +1406,17 @@ public class WordPressDB {
                 "category_name" }, "blog_id=" + Integer.toString(id), null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
-        List<String> returnVector = new Vector<String>();
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < numRows; ++i) {
             String category_name = c.getString(2);
             if (category_name != null) {
-                returnVector.add(category_name);
+                list.add(category_name);
             }
             c.moveToNext();
         }
         c.close();
 
-        return returnVector;
+        return list;
     }
 
     public int getCategoryId(int id, String category) {
@@ -1450,12 +1477,12 @@ public class WordPressDB {
         String id, name;
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> blogs = new Vector<Map<String, Object>>();
+        List<Map<String, Object>> blogs = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
             id = c.getString(0);
             name = c.getString(2);
             if (id != null) {
-                Map<String, Object> thisHash = new HashMap<String, Object>();
+                Map<String, Object> thisHash = new HashMap<>();
 
                 thisHash.put("id", id);
                 thisHash.put("name", name);

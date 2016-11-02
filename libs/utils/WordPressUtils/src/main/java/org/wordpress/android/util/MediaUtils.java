@@ -112,8 +112,10 @@ public class MediaUtils {
         CursorLoader loader = new CursorLoader(activity, contentUri, proj, null, null, sortOrder);
         Cursor cursor = loader.loadInBackground();
         cursor.moveToFirst();
+        long value = cursor.getLong(0);
+        SqlUtils.closeCursor(cursor);
 
-        return Uri.parse(contentUri.toString() + "/" + cursor.getLong(0));
+        return Uri.parse(contentUri.toString() + "/" + value);
     }
 
     /**

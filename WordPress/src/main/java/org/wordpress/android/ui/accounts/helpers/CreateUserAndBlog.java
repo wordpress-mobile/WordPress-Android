@@ -160,7 +160,7 @@ public class CreateUserAndBlog {
 
             @Override
             public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
-                mErrorListener.onErrorResponse(new VolleyError("Sign in failed."));
+                mErrorListener.onErrorResponse(new VolleyError("Log in failed."));
             }
         });
 

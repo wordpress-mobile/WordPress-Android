@@ -399,6 +399,30 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_search_result_tapped");
                 instructions.setCurrentDateForPeopleProperty("last_time_reader_search_result_tapped");
                 break;
+            case READER_RELATED_POST_CLICKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Related Post Clicked");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_related_post_clicked");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_related_post_clicked");
+                break;
+            case READER_VIEWPOST_INTERCEPTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Intercepted viewpost");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_viewpost_intercepted");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_viewpost_intercepted");
+                break;
+            case READER_BLOG_POST_INTERCEPTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Intercepted blog post");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_blog_post_intercepted");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_blog_post_intercepted");
+                break;
+            case READER_FEED_POST_INTERCEPTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Intercepted feed post");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_feed_post_intercepted");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_feed_post_intercepted");
+                break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Created Post");
@@ -1061,6 +1085,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case TRAIN_TRACKS_RENDER: case TRAIN_TRACKS_INTERACT:
                 // Do nothing. These events are just for Tracks.
                 instructions = null;
+                break;
+            case DEEP_LINKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Deep linked");
                 break;
             default:
                 instructions = null;

@@ -66,6 +66,13 @@
     </declare-styleable>
 
     <!--
+        ReaderFollowButton attributes
+    -->
+    <declare-styleable name="ReaderFollowButton">
+        <attr name="wpShowFollowButtonCaption" format="boolean" />
+    </declare-styleable>
+
+    <!--
         PostListButton attributes
     -->
     <declare-styleable name="wpPostListButton">

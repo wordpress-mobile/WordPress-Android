@@ -24,6 +24,7 @@ import org.wordpress.android.util.LanguageUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -85,7 +86,7 @@ public class RestClientUtils {
     }
 
     public void getCategories(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/categories", siteId);
+        String path = String.format(Locale.US, "sites/%s/categories", siteId);
         get(path, null, null, listener, errorListener);
     }
 
@@ -95,7 +96,7 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/comments/
      */
     public void getComments(String siteId, Map<String, String> params, final Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/comments", siteId);
+        String path = String.format(Locale.US, "sites/%s/comments", siteId);
         get(path, params, null, listener, errorListener);
     }
 
@@ -119,7 +120,7 @@ public class RestClientUtils {
                                ErrorListener errorListener) {
         Map<String, String> params = new HashMap<String, String>();
         params.put(COMMENT_REPLY_CONTENT_FIELD, content);
-        String path = String.format("sites/%d/comments/%d/replies/new", siteId, commentId);
+        String path = String.format(Locale.US, "sites/%d/comments/%d/replies/new", siteId, commentId);
         post(path, params, null, listener, errorListener);
     }
 
@@ -129,7 +130,7 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/follows/new/
      */
     public void followSite(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/follows/new", siteId);
+        String path = String.format(Locale.US, "sites/%s/follows/new", siteId);
         post(path, listener, errorListener);
     }
 
@@ -139,7 +140,7 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/follows/mine/delete/
      */
     public void unfollowSite(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/follows/mine/delete", siteId);
+        String path = String.format(Locale.US, "sites/%s/follows/mine/delete", siteId);
         post(path, listener, errorListener);
     }
 
@@ -153,6 +154,16 @@ public class RestClientUtils {
         params.put("num_note_items", "20");
         params.put("fields", NOTIFICATION_FIELDS);
         get("notifications", params, null, listener, errorListener);
+    }
+
+    /**
+     * Get a specific notification given its noteId.
+     * <p/>
+     */
+    public void getNotification(Map<String, String> params, String noteId, Listener listener, ErrorListener errorListener) {
+        params.put("fields", NOTIFICATION_FIELDS);
+        String path = String.format(Locale.US, "notifications/%s/", noteId);
+        get(path, params, null, listener, errorListener);
     }
 
     /**
@@ -184,7 +195,7 @@ public class RestClientUtils {
                                 ErrorListener errorListener) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("status", status);
-        String path = String.format("sites/%s/comments/%s/", siteId, commentId);
+        String path = String.format(Locale.US, "sites/%s/comments/%s/", siteId, commentId);
         post(path, params, null, listener, errorListener);
     }
 
@@ -195,7 +206,7 @@ public class RestClientUtils {
                                 ErrorListener errorListener) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("content", content);
-        String path = String.format("sites/%d/comments/%d/", siteId, commentId);
+        String path = String.format(Locale.US, "sites/%d/comments/%d/", siteId, commentId);
         post(path, params, null, listener, errorListener);
     }
 
@@ -205,7 +216,7 @@ public class RestClientUtils {
     public void likeComment(String siteId, String commentId, boolean isLiked, Listener listener,
                                 ErrorListener errorListener) {
         Map<String, String> params = new HashMap<String, String>();
-        String path = String.format("sites/%s/comments/%s/likes/", siteId, commentId);
+        String path = String.format(Locale.US, "sites/%s/comments/%s/likes/", siteId, commentId);
 
         if (!isLiked) {
             path += "mine/delete";
@@ -221,7 +232,7 @@ public class RestClientUtils {
     }
 
     public void getSearchThemes(String tier, String siteId, int limit, int offset, String searchTerm, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/themes?tier=" + tier + "&number=%d&offset=%d&search=%s", siteId, limit, offset, searchTerm);
+        String path = String.format(Locale.US, "sites/%s/themes?tier=" + tier + "&number=%d&offset=%d&search=%s", siteId, limit, offset, searchTerm);
         get(path, listener, errorListener);
     }
 
@@ -230,7 +241,7 @@ public class RestClientUtils {
     }
 
     public void getPurchasedThemes(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/themes/purchased", siteId);
+        String path = String.format(Locale.US, "sites/%s/themes/purchased", siteId);
         get(path, listener, errorListener);
     }
 
@@ -238,7 +249,7 @@ public class RestClientUtils {
      * Get all a site's themes
      */
     public void getThemes(String tier, String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/themes/?tier=" + tier + "&number=%d&offset=%d", siteId, limit, offset);
+        String path = String.format(Locale.US, "sites/%s/themes/?tier=" + tier + "&number=%d&offset=%d", siteId, limit, offset);
         get(path, listener, errorListener);
     }
 
@@ -248,7 +259,7 @@ public class RestClientUtils {
     public void setTheme(String siteId, String themeId, Listener listener, ErrorListener errorListener) {
         Map<String, String> params = new HashMap<>();
         params.put("theme", themeId);
-        String path = String.format("sites/%s/themes/mine", siteId);
+        String path = String.format(Locale.US, "sites/%s/themes/mine", siteId);
         post(path, params, null, listener, errorListener);
     }
 
@@ -256,19 +267,19 @@ public class RestClientUtils {
      * Get a site's current theme
      */
     public void getCurrentTheme(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/themes/mine", siteId);
+        String path = String.format(Locale.US, "sites/%s/themes/mine", siteId);
         get(path, listener, errorListener);
     }
 
     public void getGeneralSettings(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/settings", siteId);
+        String path = String.format(Locale.US, "sites/%s/settings", siteId);
         Map<String, String> params = new HashMap<String, String>();
         get(path, params, null, listener, errorListener);
     }
 
     public void setGeneralSiteSettings(String siteId, Listener listener, ErrorListener errorListener,
                                        Map<String, String> params) {
-        String path = String.format("sites/%s/settings", siteId);
+        String path = String.format(Locale.US, "sites/%s/settings", siteId);
         post(path, params, null, listener, errorListener);
     }
 
@@ -276,17 +287,17 @@ public class RestClientUtils {
      * Delete a site
      */
     public void deleteSite(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/delete", siteId);
+        String path = String.format(Locale.US, "sites/%s/delete", siteId);
         post(path, listener, errorListener);
     }
 
     public void getSitePurchases(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/purchases", siteId);
+        String path = String.format(Locale.US, "sites/%s/purchases", siteId);
         get(path, listener, errorListener);
     }
 
     public void exportContentAll(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/exports/start", siteId);
+        String path = String.format(Locale.US, "sites/%s/exports/start", siteId);
         post(path, listener, errorListener);
     }
 
@@ -305,7 +316,7 @@ public class RestClientUtils {
     }
 
     public void isAvailable(String email, Listener listener, ErrorListener errorListener) {
-        String path = String.format("is-available/email?q=%s", email);
+        String path = String.format(Locale.US, "is-available/email?q=%s", email);
         get(path, listener, errorListener);
     }
 

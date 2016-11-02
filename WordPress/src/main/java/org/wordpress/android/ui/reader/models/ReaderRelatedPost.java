@@ -1,86 +1,126 @@
 package org.wordpress.android.ui.reader.models;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.util.UrlUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.JSONUtils;
 
 /**
  * simplified version of a reader post that contains only the fields necessary for a related post
  */
 public class ReaderRelatedPost {
-    private final long mPostId;
-    private final long mBlogId;
-    private final String mTitle;
-    private final String mByline;
-    private final String mFeaturedImage;
+    private long mPostId;
+    private long mSiteId;
+    private boolean mIsFollowing;
 
-    public ReaderRelatedPost(@NonNull ReaderPost post) {
-        mPostId = post.postId;
-        mBlogId = post.blogId;
+    private String mTitle;
+    private String mAuthorName;
+    private String mAuthorAvatarUrl;
+    private String mExcerpt;
+    private String mSiteName;
+    private String mFeaturedImageUrl;
 
-        mTitle = post.getTitle();
-        mFeaturedImage = post.getFeaturedImage();
+    // these are the specific fields we should ask for when requesting related posts from
+    // the endpoint - note that we want to avoid ever requesting the post content, since
+    // that makes the call much heavier
+    public static final String RELATED_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,is_following,author,featured_image,featured_media";
 
-        /*
-         * we want to include the blog name in the byline when it's available, and most sites
-         * will have a name, but in rare cases there isn't one so we show the domain instead
-         */
-        String blogNameOrDomain;
-        boolean hasBlogNameOrDomain;
-        if (post.hasBlogName()) {
-            blogNameOrDomain = post.getBlogName();
-            hasBlogNameOrDomain = true;
-        } else if (post.hasBlogUrl()) {
-            blogNameOrDomain = UrlUtils.getHost(post.getBlogUrl());
-            hasBlogNameOrDomain = true;
-        } else {
-            blogNameOrDomain = null;
-            hasBlogNameOrDomain = false;
+    public static ReaderRelatedPost fromJson(JSONObject json) {
+        if (json == null) {
+            throw new IllegalArgumentException("ReaderRelatedPost requires a non-null JSONObject");
         }
 
-        /*
-         * The byline should show the author name and blog name if both are available, but if
-         * they're the same (which happens frequently) we only need to show the blog name.
-         * Otherwise, show either the blog name or author name depending on which is available.
-         */
-        if (post.hasAuthorName() && hasBlogNameOrDomain) {
-            if (post.getAuthorName().equalsIgnoreCase(blogNameOrDomain)) {
-                mByline = blogNameOrDomain;
-            } else {
-                mByline = post.getAuthorName() + ", " + blogNameOrDomain;
+        ReaderRelatedPost post = new ReaderRelatedPost();
+
+        // ID and site_ID are required, so make sure we have them
+        try {
+            post.mPostId = json.getLong("ID");
+            post.mSiteId = json.getLong("site_ID");
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.READER, e);
+            return null;
+        }
+
+        post.mIsFollowing = JSONUtils.getBool(json, "is_following");
+
+        post.mTitle = JSONUtils.getStringDecoded(json, "title");
+        post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
+        post.mSiteName = JSONUtils.getStringDecoded(json, "site_name");
+        post.mFeaturedImageUrl = JSONUtils.getString(json, "featured_image");
+
+        JSONObject jsonAuthor = json.optJSONObject("author");
+        if (jsonAuthor != null) {
+            post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
+            // don't read the avatar field unless "has_avatar" is true
+            if (JSONUtils.getBool(jsonAuthor, "has_avatar")) {
+                post.mAuthorAvatarUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
             }
-        } else if (post.hasAuthorName()) {
-            mByline = post.getAuthorName();
-        } else if (hasBlogNameOrDomain) {
-            mByline = blogNameOrDomain;
-        } else {
-            mByline = "";
         }
+
+        // if there's no featured image, check if featured media has been set to an image
+        if (!post.hasFeaturedImageUrl() && json.has("featured_media")) {
+            JSONObject jsonMedia = json.optJSONObject("featured_media");
+            String type = JSONUtils.getString(jsonMedia, "type");
+            if (type.equals("image")) {
+                post.mFeaturedImageUrl = JSONUtils.getString(jsonMedia, "uri");
+            }
+        }
+
+        return post;
     }
 
     public long getPostId() {
         return mPostId;
     }
 
-    public long getBlogId() {
-        return mBlogId;
+    public long getSiteId() {
+        return mSiteId;
     }
 
     public String getTitle() {
         return mTitle;
     }
 
-    public String getByline() {
-        return mByline;
+    public String getExcerpt() {
+        return mExcerpt;
     }
 
-    public String getFeaturedImage() {
-        return mFeaturedImage;
+    public String getSiteName() {
+        return mSiteName;
     }
 
-    public boolean hasFeaturedImage() {
-        return !TextUtils.isEmpty(mFeaturedImage);
+    public String getAuthorName() {
+        return mAuthorName;
+    }
+
+    public String getAuthorAvatarUrl() {
+        return mAuthorAvatarUrl;
+    }
+
+    public String getFeaturedImageUrl() {
+        return mFeaturedImageUrl;
+    }
+
+    public boolean isFollowing() {
+        return mIsFollowing;
+    }
+
+    public void setIsFollowing(boolean isFollowing) {
+        mIsFollowing = isFollowing;
+    }
+
+    public boolean hasExcerpt() {
+        return !TextUtils.isEmpty(mExcerpt);
+    }
+
+    public boolean hasAuthorAvatarUrl() {
+        return !TextUtils.isEmpty(mAuthorAvatarUrl);
+    }
+
+    public boolean hasFeaturedImageUrl() {
+        return !TextUtils.isEmpty(mFeaturedImageUrl);
     }
 }

@@ -31,9 +31,9 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 public class AddQuickPressShortcutActivity extends ListActivity {
     static final int ADD_ACCOUNT_REQUEST = 0;
@@ -43,7 +43,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     public int[] accountIDs;
     public String[] accountUsers;
     public String[] blavatars;
-    public List<String> accountNames = new Vector<String>();
+    public List<String> accountNames = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

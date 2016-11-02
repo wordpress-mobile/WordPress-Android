@@ -45,6 +45,7 @@ import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class EditCommentActivity extends AppCompatActivity {
@@ -100,6 +101,7 @@ public class EditCommentActivity extends AppCompatActivity {
                     mNote = SimperiumUtils.getNotesBucket().get(noteId);
                     requestFullCommentForNote(mNote);
                 } catch (BucketObjectMissingException e) {
+                    SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
                     showErrorAndFinish();
                 }
             }
@@ -407,7 +409,7 @@ public class EditCommentActivity extends AppCompatActivity {
             }
         };
 
-        final String path = String.format("/sites/%s/comments/%s", note.getSiteId(), note.getCommentId());
+        final String path = String.format(Locale.US, "/sites/%s/comments/%s", note.getSiteId(), note.getCommentId());
         WordPress.getRestClientUtils().get(path, restListener, restErrListener);
     }
 

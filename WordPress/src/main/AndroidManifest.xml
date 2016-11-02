@@ -141,10 +141,6 @@
             android:name=".ui.comments.CommentsActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
-            android:name=".ui.comments.CommentDetailActivity"
-            android:theme="@style/CalypsoTheme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name=".ui.comments.EditCommentActivity"
             android:theme="@style/CalypsoTheme" />
 
@@ -257,6 +253,37 @@
                 <data
                     android:host="viewpost"
                     android:scheme="wordpress" />
+            </intent-filter>
+
+            <intent-filter>
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
 
@@ -424,6 +451,10 @@
             android:name=".ui.plans.PlanUpdateService"
             android:exported="false"
             android:label="Plans Update Service" />
+        <service
+            android:name=".push.NotificationsProcessingService"
+            android:exported="false"
+            android:label="Notifications Quick Actions processing Service" />
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"
@@ -470,20 +501,20 @@
         </receiver>
 
         <service
-            android:name=".GCMRegistrationIntentService"
+            android:name=".push.GCMRegistrationIntentService"
             android:exported="false" />
 
         <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
         <service
-            android:name=".GCMMessageService"
+            android:name=".push.GCMMessageService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".InstanceIDService"
+            android:name=".push.InstanceIDService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
@@ -521,5 +552,16 @@
 
         <!-- Smart Lock for Passwords -->
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
+
+        <!-- Provider for exposing file URIs on Android 7+ -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 </manifest>

@@ -422,7 +422,7 @@ public class WPHtml {
                 int xRes = mediaFile.getWidth();
                 int yRes = mediaFile.getHeight();
                 String mimeType = mediaFile.getMimeType();
-                content = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                content = String.format(Locale.US, "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
                         xRes, yRes, url, mimeType, url);
             }
         } else {

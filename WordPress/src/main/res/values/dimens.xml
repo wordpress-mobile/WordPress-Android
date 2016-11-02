@@ -83,8 +83,9 @@
     <dimen name="reader_detail_margin_tablet_big">96dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
-    <dimen name="reader_related_post_margin">@dimen/margin_extra_large</dimen>
-    <dimen name="reader_related_post_image_size">48dp</dimen>
+    <dimen name="reader_detail_header_avatar">48dp</dimen>
+    <dimen name="reader_detail_header_blavatar">56dp</dimen>
+    <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
 
     <dimen name="reader_thumbnail_strip_image_size">48dp</dimen>
 
@@ -111,8 +112,10 @@
     <dimen name="blavatar_sz">40dp</dimen>
 
     <dimen name="reader_button_icon">24dp</dimen>
-    <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_more_icon">48dp</dimen>
+    <dimen name="reader_follow_icon">16dp</dimen>
+    <dimen name="reader_follow_icon_no_caption">24dp</dimen>
+    <dimen name="reader_follow_button_padding">@dimen/margin_small</dimen>
 
     <dimen name="reader_detail_tag_height">48dp</dimen>
 
@@ -120,6 +123,8 @@
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
+
+    <dimen name="reader_related_post_image_width">72dp</dimen>
 
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>

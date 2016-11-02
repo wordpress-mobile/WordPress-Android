@@ -18,6 +18,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 
 class FollowHelper {
 
@@ -55,9 +56,9 @@ class FollowHelper {
                 final RestClientUtils restClientUtils = WordPress.getRestClientUtils();
                 final String restPath;
                 if (!followData.isFollowing()) {
-                    restPath = String.format("/sites/%s/follows/new", followData.getSiteID());
+                    restPath = String.format(Locale.US, "/sites/%s/follows/new", followData.getSiteID());
                 } else {
-                    restPath = String.format("/sites/%s/follows/mine/delete", followData.getSiteID());
+                    restPath = String.format(Locale.US, "/sites/%s/follows/mine/delete", followData.getSiteID());
                 }
 
                 followData.isRestCallInProgress = true;
@@ -94,7 +95,7 @@ class FollowHelper {
                     boolean isFollowing = response.getBoolean("is_following");
                     mFollowData.setIsFollowing(isFollowing);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    AppLog.e(AppLog.T.STATS, e.getMessage());
                 }
             }
         }

@@ -1,6 +1,9 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -228,6 +231,28 @@ public class AppLog {
         return errors.toString();
     }
 
+
+    private static String getAppInfoHeaderText(Context context) {
+        StringBuilder sb = new StringBuilder();
+        PackageManager packageManager = context.getPackageManager();
+        PackageInfo pkInfo = PackageUtils.getPackageInfo(context);
+
+        ApplicationInfo applicationInfo = pkInfo != null ? pkInfo.applicationInfo : null;
+        String appName;
+        if (applicationInfo != null && packageManager.getApplicationLabel(applicationInfo) != null) {
+            appName =  packageManager.getApplicationLabel(applicationInfo).toString();
+        } else {
+            appName = "Unknown";
+        }
+        sb.append(appName).append(" - ").append(PackageUtils.getVersionName(context))
+                .append(" - Version code: ").append(PackageUtils.getVersionCode(context));
+        return sb.toString();
+    }
+
+    private static String getDeviceInfoHeaderText(Context context) {
+        return "Android device name: " + DeviceUtils.getInstance().getDeviceName(context);
+    }
+
     /**
      * Returns entire log as html for display (see AppLogViewerActivity)
      * @param  context
@@ -237,8 +262,8 @@ public class AppLog {
         ArrayList<String> items = new ArrayList<String>();
 
         // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
-        items.add("<strong>WordPress Android version: " + PackageUtils.getVersionName(context) + "</strong>");
-        items.add("<strong>Android device name: " + DeviceUtils.getInstance().getDeviceName(context) + "</strong>");
+        items.add("<strong>" + getAppInfoHeaderText(context) + "</strong>");
+        items.add("<strong>" + getDeviceInfoHeaderText(context) + "</strong>");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
         while (it.hasNext()) {
@@ -256,8 +281,8 @@ public class AppLog {
         StringBuilder sb = new StringBuilder();
 
         // add version & device info
-        sb.append("WordPress Android version: " + PackageUtils.getVersionName(context)).append("\n")
-                .append("Android device name: " + DeviceUtils.getInstance().getDeviceName(context)).append("\n\n");
+        sb.append(getAppInfoHeaderText(context)).append("\n")
+                .append(getDeviceInfoHeaderText(context)).append("\n\n");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
         int lineNum = 1;

@@ -95,6 +95,7 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -1226,13 +1227,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void launchCamera() {
-        WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {
-            @Override
-            public void onMediaCapturePathReady(String mediaCapturePath) {
-                mMediaCapturePath = mediaCapturePath;
-                AppLockManager.getInstance().setExtendedTimeout();
-            }
-        });
+        WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
+                new WordPressMediaUtils.LaunchCameraCallback() {
+                    @Override
+                    public void onMediaCapturePathReady(String mediaCapturePath) {
+                        mMediaCapturePath = mediaCapturePath;
+                        AppLockManager.getInstance().setExtendedTimeout();
+                    }
+                });
     }
 
     protected void setPostContentFromShareAction() {
@@ -1439,33 +1441,20 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Media
      */
 
-    private void fetchMedia(final List<Uri> mediaUris) {
-        new AsyncTask<List<Uri>, Boolean, Void>() {
-            @Override
-            protected Void doInBackground(List<Uri>... lists) {
-                for (Uri mediaUri : mediaUris) {
-                    if (mediaUri == null) {
-                        publishProgress(false);
-                        continue;
-                    }
-
-                    if (!addMedia(mediaUri)) {
-                        publishProgress(false);
-                    }
-                }
-
-                return null;
+    private void fetchMedia(List<Uri> mediaUris) {
+        for (Uri mediaUri : mediaUris) {
+            if (mediaUri == null) {
+                Toast.makeText(EditPostActivity.this,
+                        getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                continue;
             }
 
-            @Override
-            protected void onProgressUpdate(Boolean... values) {
-                // use onProgressUpdate to Toast on error
+            if (!addMedia(mediaUri)) {
                 Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error),
                         Toast.LENGTH_SHORT).show();
             }
-        }.execute(mediaUris);
+        }
     }
-
 
     private void updateMediaFileOnServer(WPImageSpan wpIS) {
         Blog currentBlog = WordPress.getCurrentBlog();
@@ -1539,8 +1528,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (cur != null && cur.moveToFirst()) {
             int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
             path = cur.getString(dataColumn);
-            cur.close();
         }
+        SqlUtils.closeCursor(cur);
         return path;
     }
 

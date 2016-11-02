@@ -54,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:padding="@dimen/reader_follow_button_padding"
             android:visibility="gone"
             tools:visibility="visible" />
 
