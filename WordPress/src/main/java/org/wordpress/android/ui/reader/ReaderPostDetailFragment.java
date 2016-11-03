@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -86,6 +87,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderLikingUsersView mLikingUsersView;
     private View mLikingUsersDivider;
     private View mLikingUsersLabel;
+    private ViewGroup mRelatedPostsContainerView;
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
@@ -200,6 +202,9 @@ public class ReaderPostDetailFragment extends Fragment
         // hide footer and scrollView until the post is loaded
         mLayoutFooter.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
+
+        mRelatedPostsContainerView = (ViewGroup) view.findViewById(R.id.container_related_posts);
+        mRelatedPostsContainerView.setVisibility(View.INVISIBLE);
 
         return view;
     }
@@ -410,8 +415,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         // hide views that would show info for the previous post - these will be re-displayed
         // with the correct info once the new post loads
-        getView().findViewById(R.id.related_posts_view_local).setVisibility(View.GONE);
-        getView().findViewById(R.id.related_posts_view_global).setVisibility(View.GONE);
+        mRelatedPostsContainerView.findViewById(R.id.related_posts_view_local).setVisibility(View.GONE);
+        mRelatedPostsContainerView.findViewById(R.id.related_posts_view_global).setVisibility(View.GONE);
 
         mLikingUsersView.setVisibility(View.GONE);
         mLikingUsersDivider.setVisibility(View.GONE);
@@ -462,7 +467,7 @@ public class ReaderPostDetailFragment extends Fragment
     private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, boolean isGlobal) {
         // different container views for global/local related posts
         int id = isGlobal ? R.id.related_posts_view_global : R.id.related_posts_view_local;
-        ReaderRelatedPostsView relatedPostsView = (ReaderRelatedPostsView) getView().findViewById(id);
+        ReaderRelatedPostsView relatedPostsView = (ReaderRelatedPostsView) mRelatedPostsContainerView.findViewById(id);
         relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
 
         // tapping a related posts should open the related post detail
@@ -473,6 +478,12 @@ public class ReaderPostDetailFragment extends Fragment
             }
         });
 
+        // make sure the container is visible
+        if (mRelatedPostsContainerView.getVisibility() != View.VISIBLE) {
+            mRelatedPostsContainerView.setVisibility(View.VISIBLE);
+        }
+
+        // fade in this related posts view
         if (relatedPostsView.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM);
         }
@@ -992,6 +1003,24 @@ public class ReaderPostDetailFragment extends Fragment
                 && mScrollView.getScrollY() > mToolbarHeight) {
             showToolbar(false);
             showFooter(false);
+        }
+
+        if (isRelatedPostsShowing()) {
+            AppLog.w(T.READER, "RELATED POSTS SHOWING");
+        }
+    }
+
+    /*
+     * returns true if related posts are visible (the container view is hidden until after they're
+     * loaded) and are scrolled into view
+     */
+    private boolean isRelatedPostsShowing() {
+        if (mRelatedPostsContainerView.getVisibility() == View.VISIBLE) {
+            Rect scrollBounds = new Rect();
+            mScrollView.getHitRect(scrollBounds);
+            return (mRelatedPostsContainerView.getLocalVisibleRect(scrollBounds));
+        } else {
+            return false;
         }
     }
 
