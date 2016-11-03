@@ -44,8 +44,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     }
 
     private InterceptType mInterceptType;
-    private String mBlogId;
-    private String mPostId;
+    private String mBlogIdentifier; // can be an id or a slug
+    private String mPostIdentifier; // can be an id or a slug
     private String mInterceptedUri;
     private DirectOperation mDirectOperation;
     private int mCommentId;
@@ -69,8 +69,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
             switch (uri.getScheme()) {
                 case "wordpress":
                     mInterceptType = InterceptType.VIEWPOST;
-                    mBlogId = uri.getQueryParameter("blogId");
-                    mPostId = uri.getQueryParameter("postId");
+                    mBlogIdentifier = uri.getQueryParameter("blogId");
+                    mPostIdentifier = uri.getQueryParameter("postId");
 
                     // if user is logged in, show the post right away - otherwise show welcome activity
                     // and then show the post once the user has logged in
@@ -92,7 +92,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                     if (segments != null) {
                         if (segments.get(0).equals("read")) {
                             if (segments.size() > 2) {
-                                mBlogId = segments.get(2);
+                                mBlogIdentifier = segments.get(2);
 
                                 if (segments.get(1).equals("blogs")) {
                                     mInterceptType = InterceptType.READER_BLOG;
@@ -102,7 +102,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                             }
 
                             if (segments.size() > 4 && segments.get(3).equals("posts")) {
-                                mPostId = segments.get(4);
+                                mPostIdentifier = segments.get(4);
                             }
 
                             parseFragment(uri);
@@ -110,9 +110,9 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                             showPost();
                             return;
                         } else if (segments.size() == 4) {
-                            mBlogId = uri.getHost();
+                            mBlogIdentifier = uri.getHost();
                             try {
-                                mPostId = URLEncoder.encode(segments.get(3), "UTF-8");
+                                mPostIdentifier = URLEncoder.encode(segments.get(3), "UTF-8");
                             } catch (UnsupportedEncodingException e) {
                                 AppLog.e(T.READER, e);
                                 ToastUtils.showToast(this, R.string.error_generic);
@@ -213,35 +213,36 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     }
 
     private void showPost() {
-        if (!TextUtils.isEmpty(mBlogId) && !TextUtils.isEmpty(mPostId)) {
+        if (!TextUtils.isEmpty(mBlogIdentifier) && !TextUtils.isEmpty(mPostIdentifier)) {
             if (mInterceptType != null) {
                 switch (mInterceptType) {
                     case VIEWPOST:
                         AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED,
-                                mBlogId, mPostId);
+                                mBlogIdentifier, mPostIdentifier);
                         break;
                     case READER_BLOG:
                         AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
-                                mBlogId, mPostId);
+                                mBlogIdentifier, mPostIdentifier);
                         break;
                     case READER_FEED:
                         AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
-                                mBlogId, mPostId);
+                                mBlogIdentifier, mPostIdentifier);
                         break;
                     case WPCOM_POST_SLUG:
                         AnalyticsUtils.trackWithBlogPostDetails(
-                                AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED, mBlogId, mPostId, mCommentId);
+                                AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED, mBlogIdentifier,
+                                mPostIdentifier, mCommentId);
                         break;
                 }
             }
 
             if (mInterceptType == InterceptType.WPCOM_POST_SLUG) {
                 ReaderActivityLauncher.showReaderPostDetail(
-                        this, mBlogId, mPostId, mDirectOperation, mCommentId, false, mInterceptedUri);
+                        this, mBlogIdentifier, mPostIdentifier, mDirectOperation, mCommentId, false, mInterceptedUri);
             } else {
                 try {
-                    final long blogId = Long.parseLong(mBlogId);
-                    final long postId = Long.parseLong(mPostId);
+                    final long blogId = Long.parseLong(mBlogIdentifier);
+                    final long postId = Long.parseLong(mPostIdentifier);
 
                     ReaderActivityLauncher.showReaderPostDetail(this, InterceptType.READER_FEED.equals(mInterceptType),
                         blogId, postId, mDirectOperation, mCommentId, false, mInterceptedUri);
