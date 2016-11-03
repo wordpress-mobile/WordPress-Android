@@ -11,4 +11,5 @@
     <issue id="InconsistentArrays" severity="error" />
     <issue id="StringFormatCount" severity="error" />
     <issue id="DefaultLocale" severity="error" />
+    <issue id="SimpleDateFormat" severity="error" />
 </lint>
