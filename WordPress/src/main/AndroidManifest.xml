@@ -446,6 +446,10 @@
             android:name=".push.NotificationsProcessingService"
             android:exported="false"
             android:label="Notifications Quick Actions processing Service" />
+        <service
+            android:name=".ui.notifications.services.NotificationsUpdateService"
+            android:exported="false"
+            android:label="Notifications Update Service" />
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"

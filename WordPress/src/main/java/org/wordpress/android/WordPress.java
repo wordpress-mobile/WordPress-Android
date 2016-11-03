@@ -48,6 +48,7 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -262,9 +263,10 @@ public class WordPress extends MultiDexApplication {
             startService(new Intent(this, GCMRegistrationIntentService.class));
         }
 
-        // Refresh account informations
+        // Refresh account informations and Notifications
         if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
+            NotificationsUpdateService.startService(getContext());
         }
     }
 
@@ -835,6 +837,9 @@ public class WordPress extends MultiDexApplication {
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
+                // Refresh notifications
+                NotificationsUpdateService.startService(getContext());
+
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
 

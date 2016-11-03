@@ -1,5 +1,11 @@
 package org.wordpress.android.ui.notifications;
 
+import com.android.volley.VolleyError;
+
+import org.wordpress.android.models.Note;
+
+import java.util.List;
+
 public class NotificationEvents {
     public static class NotificationsChanged {}
     public static class NoteModerationFailed {}
@@ -33,6 +39,20 @@ public class NotificationEvents {
         public boolean hasUnseenNotes;
         public NotificationsUnseenStatus(boolean hasUnseenNotes) {
             this.hasUnseenNotes = hasUnseenNotes;
+        }
+    }
+    public static class NotificationsRefreshCompleted {
+        List<Note> notes;
+        public NotificationsRefreshCompleted(List<Note> notes) {
+            this.notes = notes;
+        }
+    }
+    public static class NotificationsRefreshError {
+        VolleyError error;
+        public NotificationsRefreshError(VolleyError error) {
+            this.error = error;
+        }
+        public NotificationsRefreshError() {
         }
     }
 }

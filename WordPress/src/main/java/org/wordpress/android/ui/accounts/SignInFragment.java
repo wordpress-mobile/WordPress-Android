@@ -46,6 +46,7 @@ import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -541,6 +542,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             // uses the application context since the activity is finished immediately below
             ReaderUpdateService.startService(getActivity().getApplicationContext(),
                     EnumSet.of(UpdateTask.TAGS));
+
+            NotificationsUpdateService.startService(getActivity().getApplicationContext());
 
             if (isWPComLogin()) {
                 //Update previous stats widgets

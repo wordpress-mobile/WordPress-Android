@@ -16,31 +16,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -102,6 +91,21 @@ public class NotificationsListFragment extends Fragment
         return view;
     }
 
+    /*
+     * scroll listener assigned to the recycler when the "new notifications" ribbon is shown to hide
+     * it upon scrolling
+     */
+    private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            mRecyclerView.removeOnScrollListener(this); // remove the listener now
+            EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
+                    false
+            ));
+        }
+    };
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -111,15 +115,12 @@ public class NotificationsListFragment extends Fragment
         if (savedInstanceState != null) {
             setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
         }
-
-        fetchNotesFromRemote();
+        mNotesAdapter.reloadNotesFromDBAsync();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        mNotesAdapter.reloadNotesFromDBAsync();
 
         // Removes app notifications from the system bar
         new Thread(new Runnable() {
@@ -314,41 +315,8 @@ public class NotificationsListFragment extends Fragment
             return;
         }
 
-        NotificationsActions.getNotifications(mNotesResponseHandler, mNotesResponseHandler);
+        NotificationsUpdateService.startService(getActivity());
     }
-
-    private final NotesResponseHandler mNotesResponseHandler = new NotesResponseHandler() {
-        @Override
-        public void onNotes(final List<Note> notes) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            // nbradbury - saving notes can be slow, so do it in the background
-            new Thread() {
-                @Override
-                public void run() {
-                    NotificationsTable.saveNotes(notes, true);
-                    NotificationsActions.updateSeenNotes(); // Refresh launched by the user. Update the last seen time.
-                    if (isAdded() && getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mNotesAdapter.addAll(notes, true);
-                            }
-                        });
-                    }
-                }
-            }.start();
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            if (!isAdded()) {
-                return;
-            }
-
-            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_notifications));
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
-    };
 
     // Show different empty list message and action button based on the active filter
     private void showEmptyViewForCurrentFilter() {
@@ -445,44 +413,6 @@ public class NotificationsListFragment extends Fragment
         mRestoredScrollPosition = listPosition;
     }
 
-    abstract class NotesResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener {
-        abstract void onNotes(List<Note> notes);
-
-        @Override
-        public void onResponse(JSONObject response) {
-            if (response == null) {
-                //Not sure this could ever happen, but make sure we're catching all response types
-                AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
-                onNotes(new ArrayList<Note>(0));
-                return;
-            }
-
-            try {
-                List<Note> notes = NotificationsActions.parseNotes(response);
-                onNotes(notes);
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response", e);
-                showError(getString(R.string.error_generic));
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            showError();
-            AppLog.d(AppLog.T.NOTIFS, String.format("Error retrieving notes: %s", error));
-        }
-
-        void showError(final String errorMessage) {
-            if (isAdded()) {
-                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-            }
-        }
-
-        void showError() {
-            showError(getString(R.string.error_generic));
-        }
-    }
-
     // Notification filter methods
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
@@ -512,9 +442,15 @@ public class NotificationsListFragment extends Fragment
 
     @Override
     public void onScrollToTop() {
-        if (isAdded() && getScrollPosition() > 0) {
+        if(!isAdded()) return;
+        // Immediately update the unseen ribbon
+        EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
+                false
+        ));
+        // Then hit the server
+        NotificationsActions.updateSeenNotes();
+        if (getScrollPosition() > 0) {
             mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
-            NotificationsActions.updateSeenNotes();
         }
     }
 
@@ -528,6 +464,22 @@ public class NotificationsListFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().registerSticky(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_notifications));
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+    @SuppressWarnings("unused")
+    public void onEventMainThread(final NotificationEvents.NotificationsRefreshCompleted event) {
+        if (!isAdded()) {
+            return;
+        }
+        mSwipeRefreshLayout.setRefreshing(false);
+        mNotesAdapter.addAll(event.notes, true);
     }
 
     @SuppressWarnings("unused")
@@ -551,5 +503,25 @@ public class NotificationsListFragment extends Fragment
         }
 
         EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
+        if (!isAdded()) {
+            return;
+        }
+        getNotesAdapter().reloadNotesFromDBAsync();
+    }
+
+    public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
+        if (!isAdded()) {
+            return;
+        }
+        // if a new note arrives when the notifications list is on Foreground.
+        if (event.hasUnseenNotes) {
+            mRecyclerView.addOnScrollListener(mOnScrollListener);
+        } else {
+            mRecyclerView.removeOnScrollListener(mOnScrollListener);
+        }
     }
 }

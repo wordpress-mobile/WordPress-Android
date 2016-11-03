@@ -320,8 +320,6 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             buildAndShowNotificationFromNoteData(context, data);
-
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
         }
 
         private boolean buildNoteObjectFromPNPayloadAndSaveIt(Bundle data) {
@@ -373,7 +371,12 @@ public class GCMMessageService extends GcmListenerService {
                                 }
                                 try {
                                     List<Note> notes = NotificationsActions.parseNotes(response);
-                                    NotificationsTable.saveNotes(notes, true);
+                                    if (notes.size() > 0) {
+                                        NotificationsTable.saveNote(notes.get(0), true);
+                                    } else {
+                                        AppLog.e(AppLog.T.NOTIFS, "Success, but no note!!!???");
+                                    }
+                                    EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
                                 } catch (JSONException e) {
                                     AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response for the note_id " + wpcomNoteID , e);
                                 }
@@ -384,7 +387,13 @@ public class GCMMessageService extends GcmListenerService {
                                 AppLog.e(AppLog.T.NOTIFS, "Error retrieving note with ID " + wpcomNoteID, error);
                             }
                         });
+            } else {
+                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
             }
+            // Update the ribbon if the app is Foreground.
+            EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
+                    true
+            ));
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
