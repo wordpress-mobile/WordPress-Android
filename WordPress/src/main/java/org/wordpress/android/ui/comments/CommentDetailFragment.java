@@ -228,9 +228,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
-        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(LanguageUtils.getCurrentDeviceLanguage(getActivity()), "%s%d%d",
-                AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
-                getRemoteBlogId(), getCommentId()));
+        setReplyUniqueId();
 
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
 
@@ -356,6 +354,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setComment(localBlogId, CommentTable.getComment(localBlogId, commentId));
     }
 
+    private void setReplyUniqueId() {
+        mEditReply.getAutoSaveTextHelper().setUniqueId(
+                String.format(LanguageUtils.getCurrentDeviceLanguage(getActivity()), "%s%d%d",
+                AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
+                getRemoteBlogId(), getCommentId()));
+    }
+
     private void setComment(int localBlogId, final Comment comment) {
         mComment = comment;
         mLocalBlogId = localBlogId;
@@ -364,11 +369,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // notification about a reply to a comment this user posted on someone else's blog
         mIsUsersBlog = (comment != null && WordPress.wpDB.isLocalBlogIdInDatabase(mLocalBlogId));
 
-        if (mIsUsersBlog)
+        if (mIsUsersBlog) {
             mRemoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
+        }
 
-        if (isAdded())
+        if (isAdded()) {
             showComment();
+        }
+
+        // Reset the reply unique id since mComment just changed.
+        setReplyUniqueId();
     }
 
     private void disableShouldFocusReplyField() {
