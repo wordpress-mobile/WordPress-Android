@@ -16,18 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -35,13 +27,9 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -103,6 +91,21 @@ public class NotificationsListFragment extends Fragment
         return view;
     }
 
+    /*
+     * scroll listener assigned to the recycler when the "new notifications" ribbon is shown to hide
+     * it upon scrolling
+     */
+    private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            mRecyclerView.removeOnScrollListener(this); // remove the listener now
+            EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
+                    false
+            ));
+        }
+    };
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -118,8 +121,6 @@ public class NotificationsListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-
-        NotificationsActions.updateSeenNotes();
 
         // Removes app notifications from the system bar
         new Thread(new Runnable() {
@@ -441,9 +442,15 @@ public class NotificationsListFragment extends Fragment
 
     @Override
     public void onScrollToTop() {
-        if (isAdded() && getScrollPosition() > 0) {
+        if(!isAdded()) return;
+        // Immediately update the unseen ribbon
+        EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
+                false
+        ));
+        // Then hit the server
+        NotificationsActions.updateSeenNotes();
+        if (getScrollPosition() > 0) {
             mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
-            NotificationsActions.updateSeenNotes();
         }
     }
 
@@ -472,7 +479,6 @@ public class NotificationsListFragment extends Fragment
             return;
         }
         mSwipeRefreshLayout.setRefreshing(false);
-        NotificationsActions.updateSeenNotes(); // Refresh launched by the user. Update the last seen time.
         mNotesAdapter.addAll(event.notes, true);
     }
 
@@ -505,5 +511,17 @@ public class NotificationsListFragment extends Fragment
             return;
         }
         getNotesAdapter().reloadNotesFromDBAsync();
+    }
+
+    public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
+        if (!isAdded()) {
+            return;
+        }
+        // if a new note arrives when the notifications list is on Foreground.
+        if (event.hasUnseenNotes) {
+            mRecyclerView.addOnScrollListener(mOnScrollListener);
+        } else {
+            mRecyclerView.removeOnScrollListener(mOnScrollListener);
+        }
     }
 }
