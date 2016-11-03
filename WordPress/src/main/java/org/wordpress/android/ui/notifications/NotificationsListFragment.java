@@ -605,7 +605,7 @@ public class NotificationsListFragment extends Fragment
      * returns true if the first item is still visible in the RecyclerView - will return
      * false if the first item is scrolled out of view, or if the list is empty
      */
-    public boolean isFirstItemVisible() {
+    private boolean isFirstItemVisible() {
         if (mRecyclerView == null
                 || mRecyclerView.getLayoutManager() == null) {
             return false;
