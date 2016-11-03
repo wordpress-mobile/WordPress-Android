@@ -290,11 +290,12 @@ public class ReaderActivityLauncher {
             context.startActivity(intent);
             AppLockManager.getInstance().setExtendedTimeout();
 
-            // re-enable deeplinking
-            ActivityLauncher.enableDeepLinking(context);
         } catch (ActivityNotFoundException e) {
             String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
             ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
+        } finally {
+            // re-enable deeplinking
+            ActivityLauncher.enableDeepLinking(context);
         }
     }
 }
