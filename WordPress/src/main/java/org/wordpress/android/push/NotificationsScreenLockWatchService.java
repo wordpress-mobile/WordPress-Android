@@ -2,12 +2,12 @@ package org.wordpress.android.push;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import org.wordpress.android.ui.notifications.ScreenLockUnlockBroadcastReceiver;
 import org.wordpress.android.util.AppLog;
 
 public class NotificationsScreenLockWatchService extends Service {
@@ -18,19 +18,7 @@ public class NotificationsScreenLockWatchService extends Service {
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.NOTIFS, "notifications screen lock watch service > created");
-
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                GCMMessageService.rebuildAndUpdateNotifsOnSystemBarForRemainingNote(context);
-
-                //restart the service
-                Intent i = new Intent(context, NotificationsScreenLockWatchService.class);
-                context.startService(i);
-            }
-        };
+        mReceiver = new ScreenLockUnlockBroadcastReceiver();
         registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
     }
 

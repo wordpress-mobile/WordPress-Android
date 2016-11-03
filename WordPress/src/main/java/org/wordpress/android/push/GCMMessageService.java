@@ -671,6 +671,14 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             if (sActiveNotificationsMap.size() > 1) {
+
+                //first remove 2fa push from the map, then reinsert it, so it's not shown in the inbox style group notif
+                Bundle authPNBundle = null;
+                if (mapContainsAuthPushNotification()) {
+                    authPNBundle = sActiveNotificationsMap.get(AUTH_PUSH_NOTIFICATION_ID);
+                    sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
+                }
+
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 int noteCtr = 1;
                 for (Bundle pushBundle : sActiveNotificationsMap.values()) {
@@ -712,6 +720,11 @@ public class GCMMessageService extends GcmListenerService {
                         .setStyle(inboxStyle);
 
                 showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID);
+
+                //reinsert 2fa bundle if it was present
+                if (authPNBundle != null) {
+                    sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+                }
 
             } else {
                 // Set the individual notification we've already built as the group summary
@@ -951,6 +964,14 @@ public class GCMMessageService extends GcmListenerService {
 
         private void addAuthPushNotificationToNotificationMap(Bundle data) {
             sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
+        }
+
+        private boolean mapContainsAuthPushNotification(){
+            for (Integer pushId : sActiveNotificationsMap.keySet()) {
+                if (pushId.equals(AUTH_PUSH_NOTIFICATION_ID))
+                    return true;
+            }
+            return false;
         }
 
         // Returns true if the note type is known to have a gravatar
