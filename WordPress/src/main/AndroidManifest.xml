@@ -92,6 +92,10 @@
                 <data
                     android:host="signin"
                     android:scheme="wordpress" />
+
+                <data
+                    android:host="magic-login"
+                    android:scheme="wordpress" />
             </intent-filter>
         </activity>
 
@@ -511,23 +515,6 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-
-        <activity
-            android:theme="@style/Calypso.NoActionBar"
-            android:name=".ui.accounts.login.MagicLinkSignInActivity"
-            android:label="@string/sign_in"
-            android:windowSoftInputMode="stateAlwaysHidden">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="magic-login"
-                    android:scheme="wordpress" >
-                </data>
-            </intent-filter>
-        </activity>
 
         <activity
             android:name=".ui.HelpshiftDeepLinkReceiver">
