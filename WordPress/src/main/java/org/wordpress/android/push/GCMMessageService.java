@@ -161,8 +161,7 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     public static synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context){
-        if (sNotificationHelpers != null && sActiveNotificationsMap.size() == 1) {
-            //get the corresponding bundle for this noteId
+        if (sNotificationHelpers != null && sActiveNotificationsMap.size() > 0) {
             Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
             sNotificationHelpers.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
         }
@@ -306,6 +305,11 @@ public class GCMMessageService extends GcmListenerService {
         return DeviceUtils.getInstance().isDeviceLocked(this);
     }
 
+
+    private static void addAuthPushNotificationToNotificationMap(Bundle data) {
+        sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
+    }
+
     private class NotificationHelper {
 
         private void handleDefaultPush(Context context, @NonNull Bundle data) {
@@ -324,6 +328,7 @@ public class GCMMessageService extends GcmListenerService {
 
             // Check for wpcom auth push, if so we will process this push differently
             if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+                addAuthPushNotificationToNotificationMap(data);
                 handlePushAuth(context, data);
                 return;
             }
@@ -673,11 +678,7 @@ public class GCMMessageService extends GcmListenerService {
             if (sActiveNotificationsMap.size() > 1) {
 
                 //first remove 2fa push from the map, then reinsert it, so it's not shown in the inbox style group notif
-                Bundle authPNBundle = null;
-                if (mapContainsAuthPushNotification()) {
-                    authPNBundle = sActiveNotificationsMap.get(AUTH_PUSH_NOTIFICATION_ID);
-                    sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
-                }
+                Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
 
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 int noteCtr = 1;
@@ -803,10 +804,17 @@ public class GCMMessageService extends GcmListenerService {
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
             // Check for wpcom auth push, if so we will process this push differently
-            if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
-                handlePushAuth(context, data);
-                return;
+            // and we'll remove the auth special notif out of the map while we re-build the remaining notifs
+            Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);;
+            if (authPNBundle != null) {
+                handlePushAuth(context, authPNBundle);
+                if (sActiveNotificationsMap.size() > 0 && noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+                    //get the data for the next notification in map for re-build
+                    //because otherwise we would be keeping the PUSH_AUTH type note in `data`
+                    data = sActiveNotificationsMap.values().iterator().next();
+                }
             }
+
 
             Bitmap largeIconBitmap = null;
             // here notify the existing group notification by eliminating the line that is now gone
@@ -858,6 +866,11 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             showGroupNotificationForBuilder(context, builder,  wpcomNoteID, message);
+
+            //reinsert 2fa bundle if it was present
+            if (authPNBundle != null) {
+                sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+            }
         }
 
         private String getNotificationTitleOrAppNameFromBundle(Bundle data){
@@ -889,8 +902,6 @@ public class GCMMessageService extends GcmListenerService {
             if (data == null) {
                 return;
             }
-
-            addAuthPushNotificationToNotificationMap(data);
 
             String pushAuthToken = data.getString("push_auth_token", "");
             String title = data.getString("title", "");
@@ -960,18 +971,6 @@ public class GCMMessageService extends GcmListenerService {
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
-        }
-
-        private void addAuthPushNotificationToNotificationMap(Bundle data) {
-            sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
-        }
-
-        private boolean mapContainsAuthPushNotification(){
-            for (Integer pushId : sActiveNotificationsMap.keySet()) {
-                if (pushId.equals(AUTH_PUSH_NOTIFICATION_ID))
-                    return true;
-            }
-            return false;
         }
 
         // Returns true if the note type is known to have a gravatar
