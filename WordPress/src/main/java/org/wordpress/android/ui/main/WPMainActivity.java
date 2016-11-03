@@ -3,10 +3,7 @@ package org.wordpress.android.ui.main;
 import android.animation.ObjectAnimator;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +31,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.push.NotificationsProcessingService;
+import org.wordpress.android.push.NotificationsScreenLockWatchService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -76,7 +74,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
     private int  mAppBarElevation;
-    private BroadcastReceiver mScreenOffBroadcastReceiver;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -191,15 +188,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             }
         });
 
-        if (mScreenOffBroadcastReceiver == null) {
-            mScreenOffBroadcastReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    GCMMessageService.rebuildAndUpdateNotifsOnSystemBarForRemainingNote(WPMainActivity.this);
-                }
-            };
-        }
-        registerReceiver(mScreenOffBroadcastReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 
         if (savedInstanceState == null) {
             if (AccountHelper.isSignedIn()) {
@@ -221,11 +209,12 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 ActivityLauncher.showSignInForResult(this);
             }
         }
+        startService(new Intent(this, NotificationsScreenLockWatchService.class));
     }
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(mScreenOffBroadcastReceiver);
+        stopService(new Intent(this, NotificationsScreenLockWatchService.class));
         super.onDestroy();
     }
 
