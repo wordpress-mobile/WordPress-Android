@@ -35,6 +35,7 @@ import org.wordpress.android.util.DeviceUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.AUTH_PUSH_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
@@ -48,6 +49,7 @@ import static org.wordpress.android.ui.notifications.NotificationsListFragment.N
  * - like
  * - reply-to-comment
  * - approve
+ * - 2fa approve & ignore
  */
 
 public class NotificationsProcessingService extends Service {
@@ -341,14 +343,15 @@ public class NotificationsProcessingService extends Service {
             //dismiss any other pending result notification
             dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
             //update notification indicating the operation succeeded
-            showFinalMessageToUser(successMessage, GROUP_NOTIFICATION_ID);
+            showFinalMessageToUser(successMessage, ACTIONS_PROGRESS_NOTIFICATION_ID);
+            //remove the original notification from the system bar
+            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(mContext, mNoteId);
 
             //after 3 seconds, dismiss the notification that indicated success
             Handler handler = new Handler(getMainLooper());
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    //remove the original notification from the system bar
-                    GCMMessageService.removeNotificationWithNoteIdFromSystemBar(mContext, mNoteId);
+                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
                 }}, 3000); // show the success message for 3 seconds, then dismiss
 
             stopSelf(mTaskId);
@@ -372,6 +375,7 @@ public class NotificationsProcessingService extends Service {
                 errorMessage = getString(R.string.error_generic);
             }
             resetOriginalNotification();
+            dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
             showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
 
             //after 3 seconds, dismiss the error message notification
@@ -407,7 +411,7 @@ public class NotificationsProcessingService extends Service {
         }
 
         private void showIntermediateMessageToUser(String message) {
-            showMessageToUser(message, true, GROUP_NOTIFICATION_ID);
+            showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID);
         }
 
         private void showFinalMessageToUser(String message, int pushId) {
@@ -554,7 +558,7 @@ public class NotificationsProcessingService extends Service {
                     //dismiss notifs
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID); //intermediate progress notif
                     GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
 
                     stopSelf(mTaskId);
@@ -566,7 +570,7 @@ public class NotificationsProcessingService extends Service {
                     //dismiss notifs
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID); //intermediate progress notif
                     GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
                     requestFailedWithMessage(getString(R.string.push_auth_expired), false);
                 }
