@@ -68,7 +68,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
@@ -355,10 +354,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setReplyUniqueId() {
-        mEditReply.getAutoSaveTextHelper().setUniqueId(
-                String.format(LanguageUtils.getCurrentDeviceLanguage(getActivity()), "%s%d%d",
-                AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
-                getRemoteBlogId(), getCommentId()));
+        if (mEditReply != null && isAdded()) {
+            mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%s%d%d",
+                            AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
+                            getRemoteBlogId(), getCommentId()));
+        }
     }
 
     private void setComment(int localBlogId, final Comment comment) {
