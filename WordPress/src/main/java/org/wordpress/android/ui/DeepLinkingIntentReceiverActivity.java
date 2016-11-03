@@ -139,6 +139,12 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Parse the URL fragment and interpret it as an operation to perform. For example, a "#comments" fragment is
+     * interpreted as a direct jump into the comments section of the post.
+     *
+     * @param uri the full URI input, including the fragment
+     */
     private void parseFragment(Uri uri) {
         // default to do-nothing w.r.t. comments
         mDirectOperation = null;
