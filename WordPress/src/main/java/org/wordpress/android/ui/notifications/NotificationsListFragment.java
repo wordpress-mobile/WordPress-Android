@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -51,8 +53,10 @@ public class NotificationsListFragment extends Fragment
     private View mFilterView;
     private RadioGroup mFilterRadioGroup;
     private View mFilterDivider;
+    private View mNewNotificationsBar;
 
-    private int mRestoredScrollPosition;
+    private long mRestoredScrollNoteID;
+    private boolean mIsAnimatingOutNewNotificationsBar;
 
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
@@ -88,6 +92,17 @@ public class NotificationsListFragment extends Fragment
             }
         });
 
+
+        // bar that appears at bottom after new notes are received and the user is on this screen
+        mNewNotificationsBar = view.findViewById(R.id.layout_new_notificatons);
+        mNewNotificationsBar.setVisibility(View.GONE);
+        mNewNotificationsBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onScrollToTop();
+            }
+        });
+
         return view;
     }
 
@@ -100,11 +115,35 @@ public class NotificationsListFragment extends Fragment
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             mRecyclerView.removeOnScrollListener(this); // remove the listener now
-            EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
-                    false
-            ));
+            clearPendingNotificationsItemsOnUI();
         }
     };
+
+    private void clearPendingNotificationsItemsOnUI() {
+        hideNewNotificationsBar();
+        // Immediately update the unseen ribbon
+        EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
+                false
+        ));
+        // Then hit the server
+        NotificationsActions.updateSeenNotes();
+
+        // Removes app notifications from the system bar
+        new Thread(new Runnable() {
+            public void run() {
+                GCMMessageService.removeAllNotifications(getActivity());
+            }
+        }).start();
+    }
+
+    @Override
+    public void onScrollToTop() {
+        if(!isAdded()) return;
+        clearPendingNotificationsItemsOnUI();
+        if (getFirstVisibleItemID() > 0) {
+            mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
+        }
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -113,7 +152,7 @@ public class NotificationsListFragment extends Fragment
         mRecyclerView.setAdapter(getNotesAdapter());
 
         if (savedInstanceState != null) {
-            setRestoredListPosition(savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, RecyclerView.NO_POSITION));
+            setRestoredFirstVisibleItemID(savedInstanceState.getLong(KEY_LIST_SCROLL_POSITION, 0));
         }
         mNotesAdapter.reloadNotesFromDBAsync();
     }
@@ -134,6 +173,9 @@ public class NotificationsListFragment extends Fragment
     public void onDataLoaded(int itemsCount) {
         if (itemsCount > 0) {
             hideEmptyView();
+            if (mRestoredScrollNoteID > 0) {
+                restoreListScrollPosition();
+            }
         } else {
             showEmptyViewForCurrentFilter();
         }
@@ -381,11 +423,15 @@ public class NotificationsListFragment extends Fragment
     }
 
     private void restoreListScrollPosition() {
-        if (isAdded() && mRecyclerView != null && mRestoredScrollPosition != RecyclerView.NO_POSITION
-                && mRestoredScrollPosition < mNotesAdapter.getItemCount()) {
+        if (!isAdded()  ||  mRestoredScrollNoteID <= 0) {
+            return;
+        }
+        final int pos = getNotesAdapter().getPositionForNote(String.valueOf(mRestoredScrollNoteID));
+
+        if (pos != RecyclerView.NO_POSITION && pos < mNotesAdapter.getItemCount()) {
             // Restore scroll position in list
-            mLinearLayoutManager.scrollToPosition(mRestoredScrollPosition);
-            mRestoredScrollPosition = RecyclerView.NO_POSITION;
+            mLinearLayoutManager.scrollToPosition(pos);
+            mRestoredScrollNoteID = 0L;
         }
     }
 
@@ -396,21 +442,22 @@ public class NotificationsListFragment extends Fragment
         }
 
         // Save list view scroll position
-        outState.putInt(KEY_LIST_SCROLL_POSITION, getScrollPosition());
+        outState.putLong(KEY_LIST_SCROLL_POSITION, getFirstVisibleItemID());
 
         super.onSaveInstanceState(outState);
     }
 
-    private int getScrollPosition() {
+    private long getFirstVisibleItemID() {
         if (!isAdded() || mRecyclerView == null) {
             return RecyclerView.NO_POSITION;
         }
 
-        return mLinearLayoutManager.findFirstVisibleItemPosition();
+        int pos = mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();
+        return getNotesAdapter().getItemId(pos);
     }
 
-    private void setRestoredListPosition(int listPosition) {
-        mRestoredScrollPosition = listPosition;
+    private void setRestoredFirstVisibleItemID(long noteID) {
+        mRestoredScrollNoteID = noteID;
     }
 
     // Notification filter methods
@@ -438,20 +485,6 @@ public class NotificationsListFragment extends Fragment
                 restoreListScrollPosition();
             }
         });
-    }
-
-    @Override
-    public void onScrollToTop() {
-        if(!isAdded()) return;
-        // Immediately update the unseen ribbon
-        EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
-                false
-        ));
-        // Then hit the server
-        NotificationsActions.updateSeenNotes();
-        if (getScrollPosition() > 0) {
-            mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
-        }
     }
 
     @Override
@@ -510,6 +543,7 @@ public class NotificationsListFragment extends Fragment
         if (!isAdded()) {
             return;
         }
+        mRestoredScrollNoteID = getFirstVisibleItemID(); // Remember the ID of the first note visible on the screen
         getNotesAdapter().reloadNotesFromDBAsync();
     }
 
@@ -519,9 +553,65 @@ public class NotificationsListFragment extends Fragment
         }
         // if a new note arrives when the notifications list is on Foreground.
         if (event.hasUnseenNotes) {
+            mRecyclerView.clearOnScrollListeners(); // Just one listener. Multiple notes received here add multiple listeners.
             mRecyclerView.addOnScrollListener(mOnScrollListener);
+            if(!isFirstItemVisible()) {
+                showNewNotificationsBar();
+            }
         } else {
             mRecyclerView.removeOnScrollListener(mOnScrollListener);
         }
+    }
+
+    /*
+     * bar that appears at the top when new notifications are available
+     */
+    private boolean isNewNotificationsBarShowing() {
+        return (mNewNotificationsBar != null && mNewNotificationsBar.getVisibility() == View.VISIBLE);
+    }
+
+    private void showNewNotificationsBar() {
+        if (!isAdded() || isNewNotificationsBarShowing()) {
+            return;
+        }
+
+        AniUtils.startAnimation(mNewNotificationsBar, R.anim.notifications_bottom_bar_in);
+        mNewNotificationsBar.setVisibility(View.VISIBLE);
+    }
+    private void hideNewNotificationsBar() {
+        if (!isAdded() || !isNewNotificationsBarShowing() || mIsAnimatingOutNewNotificationsBar) {
+            return;
+        }
+
+        mIsAnimatingOutNewNotificationsBar = true;
+
+        Animation.AnimationListener listener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (isAdded()) {
+                    mNewNotificationsBar.setVisibility(View.GONE);
+                    mIsAnimatingOutNewNotificationsBar = false;
+                }
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        };
+        AniUtils.startAnimation(mNewNotificationsBar, R.anim.notifications_bottom_bar_out, listener);
+    }
+
+    /*
+     * returns true if the first item is still visible in the RecyclerView - will return
+     * false if the first item is scrolled out of view, or if the list is empty
+     */
+    public boolean isFirstItemVisible() {
+        if (mRecyclerView == null
+                || mRecyclerView.getLayoutManager() == null) {
+            return false;
+        }
+
+        View child = mRecyclerView.getLayoutManager().getChildAt(0);
+        return (child != null && mRecyclerView.getLayoutManager().getPosition(child) == 0);
     }
 }
