@@ -547,6 +547,7 @@ public class NotificationsListFragment extends Fragment
         getNotesAdapter().reloadNotesFromDBAsync();
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
         if (!isAdded()) {
             return;
