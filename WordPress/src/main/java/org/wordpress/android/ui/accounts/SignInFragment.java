@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.wordpress.rest.RestRequest;
 
@@ -39,6 +40,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
@@ -46,6 +49,8 @@ import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
+import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -76,10 +81,16 @@ import java.util.regex.Pattern;
 
 public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String TAG = "sign_in_fragment_tag";
+    public static final String REASON_ERROR = "error";
+    public static final String REASON_ERROR_TAKEN = "taken";
+    public static final int MAX_EMAIL_LENGTH = 100;
+    public static final String MAGIC_LINK_PROPERTY = "magic_link";
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
+    private static final Pattern DOT_COM_RESERVED_NAMES =
+            Pattern.compile("^(?:admin|administrator|invite|main|root|web|www|[^@]*wordpress[^@]*)$");
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -116,6 +127,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected WPTextView mJetpackAuthLabel;
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
+
+    private final Matcher mReservedNameMatcher = DOT_COM_RESERVED_NAMES.matcher("");
+
+    private OnMagicLinkRequestInteraction mListener;
+    private String mToken = "";
+    private boolean mSmartLockEnabled = true;
+    private boolean mShouldShowPassword;
+
+    public interface OnMagicLinkRequestInteraction {
+        void onMagicLinkRequestSuccess(String email);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -165,6 +187,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     autocorrectUsername();
+
+                    // Show the self-hosted sign-in form if the user entered a username that can't be for WordPress.com
+                    if (!mSelfHosted) {
+                        mReservedNameMatcher.reset(mUsernameEditText.getText().toString());
+                        if (mReservedNameMatcher.matches()) {
+                            showSelfHostedSignInForm();
+                        }
+                    }
                 }
             }
         });
@@ -205,7 +235,32 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             showSelfHostedSignInForm();
         }
         autofillFromBuildConfig();
+
+        if (savedInstanceState == null) {
+            configureMagicLinkUI();
+        }
+        mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((didPressNextKey(actionId, event) || didPressEnterKey(actionId, event)) && !isEnterPasswordMode()) {
+                    signIn();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SignInFragment.OnMagicLinkRequestInteraction) {
+            mListener = (SignInFragment.OnMagicLinkRequestInteraction) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnMagicLinkRequestInteraction");
+        }
     }
 
     @Override
@@ -221,6 +276,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (!TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.GONE) {
             setTwoStepAuthVisibility(true);
         }
+
+        if (!mToken.isEmpty()) {
+            attemptLoginWithMagicLink();
+            mSmartLockEnabled = false;
+        } else {
+            mSmartLockEnabled = true;
+        }
+        if (mShouldShowPassword) {
+            showPasswordFieldAndFocus();
+        }
     }
 
     /**
@@ -229,6 +294,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      */
     public void forceSelfHostedMode(@NonNull String prefillUrl) {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
+        mPasswordLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
         if (!prefillUrl.isEmpty()) {
@@ -237,13 +303,39 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSelfHosted = true;
     }
 
+    private void showPasswordFieldAndFocus() {
+        if (isAdded()) {
+            endProgress();
+            showPasswordField();
+            mPasswordEditText.requestFocus();
+            mSignInButton.setText(getString(R.string.sign_in));
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(mPasswordEditText, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    private void showPasswordField() {
+        if (isAdded()) {
+            mPasswordLayout.setVisibility(View.VISIBLE);
+            mForgotPassword.setVisibility(View.VISIBLE);
+            if (!mSelfHosted) {
+                mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            }
+            mSignInButton.setText(R.string.sign_in);
+        }
+    }
+
     protected void toggleSignInMode(){
         if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
-            showDotComSignInForm();
-            mSelfHosted = false;
+            configureMagicLinkUI();
         } else {
             showSelfHostedSignInForm();
-            mSelfHosted = true;
+        }
+        
+        if (fieldsFilled()) {
+            mSignInButton.setEnabled(true);
+        } else {
+            mSignInButton.setEnabled(false);
         }
     }
 
@@ -253,11 +345,18 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void showSelfHostedSignInForm(){
+        endProgress();
+        mSelfHosted = true;
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
+        showPasswordField();
     }
 
     protected void track(Stat stat, Map<String, Boolean> properties) {
+        if (properties == null) {
+            properties = new HashMap<>();
+        }
+        properties.put(MAGIC_LINK_PROPERTY, true);
         AnalyticsTracker.track(stat, properties);
     }
 
@@ -269,11 +368,22 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             @Override
             public void run() {
                 if (userBlogList != null) {
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
+                    Intent intent = new Intent(getActivity(), WPMainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
+
+                    getActivity().startActivity(intent);
                 }
             }
         });
+    }
+
+    public void setToken(String token) {
+        mToken = token;
+    }
+
+    public void setShouldShowPassword(boolean shouldShowPassword) {
+        mShouldShowPassword = shouldShowPassword;
     }
 
     private void initInfoButtons(View rootView) {
@@ -316,10 +426,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     public boolean canAutofillUsernameAndPassword() {
-        return EditTextUtils.getText(mUsernameEditText).isEmpty()
-               && EditTextUtils.getText(mPasswordEditText).isEmpty()
-               && mUsernameEditText != null
-               && mPasswordEditText != null;
+        return mSmartLockEnabled && EditTextUtils.getText(mUsernameEditText).isEmpty()
+                && EditTextUtils.getText(mPasswordEditText).isEmpty() && !mSelfHosted;
     }
 
     public void onCredentialRetrieved(Credential credential) {
@@ -329,6 +437,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mUsernameEditText.setText(credential.getId());
             mPasswordEditText.setText(credential.getPassword());
         }
+        showPasswordField();
     }
 
     @Override
@@ -354,6 +463,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mBottomButtonsLayout.setOrientation(LinearLayout.VERTICAL);
             setSecondaryButtonVisible(false);
         }
+    }
+
+    private boolean isEnterPasswordMode() {
+        return mPasswordLayout.getVisibility() == View.VISIBLE;
     }
 
     private final OnClickListener mOnLoginFormClickListener = new OnClickListener() {
@@ -392,6 +505,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
         return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) ||
                 WPUrlUtils.isWordPressCom(UrlUtils.addUrlSchemeIfNeeded(selfHostedUrl, false));
+    }
+
+    private void configureMagicLinkUI() {
+        showDotComSignInForm();
+        mSelfHosted = false;
+        mPasswordLayout.setVisibility(View.GONE);
+        mForgotPassword.setVisibility(View.GONE);
+        mSignInButton.setText(getString(R.string.button_next));
     }
 
     private boolean isJetpackAuth() {
@@ -508,6 +629,22 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (!isWPComLogin()) {
             track(Stat.ADDED_SELF_HOSTED_SITE, null);
         }
+    }
+
+    public void attemptLoginWithMagicLink() {
+        saveUsernameAndTokenToAccount();
+
+        SimperiumUtils.configureSimperium(WordPress.getContext(), mToken);
+
+        configureAccountAfterSuccessfulSignIn();
+    }
+
+    private void saveUsernameAndTokenToAccount() {
+        Account account = AccountHelper.getDefaultAccount();
+        account.setAccessToken(mToken);
+        account.setUserName(mUsername);
+        account.save();
+        account.fetchAccountDetails();
     }
 
     private SmartLockHelper getSmartLockHelper() {
@@ -709,27 +846,76 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void signIn() {
-        if (!isUserDataValid()) {
-            return;
-        }
+        if (mSelfHosted || isEnterPasswordMode()) {
+            if (!isUserDataValid()) {
+                return;
+            }
 
-        if (!checkNetworkConnectivity()) {
-            return;
-        }
+            if (!checkNetworkConnectivity()) {
+                return;
+            }
 
-        mUsername = EditTextUtils.getText(mUsernameEditText).trim();
-        mPassword = EditTextUtils.getText(mPasswordEditText).trim();
-        mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
-        if (isWPComLogin()) {
-            AppLog.i(T.NUX, "User tries to log in on WordPress.com with username: " + mUsername);
-            startProgress(getString(R.string.connecting_wpcom));
-            signInAndFetchBlogListWPCom();
+            mUsername = EditTextUtils.getText(mUsernameEditText).trim();
+            mPassword = EditTextUtils.getText(mPasswordEditText).trim();
+            mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
+            if (isWPComLogin()) {
+                AppLog.i(T.NUX, "User tries to log in on WordPress.com with username: " + mUsername);
+                startProgress(getString(R.string.connecting_wpcom));
+                signInAndFetchBlogListWPCom();
+            } else {
+                String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
+                AppLog.i(T.NUX, "User tries to log in on Self Hosted: " + selfHostedUrl + " with username: " + mUsername);
+                startProgress(getString(R.string.signing_in));
+                signInAndFetchBlogListWPOrg();
+            }
         } else {
-            String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
-            AppLog.i(T.NUX, "User tries to log in on Self Hosted: " + selfHostedUrl + " with username: " + mUsername);
-            startProgress(getString(R.string.signing_in));
-            signInAndFetchBlogListWPOrg();
+            if (isUsernameEmail()) {
+                startProgress(getActivity().getString(R.string.checking_email));
+                requestWPComEmailCheck();
+            } else {
+                showPasswordFieldAndFocus();
+            }
         }
+    }
+
+    private void requestWPComEmailCheck() {
+        WordPress.getRestClientUtilsV0().isAvailable(mUsername, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String errorReason = response.getString(REASON_ERROR);
+                    if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN) && mListener != null) {
+                        mListener.onMagicLinkRequestSuccess(mUsername);
+                    } else {
+                        if (isUsernameEmail()) {
+                            showSelfHostedSignInForm();
+                        } else {
+                            showPasswordFieldAndFocus();
+                        }
+                    }
+                } catch (JSONException error) {
+                    AppLog.e(AppLog.T.MAIN, error);
+                    if (isUsernameEmail()) {
+                        showSelfHostedSignInForm();
+                    } else {
+                        showPasswordFieldAndFocus();
+                    }
+                }
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                showPasswordFieldAndFocus();
+            }
+        });
+    }
+
+    private boolean isUsernameEmail() {
+        mUsername = EditTextUtils.getText(mUsernameEditText).trim();
+        Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
+        Matcher matcher = emailRegExPattern.matcher(mUsername);
+
+        return matcher.find() && mUsername.length() <= MAX_EMAIL_LENGTH;
     }
 
     private void requestSMSTwoStepCode() {
