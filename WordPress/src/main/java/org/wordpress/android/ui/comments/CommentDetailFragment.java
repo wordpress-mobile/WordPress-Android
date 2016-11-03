@@ -77,6 +77,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
@@ -1227,7 +1228,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         };
 
-        final String path = String.format("/sites/%s/comments/%s", remoteBlogId, commentId);
+        final String path = String.format(Locale.US, "/sites/%s/comments/%s", remoteBlogId, commentId);
         WordPress.getRestClientUtils().get(path, restListener, restErrListener);
     }
 }
