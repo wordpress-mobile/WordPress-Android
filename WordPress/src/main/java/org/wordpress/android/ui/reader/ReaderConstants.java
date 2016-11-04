@@ -43,6 +43,7 @@ public class ReaderConstants {
     static final String KEY_WAS_PAUSED        = "was_paused";
     static final String KEY_ERROR_MESSAGE     = "error_message";
     static final String KEY_FIRST_LOAD        = "first_load";
+    static final String KEY_TRACKED_RELATED   = "already_tracked_related";
 
     // JSON key names
     //  tag endpoints

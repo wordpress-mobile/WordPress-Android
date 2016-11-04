@@ -94,6 +94,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsLoggedOutReader;
     private boolean mIsWebViewPaused;
     private boolean mIsRelatedPost;
+    private boolean mHasTrackedRelatedPosts;
 
     private int mToolbarHeight;
     private String mErrorMessage;
@@ -274,6 +275,7 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
+        outState.putBoolean(ReaderConstants.KEY_TRACKED_RELATED, mHasTrackedRelatedPosts);
 
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
@@ -301,6 +303,7 @@ public class ReaderPostDetailFragment extends Fragment
             mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
+            mHasTrackedRelatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_TRACKED_RELATED);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -412,6 +415,7 @@ public class ReaderPostDetailFragment extends Fragment
         mPostId = postId;
         mHasAlreadyRequestedPost = false;
         mHasAlreadyUpdatedPost = false;
+        mHasTrackedRelatedPosts = false;
 
         // hide views that would show info for the previous post - these will be re-displayed
         // with the correct info once the new post loads
@@ -481,6 +485,7 @@ public class ReaderPostDetailFragment extends Fragment
         // make sure the container is visible
         if (mRelatedPostsContainerView.getVisibility() != View.VISIBLE) {
             mRelatedPostsContainerView.setVisibility(View.VISIBLE);
+            trackRelatedPostsIfShowing();
         }
 
         // fade in this related posts view
@@ -1005,23 +1010,28 @@ public class ReaderPostDetailFragment extends Fragment
             showFooter(false);
         }
 
-        if (isRelatedPostsShowing()) {
-            AppLog.w(T.READER, "RELATED POSTS SHOWING");
-        }
+        trackRelatedPostsIfShowing();
     }
 
     /*
-     * returns true if related posts are visible (the container view is hidden until after they're
-     * loaded) and are scrolled into view
+     * track that related posts have loaded and scrolled into view if we haven't
+     * already tracked it
      */
-    private boolean isRelatedPostsShowing() {
-        if (mRelatedPostsContainerView.getVisibility() == View.VISIBLE) {
-            Rect scrollBounds = new Rect();
-            mScrollView.getHitRect(scrollBounds);
-            return (mRelatedPostsContainerView.getLocalVisibleRect(scrollBounds));
-        } else {
-            return false;
-        }
+    private void trackRelatedPostsIfShowing() {
+        // nothing to do if we've already tracked related posts
+        if (mHasTrackedRelatedPosts) return;
+
+        // container won't be visible if related posts haven't loaded yet
+        if (mRelatedPostsContainerView.getVisibility() != View.VISIBLE) return;
+
+        // don't track if the container isn't scrolled into view
+        Rect scrollBounds = new Rect();
+        mScrollView.getHitRect(scrollBounds);
+        if (!mRelatedPostsContainerView.getLocalVisibleRect(scrollBounds)) return;
+
+        mHasTrackedRelatedPosts = true;
+        AppLog.w(T.READER, "Related posts tracked");
+        // TODO: actually track this!
     }
 
     @Override
