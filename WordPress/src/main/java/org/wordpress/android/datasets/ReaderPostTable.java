@@ -262,36 +262,24 @@ public class ReaderPostTable {
     }
 
     public static ReaderPost getBlogPost(long blogId, long postId, boolean excludeTextColumn) {
-        return getPost(false, blogId, postId, excludeTextColumn);
-    }
-
-    public static ReaderPost getFeedPost(long feedId, long feedItemId, boolean excludeTextColumn) {
-        return getPost(true, feedId, feedItemId, excludeTextColumn);
-    }
-
-    private static ReaderPost getPost(boolean isFeed, long blogOrFeedId, long postOrItemId, boolean excludeTextColumn) {
-        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE "
-                + (isFeed ? "feed_id" : "blog_id") + "=? AND " + (isFeed ? "feed_item_id" : "post_id") + "=? LIMIT 1";
-
-        String[] args = new String[] {Long.toString(blogOrFeedId), Long.toString(postOrItemId)};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
-        try {
-            if (!c.moveToFirst()) {
-                return null;
-            }
-            return getPostFromCursor(c);
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
+        return getPost("blog_id=? AND post_id=?", new String[]{Long.toString(blogId), Long.toString(postId)},
+                excludeTextColumn);
     }
 
     public static ReaderPost getBlogPost(String blogSlug, String postSlug, boolean excludeTextColumn) {
-        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE "
-                + "blog_url LIKE ? AND url LIKE ? LIMIT 1";
+        return getPost("blog_url LIKE ? AND url LIKE ?", new String[] {"%//" + blogSlug, "%/" + postSlug + "/"},
+                excludeTextColumn);
+    }
 
-        String[] args = new String[] {"%//" + blogSlug, "%/" + postSlug + "/"};
+    public static ReaderPost getFeedPost(long feedId, long feedItemId, boolean excludeTextColumn) {
+        return getPost("feed_id=? AND feed_item_id=?", new String[]{Long.toString(feedId), Long.toString(feedItemId)},
+                excludeTextColumn);
+    }
+
+    private static ReaderPost getPost(String where, String[] args, boolean excludeTextColumn) {
+        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE " + where + " LIMIT 1";
+
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             if (!c.moveToFirst()) {
