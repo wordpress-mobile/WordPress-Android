@@ -32,7 +32,8 @@ public class NotificationsScreenLockWatchService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //no op
-        return START_NOT_STICKY;
+        // We want this service to continue running until it is explicitly stopped, so return sticky.
+        return START_STICKY;
     }
 
     @Nullable

@@ -317,6 +317,11 @@ public class GCMMessageService extends GcmListenerService {
             // Ensure Simperium is running so that notes sync
             SimperiumUtils.configureSimperium(context, AccountHelper.getDefaultAccount().getAccessToken());
 
+            // if a notification is received while the app has not yet been launched after last power on,
+            // the screenlockwatchservice won't be running. Let's start it now.
+            startService(new Intent(context, NotificationsScreenLockWatchService.class));
+
+
             long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
             String pushUserId = data.getString(PUSH_ARG_USER);
             // pushUserId is always set server side, but better to double check it here.
