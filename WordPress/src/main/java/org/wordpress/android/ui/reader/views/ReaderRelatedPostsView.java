@@ -36,7 +36,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
 
     private OnRelatedPostClickListener mClickListener;
     private int mFeaturedImageWidth;
-    private ReaderRelatedPostList mRelatedPostList;
+    private final ReaderRelatedPostList mRelatedPostList = new ReaderRelatedPostList();
 
     public ReaderRelatedPostsView(Context context) {
         super(context);
@@ -69,7 +69,8 @@ public class ReaderRelatedPostsView extends LinearLayout {
     }
 
     public void showRelatedPosts(@NonNull ReaderRelatedPostList posts, String siteName, boolean isGlobal) {
-        mRelatedPostList = posts;
+        mRelatedPostList.clear();
+        mRelatedPostList.addAll(posts);
 
         ViewGroup container = (ViewGroup) findViewById(R.id.container_related_posts);
         container.removeAllViews();
@@ -151,6 +152,10 @@ public class ReaderRelatedPostsView extends LinearLayout {
         } else {
             label.setText(String.format(getContext().getString(R.string.reader_label_local_related_posts), siteName));
         }
+    }
+
+    public ReaderRelatedPostList getRelatedPosts() {
+        return mRelatedPostList;
     }
 
     /**
