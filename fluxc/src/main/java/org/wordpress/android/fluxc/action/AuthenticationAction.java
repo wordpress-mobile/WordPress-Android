@@ -15,6 +15,8 @@ public enum AuthenticationAction implements IAction {
     AUTHENTICATE,
     @Action(payloadType = RefreshSitesXMLRPCPayload.class)
     DISCOVER_ENDPOINT,
+    @Action(payloadType = String.class)
+    SEND_AUTH_EMAIL,
 
     // Remote responses
     @Action(payloadType = AuthenticateErrorPayload.class)
