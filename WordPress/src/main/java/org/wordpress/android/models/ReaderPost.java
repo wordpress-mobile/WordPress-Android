@@ -1,6 +1,5 @@
 package org.wordpress.android.models;
 
-import android.net.Uri;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
