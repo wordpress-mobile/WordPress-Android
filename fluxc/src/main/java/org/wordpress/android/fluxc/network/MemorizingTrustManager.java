@@ -41,7 +41,7 @@ public class MemorizingTrustManager implements X509TrustManager {
 
     public MemorizingTrustManager(Context appContext) {
         mContext = appContext;
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
         mLocalKeyStoreFutureTask = new FutureTask<>(new Callable<KeyStore>() {
             public KeyStore call() {
                 return getKeyStore();
@@ -52,6 +52,7 @@ public class MemorizingTrustManager implements X509TrustManager {
                 return getTrustManager(null);
             }
         });
+        executorService.execute(mLocalKeyStoreFutureTask);
         executorService.execute(mTrustManagerFutureTask);
     }
 

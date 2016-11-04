@@ -26,6 +26,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -153,7 +154,7 @@ public class SiteStore extends Store {
 
         public static NewSiteErrorType fromString(final String string) {
             if (!TextUtils.isEmpty(string)) {
-                String siteString = string.toUpperCase().replace(BLOG, SITE);
+                String siteString = string.toUpperCase(Locale.US).replace(BLOG, SITE);
                 for (NewSiteErrorType v : NewSiteErrorType.values()) {
                     if (siteString.equalsIgnoreCase(v.name())) {
                         return v;
