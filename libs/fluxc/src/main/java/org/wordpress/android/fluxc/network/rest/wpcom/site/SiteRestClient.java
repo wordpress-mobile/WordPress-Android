@@ -40,6 +40,17 @@ import javax.inject.Singleton;
 
 @Singleton
 public class SiteRestClient extends BaseWPComRestClient {
+    //
+    // New site request keys
+    //
+    public static final String SITE_NAME_KEY = "blog_name";
+    public static final String SITE_TITLE_KEY = "blog_title";
+    public static final String LANGUAGE_ID_KEY = "lang_id";
+    public static final String PUBLIC_KEY = "public";
+    public static final String VALIDATE_KEY = "validate";
+    public static final String CLIENT_ID_KEY = "client_id";
+    public static final String CLIENT_SECRET_KEY = "client_secret";
+
     private final AppSecrets mAppSecrets;
 
     public static class NewSiteResponsePayload extends Payload {
@@ -110,13 +121,13 @@ public class SiteRestClient extends BaseWPComRestClient {
                         @NonNull SiteVisibility visibility, final boolean dryRun) {
         String url = WPCOMREST.sites.new_.getUrlV1();
         Map<String, Object> body = new HashMap<>();
-        body.put("blog_name", siteName);
-        body.put("blog_title", siteTitle);
-        body.put("lang_id", language);
-        body.put("public", visibility.toString());
-        body.put("validate", dryRun ? "1" : "0");
-        body.put("client_id", mAppSecrets.getAppId());
-        body.put("client_secret", mAppSecrets.getAppSecret());
+        body.put(SITE_NAME_KEY, siteName);
+        body.put(SITE_TITLE_KEY, siteTitle);
+        body.put(LANGUAGE_ID_KEY, language);
+        body.put(PUBLIC_KEY, visibility.toString());
+        body.put(VALIDATE_KEY, dryRun ? "1" : "0");
+        body.put(CLIENT_ID_KEY, mAppSecrets.getAppId());
+        body.put(CLIENT_SECRET_KEY, mAppSecrets.getAppSecret());
 
         WPComGsonRequest<NewAccountResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 NewAccountResponse.class,
@@ -184,7 +195,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         site.setIsJetpack(from.jetpack);
         site.setIsVisible(from.visible);
         site.setIsPrivate(from.is_private);
-        // Depending of user's role, options could be "hidden", for instance an "Author" can't read blog options.
+        // Depending of user's role, options could be "hidden", for instance an "Author" can't read site options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
             site.setIsVideoPressSupported(from.options.videopress_enabled);
