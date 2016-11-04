@@ -357,7 +357,7 @@ public class GCMMessageService extends GcmListenerService {
                 return;
             }
 
-            buildAndShowNotificationFromNoteData(context, data);
+            buildAndShowNotificationFromNoteData(context, data, false);
 
             EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
         }
@@ -388,7 +388,7 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        private void buildAndShowNotificationFromNoteData(Context context, Bundle data) {
+        private void buildAndShowNotificationFromNoteData(Context context, Bundle data, boolean dontPlaySound) {
 
             if (data == null) {
                 AppLog.e(T.NOTIFS, "Push notification received without a valid Bundle!");
@@ -473,11 +473,12 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             showGroupNotificationForActiveNotificationsMap(context, pushId, wpcomNoteID,
-                    noteType, data.getString("icon"), title, message);
+                    noteType, data.getString("icon"), title, message, dontPlaySound);
         }
 
         private void showGroupNotificationForActiveNotificationsMap(Context context, int pushId, String wpcomNoteID, String noteType,
-                                                                    String largeIconUri, String title, String message) {
+                                                                    String largeIconUri, String title, String message,
+                                                                    boolean dontPlaySound) {
 
             // Build the new notification, add group to support wearable stacking
             NotificationCompat.Builder builder = getNotificationBuilder(context, title, message);
@@ -487,10 +488,10 @@ public class GCMMessageService extends GcmListenerService {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
-            showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId);
+            showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId, dontPlaySound);
 
             // Also add a group summary notification, which is required for non-wearable devices
-            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message);
+            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message, dontPlaySound);
         }
 
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
@@ -688,7 +689,7 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void showGroupNotificationForBuilder(Context context, NotificationCompat.Builder builder,
-                                                     String wpcomNoteID, String message) {
+                                                     String wpcomNoteID, String message, boolean dontPlaySound) {
 
             if (builder == null) {
                 return;
@@ -738,12 +739,12 @@ public class GCMMessageService extends GcmListenerService {
                         .setContentText(subject)
                         .setStyle(inboxStyle);
 
-                showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID);
+                showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, dontPlaySound);
 
             } else {
                 // Set the individual notification we've already built as the group summary
                 builder.setGroupSummary(true);
-                showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID);
+                showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, dontPlaySound);
             }
             //reinsert 2fa bundle if it was present
             if (authPNBundle != null) {
@@ -752,7 +753,9 @@ public class GCMMessageService extends GcmListenerService {
 
         }
 
-        private void showIndividualNotificationForBuilder(Context context, NotificationCompat.Builder builder, String noteType, String wpcomNoteID, int pushId) {
+        private void showIndividualNotificationForBuilder(Context context, NotificationCompat.Builder builder,
+                                                          String noteType, String wpcomNoteID, int pushId,
+                                                          boolean dontPlaySound) {
             if (builder == null) {
                 return;
             }
@@ -761,11 +764,12 @@ public class GCMMessageService extends GcmListenerService {
                 addActionsForCommentNotification(context, builder, wpcomNoteID);
             }
 
-            showNotificationForBuilder(builder, context, wpcomNoteID, pushId);
+            showNotificationForBuilder(builder, context, wpcomNoteID, pushId, dontPlaySound);
         }
 
         // Displays a notification to the user
-        private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context, String wpcomNoteID, int pushId) {
+        private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context,
+                                                String wpcomNoteID, int pushId, boolean dontPlaySound) {
             if (builder == null || context == null) {
                 return;
             }
@@ -786,18 +790,20 @@ public class GCMMessageService extends GcmListenerService {
             String notificationSound = prefs.getString("wp_pref_custom_notification_sound", null); //"" if None is selected
 
 
-            // use default sound if the legacy sound preference was ON but the custom sound was not selected (null)
-            if (shouldPlaySound && notificationSound == null) {
-                builder.setSound(Uri.parse("content://settings/system/notification_sound"));
-            } else if (!TextUtils.isEmpty(notificationSound)) {
-                builder.setSound(Uri.parse(notificationSound));
-            }
+            if (!dontPlaySound) {
+                // use default sound if the legacy sound preference was ON but the custom sound was not selected (null)
+                if (shouldPlaySound && notificationSound == null) {
+                    builder.setSound(Uri.parse("content://settings/system/notification_sound"));
+                } else if (!TextUtils.isEmpty(notificationSound)) {
+                    builder.setSound(Uri.parse(notificationSound));
+                }
 
-            if (shouldVibrate) {
-                builder.setVibrate(new long[]{500, 500, 500});
-            }
-            if (shouldBlinkLight) {
-                builder.setLights(0xff0000ff, 1000, 5000);
+                if (shouldVibrate) {
+                    builder.setVibrate(new long[]{500, 500, 500});
+                }
+                if (shouldBlinkLight) {
+                    builder.setLights(0xff0000ff, 1000, 5000);
+                }
             }
 
             // Call broadcast receiver when notification is dismissed
@@ -866,7 +872,7 @@ public class GCMMessageService extends GcmListenerService {
                     noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
                     if (!sActiveNotificationsMap.isEmpty()) {
-                        showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0));
+                        showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0), true);
                     }
                 }
             }
@@ -887,7 +893,7 @@ public class GCMMessageService extends GcmListenerService {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
-            showGroupNotificationForBuilder(context, builder,  wpcomNoteID, message);
+            showGroupNotificationForBuilder(context, builder,  wpcomNoteID, message, true);
 
             //reinsert 2fa bundle if it was present
             if (authPNBundle != null) {
