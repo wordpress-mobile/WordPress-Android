@@ -168,8 +168,10 @@ public class WPMainActivity extends AppCompatActivity {
                     break;
                     case WPMainTabAdapter.TAB_NOTIFS:
                         setTabLayoutElevation(mAppBarElevation);
-                        mTabLayout.showNoteBadge(false); // Mark unseen to false immediately on the UI.
-                        NotificationsActions.updateSeenNotes(); // Send the unseen status to the server.
+                        Fragment fragment = mTabAdapter.getFragment(position);
+                        if (fragment instanceof NotificationsListFragment) {
+                            ((NotificationsListFragment) fragment).clearPendingNotificationsItemsOnUI();
+                        }
                         break;
                 }
 

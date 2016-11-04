@@ -119,7 +119,7 @@ public class NotificationsListFragment extends Fragment
         }
     };
 
-    private void clearPendingNotificationsItemsOnUI() {
+    public void clearPendingNotificationsItemsOnUI() {
         hideNewNotificationsBar();
         // Immediately update the unseen ribbon
         EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
@@ -154,12 +154,14 @@ public class NotificationsListFragment extends Fragment
         if (savedInstanceState != null) {
             setRestoredFirstVisibleItemID(savedInstanceState.getLong(KEY_LIST_SCROLL_POSITION, 0));
         }
-        mNotesAdapter.reloadNotesFromDBAsync();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        hideNewNotificationsBar();
+        mNotesAdapter.reloadNotesFromDBAsync();
 
         // Removes app notifications from the system bar
         new Thread(new Runnable() {
