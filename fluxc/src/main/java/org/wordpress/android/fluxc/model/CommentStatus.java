@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
+import java.util.Locale;
+
 public enum CommentStatus {
     // Real status
     APPROVED,
@@ -16,7 +18,7 @@ public enum CommentStatus {
     UNTRASH; // Untrash a comment. Only works when the comment is in the trash.
 
     public String toString() {
-        return this.name().toLowerCase();
+        return this.name().toLowerCase(Locale.US);
     }
 
     public static CommentStatus fromString(String string) {

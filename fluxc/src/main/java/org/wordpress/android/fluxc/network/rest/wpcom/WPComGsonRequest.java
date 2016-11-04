@@ -17,8 +17,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class WPComGsonRequest<T> extends GsonRequest<T> {
-    private static final String REST_AUTHORIZATION_HEADER = "Authorization";
-    private static final String REST_AUTHORIZATION_FORMAT = "Bearer %s";
+    public static final String REST_AUTHORIZATION_HEADER = "Authorization";
+    public static final String REST_AUTHORIZATION_FORMAT = "Bearer %s";
 
     public static class WPComGsonNetworkError extends BaseNetworkError {
         public String apiError;
