@@ -87,14 +87,18 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderLikingUsersView mLikingUsersView;
     private View mLikingUsersDivider;
     private View mLikingUsersLabel;
-    private ViewGroup mRelatedPostsContainerView;
+
+    private ReaderRelatedPostsView mGlobalRelatedPostsView;
+    private ReaderRelatedPostsView mLocalRelatedPostsView;
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsLoggedOutReader;
     private boolean mIsWebViewPaused;
     private boolean mIsRelatedPost;
-    private boolean mHasTrackedRelatedPosts;
+
+    private boolean mHasTrackedGlobalRelatedPosts;
+    private boolean mHasTrackedLocalRelatedPosts;
 
     private int mToolbarHeight;
     private String mErrorMessage;
@@ -204,8 +208,9 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutFooter.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
 
-        mRelatedPostsContainerView = (ViewGroup) view.findViewById(R.id.container_related_posts);
-        mRelatedPostsContainerView.setVisibility(View.INVISIBLE);
+        ViewGroup relatedPostsContainerView = (ViewGroup) view.findViewById(R.id.container_related_posts);
+        mGlobalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainerView.findViewById(R.id.related_posts_view_global);
+        mLocalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainerView.findViewById(R.id.related_posts_view_local);
 
         return view;
     }
@@ -275,7 +280,9 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
-        outState.putBoolean(ReaderConstants.KEY_TRACKED_RELATED, mHasTrackedRelatedPosts);
+
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS, mHasTrackedGlobalRelatedPosts);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS, mHasTrackedLocalRelatedPosts);
 
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
@@ -300,10 +307,14 @@ public class ReaderPostDetailFragment extends Fragment
             mIsFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+
             mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
-            mHasTrackedRelatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_TRACKED_RELATED);
+
+            mHasTrackedGlobalRelatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS);
+            mHasTrackedLocalRelatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS);
+
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -413,14 +424,16 @@ public class ReaderPostDetailFragment extends Fragment
         mIsFeed = false;
         mBlogId = blogId;
         mPostId = postId;
+
         mHasAlreadyRequestedPost = false;
         mHasAlreadyUpdatedPost = false;
-        mHasTrackedRelatedPosts = false;
+        mHasTrackedGlobalRelatedPosts = false;
+        mHasTrackedLocalRelatedPosts = false;
 
         // hide views that would show info for the previous post - these will be re-displayed
         // with the correct info once the new post loads
-        mRelatedPostsContainerView.findViewById(R.id.related_posts_view_local).setVisibility(View.GONE);
-        mRelatedPostsContainerView.findViewById(R.id.related_posts_view_global).setVisibility(View.GONE);
+        mGlobalRelatedPostsView.setVisibility(View.GONE);
+        mLocalRelatedPostsView.setVisibility(View.GONE);
 
         mLikingUsersView.setVisibility(View.GONE);
         mLikingUsersDivider.setVisibility(View.GONE);
@@ -471,7 +484,7 @@ public class ReaderPostDetailFragment extends Fragment
     private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, boolean isGlobal) {
         // different container views for global/local related posts
         int id = isGlobal ? R.id.related_posts_view_global : R.id.related_posts_view_local;
-        ReaderRelatedPostsView relatedPostsView = (ReaderRelatedPostsView) mRelatedPostsContainerView.findViewById(id);
+        ReaderRelatedPostsView relatedPostsView = isGlobal ? mLocalRelatedPostsView : mGlobalRelatedPostsView;
         relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
 
         // tapping a related posts should open the related post detail
@@ -482,15 +495,35 @@ public class ReaderPostDetailFragment extends Fragment
             }
         });
 
-        // make sure the container is visible
-        if (mRelatedPostsContainerView.getVisibility() != View.VISIBLE) {
-            mRelatedPostsContainerView.setVisibility(View.VISIBLE);
-            trackRelatedPostsIfShowing();
-        }
-
         // fade in this related posts view
         if (relatedPostsView.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM);
+        }
+    }
+
+    /*
+     * track that related posts have loaded and are scrolled into view if we haven't
+     * already tracked it
+     */
+    private void trackRelatedPostsIfShowing() {
+        if (!mHasTrackedGlobalRelatedPosts && isVisibleAndScrolledIntoView(mGlobalRelatedPostsView)) {
+            mHasTrackedGlobalRelatedPosts = true;
+            //AnalyticsUtils.trackRailcarRender(???);
+        }
+
+        if (!mHasTrackedLocalRelatedPosts && isVisibleAndScrolledIntoView(mLocalRelatedPostsView)) {
+            mHasTrackedLocalRelatedPosts = true;
+            //AnalyticsUtils.trackRailcarRender(???);
+        }
+    }
+
+    private boolean isVisibleAndScrolledIntoView(View view) {
+        if (view != null && view.getVisibility() == View.VISIBLE) {
+            Rect scrollBounds = new Rect();
+            mScrollView.getHitRect(scrollBounds);
+            return view.getLocalVisibleRect(scrollBounds);
+        } else {
+            return false;
         }
     }
 
@@ -1011,27 +1044,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         trackRelatedPostsIfShowing();
-    }
-
-    /*
-     * track that related posts have loaded and scrolled into view if we haven't
-     * already tracked it
-     */
-    private void trackRelatedPostsIfShowing() {
-        // nothing to do if we've already tracked related posts
-        if (mHasTrackedRelatedPosts) return;
-
-        // container won't be visible if related posts haven't loaded yet
-        if (mRelatedPostsContainerView.getVisibility() != View.VISIBLE) return;
-
-        // don't track if the container isn't scrolled into view
-        Rect scrollBounds = new Rect();
-        mScrollView.getHitRect(scrollBounds);
-        if (!mRelatedPostsContainerView.getLocalVisibleRect(scrollBounds)) return;
-
-        mHasTrackedRelatedPosts = true;
-        AppLog.w(T.READER, "Related posts tracked");
-        //AnalyticsUtils.trackRailcarRender(???);
+        trackRelatedPostsIfShowing();
     }
 
     @Override
