@@ -23,7 +23,7 @@ public class ReaderRelatedPost {
     private String mSiteName;
     private String mFeaturedImageUrl;
 
-    private String mRailcar;
+    private String mRailcarJson;
 
     // these are the specific fields we should ask for when requesting related posts from
     // the endpoint - note that we want to avoid ever requesting the post content, since
@@ -53,8 +53,6 @@ public class ReaderRelatedPost {
         post.mSiteName = JSONUtils.getStringDecoded(json, "site_name");
         post.mFeaturedImageUrl = JSONUtils.getString(json, "featured_image");
 
-        post.mRailcar = JSONUtils.getString(json, "railcar");
-
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor != null) {
             post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
@@ -71,6 +69,11 @@ public class ReaderRelatedPost {
             if (type.equals("image")) {
                 post.mFeaturedImageUrl = JSONUtils.getString(jsonMedia, "uri");
             }
+        }
+
+        JSONObject jsonRailcar = json.optJSONObject("railcar");
+        if (jsonRailcar != null) {
+            post.mRailcarJson = jsonRailcar.toString();
         }
 
         return post;
@@ -108,8 +111,8 @@ public class ReaderRelatedPost {
         return mFeaturedImageUrl;
     }
 
-    public String getRailcar() {
-        return mRailcar;
+    public String getRailcarJson() {
+        return mRailcarJson;
     }
 
     public boolean isFollowing() {

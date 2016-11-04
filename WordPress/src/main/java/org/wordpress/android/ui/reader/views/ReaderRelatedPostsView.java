@@ -231,7 +231,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
      */
     public void trackRailcarRender() {
         for (ReaderRelatedPost post: mRelatedPostList) {
-            AnalyticsUtils.trackRailcarRender(post.getRailcar());
+            AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
         }
     }
 
