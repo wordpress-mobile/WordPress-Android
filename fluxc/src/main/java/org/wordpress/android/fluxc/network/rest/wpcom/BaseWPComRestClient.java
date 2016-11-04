@@ -18,7 +18,7 @@ public class BaseWPComRestClient {
     private final RequestQueue mRequestQueue;
     protected final Dispatcher mDispatcher;
     protected final Context mAppContext;
-    private UserAgent mUserAgent;
+    protected UserAgent mUserAgent;
 
     protected OnAuthFailedListener mOnAuthFailedListener;
 
@@ -48,6 +48,10 @@ public class BaseWPComRestClient {
         }
         // TODO: If !mAccountToken.exists() then trigger the mOnAuthFailedListener
         return mRequestQueue.add(setRequestAuthParams(request));
+    }
+
+    protected AccessToken getAccessToken() {
+        return mAccessToken;
     }
 
     private WPComGsonRequest setRequestAuthParams(WPComGsonRequest request) {
