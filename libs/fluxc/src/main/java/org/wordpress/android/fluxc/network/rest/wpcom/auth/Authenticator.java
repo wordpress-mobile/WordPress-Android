@@ -222,12 +222,15 @@ public class Authenticator {
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
 
-        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, HashMap.class,
-                new Response.Listener<HashMap>() {
+        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, AuthEmailWPComRestResponse.class,
+                new Response.Listener<AuthEmailWPComRestResponse>() {
                     @Override
-                    public void onResponse(HashMap response) {
+                    public void onResponse(AuthEmailWPComRestResponse response) {
                         AuthEmailResponsePayload payload = new AuthEmailResponsePayload();
 
+                        if (!response.success) {
+                            payload.error = new AuthEmailError(AuthEmailErrorType.UNSUCCESSFUL, "");
+                        }
                         mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(payload));
                     }
                 }, new BaseErrorListener() {
