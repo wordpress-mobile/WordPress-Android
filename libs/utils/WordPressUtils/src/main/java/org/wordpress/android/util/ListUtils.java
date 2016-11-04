@@ -23,7 +23,7 @@ public class ListUtils {
         if (list == null) {
             return null;
         }
-        Long[] array = (Long[]) list.toArray();
+        Long[] array = list.toArray(new Long[list.size()]);
         return ArrayUtils.toPrimitive(array);
     }
 }
