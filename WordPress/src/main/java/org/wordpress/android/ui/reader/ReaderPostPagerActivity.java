@@ -44,6 +44,7 @@ import de.greenrobot.event.EventBus;
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.AutoHideToolbarListener {
+    private static final String KEY_TRACKED_POST = "tracked_post";
 
     private WPViewPager mViewPager;
     private ProgressBar mProgress;
@@ -66,6 +67,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private boolean mIsRelatedPostView;
 
     private final HashSet<Integer> mTrackedPositions = new HashSet<>();
+    private boolean mTrackedPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
                 mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
             }
+            mTrackedPost = savedInstanceState.getBoolean(KEY_TRACKED_POST);
         } else {
             mIsFeed = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_FEED, false);
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -178,7 +181,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             if (mBlogSlug == null) {
                 loadPosts(mBlogId, mPostId);
             } else {
-                loadPosts(mBlogSlug, mPostSlug);
+                loadPost(mBlogSlug, mPostSlug);
             }
         }
     }
@@ -231,9 +234,12 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         if (id != null) {
             outState.putLong(ReaderConstants.ARG_BLOG_ID, id.getBlogId());
             outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
-            outState.putString(ReaderConstants.ARG_BLOG_SLUG, id.getBlogSlug());
-            outState.putString(ReaderConstants.ARG_POST_SLUG, id.getPostSlug());
         }
+
+        outState.putString(ReaderConstants.ARG_BLOG_SLUG, mBlogSlug);
+        outState.putString(ReaderConstants.ARG_POST_SLUG, mPostSlug);
+
+        outState.putBoolean(KEY_TRACKED_POST, mTrackedPost);
 
         super.onSaveInstanceState(outState);
     }
@@ -281,21 +287,27 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         mTrackedPositions.add(position);
 
         // bump the page view
-        if (mBlogSlug == null) {
-            ReaderPostActions.bumpPageViewForPost(idPair.getBlogId(), idPair.getPostId());
+        ReaderPostActions.bumpPageViewForPost(idPair.getBlogId(), idPair.getPostId());
 
-            // analytics tracking
-            AnalyticsUtils.trackWithReaderPostDetails(
-                    AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                    ReaderPostTable.getBlogPost(idPair.getBlogId(), idPair.getPostId(), true));
-        } else {
-            ReaderPostActions.bumpPageViewForPost(idPair.getBlogSlug(), idPair.getPostSlug());
+        // analytics tracking
+        AnalyticsUtils.trackWithReaderPostDetails(
+                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
+                ReaderPostTable.getBlogPost(idPair.getBlogId(), idPair.getPostId(), true));
+    }
 
-            // analytics tracking
-            AnalyticsUtils.trackWithReaderPostDetails(
-                    AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                    ReaderPostTable.getBlogPost(idPair.getBlogSlug(), idPair.getPostSlug(), true));
-        }
+    /*
+     * perform analytics tracking and bump the page view for the post if it hasn't already been done
+     */
+    private void trackPostSlugIfNeeded() {
+        AppLog.d(AppLog.T.READER, "reader pager > tracking post via slug");
+        mTrackedPost = true;
+
+        // bump the page view
+        ReaderPostActions.bumpPageViewForPost(mBlogSlug, mPostSlug);
+
+        // analytics tracking
+        AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_OPENED, ReaderPostTable
+                .getBlogPost(mBlogSlug, mPostSlug, true));
     }
 
     /*
@@ -350,54 +362,12 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     /*
-     * loads the blogId/postId pairs used to populate the pager adapter - passed blogId/postId will
-     * be made active after loading unless gotoNext=true, in which case the post after the passed
-     * one will be made active
+     * loads the blogSlug/postSlug
      */
-    private void loadPosts(final String blogSlug, final String postSlug) {
-        new Thread() {
-            @Override
-            public void run() {
-                final ReaderBlogIdPostIdList idList;
-                if (mIsSinglePostView) {
-                    idList = new ReaderBlogIdPostIdList();
-                    idList.add(new ReaderBlogIdPostId(blogSlug, postSlug));
-                } else {
-                    int maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
-                    switch (getPostListType()) {
-                        case TAG_FOLLOWED:
-                        case TAG_PREVIEW:
-                            idList = ReaderPostTable.getBlogIdPostIdsWithTag(getCurrentTag(), maxPosts);
-                            break;
-                        case BLOG_PREVIEW:
-                            idList = ReaderPostTable.getBlogIdPostIdsInBlog(blogSlug, maxPosts);
-                            break;
-                        default:
-                            return;
-                    }
-                }
-
-                final int currentPosition = mViewPager.getCurrentItem();
-                final int newPosition = idList.indexOf(blogSlug, postSlug);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AppLog.d(AppLog.T.READER, "reader pager > creating adapter");
-                        PostPagerAdapter adapter =
-                                new PostPagerAdapter(getFragmentManager(), idList);
-                        mViewPager.setAdapter(adapter);
-                        if (adapter.isValidPosition(newPosition)) {
-                            mViewPager.setCurrentItem(newPosition);
-                            trackPostAtPositionIfNeeded(newPosition);
-                        } else if (adapter.isValidPosition(currentPosition)) {
-                            mViewPager.setCurrentItem(currentPosition);
-                            trackPostAtPositionIfNeeded(currentPosition);
-                        }
-                    }
-                });
-            }
-        }.start();
+    private void loadPost(String blogSlug, String postSlug) {
+        AppLog.d(AppLog.T.READER, "reader pager > creating adapter");
+        mViewPager.setAdapter(new PostPagerAdapter(getFragmentManager(), blogSlug, postSlug));
+        trackPostSlugIfNeeded();
     }
 
     private ReaderTag getCurrentTag() {
@@ -499,17 +469,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW) {
             AppLog.d(AppLog.T.READER, "reader pager > older posts received");
-            // remember which post to keep active
-            ReaderBlogIdPostId id = adapter.getCurrentBlogIdPostId();
-            long blogId = (id != null ? id.getBlogId() : 0);
-            long postId = (id != null ? id.getPostId() : 0);
-            String blogSlug = (id != null ? id.getBlogSlug() : null);
-            String postSlug = (id != null ? id.getPostSlug() : null);
-
-            if (blogSlug == null) {
+            if (mBlogSlug == null) {
+                // remember which post to keep active
+                ReaderBlogIdPostId id = adapter.getCurrentBlogIdPostId();
+                long blogId = (id != null ? id.getBlogId() : 0);
+                long postId = (id != null ? id.getPostId() : 0);
                 loadPosts(blogId, postId);
             } else {
-                loadPosts(blogSlug, postSlug);
+                loadPost(mBlogSlug, mPostSlug);
             }
         } else {
             AppLog.d(AppLog.T.READER, "reader pager > all posts loaded");
@@ -531,7 +498,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
      * pager adapter containing post detail fragments
      **/
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
-        private ReaderBlogIdPostIdList mIdList = new ReaderBlogIdPostIdList();
+        private ReaderBlogIdPostIdList mIdList;
+        private String mSingleBlogSlug;
+        private String mSinglePostSlug;
         private boolean mAllPostsLoaded;
 
         // this is used to retain created fragments so we can access them in
@@ -544,6 +513,12 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
             mIdList = (ReaderBlogIdPostIdList)ids.clone();
+        }
+
+        PostPagerAdapter(FragmentManager fm, String blogSlug, String postSlug) {
+            super(fm);
+            mSingleBlogSlug = blogSlug;
+            mSinglePostSlug = postSlug;
         }
 
         @Override
@@ -568,7 +543,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         private boolean canRequestMostPosts() {
             return !mAllPostsLoaded
                 && !mIsSinglePostView
-                && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
+                && (mIdList != null && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
                 && NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this);
         }
 
@@ -578,7 +553,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return mIdList.size();
+            return mSingleBlogSlug != null ? 1 : mIdList.size();
         }
 
         @Override
@@ -587,7 +562,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 requestMorePosts();
             }
 
-            if (mBlogSlug == null) {
+            if (mSingleBlogSlug == null) {
                 return ReaderPostDetailFragment.newInstance(
                         mIsFeed,
                         mIdList.get(position).getBlogId(),
@@ -599,8 +574,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         getPostListType());
             } else {
                 return ReaderPostDetailFragment.newInstance(
-                        mIdList.get(position).getBlogSlug(),
-                        mIdList.get(position).getPostSlug(),
+                        mSingleBlogSlug,
+                        mSinglePostSlug,
                         mDirectOperation,
                         mCommentId,
                         mIsRelatedPostView,

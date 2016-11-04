@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.net.Uri;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -266,10 +265,6 @@ public class ReaderPostTable {
         return getPost(false, blogId, postId, excludeTextColumn);
     }
 
-    public static ReaderPost getBlogPost(String blogSlug, String postSlug, boolean excludeTextColumn) {
-        return getPost(blogSlug, postSlug, excludeTextColumn);
-    }
-
     public static ReaderPost getFeedPost(long feedId, long feedItemId, boolean excludeTextColumn) {
         return getPost(true, feedId, feedItemId, excludeTextColumn);
     }
@@ -291,7 +286,7 @@ public class ReaderPostTable {
         }
     }
 
-    private static ReaderPost getPost(String blogSlug, String postSlug, boolean excludeTextColumn) {
+    public static ReaderPost getBlogPost(String blogSlug, String postSlug, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql = "SELECT " + columns + " FROM tbl_posts WHERE "
                 + "blog_url LIKE ? AND url LIKE ? LIMIT 1";
@@ -558,15 +553,9 @@ public class ReaderPostTable {
         }
 
         String dateColumn = getSortColumnForTag(tag);
-        if (ids.getBlogSlug() == null) {
-            String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
-            String sql = "SELECT " + dateColumn + " FROM tbl_posts WHERE blog_id=? AND post_id=?";
-            return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
-        } else {
-            String[] args = {"%//" + ids.getBlogSlug(), "%/" + ids.getPostSlug()};
-            String sql = "SELECT " + dateColumn + " FROM tbl_posts WHERE blog_url LIKE ? AND url LIKE ?";
-            return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
-        }
+        String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
+        String sql = "SELECT " + dateColumn + " FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     /*
@@ -871,28 +860,6 @@ public class ReaderPostTable {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     idList.add(new ReaderBlogIdPostId(blogId, cursor.getLong(0)));
-                } while (cursor.moveToNext());
-            }
-
-            return idList;
-        } finally {
-            SqlUtils.closeCursor(cursor);
-        }
-    }
-
-    public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(String blogSlug, int maxPosts) {
-        String sql = "SELECT url FROM tbl_posts WHERE blog_url = ? ORDER BY date_published DESC";
-
-        if (maxPosts > 0) {
-            sql += " LIMIT " + Integer.toString(maxPosts);
-        }
-
-        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{"%//" + blogSlug});
-        try {
-            ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    idList.add(new ReaderBlogIdPostId(blogSlug, Uri.parse(cursor.getString(0)).getLastPathSegment()));
                 } while (cursor.moveToNext());
             }
 

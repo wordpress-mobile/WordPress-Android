@@ -37,13 +37,4 @@ public class ReaderBlogIdPostIdList extends ArrayList<ReaderBlogIdPostId>
         }
         return -1;
     }
-
-    public int indexOf(String blogSlug, String postSlugId) {
-        for (int i = 0; i < this.size(); i++) {
-            if (this.get(i).getBlogSlug() == blogSlug && this.get(i).getPostSlug() == postSlugId) {
-                return i;
-            }
-        }
-        return -1;
-    }
 }
