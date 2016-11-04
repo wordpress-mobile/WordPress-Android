@@ -16,12 +16,12 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -284,7 +284,7 @@ public class ReaderActivityLauncher {
     private static void openUrlExternal(Context context, @NonNull String url) {
         try {
             // disable deeplinking activity so to not catch WP URLs
-            ActivityLauncher.disableDeepLinking(context);
+            WPActivityUtils.disableDeepLinking(context);
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(intent);
@@ -295,7 +295,7 @@ public class ReaderActivityLauncher {
             ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
         } finally {
             // re-enable deeplinking
-            ActivityLauncher.enableDeepLinking(context);
+            WPActivityUtils.enableDeepLinking(context);
         }
     }
 }
