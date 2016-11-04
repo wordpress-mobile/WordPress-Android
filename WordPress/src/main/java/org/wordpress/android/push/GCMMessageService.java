@@ -694,10 +694,9 @@ public class GCMMessageService extends GcmListenerService {
                 return;
             }
 
+            //first remove 2fa push from the map, then reinsert it, so it's not shown in the inbox style group notif
+            Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
             if (sActiveNotificationsMap.size() > 1) {
-
-                //first remove 2fa push from the map, then reinsert it, so it's not shown in the inbox style group notif
-                Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
 
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 int noteCtr = 1;
@@ -741,16 +740,16 @@ public class GCMMessageService extends GcmListenerService {
 
                 showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID);
 
-                //reinsert 2fa bundle if it was present
-                if (authPNBundle != null) {
-                    sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
-                }
-
             } else {
                 // Set the individual notification we've already built as the group summary
                 builder.setGroupSummary(true);
                 showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID);
             }
+            //reinsert 2fa bundle if it was present
+            if (authPNBundle != null) {
+                sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+            }
+
         }
 
         private void showIndividualNotificationForBuilder(Context context, NotificationCompat.Builder builder, String noteType, String wpcomNoteID, int pushId) {
