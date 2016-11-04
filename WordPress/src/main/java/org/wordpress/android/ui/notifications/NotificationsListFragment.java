@@ -18,6 +18,10 @@ import android.view.animation.Animation;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
@@ -161,6 +165,10 @@ public class NotificationsListFragment extends Fragment
         super.onResume();
 
         hideNewNotificationsBar();
+        // Immediately update the unseen ribbon
+        EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
+                false
+        ));
         mNotesAdapter.reloadNotesFromDBAsync();
 
         // Removes app notifications from the system bar
@@ -518,10 +526,28 @@ public class NotificationsListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(NotificationEvents.NoteModerationStatusChanged event) {
-        setNoteIsModerating(event.mNoteId, event.mIsModerating);
-
-        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
+    public void onEventMainThread(final NotificationEvents.NoteModerationStatusChanged event) {
+        if (event.mIsModerating) {
+            setNoteIsModerating(event.mNoteId, event.mIsModerating);
+            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
+        } else {
+            // Moderation done -> refresh the note before calling the end.
+            NotificationsActions.downloadNoteAndUpdateDB(event.mNoteId,
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            setNoteIsModerating(event.mNoteId, event.mIsModerating);
+                            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            setNoteIsModerating(event.mNoteId, event.mIsModerating);
+                            EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
+                        }
+                    }
+            );
+        }
     }
 
     @SuppressWarnings("unused")

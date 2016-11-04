@@ -90,7 +90,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     public void removeModeratingNoteId(String noteId) {
         mModeratingNoteIds.remove(noteId);
-        myNotifyDatasetChanged();
+        // Reload the notifications from DB since the state of at least one of them is changed.
+        // DB already has the fresh value in it.
+        reloadNotesFromDBAsync();
     }
 
     public void addAll(List<Note> notes, boolean clearBeforeAdding) {

@@ -359,34 +359,13 @@ public class GCMMessageService extends GcmListenerService {
             if (!buildNoteObjectFromPNPayloadAndSaveIt(data)) {
                 // PN payload doesn't have the note or there was an error.
                 // Retrieve the Note obj by calling the REST API
-
-                WordPress.getRestClientUtilsV1_1().getNotification(
-                        wpcomNoteID,
+                NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID,
                         new RestRequest.Listener() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                if (response == null) {
-                                    //Not sure this could ever happen, but make sure we're catching all response types
-                                    AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
-                                }
-                                try {
-                                    List<Note> notes = NotificationsActions.parseNotes(response);
-                                    if (notes.size() > 0) {
-                                        NotificationsTable.saveNote(notes.get(0), true);
-                                    } else {
-                                        AppLog.e(AppLog.T.NOTIFS, "Success, but no note!!!???");
-                                    }
-                                    EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-                                } catch (JSONException e) {
-                                    AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response for the note_id " + wpcomNoteID , e);
-                                }
+                                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
                             }
-                        }, new RestRequest.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                AppLog.e(AppLog.T.NOTIFS, "Error retrieving note with ID " + wpcomNoteID, error);
-                            }
-                        });
+                        }, null);
             } else {
                 EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
             }

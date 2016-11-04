@@ -70,4 +70,40 @@ public class NotificationsActions {
             });
         }
     }
+
+    public static void downloadNoteAndUpdateDB(final String noteID, final RestRequest.Listener respoListener, final RestRequest.ErrorListener errorListener) {
+        WordPress.getRestClientUtilsV1_1().getNotification(
+                noteID,
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (response == null) {
+                            //Not sure this could ever happen, but make sure we're catching all response types
+                            AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
+                        }
+                        try {
+                            List<Note> notes = NotificationsActions.parseNotes(response);
+                            if (notes.size() > 0) {
+                                NotificationsTable.saveNote(notes.get(0), true);
+                            } else {
+                                AppLog.e(AppLog.T.NOTIFS, "Success, but no note!!!???");
+                            }
+                        } catch (JSONException e) {
+                            AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response for the note_id " + noteID, e);
+                        }
+                        if (respoListener != null) {
+                            respoListener.onResponse(response);
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.e(AppLog.T.NOTIFS, "Error retrieving note with ID " + noteID, error);
+                        if (errorListener != null) {
+                            errorListener.onErrorResponse(error);
+                        }
+                    }
+                });
+    }
+
 }
