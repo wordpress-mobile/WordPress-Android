@@ -499,6 +499,8 @@ public class ReaderPostDetailFragment extends Fragment
         if (relatedPostsView.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM);
         }
+
+        trackRelatedPostsIfShowing();
     }
 
     /*
@@ -508,12 +510,14 @@ public class ReaderPostDetailFragment extends Fragment
     private void trackRelatedPostsIfShowing() {
         if (!mHasTrackedGlobalRelatedPosts && isVisibleAndScrolledIntoView(mGlobalRelatedPostsView)) {
             mHasTrackedGlobalRelatedPosts = true;
-            //AnalyticsUtils.trackRailcarRender(???);
+            AppLog.d(T.READER, "reader post detail > global related posts rendered");
+            mGlobalRelatedPostsView.trackRailcarRender();
         }
 
         if (!mHasTrackedLocalRelatedPosts && isVisibleAndScrolledIntoView(mLocalRelatedPostsView)) {
             mHasTrackedLocalRelatedPosts = true;
-            //AnalyticsUtils.trackRailcarRender(???);
+            AppLog.d(T.READER, "reader post detail > local related posts rendered");
+            mLocalRelatedPostsView.trackRailcarRender();
         }
     }
 
@@ -1042,9 +1046,6 @@ public class ReaderPostDetailFragment extends Fragment
             showToolbar(false);
             showFooter(false);
         }
-
-        trackRelatedPostsIfShowing();
-        trackRelatedPostsIfShowing();
     }
 
     @Override
@@ -1054,6 +1055,8 @@ public class ReaderPostDetailFragment extends Fragment
             showToolbar(true);
             showFooter(true);
         }
+
+        trackRelatedPostsIfShowing();
     }
 
     private void showToolbar(boolean show) {

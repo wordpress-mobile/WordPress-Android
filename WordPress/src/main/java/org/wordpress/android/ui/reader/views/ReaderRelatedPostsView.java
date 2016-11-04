@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -154,10 +155,6 @@ public class ReaderRelatedPostsView extends LinearLayout {
         }
     }
 
-    public ReaderRelatedPostList getRelatedPosts() {
-        return mRelatedPostList;
-    }
-
     /**
      * user tapped follow button on a global related post
      * @param btnFollow Follow button for the site to follow
@@ -226,6 +223,16 @@ public class ReaderRelatedPostsView extends LinearLayout {
         });
 
         imgFeatured.setVisibility(View.VISIBLE);
+    }
+
+    /*
+     * called by reader detail when this related posts view is scrolled into view, tracks
+     * railcar events for each related post
+     */
+    public void trackRailcarRender() {
+        for (ReaderRelatedPost post: mRelatedPostList) {
+            AnalyticsUtils.trackRailcarRender(post.getRailcar());
+        }
     }
 
 }
