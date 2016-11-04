@@ -169,8 +169,8 @@ public class WPMainActivity extends AppCompatActivity {
                     case WPMainTabAdapter.TAB_NOTIFS:
                         setTabLayoutElevation(mAppBarElevation);
                         Fragment fragment = mTabAdapter.getFragment(position);
-                        if (fragment instanceof NotificationsListFragment) {
-                            ((NotificationsListFragment) fragment).clearPendingNotificationsItemsOnUI();
+                        if (fragment instanceof OnScrollToTopListener) {
+                            ((OnScrollToTopListener) fragment).onScrollToTop();
                         }
                         break;
                 }
