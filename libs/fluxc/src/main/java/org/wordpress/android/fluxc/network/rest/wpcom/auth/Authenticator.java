@@ -13,6 +13,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
@@ -51,6 +52,7 @@ public class Authenticator {
     private static final String INVALID_OTP_ERROR = "invalid_otp";
     private static final String INVALID_CREDS_ERROR = "Incorrect username or password.";
 
+    private final Dispatcher mDispatcher;
     private final RequestQueue mRequestQueue;
     private AppSecrets mAppSecrets;
 
@@ -71,7 +73,8 @@ public class Authenticator {
     }
 
     @Inject
-    public Authenticator(RequestQueue requestQueue, AppSecrets secrets) {
+    public Authenticator(Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets secrets) {
+        mDispatcher = dispatcher;
         mRequestQueue = requestQueue;
         mAppSecrets = secrets;
     }
