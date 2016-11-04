@@ -258,6 +258,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     private void launchWithNoteId() {
         if (isFinishing() || getIntent() == null) return;
 
+        GCMMessageService.remove2FANotification(this);
+
         NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(getIntent(),
                 new NotificationsUtils.TwoFactorAuthCallback() {
             @Override

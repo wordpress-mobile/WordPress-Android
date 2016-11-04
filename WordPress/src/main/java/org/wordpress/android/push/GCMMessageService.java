@@ -252,6 +252,16 @@ public class GCMMessageService extends GcmListenerService {
         clearNotifications();
     }
 
+    public static synchronized void remove2FANotification(Context context) {
+        if (context == null || !hasNotifications()) {
+            return;
+        }
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.cancel(AUTH_PUSH_NOTIFICATION_ID);
+        sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
+    }
+
     // NoteID is the ID if the note in WordPress
     public static synchronized void bumpPushNotificationsTappedAnalytics(String noteID) {
         for (int id : sActiveNotificationsMap.keySet()) {
