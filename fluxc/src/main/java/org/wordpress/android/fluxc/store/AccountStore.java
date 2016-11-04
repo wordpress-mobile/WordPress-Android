@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
 
-import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -14,12 +13,9 @@ import org.wordpress.android.fluxc.action.AuthenticationAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
@@ -28,6 +24,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
@@ -35,7 +32,6 @@ import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -381,7 +377,10 @@ public class AccountStore extends Store {
                 discoveryResult((DiscoveryResultPayload) payload);
                 break;
             case SEND_AUTH_EMAIL:
-                sendAuthEmail((String) payload);
+                mAuthenticator.sendAuthEmail((String) payload);
+                break;
+            case SENT_AUTH_EMAIL:
+                handleSentAuthEmail((AuthEmailResponsePayload) payload);
                 break;
         }
     }
@@ -391,6 +390,7 @@ public class AccountStore extends Store {
         event.error = payload.error;
         emitChange(event);
     }
+
     private void discoverEndPoint(RefreshSitesXMLRPCPayload payload) {
         mSelfHostedEndpointFinder.findEndpoint(payload.url, payload.username, payload.password);
     }
@@ -545,21 +545,15 @@ public class AccountStore extends Store {
                 });
     }
 
-    private void sendAuthEmail(final String payload) {
-        mAuthenticator.sendAuthEmail(payload, new Listener<HashMap>() {
-                    @Override
-                    public void onResponse(HashMap response) {
-                        OnAuthEmailSent event = new OnAuthEmailSent();
-                        emitChange(event);
-                    }
-                }, new BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        OnAuthEmailSent event = new OnAuthEmailSent();
-                        event.error = new AuthEmailError(((WPComGsonNetworkError) error).apiError, error.message);
-                        emitChange(event);
-                    }
-                });
+    private void handleSentAuthEmail(final AuthEmailResponsePayload payload) {
+        if (payload.isError()) {
+            OnAuthEmailSent event = new OnAuthEmailSent();
+            event.error = payload.error;
+            emitChange(event);
+        } else {
+            OnAuthEmailSent event = new OnAuthEmailSent();
+            emitChange(event);
+        }
     }
 
     private boolean checkError(AccountRestPayload payload, String log) {

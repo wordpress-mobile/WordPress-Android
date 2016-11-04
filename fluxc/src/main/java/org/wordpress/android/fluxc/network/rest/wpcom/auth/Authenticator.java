@@ -15,9 +15,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
@@ -69,6 +74,16 @@ public class Authenticator {
         }
         public AuthenticateErrorPayload(@NonNull AuthenticationErrorType errorType) {
             this.error = new AuthenticationError(errorType, "");
+        }
+    }
+
+    public static class AuthEmailResponsePayload extends Payload {
+        public AuthEmailError error;
+        public AuthEmailResponsePayload() {}
+
+        @Override
+        public boolean isError() {
+            return error != null;
         }
     }
 
@@ -199,7 +214,7 @@ public class Authenticator {
         }
     }
 
-    public void sendAuthEmail(String email, Response.Listener<HashMap> listener, BaseErrorListener errorListener) {
+    public void sendAuthEmail(final String email) {
         String url = WPCOMREST.auth.send_login_email.getUrlV1_1();
 
         Map<String, Object> params = new HashMap<>();
@@ -207,7 +222,23 @@ public class Authenticator {
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
 
-        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, HashMap.class, listener, errorListener);
+        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, HashMap.class,
+                new Response.Listener<HashMap>() {
+                    @Override
+                    public void onResponse(HashMap response) {
+                        AuthEmailResponsePayload payload = new AuthEmailResponsePayload();
+
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(payload));
+                    }
+                }, new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AuthEmailResponsePayload payload = new AuthEmailResponsePayload();
+                        payload.error = new AuthEmailError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(payload));
+                    }
+                }
+        );
 
         mRequestQueue.add(request);
     }
