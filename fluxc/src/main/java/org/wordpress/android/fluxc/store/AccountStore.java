@@ -211,6 +211,11 @@ public class AccountStore extends Store {
         public AuthEmailErrorType type;
         public String message;
 
+        public AuthEmailError(AuthEmailErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+
         public AuthEmailError(@NonNull String type, @NonNull String message) {
             this.type = AuthEmailErrorType.fromString(type);
             this.message = message;
@@ -220,6 +225,7 @@ public class AccountStore extends Store {
     public enum AuthEmailErrorType {
         INVALID_INPUT,
         NO_SUCH_USER,
+        UNSUCCESSFUL,
         GENERIC_ERROR;
 
         public static AuthEmailErrorType fromString(String string) {
