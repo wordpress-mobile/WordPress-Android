@@ -1031,7 +1031,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         mHasTrackedRelatedPosts = true;
         AppLog.w(T.READER, "Related posts tracked");
-        // TODO: actually track this!
+        //AnalyticsUtils.trackRailcarRender(???);
     }
 
     @Override
