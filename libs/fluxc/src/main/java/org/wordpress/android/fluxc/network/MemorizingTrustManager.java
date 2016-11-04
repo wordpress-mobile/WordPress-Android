@@ -32,7 +32,7 @@ import javax.net.ssl.X509TrustManager;
 public class MemorizingTrustManager implements X509TrustManager {
     private static final String KEYSTORE_FILENAME = "wpstore_certs_truststore.bks";
     private static final String KEYSTORE_PASSWORD = "secret";
-    private static final long FUTURE_TASK_TIMEOUT_SECONDS = 5;
+    private static final long FUTURE_TASK_TIMEOUT_SECONDS = 10;
 
     private FutureTask<X509TrustManager> mTrustManagerFutureTask;
     private FutureTask<KeyStore> mLocalKeyStoreFutureTask;
@@ -61,8 +61,7 @@ public class MemorizingTrustManager implements X509TrustManager {
         try {
             return mLocalKeyStoreFutureTask.get(FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new IllegalStateException("Couldn't find X509TrustManager");
-            // no op
+            throw new IllegalStateException("Couldn't find KeyStore");
         }
     }
 
@@ -72,7 +71,6 @@ public class MemorizingTrustManager implements X509TrustManager {
             return mTrustManagerFutureTask.get(FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new IllegalStateException("Couldn't find X509TrustManager");
-            // no op
         }
     }
 
