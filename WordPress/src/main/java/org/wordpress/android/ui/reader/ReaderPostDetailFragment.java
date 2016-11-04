@@ -521,6 +521,10 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+    /*
+     * returns True if the passed view is visible and has been scrolled into view - assumes
+     * that the view is a child of mScrollView
+     */
     private boolean isVisibleAndScrolledIntoView(View view) {
         if (view != null && view.getVisibility() == View.VISIBLE) {
             Rect scrollBounds = new Rect();
