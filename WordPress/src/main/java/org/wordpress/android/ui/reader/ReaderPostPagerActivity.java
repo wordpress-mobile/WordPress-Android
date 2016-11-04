@@ -434,17 +434,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 break;
 
             case BLOG_PREVIEW:
-                if (mBlogSlug == null) {
-                    ReaderPostService.startServiceForBlog(
-                            this,
-                            mBlogId,
-                            ReaderPostService.UpdateAction.REQUEST_OLDER);
-                } else {
-                    ReaderPostService.startServiceForBlog(
-                            this,
-                            mBlogSlug,
-                            ReaderPostService.UpdateAction.REQUEST_OLDER);
-                }
+                ReaderPostService.startServiceForBlog(
+                        this,
+                        mBlogId,
+                        ReaderPostService.UpdateAction.REQUEST_OLDER);
                 break;
         }
     }
