@@ -187,7 +187,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Intent intent = new Intent();
-        intent.putExtra(RESULT_IDS, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
+        if (!com.helpshift.support.util.ListUtils.isEmpty(mGridAdapter.getSelectedItems())) {
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
+        }
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -251,9 +253,13 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                             public void run() {
                                 //mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
-                                mGridAdapter.swapCursor(cursor);
-
+                                if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
+                                    Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
+                                    mGridAdapter.swapCursor(cursor);
+                                } else {
+                                    Cursor cursor = mMediaStore.getSiteImagesAsCursor(mSite);
+                                    mGridAdapter.swapCursor(cursor);
+                                }
                             }
                         });
                     }

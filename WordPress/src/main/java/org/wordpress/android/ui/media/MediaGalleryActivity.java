@@ -146,8 +146,14 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
         if (requestCode == MediaGalleryPickerActivity.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
+                if (ids == null || ids.isEmpty()) {
+                    finish();
+                    return;
+                }
                 mMediaGalleryEditFragment.setMediaIds(ids);
             }
+        } else {
+            finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

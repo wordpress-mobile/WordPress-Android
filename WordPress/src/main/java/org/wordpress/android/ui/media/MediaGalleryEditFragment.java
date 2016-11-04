@@ -92,7 +92,9 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLongArray(SAVED_MEDIA_IDS, ListUtils.toLongArray(mIds));
+        if (mIds != null && !mIds.isEmpty()) {
+            outState.putLongArray(SAVED_MEDIA_IDS, ListUtils.toLongArray(mIds));
+        }
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
@@ -114,11 +116,11 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     }
 
     private void refreshGridView() {
-        Cursor cursor = mMediaStore.getSiteMediaWithIdsAsCursor(mSite, mIds);
-        if (cursor == null) {
+        if (mIds == null || mIds.isEmpty()) {
             mGridAdapter.changeCursor(null);
             return;
         }
+        Cursor cursor = mMediaStore.getSiteMediaWithIdsAsCursor(mSite, mIds);
         SparseIntArray positions = mapIdsToCursorPositions(cursor);
         mGridAdapter.swapCursor(new OrderedCursor(cursor, positions));
     }
