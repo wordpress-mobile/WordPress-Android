@@ -37,7 +37,7 @@ import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -168,8 +168,10 @@ public class WPMainActivity extends AppCompatActivity {
                     break;
                     case WPMainTabAdapter.TAB_NOTIFS:
                         setTabLayoutElevation(mAppBarElevation);
-                        mTabLayout.showNoteBadge(false); // Mark unseen to false immediately on the UI.
-                        NotificationsActions.updateSeenNotes(); // Send the unseen status to the server.
+                        Fragment fragment = mTabAdapter.getFragment(position);
+                        if (fragment instanceof OnScrollToTopListener) {
+                            ((OnScrollToTopListener) fragment).onScrollToTop();
+                        }
                         break;
                 }
 
@@ -364,7 +366,7 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void checkMagicLinkSignIn() {
         if (getIntent() !=  null) {
-            if (getIntent().getBooleanExtra(MagicLinkSignInActivity.MAGIC_LOGIN, false)) {
+            if (getIntent().getBooleanExtra(SignInActivity.MAGIC_LOGIN, false)) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
                 startWithNewAccount();
             }

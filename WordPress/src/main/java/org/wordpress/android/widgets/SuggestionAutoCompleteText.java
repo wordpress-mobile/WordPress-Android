@@ -145,7 +145,7 @@ public class SuggestionAutoCompleteText extends MultiAutoCompleteTextView {
             }
         }
 
-        return super.dispatchKeyEvent(event);
+        return super.onKeyPreIme(keyCode,event);
     }
 
     @Override

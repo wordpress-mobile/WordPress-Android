@@ -320,10 +320,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         protected void onPostExecute(ArrayList<Note> notes) {
             mNotes.clear();
             mNotes.addAll(notes);
-            buildFilteredNotesList();
-            notifyDataSetChanged();
-
-            mDataLoadedListener.onDataLoaded(getItemCount());
+            myNotifyDatasetChanged();
         }
     }
 

@@ -67,7 +67,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
@@ -77,6 +76,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
@@ -226,9 +226,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
-        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(LanguageUtils.getCurrentDeviceLanguage(getActivity()), "%s%d%d",
-                AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
-                getRemoteBlogId(), getCommentId()));
+        setReplyUniqueId();
 
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
 
@@ -354,6 +352,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setComment(localBlogId, CommentTable.getComment(localBlogId, commentId));
     }
 
+    private void setReplyUniqueId() {
+        if (mEditReply != null && isAdded()) {
+            mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%s%d%d",
+                            AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
+                            getRemoteBlogId(), getCommentId()));
+        }
+    }
+
     private void setComment(int localBlogId, final Comment comment) {
         mComment = comment;
         mLocalBlogId = localBlogId;
@@ -362,11 +368,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // notification about a reply to a comment this user posted on someone else's blog
         mIsUsersBlog = (comment != null && WordPress.wpDB.isLocalBlogIdInDatabase(mLocalBlogId));
 
-        if (mIsUsersBlog)
+        if (mIsUsersBlog) {
             mRemoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
+        }
 
-        if (isAdded())
+        if (isAdded()) {
             showComment();
+        }
+
+        // Reset the reply unique id since mComment just changed.
+        setReplyUniqueId();
     }
 
     private void disableShouldFocusReplyField() {
@@ -1227,7 +1238,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         };
 
-        final String path = String.format("/sites/%s/comments/%s", remoteBlogId, commentId);
+        final String path = String.format(Locale.US, "/sites/%s/comments/%s", remoteBlogId, commentId);
         WordPress.getRestClientUtils().get(path, restListener, restErrListener);
     }
 }

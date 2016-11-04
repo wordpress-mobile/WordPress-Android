@@ -7,6 +7,7 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 public class MediaFile {
@@ -326,11 +327,11 @@ public class MediaFile {
 
         String mediaTitle = StringUtils.notNullStr(getTitle());
 
-        String content = String.format("<a href=\"%s\"><img title=\"%s\" %s alt=\"image\" src=\"%s\" /></a>",
+        String content = String.format(Locale.US, "<a href=\"%s\"><img title=\"%s\" %s alt=\"image\" src=\"%s\" /></a>",
                 fullSizeUrl, mediaTitle, alignmentCSS, resizedPictureURL);
 
         if (!TextUtils.isEmpty(getCaption())) {
-            content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\"]%s%s[/caption]",
+            content = String.format(Locale.US, "[caption id=\"\" align=\"%s\" width=\"%d\"]%s%s[/caption]",
                     alignment, getWidth(), content, TextUtils.htmlEncode(getCaption()));
         }
 
