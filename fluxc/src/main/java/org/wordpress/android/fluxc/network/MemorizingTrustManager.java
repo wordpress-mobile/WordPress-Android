@@ -32,30 +32,21 @@ import javax.net.ssl.X509TrustManager;
 public class MemorizingTrustManager implements X509TrustManager {
     private static final String KEYSTORE_FILENAME = "wpstore_certs_truststore.bks";
     private static final String KEYSTORE_PASSWORD = "secret";
-    private static final long TRUST_MANAGER_FUTURE_TASK_TIMEOUT_SECONDS = 5;
+    private static final long FUTURE_TASK_TIMEOUT_SECONDS = 5;
 
     private FutureTask<X509TrustManager> mTrustManagerFutureTask;
-    private KeyStore mLocalKeyStore;
+    private FutureTask<KeyStore> mLocalKeyStoreFutureTask;
     private X509Certificate mLastFailure;
     private Context mContext;
 
     public MemorizingTrustManager(Context appContext) {
         mContext = appContext;
-        try {
-            mLocalKeyStore = loadTrustStore();
-        } catch (FileNotFoundException e) {
-            // Init the key store for the first time
-            try {
-                initLocalKeyStoreFile();
-                mLocalKeyStore = loadTrustStore();
-            } catch (IOException | GeneralSecurityException e1) {
-                throw new IllegalStateException(e1);
-            }
-        } catch (IOException | GeneralSecurityException e) {
-            AppLog.e(T.API, e);
-            throw new IllegalStateException(e);
-        }
         ExecutorService executorService = Executors.newSingleThreadExecutor();
+        mLocalKeyStoreFutureTask = new FutureTask<>(new Callable<KeyStore>() {
+            public KeyStore call() {
+                return getKeyStore();
+            }
+        });
         mTrustManagerFutureTask = new FutureTask<>(new Callable<X509TrustManager>() {
             public X509TrustManager call() {
                 return getTrustManager(null);
@@ -65,13 +56,42 @@ public class MemorizingTrustManager implements X509TrustManager {
     }
 
     @NonNull
-    private X509TrustManager getDefaultTrustManager() {
+    private KeyStore getLocalKeyStore() {
         try {
-            return mTrustManagerFutureTask.get(TRUST_MANAGER_FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            return mLocalKeyStoreFutureTask.get(FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new IllegalStateException("Couldn't find X509TrustManager");
             // no op
         }
+    }
+
+    @NonNull
+    private X509TrustManager getDefaultTrustManager() {
+        try {
+            return mTrustManagerFutureTask.get(FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            throw new IllegalStateException("Couldn't find X509TrustManager");
+            // no op
+        }
+    }
+
+    private KeyStore getKeyStore() {
+        KeyStore localKeyStore;
+        try {
+            localKeyStore = loadTrustStore();
+        } catch (FileNotFoundException e) {
+            // Init the key store for the first time
+            try {
+                initLocalKeyStoreFile();
+                localKeyStore = loadTrustStore();
+            } catch (IOException | GeneralSecurityException e1) {
+                throw new IllegalStateException(e1);
+            }
+        } catch (IOException | GeneralSecurityException e) {
+            AppLog.e(T.API, e);
+            throw new IllegalStateException(e);
+        }
+        return localKeyStore;
     }
 
     private X509TrustManager getTrustManager(@Nullable KeyStore keyStore) {
@@ -139,7 +159,7 @@ public class MemorizingTrustManager implements X509TrustManager {
 
     public boolean isCertificateAccepted(X509Certificate cert) {
         try {
-            return mLocalKeyStore.getCertificateAlias(cert) != null;
+            return getLocalKeyStore().getCertificateAlias(cert) != null;
         } catch (GeneralSecurityException e) {
             return false;
         }
@@ -151,8 +171,8 @@ public class MemorizingTrustManager implements X509TrustManager {
 
     public void storeCert(X509Certificate cert) {
         try {
-            mLocalKeyStore.setCertificateEntry(cert.getSubjectDN().toString(), cert);
-            saveTrustStore(mLocalKeyStore);
+            getLocalKeyStore().setCertificateEntry(cert.getSubjectDN().toString(), cert);
+            saveTrustStore(getLocalKeyStore());
         } catch (IOException | GeneralSecurityException e) {
             AppLog.e(T.API, "Unable to store the certificate: " + cert);
         }
