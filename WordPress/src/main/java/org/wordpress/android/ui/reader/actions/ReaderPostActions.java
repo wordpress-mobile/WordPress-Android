@@ -20,6 +20,7 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
@@ -231,12 +232,6 @@ public class ReaderPostActions {
         requestPost(false, blogId, postId, requestListener);
     }
 
-    public static void requestBlogPost(final String blogSlug,
-            final String postSlug,
-            final ReaderActions.OnRequestListener requestListener) {
-        requestPost(blogSlug, postSlug, requestListener);
-    }
-
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
@@ -246,60 +241,29 @@ public class ReaderPostActions {
         requestPost(true, blogId, postId, requestListener);
     }
 
+    /**
+     * similar to updatePost, but used when post doesn't already exist in local db
+     **/
+    public static void requestBlogPost(final String blogSlug,
+            final String postSlug,
+            final ReaderActions.OnRequestListener requestListener) {
+        String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
+        requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
+    }
+
     private static void requestPost(final boolean isFeed,
             final long blogOrFeedId,
             final long postOrItemId,
             final ReaderActions.OnRequestListener requestListener) {
-        String path = isFeed ? "read/feed/" + blogOrFeedId + "/posts/" + postOrItemId + "/?meta=site,likes" :
-                "read/sites/" + blogOrFeedId + "/posts/" + postOrItemId + "/?meta=site,likes";
-
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                ReaderPost post = ReaderPost.fromJson(jsonObject);
-                ReaderPostTable.addOrUpdatePost(post);
-                handlePostLikes(post, jsonObject);
-                if (requestListener != null) {
-                    requestListener.onSuccess();
-                }
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (requestListener != null) {
-                    int statusCode = 0;
-                    // first try to get the error code from the JSON response, example:
-                    //   {"code":403,"headers":[{"name":"Content-Type","value":"application\/json"}],
-                    //    "body":{"error":"unauthorized","message":"User cannot access this private blog."}}
-                    JSONObject jsonObject = VolleyUtils.volleyErrorToJSON(volleyError);
-                    if (jsonObject != null && jsonObject.has("code")) {
-                        statusCode = jsonObject.optInt("code");
-                    }
-                    if (statusCode == 0) {
-                        statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
-                    }
-                    requestListener.onFailure(statusCode);
-                }
-            }
-        };
-
-        if (isFeed) {
-            AppLog.d(T.READER, "requesting feed post");
-            WordPress.getRestClientUtilsV1_3().get(path, null, null, listener, errorListener);
-        } else {
-            AppLog.d(T.READER, "requesting post");
-            WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
-        }
+        String path = (isFeed ?
+                "read/feed/" + blogOrFeedId + "/posts/" + postOrItemId :
+                "read/sites/" + blogOrFeedId + "/posts/" + postOrItemId)
+            + "/?meta=site,likes";
+        requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
     }
 
-    private static void requestPost(
-            final String blogSlug,
-            final String postSlug,
-            final ReaderActions.OnRequestListener requestListener) {
-        String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
-
+    private static void requestPost(RestClientUtils restClientUtils, String path, final ReaderActions
+            .OnRequestListener requestListener) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -333,7 +297,7 @@ public class ReaderPostActions {
         };
 
         AppLog.d(T.READER, "requesting post");
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        restClientUtils.get(path, null, null, listener, errorListener);
     }
 
     private static String getTrackingPixelForPost(@NonNull ReaderPost post) {
