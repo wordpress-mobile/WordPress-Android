@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
 
+import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -13,9 +14,12 @@ import org.wordpress.android.fluxc.action.AuthenticationAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
@@ -31,6 +35,7 @@ import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -115,6 +120,8 @@ public class AccountStore extends Store {
         }
     }
 
+    public class OnAuthEmailSent extends OnChanged<AuthEmailError> {}
+
     public static class AuthenticationError implements OnChangedError {
         public AuthenticationErrorType type;
         public String message;
@@ -195,6 +202,33 @@ public class AccountStore extends Store {
         public static IsAvailableErrorType fromString(String string) {
             if (string != null) {
                 for (IsAvailableErrorType v : IsAvailableErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+    }
+
+    public static class AuthEmailError implements OnChangedError {
+        public AuthEmailErrorType type;
+        public String message;
+
+        public AuthEmailError(@NonNull String type, @NonNull String message) {
+            this.type = AuthEmailErrorType.fromString(type);
+            this.message = message;
+        }
+    }
+
+    public enum AuthEmailErrorType {
+        INVALID_INPUT,
+        NO_SUCH_USER,
+        GENERIC_ERROR;
+
+        public static AuthEmailErrorType fromString(String string) {
+            if (string != null) {
+                for (AuthEmailErrorType v : AuthEmailErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -345,6 +379,9 @@ public class AccountStore extends Store {
                 break;
             case DISCOVERY_RESULT:
                 discoveryResult((DiscoveryResultPayload) payload);
+                break;
+            case SEND_AUTH_EMAIL:
+                sendAuthEmail((String) payload);
                 break;
         }
     }
@@ -503,6 +540,23 @@ public class AccountStore extends Store {
                         event.error = new AuthenticationError(
                                 Authenticator.volleyErrorToAuthenticationError(volleyError),
                                 Authenticator.volleyErrorToErrorMessage(volleyError));
+                        emitChange(event);
+                    }
+                });
+    }
+
+    private void sendAuthEmail(final String payload) {
+        mAuthenticator.sendAuthEmail(payload, new Listener<HashMap>() {
+                    @Override
+                    public void onResponse(HashMap response) {
+                        OnAuthEmailSent event = new OnAuthEmailSent();
+                        emitChange(event);
+                    }
+                }, new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        OnAuthEmailSent event = new OnAuthEmailSent();
+                        event.error = new AuthEmailError(((WPComGsonNetworkError) error).apiError, error.message);
                         emitChange(event);
                     }
                 });

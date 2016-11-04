@@ -14,6 +14,9 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
@@ -191,6 +194,19 @@ public class Authenticator {
                     tokenJSON.getString(SITE_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME), tokenJSON.getString(
                     TOKEN_TYPE_FIELD_NAME));
         }
+    }
+
+    public void sendAuthEmail(String email, Response.Listener<HashMap> listener, BaseErrorListener errorListener) {
+        String url = WPCOMREST.auth.send_login_email.getUrlV1_1();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+        params.put("client_id", mAppSecrets.getAppId());
+        params.put("client_secret", mAppSecrets.getAppSecret());
+
+        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, HashMap.class, listener, errorListener);
+
+        mRequestQueue.add(request);
     }
 
     public static AuthenticationErrorType volleyErrorToAuthenticationError(VolleyError error) {
