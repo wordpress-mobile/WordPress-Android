@@ -208,9 +208,9 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutFooter.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
 
-        ViewGroup relatedPostsContainerView = (ViewGroup) view.findViewById(R.id.container_related_posts);
-        mGlobalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainerView.findViewById(R.id.related_posts_view_global);
-        mLocalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainerView.findViewById(R.id.related_posts_view_local);
+        View relatedPostsContainer = view.findViewById(R.id.container_related_posts);
+        mGlobalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainer.findViewById(R.id.related_posts_view_global);
+        mLocalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainer.findViewById(R.id.related_posts_view_local);
 
         return view;
     }
@@ -481,7 +481,7 @@ public class ReaderPostDetailFragment extends Fragment
      * show the passed list of related posts - can be either global (related posts from
      * across wp.com) or local (related posts from the same site as the current post)
      */
-    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, boolean isGlobal) {
+    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, final boolean isGlobal) {
         // different container views for global/local related posts
         int id = isGlobal ? R.id.related_posts_view_global : R.id.related_posts_view_local;
         ReaderRelatedPostsView relatedPostsView = isGlobal ? mLocalRelatedPostsView : mGlobalRelatedPostsView;
@@ -491,7 +491,7 @@ public class ReaderPostDetailFragment extends Fragment
         relatedPostsView.setOnRelatedPostClickListener(new ReaderRelatedPostsView.OnRelatedPostClickListener() {
             @Override
             public void onRelatedPostClick(View v, long siteId, long postId) {
-                showRelatedPostDetail(siteId, postId);
+                showRelatedPostDetail(siteId, postId, isGlobal);
             }
         });
 
@@ -536,9 +536,11 @@ public class ReaderPostDetailFragment extends Fragment
      * history stack so the user can back-button through the history - otherwise start a new detail
      * activity for this related post
      */
-    private void showRelatedPostDetail(long blogId, long postId) {
-        AnalyticsUtils.trackWithReaderPostDetails(
-                AnalyticsTracker.Stat.READER_RELATED_POST_CLICKED, blogId, postId);
+    private void showRelatedPostDetail(long blogId, long postId, boolean isGlobal) {
+        AnalyticsTracker.Stat stat = isGlobal
+                ? AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED
+                : AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED;
+        AnalyticsUtils.trackWithReaderPostDetails(stat, blogId, postId);
 
         if (mIsRelatedPost) {
             mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));

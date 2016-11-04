@@ -296,8 +296,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_searchcard_clicked";
             case READER_TAG_UNFOLLOWED:
                 return "reader_reader_tag_unfollowed";
-            case READER_RELATED_POST_CLICKED:
-                return "reader_related_post_clicked";
+            case READER_GLOBAL_RELATED_POST_CLICKED:
+                return "reader_related_post_from_other_site_clicked";
+            case READER_LOCAL_RELATED_POST_CLICKED:
+                return "reader_related_post_from_same_site_clicked";
             case READER_VIEWPOST_INTERCEPTED:
                 return "reader_viewpost_intercepted";
             case READER_BLOG_POST_INTERCEPTED:
