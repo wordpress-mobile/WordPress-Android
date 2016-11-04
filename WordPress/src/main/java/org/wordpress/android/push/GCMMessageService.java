@@ -831,6 +831,10 @@ public class GCMMessageService extends GcmListenerService {
                     //get the data for the next notification in map for re-build
                     //because otherwise we would be keeping the PUSH_AUTH type note in `data`
                     data = sActiveNotificationsMap.values().iterator().next();
+                } else if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+                    //only note is the 2fa note, just reinsert it in the map and return
+                    sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+                    return;
                 }
             }
 
