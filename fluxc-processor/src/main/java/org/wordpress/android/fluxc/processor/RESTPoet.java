@@ -124,7 +124,7 @@ public class RESTPoet {
 
         if (!endpointNode.hasChildren()) {
             // Build annotated accessor method for variable endpoint and add it to the class
-            List<MethodSpec> endpointMethods = generateEndpointMethodsForClass(endpointNode, sBaseEndpointClass);
+            List<MethodSpec> endpointMethods = generateEndpointMethods(endpointNode, sBaseEndpointClass);
 
             for (MethodSpec endpointMethod : endpointMethods) {
                 classBuilder.addMethod(endpointMethod);
@@ -146,19 +146,25 @@ public class RESTPoet {
             for (Class endpointType : getVariableEndpointTypes(endpointNode)) {
                 String variableName = endpointType.equals(String.class) ? endpointName : endpointName + "Id";
 
-                MethodSpec endpointConstructor = MethodSpec.constructorBuilder()
+                MethodSpec.Builder endpointConstructorBuilder = MethodSpec.constructorBuilder()
                         .addModifiers(Modifier.PRIVATE)
                         .addParameter(String.class, "previousEndpoint")
-                        .addParameter(endpointType, variableName)
-                        .addStatement("super($L, $L)", "previousEndpoint", variableName)
-                        .build();
-                endpointClassBuilder.addMethod(endpointConstructor);
+                        .addParameter(endpointType, variableName);
+
+                if (endpointNode.getLocalEndpoint().contains(":")) {
+                    // Special case for endpoints of type '/item:$item/'
+                    endpointConstructorBuilder.addStatement("super($L, $S + $L)", "previousEndpoint",
+                            endpointName + ":", variableName);
+                } else {
+                    endpointConstructorBuilder.addStatement("super($L, $L)", "previousEndpoint", variableName);
+                }
+                endpointClassBuilder.addMethod(endpointConstructorBuilder.build());
             }
 
             TypeName endpointClassName = ClassName.get("", innerClassName);
 
             // Build annotated accessor method for variable endpoint
-            List<MethodSpec> endpointMethods = generateEndpointMethodsForClass(endpointNode, endpointClassName);
+            List<MethodSpec> endpointMethods = generateEndpointMethods(endpointNode, endpointClassName);
 
             for (EndpointNode childEndpoint : endpointNode.getChildren()) {
                 addEndpointToBuilder(childEndpoint, endpointClassBuilder);
@@ -172,7 +178,7 @@ public class RESTPoet {
         }
     }
 
-    private static List<MethodSpec> generateEndpointMethodsForClass(EndpointNode endpointNode, TypeName endpointClassName) {
+    private static List<MethodSpec> generateEndpointMethods(EndpointNode endpointNode, TypeName endpointClassName) {
         List<MethodSpec> endpointMethods = new ArrayList<>();
 
         for (Class endpointType : getVariableEndpointTypes(endpointNode)) {
@@ -195,11 +201,27 @@ public class RESTPoet {
                             .build());
 
             if (endpointNode.getParent().isRoot()) {
-                endpointMethodBuilder.addModifiers(Modifier.STATIC)
-                        .addStatement("return new $T($S, $L)", endpointClassName, "/", variableName);
+                if (endpointNode.getLocalEndpoint().contains(":") && !endpointNode.hasChildren()) {
+                    // Special case for endpoints of type '/item:$item/'
+                    // (the case with children is covered in the constructor, not here)
+                    endpointMethodBuilder.addModifiers(Modifier.STATIC)
+                            .addStatement("return new $T($S, $S + $L)", endpointClassName, "/",
+                                    endpointName + ":", variableName);
+                } else {
+                    endpointMethodBuilder.addModifiers(Modifier.STATIC)
+                            .addStatement("return new $T($S, $L)", endpointClassName, "/", variableName);
+                }
             } else {
-                endpointMethodBuilder
-                        .addStatement("return new $T(getEndpoint(), $L)", endpointClassName, variableName);
+                if (endpointNode.getLocalEndpoint().contains(":") && !endpointNode.hasChildren()) {
+                    // Special case for endpoints of type '/item:$item/'
+                    // (the case with children is covered in the constructor, not here)
+                    endpointMethodBuilder
+                            .addStatement("return new $T(getEndpoint(), $S + $L)", endpointClassName,
+                                    endpointName + ":", variableName);
+                } else {
+                    endpointMethodBuilder
+                            .addStatement("return new $T(getEndpoint(), $L)", endpointClassName, variableName);
+                }
             }
             endpointMethods.add(endpointMethodBuilder.build());
         }
