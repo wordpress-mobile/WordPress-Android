@@ -183,7 +183,14 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     public static synchronized void clearNotifications() {
+        Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
+
         sActiveNotificationsMap.clear();
+
+        //reinsert 2fa bundle if it was present
+        if (authPNBundle != null) {
+            sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+        }
     }
 
     public static synchronized int getNotificationsCount() {
@@ -231,10 +238,16 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
         for (Integer pushId : sActiveNotificationsMap.keySet()) {
             notificationManager.cancel(pushId);
         }
         notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
+
+        //reinsert 2fa bundle if it was present
+        if (authPNBundle != null) {
+            sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+        }
 
         clearNotifications();
     }
