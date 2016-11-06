@@ -948,6 +948,7 @@ public class ReaderPostDetailFragment extends Fragment
                         ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId,
                                 mDirectOperation, mCommentId, mInterceptedUri);
                         getActivity().finish();
+                        getActivity().overridePendingTransition(0, 0);
                         return;
                     case POST_LIKE:
                         // Liking needs to be handled "later" after the post has been updated from the server so,
