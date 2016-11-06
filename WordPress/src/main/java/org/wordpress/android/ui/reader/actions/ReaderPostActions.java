@@ -229,16 +229,17 @@ public class ReaderPostActions {
     public static void requestBlogPost(final long blogId,
             final long postId,
             final ReaderActions.OnRequestListener requestListener) {
-        requestPost(false, blogId, postId, requestListener);
+        String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
+        requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
     }
 
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestFeedPost(final long blogId,
-            final long postId,
+    public static void requestFeedPost(final long feedId, final long feedItemId,
             final ReaderActions.OnRequestListener requestListener) {
-        requestPost(true, blogId, postId, requestListener);
+        String path = "read/feed/" + feedId + "/posts/" + feedItemId + "/?meta=site,likes";
+        requestPost(WordPress.getRestClientUtilsV1_3(), path, requestListener);
     }
 
     /**
@@ -248,17 +249,6 @@ public class ReaderPostActions {
             final String postSlug,
             final ReaderActions.OnRequestListener requestListener) {
         String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
-        requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
-    }
-
-    private static void requestPost(final boolean isFeed,
-            final long blogOrFeedId,
-            final long postOrItemId,
-            final ReaderActions.OnRequestListener requestListener) {
-        String path = (isFeed ?
-                "read/feed/" + blogOrFeedId + "/posts/" + postOrItemId :
-                "read/sites/" + blogOrFeedId + "/posts/" + postOrItemId)
-            + "/?meta=site,likes";
         requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
     }
 
