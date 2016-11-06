@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.reader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +25,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -83,6 +86,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private long mReplyToCommentId;
     private long mCommentId;
     private int mRestorePosition;
+    private String mInterceptedUri;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,12 +117,14 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
+            mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             directOperation = (DirectOperation) getIntent()
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
+            mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
             // we need to re-request comments every time this activity is shown in order to
             // correctly reflect deletions and nesting changes - skipped when there's no
             // connection so we can show existing comments while offline
@@ -168,6 +174,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     break;
                 case COMMENT_LIKE:
                     getCommentAdapter().setDoLikeCommentId(mCommentId);
+                    if (ReaderUtils.isLoggedOutReader()) {
+                        Snackbar.make(mRecyclerView, R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                                Snackbar.LENGTH_INDEFINITE)
+                                        .setAction(R.string.sign_in, mSignInClickListener)
+                                        .show();
+                    }
                     break;
                 case POST_LIKE:
                     // nothing special to do in this case
@@ -189,6 +201,16 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
     }
 
+    private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
+
+            Intent parentIntent = getIntent();
+            parentIntent.setClass(ReaderCommentListActivity.this, SignInActivity.class);
+            startActivityForResult(parentIntent, 0);
+        }
+    };
 
     private void updatePostAndComments() {
         //to do a complete refresh we need to get updated post and new comments
@@ -284,6 +306,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
         outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mHasUpdatedComments);
+        outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
 
         super.onSaveInstanceState(outState);
     }

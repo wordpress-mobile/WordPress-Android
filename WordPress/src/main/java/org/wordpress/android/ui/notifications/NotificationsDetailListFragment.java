@@ -233,7 +233,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (!isAdded() || mNote == null || mNote.getCommentId() == 0) return;
 
             ReaderActivityLauncher.showReaderComments(getActivity(), mNote.getSiteId(), mNote.getPostId(),
-                    DirectOperation.COMMENT_JUMP, mNote.getCommentId());
+                    DirectOperation.COMMENT_JUMP, mNote.getCommentId(), null);
         }
 
         @Override

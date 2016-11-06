@@ -239,7 +239,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     public void showReaderCommentsList(long siteId, long postId, long commentId) {
         if (isFinishing()) return;
 
-        ReaderActivityLauncher.showReaderComments(this, siteId, postId, DirectOperation.COMMENT_JUMP, commentId);
+        ReaderActivityLauncher.showReaderComments(this, siteId, postId, DirectOperation.COMMENT_JUMP, commentId, null);
     }
 
     @Override

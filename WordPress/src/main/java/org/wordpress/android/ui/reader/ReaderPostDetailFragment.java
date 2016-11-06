@@ -947,7 +947,7 @@ public class ReaderPostDetailFragment extends Fragment
                     case COMMENT_REPLY:
                     case COMMENT_LIKE:
                         ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId,
-                                mDirectOperation, mCommentId);
+                                mDirectOperation, mCommentId, mInterceptedUri);
                         getActivity().finish();
                         return;
                     case POST_LIKE:
