@@ -20,8 +20,6 @@ import org.wordpress.android.util.ToastUtils;
  * An activity to handle deep linking and intercepting
  *
  * wordpress://viewpost?blogId={blogId}&postId={postId}
- * http[s]://wordpress.com/read/blogs/{blogId}/posts/{postId}
- * http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
  *
  * Redirects users to the reader activity along with IDs passed in the intent
  */
