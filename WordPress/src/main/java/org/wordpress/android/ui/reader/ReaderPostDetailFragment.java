@@ -79,8 +79,6 @@ public class ReaderPostDetailFragment extends Fragment
 
     private long mPostId;
     private long mBlogId;
-    private String mPostSlug;
-    private String mBlogSlug;
     private DirectOperation mDirectOperation;
     private int mCommentId;
     private boolean mIsFeed;
@@ -101,6 +99,7 @@ public class ReaderPostDetailFragment extends Fragment
     private WPTextView mSignInButton;
 
 
+    private boolean mPostSlugsResolutionUnderway;
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsWebViewPaused;
@@ -116,7 +115,7 @@ public class ReaderPostDetailFragment extends Fragment
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(false, blogId, postId, null, 0, false, null, null);
+        return newInstance(false, blogId, postId, null, 0, false, null, null, false);
     }
 
     public static ReaderPostDetailFragment newInstance(boolean isFeed,
@@ -126,7 +125,8 @@ public class ReaderPostDetailFragment extends Fragment
                                                        int commentId,
                                                        boolean isRelatedPost,
                                                        String interceptedUri,
-                                                       ReaderPostListType postListType) {
+                                                       ReaderPostListType postListType,
+                                                       boolean postSlugsResolutionUnderway) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
@@ -140,33 +140,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
-
-        ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-
-    public static ReaderPostDetailFragment newInstance(
-            String blogSlug,
-            String postSlug,
-            DirectOperation directOperation,
-            int commentId,
-            boolean isRelatedPost,
-            String interceptedUri,
-            ReaderPostListType postListType) {
-        AppLog.d(T.READER, "reader post detail > newInstance");
-
-        Bundle args = new Bundle();
-        args.putString(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
-        args.putString(ReaderConstants.ARG_POST_SLUG, postSlug);
-        args.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
-        args.putInt(ReaderConstants.ARG_COMMENT_ID, commentId);
-        args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
-        args.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
-        if (postListType != null) {
-            args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
-        }
+        args.putBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY, postSlugsResolutionUnderway);
 
         ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
         fragment.setArguments(args);
@@ -189,8 +163,6 @@ public class ReaderPostDetailFragment extends Fragment
             mIsFeed = args.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
-            mBlogSlug = args.getString(ReaderConstants.ARG_BLOG_SLUG);
-            mPostSlug = args.getString(ReaderConstants.ARG_POST_SLUG);
             mDirectOperation = (DirectOperation) args.getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = args.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
@@ -198,6 +170,7 @@ public class ReaderPostDetailFragment extends Fragment
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
+            mPostSlugsResolutionUnderway = args.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY);
         }
     }
 
@@ -253,6 +226,11 @@ public class ReaderPostDetailFragment extends Fragment
 
         mSignInButton = (WPTextView) view.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
+
+        final ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress_loading);
+        if (mPostSlugsResolutionUnderway) {
+            progress.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
@@ -342,13 +320,12 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.ARG_IS_FEED, mIsFeed);
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
-        outState.putString(ReaderConstants.ARG_BLOG_SLUG, mBlogSlug);
-        outState.putString(ReaderConstants.ARG_POST_SLUG, mPostSlug);
         outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, mDirectOperation);
         outState.putInt(ReaderConstants.ARG_COMMENT_ID, mCommentId);
 
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
+        outState.putBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY, mPostSlugsResolutionUnderway);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
 
@@ -375,13 +352,12 @@ public class ReaderPostDetailFragment extends Fragment
             mIsFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mBlogSlug = savedInstanceState.getString(ReaderConstants.ARG_BLOG_SLUG);
-            mPostSlug = savedInstanceState.getString(ReaderConstants.ARG_POST_SLUG);
             mDirectOperation = (DirectOperation) savedInstanceState
                     .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
+            mPostSlugsResolutionUnderway = savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
@@ -503,14 +479,14 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * replace the current post with the passed one
      */
-    private void replacePost(long blogId, long postId) {
+    private void replacePost(long blogId, long postId, boolean clearCommentOperation) {
         mIsFeed = false;
         mBlogId = blogId;
         mPostId = postId;
-        mBlogSlug = null;
-        mPostSlug = null;
-        mDirectOperation = null;
-        mCommentId = 0;
+        if (clearCommentOperation) {
+            mDirectOperation = null;
+            mCommentId = 0;
+        }
         mHasAlreadyRequestedPost = false;
         mHasAlreadyUpdatedPost = false;
 
@@ -595,7 +571,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         if (mIsRelatedPost) {
             mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
-            replacePost(blogId, postId);
+            replacePost(blogId, postId, true);
         } else {
             ReaderActivityLauncher.showReaderPostDetail(getActivity(), false, blogId, postId, null, 0, true,
                     mInterceptedUri);
@@ -608,7 +584,7 @@ public class ReaderPostDetailFragment extends Fragment
     protected boolean goBackInPostHistory() {
         if (!mPostHistory.isEmpty()) {
             ReaderBlogIdPostId ids = mPostHistory.pop();
-            replacePost(ids.getBlogId(), ids.getPostId());
+            replacePost(ids.getBlogId(), ids.getPostId(), true);
             return true;
         } else {
             return false;
@@ -802,37 +778,7 @@ public class ReaderPostDetailFragment extends Fragment
             public void onFailure(int statusCode) {
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
-                    int errMsgResId;
-                    if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-                        errMsgResId = R.string.no_network_message;
-                    } else {
-                        switch (statusCode) {
-                            case 401:
-                            case 403:
-                                final boolean offerSignIn = WPUrlUtils.isWordPressCom(mInterceptedUri)
-                                        && !AccountHelper.isSignedInWordPressDotCom();
-
-                                if (!offerSignIn) {
-                                    errMsgResId = (mInterceptedUri == null)
-                                            ? R.string.reader_err_get_post_not_authorized
-                                            : R.string.reader_err_get_post_not_authorized_fallback;
-                                    mSignInButton.setVisibility(View.GONE);
-                                } else {
-                                    errMsgResId = (mInterceptedUri == null)
-                                            ? R.string.reader_err_get_post_not_authorized_signin
-                                            : R.string.reader_err_get_post_not_authorized_signin_fallback;
-                                    mSignInButton.setVisibility(View.VISIBLE);
-                                }
-                                break;
-                            case 404:
-                                errMsgResId = R.string.reader_err_get_post_not_found;
-                                break;
-                            default:
-                                errMsgResId = R.string.reader_err_get_post_generic;
-                                break;
-                        }
-                    }
-                    showError(getString(errMsgResId));
+                    onRequestFailure(statusCode);
                 }
             }
         };
@@ -840,12 +786,61 @@ public class ReaderPostDetailFragment extends Fragment
         if (mIsFeed) {
             ReaderPostActions.requestFeedPost(mBlogId, mPostId, listener);
         } else {
-            if (mBlogSlug == null) {
-                ReaderPostActions.requestBlogPost(mBlogId, mPostId, listener);
-            } else {
-                ReaderPostActions.requestBlogPost(mBlogSlug, mPostSlug, listener);
+            ReaderPostActions.requestBlogPost(mBlogId, mPostId, listener);
+        }
+    }
+
+    /*
+     * post slugs resolution to IDs has completed
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.PostSlugsRequestCompleted event) {
+        mPostSlugsResolutionUnderway = false;
+
+        if (!isAdded()) return;
+
+        final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_loading);
+        progress.setVisibility(View.GONE);
+
+        if (event.getStatusCode() == 200) {
+            replacePost(event.getBlogId(), event.getPostId(), false);
+        } else {
+            onRequestFailure(event.getStatusCode());
+        }
+    }
+
+    private void onRequestFailure(int statusCode) {
+        int errMsgResId;
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            errMsgResId = R.string.no_network_message;
+        } else {
+            switch (statusCode) {
+                case 401:
+                case 403:
+                    final boolean offerSignIn = WPUrlUtils.isWordPressCom(mInterceptedUri)
+                            && !AccountHelper.isSignedInWordPressDotCom();
+
+                    if (!offerSignIn) {
+                        errMsgResId = (mInterceptedUri == null)
+                                ? R.string.reader_err_get_post_not_authorized
+                                : R.string.reader_err_get_post_not_authorized_fallback;
+                        mSignInButton.setVisibility(View.GONE);
+                    } else {
+                        errMsgResId = (mInterceptedUri == null)
+                                ? R.string.reader_err_get_post_not_authorized_signin
+                                : R.string.reader_err_get_post_not_authorized_signin_fallback;
+                        mSignInButton.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case 404:
+                    errMsgResId = R.string.reader_err_get_post_not_found;
+                    break;
+                default:
+                    errMsgResId = R.string.reader_err_get_post_generic;
+                    break;
             }
         }
+        showError(getString(errMsgResId));
     }
 
     /*
@@ -865,6 +860,11 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void showPost() {
+        if (mPostSlugsResolutionUnderway) {
+            AppLog.w(T.READER, "reader post detail > post request already running");
+            return;
+        }
+
         if (mIsPostTaskRunning) {
             AppLog.w(T.READER, "reader post detail > show post task already running");
             return;
@@ -892,8 +892,7 @@ public class ReaderPostDetailFragment extends Fragment
         @Override
         protected Boolean doInBackground(Void... params) {
             mPost = mIsFeed ? ReaderPostTable.getFeedPost(mBlogId, mPostId, false)
-                    : (mBlogSlug == null ? ReaderPostTable.getBlogPost(mBlogId, mPostId, false)
-                            : ReaderPostTable.getBlogPost(mBlogSlug, mPostSlug, false));
+                    : ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
             if (mPost == null) {
                 return false;
             }

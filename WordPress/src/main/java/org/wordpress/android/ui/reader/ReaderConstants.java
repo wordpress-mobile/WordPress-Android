@@ -27,8 +27,6 @@ public class ReaderConstants {
     static final String ARG_BLOG_ID           = "blog_id";
     static final String ARG_FEED_ID           = "feed_id";
     static final String ARG_POST_ID           = "post_id";
-    static final String ARG_BLOG_SLUG         = "blog_url";
-    static final String ARG_POST_SLUG         = "post_slug";
     static final String ARG_INTERCEPTED_URI   = "intercepted_uri";
     static final String ARG_COMMENT_ID        = "comment_id";
     static final String ARG_DIRECT_OPERATION = "comment_operation";
@@ -41,6 +39,7 @@ public class ReaderConstants {
     static final String ARG_IS_RELATED_POST   = "is_related_post";
     static final String ARG_SEARCH_QUERY      = "search_query";
 
+    static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";
     static final String KEY_ALREADY_UPDATED   = "already_updated";
     static final String KEY_ALREADY_REQUESTED = "already_requested";
     static final String KEY_RESTORE_POSITION  = "restore_position";

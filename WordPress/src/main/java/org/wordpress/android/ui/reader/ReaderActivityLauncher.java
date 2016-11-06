@@ -59,25 +59,6 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderPostDetail(Context context,
-                                            String blogSlug,
-                                            String postSlug,
-                                            DirectOperation directOperation,
-                                            int commentId,
-                                            boolean isRelatedPost,
-                                            String interceptedUri) {
-        Intent intent = new Intent(context, ReaderPostPagerActivity.class);
-        intent.putExtra(ReaderConstants.ARG_IS_FEED, false);
-        intent.putExtra(ReaderConstants.ARG_BLOG_SLUG, blogSlug);
-        intent.putExtra(ReaderConstants.ARG_POST_SLUG, postSlug);
-        intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
-        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
-        intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
-        intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
-        intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
-        context.startActivity(intent);
-    }
-
     /*
      * show pager view of posts with a specific tag - passed blogId/postId is the post
      * to select after the pager is populated

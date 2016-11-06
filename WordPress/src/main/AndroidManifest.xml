@@ -259,7 +259,20 @@
                     android:host="viewpost"
                     android:scheme="wordpress" />
             </intent-filter>
+        </activity>
 
+        <!-- Reader Activities -->
+        <activity
+            android:name=".ui.reader.ReaderPostListActivity"
+            android:label="@string/reader"
+            android:theme="@style/Calypso.NoActionBar">
+        </activity>
+        <activity
+            android:name=".ui.reader.ReaderPostPagerActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/reader_title_deeplink"
+            android:theme="@style/Calypso.NoActionBar"
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <data
                     android:host="wordpress.com"
@@ -315,19 +328,6 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-
-        <!-- Reader Activities -->
-        <activity
-            android:name=".ui.reader.ReaderPostListActivity"
-            android:label="@string/reader"
-            android:theme="@style/Calypso.NoActionBar">
-        </activity>
-        <activity
-            android:name=".ui.reader.ReaderPostPagerActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/reader_title_post_detail"
-            android:theme="@style/Calypso.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"

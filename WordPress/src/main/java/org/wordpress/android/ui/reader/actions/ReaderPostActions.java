@@ -303,10 +303,6 @@ public class ReaderPostActions {
         bumpPageViewForPost(ReaderPostTable.getBlogPost(blogId, postId, true));
     }
 
-    public static void bumpPageViewForPost(String blogSlug, String postSlug) {
-        bumpPageViewForPost(ReaderPostTable.getBlogPost(blogSlug, postSlug, true));
-    }
-
     public static void bumpPageViewForPost(ReaderPost post) {
         if (post == null) {
             return;

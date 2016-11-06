@@ -2,6 +2,8 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -10,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +22,9 @@ import android.widget.ProgressBar;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -31,20 +36,40 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashSet;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.greenrobot.event.EventBus;
 
 /*
  * shows reader post detail fragments in a ViewPager - primarily used for easy swiping between
  * posts with a specific tag or in a specific blog, but can also be used to show a single
- * post detail
+ * post detail.
+ *
+ * It also displays intercepted WordPress.com URls in the following forms
+ *
+ * http[s]://wordpress.com/read/blogs/{blogId}/posts/{postId}
+ * http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}
+ *
+ * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.AutoHideToolbarListener {
     private static final String KEY_TRACKED_POST = "tracked_post";
+
+    private enum InterceptType {
+        READER_BLOG,
+        READER_FEED,
+        WPCOM_POST_SLUG
+    }
 
     private WPViewPager mViewPager;
     private ProgressBar mProgress;
@@ -54,14 +79,13 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private boolean mIsFeed;
     private long mBlogId;
     private long mPostId;
-    private String mBlogSlug;
-    private String mPostSlug;
     private int mCommentId;
     private DirectOperation mDirectOperation;
     private String mInterceptedUri;
     private int mLastSelectedPosition = -1;
     private ReaderPostListType mPostListType;
 
+    private boolean mPostSlugsResolutionUnderway;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
     private boolean mIsRelatedPostView;
@@ -73,6 +97,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
+
+        final boolean isDeepLinking = Intent.ACTION_VIEW.equals(getIntent().getAction());
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -90,8 +116,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mIsFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mBlogSlug = savedInstanceState.getString(ReaderConstants.ARG_BLOG_SLUG);
-            mPostSlug = savedInstanceState.getString(ReaderConstants.ARG_POST_SLUG);
             mDirectOperation = (DirectOperation) savedInstanceState
                     .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
@@ -105,12 +129,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
             }
             mTrackedPost = savedInstanceState.getBoolean(KEY_TRACKED_POST);
+            mPostSlugsResolutionUnderway = savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY);
         } else {
             mIsFeed = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_FEED, false);
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            mBlogSlug = getIntent().getStringExtra(ReaderConstants.ARG_BLOG_SLUG);
-            mPostSlug = getIntent().getStringExtra(ReaderConstants.ARG_POST_SLUG);
             mDirectOperation = (DirectOperation) getIntent()
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getIntExtra(ReaderConstants.ARG_COMMENT_ID, 0);
@@ -129,7 +152,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
         }
 
-        setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : R.string.reader_title_post_detail);
+        setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : (isDeepLinking ? R.string.reader_title_post_detail_wpcom :
+                R.string.reader_title_post_detail));
 
         // for related posts, show an X in the toolbar which closes the activity - using the
         // back button will navigate through related posts
@@ -171,6 +195,226 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         mViewPager.setPageTransformer(false,
                 new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
+
+        if (isDeepLinking) {
+            handleDeepLinking();
+        }
+    }
+
+    private void handleDeepLinking() {
+        String action = getIntent().getAction();
+        Uri uri = getIntent().getData();
+
+        AnalyticsUtils.trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, uri);
+
+        if (uri == null) {
+            // invalid uri so, just show the entry screen
+            Intent intent = new Intent(this, WPLaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        InterceptType interceptType = InterceptType.READER_BLOG;
+        String blogIdentifier = null; // can be an id or a slug
+        String postIdentifier = null; // can be an id or a slug
+
+        mInterceptedUri = uri.toString();
+
+        List<String> segments = uri.getPathSegments();
+
+        // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
+        //  with the first segment being 'read'.
+        if (segments != null) {
+            if (segments.get(0).equals("read")) {
+                if (segments.size() > 2) {
+                    blogIdentifier = segments.get(2);
+
+                    if (segments.get(1).equals("blogs")) {
+                        interceptType = InterceptType.READER_BLOG;
+                    } else if (segments.get(1).equals("feeds")) {
+                        interceptType = InterceptType.READER_FEED;
+                        mIsFeed = true;
+                    }
+                }
+
+                if (segments.size() > 4 && segments.get(3).equals("posts")) {
+                    postIdentifier = segments.get(4);
+                }
+
+                parseFragment(uri);
+
+                showPost(interceptType, blogIdentifier, postIdentifier);
+                return;
+            } else if (segments.size() == 4) {
+                blogIdentifier = uri.getHost();
+                try {
+                    postIdentifier = URLEncoder.encode(segments.get(3), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    AppLog.e(AppLog.T.READER, e);
+                    ToastUtils.showToast(this, R.string.error_generic);
+                }
+
+                parseFragment(uri);
+                detectLike(uri);
+
+                interceptType = InterceptType.WPCOM_POST_SLUG;
+                showPost(interceptType, blogIdentifier, postIdentifier);
+                return;
+            }
+        }
+
+        // at this point, just show the entry screen
+        Intent intent = new Intent(this, WPLaunchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void showPost(@NonNull InterceptType interceptType, final String blogIdentifier, final String
+            postIdentifier) {
+        if (!TextUtils.isEmpty(blogIdentifier) && !TextUtils.isEmpty(postIdentifier)) {
+            mIsSinglePostView = true;
+            mIsRelatedPostView = false;
+
+            switch (interceptType) {
+                case READER_BLOG:
+                    AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
+                            blogIdentifier, postIdentifier);
+                    break;
+                case READER_FEED:
+                    AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
+                            blogIdentifier, postIdentifier);
+                    break;
+                case WPCOM_POST_SLUG:
+                    AnalyticsUtils.trackWithBlogPostDetails(
+                            AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED, blogIdentifier,
+                            postIdentifier, mCommentId);
+                    break;
+            }
+
+            if (interceptType == InterceptType.WPCOM_POST_SLUG) {
+                // try to get the post from the local db
+                ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier, true);
+                if (post != null) {
+                    // set the IDs and let ReaderPostPagerActivity normally display the post
+                    mBlogId = post.blogId;
+                    mPostId = post.postId;
+                } else {
+                    // not stored locally, so request it
+                    ReaderPostActions.requestBlogPost(blogIdentifier, postIdentifier,
+                            new ReaderActions.OnRequestListener() {
+                        @Override
+                        public void onSuccess() {
+                            ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier, true);
+                            ReaderEvents.PostSlugsRequestCompleted slugsResolved = (post != null) ? new ReaderEvents
+                                    .PostSlugsRequestCompleted(200, post.blogId, post.postId) : new ReaderEvents
+                                    .PostSlugsRequestCompleted(200, 0, 0);
+                            // notify that the slug resolution request has completed
+                            EventBus.getDefault().post(slugsResolved);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode) {
+                            // notify that the slug resolution request has completed
+                            EventBus.getDefault().post(new ReaderEvents.PostSlugsRequestCompleted(statusCode, 0, 0));
+                        }
+                    });
+                    mPostSlugsResolutionUnderway = true;
+                }
+            } else {
+                try {
+                    mBlogId = Long.parseLong(blogIdentifier);
+                    mPostId = Long.parseLong(postIdentifier);
+                    // set the IDs and let ReaderPostPagerActivity normally display the post
+                } catch (NumberFormatException e) {
+                    ToastUtils.showToast(this, R.string.error_generic);
+                    AppLog.e(AppLog.T.READER, e);
+                }
+            }
+        } else {
+            ToastUtils.showToast(this, R.string.error_generic);
+        }
+    }
+
+    /**
+     * Parse the URL fragment and interpret it as an operation to perform. For example, a "#comments" fragment is
+     * interpreted as a direct jump into the comments section of the post.
+     *
+     * @param uri the full URI input, including the fragment
+     */
+    private void parseFragment(Uri uri) {
+        // default to do-nothing w.r.t. comments
+        mDirectOperation = null;
+
+        if (uri == null || uri.getFragment() == null) {
+            return;
+        }
+
+        final String fragment = uri.getFragment();
+
+        final Pattern FRAGMENT_COMMENTS_PATTERN = Pattern.compile("comments", Pattern.CASE_INSENSITIVE);
+        final Pattern FRAGMENT_COMMENT_ID_PATTERN = Pattern.compile("comment-(\\d+)", Pattern.CASE_INSENSITIVE);
+        final Pattern FRAGMENT_RESPOND_PATTERN = Pattern.compile("respond", Pattern.CASE_INSENSITIVE);
+
+        // check for the general "#comments" fragment to jump to the comments section
+        Matcher commentsMatcher = FRAGMENT_COMMENTS_PATTERN.matcher(fragment);
+        if (commentsMatcher.matches()) {
+            mDirectOperation = DirectOperation.COMMENT_JUMP;
+            mCommentId = 0;
+            return;
+        }
+
+        // check for the "#respond" fragment to jump to the reply box
+        Matcher respondMatcher = FRAGMENT_RESPOND_PATTERN.matcher(fragment);
+        if (respondMatcher.matches()) {
+            mDirectOperation = DirectOperation.COMMENT_REPLY;
+
+            // check whether we are to reply to a specific comment
+            final String replyToCommentId = uri.getQueryParameter("replytocom");
+            if (replyToCommentId != null) {
+                try {
+                    mCommentId = Integer.parseInt(replyToCommentId);
+                } catch (NumberFormatException e) {
+                    AppLog.e(AppLog.T.UTILS, "replytocom cannot be converted to int" + replyToCommentId, e);
+                }
+            }
+
+            return;
+        }
+
+        // check for the "#comment-xyz" fragment to jump to a specific comment
+        Matcher commentIdMatcher = FRAGMENT_COMMENT_ID_PATTERN.matcher(fragment);
+        if (commentIdMatcher.find() && commentIdMatcher.groupCount() > 0) {
+            mCommentId = Integer.valueOf(commentIdMatcher.group(1));
+            mDirectOperation = DirectOperation.COMMENT_JUMP;
+        }
+    }
+
+    /**
+     * Parse the URL query parameters and detect attempt to like a post or a comment
+     *
+     * @param uri the full URI input, including the query parameters
+     */
+    private void detectLike(Uri uri) {
+        // check whether we are to like something
+        final boolean doLike = "1".equals(uri.getQueryParameter("like"));
+        final String likeActor = uri.getQueryParameter("like_actor");
+
+        if (doLike && likeActor != null && likeActor.trim().length() > 0) {
+            mDirectOperation = DirectOperation.POST_LIKE;
+
+            // check whether we are to like a specific comment
+            final String likeCommentId = uri.getQueryParameter("commentid");
+            if (likeCommentId != null) {
+                try {
+                    mCommentId = Integer.parseInt(likeCommentId);
+                    mDirectOperation = DirectOperation.COMMENT_LIKE;
+                } catch (NumberFormatException e) {
+                    AppLog.e(AppLog.T.UTILS, "commentid cannot be converted to int" + likeCommentId, e);
+                }
+            }
+        }
     }
 
     @Override
@@ -178,11 +422,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         super.onResume();
         EventBus.getDefault().register(this);
         if (!hasPagerAdapter()) {
-            if (mBlogSlug == null) {
-                loadPosts(mBlogId, mPostId);
-            } else {
-                loadPost(mBlogSlug, mPostSlug);
-            }
+            loadPosts(mBlogId, mPostId);
         }
     }
 
@@ -236,10 +476,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
         }
 
-        outState.putString(ReaderConstants.ARG_BLOG_SLUG, mBlogSlug);
-        outState.putString(ReaderConstants.ARG_POST_SLUG, mPostSlug);
-
         outState.putBoolean(KEY_TRACKED_POST, mTrackedPost);
+
+        outState.putBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY, mPostSlugsResolutionUnderway);
 
         super.onSaveInstanceState(outState);
     }
@@ -296,21 +535,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     /*
-     * perform analytics tracking and bump the page view for the post if it hasn't already been done
-     */
-    private void trackPostSlugIfNeeded() {
-        AppLog.d(AppLog.T.READER, "reader pager > tracking post via slug");
-        mTrackedPost = true;
-
-        // bump the page view
-        ReaderPostActions.bumpPageViewForPost(mBlogSlug, mPostSlug);
-
-        // analytics tracking
-        AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_OPENED, ReaderPostTable
-                .getBlogPost(mBlogSlug, mPostSlug, true));
-    }
-
-    /*
      * loads the blogId/postId pairs used to populate the pager adapter - passed blogId/postId will
      * be made active after loading unless gotoNext=true, in which case the post after the passed
      * one will be made active
@@ -359,15 +583,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 });
             }
         }.start();
-    }
-
-    /*
-     * loads the blogSlug/postSlug
-     */
-    private void loadPost(String blogSlug, String postSlug) {
-        AppLog.d(AppLog.T.READER, "reader pager > creating adapter");
-        mViewPager.setAdapter(new PostPagerAdapter(getFragmentManager(), blogSlug, postSlug));
-        trackPostSlugIfNeeded();
     }
 
     private ReaderTag getCurrentTag() {
@@ -462,15 +677,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW) {
             AppLog.d(AppLog.T.READER, "reader pager > older posts received");
-            if (mBlogSlug == null) {
-                // remember which post to keep active
-                ReaderBlogIdPostId id = adapter.getCurrentBlogIdPostId();
-                long blogId = (id != null ? id.getBlogId() : 0);
-                long postId = (id != null ? id.getPostId() : 0);
-                loadPosts(blogId, postId);
-            } else {
-                loadPost(mBlogSlug, mPostSlug);
-            }
+            // remember which post to keep active
+            ReaderBlogIdPostId id = adapter.getCurrentBlogIdPostId();
+            long blogId = (id != null ? id.getBlogId() : 0);
+            long postId = (id != null ? id.getPostId() : 0);
+            loadPosts(blogId, postId);
         } else {
             AppLog.d(AppLog.T.READER, "reader pager > all posts loaded");
             adapter.mAllPostsLoaded = true;
@@ -492,8 +703,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
      **/
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
         private ReaderBlogIdPostIdList mIdList;
-        private String mSingleBlogSlug;
-        private String mSinglePostSlug;
         private boolean mAllPostsLoaded;
 
         // this is used to retain created fragments so we can access them in
@@ -506,12 +715,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
             mIdList = (ReaderBlogIdPostIdList)ids.clone();
-        }
-
-        PostPagerAdapter(FragmentManager fm, String blogSlug, String postSlug) {
-            super(fm);
-            mSingleBlogSlug = blogSlug;
-            mSinglePostSlug = postSlug;
         }
 
         @Override
@@ -546,7 +749,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return mSingleBlogSlug != null ? 1 : mIdList.size();
+            return mIdList.size();
         }
 
         @Override
@@ -555,26 +758,16 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 requestMorePosts();
             }
 
-            if (mSingleBlogSlug == null) {
-                return ReaderPostDetailFragment.newInstance(
-                        mIsFeed,
-                        mIdList.get(position).getBlogId(),
-                        mIdList.get(position).getPostId(),
-                        mDirectOperation,
-                        mCommentId,
-                        mIsRelatedPostView,
-                        mInterceptedUri,
-                        getPostListType());
-            } else {
-                return ReaderPostDetailFragment.newInstance(
-                        mSingleBlogSlug,
-                        mSinglePostSlug,
-                        mDirectOperation,
-                        mCommentId,
-                        mIsRelatedPostView,
-                        mInterceptedUri,
-                        getPostListType());
-            }
+            return ReaderPostDetailFragment.newInstance(
+                    mIsFeed,
+                    mIdList.get(position).getBlogId(),
+                    mIdList.get(position).getPostId(),
+                    mDirectOperation,
+                    mCommentId,
+                    mIsRelatedPostView,
+                    mInterceptedUri,
+                    getPostListType(),
+                    mPostSlugsResolutionUnderway);
         }
 
         @Override
