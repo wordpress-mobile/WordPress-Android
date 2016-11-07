@@ -353,7 +353,7 @@ public class GCMMessageService extends GcmListenerService {
 
             // Always do this, since a note can be updated!!
             // The PN payload 99% of times contains the most recent version of the note.
-             if (!buildNoteObjectFromPNPayloadAndSaveIt(data)) {
+            if (!buildNoteObjectFromPNPayloadAndSaveIt(data)) {
                 // PN payload doesn't have the note or there was an error.
                 // Retrieve the Note obj by calling the REST API
                 NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID,
