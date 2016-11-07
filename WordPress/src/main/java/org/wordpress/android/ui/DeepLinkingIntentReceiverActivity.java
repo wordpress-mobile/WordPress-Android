@@ -80,7 +80,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                 final long postId = Long.parseLong(mPostId);
 
                 AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED,
-                        mBlogId, mPostId);
+                        blogId, postId);
 
                 ReaderActivityLauncher.showReaderPostDetail(this, false, blogId, postId, null, 0, false,
                         mInterceptedUri);

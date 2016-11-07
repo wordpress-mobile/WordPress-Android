@@ -295,66 +295,81 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
             switch (interceptType) {
                 case READER_BLOG:
-                    AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
-                            blogIdentifier, postIdentifier);
+                    if (parseIds(blogIdentifier, postIdentifier)) {
+                        AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
+                                mBlogId, mPostId);
+                        // IDs have now been set so, let ReaderPostPagerActivity normally display the post
+                    } else {
+                        ToastUtils.showToast(this, R.string.error_generic);
+                    }
                     break;
                 case READER_FEED:
-                    AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
-                            blogIdentifier, postIdentifier);
+                    if (parseIds(blogIdentifier, postIdentifier)) {
+                        AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
+                                mBlogId, mPostId);
+                        // IDs have now been set so, let ReaderPostPagerActivity normally display the post
+                    } else {
+                        ToastUtils.showToast(this, R.string.error_generic);
+                    }
                     break;
                 case WPCOM_POST_SLUG:
                     AnalyticsUtils.trackWithBlogPostDetails(
                             AnalyticsTracker.Stat.READER_WPCOM_BLOG_POST_INTERCEPTED, blogIdentifier,
                             postIdentifier, mCommentId);
+
+                    // try to get the post from the local db
+                    ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier, true);
+                    if (post != null) {
+                        // set the IDs and let ReaderPostPagerActivity normally display the post
+                        mBlogId = post.blogId;
+                        mPostId = post.postId;
+                    } else {
+                        // not stored locally, so request it
+                        ReaderPostActions.requestBlogPost(blogIdentifier, postIdentifier,
+                                new ReaderActions.OnRequestListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        mPostSlugsResolutionUnderway = false;
+
+                                        ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier,
+                                                true);
+                                        ReaderEvents.PostSlugsRequestCompleted slugsResolved =
+                                                (post != null) ? new ReaderEvents.PostSlugsRequestCompleted(
+                                                        200, post.blogId, post.postId)
+                                                : new ReaderEvents.PostSlugsRequestCompleted(200, 0, 0);
+                                        // notify that the slug resolution request has completed
+                                        EventBus.getDefault().post(slugsResolved);
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode) {
+                                        mPostSlugsResolutionUnderway = false;
+
+                                        // notify that the slug resolution request has completed
+                                        EventBus.getDefault().post(new ReaderEvents.PostSlugsRequestCompleted
+                                                (statusCode, 0, 0));
+                                    }
+                                });
+                        mPostSlugsResolutionUnderway = true;
+                    }
+
                     break;
-            }
-
-            if (interceptType == InterceptType.WPCOM_POST_SLUG) {
-                // try to get the post from the local db
-                ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier, true);
-                if (post != null) {
-                    // set the IDs and let ReaderPostPagerActivity normally display the post
-                    mBlogId = post.blogId;
-                    mPostId = post.postId;
-                } else {
-                    // not stored locally, so request it
-                    ReaderPostActions.requestBlogPost(blogIdentifier, postIdentifier,
-                            new ReaderActions.OnRequestListener() {
-                        @Override
-                        public void onSuccess() {
-                            mPostSlugsResolutionUnderway = false;
-
-                            ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier, true);
-                            ReaderEvents.PostSlugsRequestCompleted slugsResolved = (post != null) ? new ReaderEvents
-                                    .PostSlugsRequestCompleted(200, post.blogId, post.postId) : new ReaderEvents
-                                    .PostSlugsRequestCompleted(200, 0, 0);
-                            // notify that the slug resolution request has completed
-                            EventBus.getDefault().post(slugsResolved);
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode) {
-                            mPostSlugsResolutionUnderway = false;
-
-                            // notify that the slug resolution request has completed
-                            EventBus.getDefault().post(new ReaderEvents.PostSlugsRequestCompleted(statusCode, 0, 0));
-                        }
-                    });
-                    mPostSlugsResolutionUnderway = true;
-                }
-            } else {
-                try {
-                    mBlogId = Long.parseLong(blogIdentifier);
-                    mPostId = Long.parseLong(postIdentifier);
-                    // set the IDs and let ReaderPostPagerActivity normally display the post
-                } catch (NumberFormatException e) {
-                    ToastUtils.showToast(this, R.string.error_generic);
-                    AppLog.e(AppLog.T.READER, e);
-                }
             }
         } else {
             ToastUtils.showToast(this, R.string.error_generic);
         }
+    }
+
+    private boolean parseIds(String blogIdentifier, String postIdentifier) {
+        try {
+            mBlogId = Long.parseLong(blogIdentifier);
+            mPostId = Long.parseLong(postIdentifier);
+        } catch (NumberFormatException e) {
+            AppLog.e(AppLog.T.READER, e);
+            return false;
+        }
+
+        return true;
     }
 
     /**
