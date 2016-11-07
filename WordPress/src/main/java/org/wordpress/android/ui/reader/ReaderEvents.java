@@ -173,4 +173,6 @@ public class ReaderEvents {
             return mPostId;
         }
     }
+
+    public static class DoSignIn {}
 }

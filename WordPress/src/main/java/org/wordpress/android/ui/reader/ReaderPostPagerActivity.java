@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -63,6 +65,7 @@ import de.greenrobot.event.EventBus;
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.AutoHideToolbarListener {
+    private static final int INTENT_DO_LOGIN = 1000;
     private static final String KEY_TRACKED_POST = "tracked_post";
 
     private enum InterceptType {
@@ -90,6 +93,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private boolean mIsSinglePostView;
     private boolean mIsRelatedPostView;
 
+    private boolean mBackFromLogin;
+
     private final HashSet<Integer> mTrackedPositions = new HashSet<>();
     private boolean mTrackedPost;
 
@@ -97,8 +102,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
-
-        final boolean isDeepLinking = Intent.ACTION_VIEW.equals(getIntent().getAction());
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -152,8 +155,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
         }
 
-        setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : (isDeepLinking ? R.string.reader_title_post_detail_wpcom :
-                R.string.reader_title_post_detail));
+        setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : (isDeepLinking() ? R.string
+                .reader_title_post_detail_wpcom : R.string.reader_title_post_detail));
 
         // for related posts, show an X in the toolbar which closes the activity - using the
         // back button will navigate through related posts
@@ -195,10 +198,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         mViewPager.setPageTransformer(false,
                 new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
+    }
 
-        if (isDeepLinking) {
-            handleDeepLinking();
-        }
+    private boolean isDeepLinking() {
+        return Intent.ACTION_VIEW.equals(getIntent().getAction());
     }
 
     private void handleDeepLinking() {
@@ -306,6 +309,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                             new ReaderActions.OnRequestListener() {
                         @Override
                         public void onSuccess() {
+                            mPostSlugsResolutionUnderway = false;
+
                             ReaderPost post = ReaderPostTable.getBlogPost(blogIdentifier, postIdentifier, true);
                             ReaderEvents.PostSlugsRequestCompleted slugsResolved = (post != null) ? new ReaderEvents
                                     .PostSlugsRequestCompleted(200, post.blogId, post.postId) : new ReaderEvents
@@ -316,6 +321,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
                         @Override
                         public void onFailure(int statusCode) {
+                            mPostSlugsResolutionUnderway = false;
+
                             // notify that the slug resolution request has completed
                             EventBus.getDefault().post(new ReaderEvents.PostSlugsRequestCompleted(statusCode, 0, 0));
                         }
@@ -421,8 +428,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
-        if (!hasPagerAdapter()) {
+
+        if (!hasPagerAdapter() || mBackFromLogin) {
+            handleDeepLinking();
+
             loadPosts(mBlogId, mPostId);
+
+            // clear up the back-from-login flag anyway
+            mBackFromLogin = false;
         }
     }
 
@@ -688,6 +701,17 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.DoSignIn event) {
+        if (isFinishing()) return;
+
+        AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
+
+        Intent signInIntent = new Intent(this, SignInActivity.class);
+        signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivityForResult(signInIntent, INTENT_DO_LOGIN);
+    }
+
     /*
      * called by detail fragment to show/hide the toolbar when user scrolls
      */
@@ -808,6 +832,15 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             } else {
                 return null;
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == INTENT_DO_LOGIN && resultCode == Activity.RESULT_OK) {
+            mBackFromLogin = true;
         }
     }
 }

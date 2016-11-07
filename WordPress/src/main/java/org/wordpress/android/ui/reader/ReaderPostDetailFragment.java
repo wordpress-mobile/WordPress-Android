@@ -28,7 +28,6 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
-import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
@@ -75,8 +74,6 @@ public class ReaderPostDetailFragment extends Fragment
                    ReaderCustomViewListener,
                    ReaderWebViewPageFinishedListener,
                    ReaderWebViewUrlClickListener {
-    private static final int INTENT_WELCOME = 0;
-
     private long mPostId;
     private long mBlogId;
     private DirectOperation mDirectOperation;
@@ -232,26 +229,15 @@ public class ReaderPostDetailFragment extends Fragment
             progress.setVisibility(View.VISIBLE);
         }
 
+        showPost();
+
         return view;
     }
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // make sure we reload the post upon return
-            mHasAlreadyRequestedPost = false;
-
-            // hide the error screen
-            showError(null);
-
-            // hide the sign in button
-            mSignInButton.setVisibility(View.GONE);
-
-            AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
-
-            Intent parentIntent = getActivity().getIntent();
-            parentIntent.setClass(getActivity(), SignInActivity.class);
-            startActivityForResult(parentIntent, INTENT_WELCOME);
+            EventBus.getDefault().post(new ReaderEvents.DoSignIn());
         }
     };
 
@@ -373,13 +359,6 @@ public class ReaderPostDetailFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        showPost();
     }
 
     @Override
@@ -1216,15 +1195,5 @@ public class ReaderPostDetailFragment extends Fragment
 
     private void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) {
-            if (isAdded()) {
-                getActivity().finish();
-            }
-        }
     }
 }
