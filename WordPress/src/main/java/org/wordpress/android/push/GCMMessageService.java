@@ -17,12 +17,10 @@ import android.support.v4.app.RemoteInput;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
-import com.android.volley.VolleyError;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -53,7 +51,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -330,7 +327,7 @@ public class GCMMessageService extends GcmListenerService {
                 String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
                 Note note = Note.buildFromBase64EncodedData(noteId, base64FullData);
                 if (note != null) {
-                    return NotificationsTable.saveNote(note, true);
+                    return NotificationsTable.saveNote(note);
                 }
             }
 
@@ -356,7 +353,7 @@ public class GCMMessageService extends GcmListenerService {
 
             // Always do this, since a note can be updated!!
             // The PN payload 99% of times contains the most recent version of the note.
-            if (!buildNoteObjectFromPNPayloadAndSaveIt(data)) {
+             if (!buildNoteObjectFromPNPayloadAndSaveIt(data)) {
                 // PN payload doesn't have the note or there was an error.
                 // Retrieve the Note obj by calling the REST API
                 NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID,

@@ -60,7 +60,7 @@ public class NotificationsActions {
                 @Override
                 public void onResponse(JSONObject response) {
                     note.setRead();
-                    NotificationsTable.putNote(note);
+                    NotificationsTable.saveNote(note);
                 }
             }, new RestRequest.ErrorListener() {
                 @Override
@@ -84,7 +84,7 @@ public class NotificationsActions {
                         try {
                             List<Note> notes = NotificationsActions.parseNotes(response);
                             if (notes.size() > 0) {
-                                NotificationsTable.saveNote(notes.get(0), true);
+                                NotificationsTable.saveNote(notes.get(0));
                             } else {
                                 AppLog.e(AppLog.T.NOTIFS, "Success, but no note!!!???");
                             }
