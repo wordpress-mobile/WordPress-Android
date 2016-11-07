@@ -143,15 +143,15 @@ public class WPActivityUtils {
         return !emailApps.isEmpty();
     }
 
-    public static void disableDeepLinking(Context context) {
+    public static void disableComponent(Context context, Class<?> klass) {
         PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(context, DeepLinkingIntentReceiverActivity.class),
+        pm.setComponentEnabledSetting(new ComponentName(context, klass),
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
-    public static void enableDeepLinking(Context context) {
+    public static void enableComponent(Context context, Class<?> klass) {
         PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(context, DeepLinkingIntentReceiverActivity.class),
+        pm.setComponentEnabledSetting(new ComponentName(context, klass),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 }

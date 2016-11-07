@@ -280,7 +280,7 @@ public class ReaderActivityLauncher {
     private static void openUrlExternal(Context context, @NonNull String url) {
         try {
             // disable deeplinking activity so to not catch WP URLs
-            WPActivityUtils.disableDeepLinking(context);
+            WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(intent);
@@ -291,7 +291,7 @@ public class ReaderActivityLauncher {
             ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
         } finally {
             // re-enable deeplinking
-            WPActivityUtils.enableDeepLinking(context);
+            WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
         }
     }
 }

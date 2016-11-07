@@ -44,6 +44,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -331,7 +332,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         super.onResume();
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
-        WPActivityUtils.enableDeepLinking(this);
+        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
 
         // Start listening to Simperium Note bucket
         if (SimperiumUtils.getNotesBucket() != null) {
