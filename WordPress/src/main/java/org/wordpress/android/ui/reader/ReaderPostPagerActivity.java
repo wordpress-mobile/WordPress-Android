@@ -709,6 +709,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         Intent signInIntent = new Intent(this, SignInActivity.class);
         signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
         startActivityForResult(signInIntent, INTENT_DO_LOGIN);
     }
 
