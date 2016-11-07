@@ -25,7 +25,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
-import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -198,11 +198,10 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
+            if (isFinishing()) return;
 
-            Intent parentIntent = getIntent();
-            parentIntent.setClass(ReaderCommentListActivity.this, SignInActivity.class);
-            startActivityForResult(parentIntent, 0);
+            AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
+            ActivityLauncher.loginWithoutMagicLink(ReaderCommentListActivity.this);
         }
     };
 

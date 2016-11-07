@@ -25,6 +25,8 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -64,7 +66,6 @@ import de.greenrobot.event.EventBus;
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.AutoHideToolbarListener {
-    private static final int INTENT_DO_LOGIN = 1000;
     private static final String KEY_TRACKED_POST = "tracked_post";
 
     /**
@@ -718,11 +719,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         if (isFinishing()) return;
 
         AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
-
-        Intent signInIntent = new Intent(this, SignInActivity.class);
-        signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
-        startActivityForResult(signInIntent, INTENT_DO_LOGIN);
+        ActivityLauncher.loginWithoutMagicLink(this);
     }
 
     /*
@@ -852,7 +849,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == INTENT_DO_LOGIN && resultCode == Activity.RESULT_OK) {
+        if (requestCode == RequestCodes.DO_LOGIN && resultCode == Activity.RESULT_OK) {
             mBackFromLogin = true;
         }
     }
