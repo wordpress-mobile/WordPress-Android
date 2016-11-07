@@ -95,8 +95,8 @@ public class NotificationsTable {
             }
 
             for (Note note: notes) {
-                // No need to check if the row already exists, since we've just dropped the table.
-                putNote(note, false);
+                // No need to check if the row already exists if we've just dropped the table.
+                putNote(note, !clearBeforeSaving);
             }
 
             getDb().setTransactionSuccessful();
