@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -81,6 +83,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private long mCommentId;
     private int mRestorePosition;
     private String mInterceptedUri;
+
+    private boolean mBackFromLogin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -229,6 +233,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+
+        if (mBackFromLogin) {
+            getCommentAdapter().notifyDataSetChanged();
+
+            // clear up the back-from-login flag anyway
+            mBackFromLogin = false;
+        }
     }
 
     @SuppressWarnings("unused")
@@ -599,5 +610,14 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RequestCodes.DO_LOGIN && resultCode == Activity.RESULT_OK) {
+            mBackFromLogin = true;
+        }
     }
 }

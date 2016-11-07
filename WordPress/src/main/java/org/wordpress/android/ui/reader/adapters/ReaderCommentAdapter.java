@@ -52,7 +52,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private long mDoLikeCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
-    private final boolean mIsLoggedOutReader;
     private boolean mIsHeaderClickEnabled;
 
     private final int mColorAuthor;
@@ -125,7 +124,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public ReaderCommentAdapter(Context context, ReaderPost post) {
         mPost = post;
         mIsPrivatePost = (post != null && post.isPrivate);
-        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
         mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
@@ -277,7 +275,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.progress.setVisibility(View.GONE);
         }
 
-        if (mIsLoggedOutReader) {
+        if (ReaderUtils.isLoggedOutReader()) {
             commentHolder.txtReply.setVisibility(View.GONE);
             commentHolder.imgReply.setVisibility(View.GONE);
         } else {
@@ -343,9 +341,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.countLikes.setSelected(comment.isLikedByCurrentUser);
             holder.countLikes.setCount(comment.numLikes);
 
-            if (mIsLoggedOutReader) {
+            if (ReaderUtils.isLoggedOutReader()) {
                 holder.countLikes.setEnabled(false);
             } else {
+                holder.countLikes.setEnabled(true);
                 holder.countLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
