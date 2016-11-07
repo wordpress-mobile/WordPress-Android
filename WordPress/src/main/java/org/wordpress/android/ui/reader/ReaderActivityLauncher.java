@@ -17,7 +17,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.reader.ReaderCommentListActivity.DirectOperation;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -156,7 +156,21 @@ public class ReaderActivityLauncher {
 
 
     /*
-     * Show comments for passed Ids. Passing a commentId will scroll that comment into view
+     * show specific comment for the passed Ids
+     */
+    public static void showReaderComments(Context context, long blogId, long postId, long commentId) {
+        showReaderComments(context, blogId, postId, DirectOperation.COMMENT_JUMP, commentId, null);
+    }
+
+    /**
+     * Show comments for passed Ids and directly perform an action on a specifc comment
+     *
+     * @param context context to use to start the activity
+     * @param blogId blog id
+     * @param postId post id
+     * @param directOperation operation to perform on the specific comment. Can be null for no operation.
+     * @param commentId specific comment id to perform an action on
+     * @param interceptedUri URI to fall back into (i.e. to be able to open in external browser)
      */
     public static void showReaderComments(Context context, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri) {

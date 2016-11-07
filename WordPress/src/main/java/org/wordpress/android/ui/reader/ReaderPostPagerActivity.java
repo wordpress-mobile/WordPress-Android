@@ -27,7 +27,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.reader.ReaderCommentListActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -68,10 +67,23 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private static final int INTENT_DO_LOGIN = 1000;
     private static final String KEY_TRACKED_POST = "tracked_post";
 
+    /**
+     * Type of URL intercepted
+     */
     private enum InterceptType {
         READER_BLOG,
         READER_FEED,
         WPCOM_POST_SLUG
+    }
+
+    /**
+     * operation to perform automatically when opened via deeplinking
+     */
+    public enum DirectOperation {
+        COMMENT_JUMP,
+        COMMENT_REPLY,
+        COMMENT_LIKE,
+        POST_LIKE,
     }
 
     private WPViewPager mViewPager;
