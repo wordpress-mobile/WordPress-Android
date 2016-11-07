@@ -171,6 +171,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     setReplyToCommentId(mCommentId, true);
                     break;
                 case COMMENT_LIKE:
+                    getCommentAdapter().setHighlightCommentId(mCommentId, false);
                     getCommentAdapter().setDoLikeCommentId(mCommentId);
                     if (ReaderUtils.isLoggedOutReader()) {
                         Snackbar.make(mRecyclerView, R.string.reader_snackbar_err_cannot_like_post_logged_out,
