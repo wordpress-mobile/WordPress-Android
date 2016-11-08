@@ -267,6 +267,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         // listView to reposition due to soft keyboard appearing
         if (mReplyToCommentId != 0) {
             getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false);
+            getCommentAdapter().notifyDataSetChanged();
             mRecyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
