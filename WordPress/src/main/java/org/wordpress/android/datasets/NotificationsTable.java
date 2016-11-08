@@ -129,18 +129,18 @@ public class NotificationsTable {
                 args);
     }
 
-    public static Note getNoteById(String id) {
-        if (TextUtils.isEmpty(id)) {
-            AppLog.e(AppLog.T.DB, "Asking for a note with null Id. Really?" + id);
+    public static Note getNoteById(String noteID) {
+        if (TextUtils.isEmpty(noteID)) {
+            AppLog.e(AppLog.T.DB, "Asking for a note with null Id. Really?" + noteID);
             return null;
         }
-        Cursor cursor = getDb().query(NOTIFICATIONS_TABLE, new String[] {"raw_note_data"},  "note_id=" + id, null, null, null, null);
+        Cursor cursor = getDb().query(NOTIFICATIONS_TABLE, new String[] {"raw_note_data"},  "note_id=" + noteID, null, null, null, null);
         try {
             if (cursor.moveToFirst()) {
                 JSONObject jsonNote = new JSONObject(cursor.getString(0));
-                return new Note(id, jsonNote);
+                return new Note(noteID, jsonNote);
             } else {
-                AppLog.v(AppLog.T.DB, "No Note found in the DB with this id: " + id);
+                AppLog.v(AppLog.T.DB, "No Note found in the DB with this id: " + noteID);
                 return null;
             }
         } catch (JSONException e) {
@@ -151,6 +151,22 @@ public class NotificationsTable {
             return null;
         } finally {
             cursor.close();
+        }
+    }
+
+    public static boolean deleteNoteById(String noteID) {
+        if (TextUtils.isEmpty(noteID)) {
+            AppLog.e(AppLog.T.DB, "Asking to delete a note with null Id. Really?" + noteID);
+            return false;
+        }
+        getDb().beginTransaction();
+        try {
+            String[] args = {noteID};
+            int result = getDb().delete(NOTIFICATIONS_TABLE, "note_id=?", args);
+            getDb().setTransactionSuccessful();
+            return result != 0;
+        } finally {
+            getDb().endTransaction();
         }
     }
 
