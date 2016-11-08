@@ -457,7 +457,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         EventBus.getDefault().register(this);
 
         if (!hasPagerAdapter() || mBackFromLogin) {
-            handleDeepLinking();
+            if (isDeepLinking()) {
+                handleDeepLinking();
+            }
 
             loadPosts(mBlogId, mPostId);
 
