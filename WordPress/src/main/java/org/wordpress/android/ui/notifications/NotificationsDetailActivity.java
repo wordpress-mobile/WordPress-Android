@@ -9,13 +9,18 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import org.wordpress.android.push.GCMMessageService;
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
@@ -35,6 +40,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
@@ -71,6 +77,24 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 showErrorToastAndFinish();
                 return;
             }
+
+            // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
+            WordPress.getRestClientUtilsV1_1().markNotificationsSeen(
+                    String.valueOf(note.getTimestamp()),
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // Assuming that we've marked the most recent notification as seen. (Beware, seen != read).
+                            EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(false));
+                        }
+                    },
+                    new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            AppLog.e(AppLog.T.NOTIFS, "Could not mark notifications/seen' value via API.", error);
+                        }
+                    }
+            );
 
             Map<String, String> properties = new HashMap<>();
             properties.put("notification_type", note.getType());
@@ -110,12 +134,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 getSupportActionBar().setTitle(title);
             }
 
-            NotificationsActions.markNoteAsRead(note);
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);
             // mark the note as read if it's unread
             if (note.isUnread()) {
+                NotificationsActions.markNoteAsRead(note);
                 note.setRead();
-                NotificationsTable.putNote(note);
+                NotificationsTable.saveNote(note);
                 EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
             }
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
