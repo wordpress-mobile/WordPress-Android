@@ -823,10 +823,30 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Support - Opened Helpshift Screen");
                 instructions.addSuperPropertyToFlag("opened_helpshift_screen");
                 break;
-            case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
+            case SUPPORT_USER_ACCEPTED_THE_SOLUTION:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Support - Replied to Helpshift");
-                instructions.addSuperPropertyToFlag("support_replied_to_helpshift");
+                        mixpanelInstructionsForEventName("Support - User Accepted the Solution");
+                instructions.addSuperPropertyToFlag("support_user_accepted_the_solution");
+                break;
+            case SUPPORT_USER_REJECTED_THE_SOLUTION:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - User Rejected the Solution");
+                instructions.addSuperPropertyToFlag("support_user_rejected_the_solution");
+                break;
+            case SUPPORT_USER_SENT_SCREENSHOT:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - User Sent a Screenshot");
+                instructions.addSuperPropertyToFlag("support_user_sent_screenshot");
+                break;
+            case SUPPORT_USER_REVIEWED_THE_APP:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - User Reviewed the App");
+                instructions.addSuperPropertyToFlag("support_user_reviewed_the_app");
+                break;
+            case SUPPORT_USER_REPLIED_TO_HELPSHIFT:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - User Replied to Helpshift");
+                instructions.addSuperPropertyToFlag("support_user_replied_to_helpshift");
                 break;
             case LOGIN_MAGIC_LINK_EXITED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

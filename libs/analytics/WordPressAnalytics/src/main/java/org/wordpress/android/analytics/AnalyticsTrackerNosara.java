@@ -456,8 +456,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "push_notification_alert_tapped";
             case SUPPORT_OPENED_HELPSHIFT_SCREEN:
                 return "support_helpshift_screen_opened";
-            case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
-                return "support_reply_to_support_message_sent";
+            case SUPPORT_USER_ACCEPTED_THE_SOLUTION:
+                return "support_user_accepted_the_solution";
+            case SUPPORT_USER_REJECTED_THE_SOLUTION:
+                return "support_user_rejected_the_solution";
+            case SUPPORT_USER_SENT_SCREENSHOT:
+                return "support_user_sent_screenshot";
+            case SUPPORT_USER_REVIEWED_THE_APP:
+                return "support_user_reviewed_the_app";
+            case SUPPORT_USER_REPLIED_TO_HELPSHIFT:
+                return "support_user_replied_to_helpshift";
             case LOGIN_MAGIC_LINK_EXITED:
                 return "login_magic_link_exited";
             case LOGIN_MAGIC_LINK_FAILED:

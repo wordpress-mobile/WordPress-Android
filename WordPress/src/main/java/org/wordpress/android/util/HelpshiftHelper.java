@@ -114,7 +114,7 @@ public class HelpshiftHelper {
 
             @Override
             public void userRepliedToConversation(String s) {
-                AnalyticsTracker.track(Stat.SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE);
+                AnalyticsTracker.track(Stat.SUPPORT_USER_REPLIED_TO_HELPSHIFT);
             }
 
             @Override
