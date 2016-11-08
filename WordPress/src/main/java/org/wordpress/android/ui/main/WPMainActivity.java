@@ -34,6 +34,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.push.NotificationsProcessingService;
+import org.wordpress.android.push.NotificationsScreenLockWatchService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -193,6 +194,7 @@ public class WPMainActivity extends AppCompatActivity {
             }
         });
 
+
         if (savedInstanceState == null) {
             if (AccountHelper.isSignedIn()) {
                 // open note detail if activity called from a push, otherwise return to the tab
@@ -213,6 +215,13 @@ public class WPMainActivity extends AppCompatActivity {
                 ActivityLauncher.showSignInForResult(this);
             }
         }
+        startService(new Intent(this, NotificationsScreenLockWatchService.class));
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(this, NotificationsScreenLockWatchService.class));
+        super.onDestroy();
     }
 
     private void setTabLayoutElevation(float newElevation){
@@ -254,6 +263,8 @@ public class WPMainActivity extends AppCompatActivity {
      */
     private void launchWithNoteId() {
         if (isFinishing() || getIntent() == null) return;
+
+        GCMMessageService.remove2FANotification(this);
 
         NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(getIntent(),
                 new NotificationsUtils.TwoFactorAuthCallback() {
