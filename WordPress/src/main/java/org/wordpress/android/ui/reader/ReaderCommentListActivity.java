@@ -79,6 +79,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private boolean mIsUpdatingComments;
     private boolean mHasUpdatedComments;
     private boolean mIsSubmittingComment;
+    private DirectOperation mDirectOperation;
     private long mReplyToCommentId;
     private long mCommentId;
     private int mRestorePosition;
@@ -108,8 +109,6 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        DirectOperation directOperation = null;
-
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
@@ -119,7 +118,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            directOperation = (DirectOperation) getIntent()
+            mDirectOperation = (DirectOperation) getIntent()
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
@@ -161,30 +160,6 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
 
         mRecyclerView.setAdapter(getCommentAdapter());
-
-        if (directOperation != null) {
-            switch (directOperation) {
-                case COMMENT_JUMP:
-                    getCommentAdapter().setHighlightCommentId(mCommentId, false);
-                    break;
-                case COMMENT_REPLY:
-                    setReplyToCommentId(mCommentId, true);
-                    break;
-                case COMMENT_LIKE:
-                    getCommentAdapter().setHighlightCommentId(mCommentId, false);
-                    getCommentAdapter().setDoLikeCommentId(mCommentId);
-                    if (ReaderUtils.isLoggedOutReader()) {
-                        Snackbar.make(mRecyclerView, R.string.reader_snackbar_err_cannot_like_post_logged_out,
-                                Snackbar.LENGTH_INDEFINITE)
-                                        .setAction(R.string.sign_in, mSignInClickListener)
-                                        .show();
-                    }
-                    break;
-                case POST_LIKE:
-                    // nothing special to do in this case
-                    break;
-            }
-        }
 
         if (savedInstanceState != null) {
             setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID), false);
@@ -236,7 +211,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
 
         if (mBackFromLogin) {
-            getCommentAdapter().notifyDataSetChanged();
+            if (NetworkUtils.isNetworkAvailable(this)) {
+                // purge and reload the comments since logged in changes some info (example: isLikedByCurrentUser)
+                ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
+                updatePostAndComments();
+            }
 
             // clear up the back-from-login flag anyway
             mBackFromLogin = false;
@@ -397,12 +376,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     if (!isFinishing()) {
                         if (isEmpty || !mHasUpdatedComments) {
                             updateComments(isEmpty, false);
-                        } else if (mRestorePosition > 0) {
-                            mRecyclerView.scrollToPosition(mRestorePosition);
                         } else if (mCommentId > 0) {
                             // Scroll to the commentId once if it was passed to this activity
                             smoothScrollToCommentId(mCommentId);
-                            mCommentId = 0;
+
+                            doDirectOperation();
+                        } else if (mRestorePosition > 0) {
+                            mRecyclerView.scrollToPosition(mRestorePosition);
                         }
                         mRestorePosition = 0;
                         checkEmptyView();
@@ -423,6 +403,63 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             });
         }
         return mCommentAdapter;
+    }
+
+    private void doDirectOperation() {
+        if (mDirectOperation != null) {
+            switch (mDirectOperation) {
+                case COMMENT_JUMP:
+                    mCommentAdapter.setHighlightCommentId(mCommentId, false);
+
+                    // clear up the direct operation vars. Only performing it once.
+                    mDirectOperation = null;
+                    mCommentId = 0;
+                    break;
+                case COMMENT_REPLY:
+                    setReplyToCommentId(mCommentId, true);
+
+                    // clear up the direct operation vars. Only performing it once.
+                    mDirectOperation = null;
+                    mCommentId = 0;
+                    break;
+                case COMMENT_LIKE:
+                    getCommentAdapter().setHighlightCommentId(mCommentId, false);
+                    if (ReaderUtils.isLoggedOutReader()) {
+                        Snackbar.make(mRecyclerView,
+                                R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                                Snackbar.LENGTH_INDEFINITE)
+                                .setAction(R.string.sign_in, mSignInClickListener)
+                                .show();
+                    } else {
+                        ReaderComment comment = ReaderCommentTable.getComment(mPost.blogId, mPost.postId, mCommentId);
+                        if (comment == null) {
+                            ToastUtils.showToast(ReaderCommentListActivity.this,
+                                    R.string.reader_toast_err_comment_not_found);
+                        } else if (comment.isLikedByCurrentUser) {
+                            ToastUtils.showToast(ReaderCommentListActivity.this,
+                                    R.string.reader_toast_err_already_liked);
+
+                        } else {
+                            if (ReaderCommentActions.performLikeAction(comment, true) &&
+                                    getCommentAdapter().refreshComment(mCommentId)) {
+                                getCommentAdapter().setAnimateLikeCommentId(mCommentId);
+                            } else {
+                                ToastUtils.showToast(ReaderCommentListActivity.this,
+                                        R.string.reader_toast_err_generic);
+                            }
+                        }
+
+                        // clear up the direct operation vars. Only performing it once.
+                        mDirectOperation = null;
+                    }
+                    break;
+                case POST_LIKE:
+                    // nothing special to do in this case
+                    break;
+            }
+        } else {
+            mCommentId = 0;
+        }
     }
 
     private ReaderPost getPost() {

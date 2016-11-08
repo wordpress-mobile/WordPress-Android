@@ -49,7 +49,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final int mContentWidth;
 
     private long mHighlightCommentId = 0;
-    private long mDoLikeCommentId = 0;
+    private long mAnimateLikeCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
     private boolean mIsHeaderClickEnabled;
@@ -291,18 +291,17 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 commentHolder.imgReply.setOnClickListener(replyClickListener);
             }
 
-            if (mDoLikeCommentId != 0 && mDoLikeCommentId == comment.commentId) {
+            if (mAnimateLikeCommentId != 0 && mAnimateLikeCommentId == comment.commentId) {
                 // simulate tapping on the "Like" button. Add a delay to help the user notice it.
                 commentHolder.countLikes.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        setLike(commentHolder.countLikes.getContext(), commentHolder, commentHolder
-                                .getAdapterPosition(), true);
+                        ReaderAnim.animateLikeButton(commentHolder.countLikes.getImageView(), true);
                     }
                 }, 400);
 
                 // clear the "command" to like a comment
-                mDoLikeCommentId = 0;
+                mAnimateLikeCommentId = 0;
             }
         }
 
@@ -359,22 +358,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    private void setLike(Context context, CommentHolder holder, int position, boolean isAskingToLike) {
-        if (!NetworkUtils.checkConnection(context)) {
-            return;
-        }
-
-        ReaderComment comment = getItem(position);
-        if (comment == null) {
-            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
-            return;
-        }
-
-        if (isAskingToLike != comment.isLikedByCurrentUser) {
-            doLike(context, holder, position, comment, isAskingToLike);
-        }
-    }
-
     private void toggleLike(Context context, CommentHolder holder, int position) {
         if (!NetworkUtils.checkConnection(context)) {
             return;
@@ -387,11 +370,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
-        doLike(context, holder, position, comment, isAskingToLike);
-    }
-
-    private void doLike(Context context, CommentHolder holder, int position, ReaderComment comment, boolean
-            isAskingToLike) {
         ReaderAnim.animateLikeButton(holder.countLikes.getImageView(), isAskingToLike);
 
         if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike)) {
@@ -404,6 +382,28 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mComments.set(position - NUM_HEADERS, updatedComment);
             showLikeStatus(holder, position);
         }
+    }
+
+    public boolean refreshComment(long commentId) {
+        int position = positionOfCommentId(commentId);
+        if (position == -1) {
+            return false;
+        }
+
+        ReaderComment comment = getItem(position);
+        if (comment == null) {
+            return false;
+        }
+
+        ReaderComment updatedComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
+        if (updatedComment != null) {
+            // copy the comment level over since loading from the DB always has it as 0
+            updatedComment.level = comment.level;
+            mComments.set(position - NUM_HEADERS, updatedComment);
+            notifyItemChanged(position);
+        }
+
+        return true;
     }
 
     /*
@@ -472,8 +472,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     /*
      * sets the passed comment as the one to perform a "Like" on when the list comment list has completed loading
      */
-    public void setDoLikeCommentId(long commentId) {
-        mDoLikeCommentId = commentId;
+    public void setAnimateLikeCommentId(long commentId) {
+        mAnimateLikeCommentId = commentId;
     }
 
     /*
