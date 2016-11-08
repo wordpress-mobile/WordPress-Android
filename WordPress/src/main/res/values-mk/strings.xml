@@ -349,7 +349,6 @@
 	<string name="select_from_media_library">Избери медиа од библиотеката</string>
 	<string name="jetpack_message">Jetpack додатокот е задолжителен за статистиката. Дали сакате да инсталирате Jetpack?</string>
 	<string name="jetpack_not_found">Jetpack додатокот не е пронајден</string>
-	<string name="reader_timespan_now">сега</string>
 	<string name="reader_untitled_post">(без наслов)</string>
 	<string name="reader_share_subject">Споделено од %s</string>
 	<string name="reader_btn_share">Сподели</string>
@@ -492,6 +491,7 @@
 	<string name="select_video">Изберете видео од галеријата</string>
 	<string name="media">Мултимедија</string>
 	<string name="delete">Бриши</string>
+	<string name="approve">Одобри</string>
 	<string name="none">Нема</string>
 	<string name="blogs">Блогови</string>
 	<string name="select_photo">Избери фотографија од галеријата</string>

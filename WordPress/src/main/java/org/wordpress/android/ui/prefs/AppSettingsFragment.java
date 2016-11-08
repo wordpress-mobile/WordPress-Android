@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.prefs;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -21,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -47,6 +50,8 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
+        findPreference(getString(R.string.pref_key_device_settings))
+                .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
@@ -68,7 +73,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     public boolean onPreferenceClick(Preference preference) {
         String preferenceKey = preference != null ? preference.getKey() : "";
 
-        if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
+        if (preferenceKey.equals(getString(R.string.pref_key_device_settings))) {
+            return handleDevicePreferenceClick();
+        } else if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
             return handleOssPreferenceClick();
@@ -113,9 +120,10 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             visualEditorSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                    visualEditorSwitch.setChecked(!visualEditorSwitch.isChecked());
-                    AppPrefs.setVisualEditorEnabled(visualEditorSwitch.isChecked());
-                    return false;
+                    if (newValue == null) return false;
+                    visualEditorSwitch.setChecked((Boolean) newValue);
+                    AppPrefs.setVisualEditorEnabled((Boolean) newValue);
+                    return true;
                 }
             });
         }
@@ -184,6 +192,22 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
     private boolean handleAboutPreferenceClick() {
         startActivity(new Intent(getActivity(), AboutActivity.class));
+        return true;
+    }
+
+    private boolean handleDevicePreferenceClick() {
+        try {
+            // open specific app info screen
+            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+            startActivity(intent);
+        } catch (ActivityNotFoundException exception) {
+            AppLog.w(AppLog.T.SETTINGS, exception.getMessage());
+            // open generic apps screen
+            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+            startActivity(intent);
+        }
+
         return true;
     }
 

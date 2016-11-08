@@ -30,7 +30,6 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -326,30 +325,31 @@ public class ReaderSubsActivity extends AppCompatActivity
             return;
         }
 
+        showProgress();
+        final ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
+
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (isFinishing()) return;
+                if (isFinishing()) {
+                    return;
+                }
 
+                hideProgress();
                 getPageAdapter().refreshFollowedTagFragment();
 
-                if (!succeeded) {
+                if (succeeded) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
+                    showInfoToast(getString(R.string.reader_label_added_tag, tag.getLabel()));
+                    mLastAddedTagName = tag.getTagSlug();
+                } else {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
                     mLastAddedTagName = null;
                 }
             }
         };
 
-        ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
-
-        if (ReaderTagActions.addTag(tag, actionListener)) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
-            mLastAddedTagName = tag.getTagSlug();
-            // make sure addition is reflected on followed tags
-            getPageAdapter().refreshFollowedTagFragment();
-            String labelAddedTag = getString(R.string.reader_label_added_tag);
-            showInfoToast(String.format(labelAddedTag, tag.getLabel()));
-        }
+        ReaderTagActions.addTag(tag, actionListener);
     }
 
     /*
@@ -363,7 +363,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             return;
         }
 
-        showAddUrlProgress();
+        showProgress();
 
         ReaderActions.OnRequestListener requestListener = new ReaderActions.OnRequestListener() {
             @Override
@@ -375,7 +375,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             @Override
             public void onFailure(int statusCode) {
                 if (!isFinishing()) {
-                    hideAddUrlProgress();
+                    hideProgress();
                     String errMsg;
                     switch (statusCode) {
                         case 401:
@@ -403,7 +403,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                 if (isFinishing()) {
                     return;
                 }
-                hideAddUrlProgress();
+                hideProgress();
                 if (succeeded) {
                     // clear the edit text and hide the soft keyboard
                     mEditAdd.setText(null);
@@ -422,9 +422,9 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     /*
-     * called prior to following a url to show progress and disable controls
+     * called prior to following to show progress and disable controls
      */
-    private void showAddUrlProgress() {
+    private void showProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
         progress.setVisibility(View.VISIBLE);
         mEditAdd.setEnabled(false);
@@ -432,9 +432,9 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     /*
-     * called after following a url to hide progress and re-enable controls
+     * called after following to hide progress and re-enable controls
      */
-    private void hideAddUrlProgress() {
+    private void hideProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
         progress.setVisibility(View.GONE);
         mEditAdd.setEnabled(true);

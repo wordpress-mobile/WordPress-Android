@@ -220,7 +220,7 @@ public class ReaderPostService extends Service {
 
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == UpdateAction.REQUEST_OLDER) {
-            String dateOldest = ReaderPostTable.getOldestDateInBlog(blogId);
+            String dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogId);
             if (!TextUtils.isEmpty(dateOldest)) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest);
             }
@@ -248,7 +248,7 @@ public class ReaderPostService extends Service {
                                             final UpdateResultListener resultListener) {
         String path = "read/feed/" + feedId + "/posts/?meta=site,likes";
         if (updateAction == UpdateAction.REQUEST_OLDER) {
-            String dateOldest = ReaderPostTable.getOldestDateInFeed(feedId);
+            String dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId);
             if (!TextUtils.isEmpty(dateOldest)) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest);
             }

@@ -41,6 +41,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
@@ -538,6 +539,7 @@ public class PostUploadService extends Service {
                     path = thumbData;
                     mediaFile.setFilePath(imageFile.getPath());
                 }
+                SqlUtils.closeCursor(cur);
             } else { // file is not in media library
                 path = imageUri.toString().replace("file://", "");
                 imageFile = new File(path);
@@ -706,6 +708,7 @@ public class PostUploadService extends Service {
                         }
                     }
                 }
+                SqlUtils.closeCursor(cur);
             } else { // file is not in media library
                 String filePath = videoUri.toString().replace("file://", "");
                 mediaFile.setFilePath(filePath);

@@ -24,7 +24,6 @@
 	<string name="nux_welcome_create_account">Akkaunt ochish</string>
 	<string name="media_add_new_media_gallery">Yangi galereya</string>
 	<string name="reader_untitled_post">(Nomsiz)</string>
-	<string name="reader_timespan_now">hozir</string>
 	<string name="jetpack_not_found">Jetpack plagini topilmadi</string>
 	<string name="media_add_popup_title">Media kutubxonasiga qo‘sh</string>
 	<string name="empty_list_default">Ushbu ro‘yxat bo‘sh</string>
@@ -171,6 +170,7 @@
 	<string name="sdcard_title">SD karta kerak</string>
 	<string name="media">Media</string>
 	<string name="delete">O‘chir</string>
+	<string name="approve">Tasdiqla</string>
 	<string name="none">Hech bir</string>
 	<string name="blogs">Bloglar</string>
 	<string name="select_photo">Galereyadan rasm tanlash</string>

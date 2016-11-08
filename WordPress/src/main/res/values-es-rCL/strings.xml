@@ -32,10 +32,7 @@
 	<string name="invite_message_remaining_other">%d caracteres restantes</string>
 	<string name="invite_message_remaining_one">1 caracter restantes</string>
 	<string name="invite_message_remaining_zero">0 caracteres restantes</string>
-	<string name="invite_invalid_email">La dirección de correo electrónico \'%s\' no es válida</string>
 	<string name="invite_message_title">Mensaje Personalizado</string>
-	<string name="invite_already_a_member">Ya hay un miembro con nombre de usuario \'%s\'</string>
-	<string name="invite_username_not_found">No se encontró ningún usuario para el nombre de usuario \'%s\'</string>
 	<string name="invite">Invitar</string>
 	<string name="invite_names_title">Nombres de usuario o correo electrónico</string>
 	<string name="interface_language">Idioma de la interfaz</string>
@@ -565,7 +562,6 @@
 	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="jetpack_message">Necesitas el pluging Jetpack para tener estadísticas estadísticas. ¿Quieres instalar Jetpack?</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
-	<string name="reader_timespan_now">ahora</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_share_subject">Compartido desde %s</string>
 	<string name="reader_btn_share">Compartir</string>

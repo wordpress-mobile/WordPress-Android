@@ -168,7 +168,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 mIsUnread = note.isUnread();
                 setNote(note);
             } catch (BucketObjectMissingException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
             }
         }
     }
@@ -439,7 +439,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
         // Request the reader post so that loading reader activities will work.
         if (mNote.isUserList() && !ReaderPostTable.postExists(mNote.getSiteId(), mNote.getPostId())) {
-            ReaderPostActions.requestPost(mNote.getSiteId(), mNote.getPostId(), null);
+            ReaderPostActions.requestBlogPost(mNote.getSiteId(), mNote.getPostId(), null);
         }
 
         // Request reader comments until we retrieve the comment for this note

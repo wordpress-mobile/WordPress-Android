@@ -366,9 +366,10 @@ class ReaderPostRenderer {
         .append("        padding: ").append(mResourceVars.marginMediumPx).append("px; }")
 
         // add a left border to blockquotes
-        .append("  blockquote { margin-left: ").append(mResourceVars.marginMediumPx).append("px; ")
-        .append("               padding-left: ").append(mResourceVars.marginMediumPx).append("px; ")
-        .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }")
+        .append("  blockquote { color: ").append(mResourceVars.greyMediumDarkStr).append("; ")
+        .append("               padding-left: 32px; ")
+        .append("               margin-left: 0px; ")
+        .append("               border-left: 3px solid ").append(mResourceVars.greyExtraLightStr).append("; }")
 
         // show links in the same color they are elsewhere in the app
         .append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }")
@@ -494,6 +495,12 @@ class ReaderPostRenderer {
         .append("  video {")
         .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
         .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
+
+        // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
+        // https://github.com/Automattic/wp-calypso/blob/f51293caa87edcd4f0c117aaea8cf65d26e33520/client/lib/post-normalizer/rule-content-sanitize.js
+        .append("   form, input, select, button textarea { display: none; }")
+        .append("   div.feedflare { display: none; }")
+        .append("   .sharedaddy, .jp-relatedposts, .mc4wp-form, .wpcnt, .OUTBRAIN, .adsbygoogle { display: none; }")
 
         .append("</style>");
 

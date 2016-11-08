@@ -13,6 +13,7 @@ public class RequestCodes {
     public static final int PREVIEW_POST           = 810;
     public static final int CREATE_BLOG            = 900;
     public static final int BLOG_SETTINGS          = 1000;
+    public static final int DO_LOGIN               = 1100;
 
     // Media
     public static final int PICTURE_LIBRARY = 2000;
