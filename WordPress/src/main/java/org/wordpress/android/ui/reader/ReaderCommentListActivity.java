@@ -416,7 +416,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     mCommentId = 0;
                     break;
                 case COMMENT_REPLY:
-                    setReplyToCommentId(mCommentId, true);
+                    setReplyToCommentId(mCommentId, !ReaderUtils.isLoggedOutReader());
 
                     // clear up the direct operation vars. Only performing it once.
                     mDirectOperation = null;
