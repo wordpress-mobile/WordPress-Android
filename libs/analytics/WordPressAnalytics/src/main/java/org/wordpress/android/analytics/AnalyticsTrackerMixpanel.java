@@ -462,6 +462,18 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_sign_in_initiated");
                 instructions.setCurrentDateForPeopleProperty("last_time_reader_sign_in_initiated");
                 break;
+            case READER_WPCOM_SIGN_IN_NEEDED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - WPCOM Sign in needed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_wpcom_sign_in_needed");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_wpcom_sign_in_needed");
+                break;
+            case READER_USER_UNAUTHORIZED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - User unauthorized");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_user_unauthorized");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_user_unauthorized");
+                break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Created Post");

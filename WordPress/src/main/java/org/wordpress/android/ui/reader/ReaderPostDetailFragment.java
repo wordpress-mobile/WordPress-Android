@@ -809,7 +809,10 @@ public class ReaderPostDetailFragment extends Fragment
                                 ? R.string.reader_err_get_post_not_authorized_signin
                                 : R.string.reader_err_get_post_not_authorized_signin_fallback;
                         mSignInButton.setVisibility(View.VISIBLE);
+                        AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED,
+                                mPost);
                     }
+                    AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED, mPost);
                     break;
                 case 404:
                     errMsgResId = R.string.reader_err_get_post_not_found;
