@@ -252,10 +252,16 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     EditTextUtils.showSoftInput(mEditComment);
 
                     mEditComment.setFocusableInTouchMode(isFocusableInTouchMode);
+
+                    setupReplyToComment();
                 }
             }, 200);
+        } else {
+            setupReplyToComment();
         }
+    }
 
+    private void setupReplyToComment() {
         // if a comment is being replied to, highlight it and scroll it to the top so the user can
         // see which comment they're replying to - note that scrolling is delayed to give time for
         // listView to reposition due to soft keyboard appearing
