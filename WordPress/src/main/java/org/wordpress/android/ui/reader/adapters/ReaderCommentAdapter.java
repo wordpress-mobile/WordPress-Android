@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderComment;
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -382,6 +384,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mComments.set(position - NUM_HEADERS, updatedComment);
             showLikeStatus(holder, position);
         }
+
+        AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED :
+                AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
     }
 
     public boolean refreshComment(long commentId) {

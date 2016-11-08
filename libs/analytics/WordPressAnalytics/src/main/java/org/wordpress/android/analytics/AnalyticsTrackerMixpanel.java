@@ -277,6 +277,27 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         "number_of_times_commented_on_reader_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_commented_on_article");
                 break;
+            case READER_ARTICLE_COMMENTS_OPENED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Opened Article Comments");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_comments_on_reader_article_opened");
+                instructions.setCurrentDateForPeopleProperty("last_time_comments_on_article_opened");
+                break;
+            case READER_ARTICLE_COMMENT_LIKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Liked Article Comment");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_comment_on_reader_article_liked");
+                instructions.setCurrentDateForPeopleProperty("last_time_comment_on_article_liked");
+                break;
+            case READER_ARTICLE_COMMENT_UNLIKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Unliked Article Comment");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_comment_on_reader_article_unliked");
+                instructions.setCurrentDateForPeopleProperty("last_time_comment_on_article_unliked");
+                break;
             case READER_ARTICLE_LIKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Liked Article");
@@ -294,6 +315,12 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Reader - Unliked Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unliked_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_unliked_reader_article");
+                break;
+            case READER_ARTICLE_RENDERED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Rendered Article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_rendered_article");
+                instructions.setCurrentDateForPeopleProperty("last_time_rendered_reader_article");
                 break;
             case READER_BLOG_BLOCKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

@@ -256,12 +256,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_accessed";
             case READER_ARTICLE_COMMENTED_ON:
                 return "reader_article_commented_on";
+            case READER_ARTICLE_COMMENTS_OPENED:
+                return "reader_article_comments_opened";
+            case READER_ARTICLE_COMMENT_LIKED:
+                return "reader_article_comment_liked";
+            case READER_ARTICLE_COMMENT_UNLIKED:
+                return "reader_article_comment_unliked";
             case READER_ARTICLE_LIKED:
                 return "reader_article_liked";
             case READER_ARTICLE_OPENED:
                 return "reader_article_opened";
             case READER_ARTICLE_UNLIKED:
                 return "reader_article_unliked";
+            case READER_ARTICLE_RENDERED :
+                return "reader_article_rendered";
             case READER_BLOG_BLOCKED:
                 return "reader_blog_blocked";
             case READER_BLOG_FOLLOWED:

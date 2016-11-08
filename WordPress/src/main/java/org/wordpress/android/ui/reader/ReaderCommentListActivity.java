@@ -173,6 +173,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
+
+        AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
     }
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
@@ -450,6 +452,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                             if (ReaderCommentActions.performLikeAction(comment, true) &&
                                     getCommentAdapter().refreshComment(mCommentId)) {
                                 getCommentAdapter().setAnimateLikeCommentId(mCommentId);
+
+                                AnalyticsUtils.trackWithReaderPostDetails(
+                                        AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED, mPost);
                             } else {
                                 ToastUtils.showToast(ReaderCommentListActivity.this,
                                         R.string.reader_toast_err_generic);

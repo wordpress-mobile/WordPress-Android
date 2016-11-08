@@ -338,6 +338,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                                                 : new ReaderEvents.PostSlugsRequestCompleted(200, 0, 0);
                                         // notify that the slug resolution request has completed
                                         EventBus.getDefault().post(slugsResolved);
+
+                                        // post wasn't available locally earlier so, track it now
+                                        trackPost(post.blogId, post.postId);
                                     }
 
                                     @Override
@@ -567,13 +570,20 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         AppLog.d(AppLog.T.READER, "reader pager > tracking post at position " + position);
         mTrackedPositions.add(position);
 
+        trackPost(idPair.getBlogId(), idPair.getPostId());
+    }
+
+    /*
+     * perform analytics tracking and bump the page view for the post
+     */
+    private void trackPost(long blogId, long postId) {
         // bump the page view
-        ReaderPostActions.bumpPageViewForPost(idPair.getBlogId(), idPair.getPostId());
+        ReaderPostActions.bumpPageViewForPost(blogId, postId);
 
         // analytics tracking
         AnalyticsUtils.trackWithReaderPostDetails(
                 AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                ReaderPostTable.getBlogPost(idPair.getBlogId(), idPair.getPostId(), true));
+                ReaderPostTable.getBlogPost(blogId, postId, true));
     }
 
     /*

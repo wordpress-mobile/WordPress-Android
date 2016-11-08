@@ -936,6 +936,8 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             }
 
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_RENDERED, mPost);
+
             mReaderWebView.setIsPrivatePost(mPost.isPrivate);
             mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
 
