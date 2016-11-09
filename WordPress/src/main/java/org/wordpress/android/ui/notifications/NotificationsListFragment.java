@@ -123,7 +123,7 @@ public class NotificationsListFragment extends Fragment
         }
     };
 
-    public void clearPendingNotificationsItemsOnUI() {
+    private void clearPendingNotificationsItemsOnUI() {
         hideNewNotificationsBar();
         // Immediately update the unseen ribbon
         EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(

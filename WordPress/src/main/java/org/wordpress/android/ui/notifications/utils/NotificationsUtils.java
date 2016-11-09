@@ -55,7 +55,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PackageUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
 
 import java.lang.reflect.Field;

@@ -10,23 +10,23 @@ public class NotificationEvents {
     public static class NotificationsChanged {}
     public static class NoteModerationFailed {}
     public static class NoteModerationStatusChanged {
-        boolean mIsModerating;
-        String mNoteId;
+        final boolean mIsModerating;
+        final String mNoteId;
         public NoteModerationStatusChanged(String noteId, boolean isModerating) {
             mNoteId = noteId;
             mIsModerating = isModerating;
         }
     }
     public static class NoteVisibilityChanged {
-        boolean mIsHidden;
-        String mNoteId;
+        final boolean mIsHidden;
+        final String mNoteId;
         public NoteVisibilityChanged(String noteId, boolean isHidden) {
             mNoteId = noteId;
             mIsHidden = isHidden;
         }
     }
     public static class NotificationsSettingsStatusChanged {
-        String mMessage;
+        final String mMessage;
         public NotificationsSettingsStatusChanged(String message) {
             mMessage = message;
         }
@@ -36,13 +36,13 @@ public class NotificationEvents {
         }
     }
     public static class NotificationsUnseenStatus {
-        public boolean hasUnseenNotes;
+        final public boolean hasUnseenNotes;
         public NotificationsUnseenStatus(boolean hasUnseenNotes) {
             this.hasUnseenNotes = hasUnseenNotes;
         }
     }
     public static class NotificationsRefreshCompleted {
-        List<Note> notes;
+        final List<Note> notes;
         public NotificationsRefreshCompleted(List<Note> notes) {
             this.notes = notes;
         }

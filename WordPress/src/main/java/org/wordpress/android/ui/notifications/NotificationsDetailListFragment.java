@@ -44,8 +44,6 @@ import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
-
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
     private static final String KEY_NOTE_ID = "noteId";
     private static final String KEY_LIST_POSITION = "listPosition";

@@ -86,7 +86,7 @@ public class NotificationsUpdateService extends Service {
                 AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
                 EventBus.getDefault().post(
                         new NotificationEvents.NotificationsRefreshCompleted(
-                                (List) new ArrayList<>(0)
+                                new ArrayList<Note>(0)
                         )
                 );
             } else {
