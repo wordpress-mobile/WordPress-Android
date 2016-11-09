@@ -247,7 +247,8 @@
         <!-- Deep Linking Activity -->
         <activity
             android:name=".ui.DeepLinkingIntentReceiverActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/Calypso.NoActionBar"
+            android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -257,37 +258,6 @@
                 <data
                     android:host="viewpost"
                     android:scheme="wordpress" />
-            </intent-filter>
-
-            <intent-filter>
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/feeds/.*/posts/.*"
-                    android:scheme="https" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/feeds/.*/posts/.*"
-                    android:scheme="http" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/blogs/.*/posts/.*"
-                    android:scheme="https" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/blogs/.*/posts/.*"
-                    android:scheme="http" >
-                </data>
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
 
@@ -299,9 +269,65 @@
         </activity>
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
-            android:label="@string/reader_title_post_detail"
+            android:excludeFromRecents="true"
+            android:label="@string/reader_title_deeplink"
             android:theme="@style/Calypso.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" >
+            <intent-filter>
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/2.../../../.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/2.../../../.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/19../../../.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/19../../../.*"
+                    android:scheme="http" >
+                </data>
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
