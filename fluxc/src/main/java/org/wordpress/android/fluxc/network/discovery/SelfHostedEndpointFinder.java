@@ -297,13 +297,10 @@ public class SelfHostedEndpointFinder {
     /**
      * Returns RSD URL based on regex match.
      */
-    private String getRSDMetaTagHrefRegEx(String urlString) throws DiscoveryException {
-        String html = getResponse(urlString);
-        if (html != null) {
-            Matcher matcher = RSD_LINK.matcher(html);
-            if (matcher.find()) {
-                return matcher.group(1);
-            }
+    private String getRSDMetaTagHrefRegEx(@NonNull String html) throws DiscoveryException {
+        Matcher matcher = RSD_LINK.matcher(html);
+        if (matcher.find()) {
+            return matcher.group(1);
         }
         return null;
     }
@@ -311,52 +308,47 @@ public class SelfHostedEndpointFinder {
     /**
      * Returns RSD URL based on html tag search.
      */
-    private String getRSDMetaTagHref(String urlString) throws DiscoveryException {
-        // Get the html code
-        String data = getResponse(urlString);
-
+    private String getRSDMetaTagHref(@NonNull String html) throws DiscoveryException {
         // Parse the html and get the attribute for xmlrpc endpoint
-        if (data != null) {
-            StringReader stringReader = new StringReader(data);
-            XmlPullParser parser = Xml.newPullParser();
-            try {
-                // Auto-detect the encoding from the stream
-                parser.setInput(stringReader);
-                int eventType = parser.getEventType();
-                while (eventType != XmlPullParser.END_DOCUMENT) {
-                    String name;
-                    String rel = "";
-                    String type = "";
-                    String href = "";
-                    if (eventType == XmlPullParser.START_TAG) {
-                        name = parser.getName();
-                        if (name.equalsIgnoreCase("link")) {
-                            for (int i = 0; i < parser.getAttributeCount(); i++) {
-                                String attrName = parser.getAttributeName(i);
-                                String attrValue = parser.getAttributeValue(i);
-                                if (attrName.equals("rel")) {
-                                    rel = attrValue;
-                                } else if (attrName.equals("type")) {
-                                    type = attrValue;
-                                } else if (attrName.equals("href")) {
-                                    href = attrValue;
-                                }
-                            }
-
-                            if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
-                                return href;
+        StringReader stringReader = new StringReader(html);
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            // Auto-detect the encoding from the stream
+            parser.setInput(stringReader);
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                String name;
+                String rel = "";
+                String type = "";
+                String href = "";
+                if (eventType == XmlPullParser.START_TAG) {
+                    name = parser.getName();
+                    if (name.equalsIgnoreCase("link")) {
+                        for (int i = 0; i < parser.getAttributeCount(); i++) {
+                            String attrName = parser.getAttributeName(i);
+                            String attrValue = parser.getAttributeValue(i);
+                            if (attrName.equals("rel")) {
+                                rel = attrValue;
+                            } else if (attrName.equals("type")) {
+                                type = attrValue;
+                            } else if (attrName.equals("href")) {
+                                href = attrValue;
                             }
                         }
+
+                        if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
+                            return href;
+                        }
                     }
-                    eventType = parser.next();
                 }
-            } catch (XmlPullParserException e) {
-                AppLog.e(T.API, e);
-                return null;
-            } catch (IOException e) {
-                AppLog.e(T.API, e);
-                return null;
+                eventType = parser.next();
             }
+        } catch (XmlPullParserException e) {
+            AppLog.e(T.API, e);
+            return null;
+        } catch (IOException e) {
+            AppLog.e(T.API, e);
+            return null;
         }
         return null; // Never found the rsd tag
     }
