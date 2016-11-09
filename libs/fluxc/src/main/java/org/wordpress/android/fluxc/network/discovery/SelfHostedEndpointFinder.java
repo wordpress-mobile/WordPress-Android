@@ -174,7 +174,7 @@ public class SelfHostedEndpointFinder {
         // Ordered set of Strings that contains the URLs we want to try
         final LinkedHashSet<String> urlsToTry = getOrderedVerifyUrlsToTry(siteUrl);
 
-        AppLog.i(T.NUX, "The app will call system.listMethods on the following URLs: " + urlsToTry);
+        AppLog.i(T.NUX, "Calling system.listMethods on the following URLs: " + urlsToTry);
         for (String url : urlsToTry) {
             try {
                 if (checkXMLRPCEndpointValidity(url, httpUsername, httpPassword)) {
@@ -218,7 +218,7 @@ public class SelfHostedEndpointFinder {
             urlsToTry.add(sanitizeSiteUrl(siteUrl, false));
         }
 
-        AppLog.i(AppLog.T.NUX, "The app will call the RSD discovery process on the following URLs: " + urlsToTry);
+        AppLog.i(AppLog.T.NUX, "Running RSD discovery process on the following URLs: " + urlsToTry);
 
         String xmlrpcUrl = null;
         for (String currentURL : urlsToTry) {
@@ -264,7 +264,7 @@ public class SelfHostedEndpointFinder {
                         false);
             }
             if (xmlrpcUrl != null) {
-                AppLog.i(AppLog.T.NUX, "Found the XML-RPC endpoint in the HTML document!!!");
+                AppLog.i(AppLog.T.NUX, "Found the XML-RPC endpoint in the HTML document");
                 break;
             } else {
                 AppLog.i(AppLog.T.NUX, "XML-RPC endpoint not found");
@@ -363,7 +363,7 @@ public class SelfHostedEndpointFinder {
         try {
             return future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | TimeoutException e) {
-            AppLog.e(T.API, "Couldn't get XML-RPC response.");
+            AppLog.e(T.API, "Couldn't get XML-RPC response");
         } catch (ExecutionException e) {
             if (e.getCause() instanceof AuthFailureError) {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
@@ -409,7 +409,7 @@ public class SelfHostedEndpointFinder {
                 return false;
             }
             // Exit the loop on the first URL that replies with a XML-RPC doc.
-            AppLog.i(T.NUX, "system.listMethods replied with XML-RPC objects on the URL: " + url);
+            AppLog.i(T.NUX, "system.listMethods replied with XML-RPC objects for " + url);
             AppLog.i(T.NUX, "Validating the XML-RPC response...");
             if (DiscoveryUtils.validateListMethodsResponse(methods)) {
                 // Endpoint address found and works fine.
@@ -422,7 +422,7 @@ public class SelfHostedEndpointFinder {
                 throw new DiscoveryException(DiscoveryError.MISSING_XMLRPC_METHOD, url);
             }
         } catch (DiscoveryException e) {
-            AppLog.e(T.NUX, "system.listMethods failed on: " + url, e);
+            AppLog.e(T.NUX, "system.listMethods failed for " + url, e);
             if (DiscoveryUtils.isHTTPAuthErrorMessage(e)
                 || e.discoveryError.equals(DiscoveryError.HTTP_AUTH_REQUIRED)) {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
@@ -440,7 +440,7 @@ public class SelfHostedEndpointFinder {
     private Object[] doSystemListMethodsXMLRPC(String url, String httpUsername, String httpPassword) throws
             DiscoveryException {
         if (!UrlUtils.isValidUrlAndHostNotNull(url)) {
-            AppLog.e(T.NUX, "invalid URL: " + url);
+            AppLog.e(T.NUX, "Invalid URL: " + url);
             throw new DiscoveryException(DiscoveryError.INVALID_URL, url);
         }
 
