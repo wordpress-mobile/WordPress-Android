@@ -363,7 +363,7 @@ public class NotificationsListFragment extends Fragment
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            mSwipeRefreshLayout.setRefreshing(true);
+            mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
 
