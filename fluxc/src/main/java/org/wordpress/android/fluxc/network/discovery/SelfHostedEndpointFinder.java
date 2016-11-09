@@ -278,7 +278,7 @@ public class SelfHostedEndpointFinder {
             }
         }
 
-        throw new DiscoveryException(DiscoveryError.NO_SITE_ERROR, null);
+        throw new DiscoveryException(DiscoveryError.NO_SITE_ERROR, xmlrpcUrl);
     }
 
 
