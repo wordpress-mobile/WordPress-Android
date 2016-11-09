@@ -91,6 +91,7 @@ public class HelpshiftHelper {
     public static void init(Application application) {
         InstallConfig installConfig = new InstallConfig.Builder()
                 .setEnableInAppNotification(true)
+                .setEnableDefaultFallbackLanguage(true)
                 .build();
         Core.init(Support.getInstance());
         try {
