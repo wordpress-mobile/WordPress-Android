@@ -44,7 +44,6 @@ public class SelfHostedEndpointFinder {
     private final BaseXMLRPCClient mClient;
 
     public enum DiscoveryError implements OnChangedError {
-        SITE_URL_CANNOT_BE_EMPTY,
         INVALID_URL,
         MISSING_XMLRPC_METHOD,
         ERRONEOUS_SSL_CERTIFICATE,
@@ -390,7 +389,7 @@ public class SelfHostedEndpointFinder {
         String url = siteUrl.trim();
 
         if (TextUtils.isEmpty(url)) {
-            throw new DiscoveryException(DiscoveryError.SITE_URL_CANNOT_BE_EMPTY, siteUrl);
+            throw new DiscoveryException(DiscoveryError.INVALID_URL, siteUrl);
         }
 
         // Convert IDN names to punycode if necessary
