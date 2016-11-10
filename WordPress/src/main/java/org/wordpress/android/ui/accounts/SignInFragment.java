@@ -696,9 +696,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             ReaderUpdateService.startService(getActivity().getApplicationContext(),
                     EnumSet.of(UpdateTask.TAGS));
 
-            NotificationsUpdateService.startService(getActivity().getApplicationContext());
-
             if (isWPComLogin()) {
+
+                NotificationsUpdateService.startService(getActivity().getApplicationContext());
+
                 //Update previous stats widgets
                 StatsWidgetProvider.updateWidgetsOnLogin(getActivity().getApplicationContext());
 

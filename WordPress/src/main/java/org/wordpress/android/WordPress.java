@@ -37,6 +37,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
@@ -565,6 +566,9 @@ public class WordPress extends MultiDexApplication {
         // Reset Stats Data
         StatsDatabaseHelper.getDatabase(context).reset();
         StatsWidgetProvider.updateWidgetsOnLogout(context);
+
+        // Reset Notifications Data
+        NotificationsTable.reset();
     }
 
     public static String getLoginUrl(Blog blog) {
@@ -837,8 +841,11 @@ public class WordPress extends MultiDexApplication {
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
-                // Refresh notifications
-                NotificationsUpdateService.startService(getContext());
+                // Refresh account informations and Notifications
+
+                if (AccountHelper.isSignedInWordPressDotCom()) {
+                    NotificationsUpdateService.startService(getContext());
+                }
 
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();

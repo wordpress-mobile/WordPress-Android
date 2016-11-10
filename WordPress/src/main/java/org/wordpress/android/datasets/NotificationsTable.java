@@ -173,4 +173,20 @@ public class NotificationsTable {
     private static void clearNotes() {
         getDb().delete(NOTIFICATIONS_TABLE, null, null);
     }
+
+
+    /*
+     * drop & recreate notifications table
+     */
+    public static void reset() {
+        SQLiteDatabase db = getDb();
+        db.beginTransaction();
+        try {
+            dropTables(db);
+            createTables(db);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
 }

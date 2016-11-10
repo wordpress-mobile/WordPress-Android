@@ -532,6 +532,9 @@ public class WPMainActivity extends AppCompatActivity {
     private class CheckUnseenNotesTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... voids) {
+            if (!AccountHelper.isSignedInWordPressDotCom()) {
+                return Boolean.FALSE;
+            }
             WordPress.getRestClientUtils().get("/me", new RestRequest.Listener() {
                 @Override
                 public void onResponse(JSONObject response) {

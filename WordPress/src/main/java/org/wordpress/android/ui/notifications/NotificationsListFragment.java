@@ -165,13 +165,21 @@ public class NotificationsListFragment extends Fragment
         super.onResume();
 
         hideNewNotificationsBar();
+
         // Immediately update the unseen ribbon
         EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
                 false
         ));
-        mNotesAdapter.reloadNotesFromDBAsync();
 
-        // Removes app notifications from the system bar
+        if (!AccountHelper.isSignedInWordPressDotCom()) {
+            // let user know that notifications require a wp.com account and enable sign-in
+            showEmptyView(R.string.notifications_account_required, 0, R.string.sign_in);
+            mFilterRadioGroup.setVisibility(View.GONE);
+        } else {
+            mNotesAdapter.reloadNotesFromDBAsync();
+        }
+
+        // Removes any pending app notifications from the system bar
         new Thread(new Runnable() {
             public void run() {
                 GCMMessageService.removeAllNotifications(getActivity());
