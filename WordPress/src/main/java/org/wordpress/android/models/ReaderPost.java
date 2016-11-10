@@ -191,7 +191,7 @@ public class ReaderPost {
         }
         // if we *still* don't have a featured image but the text contains an IMG tag, check whether
         // we can find a suitable image from the text
-        if (!post.hasFeaturedImage() && post.hasText() && post.text.contains("<img")) {
+        if (!post.hasFeaturedImage() && post.hasImages()) {
             post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
                     .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
@@ -203,6 +203,10 @@ public class ReaderPost {
         }
 
         return post;
+    }
+
+    public boolean hasImages() {
+        return hasText() && text.contains("<img ");
     }
 
     /*

@@ -128,7 +128,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
-        private final WPNetworkImageView imgBlavatar;
+        private final WPNetworkImageView imgAvatarOrBlavatar;
 
         private final ViewGroup layoutPostHeader;
         private final ReaderFollowButton followButton;
@@ -155,7 +155,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
 
             imgFeatured = (WPNetworkImageView) itemView.findViewById(R.id.image_featured);
-            imgBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_blavatar);
+            imgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
 
@@ -338,14 +338,24 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
         }
 
-        if (post.hasBlogUrl()) {
+        if (post.hasPostAvatar()) {
+            String imageUrl = GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzMedium);
+            holder.imgAvatarOrBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
+            holder.imgAvatarOrBlavatar.setVisibility(View.VISIBLE);
+        } else if (post.hasBlogUrl()) {
             String imageUrl = GravatarUtils.blavatarFromUrl(post.getBlogUrl(), mAvatarSzMedium);
-            holder.imgBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            holder.imgAvatarOrBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            holder.imgAvatarOrBlavatar.setVisibility(View.VISIBLE);
+        } else {
+            holder.imgAvatarOrBlavatar.setVisibility(View.GONE);
+        }
+
+        if (post.hasBlogUrl()) {
             holder.txtDomain.setText(UrlUtils.getHost(post.getBlogUrl()));
         } else {
-            holder.imgBlavatar.showDefaultBlavatarImage();
             holder.txtDomain.setText(null);
         }
+
         if (post.hasBlogName()) {
             holder.txtBlogName.setText(post.getBlogName());
         } else if (post.hasAuthorName()) {

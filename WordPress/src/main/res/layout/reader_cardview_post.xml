@@ -32,7 +32,7 @@
             android:paddingTop="@dimen/margin_large">
 
             <org.wordpress.android.widgets.WPNetworkImageView
-                android:id="@+id/image_blavatar"
+                android:id="@+id/image_avatar_or_blavatar"
                 style="@style/ReaderImageView.Avatar"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/margin_large"
@@ -53,7 +53,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/margin_large"
                 android:layout_toLeftOf="@+id/follow_button"
-                android:layout_toRightOf="@+id/image_blavatar"
+                android:layout_toRightOf="@+id/image_avatar_or_blavatar"
                 android:orientation="vertical">
 
                 <org.wordpress.android.widgets.WPTextView
