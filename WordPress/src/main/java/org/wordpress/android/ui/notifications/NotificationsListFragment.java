@@ -179,7 +179,6 @@ public class NotificationsListFragment extends Fragment
         } else {
             mNotesAdapter.reloadNotesFromDBAsync();
         }
-
     }
 
     @Override
@@ -599,21 +598,23 @@ public class NotificationsListFragment extends Fragment
         if (!isAdded()) return;
         mRecyclerView.clearOnScrollListeners(); // Just one listener. Multiple notes received here add multiple listeners.
 
+        if(!isFirstItemVisible()) {
+            showNewNotificationsBar();
+        }
+
         // assign the scroll listener to hide the bar when the recycler is scrolled, but don't assign
         // it right away since the user may be scrolling when the bar appears (which would cause it
         // to disappear as soon as it's displayed)
         mRecyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isAdded() && isNewNotificationsBarShowing()) {
+                if (isAdded()) {
                     mRecyclerView.addOnScrollListener(mOnScrollListener);
                 }
             }
         }, 1000L);
 
-        if(!isFirstItemVisible()) {
-            showNewNotificationsBar();
-        }
+
     }
 
     /*
