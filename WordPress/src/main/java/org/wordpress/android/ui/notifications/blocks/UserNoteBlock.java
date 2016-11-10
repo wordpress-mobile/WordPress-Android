@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
