@@ -91,6 +91,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
 
+    private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION = "10";
+    private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID = "102";
+
     protected EditText mUsernameEditText;
     protected EditText mPasswordEditText;
     protected EditText mUrlEditText;
@@ -816,14 +819,23 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         endProgress();
     }
     private void showGenericErrorDialog(String errorMessage) {
+        showGenericErrorDialog(errorMessage, null, null);
+    }
+
+    private void showGenericErrorDialog(String errorMessage, String faqId, String faqSection) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
 
+        int faqAction = 0;
+        if (!TextUtils.isEmpty(faqId) || !TextUtils.isEmpty(faqSection)) {
+            faqAction = SignInDialogFragment.ACTION_OPEN_FAQ_PAGE;
+        }
         nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                 errorMessage, R.drawable.noticon_alert_big, 3,
                 getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
                 SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
-                SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
+                SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG,
+                faqAction, faqId, faqSection);
 
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
@@ -989,7 +1001,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error));
                 break;
             case XMLRPC_BLOCKED:
-                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_post_blocked_error));
+                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_post_blocked_error),
+                        XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID,
+                        XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION);
                 break;
             case GENERIC_ERROR:
             default:

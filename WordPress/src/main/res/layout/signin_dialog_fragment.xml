@@ -56,6 +56,21 @@
             android:shadowRadius="2"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/nux_dialog_more_button"
+            android:visibility="gone"
+            android:layout_width="fill_parent"
+            android:layout_height="38dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="@string/more_about_problem"
+            android:textStyle="italic"
+            android:padding="8dp"
+            android:maxLines="1"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -76,7 +91,7 @@
             android:textColor="@color/white"
             android:text="@string/faq_button"
             android:padding="8dp"
-            android:singleLine="true"
+            android:maxLines="1"
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"/>
 
@@ -87,7 +102,7 @@
             android:layout_height="38dp"
             android:text="@string/nux_tutorial_get_started_title"
             android:padding="8dp"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_gravity="center_horizontal"
             android:gravity="center"/>
 
@@ -98,7 +113,7 @@
             android:textColor="@color/white"
             android:text="@string/cancel"
             android:padding="8dp"
-            android:singleLine="true"
+            android:maxLines="1"
             android:layout_gravity="center_horizontal"
             android:gravity="center"/>
     </LinearLayout>

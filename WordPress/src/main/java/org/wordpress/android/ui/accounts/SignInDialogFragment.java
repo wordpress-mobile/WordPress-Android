@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.helpshift.support.Support;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -32,6 +34,9 @@ public class SignInDialogFragment extends DialogFragment {
     private static String ARG_THIRD_BUTTON_LABEL = "third-btn-label";
     private static String ARG_SECOND_BUTTON_ACTION = "second-btn-action";
     private static String ARG_THIRD_BUTTON_ACTION = "third-btn-action";
+    private static String ARG_TELL_ME_MORE_BUTTON_ACTION = "tell-me-more-btn-action";
+    private static String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID = "tell-me-more-btn-param-name-faq-id";
+    private static String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID = "tell-me-more-btn-param-name-section-id";
     public static String ARG_OPEN_URL_PARAM = "open-url-param";
 
     private ImageView mImageView;
@@ -40,11 +45,13 @@ public class SignInDialogFragment extends DialogFragment {
     private WPTextView mFooterBottomButton;
     private WPTextView mFooterCenterButton;
     private WPTextView mFooterTopButton;
+    private WPTextView mTellMeMoreButton;
 
     public static final int ACTION_FINISH = 1;
     public static final int ACTION_OPEN_URL = 2;
     public static final int ACTION_OPEN_SUPPORT_CHAT = 3;
     public static final int ACTION_OPEN_APPLICATION_LOG = 4;
+    public static final int ACTION_OPEN_FAQ_PAGE = 5;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -60,13 +67,23 @@ public class SignInDialogFragment extends DialogFragment {
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, String buttonLabel) {
-        return newInstance(title, message, imageSource, 1, buttonLabel, "", "", 0, 0);
+        return newInstance(title, message, imageSource, 1, buttonLabel, "", "", 0, 0, 0, "", "");
+    }
+
+    public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
+                                                   String firstButtonLabel, String secondButtonLabel,
+                                                   String thirdButtonLabel, int secondButtonAction,
+                                                   int thirdButtonAction) {
+        return newInstance(title, message, imageSource, numberOfButtons, firstButtonLabel, secondButtonLabel,
+                thirdButtonLabel, secondButtonAction, thirdButtonAction, 0, "", "");
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
                                                 String firstButtonLabel, String secondButtonLabel,
                                                 String thirdButtonLabel, int secondButtonAction,
-                                                int thirdButtonAction) {
+                                                int thirdButtonAction, int tellMeMoreButtonAction,
+                                                   String tellMeMoreButtonFaqId,
+                                                   String tellMeMoreButtonSectionId) {
         SignInDialogFragment adf = new SignInDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_TITLE, title);
@@ -77,6 +94,9 @@ public class SignInDialogFragment extends DialogFragment {
         bundle.putString(ARG_SECOND_BUTTON_LABEL, secondButtonLabel);
         bundle.putString(ARG_THIRD_BUTTON_LABEL, thirdButtonLabel);
         bundle.putInt(ARG_SECOND_BUTTON_ACTION, secondButtonAction);
+        bundle.putInt(ARG_TELL_ME_MORE_BUTTON_ACTION, tellMeMoreButtonAction);
+        bundle.putString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID, tellMeMoreButtonFaqId);
+        bundle.putString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID, tellMeMoreButtonSectionId);
         bundle.putInt(ARG_THIRD_BUTTON_ACTION, thirdButtonAction);
 
         adf.setArguments(bundle);
@@ -96,6 +116,7 @@ public class SignInDialogFragment extends DialogFragment {
         mFooterBottomButton = (WPTextView) v.findViewById(R.id.nux_dialog_left_button);
         mFooterCenterButton = (WPTextView) v.findViewById(R.id.nux_dialog_center_button);
         mFooterTopButton = (WPTextView) v.findViewById(R.id.nux_dialog_right_button);
+        mTellMeMoreButton = (WPTextView) v.findViewById(R.id.nux_dialog_more_button);
         final Bundle arguments = getArguments();
 
         mTitleTextView.setText(arguments.getString(ARG_TITLE));
@@ -149,6 +170,22 @@ public class SignInDialogFragment extends DialogFragment {
         v.setClickable(true);
         v.setOnClickListener(clickListenerDismiss);
         mFooterBottomButton.setOnClickListener(clickListenerDismiss);
+
+        //set up tell me more button if the action is defined
+        if (arguments.getInt(ARG_TELL_ME_MORE_BUTTON_ACTION, 0) > 0) {
+            View.OnClickListener clickListenerMoreButton = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickAction(v, arguments.getInt(ARG_TELL_ME_MORE_BUTTON_ACTION, 0), arguments);
+                }
+            };
+
+            mTellMeMoreButton.setOnClickListener(clickListenerMoreButton);
+            mTellMeMoreButton.setVisibility(View.VISIBLE);
+        } else {
+            mTellMeMoreButton.setVisibility(View.GONE);
+        }
+
         return v;
     }
 
@@ -174,6 +211,15 @@ public class SignInDialogFragment extends DialogFragment {
             case ACTION_OPEN_APPLICATION_LOG:
                 startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
                 dismissAllowingStateLoss();
+                break;
+            case ACTION_OPEN_FAQ_PAGE:
+                String faqid = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID);
+                String sectionid = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID);
+                if (faqid != null) {
+                    Support.showSingleFAQ(getActivity(), faqid);
+                } else if (sectionid != null) {
+                    Support.showFAQSection(getActivity(), sectionid);
+                }
                 break;
             default:
             case ACTION_FINISH:
