@@ -982,14 +982,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             case NO_SITE_ERROR:
                 showGenericErrorDialog(getResources().getString(R.string.no_site_error));
                 break;
-            case SITE_URL_CANNOT_BE_EMPTY:
             case INVALID_URL:
                 showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message));
                 break;
             case MISSING_XMLRPC_METHOD:
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error));
                 break;
+            case XMLRPC_BLOCKED:
+                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_post_blocked_error));
+                break;
             case GENERIC_ERROR:
+            default:
                 showGenericErrorDialog(getResources().getString(R.string.login_failed_message));
                 break;
         }
