@@ -277,6 +277,27 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         "number_of_times_commented_on_reader_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_commented_on_article");
                 break;
+            case READER_ARTICLE_COMMENTS_OPENED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Opened Article Comments");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_comments_on_reader_article_opened");
+                instructions.setCurrentDateForPeopleProperty("last_time_comments_on_article_opened");
+                break;
+            case READER_ARTICLE_COMMENT_LIKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Liked Article Comment");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_comment_on_reader_article_liked");
+                instructions.setCurrentDateForPeopleProperty("last_time_comment_on_article_liked");
+                break;
+            case READER_ARTICLE_COMMENT_UNLIKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Unliked Article Comment");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_comment_on_reader_article_unliked");
+                instructions.setCurrentDateForPeopleProperty("last_time_comment_on_article_unliked");
+                break;
             case READER_ARTICLE_LIKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Liked Article");
@@ -294,6 +315,12 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Reader - Unliked Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unliked_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_unliked_reader_article");
+                break;
+            case READER_ARTICLE_RENDERED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Rendered Article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_rendered_article");
+                instructions.setCurrentDateForPeopleProperty("last_time_rendered_reader_article");
                 break;
             case READER_BLOG_BLOCKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -428,6 +455,30 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Reader - Intercepted feed post");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_feed_post_intercepted");
                 instructions.setCurrentDateForPeopleProperty("last_time_reader_feed_post_intercepted");
+                break;
+            case READER_WPCOM_BLOG_POST_INTERCEPTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Intercepted WordPress.com blog post");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_wpcom_blog_post_intercepted");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_wpcom_blog_post_intercepted");
+                break;
+            case READER_SIGN_IN_INITIATED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Sign in initiated");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_sign_in_initiated");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_sign_in_initiated");
+                break;
+            case READER_WPCOM_SIGN_IN_NEEDED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - WPCOM Sign in needed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_wpcom_sign_in_needed");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_wpcom_sign_in_needed");
+                break;
+            case READER_USER_UNAUTHORIZED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - User unauthorized");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_user_unauthorized");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_user_unauthorized");
                 break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -829,10 +880,30 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Support - Opened Helpshift Screen");
                 instructions.addSuperPropertyToFlag("opened_helpshift_screen");
                 break;
-            case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
+            case SUPPORT_USER_ACCEPTED_THE_SOLUTION:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Support - Replied to Helpshift");
-                instructions.addSuperPropertyToFlag("support_replied_to_helpshift");
+                        mixpanelInstructionsForEventName("Support - User Accepted the Solution");
+                instructions.addSuperPropertyToFlag("support_user_accepted_the_solution");
+                break;
+            case SUPPORT_USER_REJECTED_THE_SOLUTION:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - User Rejected the Solution");
+                instructions.addSuperPropertyToFlag("support_user_rejected_the_solution");
+                break;
+            case SUPPORT_USER_SENT_SCREENSHOT:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - User Sent a Screenshot");
+                instructions.addSuperPropertyToFlag("support_user_sent_screenshot");
+                break;
+            case SUPPORT_USER_REVIEWED_THE_APP:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - User Reviewed the App");
+                instructions.addSuperPropertyToFlag("support_user_reviewed_the_app");
+                break;
+            case SUPPORT_USER_REPLIED_TO_HELPSHIFT:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Support - User Replied to Helpshift");
+                instructions.addSuperPropertyToFlag("support_user_replied_to_helpshift");
                 break;
             case LOGIN_MAGIC_LINK_EXITED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -1095,6 +1166,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case DEEP_LINKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Deep linked");
+                break;
+            case DEEP_LINKED_FALLBACK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Deep linked fallback");
                 break;
             default:
                 instructions = null;

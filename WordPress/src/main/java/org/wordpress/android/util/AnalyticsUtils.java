@@ -35,11 +35,13 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS
 public class AnalyticsUtils {
     private static String BLOG_ID_KEY = "blog_id";
     private static String POST_ID_KEY = "post_id";
+    private static String COMMENT_ID_KEY = "comment_id";
     private static String FEED_ID_KEY = "feed_id";
     private static String FEED_ITEM_ID_KEY = "feed_item_id";
     private static String IS_JETPACK_KEY = "is_jetpack";
     private static String INTENT_ACTION = "intent_action";
     private static String INTENT_DATA = "intent_data";
+    private static String INTERCEPTED_URI = "intercepted_uri";
 
     /**
      * Utility method to refresh mixpanel metadata.
@@ -227,6 +229,16 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
+    public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, String blogId, String postId, int
+            commentId) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(BLOG_ID_KEY, blogId);
+        properties.put(POST_ID_KEY, postId);
+        properties.put(COMMENT_ID_KEY, commentId);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
     public static void trackWithFeedPostDetails(AnalyticsTracker.Stat stat, long feedId, long feedItemId) {
         Map<String, Object> properties =  new HashMap<>();
         properties.put(FEED_ID_KEY, feedId);
@@ -247,6 +259,20 @@ public class AnalyticsUtils {
         Map<String, Object> properties =  new HashMap<>();
         properties.put(INTENT_ACTION, action);
         properties.put(INTENT_DATA, data != null ? data.toString() : null);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
+     * Track when app launched via deep-linking but then fell back to external browser
+     *
+     * @param stat The Stat to bump
+     * @param interceptedUri The fallback URI the app was started with
+     *
+     */
+    public static void trackWithInterceptedUri(AnalyticsTracker.Stat stat, String interceptedUri) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(INTERCEPTED_URI, interceptedUri);
 
         AnalyticsTracker.track(stat, properties);
     }
