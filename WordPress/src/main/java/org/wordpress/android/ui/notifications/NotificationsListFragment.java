@@ -180,12 +180,6 @@ public class NotificationsListFragment extends Fragment
             mNotesAdapter.reloadNotesFromDBAsync();
         }
 
-        // Removes any pending app notifications from the system bar
-        new Thread(new Runnable() {
-            public void run() {
-                GCMMessageService.removeAllNotifications(getActivity());
-            }
-        }).start();
     }
 
     @Override
