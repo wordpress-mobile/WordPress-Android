@@ -175,6 +175,7 @@ public class NotificationsListFragment extends Fragment
             // let user know that notifications require a wp.com account and enable sign-in
             showEmptyView(R.string.notifications_account_required, 0, R.string.sign_in);
             mFilterRadioGroup.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setVisibility(View.GONE);
         } else {
             mNotesAdapter.reloadNotesFromDBAsync();
         }
@@ -362,6 +363,7 @@ public class NotificationsListFragment extends Fragment
             mEmptyView.setVisibility(View.GONE);
             mFilterDivider.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         }
     }
 
