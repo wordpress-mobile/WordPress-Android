@@ -48,6 +48,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -61,6 +62,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import de.greenrobot.event.EventBus;
@@ -339,6 +341,9 @@ public class WPMainActivity extends AppCompatActivity {
         super.onResume();
 
         new CheckUnseenNotesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
+        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications

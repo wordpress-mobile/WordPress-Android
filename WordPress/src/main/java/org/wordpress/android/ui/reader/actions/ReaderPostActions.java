@@ -20,6 +20,7 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
@@ -228,25 +229,31 @@ public class ReaderPostActions {
     public static void requestBlogPost(final long blogId,
             final long postId,
             final ReaderActions.OnRequestListener requestListener) {
-        requestPost(false, blogId, postId, requestListener);
+        String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
+        requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
     }
 
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestFeedPost(final long blogId,
-            final long postId,
+    public static void requestFeedPost(final long feedId, final long feedItemId,
             final ReaderActions.OnRequestListener requestListener) {
-        requestPost(true, blogId, postId, requestListener);
+        String path = "read/feed/" + feedId + "/posts/" + feedItemId + "/?meta=site,likes";
+        requestPost(WordPress.getRestClientUtilsV1_3(), path, requestListener);
     }
 
-    private static void requestPost(final boolean isFeed,
-            final long blogOrFeedId,
-            final long postOrItemId,
+    /**
+     * similar to updatePost, but used when post doesn't already exist in local db
+     **/
+    public static void requestBlogPost(final String blogSlug,
+            final String postSlug,
             final ReaderActions.OnRequestListener requestListener) {
-        String path = isFeed ? "read/feed/" + blogOrFeedId + "/posts/" + postOrItemId + "/?meta=site,likes" :
-                "read/sites/" + blogOrFeedId + "/posts/" + postOrItemId + "/?meta=site,likes";
+        String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
+        requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
+    }
 
+    private static void requestPost(RestClientUtils restClientUtils, String path, final ReaderActions
+            .OnRequestListener requestListener) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -279,13 +286,8 @@ public class ReaderPostActions {
             }
         };
 
-        if (isFeed) {
-            AppLog.d(T.READER, "requesting feed post");
-            WordPress.getRestClientUtilsV1_3().get(path, null, null, listener, errorListener);
-        } else {
-            AppLog.d(T.READER, "requesting post");
-            WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
-        }
+        AppLog.d(T.READER, "requesting post");
+        restClientUtils.get(path, null, null, listener, errorListener);
     }
 
     private static String getTrackingPixelForPost(@NonNull ReaderPost post) {
@@ -300,6 +302,7 @@ public class ReaderPostActions {
     public static void bumpPageViewForPost(long blogId, long postId) {
         bumpPageViewForPost(ReaderPostTable.getBlogPost(blogId, postId, true));
     }
+
     public static void bumpPageViewForPost(ReaderPost post) {
         if (post == null) {
             return;

@@ -132,6 +132,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
+    private boolean mInhibitMagicLogin;
     private boolean mSmartLockEnabled = true;
     private boolean mShouldShowPassword;
 
@@ -145,6 +146,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (savedInstanceState != null) {
             mSelfHosted = savedInstanceState.getBoolean(KEY_IS_SELF_HOSTED);
         }
+
+        mInhibitMagicLogin = getActivity() != null
+                && getActivity().getIntent().getBooleanExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, false);
     }
 
     @Override
@@ -277,7 +281,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             setTwoStepAuthVisibility(true);
         }
 
-        if (!mToken.isEmpty()) {
+        if (!mToken.isEmpty() && !mInhibitMagicLogin) {
             attemptLoginWithMagicLink();
             mSmartLockEnabled = false;
         } else {
@@ -285,6 +289,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
         if (mShouldShowPassword) {
             showPasswordFieldAndFocus();
+        } else if (mInhibitMagicLogin) {
+            showPasswordField(false);
         }
     }
 
@@ -304,10 +310,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void showPasswordFieldAndFocus() {
+        showPasswordField(true);
+    }
+
+    private void showPasswordField(boolean doFocus) {
         if (isAdded()) {
             endProgress();
             showPasswordField();
-            mPasswordEditText.requestFocus();
+            if (doFocus) {
+                mPasswordEditText.requestFocus();
+            }
             mSignInButton.setText(getString(R.string.sign_in));
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.showSoftInput(mPasswordEditText, InputMethodManager.SHOW_IMPLICIT);
@@ -368,11 +380,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             @Override
             public void run() {
                 if (userBlogList != null) {
-                    Intent intent = new Intent(getActivity(), WPMainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
+                    if (mInhibitMagicLogin) {
+                        // just finish the login activity and return to the its "caller"
+                        getActivity().setResult(Activity.RESULT_OK);
+                        getActivity().finish();
+                    } else {
+                        // move on the the main activity
+                        Intent intent = new Intent(getActivity(), WPMainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
 
-                    getActivity().startActivity(intent);
+                        getActivity().startActivity(intent);
+                    }
+
                 }
             }
         });

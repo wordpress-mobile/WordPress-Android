@@ -45,6 +45,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     public static final String EXTRA_JETPACK_MESSAGE_AUTH = "EXTRA_JETPACK_MESSAGE_AUTH";
     public static final String EXTRA_IS_AUTH_ERROR = "EXTRA_IS_AUTH_ERROR";
     public static final String EXTRA_PREFILL_URL = "EXTRA_PREFILL_URL";
+    public static final String EXTRA_INHIBIT_MAGIC_LOGIN = "INHIBIT_MAGIC_LOGIN";
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
 

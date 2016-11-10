@@ -288,4 +288,11 @@ public class ActivityLauncher {
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
+
+    public static void loginWithoutMagicLink(Activity activity) {
+        Intent signInIntent = new Intent(activity, SignInActivity.class);
+        signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
+        activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);
+    }
 }

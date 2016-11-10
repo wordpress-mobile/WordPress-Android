@@ -484,6 +484,11 @@ public class RestClientUtils {
 
         Uri uri = Uri.parse(unsanitizedPath);
 
+        if (uri.getHost() == null) {
+            uri = Uri.parse("://" + unsanitizedPath); // path may contain a ":" leading to Uri.parse to misinterpret
+                    // it as opaque so, try it with a empty scheme in front
+        }
+
         if (uri.getQueryParameterNames() != null ) {
             Iterator iter = uri.getQueryParameterNames().iterator();
             while (iter.hasNext()) {
