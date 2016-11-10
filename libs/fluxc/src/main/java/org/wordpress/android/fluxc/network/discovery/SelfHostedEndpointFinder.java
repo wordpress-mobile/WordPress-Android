@@ -435,14 +435,19 @@ public class SelfHostedEndpointFinder {
                     && e.getCause().getCause().getCause() instanceof CertificateException) {
                 // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
-            } else if (e.getCause() instanceof ServerError
-                    && ((ServerError) e.getCause()).networkResponse.statusCode == 405
-                    && !new String(((ServerError) e.getCause()).networkResponse.data).contains(
-                    "XML-RPC server accepts POST requests only.")) {
-                // XML-RPC is blocked by the server (POST request returns a 405 "Method Not Allowed" error)
-                // We exclude the case where Volley followed a 301 redirect and attempted to GET the xmlrpc endpoint,
-                // which also returns a 405 error but with the message "XML-RPC server accepts POST requests only."
-                throw new DiscoveryException(DiscoveryError.XMLRPC_BLOCKED, url);
+            } else if (e.getCause() instanceof ServerError) {
+                NetworkResponse networkResponse = ((ServerError) e.getCause()).networkResponse;
+                if (networkResponse == null) {
+                    return null;
+                }
+
+                if (networkResponse.statusCode == 405 && !new String(networkResponse.data).contains(
+                        "XML-RPC server accepts POST requests only.")) {
+                    // XML-RPC is blocked by the server (POST request returns a 405 "Method Not Allowed" error)
+                    // We exclude the case where Volley followed a 301 redirect and tried to GET the xmlrpc endpoint,
+                    // which also returns a 405 error but with the message "XML-RPC server accepts POST requests only."
+                    throw new DiscoveryException(DiscoveryError.XMLRPC_BLOCKED, url);
+                }
             }
         }
         return null;
