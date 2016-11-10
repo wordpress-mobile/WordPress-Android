@@ -371,7 +371,7 @@ public class SelfHostedEndpointFinder {
         } catch (ExecutionException e) {
             if (e.getCause() instanceof AuthFailureError) {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
-            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
+            } else if (e.getCause() instanceof NoConnectionError
                     && e.getCause().getCause() instanceof SSLHandshakeException
                     && e.getCause().getCause().getCause() instanceof CertificateException) {
                 // In the event of an SSL handshake error we should stop attempting discovery
@@ -467,7 +467,7 @@ public class SelfHostedEndpointFinder {
         } catch (ExecutionException e) {
             if (e.getCause() instanceof AuthFailureError) {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
-            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
+            } else if (e.getCause() instanceof NoConnectionError
                     && e.getCause().getCause() instanceof SSLHandshakeException
                     && e.getCause().getCause().getCause() instanceof CertificateException) {
                 // In the event of an SSL handshake error we should stop attempting discovery
