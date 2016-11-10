@@ -929,7 +929,7 @@ public class GCMMessageService extends GcmListenerService {
                 rebuildAndUpdateNotificationsOnSystemBar(context, data);
             }
 
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(sActiveNotificationsMap.size() > 0));
         }
 
         // Show a notification for two-step auth users who log in from a web browser

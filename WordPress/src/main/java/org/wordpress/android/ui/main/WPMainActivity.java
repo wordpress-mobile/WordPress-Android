@@ -283,6 +283,9 @@ public class WPMainActivity extends AppCompatActivity {
             }
         });
 
+        // Then hit the server
+        NotificationsActions.updateSeenNotes();
+
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
         //it could be that a notification has been tapped but has been removed by the time we reach
@@ -599,9 +602,7 @@ public class WPMainActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-       if(event.hasUnseenNotes) {
-           mTabLayout.showNoteBadge(event.hasUnseenNotes);
-       }
+        mTabLayout.showNoteBadge(event.hasUnseenNotes);
     }
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
