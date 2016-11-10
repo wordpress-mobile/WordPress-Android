@@ -581,6 +581,9 @@ public class NotificationsListFragment extends Fragment
         }
         mRestoredScrollNoteID = getFirstVisibleItemID(); // Remember the ID of the first note visible on the screen
         getNotesAdapter().reloadNotesFromDBAsync();
+        if (event.hasUnseenNotes) {
+            showNewUnseenNotificationsUI();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -590,18 +593,35 @@ public class NotificationsListFragment extends Fragment
         }
         // if a new note arrives when the notifications list is on Foreground.
         if (event.hasUnseenNotes) {
-            mRecyclerView.clearOnScrollListeners(); // Just one listener. Multiple notes received here add multiple listeners.
-            mRecyclerView.addOnScrollListener(mOnScrollListener);
-            if(!isFirstItemVisible()) {
-                showNewNotificationsBar();
-            }
+            showNewUnseenNotificationsUI();
         } else {
             mRecyclerView.removeOnScrollListener(mOnScrollListener);
         }
     }
 
+    private void showNewUnseenNotificationsUI() {
+        if (!isAdded()) return;
+        mRecyclerView.clearOnScrollListeners(); // Just one listener. Multiple notes received here add multiple listeners.
+
+        // assign the scroll listener to hide the bar when the recycler is scrolled, but don't assign
+        // it right away since the user may be scrolling when the bar appears (which would cause it
+        // to disappear as soon as it's displayed)
+        mRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded() && isNewNotificationsBarShowing()) {
+                    mRecyclerView.addOnScrollListener(mOnScrollListener);
+                }
+            }
+        }, 1000L);
+
+        if(!isFirstItemVisible()) {
+            showNewNotificationsBar();
+        }
+    }
+
     /*
-     * bar that appears at the top when new notifications are available
+     * bar that appears at the bottom when new notifications are available
      */
     private boolean isNewNotificationsBarShowing() {
         return (mNewNotificationsBar != null && mNewNotificationsBar.getVisibility() == View.VISIBLE);

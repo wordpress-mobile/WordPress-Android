@@ -366,8 +366,6 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             buildAndShowNotificationFromNoteData(context, data, false);
-
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
         }
 
         private boolean buildNoteObjectFromPNPayloadAndSaveIt(Bundle data) {
@@ -411,16 +409,12 @@ public class GCMMessageService extends GcmListenerService {
                         new RestRequest.Listener() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+                                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
                             }
                         }, null);
             } else {
-                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
             }
-            // Update the ribbon if the app is Foreground.
-            EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(
-                    true
-            ));
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 

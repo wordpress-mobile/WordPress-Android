@@ -599,7 +599,9 @@ public class WPMainActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        // TODO: check if we should do something here. No need to update the badge here though.
+       if(event.hasUnseenNotes) {
+           mTabLayout.showNoteBadge(event.hasUnseenNotes);
+       }
     }
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
