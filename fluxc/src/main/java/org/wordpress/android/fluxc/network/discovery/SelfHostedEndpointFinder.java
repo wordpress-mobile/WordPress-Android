@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.network.discovery;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Xml;
 import android.webkit.URLUtil;
 
 import com.android.volley.AuthFailureError;
@@ -20,11 +19,7 @@ import org.wordpress.android.fluxc.utils.WPUrlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -239,10 +234,6 @@ public class SelfHostedEndpointFinder {
 
             // Try to find the RSD tag with a regex
             String rsdUrl = getRSDMetaTagHrefRegEx(responseHTML);
-            // If the regex approach fails try to parse the HTML doc and retrieve the RSD tag.
-            if (rsdUrl == null) {
-                rsdUrl = getRSDMetaTagHref(responseHTML);
-            }
             rsdUrl = UrlUtils.addUrlSchemeIfNeeded(rsdUrl, false);
 
             // If the RSD URL is empty here, try to see if the pingback or Apilink are in the doc, as the user
@@ -307,54 +298,6 @@ public class SelfHostedEndpointFinder {
             return matcher.group(1);
         }
         return null;
-    }
-
-    /**
-     * Returns RSD URL based on html tag search.
-     */
-    private String getRSDMetaTagHref(@NonNull String html) throws DiscoveryException {
-        // Parse the html and get the attribute for xmlrpc endpoint
-        StringReader stringReader = new StringReader(html);
-        XmlPullParser parser = Xml.newPullParser();
-        try {
-            // Auto-detect the encoding from the stream
-            parser.setInput(stringReader);
-            int eventType = parser.getEventType();
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                String name;
-                String rel = "";
-                String type = "";
-                String href = "";
-                if (eventType == XmlPullParser.START_TAG) {
-                    name = parser.getName();
-                    if (name.equalsIgnoreCase("link")) {
-                        for (int i = 0; i < parser.getAttributeCount(); i++) {
-                            String attrName = parser.getAttributeName(i);
-                            String attrValue = parser.getAttributeValue(i);
-                            if (attrName.equals("rel")) {
-                                rel = attrValue;
-                            } else if (attrName.equals("type")) {
-                                type = attrValue;
-                            } else if (attrName.equals("href")) {
-                                href = attrValue;
-                            }
-                        }
-
-                        if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
-                            return href;
-                        }
-                    }
-                }
-                eventType = parser.next();
-            }
-        } catch (XmlPullParserException e) {
-            AppLog.e(T.API, e);
-            return null;
-        } catch (IOException e) {
-            AppLog.e(T.API, e);
-            return null;
-        }
-        return null; // Never found the rsd tag
     }
 
     /**
