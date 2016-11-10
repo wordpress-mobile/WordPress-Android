@@ -24,6 +24,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -368,8 +369,9 @@ public class SelfHostedEndpointFinder {
             if (e.getCause() instanceof AuthFailureError) {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
             } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
-                       && e.getCause().getCause() instanceof SSLHandshakeException) {
-                // In the event of an SSL error we should stop attempting discovery
+                    && e.getCause().getCause() instanceof SSLHandshakeException
+                    && e.getCause().getCause().getCause() instanceof CertificateException) {
+                // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             }
         }
@@ -461,8 +463,9 @@ public class SelfHostedEndpointFinder {
             if (e.getCause() instanceof AuthFailureError) {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
             } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
-                       && e.getCause().getCause() instanceof SSLHandshakeException) {
-                // In the event of an SSL error we should stop attempting discovery
+                    && e.getCause().getCause() instanceof SSLHandshakeException
+                    && e.getCause().getCause().getCause() instanceof CertificateException) {
+                // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             }
         }
