@@ -109,9 +109,9 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public Authenticator provideAuthenticator(AppSecrets appSecrets,
+    public Authenticator provideAuthenticator(Dispatcher dispatcher, AppSecrets appSecrets,
                                               @Named("regular") RequestQueue requestQueue) {
-        return new Authenticator(requestQueue, appSecrets);
+        return new Authenticator(dispatcher, requestQueue, appSecrets);
     }
 
     @Singleton
