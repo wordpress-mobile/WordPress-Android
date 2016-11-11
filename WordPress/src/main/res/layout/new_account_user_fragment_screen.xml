@@ -99,7 +99,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    app:srcCompat="@drawable/dashicon_admin_users"
+                    app:srcCompat="@drawable/gridicons_user"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>
