@@ -313,13 +313,14 @@ public class MeFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void addDropShadowToAvatar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mAvatarImageView.setOutlineProvider(new ViewOutlineProvider() {
+            mAvatarContainer.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                    int padding = (mAvatarContainer.getWidth() - mAvatarImageView.getWidth()) / 2;
+                    outline.setOval(padding, padding, view.getWidth() - padding, view.getHeight() - padding);
                 }
             });
-            mAvatarImageView.setElevation(mAvatarImageView.getResources().getDimensionPixelSize(R.dimen.card_elevation));
+            mAvatarContainer.setElevation(mAvatarContainer.getResources().getDimensionPixelSize(R.dimen.card_elevation));
         }
     }
 
