@@ -141,7 +141,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
-                    app:srcCompat="@drawable/dashicon_lock"
+                    app:srcCompat="@drawable/gridicons_lock"
                     android:tint="@color/grey_darken_10" />
 
                 <ImageView
