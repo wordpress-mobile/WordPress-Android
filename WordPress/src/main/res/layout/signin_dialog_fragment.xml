@@ -57,20 +57,6 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"/>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/nux_dialog_more_button"
-            android:visibility="gone"
-            android:layout_width="fill_parent"
-            android:layout_height="38dp"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:text="@string/more_about_problem"
-            android:textStyle="italic"
-            android:padding="8dp"
-            android:maxLines="1"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -84,7 +70,7 @@
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/nux_dialog_center_button"
+            android:id="@+id/nux_dialog_third_button"
             style="@style/WordPress.NUXPrimaryButton"
             android:layout_width="fill_parent"
             android:layout_height="38dp"
@@ -96,7 +82,7 @@
             android:layout_gravity="center_horizontal"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/nux_dialog_right_button"
+            android:id="@+id/nux_dialog_second_button"
             style="@style/WordPress.NUXPrimaryButton"
             android:layout_width="fill_parent"
             android:layout_height="38dp"
@@ -107,7 +93,7 @@
             android:gravity="center"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/nux_dialog_left_button"
+            android:id="@+id/nux_dialog_first_button"
             android:layout_width="fill_parent"
             android:layout_height="38dp"
             android:textColor="@color/white"

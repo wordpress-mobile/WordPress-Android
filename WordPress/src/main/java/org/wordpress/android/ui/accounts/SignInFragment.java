@@ -826,13 +826,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
 
-        int faqAction = 0;
+        int faqAction = SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT;
+        String thirdButtonLabel = getString(R.string.contact_us);
         if (!TextUtils.isEmpty(faqId) || !TextUtils.isEmpty(faqSection)) {
             faqAction = SignInDialogFragment.ACTION_OPEN_FAQ_PAGE;
+            thirdButtonLabel =  getString(R.string.tell_me_more);
         }
         nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                 errorMessage, R.drawable.noticon_alert_big, 3,
-                getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
+                getString(R.string.cancel), getString(R.string.reader_title_applog), thirdButtonLabel,
                 SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
                 SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG,
                 faqAction, faqId, faqSection);
@@ -1001,6 +1003,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error));
                 break;
             case XMLRPC_BLOCKED:
+                //TODO: use this to help the user a bit:  pass the Helpshift page ID or section ID
+                //on the rest of the error cases in this switch
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_post_blocked_error),
                         XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID,
                         XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION);

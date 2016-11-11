@@ -32,6 +32,7 @@ public class SignInDialogFragment extends DialogFragment {
     private static String ARG_FIRST_BUTTON_LABEL = "first-btn-label";
     private static String ARG_SECOND_BUTTON_LABEL = "second-btn-label";
     private static String ARG_THIRD_BUTTON_LABEL = "third-btn-label";
+    private static String ARG_FIRST_BUTTON_ACTION = "first-btn-action";
     private static String ARG_SECOND_BUTTON_ACTION = "second-btn-action";
     private static String ARG_THIRD_BUTTON_ACTION = "third-btn-action";
     private static String ARG_TELL_ME_MORE_BUTTON_ACTION = "tell-me-more-btn-action";
@@ -45,7 +46,6 @@ public class SignInDialogFragment extends DialogFragment {
     private WPTextView mFooterBottomButton;
     private WPTextView mFooterCenterButton;
     private WPTextView mFooterTopButton;
-    private WPTextView mTellMeMoreButton;
 
     public static final int ACTION_FINISH = 1;
     public static final int ACTION_OPEN_URL = 2;
@@ -75,13 +75,14 @@ public class SignInDialogFragment extends DialogFragment {
                                                    String thirdButtonLabel, int secondButtonAction,
                                                    int thirdButtonAction) {
         return newInstance(title, message, imageSource, numberOfButtons, firstButtonLabel, secondButtonLabel,
-                thirdButtonLabel, secondButtonAction, thirdButtonAction, 0, "", "");
+                thirdButtonLabel, 0, secondButtonAction, thirdButtonAction, "", "");
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
                                                 String firstButtonLabel, String secondButtonLabel,
-                                                String thirdButtonLabel, int secondButtonAction,
-                                                int thirdButtonAction, int tellMeMoreButtonAction,
+                                                String thirdButtonLabel, int firstButtonAction,
+                                                   int secondButtonAction,
+                                                   int thirdButtonAction,
                                                    String tellMeMoreButtonFaqId,
                                                    String tellMeMoreButtonSectionId) {
         SignInDialogFragment adf = new SignInDialogFragment();
@@ -93,11 +94,11 @@ public class SignInDialogFragment extends DialogFragment {
         bundle.putString(ARG_FIRST_BUTTON_LABEL, firstButtonLabel);
         bundle.putString(ARG_SECOND_BUTTON_LABEL, secondButtonLabel);
         bundle.putString(ARG_THIRD_BUTTON_LABEL, thirdButtonLabel);
+        bundle.putInt(ARG_FIRST_BUTTON_ACTION, firstButtonAction);
         bundle.putInt(ARG_SECOND_BUTTON_ACTION, secondButtonAction);
-        bundle.putInt(ARG_TELL_ME_MORE_BUTTON_ACTION, tellMeMoreButtonAction);
+        bundle.putInt(ARG_THIRD_BUTTON_ACTION, thirdButtonAction);
         bundle.putString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID, tellMeMoreButtonFaqId);
         bundle.putString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID, tellMeMoreButtonSectionId);
-        bundle.putInt(ARG_THIRD_BUTTON_ACTION, thirdButtonAction);
 
         adf.setArguments(bundle);
         adf.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme);
@@ -113,10 +114,9 @@ public class SignInDialogFragment extends DialogFragment {
         mImageView = (ImageView) v.findViewById(R.id.nux_dialog_image);
         mTitleTextView = (WPTextView) v.findViewById(R.id.nux_dialog_title);
         mDescriptionTextView = (WPTextView) v.findViewById(R.id.nux_dialog_description);
-        mFooterBottomButton = (WPTextView) v.findViewById(R.id.nux_dialog_left_button);
-        mFooterCenterButton = (WPTextView) v.findViewById(R.id.nux_dialog_center_button);
-        mFooterTopButton = (WPTextView) v.findViewById(R.id.nux_dialog_right_button);
-        mTellMeMoreButton = (WPTextView) v.findViewById(R.id.nux_dialog_more_button);
+        mFooterBottomButton = (WPTextView) v.findViewById(R.id.nux_dialog_first_button);
+        mFooterTopButton = (WPTextView) v.findViewById(R.id.nux_dialog_third_button);
+        mFooterCenterButton = (WPTextView) v.findViewById(R.id.nux_dialog_second_button);
         final Bundle arguments = getArguments();
 
         mTitleTextView.setText(arguments.getString(ARG_TITLE));
@@ -170,21 +170,6 @@ public class SignInDialogFragment extends DialogFragment {
         v.setClickable(true);
         v.setOnClickListener(clickListenerDismiss);
         mFooterBottomButton.setOnClickListener(clickListenerDismiss);
-
-        //set up tell me more button if the action is defined
-        if (arguments.getInt(ARG_TELL_ME_MORE_BUTTON_ACTION, 0) > 0) {
-            View.OnClickListener clickListenerMoreButton = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickAction(v, arguments.getInt(ARG_TELL_ME_MORE_BUTTON_ACTION, 0), arguments);
-                }
-            };
-
-            mTellMeMoreButton.setOnClickListener(clickListenerMoreButton);
-            mTellMeMoreButton.setVisibility(View.VISIBLE);
-        } else {
-            mTellMeMoreButton.setVisibility(View.GONE);
-        }
 
         return v;
     }

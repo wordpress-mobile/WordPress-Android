@@ -1319,7 +1319,7 @@
     <string name="help_center">Help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="faq_button">FAQ</string>
-    <string name="more_about_problem">Tell me more about this problem</string>
+    <string name="tell_me_more">Tell me more</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
