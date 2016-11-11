@@ -873,6 +873,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             endProgress();
             return;
         }
+        mErroneousLogInCount = 0;
         if (mAccountStore.hasAccessToken()) {
             // On WordPress.com login, configure Simperium
             AppLog.i(T.NOTIFS, "Configuring Simperium");
