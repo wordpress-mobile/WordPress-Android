@@ -65,7 +65,7 @@ public class NotificationsActions {
 
         // mark the note as read if it's unread
         if (note.isUnread()) {
-            WordPress.getRestClientUtilsV1_1().decrementUnreadCount(note.getId(), "10", new RestRequest.Listener() {
+            WordPress.getRestClientUtilsV1_1().decrementUnreadCount(note.getId(), "9999", new RestRequest.Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     note.setRead();
