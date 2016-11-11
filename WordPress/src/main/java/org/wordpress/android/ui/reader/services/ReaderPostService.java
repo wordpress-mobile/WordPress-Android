@@ -192,6 +192,8 @@ public class ReaderPostService extends Service {
             sb.append("&before=").append(UrlUtils.urlEncode(beforeDate));
         }
 
+        sb.append("&meta=site,likes");
+
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
