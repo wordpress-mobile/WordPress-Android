@@ -47,6 +47,9 @@ public class ReaderConstants {
     static final String KEY_ERROR_MESSAGE     = "error_message";
     static final String KEY_FIRST_LOAD        = "first_load";
 
+    static final String KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS = "already_tracked_global_related_posts";
+    static final String KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS  = "already_tracked_local_related_posts";
+
     // JSON key names
     //  tag endpoints
     public static final String JSON_TAG_TAGS_ARRAY      = "tags";
