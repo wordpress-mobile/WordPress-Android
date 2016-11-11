@@ -1214,6 +1214,8 @@ public class ReaderPostDetailFragment extends Fragment
             showToolbar(true);
             showFooter(true);
         }
+
+        trackRelatedPostsIfShowing();
     }
 
     private void showToolbar(boolean show) {
