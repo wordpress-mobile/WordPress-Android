@@ -1201,6 +1201,7 @@
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
     <string name="reader_toast_err_already_liked">You have already liked that comment</string>
+    <string name="reader_toast_err_shortlink_type_not_supported">This shortlink type is not supported!</string>
 
     <!-- snackbar messages -->
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>

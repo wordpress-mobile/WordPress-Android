@@ -39,6 +39,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPBase62Utils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.UnsupportedEncodingException;
@@ -73,7 +74,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private enum InterceptType {
         READER_BLOG,
         READER_FEED,
-        WPCOM_POST_SLUG
+        WPCOM_POST_SLUG,
+        WPME_SHORTLING,
     }
 
     /**
@@ -265,6 +267,24 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 parseFragment(uri);
 
                 showPost(interceptType, blogIdentifier, postIdentifier);
+            } else if (segments.size() == 1) {
+                String segment = segments.get(0);
+
+                // make sure the type is 'p'
+                String type = segment.substring(0, 1); //first character is the type
+                if (!"p".equals(type)) {
+                    AppLog.w(AppLog.T.READER, "Shortlink type not supported: " + type);
+                    ToastUtils.showToast(this, R.string.reader_toast_err_shortlink_type_not_supported);
+                    return;
+                }
+
+                // decode the blogId and postId
+                String[] splits = segment.substring(1).split("-");
+                if (splits.length > 1) {
+                    blogIdentifier = Long.toString(WPBase62Utils.sixtwo2dec(splits[0]));
+                    postIdentifier = Long.toString(WPBase62Utils.sixtwo2dec(splits[1]));
+                    showPost(InterceptType.WPME_SHORTLING, blogIdentifier, postIdentifier);
+                }
             } else if (segments.size() == 4) {
                 blogIdentifier = uri.getHost();
                 try {
@@ -348,6 +368,15 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         mPostSlugsResolutionUnderway = true;
                     }
 
+                    break;
+                case WPME_SHORTLING:
+                    if (parseIds(blogIdentifier, postIdentifier)) {
+                        AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_WPME_SHORTLINK_INTERCEPTED,
+                                mBlogId, mPostId);
+                        // IDs have now been set so, let ReaderPostPagerActivity normally display the post
+                    } else {
+                        ToastUtils.showToast(this, R.string.error_generic);
+                    }
                     break;
             }
         } else {
