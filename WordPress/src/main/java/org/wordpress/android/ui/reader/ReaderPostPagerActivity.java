@@ -265,7 +265,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 parseFragment(uri);
 
                 showPost(interceptType, blogIdentifier, postIdentifier);
-                return;
             } else if (segments.size() == 4) {
                 blogIdentifier = uri.getHost();
                 try {
@@ -279,14 +278,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 detectLike(uri);
 
                 showPost(InterceptType.WPCOM_POST_SLUG, blogIdentifier, postIdentifier);
-                return;
             }
         }
-
-        // at this point, just show the entry screen
-        Intent intent = new Intent(this, WPLaunchActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     private void showPost(@NonNull InterceptType interceptType, final String blogIdentifier, final String
