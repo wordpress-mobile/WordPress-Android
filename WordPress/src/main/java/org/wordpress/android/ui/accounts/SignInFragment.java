@@ -619,6 +619,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUsername = EditTextUtils.getText(mUsernameEditText).trim();
         mPassword = EditTextUtils.getText(mPasswordEditText).trim();
         mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
+        if (mUsername.startsWith("@")) {
+            mUsername = mUsername.substring(1, mUsername.length());
+        }
         if (isWPComLogin()) {
             AppLog.i(T.NUX, "User tries to sign in on WordPress.com with username: " + mUsername);
             signInAndFetchBlogListWPCom();
