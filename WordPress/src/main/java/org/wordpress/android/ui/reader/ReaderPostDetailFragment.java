@@ -541,7 +541,6 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, final boolean isGlobal) {
         // different container views for global/local related posts
-        int id = isGlobal ? R.id.related_posts_view_global : R.id.related_posts_view_local;
         ReaderRelatedPostsView relatedPostsView = isGlobal ? mLocalRelatedPostsView : mGlobalRelatedPostsView;
         relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
 
