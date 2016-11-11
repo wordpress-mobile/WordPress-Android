@@ -591,7 +591,7 @@ public class NotificationsListFragment extends Fragment
         if (event.hasUnseenNotes) {
             showNewUnseenNotificationsUI();
         } else {
-            mRecyclerView.removeOnScrollListener(mOnScrollListener);
+            hideNewNotificationsBar();
         }
     }
 
