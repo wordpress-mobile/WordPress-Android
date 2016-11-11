@@ -44,7 +44,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashSet;
@@ -117,7 +116,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtTitle;
         private final TextView txtText;
         private final TextView txtBlogName;
-        private final TextView txtDomain;
         private final TextView txtDateline;
         private final TextView txtTag;
 
@@ -147,7 +145,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtTitle = (TextView) itemView.findViewById(R.id.text_title);
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) itemView.findViewById(R.id.text_blog_name);
-            txtDomain = (TextView) itemView.findViewById(R.id.text_domain);
             txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
 
@@ -338,6 +335,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
         }
 
+        // show avatar if it exists, otherwise show blavatar
         if (post.hasPostAvatar()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzMedium);
             holder.imgAvatarOrBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
@@ -350,13 +348,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.imgAvatarOrBlavatar.setVisibility(View.GONE);
         }
 
-        if (post.hasBlogUrl()) {
-            holder.txtDomain.setText(UrlUtils.getHost(post.getBlogUrl()));
-        } else {
-            holder.txtDomain.setText(null);
-        }
-
-        if (post.hasBlogName()) {
+        // show author and blog name if both are available, otherwise show whichever is available
+        if (post.hasBlogName() && post.hasAuthorName() && !post.getBlogName().equals(post.getAuthorName())) {
+            holder.txtBlogName.setText(post.getAuthorName() + ", " + post.getBlogName());
+        } else if (post.hasBlogName()) {
             holder.txtBlogName.setText(post.getBlogName());
         } else if (post.hasAuthorName()) {
             holder.txtBlogName.setText(post.getAuthorName());
