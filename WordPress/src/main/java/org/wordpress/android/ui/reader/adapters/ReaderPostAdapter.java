@@ -521,7 +521,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         mPhotonWidth = displayWidth - (cardMargin * 2);
-        mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+        mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height_cardview);
 
         setHasStableIds(true);
     }
