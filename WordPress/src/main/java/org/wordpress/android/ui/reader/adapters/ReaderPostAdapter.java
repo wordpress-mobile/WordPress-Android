@@ -115,6 +115,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtText;
         private final TextView txtAuthorAndBlogName;
         private final TextView txtDateline;
+        private final TextView txtVisit;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
@@ -142,6 +143,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtAuthorAndBlogName = (TextView) itemView.findViewById(R.id.text_author_and_blog_name);
             txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
+            txtVisit = (TextView) itemView.findViewById(R.id.text_visit);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
@@ -169,6 +171,18 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         txtTitle.getPaddingRight(),
                         txtTitle.getPaddingBottom());
             }
+
+            // show post in internal browser when "visit" is clicked
+            txtVisit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    ReaderPost post = getItem(position);
+                    if (post != null) {
+                        ReaderActivityLauncher.openUrl(view.getContext(), post.getUrl());
+                    }
+                }
+            });
 
             ReaderUtils.setBackgroundToRoundRipple(imgMore);
         }
