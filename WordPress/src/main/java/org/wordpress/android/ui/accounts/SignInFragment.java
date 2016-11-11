@@ -594,7 +594,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSelfhostedPayload.url = url;
         // Self Hosted don't have any "Authentication" request, try to list sites with user/password
         mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
-
     }
 
     private boolean checkNetworkConnectivity() {
@@ -613,11 +612,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void signIn() {
-        if (!isUserDataValid()) {
-            return;
-        }
-
-        if (!checkNetworkConnectivity()) {
+        if (!isUserDataValid() || !checkNetworkConnectivity()) {
             return;
         }
 
@@ -682,13 +677,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         final String password = EditTextUtils.getText(mPasswordEditText).trim();
         boolean retValue = true;
 
-        if (password.equals("")) {
+        if (password.isEmpty()) {
             mPasswordEditText.setError(getString(R.string.required_field));
             mPasswordEditText.requestFocus();
             retValue = false;
         }
 
-        if (username.equals("")) {
+        if (username.isEmpty()) {
             mUsernameEditText.setError(getString(R.string.required_field));
             mUsernameEditText.requestFocus();
             retValue = false;
@@ -952,10 +947,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
         AppLog.e(T.API, "Discover error: " + error);
-        endProgress();
         if (!isAdded()) {
             return;
         }
+        endProgress();
         switch (error) {
             case ERRONEOUS_SSL_CERTIFICATE:
                 mSelfhostedPayload.url = failedEndpoint;
