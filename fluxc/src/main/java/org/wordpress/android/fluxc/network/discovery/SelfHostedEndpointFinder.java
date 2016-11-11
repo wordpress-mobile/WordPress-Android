@@ -7,6 +7,7 @@ import android.webkit.URLUtil;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
+import com.android.volley.ServerError;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
@@ -51,6 +52,7 @@ public class SelfHostedEndpointFinder {
         HTTP_AUTH_REQUIRED,
         NO_SITE_ERROR,
         WORDPRESS_COM_SITE,
+        XMLRPC_BLOCKED,
         GENERIC_ERROR
     }
 
@@ -186,7 +188,8 @@ public class SelfHostedEndpointFinder {
                 // Stop execution for errors requiring user interaction
                 if (e.discoveryError == DiscoveryError.ERRONEOUS_SSL_CERTIFICATE
                     || e.discoveryError == DiscoveryError.HTTP_AUTH_REQUIRED
-                    || e.discoveryError == DiscoveryError.MISSING_XMLRPC_METHOD) {
+                    || e.discoveryError == DiscoveryError.MISSING_XMLRPC_METHOD
+                    || e.discoveryError == DiscoveryError.XMLRPC_BLOCKED) {
                     throw e;
                 }
                 // Otherwise. swallow the error since we are just verifying various URLs
@@ -430,6 +433,8 @@ public class SelfHostedEndpointFinder {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
             } else if (e.discoveryError.equals(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE)) {
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
+            } else if (e.discoveryError.equals(DiscoveryError.XMLRPC_BLOCKED)) {
+                throw new DiscoveryException(DiscoveryError.XMLRPC_BLOCKED, url);
             }
         } catch (IllegalArgumentException e) {
             // The XML-RPC client returns this error in case of redirect to an invalid URL.
@@ -467,6 +472,14 @@ public class SelfHostedEndpointFinder {
                     && e.getCause().getCause().getCause() instanceof CertificateException) {
                 // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
+            } else if (e.getCause() instanceof ServerError
+                    && ((ServerError) e.getCause()).networkResponse.statusCode == 405
+                    && !new String(((ServerError) e.getCause()).networkResponse.data).contains(
+                    "XML-RPC server accepts POST requests only.")) {
+                // XML-RPC is blocked by the server (POST request returns a 405 "Method Not Allowed" error)
+                // We exclude the case where Volley followed a 301 redirect and attempted to GET the xmlrpc endpoint,
+                // which also returns a 405 error but with the message "XML-RPC server accepts POST requests only."
+                throw new DiscoveryException(DiscoveryError.XMLRPC_BLOCKED, url);
             }
         }
         return null;
