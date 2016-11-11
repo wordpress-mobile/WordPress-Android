@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.webkit.URLUtil;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.ServerError;
 
@@ -48,6 +49,7 @@ public class SelfHostedEndpointFinder {
         NO_SITE_ERROR,
         WORDPRESS_COM_SITE,
         XMLRPC_BLOCKED,
+        XMLRPC_FORBIDDEN,
         GENERIC_ERROR
     }
 
@@ -313,7 +315,16 @@ public class SelfHostedEndpointFinder {
             AppLog.e(T.API, "Couldn't get XML-RPC response");
         } catch (ExecutionException e) {
             if (e.getCause() instanceof AuthFailureError) {
-                throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
+                NetworkResponse networkResponse = ((AuthFailureError) e.getCause()).networkResponse;
+                if (networkResponse == null) {
+                    return null;
+                }
+
+                if (networkResponse.statusCode == 401) {
+                    throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
+                } else if (networkResponse.statusCode == 403) {
+                    throw new DiscoveryException(DiscoveryError.XMLRPC_FORBIDDEN, url);
+                }
             } else if (e.getCause() instanceof NoConnectionError
                     && e.getCause().getCause() instanceof SSLHandshakeException
                     && e.getCause().getCause().getCause() instanceof CertificateException) {
@@ -409,7 +420,16 @@ public class SelfHostedEndpointFinder {
             AppLog.e(T.API, "Couldn't get XML-RPC response.");
         } catch (ExecutionException e) {
             if (e.getCause() instanceof AuthFailureError) {
-                throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
+                NetworkResponse networkResponse = ((AuthFailureError) e.getCause()).networkResponse;
+                if (networkResponse == null) {
+                    return null;
+                }
+
+                if (networkResponse.statusCode == 401) {
+                    throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
+                } else if (networkResponse.statusCode == 403) {
+                    throw new DiscoveryException(DiscoveryError.XMLRPC_FORBIDDEN, url);
+                }
             } else if (e.getCause() instanceof NoConnectionError
                     && e.getCause().getCause() instanceof SSLHandshakeException
                     && e.getCause().getCause().getCause() instanceof CertificateException) {
