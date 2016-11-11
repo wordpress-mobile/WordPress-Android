@@ -333,8 +333,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzMedium);
             holder.imgAvatarOrBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             holder.imgAvatarOrBlavatar.setVisibility(View.VISIBLE);
-        } else if (post.hasBlogUrl()) {
-            String imageUrl = GravatarUtils.blavatarFromUrl(post.getBlogUrl(), mAvatarSzMedium);
+        } else if (post.hasBlogImageUrl()) {
+            String imageUrl = GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzMedium);
             holder.imgAvatarOrBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
             holder.imgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
