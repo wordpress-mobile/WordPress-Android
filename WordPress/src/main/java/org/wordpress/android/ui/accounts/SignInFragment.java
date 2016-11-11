@@ -777,29 +777,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         endProgress();
     }
 
-    protected void showInvalidUsernameOrPasswordDialog() {
-        // Show a dialog
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        SignInDialogFragment nuxAlert;
-        // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
-        nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                getString(org.wordpress.android.R.string.username_or_password_incorrect),
-                org.wordpress.android.R.drawable.noticon_alert_big, 3, getString(
-                        org.wordpress.android.R.string.cancel), getString(
-                        org.wordpress.android.R.string.forgot_password), getString(
-                        org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
-                SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
-
-        // Put entered url and entered username args, that could help our support team
-        Bundle bundle = nuxAlert.getArguments();
-        bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
-        bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
-        bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-        nuxAlert.setArguments(bundle);
-        ft.add(nuxAlert, "alert");
-        ft.commitAllowingStateLoss();
-    }
-
     protected void handleInvalidUsernameOrPassword(int messageId) {
         mErroneousLogInCount += 1;
         if (mErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
@@ -812,19 +789,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             showUsernameError(messageId);
         }
         endProgress();
-    }
-    private void showGenericErrorDialog(String errorMessage) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        SignInDialogFragment nuxAlert;
-
-        nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                errorMessage, R.drawable.noticon_alert_big, 3,
-                getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
-                SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
-                SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
-
-        ft.add(nuxAlert, "alert");
-        ft.commitAllowingStateLoss();
     }
 
     private void showAuthError(AuthenticationErrorType error, String errorMessage) {
@@ -957,19 +921,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         switch (error) {
             case ERRONEOUS_SSL_CERTIFICATE:
                 mSelfhostedPayload.url = failedEndpoint;
-                    SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
-                            new Callback() {
-                                @Override
-                                public void certificateTrusted() {
-                                    if (mSelfhostedPayload == null) {
-                                        return;
-                                    }
-                                    // retry login with the same parameters
-                                    startProgress(getString(R.string.signing_in));
-                                    mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
-                                }
-                            });
-
+                showSSLWarningDialog();
                 break;
             case HTTP_AUTH_REQUIRED:
                 askForHttpAuthCredentials(failedEndpoint);
@@ -978,11 +930,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 signInAndFetchBlogListWPCom();
                 break;
             case NO_SITE_ERROR:
-                showGenericErrorDialog(getResources().getString(R.string.no_site_error));
+                showUrlError(R.string.invalid_site_url_message);
                 break;
             case SITE_URL_CANNOT_BE_EMPTY:
             case INVALID_URL:
-                showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message));
+                showUrlError(R.string.invalid_url_message);
                 break;
             case MISSING_XMLRPC_METHOD:
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error));
@@ -991,6 +943,52 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 showGenericErrorDialog(getResources().getString(R.string.login_failed_message));
                 break;
         }
+    }
+
+    private void showSSLWarningDialog() {
+        SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager, new Callback() {
+                @Override
+                public void certificateTrusted() {
+                    if (mSelfhostedPayload == null) {
+                        return;
+                    }
+                    // retry login with the same parameters
+                    startProgress(getString(R.string.signing_in));
+                    mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
+                }});
+    }
+
+    private void showNuxAlertDialog(String message, int numButtons, int buttonLabel0, int buttonLabel1,
+                                    int buttonLabel2, int action1, int action2, Bundle args) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        SignInDialogFragment nuxAlert = SignInDialogFragment.newInstance(
+                getString(org.wordpress.android.R.string.nux_cannot_log_in), message, R.drawable.noticon_alert_big,
+                numButtons, getString(buttonLabel0), getString(buttonLabel1), getString(buttonLabel2), action1, action2);
+
+        if (args != null) {
+            Bundle dialogArgs = nuxAlert.getArguments();
+            dialogArgs.putAll(args);
+            nuxAlert.setArguments(dialogArgs);
+        }
+
+        ft.add(nuxAlert, "alert");
+        ft.commitAllowingStateLoss();
+    }
+
+    private void showGenericErrorDialog(String errorMessage) {
+        showNuxAlertDialog(errorMessage, 3, R.string.cancel, R.string.contact_us, R.string.reader_title_applog,
+                SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT, SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG, null);
+    }
+
+    protected void showInvalidUsernameOrPasswordDialog() {
+        Bundle args = new Bundle();
+        args.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
+        args.putString(SignInDialogFragment.ARG_OPEN_URL2_PARAM, "https://apps.wordpress.com/support/#faq-ios-gs2");
+        args.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+        args.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+        showNuxAlertDialog(getString(R.string.username_or_password_incorrect_hint), 3, R.string.cancel,
+                R.string.forgot_password, R.string.faq_button, SignInDialogFragment.ACTION_OPEN_URL,
+                SignInDialogFragment.ACTION_OPEN_URL2, args);
     }
 
     private void updateMigrationStatusIfNeeded() {
