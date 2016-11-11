@@ -34,6 +34,7 @@ public class ReaderPost {
     private String authorFirstName;
     private String blogName;
     private String blogUrl;
+    private String blogImageUrl;
     private String postAvatar;
 
     private String primaryTag;    // most popular tag on this post based on usage in blog
@@ -152,6 +153,10 @@ public class ReaderPost {
             post.blogName = JSONUtils.getString(jsonSite, "name");
             post.setBlogUrl(JSONUtils.getString(jsonSite, "URL"));
             post.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
+            JSONObject jsonSiteIcon = jsonSite.optJSONObject("icon");
+            if (jsonSiteIcon != null) {
+                post.blogImageUrl = JSONUtils.getString(jsonSiteIcon, "img");
+            }
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
         }
@@ -436,6 +441,13 @@ public class ReaderPost {
         this.blogUrl = StringUtils.notNullStr(blogUrl);
     }
 
+    public String getBlogImageUrl() {
+        return StringUtils.notNullStr(blogImageUrl);
+    }
+    public void setBlogImageUrl(String imageUrl) {
+        this.blogImageUrl = StringUtils.notNullStr(imageUrl);
+    }
+
     public String getPostAvatar() {
         return StringUtils.notNullStr(postAvatar);
     }
@@ -577,6 +589,10 @@ public class ReaderPost {
 
     public boolean hasBlogUrl() {
         return !TextUtils.isEmpty(blogUrl);
+    }
+
+    public boolean hasBlogImageUrl() {
+        return !TextUtils.isEmpty(blogImageUrl);
     }
 
     /*
