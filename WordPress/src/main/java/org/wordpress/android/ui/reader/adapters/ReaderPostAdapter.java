@@ -115,7 +115,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final TextView txtTitle;
         private final TextView txtText;
-        private final TextView txtBlogName;
+        private final TextView txtAuthorAndBlogName;
         private final TextView txtDateline;
         private final TextView txtTag;
 
@@ -125,7 +125,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ImageView imgMore;
 
         private final WPNetworkImageView imgFeatured;
-        private final WPNetworkImageView imgAvatar;
         private final WPNetworkImageView imgAvatarOrBlavatar;
 
         private final ViewGroup layoutPostHeader;
@@ -144,7 +143,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             txtTitle = (TextView) itemView.findViewById(R.id.text_title);
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
-            txtBlogName = (TextView) itemView.findViewById(R.id.text_blog_name);
+            txtAuthorAndBlogName = (TextView) itemView.findViewById(R.id.text_author_and_blog_name);
             txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
 
@@ -153,7 +152,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             imgFeatured = (WPNetworkImageView) itemView.findViewById(R.id.image_featured);
             imgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
-            imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
 
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
@@ -314,13 +312,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.txtDateline.setText(timestamp);
         }
 
-        if (post.hasPostAvatar()) {
-            holder.imgAvatar.setImageUrl(
-                    post.getPostAvatarForDisplay(mAvatarSzTiny), WPNetworkImageView.ImageType.AVATAR);
-        } else {
-            holder.imgAvatar.showDefaultGravatarImage();
-        }
-
         // post header isn't show when there's a site header
         if (hasSiteHeader()) {
             holder.layoutPostHeader.setVisibility(View.GONE);
@@ -350,13 +341,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         // show author and blog name if both are available, otherwise show whichever is available
         if (post.hasBlogName() && post.hasAuthorName() && !post.getBlogName().equals(post.getAuthorName())) {
-            holder.txtBlogName.setText(post.getAuthorName() + ", " + post.getBlogName());
+            holder.txtAuthorAndBlogName.setText(post.getAuthorName() + ", " + post.getBlogName());
         } else if (post.hasBlogName()) {
-            holder.txtBlogName.setText(post.getBlogName());
+            holder.txtAuthorAndBlogName.setText(post.getBlogName());
         } else if (post.hasAuthorName()) {
-            holder.txtBlogName.setText(post.getAuthorName());
+            holder.txtAuthorAndBlogName.setText(post.getAuthorName());
         } else {
-            holder.txtBlogName.setText(null);
+            holder.txtAuthorAndBlogName.setText(null);
         }
 
         if (post.hasExcerpt()) {
