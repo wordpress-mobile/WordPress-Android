@@ -302,15 +302,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderTypes.ReaderPostListType postListType = getPostListType();
 
         holder.txtTitle.setText(post.getTitle());
-
-        String timestamp = DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext());
-        if (post.hasAuthorName()) {
-            holder.txtDateline.setText(post.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
-        } else if (post.hasBlogName()) {
-            holder.txtDateline.setText(post.getBlogName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
-        } else {
-            holder.txtDateline.setText(timestamp);
-        }
+        holder.txtDateline.setText(DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext()));
 
         // post header isn't show when there's a site header
         if (hasSiteHeader()) {
