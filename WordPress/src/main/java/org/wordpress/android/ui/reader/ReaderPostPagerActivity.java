@@ -232,6 +232,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
 
         InterceptType interceptType = InterceptType.READER_BLOG;
+        mIsSinglePostView = true;
+        mIsRelatedPostView = false;
+
         String blogIdentifier = null; // can be an id or a slug
         String postIdentifier = null; // can be an id or a slug
 
@@ -289,9 +292,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private void showPost(@NonNull InterceptType interceptType, final String blogIdentifier, final String
             postIdentifier) {
         if (!TextUtils.isEmpty(blogIdentifier) && !TextUtils.isEmpty(postIdentifier)) {
-            mIsSinglePostView = true;
-            mIsRelatedPostView = false;
-
             switch (interceptType) {
                 case READER_BLOG:
                     if (parseIds(blogIdentifier, postIdentifier)) {
