@@ -389,6 +389,8 @@ public class SelfHostedEndpointFinder {
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             } else if (e.discoveryError.equals(DiscoveryError.XMLRPC_BLOCKED)) {
                 throw new DiscoveryException(DiscoveryError.XMLRPC_BLOCKED, url);
+            } else if (e.discoveryError.equals(DiscoveryError.MISSING_XMLRPC_METHOD)) {
+                throw new DiscoveryException(DiscoveryError.MISSING_XMLRPC_METHOD, url);
             }
         } catch (IllegalArgumentException e) {
             // The XML-RPC client returns this error in case of redirect to an invalid URL.
