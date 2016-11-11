@@ -891,6 +891,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
 
+        if (event.isError()) {
+            return;
+        }
+
         // Login Successful
         trackAnalyticsSignIn();
         mSitesFetched = true;
