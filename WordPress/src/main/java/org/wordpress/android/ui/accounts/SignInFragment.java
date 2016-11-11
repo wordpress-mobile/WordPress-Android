@@ -85,6 +85,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String TAG = "sign_in_fragment_tag";
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
+    private static final String XMLRPC_SUPPORT_URL = "https://codex.wordpress.org/XML-RPC_Support";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
 
@@ -933,6 +934,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             case WORDPRESS_COM_SITE:
                 signInAndFetchBlogListWPCom();
                 break;
+            case XMLRPC_BLOCKED:
+            case XMLRPC_FORBIDDEN:
+                showXMLRPCSupportDialog();
+                break;
             case NO_SITE_ERROR:
                 showUrlError(R.string.invalid_site_url_message);
                 break;
@@ -981,6 +986,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void showGenericErrorDialog(String errorMessage) {
         showNuxAlertDialog(errorMessage, 3, R.string.cancel, R.string.contact_us, R.string.reader_title_applog,
                 SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT, SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG, null);
+    }
+
+    private void showXMLRPCSupportDialog() {
+        Bundle args = new Bundle();
+        args.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, XMLRPC_SUPPORT_URL);
+        args.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+        args.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+        showNuxAlertDialog(getString(R.string.xmlrpc_discovery_error), 3, R.string.cancel, R.string.faq_button,
+                R.string.contact_us, SignInDialogFragment.ACTION_OPEN_URL,
+                SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT, args);
     }
 
     protected void showInvalidUsernameOrPasswordDialog() {
