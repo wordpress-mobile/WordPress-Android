@@ -541,7 +541,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, final boolean isGlobal) {
         // different container views for global/local related posts
-        ReaderRelatedPostsView relatedPostsView = isGlobal ? mLocalRelatedPostsView : mGlobalRelatedPostsView;
+        ReaderRelatedPostsView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
         relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
 
         // tapping a related posts should open the related post detail
