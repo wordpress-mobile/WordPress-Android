@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/reader_hyperlink"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="text_blog_name" />
 
