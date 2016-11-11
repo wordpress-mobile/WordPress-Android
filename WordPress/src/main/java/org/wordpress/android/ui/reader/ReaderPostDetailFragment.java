@@ -587,9 +587,8 @@ public class ReaderPostDetailFragment extends Fragment
             Rect scrollBounds = new Rect();
             mScrollView.getHitRect(scrollBounds);
             return view.getLocalVisibleRect(scrollBounds);
-        } else {
-            return false;
         }
+        return false;
     }
 
     /*
