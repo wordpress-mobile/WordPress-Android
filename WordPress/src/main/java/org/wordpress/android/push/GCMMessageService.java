@@ -400,21 +400,12 @@ public class GCMMessageService extends GcmListenerService {
                 return;
             }
 
-            // Always do this, since a note can be updated!!
-            // The PN payload 99% of times contains the most recent version of the note.
-            if (!buildNoteObjectFromPNPayloadAndSaveIt(data)) {
-                // PN payload doesn't have the note or there was an error.
-                // Retrieve the Note obj by calling the REST API
-                NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID,
-                        new RestRequest.Listener() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
-                            }
-                        }, null);
-            } else {
-                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
-            }
+            // Try to build the note object from the PN payload, and save it to the DB.
+            buildNoteObjectFromPNPayloadAndSaveIt(data);
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
+            // Always do this, since a note can be updated on the server after a PN is sent
+            NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID,
+                    null, null);
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
