@@ -61,6 +61,7 @@ import de.greenrobot.event.EventBus;
  * http[s]://wordpress.com/read/blogs/{blogId}/posts/{postId}
  * http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
  * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}
+ * http[s]://wp.me/p{blogidEncoded62}-{postIdEncoded62}
  *
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
@@ -243,10 +244,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         List<String> segments = uri.getPathSegments();
 
-        // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
-        //  with the first segment being 'read'.
         if (segments != null) {
             if (segments.get(0).equals("read")) {
+                // Handled URLs look like this: http[s]://wordpress.com/read/blogs/{blogId}/posts/{postId}
+                // or this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
                 InterceptType interceptType = InterceptType.READER_BLOG;
 
                 if (segments.size() > 2) {
@@ -268,6 +269,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
                 showPost(interceptType, blogIdentifier, postIdentifier);
             } else if (segments.size() == 1) {
+                // Handled URLs look like this: http[s]://wp.me/p{blogidEncoded62}-{postIdEncoded62}
                 String segment = segments.get(0);
 
                 // make sure the type is 'p'
