@@ -47,14 +47,13 @@
                 android:layout_marginLeft="@dimen/margin_large"
                 android:padding="@dimen/reader_follow_button_padding" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/margin_large"
                 android:layout_toLeftOf="@+id/follow_button"
-                android:layout_toRightOf="@+id/image_avatar_or_blavatar"
-                android:orientation="vertical">
+                android:layout_toRightOf="@+id/image_avatar_or_blavatar">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_author_and_blog_name"
@@ -72,10 +71,13 @@
                     style="@style/ReaderTextView.Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/text_author_and_blog_name"
+                    android:gravity="center_vertical"
                     tools:text="text_dateline" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -153,22 +155,6 @@
             android:layout_marginLeft="@dimen/reader_card_content_padding"
             android:layout_marginRight="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_medium">
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_tag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/count_comments"
-                android:background="?android:selectableItemBackground"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="@dimen/margin_small"
-                android:paddingRight="@dimen/margin_small"
-                android:paddingTop="@dimen/margin_small"
-                android:textColor="@color/reader_hyperlink"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="#text_tag" />
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
                 android:id="@+id/count_comments"

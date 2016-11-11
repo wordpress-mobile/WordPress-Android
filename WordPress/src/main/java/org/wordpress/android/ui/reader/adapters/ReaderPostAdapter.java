@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +68,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final HashSet<String> mRenderedIds = new HashSet<>();
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
-    private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
@@ -117,7 +115,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtText;
         private final TextView txtAuthorAndBlogName;
         private final TextView txtDateline;
-        private final TextView txtTag;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
@@ -145,7 +142,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtAuthorAndBlogName = (TextView) itemView.findViewById(R.id.text_author_and_blog_name);
             txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
-            txtTag = (TextView) itemView.findViewById(R.id.text_tag);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
@@ -368,24 +364,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.txtTitle.getLayoutParams();
         params.topMargin = titleMargin;
 
-        // show the best tag for this post
-        final String tagToDisplay = (mCurrentTag != null ? post.getTagForDisplay(mCurrentTag.getTagSlug()) : null);
-        if (!TextUtils.isEmpty(tagToDisplay)) {
-            holder.txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
-            holder.txtTag.setVisibility(View.VISIBLE);
-            holder.txtTag.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnTagSelectedListener != null) {
-                        mOnTagSelectedListener.onTagSelected(tagToDisplay);
-                    }
-                }
-            });
-        } else {
-            holder.txtTag.setVisibility(View.GONE);
-            holder.txtTag.setOnClickListener(null);
-        }
-
         showLikes(holder, post);
         showComments(holder, post);
 
@@ -586,13 +564,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnBlogInfoLoadedListener(ReaderSiteHeaderView.OnBlogInfoLoadedListener listener) {
         mBlogInfoLoadedListener = listener;
-    }
-
-    /*
-     * called when user clicks a tag
-     */
-    public void setOnTagSelectedListener(ReaderInterfaces.OnTagSelectedListener listener) {
-        mOnTagSelectedListener = listener;
     }
 
     private ReaderTypes.ReaderPostListType getPostListType() {
