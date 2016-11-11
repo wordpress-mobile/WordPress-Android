@@ -183,17 +183,36 @@
         <View style="@style/MeListSectionDividerView" />
 
         <LinearLayout
-            android:id="@+id/row_logout"
+            android:id="@+id/row_wpcom_connect"
             style="@style/MeListRowLayout">
 
             <ImageView
-                android:id="@+id/me_login_logout_icon"
+                android:id="@+id/me_wpcom_connect_icon"
                 style="@style/MeListRowIcon"
                 app:srcCompat="@drawable/me_icon_login_logout"
                 android:contentDescription="@string/me_btn_login_logout"/>
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
-                android:id="@+id/me_login_logout_text_view"
+                android:id="@+id/me_wpcom_connect_text_view"
+                android:text="@string/me_connect_to_wordpress_com"
+                style="@style/MeListRowTextView"
+                tools:text="@string/me_btn_login_logout" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/row_logout"
+            style="@style/MeListRowLayout">
+
+            <ImageView
+                android:id="@+id/me_logout_icon"
+                style="@style/MeListRowIcon"
+                app:srcCompat="@drawable/me_icon_login_logout"
+                android:contentDescription="@string/me_btn_login_logout"/>
+
+            <org.wordpress.android.widgets.WPAutoResizeTextView
+                android:id="@+id/me_logout_text_view"
+                android:text="@string/signout"
                 style="@style/MeListRowTextView"
                 tools:text="@string/me_btn_login_logout" />
 

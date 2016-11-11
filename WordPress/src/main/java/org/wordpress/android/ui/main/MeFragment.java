@@ -44,6 +44,8 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -92,11 +94,10 @@ public class MeFragment extends Fragment {
     private View mProgressBar;
     private ToolTipView mGravatarToolTipView;
     private View mAvatarTooltipAnchor;
-    private ViewGroup mAvatarContainer;
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
-    private TextView mLoginLogoutTextView;
+    private View mWPComConnectRow;
     private View mMyProfileView;
     private View mAccountSettingsView;
     private View mNotificationsView;
@@ -185,13 +186,12 @@ public class MeFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.me_fragment, container, false);
 
         mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
-        mAvatarContainer = (ViewGroup) rootView.findViewById(R.id.avatar_container);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
         mAvatarTooltipAnchor = rootView.findViewById(R.id.avatar_tooltip_anchor);
         mProgressBar = rootView.findViewById(R.id.avatar_progress);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
-        mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
+        mWPComConnectRow = rootView.findViewById(R.id.row_wpcom_connect);
         mMyProfileView = rootView.findViewById(R.id.row_my_profile);
         mAccountSettingsView = rootView.findViewById(R.id.row_account_settings);
         mNotificationsView = rootView.findViewById(R.id.row_notifications);
@@ -199,7 +199,7 @@ public class MeFragment extends Fragment {
 
         addDropShadowToAvatar();
 
-        mAvatarContainer.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.avatar_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED);
@@ -252,7 +252,7 @@ public class MeFragment extends Fragment {
             }
         });
 
-        rootView.findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_wpcom_connect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mAccountStore.hasAccessToken()) {
@@ -260,6 +260,18 @@ public class MeFragment extends Fragment {
                 } else {
                     ActivityLauncher.showSignInForResult(getActivity());
                 }
+            }
+        });
+
+        rootView.findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSiteStore.hasSelfHostedSite()) {
+                    for (SiteModel site : mSiteStore.getSelfHostedSites()) {
+                        mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
+                    }
+                }
+                signOutWordPressCom();
             }
         });
 
@@ -356,7 +368,7 @@ public class MeFragment extends Fragment {
             loadAvatar(avatarUrl, null);
 
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
-            mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
+            mWPComConnectRow.setVisibility(View.GONE);
 
             String displayName = StringUtils.unescapeHTML(defaultAccount.getDisplayName());
             if (!TextUtils.isEmpty(displayName)) {
@@ -373,7 +385,7 @@ public class MeFragment extends Fragment {
             mAccountSettingsView.setVisibility(View.GONE);
             mNotificationsView.setVisibility(View.GONE);
             mNotificationsDividerView.setVisibility(View.GONE);
-            mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
+            mWPComConnectRow.setVisibility(View.VISIBLE);
         }
     }
 
