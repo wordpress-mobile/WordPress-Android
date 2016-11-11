@@ -92,6 +92,7 @@ public class NotificationsListFragment extends Fragment
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                hideNewNotificationsBar();
                 fetchNotesFromRemote();
             }
         });
@@ -130,7 +131,7 @@ public class NotificationsListFragment extends Fragment
                 false
         ));
         // Then hit the server
-        NotificationsActions.updateSeenNotes();
+        NotificationsActions.updateNotesSeenTimestamp();
 
         // Removes app notifications from the system bar
         new Thread(new Runnable() {

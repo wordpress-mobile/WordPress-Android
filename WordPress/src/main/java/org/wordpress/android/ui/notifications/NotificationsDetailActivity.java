@@ -79,22 +79,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             }
 
             // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
-            WordPress.getRestClientUtilsV1_1().markNotificationsSeen(
-                    String.valueOf(note.getTimestamp()),
-                    new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // Assuming that we've marked the most recent notification as seen. (Beware, seen != read).
-                            EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(false));
-                        }
-                    },
-                    new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            AppLog.e(AppLog.T.NOTIFS, "Could not mark notifications/seen' value via API.", error);
-                        }
-                    }
-            );
+            NotificationsActions.updateSeenTimestamp(note);
 
             Map<String, String> properties = new HashMap<>();
             properties.put("notification_type", note.getType());

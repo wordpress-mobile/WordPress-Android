@@ -284,7 +284,7 @@ public class WPMainActivity extends AppCompatActivity {
         });
 
         // Then hit the server
-        NotificationsActions.updateSeenNotes();
+        NotificationsActions.updateNotesSeenTimestamp();
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 

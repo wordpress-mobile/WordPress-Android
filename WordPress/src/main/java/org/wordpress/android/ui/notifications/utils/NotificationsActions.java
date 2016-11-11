@@ -19,23 +19,32 @@ import de.greenrobot.event.EventBus;
 
 public class NotificationsActions {
 
-    public static void updateSeenNotes() {
+    // Get the latest note from the local DB and send its timestamp to the server.
+    // The server will discard the value if we've already seen a most recent note elsewhere or on this device.
+    public static void updateNotesSeenTimestamp() {
         ArrayList<Note> latestNotes = NotificationsTable.getLatestNotes(1);
         if (latestNotes.size() == 0) return;
+        updateSeenTimestamp(latestNotes.get(0));
+    }
+
+    // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
+    public static void updateSeenTimestamp(Note note) {
         WordPress.getRestClientUtilsV1_1().markNotificationsSeen(
-                String.valueOf(latestNotes.get(0).getTimestamp()),
+                String.valueOf(note.getTimestamp()),
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         // Assuming that we've marked the most recent notification as seen. (Beware, seen != read).
                         EventBus.getDefault().post(new NotificationEvents.NotificationsUnseenStatus(false));
                     }
-                }, new RestRequest.ErrorListener() {
+                },
+                new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.e(AppLog.T.NOTIFS, "Could not mark notifications/seen' value via API.", error);
                     }
-                });
+                }
+        );
     }
 
     public static List<Note> parseNotes(JSONObject response) throws JSONException {
