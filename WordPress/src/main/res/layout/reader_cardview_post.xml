@@ -156,6 +156,19 @@
             android:layout_marginRight="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_medium">
 
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_visit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="?android:selectableItemBackground"
+                android:drawableLeft="@drawable/reader_visit"
+                android:drawablePadding="@dimen/margin_extra_small"
+                android:gravity="center_vertical"
+                android:text="@string/reader_label_visit"
+                android:textColor="@color/reader_count_text"
+                android:textSize="@dimen/text_sz_medium" />
+
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
                 android:id="@+id/count_comments"
                 android:layout_width="wrap_content"
