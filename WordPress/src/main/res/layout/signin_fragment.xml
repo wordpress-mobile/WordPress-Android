@@ -228,7 +228,7 @@
                     style="@style/WordPress.NUXPrimaryButton"
                     android:layout_width="match_parent"
                     android:enabled="false"
-                    android:visibility="gone">
+                    android:visibility="invisible">
 
                     <ProgressBar
                         android:layout_width="24dp"
@@ -286,7 +286,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|top"
                 android:textColor="@color/blue_light"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 

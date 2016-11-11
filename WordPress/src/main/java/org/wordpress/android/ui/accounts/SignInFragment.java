@@ -730,7 +730,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected void startProgress(String message) {
         mProgressBarSignIn.setVisibility(View.VISIBLE);
         mProgressTextSignIn.setVisibility(View.VISIBLE);
-        mSignInButton.setVisibility(View.GONE);
+        mSignInButton.setVisibility(View.INVISIBLE);
         mProgressBarSignIn.setEnabled(false);
         mProgressTextSignIn.setText(message);
         mUsernameEditText.setEnabled(false);
@@ -743,8 +743,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void endProgress() {
-        mProgressBarSignIn.setVisibility(View.GONE);
-        mProgressTextSignIn.setVisibility(View.GONE);
+        mProgressBarSignIn.setVisibility(View.INVISIBLE);
+        mProgressTextSignIn.setVisibility(View.INVISIBLE);
         mSignInButton.setVisibility(View.VISIBLE);
         mUsernameEditText.setEnabled(true);
         mPasswordEditText.setEnabled(true);
