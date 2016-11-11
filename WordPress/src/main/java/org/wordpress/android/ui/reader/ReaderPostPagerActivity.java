@@ -231,7 +231,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             return;
         }
 
-        InterceptType interceptType = InterceptType.READER_BLOG;
         mIsSinglePostView = true;
         mIsRelatedPostView = false;
 
@@ -246,6 +245,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         //  with the first segment being 'read'.
         if (segments != null) {
             if (segments.get(0).equals("read")) {
+                InterceptType interceptType = InterceptType.READER_BLOG;
+
                 if (segments.size() > 2) {
                     blogIdentifier = segments.get(2);
 
@@ -277,8 +278,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 parseFragment(uri);
                 detectLike(uri);
 
-                interceptType = InterceptType.WPCOM_POST_SLUG;
-                showPost(interceptType, blogIdentifier, postIdentifier);
+                showPost(InterceptType.WPCOM_POST_SLUG, blogIdentifier, postIdentifier);
                 return;
             }
         }
