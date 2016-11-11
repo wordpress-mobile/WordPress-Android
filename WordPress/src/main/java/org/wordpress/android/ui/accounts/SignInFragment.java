@@ -936,7 +936,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             case NO_SITE_ERROR:
                 showUrlError(R.string.invalid_site_url_message);
                 break;
-            case SITE_URL_CANNOT_BE_EMPTY:
             case INVALID_URL:
                 showUrlError(R.string.invalid_url_message);
                 break;
