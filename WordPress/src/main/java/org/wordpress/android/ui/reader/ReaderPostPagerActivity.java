@@ -61,6 +61,12 @@ import de.greenrobot.event.EventBus;
  * http[s]://wordpress.com/read/blogs/{blogId}/posts/{postId}
  * http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
  * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/#comments
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/#comment-123
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/#respond
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/?replytocom=123#respond
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/?like_actor=actorId&like=1
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/?like_actor=actorId&lcommentid=123&ike=1
  * http[s]://wp.me/p{blogidEncoded62}-{postIdEncoded62}
  *
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
