@@ -19,14 +19,17 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -64,6 +67,26 @@ public class AccountRestClient extends BaseWPComRestClient {
     public static class NewAccountResponsePayload extends Payload {
         public NewUserError error;
         public boolean dryRun;
+    }
+
+    public static class IsAvailableResponsePayload extends Payload {
+        public IsAvailable type;
+        public String value;
+        public boolean isAvailable;
+        public List<String> suggestions;
+        public IsAvailableError error;
+
+        @Override
+        public boolean isError() {
+            return error != null;
+        }
+    }
+
+    public enum IsAvailable {
+        EMAIL,
+        USERNAME,
+        BLOG,
+        DOMAIN
     }
 
     @Inject
@@ -191,6 +214,73 @@ public class AccountRestClient extends BaseWPComRestClient {
         );
 
         request.disableRetries();
+        add(request);
+    }
+
+    public void isAvailable(@NonNull final String value, final IsAvailable type) {
+        String url = "";
+        switch (type) {
+            case BLOG:
+                url = WPCOMREST.is_available.blog.getUrlV0();
+                break;
+            case DOMAIN:
+                url = WPCOMREST.is_available.domain.getUrlV0();
+                break;
+            case EMAIL:
+                url = WPCOMREST.is_available.email.getUrlV0();
+                break;
+            case USERNAME:
+                url = WPCOMREST.is_available.username.getUrlV0();
+                break;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("q", value);
+
+        WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, params, IsAvailableResponse.class,
+                new Listener<IsAvailableResponse>() {
+                    @Override
+                    public void onResponse(IsAvailableResponse response) {
+                        IsAvailableResponsePayload payload = new IsAvailableResponsePayload();
+                        payload.value = value;
+                        payload.type = type;
+
+                        if (response == null) {
+                            // The 'is-available' endpoints return either true or a JSON object representing an error
+                            // The JsonObjectOrFalseDeserializer will deserialize true to null, so a null response
+                            // actually means that there were no errors and the queried item (e.g., email) is available
+                            payload.isAvailable = true;
+                        } else {
+                            if (response.error.equals("taken")) {
+                                // We consider "taken" not to be an error, and we report that the item is unavailable
+                                payload.isAvailable = false;
+                                payload.suggestions = response.suggestions; // These are only supplied by /domain/
+                            } else if (response.error.equals("invalid") && type.equals(IsAvailable.BLOG)
+                                    && response.message.contains("reserved")) {
+                                // Special case for /is-available/blog, which returns 'invalid' instead of 'taken'
+                                // The messages from the server are not localized at the time of writing, but that may
+                                // change in the future and cause this to be registered as a generic error
+                                payload.isAvailable = false;
+                            } else {
+                                // Genuine error (probably a malformed item)
+                                payload.error = new IsAvailableError(response.error, response.message);
+                            }
+                        }
+                        mDispatcher.dispatch(AccountActionBuilder.newCheckedIsAvailableAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // We don't expect anything but server errors here - the API itself returns errors with a
+                        // 200 status code, which will appear under Listener.onResponse instead
+                        IsAvailableResponsePayload payload = new IsAvailableResponsePayload();
+                        payload.error = new IsAvailableError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(AccountActionBuilder.newCheckedIsAvailableAction(payload));
+                    }
+                }
+        );
+
         add(request);
     }
 

@@ -30,3 +30,10 @@
 /sites/$site/taxonomies/$taxonomy#String/terms/slug:$slug#String/
 
 /users/new/
+
+/is-available/email/
+/is-available/username/
+/is-available/blog/
+/is-available/domain/
+
+/auth/send-login-email/
