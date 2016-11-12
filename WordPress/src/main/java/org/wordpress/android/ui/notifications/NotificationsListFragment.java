@@ -530,22 +530,22 @@ public class NotificationsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(final NotificationEvents.NoteModerationStatusChanged event) {
-        if (event.mIsModerating) {
-            setNoteIsModerating(event.mNoteId, event.mIsModerating);
+        if (event.isModerating) {
+            setNoteIsModerating(event.noteId, event.isModerating);
             EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
         } else {
             // Moderation done -> refresh the note before calling the end.
-            NotificationsActions.downloadNoteAndUpdateDB(event.mNoteId,
+            NotificationsActions.downloadNoteAndUpdateDB(event.noteId,
                     new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            setNoteIsModerating(event.mNoteId, event.mIsModerating);
+                            setNoteIsModerating(event.noteId, event.isModerating);
                             EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            setNoteIsModerating(event.mNoteId, event.mIsModerating);
+                            setNoteIsModerating(event.noteId, event.isModerating);
                             EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
                         }
                     }
@@ -555,7 +555,7 @@ public class NotificationsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NoteVisibilityChanged event) {
-        setNoteIsHidden(event.mNoteId, event.mIsHidden);
+        setNoteIsHidden(event.noteId, event.isHidden);
 
         EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteVisibilityChanged.class);
     }

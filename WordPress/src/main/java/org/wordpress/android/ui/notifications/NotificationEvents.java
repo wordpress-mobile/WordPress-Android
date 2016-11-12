@@ -18,19 +18,19 @@ public class NotificationEvents {
     }
     public static class NoteModerationFailed {}
     public static class NoteModerationStatusChanged {
-        final boolean mIsModerating;
-        final String mNoteId;
+        final boolean isModerating;
+        final String noteId;
         public NoteModerationStatusChanged(String noteId, boolean isModerating) {
-            mNoteId = noteId;
-            mIsModerating = isModerating;
+            this.noteId = noteId;
+            this.isModerating = isModerating;
         }
     }
     public static class NoteVisibilityChanged {
-        final boolean mIsHidden;
-        final String mNoteId;
+        final boolean isHidden;
+        final String noteId;
         public NoteVisibilityChanged(String noteId, boolean isHidden) {
-            mNoteId = noteId;
-            mIsHidden = isHidden;
+            this.noteId = noteId;
+            this.isHidden = isHidden;
         }
     }
     public static class NotificationsSettingsStatusChanged {
