@@ -350,7 +350,6 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
-    // TODO Needs implementation
     private void hideEmptyView() {
         if (isAdded() && mEmptyView != null) {
             setFilterViewScrollable(true);

@@ -18,10 +18,8 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -78,7 +76,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_ARG_TYPE = "type";
     private static final String PUSH_ARG_TITLE = "title";
     private static final String PUSH_ARG_MSG = "msg";
-    private static final String PUSH_ARG_NOTE_ID = "note_id";
+    public static final String PUSH_ARG_NOTE_ID = "note_id";
     public static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
 
     private static final String PUSH_TYPE_COMMENT = "c";
@@ -368,23 +366,6 @@ public class GCMMessageService extends GcmListenerService {
             buildAndShowNotificationFromNoteData(context, data, false);
         }
 
-        private boolean buildNoteObjectFromPNPayloadAndSaveIt(Bundle data) {
-            if (data == null) {
-                AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
-            } else {
-                String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
-                String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
-                Note note = Note.buildFromBase64EncodedData(noteId, base64FullData);
-                if (note != null) {
-                    return NotificationsTable.saveNote(note);
-                }
-            }
-
-            // At this point we don't have the note :(
-            AppLog.w(T.NOTIFS, "Cannot build the Note object by using info available in the PN payload. Please see " +
-                    "previous log messages for detailed information about the error.");
-            return false;
-        }
 
         private void buildAndShowNotificationFromNoteData(Context context, Bundle data, boolean dontPlaySound) {
 
@@ -401,7 +382,7 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             // Try to build the note object from the PN payload, and save it to the DB.
-            buildNoteObjectFromPNPayloadAndSaveIt(data);
+            NotificationsUtils.buildNoteObjectFromBundleAndSaveIt(data);
             EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
             // Always do this, since a note can be updated on the server after a PN is sent
             NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID,

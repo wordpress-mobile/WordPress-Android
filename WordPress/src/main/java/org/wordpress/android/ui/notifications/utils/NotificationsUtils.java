@@ -41,6 +41,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.comments.CommentActionResult;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationFailed;
@@ -523,7 +524,6 @@ public class NotificationsUtils {
     public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final View parentView) {
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             note.setLocalStatus(CommentStatus.toRESTString(newStatus));
-            // TODO note.save();
             EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), true));
             CommentActions.moderateCommentForNote(note, newStatus,
                     new CommentActions.CommentActionListener() {
@@ -532,7 +532,6 @@ public class NotificationsUtils {
                             EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), false));
                             if (!result.isSuccess()) {
                                 note.setLocalStatus(null);
-                                // TODO note.save();
                                 EventBus.getDefault().postSticky(new NoteModerationFailed());
                             }
                         }
@@ -574,5 +573,34 @@ public class NotificationsUtils {
 
         // Default to assuming notifications are enabled
         return true;
+    }
+
+    public static boolean buildNoteObjectFromBundleAndSaveIt(Bundle data) {
+        Note note = buildNoteObjectFromBundle(data);
+        if (note != null) {
+            return NotificationsTable.saveNote(note);
+        }
+
+        return false;
+    }
+
+    public static Note buildNoteObjectFromBundle(Bundle data) {
+
+        if (data == null) {
+            AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + GCMMessageService.PUSH_ARG_NOTE_ID + "'.");
+            return null;
+        }
+
+        Note note;
+        String noteId = data.getString(GCMMessageService.PUSH_ARG_NOTE_ID, "");
+        String base64FullData = data.getString(GCMMessageService.PUSH_ARG_NOTE_FULL_DATA);
+        note = Note.buildFromBase64EncodedData(noteId, base64FullData);
+        if (note == null) {
+            // At this point we don't have the note :(
+            AppLog.w(T.NOTIFS, "Cannot build the Note object by using info available in the PN payload. Please see " +
+                    "previous log messages for detailed information about the error.");
+        }
+
+        return note;
     }
 }

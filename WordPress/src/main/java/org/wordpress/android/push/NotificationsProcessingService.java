@@ -1,6 +1,5 @@
 package org.wordpress.android.push;
 
-import android.app.KeyguardManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -30,7 +29,6 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DeviceUtils;
 
 import java.util.HashMap;
 
@@ -220,14 +218,10 @@ public class NotificationsProcessingService extends Service {
 
         }
 
-        //TODO: Duplicate of     private boolean buildNoteObjectFromPNPayloadAndSaveIt(Bundle data)
         private void getNoteFromBundleIfExists() {
             if (mIntent.hasExtra(ARG_NOTE_BUNDLE)) {
                 Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
-                if (payload.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-                    String base64FullData = payload.getString(PUSH_ARG_NOTE_FULL_DATA);
-                    mNote = Note.buildFromBase64EncodedData(mNoteId, base64FullData);
-                }
+                mNote = NotificationsUtils.buildNoteObjectFromBundle(payload);
             }
         }
 
