@@ -174,7 +174,6 @@ public class NotificationsTable {
         getDb().delete(NOTIFICATIONS_TABLE, null, null);
     }
 
-
     /*
      * drop & recreate notifications table
      */
