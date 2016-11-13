@@ -160,17 +160,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ViewGroup postHeaderView = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
             followButton = (ReaderFollowButton) postHeaderView.findViewById(R.id.follow_button);
 
-            // post header isn't shown when there's a site header, so add a bit more
-            // padding above the title
-            if (hasSiteHeader()) {
-                int extraPadding = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
-                txtTitle.setPadding(
-                        txtTitle.getPaddingLeft(),
-                        txtTitle.getPaddingTop() + extraPadding,
-                        txtTitle.getPaddingRight(),
-                        txtTitle.getPaddingBottom());
-            }
-
             // show post in internal browser when "visit" is clicked
             txtVisit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -371,7 +360,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             titleMargin = 0;
         }
 
-        // set the top margin of the title based on whether there's a featured image and post header
+        // set the top margin of the title based on whether there's a featured image
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.txtTitle.getLayoutParams();
         params.topMargin = titleMargin;
 
