@@ -33,6 +33,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
     //
     public static final String SOFTWARE_VERSION_KEY = "software_version";
     public static final String POST_THUMBNAIL_KEY = "post_thumbnail";
+    public static final String DEFAULT_COMMENT_STATUS_KEY = "default_comment_status";
     public static final String JETPACK_CLIENT_ID_KEY = "jetpack_client_id";
     public static final String SITE_PUBLIC_KEY = "blog_public";
     public static final String HOME_URL_KEY = "home_url";
@@ -106,8 +107,8 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(new String[] {
-                SOFTWARE_VERSION_KEY, POST_THUMBNAIL_KEY, JETPACK_CLIENT_ID_KEY, SITE_PUBLIC_KEY,
-                HOME_URL_KEY, ADMIN_URL_KEY, LOGIN_URL_KEY, SITE_TITLE_KEY, TIME_ZONE_KEY });
+                SOFTWARE_VERSION_KEY, POST_THUMBNAIL_KEY, DEFAULT_COMMENT_STATUS_KEY, JETPACK_CLIENT_ID_KEY,
+                SITE_PUBLIC_KEY, HOME_URL_KEY, ADMIN_URL_KEY, LOGIN_URL_KEY, SITE_TITLE_KEY, TIME_ZONE_KEY });
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_OPTIONS, params,
                 new Listener<Object>() {
@@ -207,6 +208,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         oldModel.setSoftwareVersion(getOption(siteOptions, SOFTWARE_VERSION_KEY, String.class));
         Boolean postThumbnail = getOption(siteOptions, POST_THUMBNAIL_KEY, Boolean.class);
         oldModel.setIsFeaturedImageSupported((postThumbnail != null) && postThumbnail);
+        oldModel.setDefaultCommentStatus(getOption(siteOptions, DEFAULT_COMMENT_STATUS_KEY, String.class));
         oldModel.setTimezone(getOption(siteOptions, TIME_ZONE_KEY, String.class));
         oldModel.setLoginUrl(getOption(siteOptions, LOGIN_URL_KEY, String.class));
         oldModel.setAdminUrl(getOption(siteOptions, ADMIN_URL_KEY, String.class));
