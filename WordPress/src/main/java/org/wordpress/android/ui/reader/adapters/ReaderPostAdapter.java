@@ -314,19 +314,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.txtTitle.setText(post.getTitle());
         holder.txtDateline.setText(DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext()));
 
-        // post header isn't show when there's a site header
-        if (hasSiteHeader()) {
-            holder.layoutPostHeader.setVisibility(View.GONE);
-        } else {
-            holder.layoutPostHeader.setVisibility(View.VISIBLE);
-            // show blog preview when post header is tapped
-            holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
-                }
-            });
-        }
+        // show blog preview when post header is tapped
+        holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+            }
+        });
 
         // show avatar if it exists, otherwise show blavatar
         if (post.hasPostAvatar()) {
@@ -371,7 +365,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             titleMargin = mMarginLarge;
         } else {
             holder.imgFeatured.setVisibility(View.GONE);
-            titleMargin = (holder.layoutPostHeader.getVisibility() == View.VISIBLE ? 0 : mMarginLarge);
+            titleMargin = 0;
         }
 
         // set the top margin of the title based on whether there's a featured image and post header
