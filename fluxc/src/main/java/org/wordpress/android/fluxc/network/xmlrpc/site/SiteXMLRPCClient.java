@@ -87,20 +87,6 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public static final Map<String, String> XMLRPC_BLOG_OPTIONS = new HashMap<>();
-
-    static {
-        XMLRPC_BLOG_OPTIONS.put("software_version", "software_version");
-        XMLRPC_BLOG_OPTIONS.put("post_thumbnail", "post_thumbnail");
-        XMLRPC_BLOG_OPTIONS.put("jetpack_client_id", "jetpack_client_id");
-        XMLRPC_BLOG_OPTIONS.put("blog_public", "blog_public");
-        XMLRPC_BLOG_OPTIONS.put("home_url", "home_url");
-        XMLRPC_BLOG_OPTIONS.put("admin_url", "admin_url");
-        XMLRPC_BLOG_OPTIONS.put("login_url", "login_url");
-        XMLRPC_BLOG_OPTIONS.put("blog_title", "blog_title");
-        XMLRPC_BLOG_OPTIONS.put("time_zone", "time_zone");
-    }
-
     public void fetchSite(final SiteModel site) {
         List<Object> params = new ArrayList<>(2);
         params.add(site.getSiteId());
