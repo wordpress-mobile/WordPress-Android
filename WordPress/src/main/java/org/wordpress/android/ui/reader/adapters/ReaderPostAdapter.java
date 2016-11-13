@@ -125,7 +125,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatarOrBlavatar;
 
-        private final ViewGroup layoutPostHeader;
         private final ReaderFollowButton followButton;
 
         private final ViewGroup layoutDiscover;
@@ -158,8 +157,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             thumbnailStrip = (ReaderThumbnailStrip) itemView.findViewById(R.id.thumbnail_strip);
 
-            layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
-            followButton = (ReaderFollowButton) layoutPostHeader.findViewById(R.id.follow_button);
+            ViewGroup postHeaderView = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
+            followButton = (ReaderFollowButton) postHeaderView.findViewById(R.id.follow_button);
 
             // post header isn't shown when there's a site header, so add a bit more
             // padding above the title
@@ -180,6 +179,18 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     ReaderPost post = getItem(position);
                     if (post != null) {
                         ReaderActivityLauncher.openUrl(view.getContext(), post.getUrl());
+                    }
+                }
+            });
+
+            // show blog preview when post header is tapped
+            postHeaderView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    ReaderPost post = getItem(position);
+                    if (post != null) {
+                        ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
                     }
                 }
             });
@@ -313,14 +324,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         holder.txtTitle.setText(post.getTitle());
         holder.txtDateline.setText(DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext()));
-
-        // show blog preview when post header is tapped
-        holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
-            }
-        });
 
         // show avatar if it exists, otherwise show blavatar
         if (post.hasPostAvatar()) {
