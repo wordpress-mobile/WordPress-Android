@@ -14,7 +14,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -103,9 +102,6 @@ public class LoginWPCom extends LoginAbstract {
             account.save();
             account.fetchAccountDetails();
         }
-
-        // Once we have a token, start up Simperium
-        SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
 
         mCallback.onSuccess();
     }
