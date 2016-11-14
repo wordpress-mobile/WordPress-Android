@@ -69,6 +69,7 @@ public class GCMMessageService extends GcmListenerService {
     public static final int ACTIONS_PROGRESS_NOTIFICATION_ID = 50000;
     private static final int AUTH_PUSH_REQUEST_CODE_APPROVE = 0;
     private static final int AUTH_PUSH_REQUEST_CODE_IGNORE = 1;
+    private static final int AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG = 2;
     public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
     private static final int MAX_INBOX_ITEMS = 5;
 
@@ -308,7 +309,10 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private boolean canAddActionsToNotifications() {
-        return (!isDeviceLocked() && !isWPPinLockEnabled());
+        if (isWPPinLockEnabled()) {
+            return !isDeviceLocked();
+        }
+        return true;
     }
 
     private boolean isWPPinLockEnabled() {
@@ -941,21 +945,29 @@ public class GCMMessageService extends GcmListenerService {
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setPriority(NotificationCompat.PRIORITY_MAX);
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, pushAuthIntent,
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG, pushAuthIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(pendingIntent);
 
 
             if (canAddActionsToNotifications()) {
                 // adding ignore / approve quick actions
-                Intent authApproveIntent = new Intent(context, NotificationsProcessingService.class);
+                Intent authApproveIntent = new Intent(context, WPMainActivity.class);
+                authApproveIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
                 authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
                 authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
                 authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
                 authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
                 authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
-                PendingIntent authApprovePendingIntent =  PendingIntent.getService(context,
-                        AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                authApproveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                authApproveIntent.setAction("android.intent.action.MAIN");
+                authApproveIntent.addCategory("android.intent.category.LAUNCHER");
+
+                PendingIntent authApprovePendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+
                 builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
                         authApprovePendingIntent);
 

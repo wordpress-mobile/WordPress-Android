@@ -161,6 +161,7 @@ public class NotificationsProcessingService extends Service {
                     //dismiss notifs
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
+                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
                     GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
 
                     AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
@@ -175,41 +176,40 @@ public class NotificationsProcessingService extends Service {
                     showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
                 }
 
-                if (mActionType.equals(ARG_ACTION_AUTH_APPROVE)) {
-                    approveAuth();
-                } else { //all remaining actions are Comment REPLY, APPROVE, and LIKE
+                /*********************************************************/
+                /* possible actions are Comment REPLY, APPROVE, and LIKE */
+                /*********************************************************/
 
-                    //we probably have the note in the PN payload and such it's passed in the intent extras
-                    // bundle. If we have it, no need to go fetch it through REST API.
-                    getNoteFromBundleIfExists();
+                //we probably have the note in the PN payload and such it's passed in the intent extras
+                // bundle. If we have it, no need to go fetch it through REST API.
+                getNoteFromBundleIfExists();
 
-                    //if we still don't have a Note, go get it from the REST API
-                    if (mNote == null) {
-                        RestRequest.Listener listener =
-                                new RestRequest.Listener() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        if (response != null && !response.optBoolean("success")) {
-                                            //build the Note object here
-                                            buildNoteFromJSONObject(response);
-                                            performRequestedAction();
-                                        }
+                //if we still don't have a Note, go get it from the REST API
+                if (mNote == null) {
+                    RestRequest.Listener listener =
+                            new RestRequest.Listener() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    if (response != null && !response.optBoolean("success")) {
+                                        //build the Note object here
+                                        buildNoteFromJSONObject(response);
+                                        performRequestedAction();
                                     }
-                                };
+                                }
+                            };
 
-                        RestRequest.ErrorListener errorListener =
-                                new RestRequest.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        requestFailed(mActionType);
-                                    }
-                                };
+                    RestRequest.ErrorListener errorListener =
+                            new RestRequest.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    requestFailed(mActionType);
+                                }
+                            };
 
-                        getNoteFromNoteId(mNoteId, listener, errorListener);
-                    } else {
-                        //we have a Note! just go ahead and perform the requested action
-                        performRequestedAction();
-                    }
+                    getNoteFromNoteId(mNoteId, listener, errorListener);
+                } else {
+                    //we have a Note! just go ahead and perform the requested action
+                    performRequestedAction();
                 }
 
             } else {
@@ -594,36 +594,6 @@ public class NotificationsProcessingService extends Service {
 
         private void resetOriginalNotification(){
             GCMMessageService.rebuildAndUpdateNotificationsOnSystemBarForThisNote(mContext, mNoteId);
-        }
-
-        private void approveAuth(){
-            NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(mIntent,
-                    new NotificationsUtils.TwoFactorAuthCallback() {
-                @Override
-                public void onTokenValid(String token, String title, String message) {
-                    // ping the push auth endpoint with the token, wp.com will take care of the rest!
-                    NotificationsUtils.sendTwoFactorAuthToken(token);
-
-                    //dismiss notifs
-                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID); //intermediate progress notif
-                    GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
-
-                    stopSelf(mTaskId);
-                }
-
-                @Override
-                public void onTokenInvalid() {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-                    //dismiss notifs
-                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID); //intermediate progress notif
-                    GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
-                    requestFailedWithMessage(getString(R.string.push_auth_expired), false);
-                }
-            });
         }
     }
 }
