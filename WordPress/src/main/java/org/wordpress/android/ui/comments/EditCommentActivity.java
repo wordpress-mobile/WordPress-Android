@@ -19,19 +19,18 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
-import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
@@ -96,14 +95,11 @@ public class EditCommentActivity extends AppCompatActivity {
 
             configureViews();
         } else {
-            if (SimperiumUtils.getNotesBucket() != null) {
-                try {
-                    mNote = SimperiumUtils.getNotesBucket().get(noteId);
-                    requestFullCommentForNote(mNote);
-                } catch (BucketObjectMissingException e) {
-                    SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-                    showErrorAndFinish();
-                }
+            mNote = NotificationsTable.getNoteById(noteId);
+            if (mNote != null) {
+                requestFullCommentForNote(mNote);
+            } else {
+                showErrorAndFinish();
             }
         }
     }

@@ -91,6 +91,7 @@ public class HelpshiftHelper {
     public static void init(Application application) {
         InstallConfig installConfig = new InstallConfig.Builder()
                 .setEnableInAppNotification(true)
+                .setEnableDefaultFallbackLanguage(true)
                 .build();
         Core.init(Support.getInstance());
         try {
@@ -109,12 +110,28 @@ public class HelpshiftHelper {
             }
 
             @Override
-            public void newConversationStarted(String s) {
+            public void newConversationStarted(String newMessage) {
             }
 
             @Override
-            public void userRepliedToConversation(String s) {
-                AnalyticsTracker.track(Stat.SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE);
+            public void userRepliedToConversation(String newMessage) {
+                switch (newMessage) {
+                    case Support.UserAcceptedTheSolution:
+                        AnalyticsTracker.track(Stat.SUPPORT_USER_ACCEPTED_THE_SOLUTION);
+                        break;
+                    case Support.UserRejectedTheSolution:
+                        AnalyticsTracker.track(Stat.SUPPORT_USER_REJECTED_THE_SOLUTION);
+                        break;
+                    case Support.UserSentScreenShot:
+                        AnalyticsTracker.track(Stat.SUPPORT_USER_SENT_SCREENSHOT);
+                        break;
+                    case Support.UserReviewedTheApp:
+                        AnalyticsTracker.track(Stat.SUPPORT_USER_REVIEWED_THE_APP);
+                        break;
+                    default:
+                        AnalyticsTracker.track(Stat.SUPPORT_USER_REPLIED_TO_HELPSHIFT);
+                        break;
+                }
             }
 
             @Override
