@@ -106,6 +106,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private ImageView mBtnLikeIcon;
     private TextView mBtnLikeTextView;
     private View mBtnModerateComment;
+    private View mBtnEditComment;
     private ImageView mBtnModerateIcon;
     private TextView mBtnModerateTextView;
     private TextView mBtnSpamComment;
@@ -219,8 +220,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnModerateComment = mLayoutButtons.findViewById(R.id.btn_moderate);
         mBtnModerateIcon = (ImageView) mLayoutButtons.findViewById(R.id.btn_moderate_icon);
         mBtnModerateTextView = (TextView) mLayoutButtons.findViewById(R.id.btn_moderate_text);
+        mBtnEditComment = mLayoutButtons.findViewById(R.id.btn_edit);
         mBtnSpamComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
         mBtnTrashComment = (TextView) mLayoutButtons.findViewById(R.id.image_trash_comment);
+
+        mBtnEditComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editComment();
+            }
+        });
 
         setTextDrawable(mBtnSpamComment, R.drawable.ic_action_spam);
         setTextDrawable(mBtnTrashComment, R.drawable.ic_action_trash);
@@ -490,26 +499,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (mOnCommentChangeListener != null)
                 mOnCommentChangeListener.onCommentChanged(ChangeType.EDITED);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-        inflater.inflate(R.menu.comment_detail, menu);
-        if (!canEdit()) {
-            menu.removeItem(R.id.menu_edit_comment);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.menu_edit_comment) {
-            editComment();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private boolean hasComment() {
@@ -992,6 +981,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         } else {
             mBtnTrashComment.setVisibility(View.GONE);
+        }
+
+        if (canEdit()) {
+            mBtnEditComment.setVisibility(View.VISIBLE);
         }
 
         mLayoutButtons.setVisibility(View.VISIBLE);
