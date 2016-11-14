@@ -308,7 +308,10 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private boolean canAddActionsToNotifications() {
-        return (!isDeviceLocked() && !isWPPinLockEnabled());
+        if (isWPPinLockEnabled()) {
+            return !isDeviceLocked();
+        }
+        return true;
     }
 
     private boolean isWPPinLockEnabled() {
