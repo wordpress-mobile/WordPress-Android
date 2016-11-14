@@ -402,10 +402,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         stopMediaUploadService();
         mHandler.removeCallbacks(mAutoSave);
         mHandler = null;
+
+        if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
+            AppLog.d(T.EDITOR,""+mPost);
+            // new and empty post? delete it
+            if (mIsNewPost) {
+                WordPress.wpDB.deletePost(mPost);
+            }
+        }
     }
 
     @Override
     protected void onDestroy() {
+//        new Thread(new DeletePostThread()).start();
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         super.onDestroy();
     }
