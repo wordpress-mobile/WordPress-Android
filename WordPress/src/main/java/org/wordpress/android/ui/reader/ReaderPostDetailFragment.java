@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -95,12 +96,17 @@ public class ReaderPostDetailFragment extends Fragment
     private View mLikingUsersLabel;
     private WPTextView mSignInButton;
 
+    private ReaderRelatedPostsView mGlobalRelatedPostsView;
+    private ReaderRelatedPostsView mLocalRelatedPostsView;
 
     private boolean mPostSlugsResolutionUnderway;
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsWebViewPaused;
     private boolean mIsRelatedPost;
+
+    private boolean mHasTrackedGlobalRelatedPosts;
+    private boolean mHasTrackedLocalRelatedPosts;
 
     private int mToolbarHeight;
     private String mErrorMessage;
@@ -221,6 +227,10 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutFooter.setVisibility(View.INVISIBLE);
         mScrollView.setVisibility(View.INVISIBLE);
 
+        View relatedPostsContainer = view.findViewById(R.id.container_related_posts);
+        mGlobalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainer.findViewById(R.id.related_posts_view_global);
+        mLocalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainer.findViewById(R.id.related_posts_view_local);
+
         mSignInButton = (WPTextView) view.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
 
@@ -315,6 +325,9 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
 
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS, mHasTrackedGlobalRelatedPosts);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS, mHasTrackedLocalRelatedPosts);
+
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
         mPostHistory.saveInstance(outState);
@@ -346,6 +359,8 @@ public class ReaderPostDetailFragment extends Fragment
             mPostSlugsResolutionUnderway = savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
+            mHasTrackedGlobalRelatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS);
+            mHasTrackedLocalRelatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -462,17 +477,21 @@ public class ReaderPostDetailFragment extends Fragment
         mIsFeed = false;
         mBlogId = blogId;
         mPostId = postId;
+
         if (clearCommentOperation) {
             mDirectOperation = null;
             mCommentId = 0;
         }
+
         mHasAlreadyRequestedPost = false;
         mHasAlreadyUpdatedPost = false;
+        mHasTrackedGlobalRelatedPosts = false;
+        mHasTrackedLocalRelatedPosts = false;
 
         // hide views that would show info for the previous post - these will be re-displayed
         // with the correct info once the new post loads
-        getView().findViewById(R.id.related_posts_view_local).setVisibility(View.GONE);
-        getView().findViewById(R.id.related_posts_view_global).setVisibility(View.GONE);
+        mGlobalRelatedPostsView.setVisibility(View.GONE);
+        mLocalRelatedPostsView.setVisibility(View.GONE);
 
         mLikingUsersView.setVisibility(View.GONE);
         mLikingUsersDivider.setVisibility(View.GONE);
@@ -520,23 +539,56 @@ public class ReaderPostDetailFragment extends Fragment
      * show the passed list of related posts - can be either global (related posts from
      * across wp.com) or local (related posts from the same site as the current post)
      */
-    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, boolean isGlobal) {
+    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, final boolean isGlobal) {
         // different container views for global/local related posts
-        int id = isGlobal ? R.id.related_posts_view_global : R.id.related_posts_view_local;
-        ReaderRelatedPostsView relatedPostsView = (ReaderRelatedPostsView) getView().findViewById(id);
+        ReaderRelatedPostsView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
         relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
 
         // tapping a related posts should open the related post detail
         relatedPostsView.setOnRelatedPostClickListener(new ReaderRelatedPostsView.OnRelatedPostClickListener() {
             @Override
             public void onRelatedPostClick(View v, long siteId, long postId) {
-                showRelatedPostDetail(siteId, postId);
+                showRelatedPostDetail(siteId, postId, isGlobal);
             }
         });
 
+        // fade in this related posts view
         if (relatedPostsView.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM);
         }
+
+        trackRelatedPostsIfShowing();
+    }
+
+    /*
+     * track that related posts have loaded and are scrolled into view if we haven't
+     * already tracked it
+     */
+    private void trackRelatedPostsIfShowing() {
+        if (!mHasTrackedGlobalRelatedPosts && isVisibleAndScrolledIntoView(mGlobalRelatedPostsView)) {
+            mHasTrackedGlobalRelatedPosts = true;
+            AppLog.d(T.READER, "reader post detail > global related posts rendered");
+            mGlobalRelatedPostsView.trackRailcarRender();
+        }
+
+        if (!mHasTrackedLocalRelatedPosts && isVisibleAndScrolledIntoView(mLocalRelatedPostsView)) {
+            mHasTrackedLocalRelatedPosts = true;
+            AppLog.d(T.READER, "reader post detail > local related posts rendered");
+            mLocalRelatedPostsView.trackRailcarRender();
+        }
+    }
+
+    /*
+     * returns True if the passed view is visible and has been scrolled into view - assumes
+     * that the view is a child of mScrollView
+     */
+    private boolean isVisibleAndScrolledIntoView(View view) {
+        if (view != null && view.getVisibility() == View.VISIBLE) {
+            Rect scrollBounds = new Rect();
+            mScrollView.getHitRect(scrollBounds);
+            return view.getLocalVisibleRect(scrollBounds);
+        }
+        return false;
     }
 
     /*
@@ -544,16 +596,25 @@ public class ReaderPostDetailFragment extends Fragment
      * history stack so the user can back-button through the history - otherwise start a new detail
      * activity for this related post
      */
-    private void showRelatedPostDetail(long blogId, long postId) {
-        AnalyticsUtils.trackWithReaderPostDetails(
-                AnalyticsTracker.Stat.READER_RELATED_POST_CLICKED, blogId, postId);
+    private void showRelatedPostDetail(long blogId, long postId, boolean isGlobal) {
+        AnalyticsTracker.Stat stat = isGlobal
+                ? AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED
+                : AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED;
+        AnalyticsUtils.trackWithReaderPostDetails(stat, blogId, postId);
 
         if (mIsRelatedPost) {
             mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
             replacePost(blogId, postId, true);
         } else {
-            ReaderActivityLauncher.showReaderPostDetail(getActivity(), false, blogId, postId, null, 0, true,
-                    mInterceptedUri);
+            ReaderActivityLauncher.showReaderPostDetail(
+                    getActivity(),
+                    false,
+                    blogId,
+                    postId,
+                    null,
+                    0,
+                    true,
+                    null);
         }
     }
 
@@ -809,7 +870,10 @@ public class ReaderPostDetailFragment extends Fragment
                                 ? R.string.reader_err_get_post_not_authorized_signin
                                 : R.string.reader_err_get_post_not_authorized_signin_fallback;
                         mSignInButton.setVisibility(View.VISIBLE);
+                        AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED,
+                                mPost);
                     }
+                    AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED, mPost);
                     break;
                 case 404:
                     errMsgResId = R.string.reader_err_get_post_not_found;
@@ -935,6 +999,8 @@ public class ReaderPostDetailFragment extends Fragment
                         break;
                 }
             }
+
+            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_RENDERED, mPost);
 
             mReaderWebView.setIsPrivatePost(mPost.isPrivate);
             mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
@@ -1148,6 +1214,8 @@ public class ReaderPostDetailFragment extends Fragment
             showToolbar(true);
             showFooter(true);
         }
+
+        trackRelatedPostsIfShowing();
     }
 
     private void showToolbar(boolean show) {

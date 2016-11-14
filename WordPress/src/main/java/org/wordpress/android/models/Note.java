@@ -3,15 +3,9 @@
  */
 package org.wordpress.android.models;
 
-import android.text.Html;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
-
-import com.simperium.client.BucketSchema;
-import com.simperium.client.Syncable;
-import com.simperium.util.JSONDiff;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONArray;
@@ -24,15 +18,14 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-public class Note extends Syncable {
+public class Note {
     private static final String TAG = "NoteModel";
 
     // Maximum character length for a comment preview
@@ -45,6 +38,7 @@ public class Note extends Syncable {
     public static final String NOTE_MATCHER_TYPE = "automattcher";
     public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
     public static final String NOTE_REBLOG_TYPE = "reblog";
+    public static final String NOTE_NEW_POST_TYPE = "new_post";
     public static final String NOTE_UNKNOWN_TYPE = "unknown";
 
     // JSON action keys
@@ -76,30 +70,18 @@ public class Note extends Syncable {
         GROUP_OLDER_MONTH
     }
 
-    /**
-     * Create a note using JSON from Simperium
-     */
-    private Note(String key, JSONObject noteJSON) {
+    public Note(String key, JSONObject noteJSON) {
         mKey = key;
         mNoteJSON = noteJSON;
     }
 
-    /**
-     * Simperium method @see Diffable
-     */
-    @Override
-    public JSONObject getDiffableValue() {
-        synchronized (mSyncLock) {
-            return JSONDiff.deepCopy(mNoteJSON);
-        }
+    public Note(JSONObject noteJSON){
+        mNoteJSON = noteJSON;
+        mKey = mNoteJSON.optString("id", "");
     }
 
-    /**
-     * Simperium method for identifying bucket object @see Diffable
-     */
-    @Override
-    public String getSimperiumKey() {
-        return getId();
+    public JSONObject getJSON() {
+        return mNoteJSON != null ? mNoteJSON : new JSONObject();
     }
 
     public String getId() {
@@ -123,6 +105,10 @@ public class Note extends Syncable {
 
     public Boolean isAutomattcherType() {
         return isType(NOTE_MATCHER_TYPE);
+    }
+
+    public Boolean isNewPostType() {
+        return isType(NOTE_NEW_POST_TYPE);
     }
 
     public Boolean isFollowType() {
@@ -185,7 +171,7 @@ public class Note extends Syncable {
         return (enabledActions != null && enabledActions.contains(EnabledActions.ACTION_LIKE));
     }
 
-    private String getLocalStatus() {
+    public String getLocalStatus() {
         return StringUtils.notNullStr(mLocalStatus);
     }
 
@@ -193,7 +179,7 @@ public class Note extends Syncable {
         mLocalStatus = localStatus;
     }
 
-    private JSONObject getSubject() {
+    public JSONObject getSubject() {
         try {
             synchronized (mSyncLock) {
                 JSONArray subjectArray = mNoteJSON.getJSONArray("subject");
@@ -208,7 +194,7 @@ public class Note extends Syncable {
         return null;
     }
 
-    private Spannable getFormattedSubject() {
+    public Spannable getFormattedSubject() {
         return NotificationsUtils.getSpannableContentForRanges(getSubject());
     }
 
@@ -216,11 +202,11 @@ public class Note extends Syncable {
         return queryJSON("title", "");
     }
 
-    private String getIconURL() {
+    public String getIconURL() {
         return queryJSON("icon", "");
     }
 
-    private String getCommentSubject() {
+    public String getCommentSubject() {
         synchronized (mSyncLock) {
             JSONArray subjectArray = mNoteJSON.optJSONArray("subject");
             if (subjectArray != null) {
@@ -239,7 +225,7 @@ public class Note extends Syncable {
         return "";
     }
 
-    private String getCommentSubjectNoticon() {
+    public String getCommentSubjectNoticon() {
         JSONArray subjectRanges = queryJSON("subject[0].ranges", new JSONArray());
         if (subjectRanges != null) {
             for (int i=0; i < subjectRanges.length(); i++) {
@@ -282,6 +268,13 @@ public class Note extends Syncable {
         }
     }
 
+    public static class TimeStampComparator implements Comparator<Note> {
+        @Override
+        public int compare(Note a, Note b) {
+            return b.getTimestampString().compareTo(a.getTimestampString());
+        }
+    }
+
     /**
      * The inverse of isRead
      */
@@ -293,18 +286,11 @@ public class Note extends Syncable {
         return queryJSON("read", 0) == 1;
     }
 
-    public void markAsRead() {
+    public void setRead(){
         try {
-            synchronized (mSyncLock) {
-                mNoteJSON.put("read", 1);
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, "Unable to update note read property", e);
-            return;
-        }
-
-        if (getBucket() != null) {
-            save();
+            mNoteJSON.putOpt("read", 1);
+        } catch (JSONException e){
+            AppLog.e(AppLog.T.NOTIFS, "Failed to set 'read' property", e);
         }
     }
 
@@ -312,7 +298,11 @@ public class Note extends Syncable {
      * Get the timestamp provided by the API for the note
      */
     public long getTimestamp() {
-        return DateTimeUtils.timestampFromIso8601(queryJSON("timestamp", ""));
+        return DateTimeUtils.timestampFromIso8601(getTimestampString());
+    }
+
+    public String getTimestampString() {
+        return queryJSON("timestamp", "");
     }
 
     public JSONArray getBody() {
@@ -326,7 +316,7 @@ public class Note extends Syncable {
     }
 
     // returns character code for notification font
-    private String getNoticonCharacter() {
+    public String getNoticonCharacter() {
         return queryJSON("noticon", "");
     }
 
@@ -491,10 +481,6 @@ public class Note extends Syncable {
         return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
     }
 
-    private JSONObject getJSON() {
-        return mNoteJSON;
-    }
-
     public String getUrl() {
         return queryJSON("url", "");
     }
@@ -537,119 +523,48 @@ public class Note extends Syncable {
         return new Reply(String.format(Locale.US, "%s/replies/new", restPath), content);
     }
 
-    /**
-     * Simperium Schema
-     */
-    public static class Schema extends BucketSchema<Note> {
+    public static synchronized Note buildFromBase64EncodedData(String noteId, String base64FullNoteData) {
+        Note note = null;
 
-        static public final String NAME = "note20";
-        static public final String TIMESTAMP_INDEX = "timestamp";
-        static public final String SUBJECT_INDEX = "subject";
-        static public final String SNIPPET_INDEX = "snippet";
-        static public final String UNREAD_INDEX = "unread";
-        static public final String NOTICON_INDEX = "noticon";
-        static public final String ICON_URL_INDEX = "icon";
-        static public final String IS_UNAPPROVED_INDEX = "unapproved";
-        static public final String COMMENT_SUBJECT_NOTICON = "comment_subject_noticon";
-        static public final String LOCAL_STATUS = "local_status";
-        static public final String TYPE_INDEX = "type";
+        if (base64FullNoteData == null) return null;
 
-        private static final Indexer<Note> sNoteIndexer = new Indexer<Note>() {
+        byte[] b64DecodedPayload = Base64.decode(base64FullNoteData, Base64.DEFAULT);
 
-            @Override
-            public List<Index> index(Note note) {
-                List<Index> indexes = new ArrayList<>();
-                try {
-                    indexes.add(new Index(TIMESTAMP_INDEX, note.getTimestamp()));
-                } catch (NumberFormatException e) {
-                    // note will not have an indexed timestamp so it will
-                    // show up at the end of a query sorting by timestamp
-                    android.util.Log.e("WordPress", "Failed to index timestamp", e);
-                }
-
-                indexes.add(new Index(SUBJECT_INDEX, Html.toHtml(note.getFormattedSubject())));
-                indexes.add(new Index(SNIPPET_INDEX, note.getCommentSubject()));
-                indexes.add(new Index(UNREAD_INDEX, note.isUnread()));
-                indexes.add(new Index(NOTICON_INDEX, note.getNoticonCharacter()));
-                indexes.add(new Index(ICON_URL_INDEX, note.getIconURL()));
-                indexes.add(new Index(IS_UNAPPROVED_INDEX, note.getCommentStatus() == CommentStatus.UNAPPROVED));
-                indexes.add(new Index(COMMENT_SUBJECT_NOTICON, note.getCommentSubjectNoticon()));
-                indexes.add(new Index(LOCAL_STATUS, note.getLocalStatus()));
-                indexes.add(new Index(TYPE_INDEX, note.getType()));
-
-                return indexes;
-            }
-
-        };
-
-        public Schema() {
-            addIndex(sNoteIndexer);
+        // Decompress the payload
+        Inflater decompresser = new Inflater();
+        decompresser.setInput(b64DecodedPayload, 0, b64DecodedPayload.length);
+        byte[] result = new byte[4096]; //max length an Android PN payload can have
+        int resultLength = 0;
+        try {
+            resultLength = decompresser.inflate(result);
+            decompresser.end();
+        } catch (DataFormatException e) {
+            AppLog.e(AppLog.T.NOTIFS, "Can't decompress the PN Payload. It could be > 4K", e);
         }
 
-        @Override
-        public String getRemoteName() {
-            return NAME;
+        String out = null;
+        try {
+            out = new String(result, 0, resultLength, "UTF8");
+        } catch (UnsupportedEncodingException e) {
+            AppLog.e(AppLog.T.NOTIFS, "Notification data contains non UTF8 characters.", e);
         }
 
-        @Override
-        public Note build(String key, JSONObject properties) {
-            return new Note(key, properties);
-        }
-
-        public Note buildFromBase64EncodedData(String noteId, String base64FullNoteData){
-            Note note = null;
-
-            if (base64FullNoteData == null) return null;
-
-            byte[] b64DecodedPayload = Base64.decode(base64FullNoteData, Base64.DEFAULT);
-
-            // Decompress the payload
-            Inflater decompresser = new Inflater();
-            decompresser.setInput(b64DecodedPayload, 0, b64DecodedPayload.length);
-            byte[] result = new byte[4096]; //max length an Android PN payload can have
-            int resultLength = 0;
+        if (out != null) {
             try {
-                resultLength = decompresser.inflate(result);
-                decompresser.end();
-            } catch (DataFormatException e) {
-                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
-            }
-
-
-            String out = null;
-            try {
-                out = new String(result, 0, resultLength, "UTF-8");
-            }
-            catch(UnsupportedEncodingException e) {
-                AppLog.e(AppLog.T.NOTIFS, e.getMessage());
-            }
-
-            if (out != null) {
-                try {
-                    JSONObject jsonObject = new JSONObject(out);
-                    if (jsonObject.has("notes")) {
-                        JSONArray jsonArray = jsonObject.getJSONArray("notes");
-                        if (jsonArray != null && jsonArray.length() == 1) {
-                            jsonObject = jsonArray.getJSONObject(0);
-                        }
+                JSONObject jsonObject = new JSONObject(out);
+                if (jsonObject.has("notes")) {
+                    JSONArray jsonArray = jsonObject.getJSONArray("notes");
+                    if (jsonArray != null && jsonArray.length() == 1) {
+                        jsonObject = jsonArray.getJSONObject(0);
                     }
-                    note = build(noteId, jsonObject);
-
-                } catch (JSONException e) {
-                    AppLog.e(AppLog.T.NOTIFS, e.getMessage());
                 }
+                note = new Note(noteId, jsonObject);
+
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.NOTIFS, "Can't parse the Note JSON received in the PN", e);
             }
-
-            return note;
         }
 
-        public void update(Note note, JSONObject properties) {
-            note.updateJSON(properties);
-        }
-
-        public static JSONObject getJSON(Note note) {
-            return note.getJSON();
-        }
-
+        return note;
     }
 }

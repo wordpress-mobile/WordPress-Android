@@ -49,8 +49,8 @@ import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -653,9 +653,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     public void attemptLoginWithMagicLink() {
         saveUsernameAndTokenToAccount();
-
-        SimperiumUtils.configureSimperium(WordPress.getContext(), mToken);
-
         configureAccountAfterSuccessfulSignIn();
     }
 
@@ -700,6 +697,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     EnumSet.of(UpdateTask.TAGS));
 
             if (isWPComLogin()) {
+
+                NotificationsUpdateService.startService(getActivity().getApplicationContext());
+
                 //Update previous stats widgets
                 StatsWidgetProvider.updateWidgetsOnLogin(getActivity().getApplicationContext());
 

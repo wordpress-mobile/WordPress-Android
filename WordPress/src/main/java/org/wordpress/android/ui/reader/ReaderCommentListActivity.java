@@ -45,7 +45,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -55,6 +54,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.List;
+import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
@@ -147,9 +147,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.getAutoSaveTextHelper().setUniqueId(
-                String.format(LanguageUtils.getCurrentDeviceLanguage(this),
-                        "%s%d%d",
+        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%s%d%d",
                         AccountHelper.getCurrentUsernameForBlog(null), mPostId, mBlogId));
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
 
@@ -173,6 +171,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
+
+        AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
     }
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
@@ -450,6 +450,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                             if (ReaderCommentActions.performLikeAction(comment, true) &&
                                     getCommentAdapter().refreshComment(mCommentId)) {
                                 getCommentAdapter().setAnimateLikeCommentId(mCommentId);
+
+                                AnalyticsUtils.trackWithReaderPostDetails(
+                                        AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED, mPost);
                             } else {
                                 ToastUtils.showToast(ReaderCommentListActivity.this,
                                         R.string.reader_toast_err_generic);

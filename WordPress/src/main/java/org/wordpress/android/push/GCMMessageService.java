@@ -18,7 +18,6 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.simperium.client.BucketObjectMissingException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.R;
@@ -26,6 +25,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
@@ -34,11 +34,12 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -65,6 +66,7 @@ public class GCMMessageService extends GcmListenerService {
     public static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
     public static final int GROUP_NOTIFICATION_ID = 30000;
     public static final int ACTIONS_RESULT_NOTIFICATION_ID = 40000;
+    public static final int ACTIONS_PROGRESS_NOTIFICATION_ID = 50000;
     private static final int AUTH_PUSH_REQUEST_CODE_APPROVE = 0;
     private static final int AUTH_PUSH_REQUEST_CODE_IGNORE = 1;
     public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
@@ -74,7 +76,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_ARG_TYPE = "type";
     private static final String PUSH_ARG_TITLE = "title";
     private static final String PUSH_ARG_MSG = "msg";
-    private static final String PUSH_ARG_NOTE_ID = "note_id";
+    public static final String PUSH_ARG_NOTE_ID = "note_id";
     public static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
 
     private static final String PUSH_TYPE_COMMENT = "c";
@@ -159,6 +161,13 @@ public class GCMMessageService extends GcmListenerService {
         }
     }
 
+    public static synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context){
+        if (sNotificationHelpers != null && sActiveNotificationsMap.size() > 0) {
+            Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
+            sNotificationHelpers.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
+        }
+    }
+
     public static synchronized Bundle getCurrentNoteBundleForNoteId(String noteId){
         if (sActiveNotificationsMap.size() > 0) {
             //get the corresponding bundle for this noteId
@@ -174,7 +183,14 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     public static synchronized void clearNotifications() {
+        Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
+
         sActiveNotificationsMap.clear();
+
+        //reinsert 2fa bundle if it was present
+        if (authPNBundle != null) {
+            sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+        }
     }
 
     public static synchronized int getNotificationsCount() {
@@ -222,12 +238,28 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
         for (Integer pushId : sActiveNotificationsMap.keySet()) {
             notificationManager.cancel(pushId);
         }
         notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
 
+        //reinsert 2fa bundle if it was present
+        if (authPNBundle != null) {
+            sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+        }
+
         clearNotifications();
+    }
+
+    public static synchronized void remove2FANotification(Context context) {
+        if (context == null || !hasNotifications()) {
+            return;
+        }
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.cancel(AUTH_PUSH_NOTIFICATION_ID);
+        sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
     }
 
     // NoteID is the ID if the note in WordPress
@@ -276,6 +308,10 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private boolean canAddActionsToNotifications() {
+        return (!isDeviceLocked() && !isWPPinLockEnabled());
+    }
+
+    private boolean isWPPinLockEnabled() {
         AppLockManager appLockManager = AppLockManager.getInstance();
         // Make sure PasscodeLock isn't already in place
         if (!appLockManager.isAppLockFeatureEnabled()) {
@@ -284,17 +320,26 @@ public class GCMMessageService extends GcmListenerService {
 
         // Make sure the locker was correctly enabled, and it's active
         if (appLockManager.isAppLockFeatureEnabled() && appLockManager.getAppLock().isPasswordLocked()) {
-            return Boolean.FALSE;
+            return Boolean.TRUE;
         }
-        return Boolean.TRUE;
+        return Boolean.FALSE;
     }
 
+    private boolean isDeviceLocked() {
+        return DeviceUtils.getInstance().isDeviceLocked(this);
+    }
+
+
+    private static void addAuthPushNotificationToNotificationMap(Bundle data) {
+        sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
+    }
 
     private class NotificationHelper {
 
         private void handleDefaultPush(Context context, @NonNull Bundle data) {
-            // Ensure Simperium is running so that notes sync
-            SimperiumUtils.configureSimperium(context, AccountHelper.getDefaultAccount().getAccessToken());
+            // if a notification is received while the app has not yet been launched after last power on,
+            // the screenlockwatchservice won't be running. Let's start it now.
+            startService(new Intent(context, NotificationsScreenLockWatchService.class));
 
             long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
             String pushUserId = data.getString(PUSH_ARG_USER);
@@ -308,6 +353,7 @@ public class GCMMessageService extends GcmListenerService {
 
             // Check for wpcom auth push, if so we will process this push differently
             if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+                addAuthPushNotificationToNotificationMap(data);
                 handlePushAuth(context, data);
                 return;
             }
@@ -317,51 +363,30 @@ public class GCMMessageService extends GcmListenerService {
                 return;
             }
 
-            buildAndShowNotificationFromNoteData(context, data);
-
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+            buildAndShowNotificationFromNoteData(context, data, false);
         }
 
-        private void trySaveNoteIfNotAlreadyInBucket(Bundle data) {
-            if (SimperiumUtils.getNotesBucket() != null) {
-                if (data == null) {
-                    AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
-                    return;
-                }
 
-                String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
-                try {
-                    SimperiumUtils.getNotesBucket().get(noteId);
-                    // all good if we got here
-                } catch (BucketObjectMissingException e) {
-                    AppLog.e(T.NOTIFS, e);
-                    SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-
-                    if (data.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-                        //if note doesn't exist, try taking it from the PN payload, build it and save it
-                        // Simperium will take care of syncing local and server versions up at a later point
-                        String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
-                        Note note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
-                        SimperiumUtils.saveNote(note);
-                    }
-                }
-            }
-        }
-
-        private void buildAndShowNotificationFromNoteData(Context context, Bundle data) {
+        private void buildAndShowNotificationFromNoteData(Context context, Bundle data, boolean dontPlaySound) {
 
             if (data == null) {
                 AppLog.e(T.NOTIFS, "Push notification received without a valid Bundle!");
                 return;
             }
 
-            if (TextUtils.isEmpty(data.getString(PUSH_ARG_NOTE_ID, ""))) {
+            final String wpcomNoteID = data.getString(PUSH_ARG_NOTE_ID, "");
+            if (TextUtils.isEmpty(wpcomNoteID)) {
                 // At this point 'note_id' is always available in the notification bundle.
                 AppLog.e(T.NOTIFS, "Push notification received without a valid note_id in in payload!");
                 return;
             }
 
-            trySaveNoteIfNotAlreadyInBucket(data);
+            // Try to build the note object from the PN payload, and save it to the DB.
+            NotificationsUtils.buildNoteObjectFromBundleAndSaveIt(data);
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
+            // Always do this, since a note can be updated on the server after a PN is sent
+            NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID,
+                    null, null);
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
@@ -370,21 +395,20 @@ public class GCMMessageService extends GcmListenerService {
                 title = getString(R.string.app_name);
             }
             String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
-            String wpcomNoteID = data.getString(PUSH_ARG_NOTE_ID, "");
 
-            /*
-             * if this has the same note_id as the previous notification, and the previous notification
-             * was received within the last second, then skip showing it - this handles duplicate
-             * notifications being shown due to the device being registered multiple times with different tokens.
-             * (still investigating how this could happen - 21-Oct-13)
-             *
-             * this also handles the (rare) case where the user receives rapid-fire sub-second like notifications
-             * due to sudden popularity (post gets added to FP and is liked by many people all at once, etc.),
-             * which we also want to avoid since it would drain the battery and annoy the user
-             *
-             * NOTE: different comments on the same post will have a different note_id, but different likes
-             * on the same post will have the same note_id, so don't assume that the note_id is unique
-             */
+        /*
+         * if this has the same note_id as the previous notification, and the previous notification
+         * was received within the last second, then skip showing it - this handles duplicate
+         * notifications being shown due to the device being registered multiple times with different tokens.
+         * (still investigating how this could happen - 21-Oct-13)
+         *
+         * this also handles the (rare) case where the user receives rapid-fire sub-second like notifications
+         * due to sudden popularity (post gets added to FP and is liked by many people all at once, etc.),
+         * which we also want to avoid since it would drain the battery and annoy the user
+         *
+         * NOTE: different comments on the same post will have a different note_id, but different likes
+         * on the same post will have the same note_id, so don't assume that the note_id is unique
+         */
             long thisTime = System.currentTimeMillis();
             if (AppPrefs.getLastPushNotificationWpcomNoteId().equals(wpcomNoteID)) {
                 long seconds = TimeUnit.MILLISECONDS.toSeconds(thisTime - AppPrefs.getLastPushNotificationTime());
@@ -432,12 +456,14 @@ public class GCMMessageService extends GcmListenerService {
                 AnalyticsTracker.flush();
             }
 
+
             showGroupNotificationForActiveNotificationsMap(context, pushId, wpcomNoteID,
-                    noteType, data.getString("icon"), title, message);
+                    noteType, data.getString("icon"), title, message, dontPlaySound);
         }
 
         private void showGroupNotificationForActiveNotificationsMap(Context context, int pushId, String wpcomNoteID, String noteType,
-                                                                    String largeIconUri, String title, String message) {
+                                                                    String largeIconUri, String title, String message,
+                                                                    boolean dontPlaySound) {
 
             // Build the new notification, add group to support wearable stacking
             NotificationCompat.Builder builder = getNotificationBuilder(context, title, message);
@@ -447,10 +473,10 @@ public class GCMMessageService extends GcmListenerService {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
-            showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId);
+            showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId, dontPlaySound);
 
             // Also add a group summary notification, which is required for non-wearable devices
-            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message);
+            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message, dontPlaySound);
         }
 
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
@@ -461,34 +487,28 @@ public class GCMMessageService extends GcmListenerService {
             // Add some actions if this is a comment notification
             boolean areActionsSet = false;
 
-            if (SimperiumUtils.getNotesBucket() != null) {
-                try {
-                    Note note = SimperiumUtils.getNotesBucket().get(noteId);
-                    if (note != null) {
-                        //if note can be replied to, we'll always add this action first
-                        if (note.canReply()) {
-                            addCommentReplyActionForCommentNotification(context, builder, noteId);
-                        }
-
-                        // if the comment is lacking approval, offer moderation actions
-                        if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
-                            if (note.canModerate()) {
-                                addCommentApproveActionForCommentNotification(context, builder, noteId);
-                            }
-                        } else {
-                            //else offer REPLY / LIKE actions
-                            //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
-                            Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
-                            boolean isJetPackSite = blog != null && blog.isJetpackPowered();
-                            if (note.canLike() && !isJetPackSite) {
-                                addCommentLikeActionForCommentNotification(context, builder, noteId);
-                            }
-                        }
-                    }
-                    areActionsSet = true;
-                } catch (BucketObjectMissingException e) {
-                    AppLog.e(T.NOTIFS, e);
+            Note note = NotificationsTable.getNoteById(noteId);
+            if (note != null) {
+                //if note can be replied to, we'll always add this action first
+                if (note.canReply()) {
+                    addCommentReplyActionForCommentNotification(context, builder, noteId);
                 }
+
+                // if the comment is lacking approval, offer moderation actions
+                if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
+                    if (note.canModerate()) {
+                        addCommentApproveActionForCommentNotification(context, builder, noteId);
+                    }
+                } else {
+                    //else offer REPLY / LIKE actions
+                    //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
+                    Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
+                    boolean isJetPackSite = blog != null && blog.isJetpackPowered();
+                    if (note.canLike() && !isJetPackSite) {
+                        addCommentLikeActionForCommentNotification(context, builder, noteId);
+                    }
+                }
+                areActionsSet = true;
             }
 
             // if we could not set the actions, set the default one REPLY as it's then only safe bet
@@ -648,13 +668,16 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void showGroupNotificationForBuilder(Context context, NotificationCompat.Builder builder,
-                                                     String wpcomNoteID, String message) {
+                                                     String wpcomNoteID, String message, boolean dontPlaySound) {
 
             if (builder == null) {
                 return;
             }
 
+            //first remove 2fa push from the map, then reinsert it, so it's not shown in the inbox style group notif
+            Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
             if (sActiveNotificationsMap.size() > 1) {
+
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 int noteCtr = 1;
                 for (Bundle pushBundle : sActiveNotificationsMap.values()) {
@@ -695,16 +718,23 @@ public class GCMMessageService extends GcmListenerService {
                         .setContentText(subject)
                         .setStyle(inboxStyle);
 
-                showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID);
+                showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, dontPlaySound);
 
             } else {
                 // Set the individual notification we've already built as the group summary
                 builder.setGroupSummary(true);
-                showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID);
+                showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, dontPlaySound);
             }
+            //reinsert 2fa bundle if it was present
+            if (authPNBundle != null) {
+                sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+            }
+
         }
 
-        private void showIndividualNotificationForBuilder(Context context, NotificationCompat.Builder builder, String noteType, String wpcomNoteID, int pushId) {
+        private void showIndividualNotificationForBuilder(Context context, NotificationCompat.Builder builder,
+                                                          String noteType, String wpcomNoteID, int pushId,
+                                                          boolean dontPlaySound) {
             if (builder == null) {
                 return;
             }
@@ -712,11 +742,13 @@ public class GCMMessageService extends GcmListenerService {
             if (noteType.equals(PUSH_TYPE_COMMENT)) {
                 addActionsForCommentNotification(context, builder, wpcomNoteID);
             }
-            showNotificationForBuilder(builder, context, wpcomNoteID, pushId);
+
+            showNotificationForBuilder(builder, context, wpcomNoteID, pushId, dontPlaySound);
         }
 
         // Displays a notification to the user
-        private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context, String wpcomNoteID, int pushId) {
+        private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context,
+                                                String wpcomNoteID, int pushId, boolean dontPlaySound) {
             if (builder == null || context == null) {
                 return;
             }
@@ -737,18 +769,20 @@ public class GCMMessageService extends GcmListenerService {
             String notificationSound = prefs.getString("wp_pref_custom_notification_sound", null); //"" if None is selected
 
 
-            // use default sound if the legacy sound preference was ON but the custom sound was not selected (null)
-            if (shouldPlaySound && notificationSound == null) {
-                builder.setSound(Uri.parse("content://settings/system/notification_sound"));
-            } else if (!TextUtils.isEmpty(notificationSound)) {
-                builder.setSound(Uri.parse(notificationSound));
-            }
+            if (!dontPlaySound) {
+                // use default sound if the legacy sound preference was ON but the custom sound was not selected (null)
+                if (shouldPlaySound && notificationSound == null) {
+                    builder.setSound(Uri.parse("content://settings/system/notification_sound"));
+                } else if (!TextUtils.isEmpty(notificationSound)) {
+                    builder.setSound(Uri.parse(notificationSound));
+                }
 
-            if (shouldVibrate) {
-                builder.setVibrate(new long[]{500, 500, 500});
-            }
-            if (shouldBlinkLight) {
-                builder.setLights(0xff0000ff, 1000, 5000);
+                if (shouldVibrate) {
+                    builder.setVibrate(new long[]{500, 500, 500});
+                }
+                if (shouldBlinkLight) {
+                    builder.setLights(0xff0000ff, 1000, 5000);
+                }
             }
 
             // Call broadcast receiver when notification is dismissed
@@ -769,6 +803,26 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void rebuildAndUpdateNotificationsOnSystemBar(Context context, Bundle data) {
+
+            String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
+
+            // Check for wpcom auth push, if so we will process this push differently
+            // and we'll remove the auth special notif out of the map while we re-build the remaining notifs
+            Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);;
+            if (authPNBundle != null) {
+                handlePushAuth(context, authPNBundle);
+                if (sActiveNotificationsMap.size() > 0 && noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+                    //get the data for the next notification in map for re-build
+                    //because otherwise we would be keeping the PUSH_AUTH type note in `data`
+                    data = sActiveNotificationsMap.values().iterator().next();
+                } else if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+                    //only note is the 2fa note, just reinsert it in the map and return
+                    sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+                    return;
+                }
+            }
+
+
             Bitmap largeIconBitmap = null;
             // here notify the existing group notification by eliminating the line that is now gone
             String title = getNotificationTitleOrAppNameFromBundle(data);
@@ -794,10 +848,10 @@ public class GCMMessageService extends GcmListenerService {
 
                     builder = getNotificationBuilder(context, title, message);
 
-                    String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
+                    noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
                     if (!sActiveNotificationsMap.isEmpty()) {
-                        showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0));
+                        showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0), true);
                     }
                 }
             }
@@ -818,7 +872,12 @@ public class GCMMessageService extends GcmListenerService {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
-            showGroupNotificationForBuilder(context, builder,  wpcomNoteID, message);
+            showGroupNotificationForBuilder(context, builder,  wpcomNoteID, message, true);
+
+            //reinsert 2fa bundle if it was present
+            if (authPNBundle != null) {
+                sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+            }
         }
 
         private String getNotificationTitleOrAppNameFromBundle(Bundle data){
@@ -842,7 +901,7 @@ public class GCMMessageService extends GcmListenerService {
                 rebuildAndUpdateNotificationsOnSystemBar(context, data);
             }
 
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(sActiveNotificationsMap.size() > 0));
         }
 
         // Show a notification for two-step auth users who log in from a web browser
@@ -909,6 +968,13 @@ public class GCMMessageService extends GcmListenerService {
                         authIgnorePendingIntent);
             }
 
+            // Call broadcast receiver when notification is dismissed
+            Intent notificationDeletedIntent = new Intent(context, NotificationDismissBroadcastReceiver.class);
+            notificationDeletedIntent.putExtra("notificationId", AUTH_PUSH_NOTIFICATION_ID);
+            notificationDeletedIntent.setAction(String.valueOf(AUTH_PUSH_NOTIFICATION_ID));
+            PendingIntent pendingDeleteIntent =
+                    PendingIntent.getBroadcast(context, AUTH_PUSH_NOTIFICATION_ID, notificationDeletedIntent, 0);
+            builder.setDeleteIntent(pendingDeleteIntent);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());

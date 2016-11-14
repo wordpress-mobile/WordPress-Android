@@ -256,12 +256,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_accessed";
             case READER_ARTICLE_COMMENTED_ON:
                 return "reader_article_commented_on";
+            case READER_ARTICLE_COMMENTS_OPENED:
+                return "reader_article_comments_opened";
+            case READER_ARTICLE_COMMENT_LIKED:
+                return "reader_article_comment_liked";
+            case READER_ARTICLE_COMMENT_UNLIKED:
+                return "reader_article_comment_unliked";
             case READER_ARTICLE_LIKED:
                 return "reader_article_liked";
             case READER_ARTICLE_OPENED:
                 return "reader_article_opened";
             case READER_ARTICLE_UNLIKED:
                 return "reader_article_unliked";
+            case READER_ARTICLE_RENDERED :
+                return "reader_article_rendered";
             case READER_BLOG_BLOCKED:
                 return "reader_blog_blocked";
             case READER_BLOG_FOLLOWED:
@@ -296,8 +304,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_searchcard_clicked";
             case READER_TAG_UNFOLLOWED:
                 return "reader_reader_tag_unfollowed";
-            case READER_RELATED_POST_CLICKED:
-                return "reader_related_post_clicked";
+            case READER_GLOBAL_RELATED_POST_CLICKED:
+                return "reader_related_post_from_other_site_clicked";
+            case READER_LOCAL_RELATED_POST_CLICKED:
+                return "reader_related_post_from_same_site_clicked";
             case READER_VIEWPOST_INTERCEPTED:
                 return "reader_viewpost_intercepted";
             case READER_BLOG_POST_INTERCEPTED:
@@ -308,6 +318,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_wpcom_blog_post_intercepted";
             case READER_SIGN_IN_INITIATED:
                 return "reader_sign_in_initiated";
+            case READER_WPCOM_SIGN_IN_NEEDED:
+                return "reader_wpcom_sign_in_needed";
+            case READER_USER_UNAUTHORIZED:
+                return "reader_user_unauthorized";
             case EDITOR_CREATED_POST:
                 return "editor_post_created";
             case EDITOR_SAVED_DRAFT:
@@ -460,8 +474,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "push_notification_alert_tapped";
             case SUPPORT_OPENED_HELPSHIFT_SCREEN:
                 return "support_helpshift_screen_opened";
-            case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
-                return "support_reply_to_support_message_sent";
+            case SUPPORT_USER_ACCEPTED_THE_SOLUTION:
+                return "support_user_accepted_the_solution";
+            case SUPPORT_USER_REJECTED_THE_SOLUTION:
+                return "support_user_rejected_the_solution";
+            case SUPPORT_USER_SENT_SCREENSHOT:
+                return "support_user_sent_screenshot";
+            case SUPPORT_USER_REVIEWED_THE_APP:
+                return "support_user_reviewed_the_app";
+            case SUPPORT_USER_REPLIED_TO_HELPSHIFT:
+                return "support_user_replied_to_helpshift";
             case LOGIN_MAGIC_LINK_EXITED:
                 return "login_magic_link_exited";
             case LOGIN_MAGIC_LINK_FAILED:

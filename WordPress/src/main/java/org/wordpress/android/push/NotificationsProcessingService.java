@@ -31,8 +31,8 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
-import java.util.Map;
 
+import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.AUTH_PUSH_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
@@ -46,6 +46,7 @@ import static org.wordpress.android.ui.notifications.NotificationsListFragment.N
  * - like
  * - reply-to-comment
  * - approve
+ * - 2fa approve & ignore
  */
 
 public class NotificationsProcessingService extends Service {
@@ -160,6 +161,8 @@ public class NotificationsProcessingService extends Service {
                     //dismiss notifs
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
+                    GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
+
                     AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
                     return;
                 }
@@ -215,6 +218,13 @@ public class NotificationsProcessingService extends Service {
 
         }
 
+        private void getNoteFromBundleIfExists() {
+            if (mIntent.hasExtra(ARG_NOTE_BUNDLE)) {
+                Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
+                mNote = NotificationsUtils.buildNoteObjectFromBundle(payload);
+            }
+        }
+
         private void getDataFromIntent() {
             // get all needed data from intent
             mNoteId = mIntent.getStringExtra(ARG_NOTE_ID);
@@ -235,14 +245,59 @@ public class NotificationsProcessingService extends Service {
                     obtainReplyTextFromRemoteInputBundle(remoteInput);
                 }
             }
-        }
 
-        private void getNoteFromBundleIfExists() {
-            if (mIntent.hasExtra(ARG_NOTE_BUNDLE)) {
-                Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
-                if (payload.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-                    String base64FullData = payload.getString(PUSH_ARG_NOTE_FULL_DATA);
-                    mNote = new Note.Schema().buildFromBase64EncodedData(mNoteId, base64FullData);
+
+            if (mActionType != null) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActionType.equals(ARG_ACTION_REPLY)) {
+                    //we don't need showing the infinite progress bar in case of REPLY on Android N,
+                    //because we've got inline-reply there with its own spinner to show progress
+                    // no op
+                } else {
+                    showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
+                }
+
+                //we probably have the note in the PN payload and such it's passed in the intent extras
+                // bundle. If we have it, no need to go fetch it through REST API.
+                if (mIntent.hasExtra(ARG_NOTE_BUNDLE)) {
+                    Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
+                    if (payload.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
+                        String base64FullData = payload.getString(PUSH_ARG_NOTE_FULL_DATA);
+                        mNote = Note.buildFromBase64EncodedData(mNoteId, base64FullData);
+                    }
+                }
+
+                //if we still don't have a Note, go get it from the REST API
+                if (mNote == null) {
+                    RestRequest.Listener listener =
+                            new RestRequest.Listener() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    if (response == null) {
+                                        //Not sure this could ever happen, but make sure we're catching all response types
+                                        AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
+                                    }
+                                    if (response != null && !response.optBoolean("success")) {
+                                        //build the Note object here
+                                        buildNoteFromJSONObject(response);
+                                        performRequestedAction();
+                                    }
+                                }
+                            };
+
+                    RestRequest.ErrorListener errorListener =
+                            new RestRequest.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    requestFailed(mActionType);
+                                }
+                            };
+
+                    getNoteFromNoteId(mNoteId, listener, errorListener);
+                } else {
+                    //we have a Note! just go ahead and perform the requested action
+                    performRequestedAction();
+
                 }
             }
         }
@@ -281,7 +336,7 @@ public class NotificationsProcessingService extends Service {
                         jsonObject = jsonArray.getJSONObject(0);
                     }
                 }
-                mNote = new Note.Schema().build(mNoteId, jsonObject);
+                mNote = new Note(mNoteId, jsonObject);
 
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.NOTIFS, e.getMessage());
@@ -337,14 +392,15 @@ public class NotificationsProcessingService extends Service {
             //dismiss any other pending result notification
             dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
             //update notification indicating the operation succeeded
-            showFinalMessageToUser(successMessage, GROUP_NOTIFICATION_ID);
+            showFinalMessageToUser(successMessage, ACTIONS_PROGRESS_NOTIFICATION_ID);
+            //remove the original notification from the system bar
+            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(mContext, mNoteId);
 
             //after 3 seconds, dismiss the notification that indicated success
             Handler handler = new Handler(getMainLooper());
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    //remove the original notification from the system bar
-                    GCMMessageService.removeNotificationWithNoteIdFromSystemBar(mContext, mNoteId);
+                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
                 }}, 3000); // show the success message for 3 seconds, then dismiss
 
             stopSelf(mTaskId);
@@ -368,6 +424,7 @@ public class NotificationsProcessingService extends Service {
                 errorMessage = getString(R.string.error_generic);
             }
             resetOriginalNotification();
+            dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
             showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
 
             //after 3 seconds, dismiss the error message notification
@@ -403,7 +460,7 @@ public class NotificationsProcessingService extends Service {
         }
 
         private void showIntermediateMessageToUser(String message) {
-            showMessageToUser(message, true, GROUP_NOTIFICATION_ID);
+            showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID);
         }
 
         private void showFinalMessageToUser(String message, int pushId) {
@@ -550,7 +607,8 @@ public class NotificationsProcessingService extends Service {
                     //dismiss notifs
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID); //intermediate progress notif
+                    GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
 
                     stopSelf(mTaskId);
                 }
@@ -561,11 +619,11 @@ public class NotificationsProcessingService extends Service {
                     //dismiss notifs
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
+                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID); //intermediate progress notif
+                    GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
                     requestFailedWithMessage(getString(R.string.push_auth_expired), false);
                 }
             });
         }
-
     }
 }

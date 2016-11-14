@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SimpleTimeZone;
@@ -47,7 +48,7 @@ class XMLRPCSerializer {
     static final String TYPE_ARRAY = "array";
     static final String TYPE_STRUCT = "struct";
 
-    static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+    static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss", Locale.US);
     static Calendar cal = Calendar.getInstance(new SimpleTimeZone(0, "GMT"));
 
     private static final XmlSerializer serializeTester;
@@ -90,7 +91,7 @@ class XMLRPCSerializer {
         } else
         if (object instanceof Date || object instanceof Calendar) {
             Date date = (Date) object;
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss", Locale.US);
             dateFormat.setCalendar(cal);
             String sDate = dateFormat.format(date);
             serializer.startTag(null, TYPE_DATE_TIME_ISO8601).text(sDate).endTag(null, TYPE_DATE_TIME_ISO8601);
