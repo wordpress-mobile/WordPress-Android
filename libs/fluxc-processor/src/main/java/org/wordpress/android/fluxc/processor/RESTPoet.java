@@ -17,7 +17,6 @@ import java.util.Locale;
 import javax.lang.model.element.Modifier;
 
 public class RESTPoet {
-    // TODO: Need to support "/sites/$site/posts/slug:$post_slug"-type endpoints
     private static final String[] JAVA_KEYWORDS = {
             "new", "abstract", "assert", "boolean",
             "break", "byte", "case", "catch", "char", "class", "const",
