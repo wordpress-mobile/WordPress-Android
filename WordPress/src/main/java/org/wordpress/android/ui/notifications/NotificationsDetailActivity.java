@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -54,6 +55,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private static final String DOMAIN_WPCOM = "wordpress.com";
 
     private WPViewPager mViewPager;
+    private NotificationDetailFragmentAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,36 +94,19 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             mViewPager.setPageTransformer(false,
                     new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
             boolean allowNavigateList = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA, false);
-            buildNoteListAdapterAndSetPosition(allowNavigateList, note);
+            mAdapter = buildNoteListAdapterAndSetPosition(allowNavigateList, note);
 
             //set title
-            if (getSupportActionBar() != null) {
-                String title = note.getTitle();
-                if (TextUtils.isEmpty(title)) {
-                    //set a default title if title is not set within the note
-                    switch (note.getType()) {
-                        case NOTE_FOLLOW_TYPE:
-                            title = getString(R.string.follows);
-                            break;
-                        case NOTE_COMMENT_LIKE_TYPE:
-                            title = getString(R.string.comment_likes);
-                            break;
-                        case NOTE_LIKE_TYPE:
-                            title = getString(R.string.like);
-                            break;
-                        case NOTE_COMMENT_TYPE:
-                            title = getString(R.string.comment);
-                            break;
-                    }
-                }
+            setActionBarTitleForNote(note);
 
-                // Force change the Action Bar title for 'new_post' notifications.
-                if (note.isNewPostType()) {
-                    title = getString(R.string.reader_title_post_detail);
+            mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(int position) {
+                    //change the action bar title for the current note
+                    setActionBarTitleForNote(mAdapter.getNoteAtPosition(position));
                 }
+            });
 
-                getSupportActionBar().setTitle(title);
-            }
 
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);
             // mark the note as read if it's unread
@@ -167,7 +152,37 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         finish();
     }
 
-    private void buildNoteListAdapterAndSetPosition(boolean allowNavigateList, Note note) {
+    private void setActionBarTitleForNote(Note note) {
+        if (getSupportActionBar() != null) {
+            String title = note.getTitle();
+            if (TextUtils.isEmpty(title)) {
+                //set a default title if title is not set within the note
+                switch (note.getType()) {
+                    case NOTE_FOLLOW_TYPE:
+                        title = getString(R.string.follows);
+                        break;
+                    case NOTE_COMMENT_LIKE_TYPE:
+                        title = getString(R.string.comment_likes);
+                        break;
+                    case NOTE_LIKE_TYPE:
+                        title = getString(R.string.like);
+                        break;
+                    case NOTE_COMMENT_TYPE:
+                        title = getString(R.string.comment);
+                        break;
+                }
+            }
+
+            // Force change the Action Bar title for 'new_post' notifications.
+            if (note.isNewPostType()) {
+                title = getString(R.string.reader_title_post_detail);
+            }
+
+            getSupportActionBar().setTitle(title);
+        }
+    }
+
+    private NotificationDetailFragmentAdapter buildNoteListAdapterAndSetPosition(boolean allowNavigateList, Note note) {
         NotificationDetailFragmentAdapter adapter;
         ArrayList<Note> notes = NotificationsTable.getLatestNotes();
 
@@ -185,6 +200,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (allowNavigateList) {
             mViewPager.setCurrentItem(findNoteInNoteArray(notes, note));
         }
+
+        return adapter;
     }
 
     private int findNoteInNoteArray(ArrayList<Note> notes, Note noteToSearchFor) {
@@ -316,5 +333,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         public int getCount() {
             return mNoteList.size();
         }
+
+        public Note getNoteAtPosition(int position){
+            return mNoteList.get(position);
+        }
+
     }
 }
