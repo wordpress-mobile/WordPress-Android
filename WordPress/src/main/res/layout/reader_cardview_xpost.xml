@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,6 +11,7 @@
     card_view:cardBackgroundColor="@color/grey_lighten_30"
     card_view:cardCornerRadius="@dimen/cardview_default_radius"
     card_view:cardElevation="0dp"
+    card_view:contentPaddingLeft="@dimen/margin_extra_large"
     tools:targetApi="LOLLIPOP">
 
     <LinearLayout
@@ -59,8 +60,8 @@
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
-                tools:text="text_title"
-                app:wpFontFamily="merriweather" />
+                app:wpFontFamily="merriweather"
+                tools:text="text_title" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_subtitle"
@@ -70,8 +71,8 @@
                 android:maxLines="2"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_small"
-                tools:text="text_subtitle"
-                app:fixWidowWords="true" />
+                app:fixWidowWords="true"
+                tools:text="text_subtitle" />
 
         </LinearLayout>
     </LinearLayout>
