@@ -287,12 +287,6 @@ public class SelfHostedEndpointFinder {
         throw new DiscoveryException(DiscoveryError.NO_SITE_ERROR, xmlrpcUrl);
     }
 
-
-    private String discoverWPRESTEndpoint(String url) {
-        // TODO: See http://v2.wp-api.org/guide/discovery/
-        return url + "/wp-json/wp/v2/";
-    }
-
     /**
      * Regex pattern for matching the RSD link found in most WordPress sites.
      */
@@ -460,6 +454,45 @@ public class SelfHostedEndpointFinder {
                     throw new DiscoveryException(DiscoveryError.XMLRPC_BLOCKED, url);
                 }
             }
+        }
+        return null;
+    }
+
+    private String discoverWPRESTEndpoint(String url) throws DiscoveryException {
+        if (TextUtils.isEmpty(url)) {
+            throw new DiscoveryException(DiscoveryError.INVALID_URL, url);
+        }
+
+        if (WPUrlUtils.isWordPressCom(sanitizeSiteUrl(url, false))) {
+            throw new DiscoveryException(DiscoveryError.WORDPRESS_COM_SITE, url);
+        }
+
+        final String wpApiBaseUrl = discoverWPAPIBaseURL(url);
+
+        if (wpApiBaseUrl != null && !wpApiBaseUrl.isEmpty()) {
+            AppLog.i(AppLog.T.NUX, "Base WP-API URL found - verifying that the wp/v2 namespace is supported");
+            // TODO: Verify wp/v2 namespace support
+        }
+        return null;
+    }
+
+    private String discoverWPAPIBaseURL(String url) throws DiscoveryException {
+        BaseRequestFuture<String> future = BaseRequestFuture.newFuture();
+        WPAPIHeadRequest request = new WPAPIHeadRequest(url, future, future);
+        mBaseWPAPIRestClient.add(request);
+        try {
+            return future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | TimeoutException e) {
+            AppLog.e(T.API, "Couldn't get HEAD response from server.");
+        } catch (ExecutionException e) {
+            // TODO: Add support for HTTP AUTH and self-signed SSL WP-API sites
+//            if (e.getCause() instanceof AuthFailureError) {
+//                throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
+//            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
+//                    && e.getCause().getCause() instanceof SSLHandshakeException) {
+//                // In the event of an SSL error we should stop attempting discovery
+//                throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
+//            }
         }
         return null;
     }
