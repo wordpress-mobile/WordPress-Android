@@ -94,8 +94,13 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             mViewPager = (WPViewPager) findViewById(R.id.viewpager);
             mViewPager.setPageTransformer(false,
                     new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
+
             boolean allowNavigateList = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA, false);
-            mAdapter = buildNoteListAdapterAndSetPosition(allowNavigateList, note);
+            NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
+            if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
+                filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
+            }
+            mAdapter = buildNoteListAdapterAndSetPosition(allowNavigateList, note, filter);
 
             //set title
             setActionBarTitleForNote(note);
@@ -191,13 +196,15 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
     }
 
-    private NotificationDetailFragmentAdapter buildNoteListAdapterAndSetPosition(boolean allowNavigateList, Note note) {
+    private NotificationDetailFragmentAdapter buildNoteListAdapterAndSetPosition(boolean allowNavigateList,
+                                                                                 Note note,
+                                                                                 NotesAdapter.FILTERS filter) {
         NotificationDetailFragmentAdapter adapter;
         ArrayList<Note> notes = NotificationsTable.getLatestNotes();
         ArrayList<Note> filteredNotes = new ArrayList<>();
         if (allowNavigateList) {
             //apply filter to the list so we show the same items that the list show vertically, but horizontally
-            NotesAdapter.buildFilteredNotesList(filteredNotes, notes, NotesAdapter.FILTERS.FILTER_ALL);
+            NotesAdapter.buildFilteredNotesList(filteredNotes, notes, filter);
             adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), filteredNotes);
         } else {
             ArrayList<Note> oneNoteList = new ArrayList<>();
