@@ -266,22 +266,33 @@ public class WPMainActivity extends AppCompatActivity {
     private void launchWithNoteId() {
         if (isFinishing() || getIntent() == null) return;
 
-        GCMMessageService.remove2FANotification(this);
+        if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
+            GCMMessageService.remove2FANotification(this);
 
-        NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(getIntent(),
-                new NotificationsUtils.TwoFactorAuthCallback() {
-            @Override
-            public void onTokenValid(String token, String title, String message) {
-                NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
-            }
+            NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(getIntent(),
+                    new NotificationsUtils.TwoFactorAuthCallback() {
+                @Override
+                public void onTokenValid(String token, String title, String message) {
 
-            @Override
-            public void onTokenInvalid() {
-                // Show a toast if the user took too long to open the notification
-                ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-            }
-        });
+                    //we do this here instead of using the service in the background so we make sure
+                    //the user opens the app by using an activity (and thus unlocks the screen if locked, for security).
+                    String actionType = getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
+                    if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
+                        // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                        NotificationsUtils.sendTwoFactorAuthToken(token);
+                    } else {
+                        NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+                    }
+                }
+
+                @Override
+                public void onTokenInvalid() {
+                    // Show a toast if the user took too long to open the notification
+                    ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+                }
+            });
+        }
 
         // Then hit the server
         NotificationsActions.updateNotesSeenTimestamp();
