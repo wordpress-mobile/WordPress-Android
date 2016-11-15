@@ -11,9 +11,9 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 // Note header, displayed at top of detail view

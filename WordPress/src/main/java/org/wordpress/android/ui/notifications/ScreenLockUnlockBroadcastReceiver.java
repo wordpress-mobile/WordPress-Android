@@ -12,6 +12,9 @@ import org.wordpress.android.push.GCMMessageService;
 public class ScreenLockUnlockBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        GCMMessageService.rebuildAndUpdateNotifsOnSystemBarForRemainingNote(context);
+        final String action = intent.getAction();
+        if (Intent.ACTION_SCREEN_OFF.equals(action) || Intent.ACTION_USER_PRESENT.equals(action)) {
+            GCMMessageService.rebuildAndUpdateNotifsOnSystemBarForRemainingNote(context);
+        }
     }
 }
