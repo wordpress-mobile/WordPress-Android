@@ -35,11 +35,13 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.comments.CommentActionResult;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationFailed;
@@ -54,7 +56,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PackageUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
 
 import java.lang.reflect.Field;
@@ -489,8 +490,8 @@ public class NotificationsUtils {
         Snackbar snackbar = Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener);
 
-        // Deleted notifications in Simperium never come back, so we won't
-        // make the request until the undo bar fades away
+
+
         snackbar.setCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
@@ -498,6 +499,8 @@ public class NotificationsUtils {
                 if (mSnackbarDidUndo) {
                     return;
                 }
+                // Delete the notifications from the local DB as soon as the undo bar fades away.
+                NotificationsTable.deleteNoteById(note.getId());
                 CommentActions.moderateCommentForNote(note, status,
                         new CommentActions.CommentActionListener() {
                             @Override
@@ -521,7 +524,6 @@ public class NotificationsUtils {
     public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final View parentView) {
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             note.setLocalStatus(CommentStatus.toRESTString(newStatus));
-            note.save();
             EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), true));
             CommentActions.moderateCommentForNote(note, newStatus,
                     new CommentActions.CommentActionListener() {
@@ -530,7 +532,6 @@ public class NotificationsUtils {
                             EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), false));
                             if (!result.isSuccess()) {
                                 note.setLocalStatus(null);
-                                note.save();
                                 EventBus.getDefault().postSticky(new NoteModerationFailed());
                             }
                         }
@@ -572,5 +573,34 @@ public class NotificationsUtils {
 
         // Default to assuming notifications are enabled
         return true;
+    }
+
+    public static boolean buildNoteObjectFromBundleAndSaveIt(Bundle data) {
+        Note note = buildNoteObjectFromBundle(data);
+        if (note != null) {
+            return NotificationsTable.saveNote(note);
+        }
+
+        return false;
+    }
+
+    public static Note buildNoteObjectFromBundle(Bundle data) {
+
+        if (data == null) {
+            AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + GCMMessageService.PUSH_ARG_NOTE_ID + "'.");
+            return null;
+        }
+
+        Note note;
+        String noteId = data.getString(GCMMessageService.PUSH_ARG_NOTE_ID, "");
+        String base64FullData = data.getString(GCMMessageService.PUSH_ARG_NOTE_FULL_DATA);
+        note = Note.buildFromBase64EncodedData(noteId, base64FullData);
+        if (note == null) {
+            // At this point we don't have the note :(
+            AppLog.w(T.NOTIFS, "Cannot build the Note object by using info available in the PN payload. Please see " +
+                    "previous log messages for detailed information about the error.");
+        }
+
+        return note;
     }
 }

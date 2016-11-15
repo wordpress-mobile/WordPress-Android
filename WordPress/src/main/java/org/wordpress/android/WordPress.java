@@ -37,6 +37,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
@@ -48,8 +49,8 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
@@ -262,19 +263,11 @@ public class WordPress extends MultiDexApplication {
             // Register for Cloud messaging
             startService(new Intent(this, GCMRegistrationIntentService.class));
         }
-        configureSimperium();
 
-        // Refresh account informations
+        // Refresh account informations and Notifications
         if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
-        }
-    }
-
-    // Configure Simperium and start buckets if we are signed in to WP.com
-    private void configureSimperium() {
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            AppLog.i(T.NOTIFS, "Configuring Simperium");
-            SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
+            NotificationsUpdateService.startService(getContext());
         }
     }
 
@@ -574,8 +567,8 @@ public class WordPress extends MultiDexApplication {
         StatsDatabaseHelper.getDatabase(context).reset();
         StatsWidgetProvider.updateWidgetsOnLogout(context);
 
-        // Reset Simperium buckets (removes local data)
-        SimperiumUtils.resetBucketsAndDeauthorize();
+        // Reset Notifications Data
+        NotificationsTable.reset();
     }
 
     public static String getLoginUrl(Blog blog) {
@@ -848,6 +841,12 @@ public class WordPress extends MultiDexApplication {
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
+                // Refresh account informations and Notifications
+
+                if (AccountHelper.isSignedInWordPressDotCom()) {
+                    NotificationsUpdateService.startService(getContext());
+                }
+
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
 

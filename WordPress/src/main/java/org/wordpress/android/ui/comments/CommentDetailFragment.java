@@ -24,7 +24,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -35,6 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.AccountHelper;
@@ -51,7 +51,6 @@ import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -168,7 +167,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
-                // The note will be set in onResume() because Simperium will be running there
+                // The note will be set in onResume()
                 // See WordPress.deferredInit()
                 mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             } else {
@@ -416,19 +415,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setNoteWithNoteId(String noteId) {
-        if (noteId == null) return;
-
-        if (SimperiumUtils.getNotesBucket() != null) {
-            try {
-                Note note = SimperiumUtils.getNotesBucket().get(noteId);
-                setNote(note);
-                setRemoteBlogId(note.getSiteId());
-            } catch (BucketObjectMissingException e) {
-                AppLog.e(T.NOTIFS, e.getMessage());
-                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-                showErrorToastAndFinish();
-            }
+        if (noteId == null) {
+            showErrorToastAndFinish();
+            return;
         }
+
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+        setNote(note);
+        setRemoteBlogId(note.getSiteId());
     }
 
     private void setReplyText(String replyText) {
@@ -794,7 +792,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (mNote == null) return;
 
-        // Basic moderation support, currently only used when this Fragment is in a CommentDetailActivity
+        // Basic moderation support
         // Uses WP.com REST API and requires a note object
         final CommentStatus oldStatus = mComment.getStatusEnum();
         mComment.setStatus(CommentStatus.toString(newStatus));
