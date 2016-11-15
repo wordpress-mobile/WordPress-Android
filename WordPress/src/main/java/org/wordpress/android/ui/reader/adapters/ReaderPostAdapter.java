@@ -101,6 +101,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_blavatar);
             txtTitle = (TextView) itemView.findViewById(R.id.text_title);
             txtSubtitle = (TextView) itemView.findViewById(R.id.text_subtitle);
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    ReaderPost post = getItem(position);
+                    if (mPostSelectedListener != null && post != null) {
+                        mPostSelectedListener.onPostSelected(post);
+                    }
+                }
+            });
         }
     }
 
@@ -293,15 +304,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         holder.txtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
         holder.txtSubtitle.setText(ReaderXPostUtils.getXPostSubtitleHtml(post));
-
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPostSelectedListener != null) {
-                    mPostSelectedListener.onPostSelected(post);
-                }
-            }
-        });
 
         checkLoadMore(position);
     }
