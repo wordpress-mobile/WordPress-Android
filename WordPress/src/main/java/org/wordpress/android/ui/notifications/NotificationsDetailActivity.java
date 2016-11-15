@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -24,6 +26,7 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.reader.ReaderViewPagerTransformer;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsTimeframe;
@@ -32,7 +35,9 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPViewPager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +52,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         CommentActions.OnNoteCommentActionListener {
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
+
+    private WPViewPager mViewPager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,10 +87,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             properties.put("notification_type", note.getType());
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
 
-            Fragment detailFragment = getDetailFragmentForNote(note);
-            getFragmentManager().beginTransaction()
-                    .add(R.id.notifications_detail_container, detailFragment)
-                    .commitAllowingStateLoss();
+            //set up the viewpager and adapter for lateral navigation
+            mViewPager = (WPViewPager) findViewById(R.id.viewpager);
+            mViewPager.setPageTransformer(false,
+                    new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
+            boolean allowNavigateList = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA, false);
+            buildNoteListAdapterAndSetPosition(allowNavigateList, note);
 
             //set title
             if (getSupportActionBar() != null) {
@@ -157,6 +166,38 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         ToastUtils.showToast(this, R.string.error_notification_open);
         finish();
     }
+
+    private void buildNoteListAdapterAndSetPosition(boolean allowNavigateList, Note note) {
+        NotificationDetailFragmentAdapter adapter;
+        ArrayList<Note> notes = NotificationsTable.getLatestNotes();
+
+        if (allowNavigateList) {
+            adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), notes);
+        } else {
+            ArrayList<Note> oneNoteList = new ArrayList<>();
+            oneNoteList.add(note);
+            adapter = new NotificationDetailFragmentAdapter(getFragmentManager(),
+                    oneNoteList);
+        }
+
+        mViewPager.setAdapter(adapter);
+
+        if (allowNavigateList) {
+            mViewPager.setCurrentItem(findNoteInNoteArray(notes, note));
+        }
+    }
+
+    private int findNoteInNoteArray(ArrayList<Note> notes, Note noteToSearchFor) {
+        if (notes == null || noteToSearchFor == null || noteToSearchFor.getId() == null) return -1;
+
+        for (int i = 0; i < notes.size(); i++) {
+            Note note = notes.get(i);
+            if (noteToSearchFor.getId().equals(note.getId()))
+                return i;
+        }
+        return -1;
+    }
+
 
     /**
      * Tries to pick the correct fragment detail type for a given note
@@ -255,5 +296,25 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         setResult(RESULT_OK, resultIntent);
         finish();
+    }
+
+    private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
+
+        private ArrayList<Note> mNoteList;
+
+        NotificationDetailFragmentAdapter(FragmentManager fm, ArrayList<Note> notes) {
+            super(fm);
+            mNoteList = (ArrayList<Note>)notes.clone();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return getDetailFragmentForNote(mNoteList.get(position));
+        }
+
+        @Override
+        public int getCount() {
+            return mNoteList.size();
+        }
     }
 }

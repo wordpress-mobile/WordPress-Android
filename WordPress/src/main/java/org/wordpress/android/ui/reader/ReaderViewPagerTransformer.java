@@ -11,8 +11,8 @@ import android.view.View;
  * zoom & depth are based on examples here, with many fixes and simplifications:
  * http://developer.android.com/training/animation/screen-slide.html#pagetransformer
  */
-class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
-    enum TransformType {
+public class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
+    public enum TransformType {
         FLOW,
         DEPTH,
         ZOOM,
@@ -20,7 +20,7 @@ class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
     }
     private final TransformType mTransformType;
 
-    ReaderViewPagerTransformer(TransformType transformType) {
+    public ReaderViewPagerTransformer(TransformType transformType) {
         mTransformType = transformType;
     }
 
