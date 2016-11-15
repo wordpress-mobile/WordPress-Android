@@ -9,6 +9,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.ServerError;
 
+import org.wordpress.android.fluxc.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
@@ -95,8 +96,12 @@ public class SelfHostedEndpointFinder {
             @Override
             public void run() {
                 try {
+                    String wpRestEndpoint = "";
+                    if (BuildConfig.ENABLE_WPAPI) {
+                        wpRestEndpoint = discoverWPRESTEndpoint(url);
+                    }
+                    // TODO: Eventually make the XML-RPC discovery only run if WP-API discovery fails
                     String xmlRpcEndpoint = verifyOrDiscoverXMLRPCEndpoint(url, username, password);
-                    String wpRestEndpoint = discoverWPRESTEndpoint(url);
                     DiscoveryResultPayload payload = new DiscoveryResultPayload(xmlRpcEndpoint, wpRestEndpoint);
                     mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
                 } catch (DiscoveryException e) {
