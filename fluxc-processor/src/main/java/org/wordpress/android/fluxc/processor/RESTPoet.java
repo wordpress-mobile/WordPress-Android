@@ -73,7 +73,7 @@ public class RESTPoet {
 
             if (endpointNode.getParent().isRoot()) {
                 endpointFieldBuilder.addModifiers(Modifier.STATIC)
-                        .initializer("new $T($S)", sBaseEndpointClass, endpointNode.getLocalEndpoint());
+                        .initializer("new $T($S)", sBaseEndpointClass, "/" + endpointNode.getLocalEndpoint());
             } else {
                 endpointFieldBuilder
                         .initializer("new $T(getEndpoint() + $S)", sBaseEndpointClass, endpointNode.getLocalEndpoint());
