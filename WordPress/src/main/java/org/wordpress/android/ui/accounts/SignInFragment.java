@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -49,8 +50,8 @@ import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -79,6 +80,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.content.Context.CLIPBOARD_SERVICE;
+
 public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String TAG = "sign_in_fragment_tag";
     public static final String REASON_ERROR = "error";
@@ -91,6 +94,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
     private static final Pattern DOT_COM_RESERVED_NAMES =
             Pattern.compile("^(?:admin|administrator|invite|main|root|web|www|[^@]*wordpress[^@]*)$");
+    private static final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -129,6 +133,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected ImageView mInfoButtonSecondary;
 
     private final Matcher mReservedNameMatcher = DOT_COM_RESERVED_NAMES.matcher("");
+    private final Matcher mTwoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
 
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
@@ -279,6 +284,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Ensure two-step form is shown if needed
         if (!TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.GONE) {
             setTwoStepAuthVisibility(true);
+        // Insert authentication code if copied to clipboard
+        } else if (TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.VISIBLE) {
+            insertAuthCodeFromClipboard();
         }
 
         if (!mToken.isEmpty() && !mInhibitMagicLogin) {
@@ -740,6 +748,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 public void run() {
                     if (twoStepCodeRequired) {
                         setTwoStepAuthVisibility(true);
+                        insertAuthCodeFromClipboard();
                         endProgress();
                         return;
                     }
@@ -769,6 +778,20 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (mJetpackAuthLabel != null) {
             mJetpackAuthLabel.setVisibility(View.VISIBLE);
             mJetpackAuthLabel.setText(getResources().getString(R.string.auth_required));
+        }
+    }
+
+    private void insertAuthCodeFromClipboard() {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
+
+        if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null) {
+            String code = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+
+            mTwoStepAuthCodeMatcher.reset(code);
+
+            if (!code.isEmpty() && mTwoStepAuthCodeMatcher.matches()) {
+                mTwoStepEditText.setText(code);
+            }
         }
     }
 
