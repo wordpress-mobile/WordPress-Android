@@ -208,7 +208,8 @@ public class ReaderPost {
             post.setRailcarJson(jsonRailcar.toString());
         }
 
-        // set the card type last since it depends on information contained in the post
+        // set the card type last since it depends on information contained in the post - note
+        // that this is stored in the post table rather than calculated on-the-fly
         post.setCardType(ReaderCardType.fromReaderPost(post));
 
         return post;

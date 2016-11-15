@@ -1,11 +1,16 @@
 package org.wordpress.android.models;
 
+/**
+ * Used by the reader stream view to determine which type of "card" to use
+ */
+
 public enum ReaderCardType {
     DEFAULT,
     PHOTO;
 
     public static ReaderCardType fromReaderPost(ReaderPost post) {
-        if (post != null && post.hasFeaturedImage() && post.getText().length() < 100) {
+        // photo cards have a suitable featured image and little or no text
+        if (post != null && post.hasFeaturedImage() && post.getExcerpt().length() < 100) {
             return PHOTO;
         }
         return DEFAULT;
