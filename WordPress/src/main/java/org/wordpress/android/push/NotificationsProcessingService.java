@@ -500,7 +500,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_LIKED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED);
 
             WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
                     String.valueOf(mNote.getCommentId()),
@@ -524,7 +524,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED);
 
             CommentActions.moderateCommentForNote(mNote, CommentStatus.APPROVED, new CommentActions.CommentActionListener() {
                 @Override
@@ -543,7 +543,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO);
 
 
             if (!TextUtils.isEmpty(mReplyText)) {

@@ -386,16 +386,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_notification_details_opened";
             case NOTIFICATION_APPROVED:
                 return "notifications_approved";
+            case NOTIFICATION_QUICK_ACTIONS_APPROVED:
+                return "notifications_quick_actions_approved";
             case NOTIFICATION_UNAPPROVED:
                 return "notifications_unapproved";
             case NOTIFICATION_REPLIED_TO:
                 return "notifications_replied_to";
+            case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
+                return "notifications_quick_actions_replied_to";
             case NOTIFICATION_TRASHED:
                 return "notifications_trashed";
             case NOTIFICATION_FLAGGED_AS_SPAM:
                 return "notifications_flagged_as_spam";
             case NOTIFICATION_LIKED:
                 return "notifications_comment_liked";
+            case NOTIFICATION_QUICK_ACTIONS_LIKED:
+                return "notifications_quick_actions_comment_liked";
             case NOTIFICATION_UNLIKED:
                 return "notifications_comment_unliked";
             case OPENED_POSTS:
