@@ -290,14 +290,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(
-                    post.getPostAvatarForDisplay(mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                    GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall),
+                    WPNetworkImageView.ImageType.AVATAR);
         } else {
             holder.imgAvatar.showDefaultGravatarImage();
         }
 
-        if (post.hasBlogUrl()) {
+        if (post.hasBlogImageUrl()) {
             holder.imgBlavatar.setImageUrl(
-                    post.getPostBlavatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.BLAVATAR);
+                    GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall),
+                    WPNetworkImageView.ImageType.BLAVATAR);
         } else {
             holder.imgBlavatar.showDefaultBlavatarImage();
         }
