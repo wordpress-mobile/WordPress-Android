@@ -23,6 +23,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -193,9 +194,11 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private NotificationDetailFragmentAdapter buildNoteListAdapterAndSetPosition(boolean allowNavigateList, Note note) {
         NotificationDetailFragmentAdapter adapter;
         ArrayList<Note> notes = NotificationsTable.getLatestNotes();
-
+        ArrayList<Note> filteredNotes = new ArrayList<>();
         if (allowNavigateList) {
-            adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), notes);
+            //apply filter to the list so we show the same items that the list show vertically, but horizontally
+            NotesAdapter.buildFilteredNotesList(filteredNotes, notes, NotesAdapter.FILTERS.FILTER_ALL);
+            adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), filteredNotes);
         } else {
             ArrayList<Note> oneNoteList = new ArrayList<>();
             oneNoteList.add(note);
@@ -206,7 +209,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         mViewPager.setAdapter(adapter);
 
         if (allowNavigateList) {
-            mViewPager.setCurrentItem(findNoteInNoteArray(notes, note));
+            mViewPager.setCurrentItem(findNoteInNoteArray(filteredNotes, note));
         }
 
         return adapter;
