@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.OnAuthFailedListener;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.discovery.WPAPIHeadRequest;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 
 public class BaseWPAPIRestClient {
@@ -30,7 +31,7 @@ public class BaseWPAPIRestClient {
         };
     }
 
-    public Request add(BaseRequest request) {
+    public Request add(WPAPIHeadRequest request) {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
