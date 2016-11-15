@@ -40,7 +40,7 @@ public class SelfHostedEndpointFinder {
     public static final int TIMEOUT_MS = 60000;
 
     private final Dispatcher mDispatcher;
-    private final BaseXMLRPCClient mClient;
+    private final BaseXMLRPCClient mXMLRPCClient;
 
     public enum DiscoveryError implements OnChangedError {
         INVALID_URL,
@@ -88,7 +88,7 @@ public class SelfHostedEndpointFinder {
     @Inject
     public SelfHostedEndpointFinder(Dispatcher dispatcher, BaseXMLRPCClient baseXMLRPCClient) {
         mDispatcher = dispatcher;
-        mClient = baseXMLRPCClient;
+        mXMLRPCClient = baseXMLRPCClient;
     }
 
     public void findEndpoint(final String url, final String username, final String password) {
@@ -313,7 +313,7 @@ public class SelfHostedEndpointFinder {
     private String getResponse(String url) throws DiscoveryException {
         BaseRequestFuture<String> future = BaseRequestFuture.newFuture();
         DiscoveryRequest request = new DiscoveryRequest(url, future, future);
-        mClient.add(request);
+        mXMLRPCClient.add(request);
         try {
             return future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | TimeoutException e) {
@@ -420,7 +420,7 @@ public class SelfHostedEndpointFinder {
 
         BaseRequestFuture<Object[]> future = BaseRequestFuture.newFuture();
         DiscoveryXMLRPCRequest request = new DiscoveryXMLRPCRequest(url, XMLRPC.LIST_METHODS, params, future, future);
-        mClient.add(request);
+        mXMLRPCClient.add(request);
         try {
             return future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | TimeoutException e) {
