@@ -7,6 +7,7 @@ import android.webkit.URLUtil;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
+import com.android.volley.Request.Method;
 import com.android.volley.ServerError;
 
 import org.wordpress.android.fluxc.BuildConfig;
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.network.BaseRequestFuture;
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient;
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.store.Store.OnChangedError;
 import org.wordpress.android.fluxc.utils.WPUrlUtils;
@@ -467,11 +469,13 @@ public class SelfHostedEndpointFinder {
             throw new DiscoveryException(DiscoveryError.WORDPRESS_COM_SITE, url);
         }
 
+        // TODO: Implement URL validation in this and its called methods, and http/https neutrality
+
         final String wpApiBaseUrl = discoverWPAPIBaseURL(url);
 
         if (wpApiBaseUrl != null && !wpApiBaseUrl.isEmpty()) {
             AppLog.i(AppLog.T.NUX, "Base WP-API URL found - verifying that the wp/v2 namespace is supported");
-            // TODO: Verify wp/v2 namespace support
+            return verifyWPAPIV2Support(wpApiBaseUrl);
         }
         return null;
     }
@@ -484,6 +488,37 @@ public class SelfHostedEndpointFinder {
             return future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | TimeoutException e) {
             AppLog.e(T.API, "Couldn't get HEAD response from server.");
+        } catch (ExecutionException e) {
+            // TODO: Add support for HTTP AUTH and self-signed SSL WP-API sites
+//            if (e.getCause() instanceof AuthFailureError) {
+//                throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
+//            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
+//                    && e.getCause().getCause() instanceof SSLHandshakeException) {
+//                // In the event of an SSL error we should stop attempting discovery
+//                throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
+//            }
+        }
+        return null;
+    }
+
+    private String verifyWPAPIV2Support(String wpApiBaseUrl) {
+        BaseRequestFuture<RootWPAPIRestResponse> future = BaseRequestFuture.newFuture();
+        WPAPIGsonRequest request = new WPAPIGsonRequest<>(Method.GET, wpApiBaseUrl, null, null,
+                RootWPAPIRestResponse.class, future, future);
+        mBaseWPAPIRestClient.add(request);
+
+        try {
+            RootWPAPIRestResponse response = future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
+            if (!response.namespaces.contains("wp/v2")) {
+                AppLog.i(AppLog.T.NUX, "Site does not have the full WP-API available "
+                        + "(missing wp/v2 namespace)");
+                return null;
+            } else {
+                AppLog.i(AppLog.T.NUX, "Found valid WP-API endpoint! - " + wpApiBaseUrl);
+                return wpApiBaseUrl;
+            }
+        } catch (InterruptedException | TimeoutException e) {
+            AppLog.e(T.API, "Couldn't get response from root endpoint.");
         } catch (ExecutionException e) {
             // TODO: Add support for HTTP AUTH and self-signed SSL WP-API sites
 //            if (e.getCause() instanceof AuthFailureError) {
