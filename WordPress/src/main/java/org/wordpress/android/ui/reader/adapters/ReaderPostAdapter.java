@@ -342,50 +342,52 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.txtAuthorAndBlogName.setText(null);
         }
 
-        // posts with a suitable featured image that have very little text get the "photo card"
-        // treatment - show the title overlaid on the featured image without any text
-        boolean isPhotoCard = post.hasFeaturedImage() && post.getText().length() < 100;
-
-        if (isPhotoCard) {
-            holder.txtText.setVisibility(View.GONE);
-            holder.txtTitle.setVisibility(View.GONE);
-
-            holder.framePhoto.setVisibility(View.VISIBLE);
-            holder.txtPhotoTitle.setVisibility(View.VISIBLE);
-            holder.txtPhotoTitle.setText(post.getTitle());
-
-            String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-            holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
-        } else {
-            holder.txtTitle.setVisibility(View.VISIBLE);
-            holder.txtTitle.setText(post.getTitle());
-            holder.txtPhotoTitle.setVisibility(View.GONE);
-
-            if (post.hasExcerpt()) {
-                holder.txtText.setVisibility(View.VISIBLE);
-                holder.txtText.setText(post.getExcerpt());
-            } else {
+        switch (post.getCardType()) {
+            // posts with a suitable featured image that have very little text get the "photo
+            // card" treatment - show the title overlaid on the featured image without any text
+            case PHOTO:
                 holder.txtText.setVisibility(View.GONE);
-            }
-
-            final int titleMargin;
-            if (post.hasFeaturedImage()) {
-                String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-                holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                holder.txtTitle.setVisibility(View.GONE);
                 holder.framePhoto.setVisibility(View.VISIBLE);
-                titleMargin = mMarginLarge;
-            } else if (post.hasFeaturedVideo() && WPNetworkImageView.canShowVideoThumbnail(post.getFeaturedVideo())) {
-                holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
-                holder.framePhoto.setVisibility(View.VISIBLE);
-                titleMargin = mMarginLarge;
-            } else {
-                holder.framePhoto.setVisibility(View.GONE);
-                titleMargin = 0;
-            }
+                holder.txtPhotoTitle.setVisibility(View.VISIBLE);
+                holder.txtPhotoTitle.setText(post.getTitle());
+                holder.imgFeatured.setImageUrl(
+                        post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
+                        WPNetworkImageView.ImageType.PHOTO);
+                break;
 
-            // set the top margin of the title based on whether there's a featured image
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.txtTitle.getLayoutParams();
-            params.topMargin = titleMargin;
+            case DEFAULT:
+                holder.txtTitle.setVisibility(View.VISIBLE);
+                holder.txtTitle.setText(post.getTitle());
+                holder.txtPhotoTitle.setVisibility(View.GONE);
+
+                if (post.hasExcerpt()) {
+                    holder.txtText.setVisibility(View.VISIBLE);
+                    holder.txtText.setText(post.getExcerpt());
+                } else {
+                    holder.txtText.setVisibility(View.GONE);
+                }
+
+                final int titleMargin;
+                if (post.hasFeaturedImage()) {
+                    holder.imgFeatured.setImageUrl(
+                            post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
+                            WPNetworkImageView.ImageType.PHOTO);
+                    holder.framePhoto.setVisibility(View.VISIBLE);
+                    titleMargin = mMarginLarge;
+                } else if (post.hasFeaturedVideo() && WPNetworkImageView.canShowVideoThumbnail(post.getFeaturedVideo())) {
+                    holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
+                    holder.framePhoto.setVisibility(View.VISIBLE);
+                    titleMargin = mMarginLarge;
+                } else {
+                    holder.framePhoto.setVisibility(View.GONE);
+                    titleMargin = 0;
+                }
+
+                // set the top margin of the title based on whether there's a featured image
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.txtTitle.getLayoutParams();
+                params.topMargin = titleMargin;
+                break;
         }
 
         showLikes(holder, post);

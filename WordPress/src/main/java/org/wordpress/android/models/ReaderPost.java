@@ -69,7 +69,7 @@ public class ReaderPost {
     public long xpostBlogId;
 
     private String railcarJson;
-    private ReaderPostCardType postCardType = ReaderPostCardType.DEFAULT;
+    private ReaderCardType cardType = ReaderCardType.DEFAULT;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -209,7 +209,7 @@ public class ReaderPost {
         }
 
         // set the card type last since it depends on information contained in the post
-        post.setPostCardType(ReaderPostCardType.fromReaderPost(post));
+        post.setCardType(ReaderCardType.fromReaderPost(post));
 
         return post;
     }
@@ -657,11 +657,11 @@ public class ReaderPost {
         return !TextUtils.isEmpty(railcarJson);
     }
 
-    public ReaderPostCardType getPostCardType() {
-        return postCardType != null ? postCardType : ReaderPostCardType.DEFAULT;
+    public ReaderCardType getCardType() {
+        return cardType != null ? cardType : ReaderCardType.DEFAULT;
     }
-    public void setPostCardType(ReaderPostCardType cardType) {
-        this.postCardType = cardType;
+    public void setCardType(ReaderCardType cardType) {
+        this.cardType = cardType;
     }
 
     /****
