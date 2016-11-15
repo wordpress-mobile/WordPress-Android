@@ -98,24 +98,21 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
             //set title
             setActionBarTitleForNote(note);
+            markNoteAsRead(note);
 
             mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                 @Override
                 public void onPageSelected(int position) {
                     //change the action bar title for the current note
-                    setActionBarTitleForNote(mAdapter.getNoteAtPosition(position));
+                    Note currentNote = mAdapter.getNoteAtPosition(position);
+                    if (currentNote != null) {
+                        setActionBarTitleForNote(currentNote);
+                        markNoteAsRead(currentNote);
+                    }
                 }
             });
 
 
-            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);
-            // mark the note as read if it's unread
-            if (note.isUnread()) {
-                NotificationsActions.markNoteAsRead(note);
-                note.setRead();
-                NotificationsTable.saveNote(note);
-                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-            }
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
         }
@@ -150,6 +147,17 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
         ToastUtils.showToast(this, R.string.error_notification_open);
         finish();
+    }
+
+    private void markNoteAsRead(Note note) {
+        GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, note.getId());
+        // mark the note as read if it's unread
+        if (note.isUnread()) {
+            NotificationsActions.markNoteAsRead(note);
+            note.setRead();
+            NotificationsTable.saveNote(note);
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+        }
     }
 
     private void setActionBarTitleForNote(Note note) {
@@ -334,8 +342,15 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             return mNoteList.size();
         }
 
+        boolean isValidPosition(int position) {
+            return (position >= 0 && position < getCount());
+        }
+
         public Note getNoteAtPosition(int position){
-            return mNoteList.get(position);
+            if (isValidPosition(position))
+                return mNoteList.get(position);
+            else
+                return null;
         }
 
     }
