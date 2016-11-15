@@ -853,6 +853,8 @@
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
     <string name="unread">Unread</string>
     <string name="follows">Follows</string>
+    <string name="notifications_label_new_notifications">New notifications</string>
+    <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>

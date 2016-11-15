@@ -18,7 +18,6 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.simperium.client.BucketObjectMissingException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.R;
@@ -26,6 +25,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
@@ -34,8 +34,8 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -69,6 +69,7 @@ public class GCMMessageService extends GcmListenerService {
     public static final int ACTIONS_PROGRESS_NOTIFICATION_ID = 50000;
     private static final int AUTH_PUSH_REQUEST_CODE_APPROVE = 0;
     private static final int AUTH_PUSH_REQUEST_CODE_IGNORE = 1;
+    private static final int AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG = 2;
     public static final String EXTRA_VOICE_OR_INLINE_REPLY = "extra_voice_or_inline_reply";
     private static final int MAX_INBOX_ITEMS = 5;
 
@@ -76,7 +77,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_ARG_TYPE = "type";
     private static final String PUSH_ARG_TITLE = "title";
     private static final String PUSH_ARG_MSG = "msg";
-    private static final String PUSH_ARG_NOTE_ID = "note_id";
+    public static final String PUSH_ARG_NOTE_ID = "note_id";
     public static final String PUSH_ARG_NOTE_FULL_DATA = "note_full_data";
 
     private static final String PUSH_TYPE_COMMENT = "c";
@@ -308,7 +309,10 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private boolean canAddActionsToNotifications() {
-        return (!isDeviceLocked() && !isWPPinLockEnabled());
+        if (isWPPinLockEnabled()) {
+            return !isDeviceLocked();
+        }
+        return true;
     }
 
     private boolean isWPPinLockEnabled() {
@@ -337,13 +341,9 @@ public class GCMMessageService extends GcmListenerService {
     private class NotificationHelper {
 
         private void handleDefaultPush(Context context, @NonNull Bundle data) {
-            // Ensure Simperium is running so that notes sync
-            SimperiumUtils.configureSimperium(context, AccountHelper.getDefaultAccount().getAccessToken());
-
             // if a notification is received while the app has not yet been launched after last power on,
             // the screenlockwatchservice won't be running. Let's start it now.
             startService(new Intent(context, NotificationsScreenLockWatchService.class));
-
 
             long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
             String pushUserId = data.getString(PUSH_ARG_USER);
@@ -368,35 +368,8 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             buildAndShowNotificationFromNoteData(context, data, false);
-
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
         }
 
-        private void trySaveNoteIfNotAlreadyInBucket(Bundle data) {
-            if (SimperiumUtils.getNotesBucket() != null) {
-                if (data == null) {
-                    AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + PUSH_ARG_NOTE_ID +"'.");
-                    return;
-                }
-
-                String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
-                try {
-                    SimperiumUtils.getNotesBucket().get(noteId);
-                    // all good if we got here
-                } catch (BucketObjectMissingException e) {
-                    AppLog.e(T.NOTIFS, e);
-                    SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-
-                    if (data.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-                        //if note doesn't exist, try taking it from the PN payload, build it and save it
-                        // Simperium will take care of syncing local and server versions up at a later point
-                        String base64FullData = data.getString(PUSH_ARG_NOTE_FULL_DATA);
-                        Note note = new Note.Schema().buildFromBase64EncodedData(noteId, base64FullData);
-                        SimperiumUtils.saveNote(note);
-                    }
-                }
-            }
-        }
 
         private void buildAndShowNotificationFromNoteData(Context context, Bundle data, boolean dontPlaySound) {
 
@@ -405,13 +378,19 @@ public class GCMMessageService extends GcmListenerService {
                 return;
             }
 
-            if (TextUtils.isEmpty(data.getString(PUSH_ARG_NOTE_ID, ""))) {
+            final String wpcomNoteID = data.getString(PUSH_ARG_NOTE_ID, "");
+            if (TextUtils.isEmpty(wpcomNoteID)) {
                 // At this point 'note_id' is always available in the notification bundle.
                 AppLog.e(T.NOTIFS, "Push notification received without a valid note_id in in payload!");
                 return;
             }
 
-            trySaveNoteIfNotAlreadyInBucket(data);
+            // Try to build the note object from the PN payload, and save it to the DB.
+            NotificationsUtils.buildNoteObjectFromBundleAndSaveIt(data);
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
+            // Always do this, since a note can be updated on the server after a PN is sent
+            NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID,
+                    null, null);
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
@@ -420,21 +399,20 @@ public class GCMMessageService extends GcmListenerService {
                 title = getString(R.string.app_name);
             }
             String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
-            String wpcomNoteID = data.getString(PUSH_ARG_NOTE_ID, "");
 
-            /*
-             * if this has the same note_id as the previous notification, and the previous notification
-             * was received within the last second, then skip showing it - this handles duplicate
-             * notifications being shown due to the device being registered multiple times with different tokens.
-             * (still investigating how this could happen - 21-Oct-13)
-             *
-             * this also handles the (rare) case where the user receives rapid-fire sub-second like notifications
-             * due to sudden popularity (post gets added to FP and is liked by many people all at once, etc.),
-             * which we also want to avoid since it would drain the battery and annoy the user
-             *
-             * NOTE: different comments on the same post will have a different note_id, but different likes
-             * on the same post will have the same note_id, so don't assume that the note_id is unique
-             */
+        /*
+         * if this has the same note_id as the previous notification, and the previous notification
+         * was received within the last second, then skip showing it - this handles duplicate
+         * notifications being shown due to the device being registered multiple times with different tokens.
+         * (still investigating how this could happen - 21-Oct-13)
+         *
+         * this also handles the (rare) case where the user receives rapid-fire sub-second like notifications
+         * due to sudden popularity (post gets added to FP and is liked by many people all at once, etc.),
+         * which we also want to avoid since it would drain the battery and annoy the user
+         *
+         * NOTE: different comments on the same post will have a different note_id, but different likes
+         * on the same post will have the same note_id, so don't assume that the note_id is unique
+         */
             long thisTime = System.currentTimeMillis();
             if (AppPrefs.getLastPushNotificationWpcomNoteId().equals(wpcomNoteID)) {
                 long seconds = TimeUnit.MILLISECONDS.toSeconds(thisTime - AppPrefs.getLastPushNotificationTime());
@@ -482,6 +460,7 @@ public class GCMMessageService extends GcmListenerService {
                 AnalyticsTracker.flush();
             }
 
+
             showGroupNotificationForActiveNotificationsMap(context, pushId, wpcomNoteID,
                     noteType, data.getString("icon"), title, message, dontPlaySound);
         }
@@ -512,34 +491,28 @@ public class GCMMessageService extends GcmListenerService {
             // Add some actions if this is a comment notification
             boolean areActionsSet = false;
 
-            if (SimperiumUtils.getNotesBucket() != null) {
-                try {
-                    Note note = SimperiumUtils.getNotesBucket().get(noteId);
-                    if (note != null) {
-                        //if note can be replied to, we'll always add this action first
-                        if (note.canReply()) {
-                            addCommentReplyActionForCommentNotification(context, builder, noteId);
-                        }
-
-                        // if the comment is lacking approval, offer moderation actions
-                        if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
-                            if (note.canModerate()) {
-                                addCommentApproveActionForCommentNotification(context, builder, noteId);
-                            }
-                        } else {
-                            //else offer REPLY / LIKE actions
-                            //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
-                            Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
-                            boolean isJetPackSite = blog != null && blog.isJetpackPowered();
-                            if (note.canLike() && !isJetPackSite) {
-                                addCommentLikeActionForCommentNotification(context, builder, noteId);
-                            }
-                        }
-                    }
-                    areActionsSet = true;
-                } catch (BucketObjectMissingException e) {
-                    AppLog.e(T.NOTIFS, e);
+            Note note = NotificationsTable.getNoteById(noteId);
+            if (note != null) {
+                //if note can be replied to, we'll always add this action first
+                if (note.canReply()) {
+                    addCommentReplyActionForCommentNotification(context, builder, noteId);
                 }
+
+                // if the comment is lacking approval, offer moderation actions
+                if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
+                    if (note.canModerate()) {
+                        addCommentApproveActionForCommentNotification(context, builder, noteId);
+                    }
+                } else {
+                    //else offer REPLY / LIKE actions
+                    //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
+                    Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
+                    boolean isJetPackSite = blog != null && blog.isJetpackPowered();
+                    if (note.canLike() && !isJetPackSite) {
+                        addCommentLikeActionForCommentNotification(context, builder, noteId);
+                    }
+                }
+                areActionsSet = true;
             }
 
             // if we could not set the actions, set the default one REPLY as it's then only safe bet
@@ -932,7 +905,7 @@ public class GCMMessageService extends GcmListenerService {
                 rebuildAndUpdateNotificationsOnSystemBar(context, data);
             }
 
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(sActiveNotificationsMap.size() > 0));
         }
 
         // Show a notification for two-step auth users who log in from a web browser
@@ -972,21 +945,29 @@ public class GCMMessageService extends GcmListenerService {
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setPriority(NotificationCompat.PRIORITY_MAX);
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, pushAuthIntent,
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG, pushAuthIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(pendingIntent);
 
 
             if (canAddActionsToNotifications()) {
                 // adding ignore / approve quick actions
-                Intent authApproveIntent = new Intent(context, NotificationsProcessingService.class);
+                Intent authApproveIntent = new Intent(context, WPMainActivity.class);
+                authApproveIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
                 authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
                 authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
                 authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
                 authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
                 authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
-                PendingIntent authApprovePendingIntent =  PendingIntent.getService(context,
-                        AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+                authApproveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                authApproveIntent.setAction("android.intent.action.MAIN");
+                authApproveIntent.addCategory("android.intent.category.LAUNCHER");
+
+                PendingIntent authApprovePendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+
                 builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
                         authApprovePendingIntent);
 
