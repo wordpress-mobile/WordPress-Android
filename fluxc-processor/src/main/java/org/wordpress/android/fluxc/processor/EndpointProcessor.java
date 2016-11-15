@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -29,6 +30,8 @@ import javax.lang.model.element.TypeElement;
 public class EndpointProcessor extends AbstractProcessor {
     private static final String WPCOMREST_ENDPOINT_FILE = "fluxc/src/main/tools/wp-com-endpoints.txt";
     private static final String XMLRPC_ENDPOINT_FILE = "fluxc/src/main/tools/xmlrpc-endpoints.txt";
+
+    private static final Pattern WPCOMREST_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("\\$");
 
     private static final Map<String, List<String>> XML_RPC_ALIASES;
     static {
@@ -69,7 +72,8 @@ public class EndpointProcessor extends AbstractProcessor {
         File file = new File(WPCOMREST_ENDPOINT_FILE);
         EndpointNode rootNode = EndpointTreeGenerator.process(file);
 
-        TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPCOMREST", WPComEndpoint.class);
+        TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPCOMREST", WPComEndpoint.class,
+                WPCOMREST_VARIABLE_ENDPOINT_PATTERN);
         writeEndpointClassToFile(endpointClass);
     }
 

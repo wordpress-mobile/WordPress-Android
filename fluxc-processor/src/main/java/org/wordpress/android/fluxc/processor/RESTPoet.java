@@ -13,6 +13,8 @@ import org.wordpress.android.fluxc.annotations.endpoint.EndpointNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.lang.model.element.Modifier;
 
@@ -30,9 +32,12 @@ public class RESTPoet {
     };
 
     private static TypeName sBaseEndpointClass;
+    private static Pattern sVariableEndpointPattern;
 
-    public static TypeSpec generate(EndpointNode rootNode, String fileName, Class baseEndpointClass) {
+    public static TypeSpec generate(EndpointNode rootNode, String fileName, Class baseEndpointClass,
+                                    Pattern variableEndpointPattern) {
         sBaseEndpointClass = ClassName.get(baseEndpointClass);
+        sVariableEndpointPattern = variableEndpointPattern;
 
         TypeSpec.Builder wpcomRestBuilder = TypeSpec.classBuilder(fileName)
                 .addModifiers(Modifier.PUBLIC);
@@ -45,7 +50,9 @@ public class RESTPoet {
     }
 
     private static void addEndpointToBuilder(EndpointNode endpointNode, TypeSpec.Builder classBuilder) {
-        if (endpointNode.getLocalEndpoint().contains("$")) {
+        Matcher variableEndpointMatcher = sVariableEndpointPattern.matcher(endpointNode.getLocalEndpoint());
+
+        if (variableEndpointMatcher.find()) {
             processVariableEndpointNode(endpointNode, classBuilder);
         } else {
             processStaticEndpointNode(endpointNode, classBuilder);
