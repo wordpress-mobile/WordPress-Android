@@ -114,6 +114,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
         //copyDatabase(db);
+        //getDatabase().reset(db);
     }
 
     /*
