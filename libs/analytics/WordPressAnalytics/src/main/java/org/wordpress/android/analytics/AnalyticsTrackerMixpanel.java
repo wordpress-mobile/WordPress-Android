@@ -669,32 +669,47 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case NOTIFICATION_APPROVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_notifications_approved");
+                        mixpanelInstructionsForEventName("Notification - Approved");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_notifications_approved");
+                break;
+            case NOTIFICATION_QUICK_ACTIONS_APPROVED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notification - Quick Actions Approved");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_notifications_approved");
                 break;
             case NOTIFICATION_UNAPPROVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_notifications_unapproved");
+                        mixpanelInstructionsForEventName("Notification - Unapproved");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_notifications_unapproved");
                 break;
             case NOTIFICATION_REPLIED_TO:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_notifications_replied_to");
+                        mixpanelInstructionsForEventName("Notification - Replied To");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_notifications_replied_to");
+                break;
+            case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notification - Quick Actions Replied To");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_notifications_replied_to");
                 break;
             case NOTIFICATION_TRASHED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_notifications_trashed");
+                        mixpanelInstructionsForEventName("Notification - Trashed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_notifications_trashed");
                 break;
             case NOTIFICATION_FLAGGED_AS_SPAM:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_notifications_flagged_as_spam");
+                        mixpanelInstructionsForEventName("Notification - Flagged Spam");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_notifications_flagged_as_spam");
                 break;
             case NOTIFICATION_LIKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notifications - Liked Comment");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_comment_likes_from_notification");
+                break;
+            case NOTIFICATION_QUICK_ACTIONS_LIKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Quick Actions Liked Comment");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_comment_likes_from_notification");
                 break;
             case NOTIFICATION_UNLIKED:
