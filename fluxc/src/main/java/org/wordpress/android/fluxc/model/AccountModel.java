@@ -23,6 +23,7 @@ public class AccountModel extends Payload implements Identifiable {
     @Column private int mSiteCount;
     @Column private int mVisibleSiteCount;
     @Column private String mEmail;
+    @Column private boolean mHasUnseenNotes;
 
     // Account Settings attributes
     @Column private String mFirstName;
@@ -66,7 +67,8 @@ public class AccountModel extends Payload implements Identifiable {
                && StringUtils.equals(getDate(), otherAccount.getDate())
                && StringUtils.equals(getNewEmail(), otherAccount.getNewEmail())
                && getPendingEmailChange() == otherAccount.getPendingEmailChange()
-               && StringUtils.equals(getWebAddress(), otherAccount.getWebAddress());
+               && StringUtils.equals(getWebAddress(), otherAccount.getWebAddress())
+               && getHasUnseenNotes() == otherAccount.getHasUnseenNotes();
     }
 
     public void init() {
@@ -102,6 +104,7 @@ public class AccountModel extends Payload implements Identifiable {
         setSiteCount(other.getSiteCount());
         setVisibleSiteCount(other.getVisibleSiteCount());
         setEmail(other.getEmail());
+        setHasUnseenNotes(other.getHasUnseenNotes());
     }
 
     /**
@@ -247,5 +250,13 @@ public class AccountModel extends Payload implements Identifiable {
 
     public String getWebAddress() {
         return mWebAddress;
+    }
+
+    public boolean getHasUnseenNotes() {
+        return mHasUnseenNotes;
+    }
+
+    public void setHasUnseenNotes(boolean hasUnseenNotes) {
+        mHasUnseenNotes = hasUnseenNotes;
     }
 }
