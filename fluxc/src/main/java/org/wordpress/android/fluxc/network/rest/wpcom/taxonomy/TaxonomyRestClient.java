@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse.TermsResponse;
+import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermResponsePayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError;
 
@@ -37,10 +38,44 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
+    public void fetchTerm(final TermModel term, final SiteModel site) {
+        final String taxonomy = term.getTaxonomy();
+        final String slug = term.getSlug();
+        String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms.slug(slug).getUrlV1_1();
+
+        final WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, null,
+                TermWPComRestResponse.class,
+                new Listener<TermWPComRestResponse>() {
+                    @Override
+                    public void onResponse(TermWPComRestResponse response) {
+                        TermModel fetchedTerm = termResponseToTermModel(response);
+                        fetchedTerm.setId(term.getId());
+                        fetchedTerm.setTaxonomy(taxonomy);
+                        fetchedTerm.setLocalSiteId(site.getId());
+
+                        FetchTermResponsePayload payload = new FetchTermResponsePayload(fetchedTerm, site);
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // Possible non-generic errors: 400 invalid_taxonomy
+                        TaxonomyError taxonomyError = new TaxonomyError(((WPComGsonNetworkError) error).apiError,
+                                error.message);
+                        FetchTermResponsePayload payload = new FetchTermResponsePayload(term, site);
+                        payload.error = taxonomyError;
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
     public void fetchTerms(final SiteModel site, final String taxonomyName) {
         String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomyName).terms.getUrlV1_1();
 
-        final WPComGsonRequest<TermsResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+        final WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, null,
                 TermsResponse.class,
                 new Listener<TermsResponse>() {
                     @Override
