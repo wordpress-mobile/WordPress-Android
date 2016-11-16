@@ -83,6 +83,16 @@ public class TaxonomyStore extends Store {
         }
     }
 
+    public static class InstantiateTermPayload extends Payload {
+        public SiteModel site;
+        public TaxonomyModel taxonomy;
+
+        public InstantiateTermPayload(SiteModel site, TaxonomyModel taxonomy) {
+            this.site = site;
+            this.taxonomy = taxonomy;
+        }
+    }
+
     // OnChanged events
     public class OnTaxonomyChanged extends OnChanged<TaxonomyError> {
         public int rowsAffected;
@@ -92,6 +102,14 @@ public class TaxonomyStore extends Store {
         public OnTaxonomyChanged(int rowsAffected, String taxonomyName) {
             this.rowsAffected = rowsAffected;
             this.taxonomyName = taxonomyName;
+        }
+    }
+
+    public class OnTermInstantiated extends OnChanged<TaxonomyError> {
+        public TermModel term;
+
+        public OnTermInstantiated(TermModel term) {
+            this.term = term;
         }
     }
 
@@ -218,6 +236,16 @@ public class TaxonomyStore extends Store {
             case FETCHED_TERM:
                 handleFetchSingleTermCompleted((FetchTermResponsePayload) action.getPayload());
                 break;
+            case INSTANTIATE_CATEGORY:
+                instantiateTerm((SiteModel) action.getPayload(), DEFAULT_TAXONOMY_CATEGORY);
+                break;
+            case INSTANTIATE_TAG:
+                instantiateTerm((SiteModel) action.getPayload(), DEFAULT_TAXONOMY_TAG);
+                break;
+            case INSTANTIATE_TERM:
+                InstantiateTermPayload payload = (InstantiateTermPayload) action.getPayload();
+                instantiateTerm(payload.site, payload.taxonomy.getName());
+                break;
         }
     }
 
@@ -288,6 +316,17 @@ public class TaxonomyStore extends Store {
         } else {
             updateTerm(payload.term);
         }
+    }
+
+    private void instantiateTerm(SiteModel site, String taxonomy) {
+        TermModel newTerm = new TermModel();
+        newTerm.setLocalSiteId(site.getId());
+        newTerm.setTaxonomy(taxonomy);
+
+        // Insert the term into the db, updating the object to include the local ID
+        newTerm = TaxonomySqlUtils.insertTermForResult(newTerm);
+
+        emitChange(new OnTermInstantiated(newTerm));
     }
 
     private void updateTerm(TermModel term) {
