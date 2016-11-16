@@ -221,6 +221,12 @@ public class WPMainActivity extends AppCompatActivity {
             }
         }
         startService(new Intent(this, NotificationsScreenLockWatchService.class));
+
+        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
+        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
+
+        // monitor whether we're not the default app
+        trackDefaultApp();
     }
 
     @Override
@@ -348,11 +354,8 @@ public class WPMainActivity extends AppCompatActivity {
 
         new CheckUnseenNotesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
+        // ensure the deep linking activity is enabled. We might be returning from the external-browser viewing of a post
         WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
-
-        // monitor whether we're not the default app
-        trackDefaultApp();
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
