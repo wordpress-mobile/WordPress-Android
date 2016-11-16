@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2015-08-19 20:02:12+0000
+Plural-Forms: nplurals=1; plural=0;
+Generator: GlotPress/2.3.0-alpha
+Language: uz
+-->
 <resources>
 	<string name="loading_videos">Videolarni yuklash</string>
 	<string name="loading_images">Rasmlarni yuklash</string>

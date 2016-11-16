@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-10-26 09:02:58+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: es
+-->
 <resources>
+	<string name="reader_label_global_related_posts">Más en WordPress.com</string>
+	<string name="reader_label_local_related_posts">Más en %s</string>
+	<string name="preference_open_device_settings">Abrir ajustes del dispositivo</string>
+	<string name="comment_moderated_unapproved">Comentario desaprobado</string>
 	<string name="invite_invalid_email">%s: Correo electrónico no válido</string>
 	<string name="invite_user_blocked_invites">%s: Invitaciones bloqueadas por el usuario</string>
 	<string name="invite_already_following">%s: Siguiendo</string>
@@ -92,7 +102,6 @@
 	<string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
 	<string name="reader_empty_posts_in_search_description">No se han encontrado entradas con %s para tu idioma</string>
 	<string name="reader_empty_posts_in_search_title">No se han encontrado entradas</string>
-	<string name="reader_label_related_posts">Lecturas relacionadas</string>
 	<string name="reader_label_post_search_running">Buscando...</string>
 	<string name="reader_label_post_search_explainer">Buscar en todos los blogs públicos de WordPress.com</string>
 	<string name="reader_hint_post_search">Buscar en WordPress.com</string>
