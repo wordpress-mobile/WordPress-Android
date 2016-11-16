@@ -8,6 +8,7 @@ wp.getPosts
 wp.newPost
 wp.editPost
 wp.deletePost
+wp.getTerm
 wp.getTerms
 wp.uploadFile
 wp.newComment
