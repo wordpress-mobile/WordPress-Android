@@ -515,6 +515,7 @@ public class SelfHostedEndpointFinder {
                 return null;
             } else {
                 AppLog.i(AppLog.T.NUX, "Found valid WP-API endpoint! - " + wpApiBaseUrl);
+                // TODO: Extract response.authentication and float it up
                 return wpApiBaseUrl;
             }
         } catch (InterruptedException | TimeoutException e) {
