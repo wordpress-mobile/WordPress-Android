@@ -314,6 +314,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         account.setDate(from.date);
         account.setSiteCount(from.site_count);
         account.setVisibleSiteCount(from.visible_site_count);
+        account.setHasUnseenNotes(from.has_unseen_notes);
         return account;
     }
 
