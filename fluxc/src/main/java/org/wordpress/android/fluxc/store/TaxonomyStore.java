@@ -225,7 +225,8 @@ public class TaxonomyStore extends Store {
         if (payload.site.isWPCom()) {
             mTaxonomyRestClient.fetchTerm(payload.term, payload.site);
         } else {
-            // TODO: XML-RPC support
+            // TODO: check for WP-REST-API plugin and use it here
+            mTaxonomyXMLRPCClient.fetchTerm(payload.term, payload.site);
         }
     }
 

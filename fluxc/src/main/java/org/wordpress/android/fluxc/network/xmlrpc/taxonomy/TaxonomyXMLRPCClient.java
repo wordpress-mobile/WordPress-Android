@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import com.android.volley.Response.Listener;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
@@ -12,13 +12,14 @@ import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
-import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
+import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermResponsePayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType;
@@ -34,6 +35,58 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
     }
 
+    public void fetchTerm(final TermModel term, final SiteModel site) {
+        List<Object> params = new ArrayList<>(4);
+        params.add(site.getSelfHostedSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        params.add(term.getTaxonomy());
+        params.add(term.getRemoteTermId());
+
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_TERM, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                        if (response != null && response instanceof Map) {
+                            TermModel termModel = termResponseObjectToTermModel(response, site);
+                            FetchTermResponsePayload payload;
+                            if (termModel != null) {
+                                payload = new FetchTermResponsePayload(termModel, site);
+                            } else {
+                                payload = new FetchTermResponsePayload(term, site);
+                                payload.error = new TaxonomyError(TaxonomyErrorType.INVALID_RESPONSE);
+                            }
+
+                            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
+                        }
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                            // Possible non-generic errors:
+                            // 403 - "Invalid taxonomy."
+                            // 404 - "Invalid term ID."
+                            FetchTermResponsePayload payload = new FetchTermResponsePayload(term, site);
+                            // TODO: Check the error message and flag this as INVALID_TAXONOMY or UNKNOWN_TERM
+                            // Convert GenericErrorType to TaxonomyErrorType where applicable
+                            TaxonomyError taxonomyError;
+                            switch (error.type) {
+                                case AUTHORIZATION_REQUIRED:
+                                    taxonomyError = new TaxonomyError(TaxonomyErrorType.UNAUTHORIZED, error.message);
+                                    break;
+                                default:
+                                    taxonomyError = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, error.message);
+                            }
+                            payload.error = taxonomyError;
+                            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
+                    }
+                }
+        );
+
+        add(request);
+    }
+
     public void fetchTerms(final SiteModel site, final String taxonomyName) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
@@ -42,7 +95,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         params.add(taxonomyName);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_TERMS, params,
-                new Response.Listener<Object[]>() {
+                new Listener<Object[]>() {
                     @Override
                     public void onResponse(Object[] response) {
                         TermsModel terms = termsResponseToTermsModel(response, site);
@@ -59,9 +112,9 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                 },
                 new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // Possible non-generic errors:
-                        // 403 - Invalid taxonomy
+                        // 403 - "Invalid taxonomy."
                         // TODO: Check the error message and flag this as INVALID_TAXONOMY if applicable
                         // Convert GenericErrorType to TaxonomyErrorType where applicable
                         TaxonomyError taxonomyError;
