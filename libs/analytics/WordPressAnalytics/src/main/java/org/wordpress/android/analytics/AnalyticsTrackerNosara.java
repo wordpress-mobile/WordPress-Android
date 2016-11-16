@@ -130,6 +130,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STATS_PERIOD_YEARS_ACCESSED:
                 predefinedEventProperties.put("period", "years");
                 break;
+            case NOTIFICATION_QUICK_ACTIONS_LIKED:
+            case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
+            case NOTIFICATION_QUICK_ACTIONS_APPROVED:
+                predefinedEventProperties.put("is_quick_action", true);
+                break;
         }
 
         final String user;
@@ -385,16 +390,19 @@ public class AnalyticsTrackerNosara extends Tracker {
             case NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS:
                 return "notifications_notification_details_opened";
             case NOTIFICATION_APPROVED:
+            case NOTIFICATION_QUICK_ACTIONS_APPROVED:
                 return "notifications_approved";
             case NOTIFICATION_UNAPPROVED:
                 return "notifications_unapproved";
             case NOTIFICATION_REPLIED_TO:
+            case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
                 return "notifications_replied_to";
             case NOTIFICATION_TRASHED:
                 return "notifications_trashed";
             case NOTIFICATION_FLAGGED_AS_SPAM:
                 return "notifications_flagged_as_spam";
             case NOTIFICATION_LIKED:
+            case NOTIFICATION_QUICK_ACTIONS_LIKED:
                 return "notifications_comment_liked";
             case NOTIFICATION_UNLIKED:
                 return "notifications_comment_unliked";
