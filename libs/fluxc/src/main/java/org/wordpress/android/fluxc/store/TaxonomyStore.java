@@ -59,6 +59,30 @@ public class TaxonomyStore extends Store {
         }
     }
 
+    public static class RemoteTermPayload extends Payload {
+        public TaxonomyError error;
+        public TermModel term;
+        public SiteModel site;
+
+        public RemoteTermPayload() {}
+
+        public RemoteTermPayload(TermModel term, SiteModel site) {
+            this.term = term;
+            this.site = site;
+        }
+
+        @Override
+        public boolean isError() {
+            return error != null;
+        }
+    }
+
+    public static class FetchTermResponsePayload extends RemoteTermPayload {
+        public FetchTermResponsePayload(TermModel term, SiteModel site) {
+            super(term, site);
+        }
+    }
+
     // OnChanged events
     public class OnTaxonomyChanged extends OnChanged<TaxonomyError> {
         public int rowsAffected;
@@ -188,6 +212,20 @@ public class TaxonomyStore extends Store {
             case FETCHED_TERMS:
                 handleFetchTermsCompleted((FetchTermsResponsePayload) action.getPayload());
                 break;
+            case FETCH_TERM:
+                fetchTerm((RemoteTermPayload) action.getPayload());
+                break;
+            case FETCHED_TERM:
+                handleFetchSingleTermCompleted((FetchTermResponsePayload) action.getPayload());
+                break;
+        }
+    }
+
+    private void fetchTerm(RemoteTermPayload payload) {
+        if (payload.site.isWPCom()) {
+            mTaxonomyRestClient.fetchTerm(payload.term, payload.site);
+        } else {
+            // TODO: XML-RPC support
         }
     }
 
@@ -237,6 +275,25 @@ public class TaxonomyStore extends Store {
                 onTaxonomyChanged.causeOfChange = TaxonomyAction.FETCH_TERMS;
         }
 
+        emitChange(onTaxonomyChanged);
+    }
+
+    private void handleFetchSingleTermCompleted(FetchTermResponsePayload payload) {
+        if (payload.isError()) {
+            OnTaxonomyChanged event = new OnTaxonomyChanged(0, payload.term.getTaxonomy());
+            event.error = payload.error;
+            event.causeOfChange = TaxonomyAction.UPDATE_TERM;
+            emitChange(event);
+        } else {
+            updateTerm(payload.term);
+        }
+    }
+
+    private void updateTerm(TermModel term) {
+        int rowsAffected = TaxonomySqlUtils.insertOrUpdateTerm(term);
+
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
+        onTaxonomyChanged.causeOfChange = TaxonomyAction.UPDATE_TERM;
         emitChange(onTaxonomyChanged);
     }
 }
