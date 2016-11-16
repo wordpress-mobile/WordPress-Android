@@ -19,4 +19,5 @@ public class AccountResponse implements Response {
     public String date;
     public int site_count;
     public int visible_site_count;
+    public boolean has_unseen_notes;
 }
