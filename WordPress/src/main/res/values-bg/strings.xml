@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-09-18 06:09:10+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: bg
+-->
 <resources>
 	<string name="reader_label_image_count_one">1 снимка</string>
 	<string name="timespan_now">сега</string>
@@ -84,7 +90,6 @@
 	<string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
 	<string name="reader_empty_posts_in_search_description">Няма намерени публикации за %s на вашия език</string>
 	<string name="reader_empty_posts_in_search_title">Няма намерени публикации</string>
-	<string name="reader_label_related_posts">Свързани статии</string>
 	<string name="reader_label_post_search_running">Търсене...</string>
 	<string name="reader_label_post_search_explainer">Търсене в публичните блогове на WordPress.com</string>
 	<string name="reader_hint_post_search">Търсене в WordPress.com</string>

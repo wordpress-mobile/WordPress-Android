@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-08-01 20:39:49+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: el_GR
+-->
 <resources>
 	<string name="editor_failed_uploads_switch_html">Μερικές μεταφορτώσεις πολυμέσων απέτυχαν. Δεν μπορείτε να μεταβείτε σε λειτουργία HTML \n        σε αυτή την κατάσταση. Αφαίρεση όλων των αποτυχημένων μεταφορτώσεων και συνέχεια;</string>
 	<string name="image_thumbnail">Μικρογραφία εικόνας</string>
@@ -43,7 +49,6 @@
 	<string name="dlg_confirm_clear_search_history">Καθαρισμός ιστορικού αναζήτησης;</string>
 	<string name="reader_empty_posts_in_search_description">Δεν βρέθηκαν άρθρα στην γλώσσα σας για %s</string>
 	<string name="reader_empty_posts_in_search_title">Δεν βρέθηκαν άρθρα</string>
-	<string name="reader_label_related_posts">Ανάγνωση Σχετικών</string>
 	<string name="reader_label_post_search_running">Γίνεται αναζήτηση...</string>
 	<string name="reader_label_post_search_explainer">Αναζήτηση σε όλα τα δημόσια ιστολόγια του WordPress.com</string>
 	<string name="reader_hint_post_search">Αναζήτηση στο WordPress.com</string>
