@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Contextual ActionBar menu for comment list
+-->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_notifications_left"
+        android:icon="@drawable/ic_arrow_left"
+        app:showAsAction="always"
+        android:title="@string/previous_button" />
+    <item
+        android:id="@+id/menu_notifications_right"
+        android:icon="@drawable/ic_arrow_right"
+        app:showAsAction="always"
+        android:title="@string/next_button" />
+
+</menu>

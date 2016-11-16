@@ -490,26 +490,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-        inflater.inflate(R.menu.comment_detail, menu);
-        if (!canEdit()) {
-            menu.removeItem(R.id.menu_edit_comment);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.menu_edit_comment) {
-            editComment();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private boolean hasComment() {
         return (mComment != null);
     }
