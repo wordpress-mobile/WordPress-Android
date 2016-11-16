@@ -176,14 +176,6 @@ public class NotificationsProcessingService extends Service {
                     showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
                 }
 
-                /*********************************************************/
-                /* possible actions are Comment REPLY, APPROVE, and LIKE */
-                /*********************************************************/
-
-                //we probably have the note in the PN payload and such it's passed in the intent extras
-                // bundle. If we have it, no need to go fetch it through REST API.
-                getNoteFromBundleIfExists();
-
                 //if we still don't have a Note, go get it from the REST API
                 if (mNote == null) {
                     RestRequest.Listener listener =
@@ -211,7 +203,6 @@ public class NotificationsProcessingService extends Service {
                     //we have a Note! just go ahead and perform the requested action
                     performRequestedAction();
                 }
-
             } else {
                 requestFailed(null);
             }
@@ -246,60 +237,9 @@ public class NotificationsProcessingService extends Service {
                 }
             }
 
-
-            if (mActionType != null) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActionType.equals(ARG_ACTION_REPLY)) {
-                    //we don't need showing the infinite progress bar in case of REPLY on Android N,
-                    //because we've got inline-reply there with its own spinner to show progress
-                    // no op
-                } else {
-                    showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
-                }
-
-                //we probably have the note in the PN payload and such it's passed in the intent extras
-                // bundle. If we have it, no need to go fetch it through REST API.
-                if (mIntent.hasExtra(ARG_NOTE_BUNDLE)) {
-                    Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
-                    if (payload.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-                        String base64FullData = payload.getString(PUSH_ARG_NOTE_FULL_DATA);
-                        mNote = Note.buildFromBase64EncodedData(mNoteId, base64FullData);
-                    }
-                }
-
-                //if we still don't have a Note, go get it from the REST API
-                if (mNote == null) {
-                    RestRequest.Listener listener =
-                            new RestRequest.Listener() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    if (response == null) {
-                                        //Not sure this could ever happen, but make sure we're catching all response types
-                                        AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
-                                    }
-                                    if (response != null && !response.optBoolean("success")) {
-                                        //build the Note object here
-                                        buildNoteFromJSONObject(response);
-                                        performRequestedAction();
-                                    }
-                                }
-                            };
-
-                    RestRequest.ErrorListener errorListener =
-                            new RestRequest.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    requestFailed(mActionType);
-                                }
-                            };
-
-                    getNoteFromNoteId(mNoteId, listener, errorListener);
-                } else {
-                    //we have a Note! just go ahead and perform the requested action
-                    performRequestedAction();
-
-                }
-            }
+            //we probably have the note in the PN payload and such it's passed in the intent extras
+            // bundle. If we have it, no need to go fetch it through REST API.
+            getNoteFromBundleIfExists();
         }
 
         private String getProcessingTitleForAction(String actionType) {
@@ -344,6 +284,9 @@ public class NotificationsProcessingService extends Service {
         }
 
         private void performRequestedAction(){
+            /*********************************************************/
+            /* possible actions are Comment REPLY, APPROVE, and LIKE */
+            /*********************************************************/
             if (mNote != null) {
                 if (mActionType != null) {
                     switch (mActionType) {
