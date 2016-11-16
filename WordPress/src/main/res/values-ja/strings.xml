@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-11-13 12:00:38+0000
+Plural-Forms: nplurals=1; plural=0;
+Generator: GlotPress/2.3.0-alpha
+Language: ja_JP
+-->
 <resources>
+	<string name="reader_label_global_related_posts">WordPress.com の詳細</string>
+	<string name="reader_label_local_related_posts">関連 (%s)</string>
+	<string name="preference_open_device_settings">デバイス設定を開く</string>
+	<string name="comment_moderated_unapproved">未承認コメント</string>
+	<string name="invite_invalid_email">%s: 無効なメールアドレス</string>
+	<string name="invite_user_blocked_invites">%s: ユーザーが招待をブロックしました</string>
+	<string name="invite_already_following">%s: すでにフォロー済です</string>
+	<string name="invite_already_a_member">%s: すでにメンバーです</string>
+	<string name="invite_username_not_found">%s: ユーザーが見つかりませんでした</string>
+	<string name="comment_moderated_approved">コメントが承認されました。</string>
+	<string name="like">いいね</string>
+	<string name="reader_label_image_count_one">1画像</string>
+	<string name="timespan_now">今</string>
 	<string name="role_viewer">閲覧者</string>
 	<string name="role_follower">フォロワー</string>
 	<string name="role_contributor">寄稿者</string>
@@ -10,6 +29,7 @@
 	<string name="alignment_right">右</string>
 	<string name="alignment_left">左</string>
 	<string name="alignment_none">なし</string>
+	<string name="site_settings_list_editor_action_mode_title">%1$d が選択されています</string>
 	<string name="error_fetch_users_list">サイトのユーザーを取得できませんでした</string>
 	<string name="plans_manage">プランの管理は次で行います\nWordPress.com/plans</string>
 	<string name="title_email_follower">メールフォロワー</string>
@@ -27,6 +47,7 @@
 	<string name="viewer_remove_confirmation_message">この読者を削除すると、この読者はこのサイトにアクセスできなくなります。\n\n本当にこの読者を削除しますか ?</string>
 	<string name="follower_remove_confirmation_message">削除すると、このフォロワーが再度フォローしない限り、このサイトの通知を受け取れなくなります。\n\n本当にこのフォロワーを削除しますか ?</string>
 	<string name="follower_subscribed_since">購読日: %1$s</string>
+	<string name="reader_label_image_count_multi">%d枚の画像</string>
 	<string name="reader_label_view_gallery">ギャラリーを表示</string>
 	<string name="error_remove_viewer">閲覧者を削除できませんでした。</string>
 	<string name="error_remove_follower">フォロワーを削除できませんでした。</string>
@@ -42,7 +63,7 @@
 	<string name="format_bar_description_more">more タグを挿入</string>
 	<string name="format_bar_description_link">リンクを挿入</string>
 	<string name="format_bar_description_quote">引用をブロック</string>
-	<string name="format_bar_description_strike">取り消し線</string>
+	<string name="format_bar_description_strike">打ち消し</string>
 	<string name="format_bar_description_underline">下線</string>
 	<string name="format_bar_description_italic">斜体</string>
 	<string name="format_bar_description_bold">太字</string>
@@ -81,7 +102,6 @@
 	<string name="dlg_confirm_clear_search_history">検索履歴を削除しますか ?</string>
 	<string name="reader_empty_posts_in_search_description">お使いの言語では %s に関する投稿は見つかりませんでした。</string>
 	<string name="reader_empty_posts_in_search_title">投稿が見つかりません</string>
-	<string name="reader_label_related_posts">こちらもどうぞ</string>
 	<string name="reader_label_post_search_running">検索中…</string>
 	<string name="reader_label_post_search_explainer">WordPress.com の公開ブログをすべて検索</string>
 	<string name="reader_hint_post_search">WordPress.com を検索</string>
@@ -189,7 +209,7 @@
 	<string name="post_format_image">画像</string>
 	<string name="post_format_gallery">ギャラリー</string>
 	<string name="post_format_chat">チャット</string>
-	<string name="post_format_audio">音声ファイル</string>
+	<string name="post_format_audio">音声</string>
 	<string name="post_format_aside">アサイド</string>
 	<string name="notif_events">WordPress.com のコースやイベント (オンライン・オフライン) の情報。</string>
 	<string name="notif_surveys">WordPress.com の研究・調査に参加する機会。</string>
@@ -724,7 +744,7 @@
 	<string name="agree_terms_of_service">アカウントを作成すると%1$s利用規約%2$sに合意したものとみなされます。</string>
 	<string name="nux_help_description">ヘルプセンターにアクセスして一般的な質問の答えを探すか、フォーラムにアクセスして新しい質問を尋ねてください。</string>
 	<string name="browse_our_faq_button">よく聞かれる質問を表示</string>
-	<string name="faq_button">よく聞かれる質問</string>
+	<string name="faq_button">よくある質問</string>
 	<string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
 	<string name="reader_empty_followed_blogs_title">フォローしているサイトがまだありません</string>
 	<string name="reader_menu_block_blog">このブログをブロック</string>
@@ -1096,7 +1116,7 @@
 	<string name="max_thumbnail_px_width">標準の画像幅</string>
 	<string name="image_alignment">配置</string>
 	<string name="refresh">再読み込み</string>
-	<string name="untitled">タイトル未設定</string>
+	<string name="untitled">名称未設定</string>
 	<string name="edit">編集</string>
 	<string name="page_id">固定ページ</string>
 	<string name="post_id">投稿</string>

@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-10-26 14:24:24+0000
+Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
+Generator: GlotPress/2.3.0-alpha
+Language: ro
+-->
 <resources>
+	<string name="reader_label_global_related_posts">Mai multe pe WordPress.com</string>
+	<string name="reader_label_local_related_posts">Mai multe în %s</string>
+	<string name="preference_open_device_settings">Deschide setări dispozitiv</string>
+	<string name="comment_moderated_unapproved">Comentariu neaprobat</string>
 	<string name="invite_invalid_email">%s: email invalid</string>
 	<string name="invite_user_blocked_invites">%s: invitați blocați de utilizator</string>
 	<string name="invite_already_following">%s: deja urmăresc</string>
@@ -92,7 +102,6 @@
 	<string name="dlg_confirm_clear_search_history">Ștergi istoricul căutărilor?</string>
 	<string name="reader_empty_posts_in_search_description">Nu s-a găsit niciun articol a lui %s în limba ta</string>
 	<string name="reader_empty_posts_in_search_title">Niciun articol găsit</string>
-	<string name="reader_label_related_posts">Lectură similară</string>
 	<string name="reader_label_post_search_running">Se caută...</string>
 	<string name="reader_label_post_search_explainer">Caută în toate blogurile publice WordPress.com</string>
 	<string name="reader_hint_post_search">Caută în WordPress.com</string>
