@@ -1049,7 +1049,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // Now we'll add a detail fragment list
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note.getId());
         mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
