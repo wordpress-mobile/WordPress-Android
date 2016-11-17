@@ -241,7 +241,14 @@ public class StatsService extends Service {
 
         final String blogId = intent.getStringExtra(ARG_BLOG_ID);
         if (TextUtils.isEmpty(blogId)) {
-            AppLog.e(T.STATS, "StatsService was started with a blank blog_id ");
+            AppLog.e(T.STATS, "StatsService was started with a blank blog_id");
+            return START_NOT_STICKY;
+        }
+
+        int[] sectionFromIntent = intent.getIntArrayExtra(ARG_SECTION);
+        if (sectionFromIntent == null || sectionFromIntent.length == 0) {
+            // No sections to update
+            AppLog.e(T.STATS, "StatsService was started without valid sections info");
             return START_NOT_STICKY;
         }
 
@@ -265,8 +272,6 @@ public class StatsService extends Service {
 
         final int maxResultsRequested = intent.getIntExtra(ARG_MAX_RESULTS, DEFAULT_NUMBER_OF_RESULTS);
         final int pageRequested = intent.getIntExtra(ARG_PAGE_REQUESTED, -1);
-
-        int[] sectionFromIntent = intent.getIntArrayExtra(ARG_SECTION);
 
         this.mServiceStartId = startId;
         for (int i=0; i < sectionFromIntent.length; i++){
