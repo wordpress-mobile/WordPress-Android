@@ -65,6 +65,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
@@ -149,6 +150,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private boolean mInhibitMagicLogin;
     private boolean mSmartLockEnabled = true;
     private boolean mShouldShowPassword;
+    private boolean mIsActivityFinishing;
 
     public interface OnMagicLinkRequestInteraction {
         void onMagicLinkRequestSuccess(String email);
@@ -304,8 +306,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
 
         if (!mToken.isEmpty() && !mInhibitMagicLogin) {
-            attemptLoginWithMagicLink();
             mSmartLockEnabled = false;
+            attemptLoginWithMagicLink();
         } else {
             mSmartLockEnabled = true;
         }
@@ -471,10 +473,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     public boolean canAutofillUsernameAndPassword() {
         return EditTextUtils.getText(mUsernameEditText).isEmpty()
-                && EditTextUtils.getText(mPasswordEditText).isEmpty()
-                && mUsernameEditText != null
-                && mPasswordEditText != null
-                && !mSelfHosted;
+               && EditTextUtils.getText(mPasswordEditText).isEmpty()
+               && mUsernameEditText != null
+               && mPasswordEditText != null
+               && mSmartLockEnabled
+               && !mSelfHosted;
     }
 
     public void onCredentialRetrieved(Credential credential) {
@@ -650,25 +653,44 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    private void saveCredentialsInSmartLock() {
+        SmartLockHelper smartLockHelper = getSmartLockHelper();
+        // mUsername and mPassword are null when the user log in with a magic link
+        if (smartLockHelper != null && mUsername != null && mPassword != null) {
+            smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword,
+                    HtmlUtils.fastUnescapeHtml(mAccountStore.getAccount().getDisplayName()),
+                    Uri.parse(mAccountStore.getAccount().getAvatarUrl()));
+        }
+    }
+
     private void finishCurrentActivity() {
-        if (!isAdded()) {
+        if (mIsActivityFinishing) return;
+        mIsActivityFinishing = true;
+        saveCredentialsInSmartLock();
+        if (getActivity() == null) {
             return;
         }
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
+                if (mInhibitMagicLogin) {
+                    // just finish the login activity and return to the its "caller"
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                } else {
+                    // move on the the main activity
+                    Intent intent = new Intent(getActivity(), WPMainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
+                    getActivity().startActivity(intent);
+                }
             }
         });
     }
 
     public void attemptLoginWithMagicLink() {
-        saveTokenToAccount();
-        fetchAccountSettingsAndSites();
-    }
-
-    private void saveTokenToAccount() {
+        // Save Token to the AccountStore, this will a onAuthenticationChanged (that will pull account setting and
+        // sites)
         AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(mToken);
         mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
     }
