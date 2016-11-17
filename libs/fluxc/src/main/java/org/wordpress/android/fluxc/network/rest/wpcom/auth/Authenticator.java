@@ -13,7 +13,16 @@ import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
@@ -48,6 +57,7 @@ public class Authenticator {
     private static final String INVALID_OTP_ERROR = "invalid_otp";
     private static final String INVALID_CREDS_ERROR = "Incorrect username or password.";
 
+    private final Dispatcher mDispatcher;
     private final RequestQueue mRequestQueue;
     private AppSecrets mAppSecrets;
 
@@ -67,8 +77,19 @@ public class Authenticator {
         }
     }
 
+    public static class AuthEmailResponsePayload extends Payload {
+        public AuthEmailError error;
+        public AuthEmailResponsePayload() {}
+
+        @Override
+        public boolean isError() {
+            return error != null;
+        }
+    }
+
     @Inject
-    public Authenticator(RequestQueue requestQueue, AppSecrets secrets) {
+    public Authenticator(Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets secrets) {
+        mDispatcher = dispatcher;
         mRequestQueue = requestQueue;
         mAppSecrets = secrets;
     }
@@ -191,6 +212,38 @@ public class Authenticator {
                     tokenJSON.getString(SITE_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME), tokenJSON.getString(
                     TOKEN_TYPE_FIELD_NAME));
         }
+    }
+
+    public void sendAuthEmail(final String email) {
+        String url = WPCOMREST.auth.send_login_email.getUrlV1_1();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+        params.put("client_id", mAppSecrets.getAppId());
+        params.put("client_secret", mAppSecrets.getAppSecret());
+
+        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, AuthEmailWPComRestResponse.class,
+                new Response.Listener<AuthEmailWPComRestResponse>() {
+                    @Override
+                    public void onResponse(AuthEmailWPComRestResponse response) {
+                        AuthEmailResponsePayload payload = new AuthEmailResponsePayload();
+
+                        if (!response.success) {
+                            payload.error = new AuthEmailError(AuthEmailErrorType.UNSUCCESSFUL, "");
+                        }
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(payload));
+                    }
+                }, new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AuthEmailResponsePayload payload = new AuthEmailResponsePayload();
+                        payload.error = new AuthEmailError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(payload));
+                    }
+                }
+        );
+
+        mRequestQueue.add(request);
     }
 
     public static AuthenticationErrorType volleyErrorToAuthenticationError(VolleyError error) {

@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.util.AppLog;
@@ -16,29 +17,72 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 public class MemorizingTrustManager implements X509TrustManager {
-    public static final String KEYSTORE_FILENAME = "wpstore_certs_truststore.bks";
-    public static final String KEYSTORE_PASSWORD = "secret";
+    private static final String KEYSTORE_FILENAME = "wpstore_certs_truststore.bks";
+    private static final String KEYSTORE_PASSWORD = "secret";
+    private static final long FUTURE_TASK_TIMEOUT_SECONDS = 10;
 
-    private X509TrustManager mDefaultTrustManager;
-    private KeyStore mLocalKeyStore;
+    private FutureTask<X509TrustManager> mTrustManagerFutureTask;
+    private FutureTask<KeyStore> mLocalKeyStoreFutureTask;
     private X509Certificate mLastFailure;
     private Context mContext;
 
     public MemorizingTrustManager(Context appContext) {
         mContext = appContext;
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        mLocalKeyStoreFutureTask = new FutureTask<>(new Callable<KeyStore>() {
+            public KeyStore call() {
+                return getKeyStore();
+            }
+        });
+        mTrustManagerFutureTask = new FutureTask<>(new Callable<X509TrustManager>() {
+            public X509TrustManager call() {
+                return getTrustManager(null);
+            }
+        });
+        executorService.execute(mLocalKeyStoreFutureTask);
+        executorService.execute(mTrustManagerFutureTask);
+    }
+
+    @NonNull
+    private KeyStore getLocalKeyStore() {
         try {
-            mLocalKeyStore = loadTrustStore();
+            return mLocalKeyStoreFutureTask.get(FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            throw new IllegalStateException("Couldn't find KeyStore");
+        }
+    }
+
+    @NonNull
+    private X509TrustManager getDefaultTrustManager() {
+        try {
+            return mTrustManagerFutureTask.get(FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            throw new IllegalStateException("Couldn't find X509TrustManager");
+        }
+    }
+
+    private KeyStore getKeyStore() {
+        KeyStore localKeyStore;
+        try {
+            localKeyStore = loadTrustStore();
         } catch (FileNotFoundException e) {
             // Init the key store for the first time
             try {
                 initLocalKeyStoreFile();
-                mLocalKeyStore = loadTrustStore();
+                localKeyStore = loadTrustStore();
             } catch (IOException | GeneralSecurityException e1) {
                 throw new IllegalStateException(e1);
             }
@@ -46,10 +90,7 @@ public class MemorizingTrustManager implements X509TrustManager {
             AppLog.e(T.API, e);
             throw new IllegalStateException(e);
         }
-        mDefaultTrustManager = getTrustManager(null);
-        if (mDefaultTrustManager == null) {
-            throw new IllegalStateException("Couldn't find X509TrustManager");
-        }
+        return localKeyStore;
     }
 
     private X509TrustManager getTrustManager(@Nullable KeyStore keyStore) {
@@ -117,7 +158,7 @@ public class MemorizingTrustManager implements X509TrustManager {
 
     public boolean isCertificateAccepted(X509Certificate cert) {
         try {
-            return mLocalKeyStore.getCertificateAlias(cert) != null;
+            return getLocalKeyStore().getCertificateAlias(cert) != null;
         } catch (GeneralSecurityException e) {
             return false;
         }
@@ -129,20 +170,20 @@ public class MemorizingTrustManager implements X509TrustManager {
 
     public void storeCert(X509Certificate cert) {
         try {
-            mLocalKeyStore.setCertificateEntry(cert.getSubjectDN().toString(), cert);
-            saveTrustStore(mLocalKeyStore);
+            getLocalKeyStore().setCertificateEntry(cert.getSubjectDN().toString(), cert);
+            saveTrustStore(getLocalKeyStore());
         } catch (IOException | GeneralSecurityException e) {
             AppLog.e(T.API, "Unable to store the certificate: " + cert);
         }
     }
 
     public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-        mDefaultTrustManager.checkClientTrusted(chain, authType);
+        getDefaultTrustManager().checkClientTrusted(chain, authType);
     }
 
     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         try {
-            mDefaultTrustManager.checkServerTrusted(chain, authType);
+            getDefaultTrustManager().checkServerTrusted(chain, authType);
         } catch (CertificateException ce) {
             mLastFailure = chain[0];
             if (isCertificateAccepted(chain[0])) {
@@ -154,7 +195,9 @@ public class MemorizingTrustManager implements X509TrustManager {
     }
 
     public X509Certificate[] getAcceptedIssuers() {
-        return mDefaultTrustManager.getAcceptedIssuers();
+        // return mDefaultTrustManager.getAcceptedIssuers();
+        // ^ Original code is super slow (~1200 msecs) - Return an empty list since it seems unused by OkHttp.
+        return new X509Certificate[0];
     }
 
     public X509Certificate getLastFailure() {
