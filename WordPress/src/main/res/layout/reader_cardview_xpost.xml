@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/grey_dark"
+                android:textColor="@color/grey_darken_30"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 app:wpFontFamily="merriweather"
