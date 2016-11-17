@@ -50,6 +50,15 @@ public class WPComEndpointTest {
         // Users
         assertEquals("/users/new/", WPCOMREST.users.new_.getEndpoint());
         assertEquals("/users/new/", WPCOMREST.users.new_.getEndpoint());
+
+        // Availability
+        assertEquals("/is-available/email/", WPCOMREST.is_available.email.getEndpoint());
+        assertEquals("/is-available/username/", WPCOMREST.is_available.username.getEndpoint());
+        assertEquals("/is-available/blog/", WPCOMREST.is_available.blog.getEndpoint());
+        assertEquals("/is-available/domain/", WPCOMREST.is_available.domain.getEndpoint());
+
+        // Magic link email sender
+        assertEquals("/auth/send-login-email/", WPCOMREST.auth.send_login_email.getEndpoint());
     }
 
     @Test
@@ -58,5 +67,6 @@ public class WPComEndpointTest {
         assertEquals("https://public-api.wordpress.com/rest/v1.1/sites/", WPCOMREST.sites.getUrlV1_1());
         assertEquals("https://public-api.wordpress.com/rest/v1.2/sites/", WPCOMREST.sites.getUrlV1_2());
         assertEquals("https://public-api.wordpress.com/rest/v1.3/sites/", WPCOMREST.sites.getUrlV1_3());
+        assertEquals("https://public-api.wordpress.com/is-available/email/", WPCOMREST.is_available.email.getUrlV0());
     }
 }

@@ -201,6 +201,10 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mPassword = password;
     }
 
+    public boolean hasFeaturedImage() {
+        return mFeaturedImageId > 0;
+    }
+
     public long getFeaturedImageId() {
         if (mFeaturedImageId == FEATURED_IMAGE_INIT_VALUE) {
             return 0;
