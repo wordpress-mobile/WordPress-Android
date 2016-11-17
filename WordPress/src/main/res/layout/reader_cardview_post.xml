@@ -97,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|left"
-                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layout_marginLeft="@dimen/reader_card_content_padding"
                 android:layout_marginRight="@dimen/reader_card_content_padding"
                 android:ellipsize="end"
