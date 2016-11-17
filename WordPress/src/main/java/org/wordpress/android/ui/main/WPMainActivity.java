@@ -4,6 +4,9 @@ import android.animation.ObjectAnimator;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -218,6 +221,12 @@ public class WPMainActivity extends AppCompatActivity {
             }
         }
         startService(new Intent(this, NotificationsScreenLockWatchService.class));
+
+        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
+        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
+
+        // monitor whether we're not the default app
+        trackDefaultApp();
     }
 
     @Override
@@ -356,7 +365,7 @@ public class WPMainActivity extends AppCompatActivity {
 
         new CheckUnseenNotesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
+        // ensure the deep linking activity is enabled. We might be returning from the external-browser viewing of a post
         WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
 
         // We need to track the current item on the screen when this activity is resumed.
@@ -434,6 +443,16 @@ public class WPMainActivity extends AppCompatActivity {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void trackDefaultApp() {
+        Intent wpcomIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.wordpresscom_sample_post)));
+        ResolveInfo resolveInfo = getPackageManager().resolveActivity(wpcomIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (resolveInfo != null && !getPackageName().equals(resolveInfo.activityInfo.name)) {
+            // not set as default handler so, track this to evaluate. Note, a resolver/chooser might be the default.
+            AnalyticsUtils.trackWithDefaultInterceptor(AnalyticsTracker.Stat.DEEP_LINK_NOT_DEFAULT_HANDER,
+                    resolveInfo.activityInfo.name);
         }
     }
 

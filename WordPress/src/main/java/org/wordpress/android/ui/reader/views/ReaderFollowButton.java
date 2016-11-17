@@ -76,7 +76,7 @@ public class ReaderFollowButton extends LinearLayout {
         if (mIsFollowed) {
             drawableId = R.drawable.reader_following;
         } else {
-            drawableId = R.drawable.reader_follow_blue;
+            drawableId = R.drawable.reader_follow;
         }
         mImageFollow.setImageResource(drawableId);
     }
