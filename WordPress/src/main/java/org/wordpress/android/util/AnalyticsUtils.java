@@ -42,6 +42,7 @@ public class AnalyticsUtils {
     private static String INTENT_ACTION = "intent_action";
     private static String INTENT_DATA = "intent_data";
     private static String INTERCEPTED_URI = "intercepted_uri";
+    private static String INTERCEPTOR_CLASSNAME = "interceptor_classname";
 
     /**
      * Utility method to refresh mixpanel metadata.
@@ -277,7 +278,21 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
-  /**
+    /**
+     * Track when app launched via deep-linking but then fell back to external browser
+     *
+     * @param stat The Stat to bump
+     * @param interceptorClassname The name of the class that handles the intercept by default
+     *
+     */
+    public static void trackWithDefaultInterceptor(AnalyticsTracker.Stat stat, String interceptorClassname) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(INTERCEPTOR_CLASSNAME, interceptorClassname);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
    * Track when a railcar item has been rendered
    *
    * @param post The JSON string of the railcar
