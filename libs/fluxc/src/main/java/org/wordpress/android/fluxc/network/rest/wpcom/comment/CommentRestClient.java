@@ -96,7 +96,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchComment(final SiteModel site, final long remoteCommentId, final @Nullable CommentModel comment) {
+    public void fetchComment(final SiteModel site, final long remoteCommentId, @Nullable final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).getUrlV1_1();
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
                 url, null, CommentWPComRestResponse.class,
