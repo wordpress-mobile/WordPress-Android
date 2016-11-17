@@ -345,7 +345,6 @@ public class GCMMessageService extends GcmListenerService {
         return DeviceUtils.getInstance().isDeviceLocked(this);
     }
 
-
     private static void addAuthPushNotificationToNotificationMap(Bundle data) {
         sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
     }

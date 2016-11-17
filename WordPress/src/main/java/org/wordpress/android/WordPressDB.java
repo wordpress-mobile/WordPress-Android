@@ -265,8 +265,6 @@ public class WordPressDB {
             case 49:
                 // Delete simperium DB since we're removing Simperium from the app.
                 ctx.deleteDatabase("simperium-store");
-                currentVersion++;
-
         }
         db.setVersion(DATABASE_VERSION);
     }

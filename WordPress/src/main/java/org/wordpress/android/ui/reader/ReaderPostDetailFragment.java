@@ -304,6 +304,10 @@ public class ReaderPostDetailFragment extends Fragment
                 AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mInterceptedUri);
                 ReaderActivityLauncher.openUrl(getActivity(), mInterceptedUri, OpenUrlType.EXTERNAL,
                         mAccountStore.getAccount().getUserName());
+            } else if (mInterceptedUri != null) {
+                AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mInterceptedUri);
+                ReaderActivityLauncher.openUrl(getActivity(), mInterceptedUri, OpenUrlType.EXTERNAL,
+                        mAccountStore.getAccount().getUserName());
                 getActivity().finish();
             }
             return true;

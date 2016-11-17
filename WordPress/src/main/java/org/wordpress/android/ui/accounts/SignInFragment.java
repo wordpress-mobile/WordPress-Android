@@ -28,10 +28,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.credentials.Credential;
+import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -83,6 +87,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+
+import static com.android.volley.Request.Method.HEAD;
 
 public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String TAG = "sign_in_fragment_tag";
@@ -151,6 +157,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private boolean mSmartLockEnabled = true;
     private boolean mShouldShowPassword;
     private boolean mIsActivityFinishing;
+
 
     public interface OnMagicLinkRequestInteraction {
         void onMagicLinkRequestSuccess(String email);
@@ -367,7 +374,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         } else {
             showSelfHostedSignInForm();
         }
-
         if (fieldsFilled()) {
             mSignInButton.setEnabled(true);
         } else {

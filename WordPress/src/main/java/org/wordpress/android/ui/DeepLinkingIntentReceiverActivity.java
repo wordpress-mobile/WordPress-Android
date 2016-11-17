@@ -18,6 +18,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
+
 /**
  * An activity to handle deep linking and intercepting
  *

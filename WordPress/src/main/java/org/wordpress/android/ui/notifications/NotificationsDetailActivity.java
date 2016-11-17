@@ -118,7 +118,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 if (note.isNewPostType()) {
                     title = getString(R.string.reader_title_post_detail);
                 }
-
                 getSupportActionBar().setTitle(title);
             }
 

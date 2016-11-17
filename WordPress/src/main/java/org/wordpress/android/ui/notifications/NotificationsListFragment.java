@@ -42,8 +42,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class NotificationsListFragment extends Fragment
-        implements WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener {
+public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
+        RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
@@ -236,6 +236,7 @@ public class NotificationsListFragment extends Fragment
             WordPress.getRestClientUtilsV1_1().getNotifications(params, notesHandler, notesHandler);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (mRecyclerView.getAdapter() == null) {
                 mRecyclerView.setAdapter(mNotesAdapter);
             }
@@ -248,6 +249,8 @@ public class NotificationsListFragment extends Fragment
                 // failed for some other reason
                 showEmptyView(R.string.error_refresh_notifications);
             }
+=======
+>>>>>>> develop
 =======
 >>>>>>> develop
         }

@@ -208,6 +208,7 @@ public final class AnalyticsTracker {
         TRAIN_TRACKS_INTERACT,
         DEEP_LINKED,
         DEEP_LINKED_FALLBACK,
+        DEEP_LINK_NOT_DEFAULT_HANDLER,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

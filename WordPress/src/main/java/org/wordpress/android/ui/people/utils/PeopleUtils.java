@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.android.volley.Request.Method.HEAD;
 import static org.wordpress.android.R.id.usernames;
 
 public class PeopleUtils {

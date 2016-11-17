@@ -43,6 +43,7 @@ public class AnalyticsUtils {
     private static String INTENT_ACTION = "intent_action";
     private static String INTENT_DATA = "intent_data";
     private static String INTERCEPTED_URI = "intercepted_uri";
+    private static String INTERCEPTOR_CLASSNAME = "interceptor_classname";
 
     /**
      * Utility methods to refresh Tracks and Mixpanel metadata.
@@ -223,25 +224,38 @@ public class AnalyticsUtils {
     /**
      * Track when app launched via deep-linking but then fell back to external browser
      *
-     * @param stat The Stat to bump
+     * @param stat           The Stat to bump
      * @param interceptedUri The fallback URI the app was started with
-     *
      */
     public static void trackWithInterceptedUri(AnalyticsTracker.Stat stat, String interceptedUri) {
-        Map<String, Object> properties =  new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put(INTERCEPTED_URI, interceptedUri);
 
         AnalyticsTracker.track(stat, properties);
     }
 
-  /**
-   * Track when a railcar item has been rendered
-   *
-   * @param post The JSON string of the railcar
-   *
-   */
+    /**
+     * Track when app launched via deep-linking but then fell back to external browser
+     *
+     * @param stat                 The Stat to bump
+     * @param interceptorClassname The name of the class that handles the intercept by default
+     */
+    public static void trackWithDefaultInterceptor(AnalyticsTracker.Stat stat, String interceptorClassname) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(INTERCEPTOR_CLASSNAME, interceptorClassname);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
+     * Track when a railcar item has been rendered
+     *
+     * @param post The JSON string of the railcar
+     */
     public static void trackRailcarRender(String railcarJson) {
-        if (TextUtils.isEmpty(railcarJson)) return;
+        if (TextUtils.isEmpty(railcarJson)) {
+            return;
+        }
 
         AnalyticsTracker.track(TRAIN_TRACKS_RENDER, railcarJsonToProperties(railcarJson));
     }

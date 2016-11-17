@@ -95,8 +95,8 @@ public class RestClientUtils {
      * <p/>
      * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/comments/
      */
-    public void getComments(long siteId, Map<String, String> params, final Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/comments", siteId);
+    public void getComments(String siteId, Map<String, String> params, final Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%s/comments", siteId);
         get(path, params, null, listener, errorListener);
     }
 
@@ -258,8 +258,10 @@ public class RestClientUtils {
         getSearchThemes("free", siteId, limit, offset, searchTerm, listener, errorListener);
     }
 
-    public void getSearchThemes(String tier, long siteId, int limit, int offset, String searchTerm, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/themes?tier=" + tier + "&number=%d&offset=%d&search=%s", siteId, limit, offset, searchTerm);
+    public void getSearchThemes(String tier, long siteId, int limit, int offset, String searchTerm, Listener listener,
+                                ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/themes?tier=" + tier + "&number=%d&offset=%d&search=%s",
+                siteId, limit, offset, searchTerm);
         get(path, listener, errorListener);
     }
 
