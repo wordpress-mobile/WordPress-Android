@@ -8,9 +8,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:stateListAnimator="@anim/pressed_card"
-    card_view:cardBackgroundColor="@color/grey_lighten_30"
+    card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="@dimen/cardview_default_radius"
-    card_view:cardElevation="0dp"
+    card_view:cardElevation="@dimen/reader_card_elevation"
     card_view:contentPaddingLeft="@dimen/margin_extra_large"
     tools:targetApi="LOLLIPOP">
 
