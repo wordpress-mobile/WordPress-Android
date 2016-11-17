@@ -10,7 +10,7 @@
     <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_wpcom_confirm">Disconnecting your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
+    <string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
 
     <!-- form labels -->
@@ -69,14 +69,15 @@
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
-    <string name="sign_in">Sign in</string>
-    <string name="signing_out">Signing out…</string>
+    <string name="sign_in">Log in</string>
+    <string name="signing_out">Logging out…</string>
+    <string name="sign_in_wpcom">Log in to WordPress.com</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
     <string name="language">Language</string>
     <string name="interface_language">Interface Language</string>
-    <string name="signout">Disconnect</string>
+    <string name="signout">Log out</string>
     <string name="undo">Undo</string>
     <string name="never">Never</string>
     <string name="unknown">Unknown</string>
@@ -328,6 +329,12 @@
     <string name="approve">Approve</string>
     <string name="comment_moderated_approved">Comment approved!</string>
     <string name="comment_moderated_unapproved">Comment unapproved</string>
+    <string name="comment_liked">Comment liked</string>
+    <string name="comment_q_action_done_generic">Action done!</string>
+    <string name="comment_q_action_processing">Processing…</string>
+    <string name="comment_q_action_liking">Liking…</string>
+    <string name="comment_q_action_approving">Approving…</string>
+    <string name="comment_q_action_replying">Replying…</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -375,7 +382,7 @@
     <string name="uploading_total">Uploading %1$d of %2$d</string>
 
     <!-- new account view -->
-    <string name="signing_in">Signing in…</string>
+    <string name="signing_in">Logging in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
 
     <!-- media selection -->
@@ -471,7 +478,7 @@
     <string name="site_settings_send_pingbacks_title">Send Pingbacks</string>
     <string name="site_settings_receive_pingbacks_title">Receive Pingbacks</string>
     <string name="site_settings_identity_required_title">Must include name and email</string>
-    <string name="site_settings_account_required_title">Users must be signed in</string>
+    <string name="site_settings_account_required_title">Users must be logged in</string>
     <string name="site_settings_close_after_title" translatable="false">@string/close_after</string>
     <string name="site_settings_sort_by_title">Sort by</string>
     <string name="site_settings_threading_title">Threading</string>
@@ -610,7 +617,7 @@
     <!-- Errors -->
     <string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
     <string name="site_settings_unknown_language_code_error">Language code not recognized</string>
-    <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
+    <string name="site_settings_disconnected_toast">Logged out, editing disabled.</string>
 
     <!--               -->
     <!-- Site Settings -->
@@ -638,7 +645,7 @@
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
-    <string name="stats_sign_in_jetpack_different_com_account">To view your stats, sign in to the WordPress.com account you used to connect Jetpack.</string>
+    <string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
 
     <!-- stats: Widget labels -->
@@ -836,16 +843,18 @@
     <string name="notifications_empty_action_unread">Reignite the conversation: write a new post.</string>
     <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
     <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
-    <string name="notifications_account_required">Sign in to WordPress.com for notifications</string>
+    <string name="notifications_account_required">Log in to WordPress.com for notifications</string>
     <string name="notifications_empty_view_reader">View Reader</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
-    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
+    <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
     <string name="unread">Unread</string>
     <string name="follows">Follows</string>
+    <string name="notifications_label_new_notifications">New notifications</string>
+    <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
@@ -1051,6 +1060,9 @@
     <string name="error_remove_user">Couldn\'t remove user</string>
     <string name="error_remove_follower">Couldn\'t remove follower</string>
     <string name="error_remove_viewer">Couldn\'t remove viewer</string>
+    <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
+    <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
+    <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
@@ -1091,10 +1103,12 @@
     <string name="reader_untitled_post">(Untitled)</string>
 
     <!-- activity titles -->
+    <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_blog_preview">Reader Blog</string>
     <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_post_detail">Reader Post</string>
+    <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
@@ -1186,10 +1200,19 @@
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
+    <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
+    <string name="reader_toast_err_comment_not_found">Comment not found!</string>
+    <string name="reader_toast_err_already_liked">You have already liked that comment</string>
+
+    <!-- snackbar messages -->
+    <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
     <string name="reader_err_get_post_not_authorized">You\'re not authorized to view this post</string>
+    <string name="reader_err_get_post_not_authorized_fallback">You\'re not authorized to view this post. Use the top action button to try a browser instead.</string>
+    <string name="reader_err_get_post_not_authorized_signin">You\'re not authorized to view this post. Try signing in to WordPress.com first.</string>
+    <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorized to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
     <string name="reader_err_get_post_not_found">This post no longer exists</string>
 
     <!-- empty list/grid text -->
@@ -1240,7 +1263,7 @@
     <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
     <string name="username_email">Email or username</string>
     <string name="site_address">Your self-hosted address (URL)</string>
-    <string name="connecting_wpcom">Connecting to WordPress.com</string>
+    <string name="connecting_wpcom">Logging in to WordPress.com</string>
     <string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a-z) and numbers</string>
     <string name="username_required">Enter a username</string>
     <string name="username_not_allowed">Username not allowed</string>
@@ -1277,7 +1300,7 @@
     <string name="nux_tutorial_get_started_title">Get started!</string>
     <string name="nux_welcome_create_account">Create account</string>
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
-    <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
+    <string name="nux_oops_not_selfhosted_blog">Log in to WordPress.com</string>
     <string name="ssl_certificate_details">Details</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
@@ -1288,12 +1311,12 @@
     <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
     <string name="two_step_footer_button">Send code via text message</string>
     <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
-    <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
-    <string name="auth_required">Sign in again to continue.</string>
-    <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we signed you
-        in. Try to sign in with your newly created username and password.</string>
+    <string name="sign_in_jetpack">Log in to your WordPress.com account to connect to Jetpack.</string>
+    <string name="auth_required">Log in again to continue.</string>
+    <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we loggged you
+        in. Try to log in with your newly created username and password.</string>
     <string name="send_link">Send link</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
+    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to log in instantly</string>
     <string name="logging_in">Logging in</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="check_your_email">Check your email</string>
@@ -1348,8 +1371,8 @@
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
-    <string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
-    <string name="me_disconnect_from_wordpress_com">Disconnect from WordPress.com</string>
+    <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
+    <string name="me_disconnect_from_wordpress_com">Log out from WordPress.com</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>

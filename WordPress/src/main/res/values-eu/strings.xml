@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-10-07 14:32:13+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: eu_ES
+-->
 <resources>
 	<string name="reader_label_image_count_one">Irudi 1</string>
 	<string name="timespan_now">orain</string>

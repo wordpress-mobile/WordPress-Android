@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -23,7 +23,7 @@ public class UserNoteBlock extends NoteBlock {
 
     public interface OnGravatarClickedListener {
         // userId is currently unused, but will be handy once a profile view is added to the app
-        public void onGravatarClicked(long siteId, long userId, String siteUrl);
+        void onGravatarClicked(long siteId, long userId, String siteUrl);
     }
 
     public UserNoteBlock(

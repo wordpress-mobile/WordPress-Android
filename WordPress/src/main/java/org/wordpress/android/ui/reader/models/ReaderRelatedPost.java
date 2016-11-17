@@ -23,10 +23,12 @@ public class ReaderRelatedPost {
     private String mSiteName;
     private String mFeaturedImageUrl;
 
+    private String mRailcarJson;
+
     // these are the specific fields we should ask for when requesting related posts from
     // the endpoint - note that we want to avoid ever requesting the post content, since
     // that makes the call much heavier
-    public static final String RELATED_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,is_following,author,featured_image,featured_media";
+    public static final String RELATED_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,is_following,author,featured_image,featured_media,railcar";
 
     public static ReaderRelatedPost fromJson(JSONObject json) {
         if (json == null) {
@@ -54,7 +56,10 @@ public class ReaderRelatedPost {
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor != null) {
             post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
-            post.mAuthorAvatarUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
+            // don't read the avatar field unless "has_avatar" is true
+            if (JSONUtils.getBool(jsonAuthor, "has_avatar")) {
+                post.mAuthorAvatarUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
+            }
         }
 
         // if there's no featured image, check if featured media has been set to an image
@@ -64,6 +69,11 @@ public class ReaderRelatedPost {
             if (type.equals("image")) {
                 post.mFeaturedImageUrl = JSONUtils.getString(jsonMedia, "uri");
             }
+        }
+
+        JSONObject jsonRailcar = json.optJSONObject("railcar");
+        if (jsonRailcar != null) {
+            post.mRailcarJson = jsonRailcar.toString();
         }
 
         return post;
@@ -99,6 +109,10 @@ public class ReaderRelatedPost {
 
     public String getFeaturedImageUrl() {
         return mFeaturedImageUrl;
+    }
+
+    public String getRailcarJson() {
+        return mRailcarJson;
     }
 
     public boolean isFollowing() {

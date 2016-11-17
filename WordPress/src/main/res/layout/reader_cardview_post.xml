@@ -44,7 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_large" />
+                android:layout_marginLeft="@dimen/margin_large"
+                android:padding="@dimen/reader_follow_button_padding" />
 
             <LinearLayout
                 android:layout_width="match_parent"

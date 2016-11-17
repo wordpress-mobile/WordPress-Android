@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2015-12-08 01:00:08+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: az
+-->
 <resources>
 	<string name="theme_support">Dəstək</string>
 	<string name="theme_view">Bax</string>

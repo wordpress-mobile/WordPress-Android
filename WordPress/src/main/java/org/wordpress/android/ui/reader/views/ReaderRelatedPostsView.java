@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -36,7 +37,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
 
     private OnRelatedPostClickListener mClickListener;
     private int mFeaturedImageWidth;
-    private ReaderRelatedPostList mRelatedPostList;
+    private final ReaderRelatedPostList mRelatedPostList = new ReaderRelatedPostList();
 
     public ReaderRelatedPostsView(Context context) {
         super(context);
@@ -69,7 +70,8 @@ public class ReaderRelatedPostsView extends LinearLayout {
     }
 
     public void showRelatedPosts(@NonNull ReaderRelatedPostList posts, String siteName, boolean isGlobal) {
-        mRelatedPostList = posts;
+        mRelatedPostList.clear();
+        mRelatedPostList.addAll(posts);
 
         ViewGroup container = (ViewGroup) findViewById(R.id.container_related_posts);
         container.removeAllViews();
@@ -107,10 +109,11 @@ public class ReaderRelatedPostsView extends LinearLayout {
                 txtSiteName.setText(relatedPost.getSiteName());
                 txtAuthorName.setText(relatedPost.getAuthorName());
                 if (relatedPost.hasAuthorAvatarUrl()) {
+                    imgAvatar.setVisibility(View.VISIBLE);
                     String avatarUrl = GravatarUtils.fixGravatarUrl(relatedPost.getAuthorAvatarUrl(), avatarSize);
                     imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
                 } else {
-                    imgAvatar.showDefaultGravatarImage();
+                    imgAvatar.setVisibility(View.GONE);
                 }
 
                 final ReaderFollowButton btnFollow = (ReaderFollowButton) siteHeader.findViewById(R.id.related_post_follow_button);
@@ -220,6 +223,16 @@ public class ReaderRelatedPostsView extends LinearLayout {
         });
 
         imgFeatured.setVisibility(View.VISIBLE);
+    }
+
+    /*
+     * called by reader detail when this related posts view is scrolled into view, tracks
+     * railcar events for each related post
+     */
+    public void trackRailcarRender() {
+        for (ReaderRelatedPost post: mRelatedPostList) {
+            AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
+        }
     }
 
 }
