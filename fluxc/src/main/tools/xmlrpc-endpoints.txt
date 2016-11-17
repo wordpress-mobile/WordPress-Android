@@ -10,6 +10,7 @@ wp.editPost
 wp.deletePost
 wp.getTerm
 wp.getTerms
+wp.newTerm
 wp.uploadFile
 wp.newComment
 wp.getComment
