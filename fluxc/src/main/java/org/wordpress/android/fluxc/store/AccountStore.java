@@ -510,6 +510,7 @@ public class AccountStore extends Store {
 
     private void updateToken(UpdateTokenPayload updateTokenPayload) {
         mAccessToken.set(updateTokenPayload.token);
+        emitChange(new OnAuthenticationChanged());
     }
 
     private void updateDefaultAccount(AccountModel accountModel, AccountAction cause) {
