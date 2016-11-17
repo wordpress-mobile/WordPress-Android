@@ -78,6 +78,8 @@ public class TaxonomyStore extends Store {
     }
 
     public static class FetchTermResponsePayload extends RemoteTermPayload {
+        public TaxonomyAction origin = TaxonomyAction.FETCH_TERM; // Used to track fetching newly uploaded XML-RPC terms
+
         public FetchTermResponsePayload(TermModel term, SiteModel site) {
             super(term, site);
         }
@@ -322,6 +324,17 @@ public class TaxonomyStore extends Store {
     }
 
     private void handleFetchSingleTermCompleted(FetchTermResponsePayload payload) {
+        if (payload.origin == TaxonomyAction.PUSH_TERM) {
+            OnTermUploaded onTermUploaded = new OnTermUploaded(payload.term);
+            if (payload.isError()) {
+                onTermUploaded.error = payload.error;
+            } else {
+                updateTerm(payload.term);
+            }
+            emitChange(onTermUploaded);
+            return;
+        }
+
         if (payload.isError()) {
             OnTaxonomyChanged event = new OnTaxonomyChanged(0, payload.term.getTaxonomy());
             event.error = payload.error;
@@ -343,6 +356,11 @@ public class TaxonomyStore extends Store {
                 // All we need to do is store it and emit OnTaxonomyChanged
                 updateTerm(payload.term);
                 emitChange(new OnTermUploaded(payload.term));
+            } else {
+                // XML-RPC does not respond to new/edit term calls with the resulting term - request it from the server
+                // This needs to complete for us to obtain the slug for a newly created term
+                TaxonomySqlUtils.insertOrUpdateTerm(payload.term);
+                mTaxonomyXMLRPCClient.fetchTerm(payload.term, payload.site, TaxonomyAction.PUSH_TERM);
             }
         }
     }
@@ -362,7 +380,8 @@ public class TaxonomyStore extends Store {
         if (payload.site.isWPCom()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);
         } else {
-            // TODO: XML-RPC support
+            // TODO: check for WP-REST-API plugin and use it here
+            mTaxonomyXMLRPCClient.pushTerm(payload.term, payload.site);
         }
     }
 
