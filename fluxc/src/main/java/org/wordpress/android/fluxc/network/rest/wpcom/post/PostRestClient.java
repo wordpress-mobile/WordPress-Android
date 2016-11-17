@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
@@ -239,7 +240,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         if (from.categories != null) {
             List<Long> categoryIds = new ArrayList<>();
-            for (PostWPComRestResponse.Taxonomy value : from.categories.values()) {
+            for (TermWPComRestResponse value : from.categories.values()) {
                 categoryIds.add(value.ID);
             }
             post.setCategoryIdList(categoryIds);
@@ -247,7 +248,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         if (from.tags != null) {
             List<Long> tagIds = new ArrayList<>();
-            for (PostWPComRestResponse.Taxonomy value : from.tags.values()) {
+            for (TermWPComRestResponse value : from.tags.values()) {
                 tagIds.add(value.ID);
             }
             post.setTagIdList(tagIds);
