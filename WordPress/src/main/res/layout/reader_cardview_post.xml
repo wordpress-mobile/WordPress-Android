@@ -102,6 +102,10 @@
                 android:layout_marginRight="@dimen/reader_card_content_padding"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:shadowColor="@color/grey_dark"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 tools:text="text_photo_title" />
