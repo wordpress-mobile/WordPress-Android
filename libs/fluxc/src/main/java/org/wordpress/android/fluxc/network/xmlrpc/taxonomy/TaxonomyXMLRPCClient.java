@@ -7,6 +7,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.TaxonomyAction;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -21,11 +22,13 @@ import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermResponsePayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload;
+import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +39,10 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void fetchTerm(final TermModel term, final SiteModel site) {
+        fetchTerm(term, site, TaxonomyAction.FETCH_TERM);
+    }
+
+    public void fetchTerm(final TermModel term, final SiteModel site, final TaxonomyAction origin) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
@@ -51,11 +58,15 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                             TermModel termModel = termResponseObjectToTermModel(response, site);
                             FetchTermResponsePayload payload;
                             if (termModel != null) {
+                                if (origin == TaxonomyAction.PUSH_TERM) {
+                                    termModel.setId(term.getId());
+                                }
                                 payload = new FetchTermResponsePayload(termModel, site);
                             } else {
                                 payload = new FetchTermResponsePayload(term, site);
                                 payload.error = new TaxonomyError(TaxonomyErrorType.INVALID_RESPONSE);
                             }
+                            payload.origin = origin;
 
                             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
                         }
@@ -79,6 +90,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                                     taxonomyError = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, error.message);
                             }
                             payload.error = taxonomyError;
+                            payload.origin = origin;
                             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermAction(payload));
                     }
                 }
@@ -134,6 +146,53 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
+    public void pushTerm(final TermModel term, final SiteModel site) {
+        Map<String, Object> contentStruct = termModelToContentStruct(term);
+
+        List<Object> params = new ArrayList<>(4);
+        params.add(site.getSelfHostedSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        params.add(contentStruct);
+
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.NEW_TERM, params,
+                new Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        term.setRemoteTermId(Long.valueOf((String) response));
+
+                        RemoteTermPayload payload = new RemoteTermPayload(term, site);
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // Possible non-generic errors:
+                        // 403 - "Invalid taxonomy."
+                        // 403 - "Parent term does not exist."
+                        // 403 - "The term name cannot be empty."
+                        // 500 - "A term with the name provided already exists with this parent."
+                        RemoteTermPayload payload = new RemoteTermPayload(term, site);
+                        // TODO: Check the error message and flag this as one of the above specific errors if applicable
+                        // Convert GenericErrorType to PostErrorType where applicable
+                        TaxonomyError taxonomyError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                taxonomyError = new TaxonomyError(TaxonomyErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                taxonomyError = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, error.message);
+                        }
+                        payload.error = taxonomyError;
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
+                    }
+                });
+
+        request.disableRetries();
+        add(request);
+    }
+
     private TermsModel termsResponseToTermsModel(Object[] response, SiteModel site) {
         List<Map<?, ?>> termsList = new ArrayList<>();
         for (Object responseObject : response) {
@@ -182,5 +241,26 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         term.setTaxonomy(MapUtils.getMapStr(termMap, "taxonomy"));
 
         return term;
+    }
+
+    private static Map<String, Object> termModelToContentStruct(TermModel term) {
+        Map<String, Object> contentStruct = new HashMap<>();
+
+        contentStruct.put("name", term.getName());
+        contentStruct.put("taxonomy", term.getTaxonomy());
+
+        if (term.getSlug() != null) {
+            contentStruct.put("slug", term.getSlug());
+        }
+
+        if (term.getDescription() != null) {
+            contentStruct.put("description", term.getDescription());
+        }
+
+        if (term.getParentRemoteId() > 0) {
+            contentStruct.put("parent", term.getParentRemoteId());
+        }
+
+        return contentStruct;
     }
 }
