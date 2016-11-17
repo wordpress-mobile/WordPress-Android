@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts;
 
-import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -29,14 +28,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.credentials.Credential;
-import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -64,16 +59,12 @@ import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.reader.services.ReaderUpdateService;
-import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
@@ -83,7 +74,6 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1128,7 +1118,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (event.isError()) {
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
         }
-        if (!event.isError() && event.type == IsAvailable.EMAIL && event.isAvailable) {
+        if (!event.isError() && event.type == IsAvailable.EMAIL && !event.isAvailable) {
             // Email address exists in WordPress.com
             if (mListener != null) {
                 mListener.onMagicLinkRequestSuccess(mUsername);
@@ -1179,7 +1169,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error));
                 break;
             case GENERIC_ERROR:
-                showGenericErrorDialog(getResources().getString(R.string.login_failed_message));
+                showGenericErrorDialog(getResources().getString(R.string.nux_cannot_log_in));
                 break;
         }
     }
