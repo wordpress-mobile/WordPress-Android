@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.text.TextUtils;
 
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -33,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import de.greenrobot.event.EventBus;
 
@@ -60,7 +60,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 50;
 
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
@@ -123,6 +123,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_THEMES);
         SiteSettingsTable.createTable(db);
         SuggestionTable.createTables(db);
+        NotificationsTable.createTables(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -252,6 +253,9 @@ public class WordPressDB {
             case 48:
                 PeopleTable.createViewersTable(db);
                 currentVersion++;
+            case 49:
+                // Delete simperium DB since we're removing Simperium from the app.
+                ctx.deleteDatabase("simperium-store");
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -297,17 +301,17 @@ public class WordPressDB {
                 "category_name" }, "blog_id=" + Integer.toString(id), null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
-        List<String> returnVector = new Vector<String>();
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < numRows; ++i) {
             String category_name = c.getString(2);
             if (category_name != null) {
-                returnVector.add(category_name);
+                list.add(category_name);
             }
             c.moveToNext();
         }
         c.close();
 
-        return returnVector;
+        return list;
     }
 
     public int getCategoryId(int id, String category) {
@@ -368,12 +372,12 @@ public class WordPressDB {
         String id, name;
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> blogs = new Vector<Map<String, Object>>();
+        List<Map<String, Object>> blogs = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
             id = c.getString(0);
             name = c.getString(2);
             if (id != null) {
-                Map<String, Object> thisHash = new HashMap<String, Object>();
+                Map<String, Object> thisHash = new HashMap<>();
 
                 thisHash.put("id", id);
                 thisHash.put("name", name);

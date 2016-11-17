@@ -21,6 +21,8 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -364,9 +366,10 @@ class ReaderPostRenderer {
         .append("        padding: ").append(mResourceVars.marginMediumPx).append("px; }")
 
         // add a left border to blockquotes
-        .append("  blockquote { margin-left: ").append(mResourceVars.marginMediumPx).append("px; ")
-        .append("               padding-left: ").append(mResourceVars.marginMediumPx).append("px; ")
-        .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }")
+        .append("  blockquote { color: ").append(mResourceVars.greyMediumDarkStr).append("; ")
+        .append("               padding-left: 32px; ")
+        .append("               margin-left: 0px; ")
+        .append("               border-left: 3px solid ").append(mResourceVars.greyExtraLightStr).append("; }")
 
         // show links in the same color they are elsewhere in the app
         .append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }")
@@ -493,9 +496,27 @@ class ReaderPostRenderer {
         .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
         .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
 
-        .append("</style>")
-        .append("</head><body>")
-        .append(content)
+        // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
+        // https://github.com/Automattic/wp-calypso/blob/f51293caa87edcd4f0c117aaea8cf65d26e33520/client/lib/post-normalizer/rule-content-sanitize.js
+        .append("   form, input, select, button textarea { display: none; }")
+        .append("   div.feedflare { display: none; }")
+        .append("   .sharedaddy, .jp-relatedposts, .mc4wp-form, .wpcnt, .OUTBRAIN, .adsbygoogle { display: none; }")
+
+        .append("</style>");
+
+        // add a custom CSS class to (any) tiled gallery elements to make them easier selectable for various rules
+        final List<String> classAmendRegexes = Arrays.asList(
+                "(tiled-gallery)([\\s\"\'])",
+                "(gallery-row)([\\s\"'])",
+                "(gallery-group)([\\s\"'])",
+                "(tiled-gallery-item)([\\s\"'])");
+        String contentCustomised = content;
+        for (String classToAmend : classAmendRegexes) {
+            contentCustomised = contentCustomised.replaceAll(classToAmend, "$1 " + galleryOnlyClass + "$2");
+        }
+
+        sbHtml.append("</head><body>")
+        .append(contentCustomised)
         .append("</body></html>");
 
         return sbHtml.toString();

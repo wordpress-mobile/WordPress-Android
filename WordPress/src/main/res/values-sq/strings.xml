@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-10-26 09:56:05+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: sq_AL
+-->
 <resources>
+	<string name="reader_label_global_related_posts">Më tepër mbi WordPress.com</string>
+	<string name="reader_label_local_related_posts">Më tepër ten %s</string>
+	<string name="preference_open_device_settings">Hap rregullime pajisjeje</string>
+	<string name="comment_moderated_unapproved">Komentit iu hoq miratimi</string>
+	<string name="invite_invalid_email">%s: Email i pavlefshëm</string>
+	<string name="invite_user_blocked_invites">%s: Ftesa të bllokuara nga përdoruesi</string>
+	<string name="invite_already_following">%s: E ndiqni tashmë</string>
+	<string name="invite_already_a_member">%s: Anëtar tashmë</string>
+	<string name="invite_username_not_found">%s: Përdoruesi s’u gjet</string>
+	<string name="comment_moderated_approved">Komenti u miratua!</string>
+	<string name="like">Pëlqejeni</string>
+	<string name="reader_label_image_count_one">1 figurë</string>
+	<string name="timespan_now">tani</string>
 	<string name="role_admin">Përgjegjës</string>
 	<string name="role_editor">Redaktor</string>
 	<string name="role_author">Autor</string>
@@ -29,6 +48,7 @@
 	<string name="follower_remove_confirmation_message">Në u heqtë, ku ndjekës do të reshtë së marri njoftime mbi këtë sajt, veç në u ribëftë ndjekës.\n\nDo të donit ta hiqnit këtë ndjekës, sido qoftë?</string>
 	<string name="follower_subscribed_since">Që prej %1$s</string>
 	<string name="reader_label_view_gallery">Shihni Galerinë</string>
+	<string name="reader_label_image_count_multi">%d figura</string>
 	<string name="error_remove_follower">S&amp;#8217;u hoq dot ndjekësi</string>
 	<string name="error_remove_viewer">S&amp;#8217;u hoq dot shikuesi</string>
 	<string name="error_fetch_email_followers_list">S&amp;#8217;u morën dot ndjekës të sajtit me email</string>
@@ -71,10 +91,7 @@
 	<string name="invite_message_remaining_other">%d shenja ende</string>
 	<string name="invite_message_remaining_one">1 shenjë ende</string>
 	<string name="invite_message_remaining_zero">0 shenja</string>
-	<string name="invite_invalid_email">Adresa email \'%s\' është e pavlefshme</string>
 	<string name="invite_message_title">Mesazh i Personalizuar</string>
-	<string name="invite_already_a_member">Ka tashmë një anëtar me emër përdoruesi \'%s\'</string>
-	<string name="invite_username_not_found">S&amp;#8217;u gjet përdorues me emër përdoruesi \'%s\'</string>
 	<string name="invite">Ftoji</string>
 	<string name="invite_names_title">Emra përdoruesish ose Email-e</string>
 	<string name="send_link">Dërgo lidhje</string>
@@ -85,7 +102,6 @@
 	<string name="dlg_confirm_clear_search_history">Të spastrohet historiku?</string>
 	<string name="reader_empty_posts_in_search_description">S&amp;#8217;u gjetën postime në gjuhën tuaj për %s</string>
 	<string name="reader_label_post_search_running">Po kërkohet…</string>
-	<string name="reader_label_related_posts">Lexime të Afërta</string>
 	<string name="reader_empty_posts_in_search_title">S&amp;#8217;u gjetën postime</string>
 	<string name="reader_label_post_search_explainer">Kërkoni në krejt blogjet publike WordPress.com</string>
 	<string name="reader_hint_post_search">Kërkoni te WordPress.com</string>
@@ -1129,6 +1145,7 @@
 	<string name="select_video">Përzgjidhni një video te galeria</string>
 	<string name="media">Media</string>
 	<string name="delete">Fshije</string>
+	<string name="approve">Miratojeni</string>
 	<string name="none">Asnjë</string>
 	<string name="blogs">Blogje</string>
 	<string name="select_photo">Përzgjidhni një foto te galeria</string>

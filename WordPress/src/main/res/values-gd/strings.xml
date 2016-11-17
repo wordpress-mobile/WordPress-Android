@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-08-23 18:32:37+0000
+Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;
+Generator: GlotPress/2.3.0-alpha
+Language: gd_GB
+-->
 <resources>
 	<string name="error_fetch_users_list">Cha b’ urrainn dhuinn cleachdaichean na làraich fhaighinn</string>
 	<string name="plans_manage">Stiùirich am plana agad aig\nWordPress.com/plans</string>
@@ -668,6 +674,7 @@
 	<string name="select_video">Tagh video on ghailearaidh</string>
 	<string name="media">Meadhan</string>
 	<string name="delete">Sguab às</string>
+	<string name="approve">Thoir aonta ris</string>
 	<string name="none">Chan eil gin</string>
 	<string name="blogs">Blogaichean</string>
 	<string name="select_photo">Tagh dealbh on ghailearaidh</string>

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2015-01-28 14:24:38+0000
+Plural-Forms: nplurals=2; plural=n==1 || n%10==1 ? 0 : 1;
+Generator: GlotPress/2.3.0-alpha
+Language: mk
+-->
 <resources>
 	<string name="stats_months_and_years">Месеци и години</string>
 	<string name="error_copy_to_clipboard">Се случи грешка при копирање на текстот во клипбордот</string>
@@ -491,6 +497,7 @@
 	<string name="select_video">Изберете видео од галеријата</string>
 	<string name="media">Мултимедија</string>
 	<string name="delete">Бриши</string>
+	<string name="approve">Одобри</string>
 	<string name="none">Нема</string>
 	<string name="blogs">Блогови</string>
 	<string name="select_photo">Избери фотографија од галеријата</string>

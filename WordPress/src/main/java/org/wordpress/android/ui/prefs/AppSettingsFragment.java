@@ -128,9 +128,10 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             visualEditorSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                    visualEditorSwitch.setChecked(!visualEditorSwitch.isChecked());
-                    AppPrefs.setVisualEditorEnabled(visualEditorSwitch.isChecked());
-                    return false;
+                    if (newValue == null) return false;
+                    visualEditorSwitch.setChecked((Boolean) newValue);
+                    AppPrefs.setVisualEditorEnabled((Boolean) newValue);
+                    return true;
                 }
             });
         }

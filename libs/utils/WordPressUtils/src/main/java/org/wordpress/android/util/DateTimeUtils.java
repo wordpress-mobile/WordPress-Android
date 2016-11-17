@@ -44,19 +44,19 @@ public class DateTimeUtils {
         // less than an hour (ex: 12m)
         long minutesSince = secondsSince / 60;
         if (minutesSince < 60) {
-            return Long.toString(minutesSince) + "m";
+            return Long.toString(minutesSince) + "m " + context.getString(R.string.timespan_ago);
         }
 
         // less than a day (ex: 17h)
         long hoursSince = minutesSince / 60;
         if (hoursSince < 24) {
-            return Long.toString(hoursSince) + "h";
+            return Long.toString(hoursSince) + "h " + context.getString(R.string.timespan_ago);
         }
 
         // less than a week (ex: 5d)
         long daysSince = hoursSince / 24;
         if (daysSince < 7) {
-            return Long.toString(daysSince) + "d";
+            return Long.toString(daysSince) + "d " + context.getString(R.string.timespan_ago);
         }
 
         // less than a year old, so return day/month without year (ex: Jan 30)

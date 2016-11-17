@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-06-29 21:54:17+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: es_CL
+-->
 <resources>
 	<string name="editor_failed_uploads_switch_html">Algunas cargas de archivos fallaron. Puedes cambiar a modo HTML en este estado. ¿Eliminar los archivos que fallaron y continuar?</string>
 	<string name="format_bar_description_html">Modo HTML</string>
@@ -32,10 +38,7 @@
 	<string name="invite_message_remaining_other">%d caracteres restantes</string>
 	<string name="invite_message_remaining_one">1 caracter restantes</string>
 	<string name="invite_message_remaining_zero">0 caracteres restantes</string>
-	<string name="invite_invalid_email">La dirección de correo electrónico \'%s\' no es válida</string>
 	<string name="invite_message_title">Mensaje Personalizado</string>
-	<string name="invite_already_a_member">Ya hay un miembro con nombre de usuario \'%s\'</string>
-	<string name="invite_username_not_found">No se encontró ningún usuario para el nombre de usuario \'%s\'</string>
 	<string name="invite">Invitar</string>
 	<string name="invite_names_title">Nombres de usuario o correo electrónico</string>
 	<string name="interface_language">Idioma de la interfaz</string>

@@ -27,6 +27,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
 import com.yarolegovich.wellsql.WellSql;
 
@@ -36,6 +38,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -52,9 +55,10 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
@@ -79,6 +83,7 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -233,7 +238,12 @@ public class WordPress extends MultiDexApplication {
         // Volley networking setup
         setupVolleyQueue();
 
-        AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
+        // PasscodeLock setup
+        if(!AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+            // Make sure that PasscodeLock isn't already in place.
+            // Notifications services can enable it before the app is started.
+            AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
+        }
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
             AppLockManager.getInstance().getAppLock().setExemptActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
@@ -291,20 +301,12 @@ public class WordPress extends MultiDexApplication {
             // Register for Cloud messaging
             startService(new Intent(this, GCMRegistrationIntentService.class));
         }
-        configureSimperium();
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
-        }
-    }
-
-    // Configure Simperium and start buckets if we are signed in to WP.com
-    private void configureSimperium() {
-        if (mAccountStore.hasAccessToken()) {
-            AppLog.i(T.NOTIFS, "Configuring Simperium");
-            SimperiumUtils.configureSimperium(this, mAccountStore.getAccessToken());
+            NotificationsUpdateService.startService(getContext());
         }
     }
 
@@ -495,8 +497,8 @@ public class WordPress extends MultiDexApplication {
         StatsDatabaseHelper.getDatabase(context).reset();
         StatsWidgetProvider.refreshAllWidgets(context, mSiteStore);
 
-        // Reset Simperium buckets (removes local data)
-        SimperiumUtils.resetBucketsAndDeauthorize();
+        // Reset Notifications Data
+        NotificationsTable.reset();
     }
 
     /**
@@ -733,6 +735,11 @@ public class WordPress extends MultiDexApplication {
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
+                // Refresh account informations and Notifications
+                if (mAccountStore.hasAccessToken()) {
+                    NotificationsUpdateService.startService(getContext());
+                }
+
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
 

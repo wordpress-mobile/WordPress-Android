@@ -1,4 +1,4 @@
-package org.wordpress.android;
+package org.wordpress.android.push;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+import org.wordpress.android.BuildConfig;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -50,6 +52,7 @@ public class GCMRegistrationIntentService extends IntentService {
             AppLog.e(T.NOTIFS, "Google Play Services unavailable: ", e);
         }
     }
+
 
     public void sendRegistrationToken(String gcmToken) {
         if (!TextUtils.isEmpty(gcmToken)) {

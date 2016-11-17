@@ -1,20 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_notes"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_notifications"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/notifications_content_margin"
-        android:paddingRight="@dimen/notifications_content_margin"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_notes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/notifications_content_margin"
+            android:paddingRight="@dimen/notifications_content_margin"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_new_notificatons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/notifications_new_notification_bar_background"
+        android:elevation="@dimen/message_bar_elevation"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="@dimen/margin_large"
+        android:visibility="gone"
+        tools:targetApi="LOLLIPOP"
+        tools:visibility="visible">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notifications_label_new_notifications"
+            android:textColor="@color/grey_lighten_30"
+            android:textSize="@dimen/text_sz_large" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notifications_label_new_notifications_subtitle"
+            android:textColor="@color/grey_lighten_30"
+            android:textSize="@dimen/text_sz_small" />
+    </LinearLayout>
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -35,13 +76,13 @@
                 android:id="@+id/notifications_radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checkedButton="@+id/notifications_filter_all"
-                android:orientation="horizontal"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:layout_marginLeft="@dimen/margin_extra_large"
                 android:layout_marginRight="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:background="@drawable/calypso_segmented_control_background">
+                android:background="@drawable/calypso_segmented_control_background"
+                android:checkedButton="@+id/notifications_filter_all"
+                android:orientation="horizontal">
 
                 <org.wordpress.android.widgets.WPRadioButton
                     android:id="@+id/notifications_filter_all"
@@ -52,33 +93,33 @@
                 <org.wordpress.android.widgets.WPRadioButton
                     android:id="@+id/notifications_filter_unread"
                     style="@style/Calypso.SegmentedControl"
-                    android:background="@drawable/calypso_segmented_control_button"
                     android:layout_marginLeft="-1dp"
                     android:layout_marginStart="-1dp"
+                    android:background="@drawable/calypso_segmented_control_button"
                     android:text="@string/unread" />
 
                 <org.wordpress.android.widgets.WPRadioButton
                     android:id="@+id/notifications_filter_comments"
                     style="@style/Calypso.SegmentedControl"
-                    android:background="@drawable/calypso_segmented_control_button"
                     android:layout_marginLeft="-1dp"
                     android:layout_marginStart="-1dp"
+                    android:background="@drawable/calypso_segmented_control_button"
                     android:text="@string/tab_comments" />
 
                 <org.wordpress.android.widgets.WPRadioButton
                     android:id="@+id/notifications_filter_follows"
                     style="@style/Calypso.SegmentedControl"
-                    android:background="@drawable/calypso_segmented_control_button"
                     android:layout_marginLeft="-1dp"
                     android:layout_marginStart="-1dp"
+                    android:background="@drawable/calypso_segmented_control_button"
                     android:text="@string/follows" />
 
                 <org.wordpress.android.widgets.WPRadioButton
                     android:id="@+id/notifications_filter_likes"
                     style="@style/Calypso.SegmentedControl"
-                    android:background="@drawable/calypso_segmented_control_button_end"
                     android:layout_marginLeft="-1dp"
                     android:layout_marginStart="-1dp"
+                    android:background="@drawable/calypso_segmented_control_button_end"
                     android:text="@string/stats_likes" />
             </RadioGroup>
 
@@ -103,23 +144,23 @@
         tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_double_extra_large"
             android:fontFamily="sans-serif-light"
-            android:id="@+id/text_empty"
-            android:text="@string/notifications_empty_list" />
+            android:gravity="center"
+            android:text="@string/notifications_empty_list"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_double_extra_large" />
 
         <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_empty_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:id="@+id/text_empty_description"
-            android:textSize="@dimen/text_sz_medium"
             android:layout_marginTop="@dimen/margin_medium"
-            android:textColor="@color/grey" />
+            android:gravity="center"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_medium" />
 
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"

@@ -19,13 +19,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
-import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
 import org.w3c.dom.Comment;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
@@ -34,7 +34,6 @@ import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -50,6 +49,7 @@ import org.xmlrpc.android.XMLRPCFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -115,14 +115,11 @@ public class EditCommentActivity extends AppCompatActivity {
             }
             configureViews();
         } else {
-            if (SimperiumUtils.getNotesBucket() != null) {
-                try {
-                    mNote = SimperiumUtils.getNotesBucket().get(noteId);
-                    requestFullCommentForNote(mNote);
-                } catch (BucketObjectMissingException e) {
-                    SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-                    showErrorAndFinish();
-                }
+            mNote = NotificationsTable.getNoteById(noteId);
+            if (mNote != null) {
+                requestFullCommentForNote(mNote);
+            } else {
+                showErrorAndFinish();
             }
         }
     }
@@ -221,6 +218,7 @@ public class EditCommentActivity extends AppCompatActivity {
         if (mNote != null) {
             // Edit comment via REST API :)
             showSaveDialog();
+            // FIXME: replace the following
             WordPress.getRestClientUtils().editCommentContent(mNote.getSiteId(),
                     mNote.getCommentId(),
                     EditTextUtils.getText(editContent),
@@ -244,6 +242,7 @@ public class EditCommentActivity extends AppCompatActivity {
                     });
         } else {
             // Edit comment via XML-RPC :(
+            // FIXME: replace the following
             if (mIsUpdateTaskRunning)
                 AppLog.w(AppLog.T.COMMENTS, "update task already running");
             new UpdateCommentTask().execute();
@@ -289,91 +288,6 @@ public class EditCommentActivity extends AppCompatActivity {
             dismissDialog(ID_DIALOG_SAVING);
         } catch (IllegalArgumentException e) {
             // dialog doesn't exist
-        }
-    }
-
-    /*
-     * AsyncTask to save comment to server
-     */
-    private boolean mIsUpdateTaskRunning = false;
-    private class UpdateCommentTask extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            mIsUpdateTaskRunning = true;
-            showSaveDialog();
-        }
-        @Override
-        protected void onCancelled() {
-            mIsUpdateTaskRunning = false;
-            dismissSaveDialog();
-        }
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            if (mSite == null) {
-                AppLog.e(AppLog.T.COMMENTS, "Invalid local blog id:" + mSite.getSiteId());
-                return false;
-            }
-            final String authorName = getEditTextStr(R.id.author_name);
-            final String authorEmail = getEditTextStr(R.id.author_email);
-            final String authorUrl = getEditTextStr(R.id.author_url);
-            final String content = getEditTextStr(R.id.edit_comment_content);
-
-            final Map<String, String> postHash = new HashMap<>();
-
-            // using CommentStatus.toString() rather than getStatus() ensures that the XML-RPC
-            // status value is used - important since comment may have been loaded via the
-            // REST API, which uses different status values
-            postHash.put("status",       CommentStatus.toString(mComment.getStatusEnum()));
-            postHash.put("content",      content);
-            postHash.put("author",       authorName);
-            postHash.put("author_url",   authorUrl);
-            postHash.put("author_email", authorEmail);
-
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
-            Object[] xmlParams = {
-                    String.valueOf(site.getSiteId()),
-                    StringUtils.notNullStr(site.getUsername()),
-                    StringUtils.notNullStr(site.getPassword()),
-                    Long.toString(mCommentId),
-                    postHash
-            };
-
-            try {
-                Object result = client.call(Method.EDIT_COMMENT, xmlParams);
-                boolean isSaved = (result != null && Boolean.parseBoolean(result.toString()));
-                if (isSaved) {
-                    mComment.setAuthorEmail(authorEmail);
-                    mComment.setAuthorUrl(authorUrl);
-                    mComment.setAuthorName(authorName);
-                    mComment.setCommentText(content);
-                    CommentTable.updateComment(mLocalBlogId, mComment);
-                }
-                return isSaved;
-            } catch (XMLRPCException e) {
-                AppLog.e(AppLog.T.COMMENTS, e);
-                return false;
-            } catch (IOException e) {
-                AppLog.e(AppLog.T.COMMENTS, e);
-                return false;
-            } catch (XmlPullParserException e) {
-                AppLog.e(AppLog.T.COMMENTS, e);
-                return false;
-            }
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (isFinishing()) return;
-
-            mIsUpdateTaskRunning = false;
-            dismissSaveDialog();
-
-            if (result) {
-                setResult(RESULT_OK);
-                finish();
-            } else {
-                // alert user to error
-                showEditErrorAlert();
-            }
         }
     }
 
@@ -430,7 +344,7 @@ public class EditCommentActivity extends AppCompatActivity {
             }
         };
 
-        final String path = String.format("/sites/%s/comments/%s", note.getSiteId(), note.getCommentId());
+        final String path = String.format(Locale.US, "/sites/%s/comments/%s", note.getSiteId(), note.getCommentId());
         WordPress.getRestClientUtils().get(path, restListener, restErrListener);
     }
 

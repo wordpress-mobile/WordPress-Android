@@ -26,7 +26,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -36,6 +35,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -45,10 +45,8 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore;
-import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.Suggestion;
@@ -59,7 +57,6 @@ import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -77,7 +74,6 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -90,14 +86,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static org.wordpress.android.R.string.comments;
 import static org.wordpress.android.fluxc.model.CommentStatus.APPROVED;
-import static org.wordpress.android.fluxc.model.CommentStatus.SPAM;
-import static org.wordpress.android.fluxc.model.CommentStatus.TRASH;
 import static org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED;
-import static org.wordpress.android.fluxc.persistence.CommentSqlUtils.getCommentBySiteAndRemoteId;
 
 /**
  * comment detail displayed from both the notification list and the comment list
@@ -137,8 +127,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private String mRestoredNoteId;
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
-    private boolean mShouldLikeInstantly;
-    private boolean mShouldApproveInstantly;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -191,26 +179,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * used when called from a comment notification 'like' action
-     */
-    public static CommentDetailFragment newInstanceForInstantLike(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId, null);
-        //here tell the fragment to trigger the Like action when ready
-        fragment.setLikeCommentWhenReady();
-        return fragment;
-    }
-
-    /*
-     * used when called from a comment notification 'approve' action
-     */
-    public static CommentDetailFragment newInstanceForInstantApprove(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId, null);
-        //here tell the fragment to trigger the Like action when ready
-        fragment.setApproveCommentWhenReady();
-        return fragment;
-    }
-
-    /*
      * used when called from notifications to load a comment that doesn't already exist in the note
      */
     public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId) {
@@ -245,7 +213,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (savedInstanceState != null) {
             if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
-                // The note will be set in onResume() because Simperium will be running there
+                // The note will be set in onResume()
                 // See WordPress.deferredInit()
                 mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             } else {
@@ -301,8 +269,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
-        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mSite.getSiteId(),
-                mComment.getRemoteCommentId()));
+        setReplyUniqueId();
 
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
 
@@ -343,10 +310,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             public void onClick(View v) {
                 if (!hasComment()) return;
 
-                if (CommentStatus.fromString(mComment.getStatus()) == SPAM) {
+                if (CommentStatus.fromString(mComment.getStatus()) == CommentStatus.SPAM) {
                     moderateComment(APPROVED);
                 } else {
-                    moderateComment(SPAM);
+                    moderateComment(CommentStatus.SPAM);
                 }
             }
         });
@@ -359,7 +326,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 String status = mComment.getStatus();
 
                 // If the comment status is trash or spam, next deletion is a permanent deletion.
-                if (CommentStatus.TRASH.equals(status) || SPAM.equals(status)) {
+                if (CommentStatus.TRASH.equals(status) || CommentStatus.SPAM.equals(status)) {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
                     dialogBuilder.setTitle(getResources().getText(R.string.delete));
                     dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
@@ -376,7 +343,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     dialogBuilder.create().show();
 
                 } else {
-                    moderateComment(TRASH);
+                    moderateComment(CommentStatus.TRASH);
                 }
 
             }
@@ -404,15 +371,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             setNoteWithNoteId(mRestoredNoteId);
             mRestoredNoteId = null;
         }
-
-        if (mShouldLikeInstantly) {
-            mShouldLikeInstantly = false;
-            likeComment(true);
-        } else if (mShouldApproveInstantly) {
-            mShouldApproveInstantly = false;
-            performModerateAction();
-        }
-
     }
 
     private void setupSuggestionServiceAndAdapter() {
@@ -427,6 +385,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
+    private void setReplyUniqueId() {
+        if (mEditReply != null && isAdded()) {
+            mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d",
+                            mSite.getSiteId(), mComment.getRemoteCommentId()));
+        }
+    }
+
     private void setComment(@Nullable final CommentModel comment, @Nullable final SiteModel site) {
         mComment = comment;
         mSite = site;
@@ -438,6 +403,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (isAdded()) {
             showComment();
         }
+
+        // Reset the reply unique id since mComment just changed.
+        setReplyUniqueId();
     }
 
     private void disableShouldFocusReplyField() {
@@ -466,19 +434,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setNoteWithNoteId(String noteId) {
-        if (noteId == null) return;
-
-        if (SimperiumUtils.getNotesBucket() != null) {
-            try {
-                Note note = SimperiumUtils.getNotesBucket().get(noteId);
-                setNote(note);
-                mSite = mSiteStore.getSiteBySiteId(note.getSiteId());
-            } catch (BucketObjectMissingException e) {
-                AppLog.e(T.NOTIFS, e.getMessage());
-                SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-                showErrorToastAndFinish();
-            }
+        if (noteId == null) {
+            showErrorToastAndFinish();
+            return;
         }
+
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+        setNote(note);
     }
 
     private void setReplyText(String replyText) {
@@ -862,11 +828,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (mNote == null) return;
 
-        // Basic moderation support, currently only used when this Fragment is in a CommentDetailActivity
+        // Basic moderation support
         // Uses WP.com REST API and requires a note object
         final CommentStatus oldStatus = mComment.getStatusEnum();
         mComment.setStatus(CommentStatus.toString(newStatus));
         updateStatusViews();
+        // FIXME: replace the following
         CommentActions.moderateCommentRestApi(mNote.getSiteId(), mComment.commentID, newStatus, new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(CommentActionResult result) {
@@ -925,8 +892,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
 
                         // approve the comment
-                        if (mComment != null && mComment.getStatusEnum() != APPROVED) {
-                            moderateComment(APPROVED);
+                        if (mComment != null && !mComment.getStatus().equals(CommentStatus.APPROVED.toString())) {
+                            moderateComment(CommentStatus.APPROVED);
                         }
                     } else {
                         String errorMessage = TextUtils.isEmpty(result.getMessage()) ? getString(R.string.reply_failed) : result.getMessage();
@@ -1173,14 +1140,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         getFragmentManager().invalidateOptionsMenu();
     }
 
-    private void setLikeCommentWhenReady() {
-        mShouldLikeInstantly = true;
-    }
-
-    private void setApproveCommentWhenReady() {
-        mShouldApproveInstantly = true;
-    }
-
     // Like or unlike a comment via the REST API
     private void likeComment(boolean forceLike) {
         if (mNote == null) return;
@@ -1198,8 +1157,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNotificationsDetailListFragment != null && mComment != null) {
             // Optimistically set comment to approved when liking an unapproved comment
             // WP.com will set a comment to approved if it is liked while unapproved
-            if (mBtnLikeComment.isActivated() && mComment.getStatusEnum() == UNAPPROVED) {
-                mComment.setStatus(CommentStatus.toString(APPROVED));
+            if (mBtnLikeComment.isActivated() && mComment.getStatus().equals(CommentStatus.UNAPPROVED.toString())) {
+                mComment.setStatus(APPROVED.toString());
                 mNotificationsDetailListFragment.refreshBlocksForCommentStatus(APPROVED);
                 setModerateButtonForStatus(APPROVED);
                 commentWasUnapproved = true;
@@ -1239,9 +1198,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setCommentStatusUnapproved() {
-        mComment.setStatus(CommentStatus.toString(UNAPPROVED));
-        mNotificationsDetailListFragment.refreshBlocksForCommentStatus(UNAPPROVED);
-        setModerateButtonForStatus(UNAPPROVED);
+        mComment.setStatus(CommentStatus.UNAPPROVED.toString());
+        mNotificationsDetailListFragment.refreshBlocksForCommentStatus(CommentStatus.UNAPPROVED);
+        setModerateButtonForStatus(CommentStatus.UNAPPROVED);
     }
 
     private void toggleLikeButton(boolean isLiked) {

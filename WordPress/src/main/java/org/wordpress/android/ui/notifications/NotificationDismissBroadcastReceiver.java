@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationManagerCompat;
 
-import org.wordpress.android.GCMMessageService;
+import org.wordpress.android.push.GCMMessageService;
 
 /*
  * Clears the notification map when a user dismisses a notification

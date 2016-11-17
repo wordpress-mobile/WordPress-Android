@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -67,7 +68,9 @@ public class DeviceUtils {
                 model = decodedModel;
             }
         } catch (IOException e) {
-            AppLog.e(T.UTILS, e.getMessage());
+            AppLog.e(T.UTILS, "Can't read `android_models.properties` file from assets, or it's in the wrong form.", e);
+            AppLog.d(T.UTILS, "If you need more info about the file, please check the reference implementation available " +
+                    "here: https://github.com/wordpress-mobile/WordPress-Android/blob/dd989429bd701a66bcba911de08f2e8d336798ef/WordPress/src/main/assets/android_models.properties");
         }
 
         if (model == null) {  //Device model not found in the list
@@ -78,6 +81,11 @@ public class DeviceUtils {
             }
         }
         return model;
+    }
+
+    public boolean isDeviceLocked(Context context){
+        KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        return myKM.inKeyguardRestrictedInputMode();
     }
 
     private String capitalize(String s) {

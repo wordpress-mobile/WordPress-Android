@@ -11,20 +11,23 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -41,6 +44,8 @@ public class ReaderPostActions {
 
     private static final String TRACKING_REFERRER = "https://wordpress.com/";
     private static final Random mRandom = new Random();
+
+    private static final int NUM_RELATED_POSTS_TO_REQUEST = 2;
 
     private ReaderPostActions() {
         throw new AssertionError();
@@ -227,25 +232,31 @@ public class ReaderPostActions {
     public static void requestBlogPost(final long blogId,
             final long postId,
             final ReaderActions.OnRequestListener requestListener) {
-        requestPost(false, blogId, postId, requestListener);
+        String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
+        requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
     }
 
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestFeedPost(final long blogId,
-            final long postId,
+    public static void requestFeedPost(final long feedId, final long feedItemId,
             final ReaderActions.OnRequestListener requestListener) {
-        requestPost(true, blogId, postId, requestListener);
+        String path = "read/feed/" + feedId + "/posts/" + feedItemId + "/?meta=site,likes";
+        requestPost(WordPress.getRestClientUtilsV1_3(), path, requestListener);
     }
 
-    private static void requestPost(final boolean isFeed,
-            final long blogOrFeedId,
-            final long postOrItemId,
+    /**
+     * similar to updatePost, but used when post doesn't already exist in local db
+     **/
+    public static void requestBlogPost(final String blogSlug,
+            final String postSlug,
             final ReaderActions.OnRequestListener requestListener) {
-        String path = isFeed ? "read/feed/" + blogOrFeedId + "/posts/" + postOrItemId + "/?meta=site,likes" :
-                "read/sites/" + blogOrFeedId + "/posts/" + postOrItemId + "/?meta=site,likes";
+        String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
+        requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
+    }
 
+    private static void requestPost(RestClientUtils restClientUtils, String path, final ReaderActions
+            .OnRequestListener requestListener) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -278,13 +289,8 @@ public class ReaderPostActions {
             }
         };
 
-        if (isFeed) {
-            AppLog.d(T.READER, "requesting feed post");
-            WordPress.getRestClientUtilsV1_3().get(path, null, null, listener, errorListener);
-        } else {
-            AppLog.d(T.READER, "requesting post");
-            WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
-        }
+        AppLog.d(T.READER, "requesting post");
+        restClientUtils.get(path, null, null, listener, errorListener);
     }
 
     private static String getTrackingPixelForPost(@NonNull ReaderPost post) {
@@ -346,7 +352,8 @@ public class ReaderPostActions {
     }
 
     /*
-     * request posts related to the passed one
+     * request posts related to the passed one, endpoint returns a combined list of related posts
+     * posts from across wp.com and related posts from the same site as the passed post
      */
     public static void requestRelatedPosts(final ReaderPost sourcePost) {
         if (sourcePost == null) return;
@@ -366,20 +373,36 @@ public class ReaderPostActions {
             }
         };
 
-        String path = "/read/site/" + sourcePost.blogId + "/post/" + sourcePost.postId + "/related";
+        String path = "/read/site/" + sourcePost.blogId
+                + "/post/" + sourcePost.postId
+                + "/related"
+                + "?size_local=" + NUM_RELATED_POSTS_TO_REQUEST
+                + "&size_global=" + NUM_RELATED_POSTS_TO_REQUEST
+                + "&fields=" + ReaderRelatedPost.RELATED_POST_FIELDS;
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleRelatedPostsResponse(final ReaderPost sourcePost, final JSONObject jsonObject) {
+    private static void handleRelatedPostsResponse(final ReaderPost sourcePost,
+                                                   final JSONObject jsonObject) {
         if (jsonObject == null) return;
 
         new Thread() {
             @Override
             public void run() {
-                ReaderPostList relatedPosts = ReaderPostList.fromJson(jsonObject);
-                if (relatedPosts != null && relatedPosts.size() > 0) {
-                    ReaderPostTable.addOrUpdatePosts(null, relatedPosts);
-                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, relatedPosts));
+                JSONArray jsonPosts = jsonObject.optJSONArray("posts");
+                if (jsonPosts != null) {
+                    ReaderRelatedPostList allRelatedPosts = ReaderRelatedPostList.fromJsonPosts(jsonPosts);
+                    // split into posts from the passed site (local) and from across wp.com (global)
+                    ReaderRelatedPostList localRelatedPosts = new ReaderRelatedPostList();
+                    ReaderRelatedPostList globalRelatedPosts = new ReaderRelatedPostList();
+                    for (ReaderRelatedPost relatedPost : allRelatedPosts) {
+                        if (relatedPost.getSiteId() == sourcePost.blogId) {
+                            localRelatedPosts.add(relatedPost);
+                        } else {
+                            globalRelatedPosts.add(relatedPost);
+                        }
+                    }
+                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, localRelatedPosts, globalRelatedPosts));
                 }
             }
         }.start();

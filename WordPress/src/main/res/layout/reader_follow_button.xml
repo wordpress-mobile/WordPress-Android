@@ -5,12 +5,7 @@
     android:id="@+id/frame_follow_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
-    android:orientation="horizontal"
-    android:paddingBottom="@dimen/margin_small"
-    android:paddingLeft="@dimen/margin_small"
-    android:paddingRight="@dimen/margin_small"
-    android:paddingTop="@dimen/margin_small">
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/image_follow_button"

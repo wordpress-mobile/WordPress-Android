@@ -29,7 +29,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     private boolean mStatusChanged;
 
     public interface OnCommentStatusChangeListener {
-        public void onCommentStatusChanged(CommentStatus newStatus);
+         void onCommentStatusChanged(CommentStatus newStatus);
     }
 
     public CommentUserNoteBlock(Context context, JSONObject noteObject,
