@@ -36,6 +36,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -54,8 +55,8 @@ import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
@@ -297,21 +298,14 @@ public class WordPress extends MultiDexApplication {
             // Register for Cloud messaging
             startService(new Intent(this, GCMRegistrationIntentService.class));
         }
-        configureSimperium();
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+            NotificationsUpdateService.startService(getContext());
         }
-    }
 
-    // Configure Simperium and start buckets if we are signed in to WP.com
-    private void configureSimperium() {
-        if (mAccountStore.hasAccessToken()) {
-            AppLog.i(T.NOTIFS, "Configuring Simperium");
-            SimperiumUtils.configureSimperium(this, mAccountStore.getAccessToken());
-        }
     }
 
     public static void setupVolleyQueue() {
@@ -501,8 +495,8 @@ public class WordPress extends MultiDexApplication {
         StatsDatabaseHelper.getDatabase(context).reset();
         StatsWidgetProvider.refreshAllWidgets(context, mSiteStore);
 
-        // Reset Simperium buckets (removes local data)
-        SimperiumUtils.resetBucketsAndDeauthorize();
+        // Reset Notifications Data
+        NotificationsTable.reset();
     }
 
     /**
@@ -739,6 +733,11 @@ public class WordPress extends MultiDexApplication {
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
+                // Refresh account informations and Notifications
+                if (mAccountStore.hasAccessToken()) {
+                    NotificationsUpdateService.startService(getContext());
+                }
+
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
 

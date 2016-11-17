@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-10-05 16:01:02+0000
+Plural-Forms: nplurals=1; plural=0;
+Generator: GlotPress/2.3.0-alpha
+Language: ko_KR
+-->
 <resources>
 	<string name="invite_invalid_email">%s: 잘못된 이메일주소</string>
 	<string name="invite_user_blocked_invites">%s : 사용자가 초대를 막았음</string>
@@ -92,7 +98,6 @@
 	<string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
 	<string name="reader_empty_posts_in_search_description">사용자 언어로 된 %s에 대한 글을 찾을 수 없습니다.</string>
 	<string name="reader_empty_posts_in_search_title">글을 찾을 수 없습니다.</string>
-	<string name="reader_label_related_posts">관련 읽을거리</string>
 	<string name="reader_label_post_search_running">검색 중...</string>
 	<string name="reader_label_post_search_explainer">모든 공개 워드프레스닷컴 블로그 검색</string>
 	<string name="reader_hint_post_search">워드프레스닷컴 검색</string>

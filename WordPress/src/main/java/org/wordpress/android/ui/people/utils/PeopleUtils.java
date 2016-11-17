@@ -509,7 +509,7 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format("sites/%s/invites/new", dotComBlogId);
+        String path = String.format(Locale.US, "sites/%s/invites/new", dotComBlogId);
         Map<String, String> params = new HashMap<>();
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique

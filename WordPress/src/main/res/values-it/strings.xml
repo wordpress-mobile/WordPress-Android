@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-11-12 11:30:44+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: it
+-->
 <resources>
+	<string name="reader_label_global_related_posts">saperne di più su WordPress.com</string>
+	<string name="reader_label_local_related_posts">Per saperne di più %s</string>
+	<string name="preference_open_device_settings">Accedere alle impostazioni del device</string>
+	<string name="comment_moderated_unapproved">Commento non approvato</string>
+	<string name="invite_invalid_email">%s: email non valida</string>
+	<string name="invite_user_blocked_invites">%s: email non valida</string>
+	<string name="invite_already_following">%s: stai già seguendo</string>
+	<string name="invite_already_a_member">%s: sei già iscritto</string>
+	<string name="invite_username_not_found">%s: l\'utente non è stato trovato</string>
+	<string name="comment_moderated_approved">Commento approvato!</string>
+	<string name="like">Like</string>
 	<string name="reader_label_image_count_one">1 immagine</string>
 	<string name="timespan_now">adesso</string>
 	<string name="role_viewer">Visitatore</string>
@@ -12,6 +29,7 @@
 	<string name="alignment_right">A destra</string>
 	<string name="alignment_left">A sinistra</string>
 	<string name="alignment_none">Nessuno</string>
+	<string name="site_settings_list_editor_action_mode_title">Selezionato %1$d</string>
 	<string name="error_fetch_users_list">Non è possibile recuperare gli utenti del sito</string>
 	<string name="plans_manage">Gestisci il tuo piano su\nWordPress.com/plans</string>
 	<string name="title_email_follower">Email al follower</string>
@@ -84,7 +102,6 @@
 	<string name="dlg_confirm_clear_search_history">Pulire lo storico della ricerca?</string>
 	<string name="reader_empty_posts_in_search_description">Nessun articolo trovato riguardo %s per la tua lingua</string>
 	<string name="reader_empty_posts_in_search_title">Nessun articolo trovato</string>
-	<string name="reader_label_related_posts">Letture correlate</string>
 	<string name="reader_label_post_search_running">Ricerca in corso...</string>
 	<string name="reader_label_post_search_explainer">Cerca in tutti i blog pubblici di WordPress.com</string>
 	<string name="reader_hint_post_search">Cerca in WordPress.com</string>

@@ -9,23 +9,22 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.simperium.client.BucketObjectMissingException;
-
-import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.models.Note;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
+import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
@@ -76,56 +75,61 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 return;
             }
 
-            if (SimperiumUtils.getNotesBucket() != null) {
-                try {
-                    Note note = SimperiumUtils.getNotesBucket().get(noteId);
-
-                    Map<String, String> properties = new HashMap<>();
-                    properties.put("notification_type", note.getType());
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
-
-                    Fragment detailFragment = getDetailFragmentForNote(note);
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.notifications_detail_container, detailFragment)
-                            .commitAllowingStateLoss();
-
-                    //set title
-                    if (getSupportActionBar() != null) {
-                        String title = note.getTitle();
-                        if (TextUtils.isEmpty(title)) {
-                            //set a deafult title if title is not set within the note
-                            switch(note.getType()) {
-                                case NOTE_FOLLOW_TYPE:
-                                    title = getString(R.string.follows);
-                                    break;
-                                case NOTE_COMMENT_LIKE_TYPE:
-                                    title = getString(R.string.comment_likes);
-                                    break;
-                                case NOTE_LIKE_TYPE:
-                                    title = getString(R.string.like);
-                                    break;
-                                case NOTE_COMMENT_TYPE:
-                                    title = getString(R.string.comment);
-                                    break;
-                            }
-                        }
-                        getSupportActionBar().setTitle(title);
-                    }
-
-                    // mark the note as read if it's unread
-                    if (note.isUnread()) {
-                        // mark as read which syncs with simperium
-                        note.markAsRead();
-                        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-                    }
-                } catch (BucketObjectMissingException e) {
-                    showErrorToastAndFinish();
-                    return;
-                }
+            final Note note = NotificationsTable.getNoteById(noteId);
+            if (note == null) {
+                showErrorToastAndFinish();
+                return;
             }
 
-            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);//clearNotifications();
+            // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
+            NotificationsActions.updateSeenTimestamp(note);
 
+            Map<String, String> properties = new HashMap<>();
+            properties.put("notification_type", note.getType());
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+
+            Fragment detailFragment = getDetailFragmentForNote(note);
+            getFragmentManager().beginTransaction()
+                    .add(R.id.notifications_detail_container, detailFragment)
+                    .commitAllowingStateLoss();
+
+            //set title
+            if (getSupportActionBar() != null) {
+                String title = note.getTitle();
+                if (TextUtils.isEmpty(title)) {
+                    //set a default title if title is not set within the note
+                    switch (note.getType()) {
+                        case NOTE_FOLLOW_TYPE:
+                            title = getString(R.string.follows);
+                            break;
+                        case NOTE_COMMENT_LIKE_TYPE:
+                            title = getString(R.string.comment_likes);
+                            break;
+                        case NOTE_LIKE_TYPE:
+                            title = getString(R.string.like);
+                            break;
+                        case NOTE_COMMENT_TYPE:
+                            title = getString(R.string.comment);
+                            break;
+                    }
+                }
+
+                // Force change the Action Bar title for 'new_post' notifications.
+                if (note.isNewPostType()) {
+                    title = getString(R.string.reader_title_post_detail);
+                }
+
+                getSupportActionBar().setTitle(title);
+            }
+
+            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, noteId);
+            // mark the note as read if it's unread
+            if (note.isUnread()) {
+                NotificationsActions.markNoteAsRead(note);
+                note.setRead();
+                NotificationsTable.saveNote(note);
+                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+            }
         } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
         }
@@ -134,8 +138,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
-
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -192,6 +196,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             } else {
                 fragment = NotificationsDetailListFragment.newInstance(note.getId());
             }
+        } else if (note.isNewPostType()) {
+            fragment = ReaderPostDetailFragment.newInstance(note.getSiteId(), note.getPostId());
         } else {
             fragment = NotificationsDetailListFragment.newInstance(note.getId());
         }

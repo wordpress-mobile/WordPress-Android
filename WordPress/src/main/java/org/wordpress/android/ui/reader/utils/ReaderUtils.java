@@ -207,6 +207,4 @@ public class ReaderUtils {
     public static ReaderTag getDefaultTag() {
         return getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT);
     }
-
-
 }
