@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.comment;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -95,8 +96,8 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchComment(final SiteModel site, final CommentModel comment) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).getUrlV1_1();
+    public void fetchComment(final SiteModel site, final long remoteCommentId, final @Nullable CommentModel comment) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).getUrlV1_1();
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
                 url, null, CommentWPComRestResponse.class,
                 new Listener<CommentWPComRestResponse>() {
@@ -117,6 +118,10 @@ public class CommentRestClient extends BaseWPComRestClient {
                 }
         );
         add(request);
+    }
+
+    public void fetchComment(final SiteModel site, final CommentModel comment) {
+        fetchComment(site, comment.getRemoteCommentId(), comment);
     }
 
     public void deleteComment(final SiteModel site, final CommentModel comment) {

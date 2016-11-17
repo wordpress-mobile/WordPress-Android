@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -44,10 +45,18 @@ public class CommentStore extends Store {
     public static class RemoteCommentPayload extends Payload {
         public final SiteModel site;
         public final CommentModel comment;
+        public final long remoteCommentId;
 
         public RemoteCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment) {
             this.site = site;
             this.comment = comment;
+            this.remoteCommentId = 0;
+        }
+
+        public RemoteCommentPayload(@NonNull SiteModel site, long remoteCommentId) {
+            this.site = site;
+            this.comment = null;
+            this.remoteCommentId = remoteCommentId;
         }
     }
 
@@ -70,7 +79,7 @@ public class CommentStore extends Store {
     public static class RemoteCommentResponsePayload extends Payload {
         public final CommentModel comment;
         public CommentError error;
-        public RemoteCommentResponsePayload(@NonNull CommentModel comment) {
+        public RemoteCommentResponsePayload(@Nullable CommentModel comment) {
             this.comment = comment;
         }
     }
@@ -365,9 +374,21 @@ public class CommentStore extends Store {
 
     private void fetchComment(RemoteCommentPayload payload) {
         if (payload.site.isWPCom()) {
-            mCommentRestClient.fetchComment(payload.site, payload.comment);
+            if (payload.comment == null) {
+                // fetch by comment remote Id
+                mCommentRestClient.fetchComment(payload.site, payload.remoteCommentId, null);
+            } else {
+                // fetch by comment
+                mCommentRestClient.fetchComment(payload.site, payload.comment);
+            }
         } else {
-            mCommentXMLRPCClient.fetchComment(payload.site, payload.comment);
+            if (payload.comment == null) {
+                // fetch by comment remote Id
+                mCommentXMLRPCClient.fetchComment(payload.site, payload.remoteCommentId, null);
+            } else {
+                // fetch by comment
+                mCommentXMLRPCClient.fetchComment(payload.site, payload.comment);
+            }
         }
     }
 
