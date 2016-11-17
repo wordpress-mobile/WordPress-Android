@@ -34,6 +34,7 @@ public class ReaderPost {
     private String authorFirstName;
     private String blogName;
     private String blogUrl;
+    private String blogImageUrl;
     private String postAvatar;
 
     private String primaryTag;    // most popular tag on this post based on usage in blog
@@ -152,6 +153,10 @@ public class ReaderPost {
             post.blogName = JSONUtils.getString(jsonSite, "name");
             post.setBlogUrl(JSONUtils.getString(jsonSite, "URL"));
             post.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
+            JSONObject jsonSiteIcon = jsonSite.optJSONObject("icon");
+            if (jsonSiteIcon != null) {
+                post.blogImageUrl = JSONUtils.getString(jsonSiteIcon, "img");
+            }
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
         }
@@ -191,7 +196,7 @@ public class ReaderPost {
         }
         // if we *still* don't have a featured image but the text contains an IMG tag, check whether
         // we can find a suitable image from the text
-        if (!post.hasFeaturedImage() && post.hasText() && post.text.contains("<img")) {
+        if (!post.hasFeaturedImage() && post.hasImages()) {
             post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
                     .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
@@ -203,6 +208,10 @@ public class ReaderPost {
         }
 
         return post;
+    }
+
+    public boolean hasImages() {
+        return hasText() && text.contains("<img ");
     }
 
     /*
@@ -432,6 +441,13 @@ public class ReaderPost {
         this.blogUrl = StringUtils.notNullStr(blogUrl);
     }
 
+    public String getBlogImageUrl() {
+        return StringUtils.notNullStr(blogImageUrl);
+    }
+    public void setBlogImageUrl(String imageUrl) {
+        this.blogImageUrl = StringUtils.notNullStr(imageUrl);
+    }
+
     public String getPostAvatar() {
         return StringUtils.notNullStr(postAvatar);
     }
@@ -573,6 +589,10 @@ public class ReaderPost {
 
     public boolean hasBlogUrl() {
         return !TextUtils.isEmpty(blogUrl);
+    }
+
+    public boolean hasBlogImageUrl() {
+        return !TextUtils.isEmpty(blogImageUrl);
     }
 
     /*
