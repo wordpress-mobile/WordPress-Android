@@ -64,8 +64,8 @@ public class ReaderMenuAdapter extends BaseAdapter {
         switch (mMenuItems.get(position)) {
             case ITEM_FOLLOW:
                 textRes = R.string.reader_btn_follow;
-                textColorRes = R.color.reader_follow_grey;
-                iconRes = R.drawable.reader_follow_gray;
+                textColorRes = R.color.reader_follow_blue;
+                iconRes = R.drawable.reader_follow_blue;
                 break;
             case ITEM_UNFOLLOW:
                 textRes = R.string.reader_btn_unfollow;
