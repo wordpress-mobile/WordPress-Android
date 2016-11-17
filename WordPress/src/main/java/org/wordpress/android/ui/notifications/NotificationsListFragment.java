@@ -616,13 +616,9 @@ public class NotificationsListFragment extends Fragment
             }
         }, 1000L);
 
-        View child = mRecyclerView.getLayoutManager().getChildAt(0);
-        if (child == null) {
-            return;
-        }
-
         // Check if the first item is visible on the screen
-        if (mRecyclerView.getLayoutManager().getPosition(child) > 0) {
+        View child = mRecyclerView.getLayoutManager().getChildAt(0);
+        if (child != null && mRecyclerView.getLayoutManager().getPosition(child) > 0) {
             showNewNotificationsBar();
         }
     }
