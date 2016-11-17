@@ -108,12 +108,12 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchComment(final SiteModel site, final CommentModel comment) {
+    public void fetchComment(final SiteModel site, final long remoteCommentId, final CommentModel comment) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
-        params.add(comment.getRemoteCommentId());
+        params.add(remoteCommentId);
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_COMMENT, params,
                 new Listener<Object>() {
@@ -133,6 +133,10 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 }
         );
         add(request);
+    }
+
+    public void fetchComment(final SiteModel site, final CommentModel comment) {
+        fetchComment(site, comment.getRemoteCommentId(), comment);
     }
 
     public void deleteComment(final SiteModel site, final CommentModel comment) {
