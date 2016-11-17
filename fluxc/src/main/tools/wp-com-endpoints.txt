@@ -11,6 +11,7 @@
 /sites/$site/posts/$post_ID/delete/
 /sites/$site/posts/$post_ID/replies/new
 /sites/$site/posts/new/
+/sites/$site/posts/slug:$post_slug#String/
 
 /sites/$site/media/
 /sites/$site/media/$media_ID/
@@ -26,5 +27,13 @@
 
 /sites/$site/taxonomies/$taxonomy#String/terms/
 /sites/$site/taxonomies/$taxonomy#String/terms/new/
+/sites/$site/taxonomies/$taxonomy#String/terms/slug:$slug#String/
 
 /users/new/
+
+/is-available/email/
+/is-available/username/
+/is-available/blog/
+/is-available/domain/
+
+/auth/send-login-email/
