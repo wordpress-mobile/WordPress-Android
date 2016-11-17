@@ -11,7 +11,7 @@
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="@dimen/cardview_default_radius"
     card_view:cardElevation="@dimen/reader_card_elevation"
-    card_view:contentPaddingLeft="@dimen/margin_extra_large"
+    card_view:contentPaddingLeft="@dimen/reader_xpost_padding_left"
     tools:targetApi="LOLLIPOP">
 
     <LinearLayout
