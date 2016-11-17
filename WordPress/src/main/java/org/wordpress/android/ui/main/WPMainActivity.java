@@ -390,7 +390,9 @@ public class WPMainActivity extends AppCompatActivity {
         checkConnection();
 
         // Update account to update the notification unseen status
-        mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+        if (mAccountStore.hasAccessToken()) {
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+        }
 
         ProfilingUtils.split("WPMainActivity.onResume");
         ProfilingUtils.dump();
@@ -568,7 +570,7 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError()) {
+        if (event.isError() && mSelectedSite != null) {
             AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
         }
     }
