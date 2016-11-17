@@ -421,7 +421,8 @@ public class MediaStore extends Store {
         } else {
             String errorMessage = isWellFormedForUpload(payload.media);
             if (errorMessage != null) {
-                notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, MediaAction.UPLOAD_MEDIA, payload.media);
+                notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, MediaAction.UPLOAD_MEDIA,
+                        payload.media);
                 return;
             }
         }
@@ -499,7 +500,7 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaDeleted(@NonNull MediaListPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETED_MEDIA, payload.media);
+        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETE_MEDIA, payload.media);
 
         if (payload.isError()) {
             onMediaChanged.error = payload.error;
@@ -514,7 +515,9 @@ public class MediaStore extends Store {
 
     private String isWellFormedForUpload(@NonNull MediaModel media) {
         String error = BaseUploadRequestBody.hasRequiredData(media);
-        AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + error);
+        if (error != null) {
+            AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + error);
+        }
         return error;
     }
 
@@ -522,7 +525,8 @@ public class MediaStore extends Store {
         notifyMediaError(errorType, null, cause, media);
     }
 
-    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause, List<MediaModel> media) {
+    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause,
+                                  List<MediaModel> media) {
         OnMediaChanged mediaChange = new OnMediaChanged(cause, media);
         mediaChange.error = new MediaError(errorType, errorMessage);
         emitChange(mediaChange);
