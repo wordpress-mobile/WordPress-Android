@@ -28,7 +28,7 @@ import java.util.EnumSet;
  */
 public class ReaderThumbnailStrip extends LinearLayout {
 
-    public static final int MIN_IMAGE_COUNT = 2;
+    public static final int MIN_IMAGE_COUNT = 4;
 
     private View mView;
     private LinearLayout mContainer;
