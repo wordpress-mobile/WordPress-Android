@@ -12,7 +12,7 @@
         android:layout_width="@dimen/reader_follow_icon"
         android:layout_height="@dimen/reader_follow_icon"
         android:layout_gravity="center_vertical"
-        app:srcCompat="@drawable/reader_follow" />
+        app:srcCompat="@drawable/ic_reader_follow_ff2e4453_24dp" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_follow_button"

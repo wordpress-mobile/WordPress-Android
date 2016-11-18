@@ -34,7 +34,7 @@
                 android:layout_width="@dimen/blavatar_sz"
                 android:layout_height="@dimen/blavatar_sz"
                 android:layout_gravity="top|left"
-                app:srcCompat="@drawable/blavatar_placeholder" />
+                app:srcCompat="@drawable/ic_placeholder_blavatar_ffc8d7e1_40dp" />
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_avatar"
@@ -42,7 +42,7 @@
                 android:layout_gravity="bottom|right"
                 android:layout_marginLeft="14dp"
                 android:layout_marginTop="14dp"
-                app:srcCompat="@drawable/gravatar_placeholder" />
+                app:srcCompat="@drawable/ic_placeholder_gravatar_ffc8d8e4_100dp" />
         </FrameLayout>
 
         <LinearLayout

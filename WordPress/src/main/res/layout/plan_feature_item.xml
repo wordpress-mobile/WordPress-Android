@@ -13,7 +13,7 @@
         android:layout_height="28dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/margin_extra_large"
-        tools:background="@drawable/noticon_publish"/>
+        tools:background="@drawable/ic_reader_ff0087be_16dp"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_feature_title"

@@ -219,7 +219,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     StringUtils.unescapeHTML(blogNames[position]));
             blogUsername.setText(
                     StringUtils.unescapeHTML(username));
-            blavatar.setErrorImageResId(R.drawable.blavatar_placeholder);
+            blavatar.setErrorImageResId(R.drawable.ic_placeholder_blavatar_ffc8d7e1_40dp);
             blavatar.setImageUrl(blavatars[position], WordPress.imageLoader);
 
             return view;

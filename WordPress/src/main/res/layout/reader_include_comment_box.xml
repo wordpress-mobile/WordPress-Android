@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/content_margin"
-            app:srcCompat="@drawable/ic_action_reply" />
+            app:srcCompat="@drawable/ic_reply_ff87a6bc_24dp" />
 
         <org.wordpress.android.widgets.SuggestionAutoCompleteText
             android:id="@+id/edit_comment"

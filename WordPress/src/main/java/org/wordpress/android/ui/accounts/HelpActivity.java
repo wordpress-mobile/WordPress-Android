@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
@@ -26,7 +25,7 @@ public class HelpActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_cross_ffffffff_24dp);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setElevation(0); //remove shadow

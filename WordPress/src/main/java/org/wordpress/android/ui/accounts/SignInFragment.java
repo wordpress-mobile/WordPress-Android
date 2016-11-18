@@ -856,7 +856,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             SignInDialogFragment nuxAlert;
             nuxAlert = SignInDialogFragment.newInstance(getString(R.string.no_network_title),
                     getString(R.string.no_network_message),
-                    R.drawable.noticon_alert_big,
+                    R.drawable.ic_notice_ffffffff_64dp,
                     getString(R.string.cancel));
             ft.add(nuxAlert, "alert");
             ft.commitAllowingStateLoss();
@@ -1106,7 +1106,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
         nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                 getString(org.wordpress.android.R.string.username_or_password_incorrect),
-                org.wordpress.android.R.drawable.noticon_alert_big, 3, getString(
+                org.wordpress.android.R.drawable.ic_notice_ffffffff_64dp, 3, getString(
                         org.wordpress.android.R.string.cancel), getString(
                         org.wordpress.android.R.string.forgot_password), getString(
                         org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
@@ -1153,7 +1153,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         } else {
             AppLog.e(T.NUX, "Server response: " + clientResponse);
             nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                    getString(messageId), R.drawable.noticon_alert_big, 3,
+                    getString(messageId), R.drawable.ic_notice_ffffffff_64dp, 3,
                     getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
                     SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
                     SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);

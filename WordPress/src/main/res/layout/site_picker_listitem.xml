@@ -25,7 +25,7 @@
             android:background="@color/white"
             android:gravity="center_vertical"
             android:padding="1dp"
-            app:srcCompat="@drawable/blavatar_placeholder" />
+            app:srcCompat="@drawable/ic_placeholder_blavatar_ffc8d7e1_40dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"

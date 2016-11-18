@@ -9,7 +9,7 @@
     android:clickable="false">
     <ImageView android:layout_width="@dimen/category_row_height"
                android:layout_height="@dimen/category_row_height"
-               app:srcCompat="@drawable/ic_level_indicator"
+               app:srcCompat="@drawable/ic_level_indicator_ff464646_24dp"
                android:id="@+id/categoryRowLevelIndicator" android:scaleType="fitEnd"/>
     <TextView
             android:orientation="vertical"

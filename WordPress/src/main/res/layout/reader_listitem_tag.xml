@@ -34,5 +34,5 @@
         android:background="?android:selectableItemBackground"
         android:padding="@dimen/margin_small"
         android:contentDescription="@string/remove"
-        app:srcCompat="@drawable/ic_close_grey600_24dp" />
+        app:srcCompat="@drawable/ic_cross_ff757575_24dp" />
 </LinearLayout>

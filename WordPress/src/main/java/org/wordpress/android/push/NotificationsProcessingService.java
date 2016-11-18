@@ -480,7 +480,7 @@ public class NotificationsProcessingService extends Service {
 
         private NotificationCompat.Builder getBuilder() {
             return new NotificationCompat.Builder(mContext)
-                    .setSmallIcon(R.drawable.notification_icon)
+                    .setSmallIcon(R.drawable.ic_my_sites_ffffffff_24dp)
                     .setColor(getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(getString(R.string.app_name))
                     .setAutoCancel(true);

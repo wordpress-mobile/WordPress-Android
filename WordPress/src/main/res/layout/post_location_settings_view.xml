@@ -14,7 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selectable_background_wordpress"
-        android:drawableLeft="@drawable/ic_action_location_searching"
+        android:drawableLeft="@drawable/ic_location_searching_66000000_32dp"
         android:gravity="center_vertical"
         android:paddingBottom="4dp"
         android:paddingRight="4dp"

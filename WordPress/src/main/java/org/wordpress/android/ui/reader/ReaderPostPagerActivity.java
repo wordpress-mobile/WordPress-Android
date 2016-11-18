@@ -173,7 +173,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         // for related posts, show an X in the toolbar which closes the activity - using the
         // back button will navigate through related posts
         if (mIsRelatedPostView) {
-            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+            mToolbar.setNavigationIcon(R.drawable.ic_cross_ffffffff_24dp);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

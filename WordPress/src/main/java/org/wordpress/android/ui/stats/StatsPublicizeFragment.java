@@ -119,8 +119,8 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
                 rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 holder = new StatsViewHolder(rowView);
-                holder.networkImageView.setErrorImageResId(R.drawable.stats_icon_default_site_avatar);
-                holder.networkImageView.setDefaultImageResId(R.drawable.stats_icon_default_site_avatar);
+                holder.networkImageView.setErrorImageResId(R.drawable.ic_placeholder_blavatar_ffc8d7e1_32dp);
+                holder.networkImageView.setDefaultImageResId(R.drawable.ic_placeholder_blavatar_ffc8d7e1_32dp);
                 rowView.setTag(holder);
             } else {
                 holder = (StatsViewHolder) rowView.getTag();

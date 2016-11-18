@@ -175,7 +175,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
             // icon.
             holder.networkImageView.setVisibility(View.VISIBLE);
-            holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.stats_icon_tags));
+            holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_tag_ff0087be_12dp));
 
             return convertView;
         }
@@ -255,8 +255,8 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             // icon
             if ( children == 0 ) {
                 holder.networkImageView.setVisibility(View.VISIBLE);
-                int drawableResource = groupName.toString().equalsIgnoreCase("uncategorized") ? R.drawable.stats_icon_categories
-                        : R.drawable.stats_icon_tags;
+                int drawableResource = groupName.toString().equalsIgnoreCase("uncategorized") ? R.drawable.ic_folder_ff0087be_12dp
+                        : R.drawable.ic_tag_ff0087be_12dp;
                 holder.networkImageView.setImageDrawable(getResources().getDrawable(drawableResource));
             }
 

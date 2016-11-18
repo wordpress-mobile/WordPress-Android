@@ -110,7 +110,7 @@
         android:layout_marginLeft="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
         android:drawablePadding="@dimen/margin_small"
-        android:drawableTop="@drawable/noticon_warning_big_grey"
+        android:drawableTop="@drawable/ic_notice_ff979797_48dp"
         android:gravity="center"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_extra_large"

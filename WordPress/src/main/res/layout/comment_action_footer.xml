@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_small"
-                app:srcCompat="@drawable/ic_action_like"
+                app:srcCompat="@drawable/ic_star_ff90aec2_32dp"
                 android:contentDescription="@string/reader_label_like" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_small"
-                app:srcCompat="@drawable/ic_action_approve"
+                app:srcCompat="@drawable/ic_checkmark_ff90aec2_32dp"
                 android:contentDescription="@string/reader_label_like" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -80,7 +80,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_action_trash"
+            android:drawableTop="@drawable/ic_trash_ff87a6bc_32dp"
             android:text="@string/mnu_comment_trash" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -89,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_action_spam"
+            android:drawableTop="@drawable/ic_spam_ff87a6bc_32dp"
             android:text="@string/mnu_comment_spam" />
     </LinearLayout>
 

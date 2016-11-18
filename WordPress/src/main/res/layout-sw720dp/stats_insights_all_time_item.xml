@@ -28,7 +28,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
-                app:srcCompat="@drawable/my_site_icon_posts" />
+                app:srcCompat="@drawable/ic_posts_ff87a6bc_24dp" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 style="@style/StatsInsightsLabel"
@@ -73,7 +73,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
-                app:srcCompat="@drawable/stats_icon_views" />
+                app:srcCompat="@drawable/ic_visible_on_ff2e4453_12dp" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 style="@style/StatsInsightsLabel"
@@ -118,7 +118,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
-                app:srcCompat="@drawable/stats_icon_visitors" />
+                app:srcCompat="@drawable/ic_user_ff2e4453_12dp" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 style="@style/StatsInsightsLabel"
@@ -163,7 +163,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
-                app:srcCompat="@drawable/stats_icon_trophy" />
+                app:srcCompat="@drawable/ic_trophy_fff0b849_32dp" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 style="@style/StatsInsightsLabel"

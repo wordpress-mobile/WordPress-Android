@@ -22,11 +22,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 
 import java.util.List;
@@ -57,7 +55,7 @@ public class WPActivityUtils {
         titleView.setText(title);
 
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_left_ffffffff_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

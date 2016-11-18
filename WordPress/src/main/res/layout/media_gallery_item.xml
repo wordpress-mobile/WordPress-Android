@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            app:srcCompat="@drawable/gallery_tablet_move_file" />
+            app:srcCompat="@drawable/ic_drag_handle_ff686868_24dp" />
     </FrameLayout>
 
     <com.android.volley.toolbox.NetworkImageView

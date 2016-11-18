@@ -26,7 +26,7 @@
             style="@style/ReaderImageView.Avatar"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_large"
-            app:srcCompat="@drawable/blavatar_placeholder" />
+            app:srcCompat="@drawable/ic_placeholder_blavatar_ffc8d7e1_40dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_name"

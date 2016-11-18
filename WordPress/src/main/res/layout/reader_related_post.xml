@@ -46,7 +46,7 @@
             style="@style/ReaderImageView.Avatar.ExtraSmall"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_medium"
-            tools:src="@drawable/gravatar_placeholder" />
+            tools:src="@drawable/ic_placeholder_gravatar_ffc8d8e4_100dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

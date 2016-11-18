@@ -43,7 +43,7 @@
                     android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/margin_medium"
-                    tools:src="@drawable/gravatar_placeholder" />
+                    tools:src="@drawable/ic_placeholder_gravatar_ffc8d8e4_100dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_blog_name"

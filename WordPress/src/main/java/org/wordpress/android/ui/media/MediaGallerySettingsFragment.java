@@ -316,12 +316,12 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
     }
 
     public void onPanelExpanded() {
-        mTitleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.gallery_arrow_dropdown_open, 0);
+        mTitleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_chevron_down_fff6f6f6_35dp, 0);
         mScrollView.scrollTo(0, 0);
     }
 
     public void onPanelCollapsed() {
-        mTitleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.gallery_arrow_dropdown_closed, 0);
+        mTitleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_chevron_up_fff6f6f6_35dp, 0);
     }
 
     public void setRandom(boolean random) {

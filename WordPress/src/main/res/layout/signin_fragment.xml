@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:contentDescription="@string/help"
-                app:srcCompat="@drawable/dashicon_info"
+                app:srcCompat="@drawable/ic_info_ff000000_24dp"
                 android:tint="@color/blue_dark" />
         </LinearLayout>
 
@@ -56,7 +56,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_centerInParent="true"
-                    app:srcCompat="@drawable/nux_icon_wp" />
+                    app:srcCompat="@drawable/ic_my_sites_ffffffff_50dp" />
 
                 <ImageView
                     android:id="@+id/info_button_secondary"
@@ -68,7 +68,7 @@
                     android:layout_alignTop="@+id/nux_fragment_icon"
                     android:layout_marginRight="16dp"
                     android:contentDescription="@string/help"
-                    app:srcCompat="@drawable/dashicon_info"
+                    app:srcCompat="@drawable/ic_info_ff000000_24dp"
                     android:tint="@color/blue_dark" />
             </RelativeLayout>
 
@@ -111,7 +111,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
-                    app:srcCompat="@drawable/dashicon_admin_users"
+                    app:srcCompat="@drawable/ic_user_ff000000_24dp"
                     android:tint="@color/grey_darken_10" />
             </RelativeLayout>
 
@@ -141,7 +141,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
-                    app:srcCompat="@drawable/dashicon_lock"
+                    app:srcCompat="@drawable/ic_lock_ff000000_24dp"
                     android:tint="@color/grey_darken_10" />
 
                 <ImageView
@@ -154,7 +154,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginRight="16dp"
-                    app:srcCompat="@drawable/dashicon_eye_closed"
+                    app:srcCompat="@drawable/ic_visible_off_ff000000_24dp"
                     android:tint="@color/nux_eye_icon_color_closed" />
             </RelativeLayout>
 
@@ -204,7 +204,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
-                    app:srcCompat="@drawable/dashicon_admin_site"
+                    app:srcCompat="@drawable/ic_globe_ff000000_24dp"
                     android:tint="@color/grey_darken_10" />
             </RelativeLayout>
             <RelativeLayout

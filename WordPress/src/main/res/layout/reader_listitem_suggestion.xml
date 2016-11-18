@@ -32,5 +32,5 @@
         android:layout_marginLeft="@dimen/margin_small"
         android:background="?android:selectableItemBackground"
         android:padding="@dimen/margin_small"
-        android:src="@drawable/ic_close_grey600_24dp" />
+        android:src="@drawable/ic_cross_ff757575_24dp" />
 </RelativeLayout>

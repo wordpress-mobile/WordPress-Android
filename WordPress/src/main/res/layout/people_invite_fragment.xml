@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/margin_small"
                     android:paddingRight="@dimen/margin_small"
-                    app:srcCompat="@drawable/dashicon_info" />
+                    app:srcCompat="@drawable/ic_info_ff000000_24dp" />
             </LinearLayout>
 
             <org.wordpress.android.widgets.WPTextView
@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
                 android:layout_marginTop="5dp"
-                android:drawableRight="@drawable/arrow"
+                android:drawableRight="@drawable/ic_dropdown_ff78dcfa_24dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
