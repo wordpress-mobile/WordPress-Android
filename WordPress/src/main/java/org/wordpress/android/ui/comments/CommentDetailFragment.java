@@ -48,6 +48,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
@@ -844,19 +845,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (result.isSuccess() && mOnCommentChangeListener != null)
                     mOnCommentChangeListener.onCommentChanged(ChangeType.REPLIED);
                 if (isAdded()) {
-                    mEditReply.setEnabled(true);
-                    mSubmitReplyBtn.setVisibility(View.VISIBLE);
-                    progress.setVisibility(View.GONE);
-                    updateStatusViews();
                     if (result.isSuccess()) {
-                        ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
-                        mEditReply.setText(null);
-                        mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
-
-                        // approve the comment
-                        if (mComment != null && !mComment.getStatus().equals(CommentStatus.APPROVED.toString())) {
-                            moderateComment(CommentStatus.APPROVED);
-                        }
                     } else {
                         String errorMessage = TextUtils.isEmpty(result.getMessage()) ? getString(R.string.reply_failed) : result.getMessage();
                         String strUnEscapeHTML = StringEscapeUtils.unescapeHtml(errorMessage);
@@ -871,11 +860,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mIsSubmittingReply = true;
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
-        if (mNote != null) {
-            // FIXME: CommentActions.submitReplyToCommentNote(mNote, replyText, actionListener);
-        } else {
-            // FIXME: CommentActions.submitReplyToComment(mSite, mComment, replyText, actionListener);
-        }
+
+        // Pseudo comment reply
+        CommentModel reply = new CommentModel();
+        reply.setContent(replyText);
+
+        mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(new RemoteCreateCommentPayload(mSite,
+                mComment, reply)));
     }
 
     /*
@@ -1197,7 +1188,36 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void onCommentCreated(CommentStore.OnCommentChanged event) {
-        // FIXME
+        mIsSubmittingReply = false;
+        mEditReply.setEnabled(true);
+        mSubmitReplyBtn.setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.progress_submit_comment).setVisibility(View.GONE);
+        updateStatusViews();
+
+        if (event.isError()) {
+            if (isAdded()) {
+                String strUnEscapeHTML = StringEscapeUtils.unescapeHtml(event.error.message);
+                ToastUtils.showToast(getActivity(), strUnEscapeHTML, ToastUtils.Duration.LONG);
+                // refocus editor on failure and show soft keyboard
+                EditTextUtils.showSoftInput(mEditReply);
+            }
+            return;
+        }
+
+        if (mOnCommentChangeListener != null) {
+            mOnCommentChangeListener.onCommentChanged(ChangeType.REPLIED);
+        }
+
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
+            mEditReply.setText(null);
+            mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
+        }
+
+        // approve the comment
+        if (mComment != null && !mComment.getStatus().equals(CommentStatus.APPROVED.toString())) {
+            moderateComment(CommentStatus.APPROVED);
+        }
     }
 
     // OnChanged events
