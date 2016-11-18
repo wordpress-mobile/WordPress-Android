@@ -15,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.ReaderCardType;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
@@ -356,7 +357,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         WPNetworkImageView.ImageType.PHOTO);
                 break;
 
-            case DEFAULT:
+            default:
                 holder.txtTitle.setVisibility(View.VISIBLE);
                 holder.txtTitle.setText(post.getTitle());
                 holder.txtPhotoTitle.setVisibility(View.GONE);
@@ -369,18 +370,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
                 final int titleMargin;
-                if (post.hasFeaturedImage()) {
+                if (post.getCardType() == ReaderCardType.GALLERY) {
+                    // if this post is a gallery, scan it for images and show a thumbnail strip of
+                    // them - note that the thumbnail strip will take care of making itself visible
+                    holder.thumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
+                    holder.framePhoto.setVisibility(View.GONE);
+                    titleMargin = mMarginLarge;
+                } else if (post.hasFeaturedImage()) {
                     holder.imgFeatured.setImageUrl(
                             post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
                             WPNetworkImageView.ImageType.PHOTO);
                     holder.framePhoto.setVisibility(View.VISIBLE);
+                    holder.thumbnailStrip.setVisibility(View.GONE);
                     titleMargin = mMarginLarge;
                 } else if (post.hasFeaturedVideo() && WPNetworkImageView.canShowVideoThumbnail(post.getFeaturedVideo())) {
                     holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
                     holder.framePhoto.setVisibility(View.VISIBLE);
+                    holder.thumbnailStrip.setVisibility(View.GONE);
                     titleMargin = mMarginLarge;
                 } else {
                     holder.framePhoto.setVisibility(View.GONE);
+                    holder.thumbnailStrip.setVisibility(View.GONE);
                     titleMargin = 0;
                 }
 
@@ -431,15 +441,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             showDiscoverData(holder, post);
         } else {
             holder.layoutDiscover.setVisibility(View.GONE);
-        }
-
-        // if this post has attachments or contains a gallery, scan it for images and show a
-        // thumbnail strip of them - note that the thumbnail strip will take care of making
-        // itself visible
-        if (post.hasAttachments() || post.isGallery()) {
-            holder.thumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
-        } else {
-            holder.thumbnailStrip.setVisibility(View.GONE);
         }
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {

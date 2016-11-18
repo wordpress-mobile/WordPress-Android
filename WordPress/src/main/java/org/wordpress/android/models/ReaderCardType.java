@@ -1,5 +1,8 @@
 package org.wordpress.android.models;
 
+import org.wordpress.android.ui.reader.models.ReaderImageList;
+import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
+import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.HtmlUtils;
 
 /**
@@ -18,8 +21,14 @@ public enum ReaderCardType {
             return DEFAULT;
         }
 
+        // if this post is a gallery, scan it to make sure we have enough images to
+        // show in the stream's thumbnail strip
         if (post.isGallery()) {
-            return GALLERY;
+            ReaderImageList imageList =
+                    new ReaderImageScanner(post.getText(), post.isPrivate).getGalleryImageList();
+            if (imageList.size() >= ReaderThumbnailStrip.MIN_IMAGE_COUNT) {
+                return GALLERY;
+            }
         }
 
         // posts with a featured image and little or no text get the photo card treatment - note
