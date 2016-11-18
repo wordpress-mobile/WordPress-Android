@@ -56,6 +56,22 @@
             android:shadowRadius="2"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/nux_dialog_description_selfhosted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:shadowColor="@color/black"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
     </LinearLayout>
 
     <LinearLayout

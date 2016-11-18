@@ -1324,6 +1324,11 @@
     <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
 
+
+    <!--Helpshift Text-->
+
+    <string name="helpshift_text">If you’d like to sign into your self-hosted WordPress site using the app, please tap on the ‘Add Self-Hosted Site’ link at the bottom of the login screen. This will add another field to the form where you will enter your Site URL.</string>
+
     <!-- Help view -->
     <string name="help">Help</string>
     <string name="forgot_password">Lost your password?</string>

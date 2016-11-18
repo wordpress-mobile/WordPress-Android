@@ -1106,6 +1106,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
         nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                 getString(org.wordpress.android.R.string.username_or_password_incorrect),
+                getString(org.wordpress.android.R.string.helpshift_text),
                 org.wordpress.android.R.drawable.noticon_alert_big, 3, getString(
                         org.wordpress.android.R.string.cancel), getString(
                         org.wordpress.android.R.string.forgot_password), getString(
