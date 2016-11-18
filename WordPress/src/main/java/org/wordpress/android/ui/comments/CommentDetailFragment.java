@@ -132,6 +132,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
     private String mPreviousStatus;
+    private long mCommentidToFetch;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -212,7 +213,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (hasComment()) {
+        if (mComment != null) {
             outState.putSerializable(WordPress.SITE, mSite);
             outState.putSerializable(KEY_COMMENT, mComment);
         }
@@ -291,7 +292,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnSpamComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!hasComment()) return;
+                if (mComment == null) return;
 
                 if (CommentStatus.fromString(mComment.getStatus()) == SPAM) {
                     moderateComment(APPROVED);
@@ -304,7 +305,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnTrashComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!hasComment()) return;
+                if (mComment == null) return;
 
                 String status = mComment.getStatus();
 
@@ -524,16 +525,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean hasComment() {
-        return mComment == null;
-    }
-
     /**
      * Reload the current comment from the local database
      */
     private void reloadComment() {
         // TODO: make sure this method is useful
-        if (!hasComment()) {
+        if (mComment == null) {
             return;
         }
         CommentModel updatedComment = mCommentStore.getCommentByLocalId(mComment.getLocalSiteId());
@@ -544,7 +541,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * open the comment for editing
      */
     private void editComment() {
-        if (!isAdded() || !hasComment())
+        if (!isAdded() || mComment == null)
             return;
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
@@ -570,7 +567,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final View layoutBottom = getView().findViewById(R.id.layout_bottom);
 
         // hide container views when comment is null (will happen when opened from a notification)
-        if (!hasComment()) {
+        if (mComment == null) {
             scrollView.setVisibility(View.GONE);
             layoutBottom.setVisibility(View.GONE);
 
@@ -584,8 +581,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         setComment(comment, site);
                         return;
                     }
-                    long idToFetch = mNote.getParentCommentId() > 0 ? mNote.getParentCommentId() : mNote.getCommentId();
-                    RemoteCommentPayload payload = new RemoteCommentPayload(site, idToFetch);
+                    mCommentidToFetch = mNote.getParentCommentId() > 0 ? mNote.getParentCommentId() : mNote.getCommentId();
+                    RemoteCommentPayload payload = new RemoteCommentPayload(site, mCommentidToFetch);
                     mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
                     setProgressVisible(true);
                     return;
@@ -607,7 +604,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
         final TextView txtName = (TextView) getView().findViewById(R.id.text_name);
         final TextView txtDate = (TextView) getView().findViewById(R.id.text_date);
-
 
         txtName.setText(mComment.getAuthorName() == null ? getString(R.string.anonymous) :
                 HtmlUtils.fastUnescapeHtml(mComment.getAuthorName()));
@@ -673,7 +669,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // if comment doesn't have a post title, set it to the passed one and save to comment table
-        if (hasComment() && mComment.getPostTitle() == null) {
+        if (mComment != null && mComment.getPostTitle() == null) {
             mComment.setPostTitle(postTitle);
             mDispatcher.dispatch(CommentActionBuilder.newUpdateCommentAction(mComment));
         }
@@ -795,7 +791,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * approve, disapprove, spam, or trash the current comment
      */
     private void moderateComment(final CommentStatus newStatus) {
-        if (!isAdded() || !hasComment())
+        if (!isAdded() || mComment == null)
             return;
         if (!NetworkUtils.checkConnection(getActivity()))
             return;
@@ -824,7 +820,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * post comment box text as a reply to the current comment
      */
     private void submitReply() {
-        if (!hasComment() || !isAdded() || mIsSubmittingReply)
+        if (mComment == null || !isAdded() || mIsSubmittingReply)
             return;
 
         if (!NetworkUtils.checkConnection(getActivity()))
@@ -895,13 +891,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * already marked as spam, and show the current status of the comment
      */
     private void updateStatusViews() {
-        if (!isAdded() || !hasComment())
+        if (!isAdded() || mComment == null)
             return;
 
         final int statusTextResId;      // string resource id for status text
         final int statusColor;          // color for status text
 
-        CommentStatus commentStatus = CommentStatus.valueOf(mComment.getStatus());
+        CommentStatus commentStatus = CommentStatus.fromString(mComment.getStatus());
         switch (commentStatus) {
             case APPROVED:
                 statusTextResId = R.string.comment_status_approved;
@@ -985,7 +981,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void performModerateAction(){
-        if (!hasComment() || !isAdded() || !NetworkUtils.checkConnection(getActivity())) {
+        if (mComment == null || !isAdded() || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
@@ -1230,7 +1226,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
             return;
         }
-        // Set the comment we just pulled
-        // FIXME: setComment(localBlogId, comment);
+
+        if (mCommentidToFetch != 0) {
+            CommentModel comment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mCommentidToFetch);
+            setComment(comment, mSite);
+            mCommentidToFetch = 0;
+        }
     }
 }

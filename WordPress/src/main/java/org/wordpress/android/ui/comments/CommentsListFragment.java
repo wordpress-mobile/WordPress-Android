@@ -66,7 +66,7 @@ public class CommentsListFragment extends Fragment {
         }
 
         public CommentStatus toCommentStatus() {
-            return CommentStatus.valueOf(name());
+            return CommentStatus.fromString(name());
         }
     }
 
@@ -383,7 +383,7 @@ public class CommentsListFragment extends Fragment {
 
         // build list of comments whose status is different than passed
         for (CommentModel comment : selectedComments) {
-            if (CommentStatus.valueOf(comment.getStatus()) != newStatus) {
+            if (CommentStatus.fromString(comment.getStatus()) != newStatus) {
                 updateComments.add(comment);
             }
         }

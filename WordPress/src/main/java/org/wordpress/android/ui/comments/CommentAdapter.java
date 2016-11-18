@@ -231,7 +231,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         // status is only shown for comments that haven't been approved
         final boolean showStatus;
-        CommentStatus commentStatus = CommentStatus.valueOf(comment.getStatus());
+        CommentStatus commentStatus = CommentStatus.fromString(comment.getStatus());
         switch (commentStatus) {
             case SPAM:
                 showStatus = true;
