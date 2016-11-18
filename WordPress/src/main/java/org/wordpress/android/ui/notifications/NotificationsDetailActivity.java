@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -373,6 +374,25 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         @Override
         public int getCount() {
             return mNoteList.size();
+        }
+
+        @Override
+        public void restoreState(Parcelable state, ClassLoader loader) {
+            // work around "Fragment no longer exists for key" Android bug
+            // by catching the IllegalStateException
+            // https://code.google.com/p/android/issues/detail?id=42601
+            try {
+                AppLog.d(AppLog.T.NOTIFS, "notifications pager > adapter restoreState");
+                super.restoreState(state, loader);
+            } catch (IllegalStateException e) {
+                AppLog.e(AppLog.T.NOTIFS, e);
+            }
+        }
+
+        @Override
+        public Parcelable saveState() {
+            AppLog.d(AppLog.T.NOTIFS, "notifications pager > adapter saveState");
+            return super.saveState();
         }
 
         boolean isValidPosition(int position) {
