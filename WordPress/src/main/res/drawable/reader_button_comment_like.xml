@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/ic_star_ffa9a9a9_24dp" android:state_enabled="false" />
-    <item android:drawable="@drawable/ic_star_fff0821e_24dp" android:state_pressed="true" />
-    <item android:drawable="@drawable/ic_star_fff0821e_24dp" android:state_selected="true" />
-    <item android:drawable="@drawable/ic_star_ff0087b3_24dp" />
-</selector>
