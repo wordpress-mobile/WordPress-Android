@@ -18,6 +18,7 @@
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
+    <dimen name="card_gutters">12dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
@@ -90,8 +91,8 @@
 
     <dimen name="reader_thumbnail_strip_image_size">48dp</dimen>
 
-    <!-- height of divider between cards -->
-    <dimen name="reader_card_gutters">12dp</dimen>
+    <dimen name="reader_card_gutters">1dp</dimen>
+    <dimen name="reader_card_elevation">0dp</dimen>
 
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
