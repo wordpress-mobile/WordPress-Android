@@ -16,9 +16,9 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
@@ -41,7 +41,7 @@ public class CommentsActivity extends AppCompatActivity
     private long mSelectedCommentId;
     private final CommentList mTrashedComments = new CommentList();
 
-    private CommentStatus mCurrentCommentStatusType = CommentStatus.UNKNOWN;
+    private CommentStatus mCurrentCommentStatusType = CommentStatus.ALL;
 
     private SiteModel mSite;
 
@@ -173,7 +173,7 @@ public class CommentsActivity extends AppCompatActivity
 
         FragmentTransaction ft = fm.beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
-        CommentDetailFragment detailFragment = CommentDetailFragment.newInstance(mSite.getId(), commentId);
+        CommentDetailFragment detailFragment = CommentDetailFragment.newInstance(mSite, commentId);
         ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         if (listFragment != null) {
@@ -237,7 +237,7 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onModerateComment(final SiteModel site, final Comment comment,
+    public void onModerateComment(final SiteModel site, final CommentModel comment,
                                   final CommentStatus newStatus) {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
@@ -245,7 +245,7 @@ public class CommentsActivity extends AppCompatActivity
         }
 
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
-            getListFragment().setCommentIsModerating(comment.commentID, true);
+            getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), true);
             getListFragment().updateEmptyView();
             CommentActions.moderateComment(site, comment, newStatus,
                     new CommentActions.CommentActionListener() {
@@ -255,7 +255,7 @@ public class CommentsActivity extends AppCompatActivity
                         return;
                     }
 
-                    getListFragment().setCommentIsModerating(comment.commentID, false);
+                    getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), false);
 
                     if (result.isSuccess()) {
                         reloadCommentList();
@@ -269,10 +269,10 @@ public class CommentsActivity extends AppCompatActivity
                 }
             });
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH
-                || newStatus == CommentStatus.DELETE) {
+                || newStatus == CommentStatus.DELETED) {
             mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
-            getListFragment().setCommentIsModerating(comment.commentID, true);
+            getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), true);
             getListFragment().updateEmptyView();
 
             String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) :
@@ -282,7 +282,7 @@ public class CommentsActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     mTrashedComments.remove(comment);
-                    getListFragment().setCommentIsModerating(comment.commentID, false);
+                    getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), false);
                     getListFragment().loadComments();
                 }
             };

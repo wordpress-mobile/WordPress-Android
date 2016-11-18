@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,36 +20,27 @@ import android.widget.ProgressBar;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
-import org.w3c.dom.Comment;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.CommentAction;
+import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
-import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.VolleyUtils;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper.Method;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -108,19 +98,30 @@ public class EditCommentActivity extends AppCompatActivity {
         mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
         mComment = (CommentModel) intent.getSerializableExtra(ARG_COMMENT);
         final String noteId = intent.getStringExtra(ARG_NOTE_ID);
-        if (noteId == null) {
-            if (mComment == null) {
-                showErrorAndFinish();
-                return;
-            }
-            configureViews();
+
+        // If the noteId is passed, load the comment from the note
+        if (noteId != null) {
+            loadCommentFromNote(noteId);
+            return;
+        }
+
+        // Else make sure the comment has been passed
+        if (mComment == null) {
+            showErrorAndFinish();
+            return;
+        }
+        configureViews();
+    }
+
+    private void loadCommentFromNote(String noteId) {
+        mNote = NotificationsTable.getNoteById(noteId);
+        if (mNote != null) {
+            setFetchProgressVisible(true);
+            mSite = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+            RemoteCommentPayload payload = new RemoteCommentPayload(mSite, mNote.getCommentId());
+            mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
         } else {
-            mNote = NotificationsTable.getNoteById(noteId);
-            if (mNote != null) {
-                requestFullCommentForNote(mNote);
-            } else {
-                showErrorAndFinish();
-            }
+            showErrorAndFinish();
         }
     }
 
@@ -216,7 +217,7 @@ public class EditCommentActivity extends AppCompatActivity {
             return;
 
         if (mNote != null) {
-            // Edit comment via REST API :)
+
             showSaveDialog();
             // FIXME: replace the following
             WordPress.getRestClientUtils().editCommentContent(mNote.getSiteId(),
@@ -241,11 +242,11 @@ public class EditCommentActivity extends AppCompatActivity {
                         }
                     });
         } else {
-            // Edit comment via XML-RPC :(
-            // FIXME: replace the following
-            if (mIsUpdateTaskRunning)
-                AppLog.w(AppLog.T.COMMENTS, "update task already running");
-            new UpdateCommentTask().execute();
+            mComment.setAuthorEmail(getEditTextStr(R.id.author_email));
+            mComment.setAuthorUrl(getEditTextStr(R.id.author_url));
+            mComment.setAuthorName(getEditTextStr(R.id.author_name));
+            mComment.setContent(getEditTextStr(R.id.edit_comment_content));
+            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
         }
     }
 
@@ -304,9 +305,7 @@ public class EditCommentActivity extends AppCompatActivity {
         dialogBuilder.create().show();
     }
 
-    // Request a comment via the REST API for a note
-    private void requestFullCommentForNote(Note note) {
-        if (isFinishing()) return;
+    private void setFetchProgressVisible(boolean progressVisible) {
         final ProgressBar progress = (ProgressBar)findViewById(R.id.edit_comment_progress);
         final View editContainer = findViewById(R.id.edit_comment_container);
 
@@ -314,38 +313,8 @@ public class EditCommentActivity extends AppCompatActivity {
             return;
         }
 
-        editContainer.setVisibility(View.GONE);
-        progress.setVisibility(View.VISIBLE);
-
-        RestRequest.Listener restListener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                if (!isFinishing()) {
-                    progress.setVisibility(View.GONE);
-                    editContainer.setVisibility(View.VISIBLE);
-                    Comment comment = Comment.fromJSON(jsonObject);
-                    if (comment != null) {
-                        mComment = comment;
-                        configureViews();
-                    } else {
-                        showErrorAndFinish();
-                    }
-                }
-            }
-        };
-        RestRequest.ErrorListener restErrListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.COMMENTS, VolleyUtils.errStringFromVolleyError(volleyError), volleyError);
-                if (!isFinishing()) {
-                    progress.setVisibility(View.GONE);
-                    showErrorAndFinish();
-                }
-            }
-        };
-
-        final String path = String.format(Locale.US, "/sites/%s/comments/%s", note.getSiteId(), note.getCommentId());
-        WordPress.getRestClientUtils().get(path, restListener, restErrListener);
+        progress.setVisibility(progressVisible ? View.VISIBLE : View.GONE);
+        editContainer.setVisibility(progressVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -372,6 +341,48 @@ public class EditCommentActivity extends AppCompatActivity {
             dialogBuilder.create().show();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void onCommentPushed(CommentStore.OnCommentChanged event) {
+        if (isFinishing()) return;
+
+        dismissSaveDialog();
+
+        if (event.isError()) {
+            AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
+            showEditErrorAlert();
+            return;
+        }
+
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    private void onCommentFetched(CommentStore.OnCommentChanged event) {
+        if (isFinishing()) return;
+
+        setFetchProgressVisible(false);
+
+        if (event.isError()) {
+            AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
+            showErrorAndFinish();
+            return;
+        }
+
+        mComment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mNote.getCommentId());
+        configureViews();
+    }
+
+    // OnChanged events
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCommentChanged(CommentStore.OnCommentChanged event) {
+        if (event.causeOfChange == CommentAction.FETCH_COMMENT) {
+            onCommentFetched(event);
+        }
+        if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
+            onCommentPushed(event);
         }
     }
 }

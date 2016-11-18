@@ -462,7 +462,7 @@ public class NotificationsUtils {
      */
     public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final View parentView) {
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
-            note.setLocalStatus(CommentStatus.toRESTString(newStatus));
+            note.setLocalStatus(newStatus.toString());
             EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), true));
             // FIXME: replace the following
             CommentActions.moderateCommentForNote(note, newStatus,

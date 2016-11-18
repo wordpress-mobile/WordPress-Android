@@ -225,7 +225,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             noteViewHolder.contentView.setVisibility(View.VISIBLE);
         }
 
-        CommentStatus commentStatus = CommentStatus.UNKNOWN;
+        CommentStatus commentStatus = CommentStatus.ALL;
         if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
             commentStatus = CommentStatus.UNAPPROVED;
         }

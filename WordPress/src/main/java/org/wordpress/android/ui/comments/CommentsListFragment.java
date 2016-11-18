@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.FitWindowsViewGroup;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,9 +19,9 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.ui.EmptyViewMessageType;
@@ -47,18 +48,40 @@ public class CommentsListFragment extends Fragment {
         void onCommentSelected(long commentId);
     }
 
+    public enum CommentStatusCriteria implements FilterCriteria {
+        ALL,
+        UNAPPROVED,
+        APPROVED,
+        TRASH,
+        SPAM;
+
+        @Override
+        public String getLabel() {
+            return name();
+        }
+
+        public void fromCommentStatus(CommentStatus status) {
+            valueOf(status.name());
+        }
+
+        public CommentStatus toCommentStatus() {
+            return CommentStatus.valueOf(name());
+        }
+    }
+
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
     boolean mHasAutoRefreshedComments = false;
 
-    private final CommentStatus[] commentStatuses = {CommentStatus.ALL, CommentStatus.UNAPPROVED,
-            CommentStatus.APPROVED, CommentStatus.TRASH, CommentStatus.SPAM};
+    private final CommentStatusCriteria[] commentStatuses = {
+            CommentStatusCriteria.ALL, CommentStatusCriteria.UNAPPROVED, CommentStatusCriteria.APPROVED,
+            CommentStatusCriteria.TRASH, CommentStatusCriteria.SPAM};
 
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
     private FilteredRecyclerView mFilteredCommentsView;
     private CommentAdapter mAdapter;
     private ActionMode mActionMode;
-    private CommentStatus mCommentStatusFilter;
+    private CommentStatusCriteria mCommentStatusFilter;
 
     private UpdateCommentsTask mUpdateCommentsTask;
 
@@ -134,15 +157,16 @@ public class CommentsListFragment extends Fragment {
             CommentAdapter.OnCommentPressedListener pressedListener = new CommentAdapter.OnCommentPressedListener() {
                 @Override
                 public void onCommentPressed(int position, View view) {
-                    Comment comment = getAdapter().getItem(position);
+                    CommentModel comment = getAdapter().getItem(position);
                     if (comment == null) {
                         return;
                     }
                     if (mActionMode == null) {
-                        if (!getAdapter().isModeratingCommentId(comment.commentID)) {
+                        if (!getAdapter().isModeratingCommentId(comment.getRemoteCommentId())) {
                             mFilteredCommentsView.invalidate();
                             if (getActivity() instanceof OnCommentSelectedListener) {
-                                ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.commentID);
+                                ((OnCommentSelectedListener) getActivity())
+                                        .onCommentSelected(comment.getRemoteCommentId());
                             }
                         }
                     } else {
@@ -164,7 +188,7 @@ public class CommentsListFragment extends Fragment {
                 }
             };
 
-            mAdapter = new CommentAdapter(getActivity(), mSite.getId());
+            mAdapter = new CommentAdapter(getActivity(), mSite);
             mAdapter.setOnCommentPressedListener(pressedListener);
             mAdapter.setOnDataLoadedListener(dataLoadedListener);
             mAdapter.setOnLoadMoreListener(loadMoreListener);
@@ -182,7 +206,7 @@ public class CommentsListFragment extends Fragment {
         return getAdapter().getSelectedCommentCount();
     }
 
-    public void removeComment(Comment comment) {
+    public void removeComment(CommentModel comment) {
         if (hasAdapter() && comment != null) {
             getAdapter().removeComment(comment);
         }
@@ -233,7 +257,8 @@ public class CommentsListFragment extends Fragment {
             }
 
             @Override
-            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
+            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener,
+                                               boolean refresh) {
             }
 
             @Override
@@ -243,8 +268,8 @@ public class CommentsListFragment extends Fragment {
 
             @Override
             public void onFilterSelected(int position, FilterCriteria criteria) {
-                AppPrefs.setCommentsStatusFilter((CommentStatus) criteria);
-                mCommentStatusFilter = (CommentStatus) criteria;
+                AppPrefs.setCommentsStatusFilter((CommentStatusCriteria) criteria);
+                mCommentStatusFilter = (CommentStatusCriteria) criteria;
             }
 
             @Override
@@ -258,7 +283,7 @@ public class CommentsListFragment extends Fragment {
 
                 if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
                     FilterCriteria filter = mFilteredCommentsView.getCurrentFilter();
-                    if (filter == null || CommentStatus.UNKNOWN.equals(filter)) {
+                    if (filter == null || CommentStatusCriteria.ALL.equals(filter)) {
                         return getString(R.string.comments_empty_list);
                     } else {
                         switch (mCommentStatusFilter) {
@@ -320,12 +345,12 @@ public class CommentsListFragment extends Fragment {
             if (!NetworkUtils.isNetworkAvailable(getActivity())){
                 ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments_showing_older));
             }
-            getAdapter().loadComments(mCommentStatusFilter);
+            getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
         }
     }
 
     public void setCommentStatusFilter(CommentStatus statusFilter) {
-        mCommentStatusFilter = statusFilter;
+        mCommentStatusFilter.fromCommentStatus(statusFilter);
     }
 
     private void dismissDialog(int id) {
@@ -343,7 +368,7 @@ public class CommentsListFragment extends Fragment {
         final CommentList updateComments = new CommentList();
 
         // build list of comments whose status is different than passed
-        for (Comment comment : selectedComments) {
+        for (CommentModel comment : selectedComments) {
             if (CommentStatus.valueOf(comment.getStatus()) != newStatus) {
                 updateComments.add(comment);
             }
@@ -466,7 +491,7 @@ public class CommentsListFragment extends Fragment {
         // this is called from CommentsActivity when a comment was changed in the detail view,
         // and the change will already be in SQLite so simply reload the comment adapter
         // to show the change
-        getAdapter().loadComments(mCommentStatusFilter);
+        getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
     }
 
     void updateEmptyView(){
@@ -491,18 +516,18 @@ public class CommentsListFragment extends Fragment {
             mFilteredCommentsView.setRefreshing(false);
             ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments_showing_older));
             //we're offline, load/refresh whatever we have in our local db
-            getAdapter().loadComments(mCommentStatusFilter);
+            getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
             return;
         }
 
         //immediately load/refresh whatever we have in our local db as we wait for the API call to get latest results
         if (!loadMore){
-            getAdapter().loadComments(mCommentStatusFilter);
+            getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
         }
 
         mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.LOADING);
 
-        mUpdateCommentsTask = new UpdateCommentsTask(loadMore, mCommentStatusFilter);
+        mUpdateCommentsTask = new UpdateCommentsTask(loadMore, mCommentStatusFilter.toCommentStatus());
         mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -567,7 +592,7 @@ public class CommentsListFragment extends Fragment {
 
             if (mStatusFilter != null){
                 //if this is UNKNOWN that means show ALL, i.e., do not apply filter
-                if (!mStatusFilter.equals(CommentStatus.UNKNOWN)){
+                if (!mStatusFilter.equals(CommentStatus.ALL)){
                     hPost.put("status", CommentStatus.toString(mStatusFilter));
                 }
             }

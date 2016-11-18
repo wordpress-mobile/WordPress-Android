@@ -11,6 +11,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
@@ -412,19 +413,19 @@ public class Note {
     /**
      * Constructs a new Comment object based off of data in a Note
      */
-    public Comment buildComment() {
-        return new Comment(
-                getPostId(),
-                getCommentId(),
-                getCommentAuthorName(),
-                DateTimeUtils.iso8601FromTimestamp(getTimestamp()),
-                getCommentText(),
-                getCommentStatus().toString(),
-                "", // post title is unavailable in note model
-                getCommentAuthorUrl(),
-                "", // user email is unavailable in note model
-                getIconURL()
-        );
+    public CommentModel buildComment() {
+        CommentModel comment = new CommentModel();
+        comment.setRemotePostId(getPostId());
+        comment.setRemoteCommentId(getCommentId());
+        comment.setAuthorName(getCommentAuthorName());
+        comment.setDatePublished(DateTimeUtils.iso8601FromTimestamp(getTimestamp()));
+        comment.setContent(getCommentText());
+        comment.setStatus(getCommentStatus().toString());
+        comment.setAuthorUrl(getCommentAuthorUrl());
+        comment.setPostTitle(""); // unavailable in note model
+        comment.setAuthorEmail(""); // unavailable in note model
+        comment.setAuthorProfileImageUrl(getIconURL());
+        return comment;
     }
 
     public String getCommentAuthorName() {
