@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.notifications;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -229,11 +229,11 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (allowNavigateList) {
             //apply filter to the list so we show the same items that the list show vertically, but horizontally
             NotesAdapter.buildFilteredNotesList(filteredNotes, notes, filter);
-            adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), filteredNotes);
+            adapter = new NotificationDetailFragmentAdapter(getSupportFragmentManager(), filteredNotes);
         } else {
             ArrayList<Note> oneNoteList = new ArrayList<>();
             oneNoteList.add(note);
-            adapter = new NotificationDetailFragmentAdapter(getFragmentManager(),
+            adapter = new NotificationDetailFragmentAdapter(getSupportFragmentManager(),
                     oneNoteList);
         }
 

@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,7 +21,6 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -71,7 +70,7 @@ public class CommentsActivity extends AppCompatActivity
             CommentsListFragment commentsListFragment = new CommentsListFragment();
             // initialize comment status filter first time
             commentsListFragment.setCommentStatusFilter(mCurrentCommentStatusType);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.layout_fragment_container, commentsListFragment, getString(R.string
                             .fragment_tag_comment_list))
                     .commitAllowingStateLoss();
@@ -107,7 +106,7 @@ public class CommentsActivity extends AppCompatActivity
 
 
     private CommentDetailFragment getDetailFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(getString(
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
                 R.string.fragment_tag_comment_detail));
         if (fragment == null) {
             return null;
@@ -120,7 +119,7 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     private CommentsListFragment getListFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(getString(
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
                 R.string.fragment_tag_comment_list));
         if (fragment == null) {
             return null;
@@ -133,7 +132,7 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     private void showReaderFragment(long remoteBlogId, long postId) {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 
         Fragment fragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
@@ -153,7 +152,7 @@ public class CommentsActivity extends AppCompatActivity
     @Override
     public void onCommentSelected(long commentId) {
         mSelectedCommentId = commentId;
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         if (fm == null) return;
 
         fm.executePendingTransactions();
@@ -230,7 +229,7 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onModerateComment(final int accountId, final Comment comment, final CommentStatus newStatus) {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
         }

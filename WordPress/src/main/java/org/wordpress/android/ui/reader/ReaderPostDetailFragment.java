@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.AsyncTask;
