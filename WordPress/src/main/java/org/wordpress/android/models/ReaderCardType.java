@@ -8,15 +8,24 @@ import org.wordpress.android.util.HtmlUtils;
 
 public enum ReaderCardType {
     DEFAULT,
-    PHOTO;
+    PHOTO,
+    GALLERY;
 
     private static final int MAX_TEXT_CHARS = 100;
 
     public static ReaderCardType fromReaderPost(ReaderPost post) {
+        if (post == null) {
+            return DEFAULT;
+        }
+
+        if (post.isGallery()) {
+            return GALLERY;
+        }
+
         // posts with a featured image and little or no text get the photo card treatment - note
         // that we have to strip HTML tags from the text to determine its length, which can be
         // an expensive operation so we try to avoid it
-        if (post != null && post.hasFeaturedImage()) {
+        if (post.hasFeaturedImage()) {
             if (post.getExcerpt().length() > MAX_TEXT_CHARS) {
                 return DEFAULT;
             }
@@ -32,15 +41,25 @@ public enum ReaderCardType {
     }
 
     public static String toString(ReaderCardType cardType) {
-        if (cardType != null && cardType == PHOTO) {
-            return "PHOTO";
+        if (cardType == null) {
+            return "DEFAULT";
         }
-        return "DEFAULT";
+        switch (cardType) {
+            case PHOTO:
+                return "PHOTO";
+            case GALLERY:
+                return "GALLERY";
+            default:
+                return "DEFAULT";
+        }
     }
 
     public static ReaderCardType fromString(String s) {
-        if (s != null && s.equals("PHOTO")) {
+        if ("PHOTO".equals(s)) {
             return PHOTO;
+        }
+        if ("GALLERY".equals(s)) {
+            return GALLERY;
         }
         return DEFAULT;
     }
