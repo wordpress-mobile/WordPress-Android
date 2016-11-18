@@ -20,6 +20,8 @@ import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
@@ -108,6 +110,8 @@ public interface AppComponent {
     void inject(CommentDetailFragment object);
     void inject(EditCommentActivity object);
     void inject(CommentAdapter object);
+    void inject(CommentsListFragment object);
+    void inject(CommentsActivity object);
 
     void inject(MeFragment object);
     void inject(MyProfileActivity object);

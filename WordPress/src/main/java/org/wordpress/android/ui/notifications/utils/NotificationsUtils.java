@@ -8,13 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -35,15 +33,9 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
-import org.wordpress.android.ui.comments.CommentActionResult;
-import org.wordpress.android.ui.comments.CommentActions;
-import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationFailed;
-import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationStatusChanged;
-import org.wordpress.android.ui.notifications.NotificationEvents.NoteVisibilityChanged;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.util.AppLog;
@@ -58,8 +50,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 public class NotificationsUtils {
     public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
@@ -409,79 +399,6 @@ public class NotificationsUtils {
                 });
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_APPROVED);
-    }
-
-    private static void showUndoBarForNote(final Note note,
-                                           final CommentStatus status,
-                                           final View parentView) {
-        Resources resources = parentView.getContext().getResources();
-        String message = (status == CommentStatus.TRASH ? resources.getString(R.string.comment_trashed) : resources.getString(R.string.comment_spammed));
-        View.OnClickListener undoListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSnackbarDidUndo = true;
-                EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
-            }
-        };
-
-        mSnackbarDidUndo = false;
-        Snackbar snackbar = Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, undoListener);
-
-
-
-        snackbar.setCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                super.onDismissed(snackbar, event);
-                if (mSnackbarDidUndo) {
-                    return;
-                }
-                // Delete the notifications from the local DB as soon as the undo bar fades away.
-                NotificationsTable.deleteNoteById(note.getId());
-                // FIXME: replace the following
-                CommentActions.moderateCommentForNote(note, status,
-                        new CommentActions.CommentActionListener() {
-                            @Override
-                            public void onActionResult(CommentActionResult result) {
-                                if (!result.isSuccess()) {
-                                    EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
-                                    EventBus.getDefault().postSticky(new NoteModerationFailed());
-                                }
-                            }
-                        });
-            }
-        });
-
-        snackbar.show();
-    }
-
-    /**
-     * Moderate a comment from a WPCOM notification.
-     * Broadcast EventBus events on update/success/failure and show an undo bar if new status is Trash or Spam
-     */
-    public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final View parentView) {
-        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
-            note.setLocalStatus(newStatus.toString());
-            EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), true));
-            // FIXME: replace the following
-            CommentActions.moderateCommentForNote(note, newStatus,
-                    new CommentActions.CommentActionListener() {
-                        @Override
-                        public void onActionResult(CommentActionResult result) {
-                            EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), false));
-                            if (!result.isSuccess()) {
-                                note.setLocalStatus(null);
-                                EventBus.getDefault().postSticky(new NoteModerationFailed());
-                            }
-                        }
-                    });
-        } else if (newStatus == CommentStatus.TRASH || newStatus == CommentStatus.SPAM) {
-            // Post as sticky, so that NotificationsListFragment can pick it up after it's created
-            EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), true));
-            // Show undo bar for trash or spam actions
-            showUndoBarForNote(note, newStatus, parentView);
-        }
     }
 
     // Checks if global notifications toggle is enabled in the Android app settings

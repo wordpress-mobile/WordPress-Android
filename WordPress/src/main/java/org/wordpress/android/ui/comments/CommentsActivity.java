@@ -14,11 +14,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.CommentStore;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
@@ -29,25 +35,31 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
+import javax.inject.Inject;
+
 public class CommentsActivity extends AppCompatActivity
         implements OnCommentSelectedListener,
                    NotificationFragment.OnPostClickListener,
                    CommentActions.OnCommentActionListener,
                    CommentActions.OnCommentChangeListener {
-    private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
+    private static final String KEY_SELECTED_COMMENT = "selected_comment_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
     private static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
-    private long mSelectedCommentId;
     private final CommentList mTrashedComments = new CommentList();
 
     private CommentStatus mCurrentCommentStatusType = CommentStatus.ALL;
 
     private SiteModel mSite;
+    private CommentModel mComment;
+
+    @Inject Dispatcher mDispatcher;
+    @Inject CommentStore mCommentStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.comment_activity);
 
@@ -77,7 +89,7 @@ public class CommentsActivity extends AppCompatActivity
             mCurrentCommentStatusType = (CommentStatus) getIntent().getSerializableExtra(SAVED_COMMENTS_STATUS_TYPE);
         } else {
             // Read the value from app preferences here. Default to 0 - All
-            mCurrentCommentStatusType = AppPrefs.getCommentsStatusFilter();
+            mCurrentCommentStatusType = AppPrefs.getCommentsStatusFilter().toCommentStatus();
         }
 
         if (savedInstanceState == null) {
@@ -91,9 +103,20 @@ public class CommentsActivity extends AppCompatActivity
         } else {
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
             getIntent().putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE));
-
-            mSelectedCommentId = savedInstanceState.getLong(KEY_SELECTED_COMMENT_ID);
+            mComment = (CommentModel) savedInstanceState.getSerializable(KEY_SELECTED_COMMENT);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -164,18 +187,21 @@ public class CommentsActivity extends AppCompatActivity
      */
     @Override
     public void onCommentSelected(long commentId) {
-        mSelectedCommentId = commentId;
         FragmentManager fm = getFragmentManager();
-        if (fm == null) return;
+        if (fm == null) {
+            return;
+        }
+
+        mComment = mCommentStore.getCommentBySiteAndRemoteId(mSite, commentId);
 
         fm.executePendingTransactions();
         CommentsListFragment listFragment = getListFragment();
 
         FragmentTransaction ft = fm.beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
-        CommentDetailFragment detailFragment = CommentDetailFragment.newInstance(mSite, commentId);
+        CommentDetailFragment detailFragment = CommentDetailFragment.newInstance(mSite, mComment);
         ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         if (listFragment != null) {
             ft.hide(listFragment);
         }
@@ -217,8 +243,8 @@ public class CommentsActivity extends AppCompatActivity
         outState.putSerializable(WordPress.SITE, mSite);
 
         // retain the id of the highlighted and selected comments
-        if (mSelectedCommentId != 0 && hasDetailFragment()) {
-            outState.putLong(KEY_SELECTED_COMMENT_ID, mSelectedCommentId);
+        if (mComment != null && hasDetailFragment()) {
+            outState.putSerializable(KEY_SELECTED_COMMENT, mComment);
         }
 
         if (hasListFragment()) {
@@ -247,27 +273,9 @@ public class CommentsActivity extends AppCompatActivity
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), true);
             getListFragment().updateEmptyView();
-            CommentActions.moderateComment(site, comment, newStatus,
-                    new CommentActions.CommentActionListener() {
-                @Override
-                public void onActionResult(CommentActionResult result) {
-                    if (isFinishing() || !hasListFragment()) {
-                        return;
-                    }
-
-                    getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), false);
-
-                    if (result.isSuccess()) {
-                        reloadCommentList();
-                    } else {
-                        getListFragment().updateEmptyView();
-                        ToastUtils.showToast(CommentsActivity.this,
-                                R.string.error_moderate_comment,
-                                ToastUtils.Duration.LONG
-                        );
-                    }
-                }
-            });
+            comment.setStatus(newStatus.toString());
+            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite,
+                    comment)));
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH
                 || newStatus == CommentStatus.DELETED) {
             mTrashedComments.add(comment);
@@ -301,27 +309,9 @@ public class CommentsActivity extends AppCompatActivity
                         return;
                     }
                     mTrashedComments.remove(comment);
-
-                    CommentActions.moderateComment(mSite, comment, newStatus,
-                            new CommentActions.CommentActionListener() {
-                        @Override
-                        public void onActionResult(CommentActionResult result) {
-                            if (isFinishing() || !hasListFragment()) {
-                                return;
-                            }
-                            getListFragment().setCommentIsModerating(comment.commentID, false);
-                            if (!result.isSuccess()) {
-                                // show comment again upon error
-                                getListFragment().loadComments();
-                                ToastUtils.showToast(CommentsActivity.this,
-                                        R.string.error_moderate_comment,
-                                        ToastUtils.Duration.LONG
-                                );
-                            } else {
-                                getListFragment().updateEmptyView();
-                            }
-                        }
-                    });
+                    comment.setStatus(newStatus.toString());
+                    mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite,
+                            comment)));
                 }
             });
 
@@ -350,4 +340,17 @@ public class CommentsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    // OnChanged events
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCommentChanged(CommentStore.OnCommentChanged event) {
+        if (getListFragment() != null) {
+            // FIXME: getListFragment().setCommentIsModerating(event.comments, false);
+            getListFragment().loadComments();
+        }
+        reloadCommentList();
+        if (event.isError()) {
+            ToastUtils.showToast(this, R.string.error_moderate_comment, ToastUtils.Duration.LONG);
+        }
+    }
 }

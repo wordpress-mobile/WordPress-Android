@@ -22,12 +22,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -275,7 +275,7 @@ public class MySiteFragment extends Fragment
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
                     //reset comments status filter
-                    AppPrefs.setCommentsStatusFilter(CommentStatus.ALL);
+                    AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
                     int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
                     setSelectedSite(selectedSite);
                 }

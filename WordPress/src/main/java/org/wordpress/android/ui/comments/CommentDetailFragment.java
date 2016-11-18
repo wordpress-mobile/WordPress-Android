@@ -101,11 +101,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private static final String KEY_MODE = "KEY_MODE";
     private static final String KEY_COMMENT = "KEY_COMMENT";
     private static final String KEY_NOTE_ID = "KEY_NOTE_ID";
+    private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
 
     private static final int INTENT_COMMENT_EDITOR     = 1010;
     private static final int FROM_BLOG_COMMENT = 1;
     private static final int FROM_NOTE = 2;
-    private static final int FROM_NOTE_REMOTE = 3;
 
     private CommentModel mComment;
     private SiteModel mSite;
@@ -172,9 +172,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
         args.putInt(KEY_MODE, FROM_NOTE);
+        args.putString(KEY_NOTE_ID, noteId);
+        args.putString(KEY_REPLY_TEXT, replyText);
         fragment.setArguments(args);
-        fragment.setNoteWithNoteId(noteId);
-        fragment.setReplyText(replyText);
         return fragment;
     }
 
@@ -190,6 +190,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 break;
             case FROM_NOTE:
                 setNoteWithNoteId(getArguments().getString(KEY_NOTE_ID));
+                setReplyText(getArguments().getString(KEY_REPLY_TEXT));
                 break;
         }
 
@@ -369,8 +370,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private void setReplyUniqueId() {
         if (mEditReply != null && isAdded()) {
-            mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d",
-                            mSite.getSiteId(), mComment.getRemoteCommentId()));
+            if (mSite == null || mComment == null) {
+                mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d",
+                        mNote.getSiteId(), mNote.getCommentId()));
+            } else {
+                mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d",
+                        mSite.getSiteId(), mComment.getRemoteCommentId()));
+            }
         }
     }
 
@@ -406,6 +412,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void setNote(Note note) {
         mNote = note;
+        mSite = mSiteStore.getSiteBySiteId(note.getSiteId());
         if (isAdded() && mNote != null) {
             showComment();
         }
@@ -1194,7 +1201,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void onCommentCreated(CommentStore.OnCommentChanged event) {
-
+        // FIXME
     }
 
     // OnChanged events
