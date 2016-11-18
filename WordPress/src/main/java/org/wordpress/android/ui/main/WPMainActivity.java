@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -104,6 +105,9 @@ public class WPMainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        // Allow vector drawables on pre-Lollipop (i.e. < API 21).
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
         mViewPager.setOffscreenPageLimit(WPMainTabAdapter.NUM_TABS - 1);

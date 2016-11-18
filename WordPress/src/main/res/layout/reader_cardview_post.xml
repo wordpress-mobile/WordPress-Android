@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -36,7 +37,7 @@
                 style="@style/ReaderImageView.Avatar"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/margin_large"
-                tools:src="@drawable/blavatar_placeholder" />
+                app:srcCompat="@drawable/blavatar_placeholder" />
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
                 android:id="@+id/follow_button"
@@ -105,7 +106,7 @@
                 style="@style/ReaderImageView.Avatar.Tiny"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="@dimen/margin_medium"
-                tools:src="@drawable/gravatar_placeholder" />
+                app:srcCompat="@drawable/gravatar_placeholder" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_dateline"
@@ -153,7 +154,7 @@
                 style="@style/ReaderImageView.Avatar.Small"
                 android:layout_marginRight="@dimen/margin_large"
                 android:background="?android:selectableItemBackground"
-                tools:src="@drawable/gravatar_placeholder" />
+                app:srcCompat="@drawable/gravatar_placeholder" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_discover"

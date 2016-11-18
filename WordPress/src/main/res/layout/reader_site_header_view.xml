@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_blog_info"
@@ -25,7 +26,7 @@
             style="@style/ReaderImageView.Avatar"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_large"
-            tools:src="@drawable/blavatar_placeholder" />
+            app:srcCompat="@drawable/blavatar_placeholder" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_name"

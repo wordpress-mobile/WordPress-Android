@@ -280,7 +280,7 @@
                     android:id="@+id/my_site_people_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/people"
-                    android:src="@drawable/me_icon_my_profile" />
+                    app:srcCompat="@drawable/me_icon_my_profile" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_people_management_text_view"
