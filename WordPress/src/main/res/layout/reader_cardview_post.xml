@@ -103,9 +103,9 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:shadowColor="@color/grey_dark"
-                android:shadowDx="1"
-                android:shadowDy="1"
-                android:shadowRadius="2"
+                android:shadowDx="3.0"
+                android:shadowDy="3.0"
+                android:shadowRadius="1.5"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 tools:text="text_photo_title" />
