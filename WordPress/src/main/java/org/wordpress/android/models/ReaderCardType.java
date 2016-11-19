@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.support.annotation.NonNull;
 
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.HtmlUtils;
@@ -27,11 +28,11 @@ public enum ReaderCardType {
             return PHOTO;
         }
 
-        // if this post is a gallery, scan it to make sure we have enough images to
+        // if this post is a gallery, scan its content to make sure we have enough images to
         // show in the stream's thumbnail strip
         if (post.isGallery()) {
             ReaderImageScanner scanner = new ReaderImageScanner(post.getText(), post.isPrivate);
-            if (scanner.hasUsableGalleryImageCount(ReaderThumbnailStrip.IMAGE_COUNT)) {
+            if (scanner.hasUsableImageCount(ReaderThumbnailStrip.IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)) {
                 return GALLERY;
             }
         }

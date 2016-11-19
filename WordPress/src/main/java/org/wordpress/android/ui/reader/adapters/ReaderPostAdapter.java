@@ -347,61 +347,57 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.txtAuthorAndBlogName.setText(null);
         }
 
-        switch (post.getCardType()) {
+        if (post.getCardType() == ReaderCardType.PHOTO) {
             // posts with a suitable featured image that have very little text get the "photo
             // card" treatment - show the title overlaid on the featured image without any text
-            case PHOTO:
+            holder.txtText.setVisibility(View.GONE);
+            holder.txtTitle.setVisibility(View.GONE);
+            holder.framePhoto.setVisibility(View.VISIBLE);
+            holder.txtPhotoTitle.setVisibility(View.VISIBLE);
+            holder.txtPhotoTitle.setText(post.getTitle());
+            holder.imgFeatured.setImageUrl(
+                    post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
+                    WPNetworkImageView.ImageType.PHOTO);
+        } else {
+            holder.txtTitle.setVisibility(View.VISIBLE);
+            holder.txtTitle.setText(post.getTitle());
+            holder.txtPhotoTitle.setVisibility(View.GONE);
+
+            if (post.hasExcerpt()) {
+                holder.txtText.setVisibility(View.VISIBLE);
+                holder.txtText.setText(post.getExcerpt());
+            } else {
                 holder.txtText.setVisibility(View.GONE);
-                holder.txtTitle.setVisibility(View.GONE);
-                holder.framePhoto.setVisibility(View.VISIBLE);
-                holder.txtPhotoTitle.setVisibility(View.VISIBLE);
-                holder.txtPhotoTitle.setText(post.getTitle());
+            }
+
+            final int titleMargin;
+            if (post.getCardType() == ReaderCardType.GALLERY) {
+                // if this post is a gallery, scan it for images and show a thumbnail strip of
+                // them - note that the thumbnail strip will take care of making itself visible
+                holder.thumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
+                holder.framePhoto.setVisibility(View.GONE);
+                titleMargin = mMarginLarge;
+            } else if (post.hasFeaturedImage()) {
                 holder.imgFeatured.setImageUrl(
                         post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
                         WPNetworkImageView.ImageType.PHOTO);
-                break;
+                holder.framePhoto.setVisibility(View.VISIBLE);
+                holder.thumbnailStrip.setVisibility(View.GONE);
+                titleMargin = mMarginLarge;
+            } else if (post.hasFeaturedVideo() && WPNetworkImageView.canShowVideoThumbnail(post.getFeaturedVideo())) {
+                holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
+                holder.framePhoto.setVisibility(View.VISIBLE);
+                holder.thumbnailStrip.setVisibility(View.GONE);
+                titleMargin = mMarginLarge;
+            } else {
+                holder.framePhoto.setVisibility(View.GONE);
+                holder.thumbnailStrip.setVisibility(View.GONE);
+                titleMargin = 0;
+            }
 
-            default:
-                holder.txtTitle.setVisibility(View.VISIBLE);
-                holder.txtTitle.setText(post.getTitle());
-                holder.txtPhotoTitle.setVisibility(View.GONE);
-
-                if (post.hasExcerpt()) {
-                    holder.txtText.setVisibility(View.VISIBLE);
-                    holder.txtText.setText(post.getExcerpt());
-                } else {
-                    holder.txtText.setVisibility(View.GONE);
-                }
-
-                final int titleMargin;
-                if (post.getCardType() == ReaderCardType.GALLERY) {
-                    // if this post is a gallery, scan it for images and show a thumbnail strip of
-                    // them - note that the thumbnail strip will take care of making itself visible
-                    holder.thumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
-                    holder.framePhoto.setVisibility(View.GONE);
-                    titleMargin = mMarginLarge;
-                } else if (post.hasFeaturedImage()) {
-                    holder.imgFeatured.setImageUrl(
-                            post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
-                            WPNetworkImageView.ImageType.PHOTO);
-                    holder.framePhoto.setVisibility(View.VISIBLE);
-                    holder.thumbnailStrip.setVisibility(View.GONE);
-                    titleMargin = mMarginLarge;
-                } else if (post.hasFeaturedVideo() && WPNetworkImageView.canShowVideoThumbnail(post.getFeaturedVideo())) {
-                    holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
-                    holder.framePhoto.setVisibility(View.VISIBLE);
-                    holder.thumbnailStrip.setVisibility(View.GONE);
-                    titleMargin = mMarginLarge;
-                } else {
-                    holder.framePhoto.setVisibility(View.GONE);
-                    holder.thumbnailStrip.setVisibility(View.GONE);
-                    titleMargin = 0;
-                }
-
-                // set the top margin of the title based on whether there's a featured image
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.txtTitle.getLayoutParams();
-                params.topMargin = titleMargin;
-                break;
+            // set the top margin of the title based on whether there's a featured image
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.txtTitle.getLayoutParams();
+            params.topMargin = titleMargin;
         }
 
         showLikes(holder, post);

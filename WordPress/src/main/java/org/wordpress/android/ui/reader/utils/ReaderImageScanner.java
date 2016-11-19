@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.utils;
 
 import android.text.TextUtils;
 
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 
 import java.util.regex.Matcher;
@@ -46,16 +45,10 @@ public class ReaderImageScanner {
     }
 
     /*
-     * returns a list of all image URLs in the content above a certain width - pass zero
-     * for the min to include all images regardless of size
+     * returns a list of image URLs in the content up to the max above a certain width - pass zero
+     * to include all images regardless of size
      */
-    public ReaderImageList getImageList() {
-        return getImageList(0);
-    }
-    public ReaderImageList getGalleryImageList() {
-        return getImageList(ReaderConstants.MIN_GALLERY_IMAGE_WIDTH);
-    }
-    public ReaderImageList getImageList(int minImageWidth) {
+    public ReaderImageList getImageList(int maxImageCount, int minImageWidth) {
         ReaderImageList imageList = new ReaderImageList(mIsPrivate);
 
         if (!mContentContainsImages) {
@@ -73,6 +66,9 @@ public class ReaderImageScanner {
                 int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag), ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
                 if (width >= minImageWidth) {
                     imageList.addImageUrl(imageUrl);
+                    if (maxImageCount > 0 && imageList.size() >= maxImageCount) {
+                        break;
+                    }
                 }
             }
         }
@@ -81,10 +77,10 @@ public class ReaderImageScanner {
     }
 
     /*
-     * returns true if there at least `count` images in the post content that are large enough for
-     * an image gallery
+     * returns true if there at least `minImageCount` images in the post content that are at
+     * least `minImageWidth` in size
      */
-    public boolean hasUsableGalleryImageCount(int count) {
+    public boolean hasUsableImageCount(int minImageCount, int minImageWidth) {
         if (!mContentContainsImages) {
             return false;
         }
@@ -95,9 +91,9 @@ public class ReaderImageScanner {
             String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
             String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imgTag);
             int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag), ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
-            if (width >= ReaderConstants.MIN_GALLERY_IMAGE_WIDTH) {
+            if (width >= minImageWidth) {
                 numFound++;
-                if (numFound >= count) {
+                if (numFound >= minImageCount) {
                     return true;
                 }
             }
