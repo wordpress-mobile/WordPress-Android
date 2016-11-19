@@ -81,6 +81,32 @@ public class ReaderImageScanner {
     }
 
     /*
+     * returns true if there at least `count` images in the post content that are large enough for
+     * an image gallery
+     */
+    public boolean hasUsableGalleryImageCount(int count) {
+        if (!mContentContainsImages) {
+            return false;
+        }
+
+        int numFound = 0;
+        Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
+        while (imgMatcher.find()) {
+            String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
+            String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imgTag);
+            int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag), ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
+            if (width >= ReaderConstants.MIN_GALLERY_IMAGE_WIDTH) {
+                numFound++;
+                if (numFound >= count) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /*
      * used when a post doesn't have a featured image assigned, searches post's content
      * for an image that may be large enough to be suitable as a featured image
      */
