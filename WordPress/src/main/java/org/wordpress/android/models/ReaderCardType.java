@@ -1,5 +1,7 @@
 package org.wordpress.android.models;
 
+import android.support.annotation.NonNull;
+
 import org.wordpress.android.util.HtmlUtils;
 
 /**
@@ -10,36 +12,48 @@ public enum ReaderCardType {
     DEFAULT,
     PHOTO;
 
-    private static final int MAX_TEXT_CHARS = 100;
+    private static final int MIN_CONTENT_CHARS = 100;
 
     public static ReaderCardType fromReaderPost(ReaderPost post) {
-        // posts with a featured image and little or no text get the photo card treatment - note
-        // that we have to strip HTML tags from the text to determine its length, which can be
-        // an expensive operation so we try to avoid it
-        if (post != null && post.hasFeaturedImage()) {
-            if (post.getExcerpt().length() > MAX_TEXT_CHARS) {
-                return DEFAULT;
-            }
-            if (post.getText().length() < MAX_TEXT_CHARS) {
-                return PHOTO;
-            }
-            if (HtmlUtils.fastStripHtml(post.getText()).length() < MAX_TEXT_CHARS) {
-                return PHOTO;
-            }
+        if (post == null) {
+            return DEFAULT;
+        }
+
+        // posts with a featured image and little or no text get the photo card treatment
+        if (post.hasFeaturedImage() && hasMinContent(post)) {
+            return PHOTO;
         }
 
         return DEFAULT;
     }
 
-    public static String toString(ReaderCardType cardType) {
-        if (cardType != null && cardType == PHOTO) {
-            return "PHOTO";
+    /*
+     * returns true if the post's content is 100 characters or less
+     */
+    private static boolean hasMinContent(@NonNull ReaderPost post) {
+        if (post.getExcerpt().length() > MIN_CONTENT_CHARS) {
+            return false;
         }
-        return "DEFAULT";
+        if (post.getText().length() <= MIN_CONTENT_CHARS) {
+            return true;
+        }
+        return (HtmlUtils.fastStripHtml(post.getText()).length() <= MIN_CONTENT_CHARS);
+    }
+
+    public static String toString(ReaderCardType cardType) {
+        if (cardType == null) {
+            return "DEFAULT";
+        }
+        switch (cardType) {
+            case PHOTO:
+                return "PHOTO";
+            default:
+                return "DEFAULT";
+        }
     }
 
     public static ReaderCardType fromString(String s) {
-        if (s != null && s.equals("PHOTO")) {
+        if ("PHOTO".equals(s)) {
             return PHOTO;
         }
         return DEFAULT;
