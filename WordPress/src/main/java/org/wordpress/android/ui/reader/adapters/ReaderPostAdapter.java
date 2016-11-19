@@ -101,6 +101,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_blavatar);
             txtTitle = (TextView) itemView.findViewById(R.id.text_title);
             txtSubtitle = (TextView) itemView.findViewById(R.id.text_subtitle);
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    ReaderPost post = getItem(position);
+                    if (mPostSelectedListener != null && post != null) {
+                        mPostSelectedListener.onPostSelected(post);
+                    }
+                }
+            });
         }
     }
 
@@ -285,29 +296,22 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(
-                    post.getPostAvatarForDisplay(mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                    GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall),
+                    WPNetworkImageView.ImageType.AVATAR);
         } else {
             holder.imgAvatar.showDefaultGravatarImage();
         }
 
-        if (post.hasBlogUrl()) {
+        if (post.hasBlogImageUrl()) {
             holder.imgBlavatar.setImageUrl(
-                    post.getPostBlavatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.BLAVATAR);
+                    GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall),
+                    WPNetworkImageView.ImageType.BLAVATAR);
         } else {
             holder.imgBlavatar.showDefaultBlavatarImage();
         }
 
         holder.txtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
         holder.txtSubtitle.setText(ReaderXPostUtils.getXPostSubtitleHtml(post));
-
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPostSelectedListener != null) {
-                    mPostSelectedListener.onPostSelected(post);
-                }
-            }
-        });
 
         checkLoadMore(position);
     }
