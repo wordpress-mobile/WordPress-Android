@@ -6,6 +6,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
@@ -29,8 +30,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
 
     public static final int IMAGE_COUNT = 4;
 
-    private View mView;
-    private LinearLayout mContainer;
+    private ViewGroup mView;
     private int mThumbnailHeight;
     private int mThumbnailWidth;
 
@@ -56,8 +56,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
     }
 
     private void initView(Context context) {
-        mView = inflate(context, R.layout.reader_thumbnail_strip, this);
-        mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
+        mView = (ViewGroup) inflate(context, R.layout.reader_thumbnail_strip, this);
         mThumbnailHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_height);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
@@ -67,7 +66,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
 
     public void loadThumbnails(long blogId, long postId, boolean isPrivate) {
         // get rid of any views already added
-        mContainer.removeAllViews();
+        mView.removeAllViews();
 
         // get this post's content and scan it for images suitable in a gallery
         final String content = ReaderPostTable.getPostText(blogId, postId);
@@ -87,9 +86,9 @@ public class ReaderThumbnailStrip extends LinearLayout {
         int numAdded = 0;
         LayoutInflater inflater = LayoutInflater.from(getContext());
         for (final String imageUrl: imageList) {
-            View view = inflater.inflate(R.layout.reader_thumbnail_strip_image, mContainer, false);
+            View view = inflater.inflate(R.layout.reader_thumbnail_strip_image, mView, false);
             WPNetworkImageView imageView = (WPNetworkImageView) view.findViewById(R.id.thumbnail_strip_image);
-            mContainer.addView(view);
+            mView.addView(view);
 
             String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailWidth, mThumbnailHeight);
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
