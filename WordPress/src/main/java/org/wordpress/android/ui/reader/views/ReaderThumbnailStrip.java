@@ -65,7 +65,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mThumbnailWidth = (displayWidth - margins) / IMAGE_COUNT;
     }
 
-    public void loadThumbnails(long blogId, long postId, final boolean isPrivate) {
+    public void loadThumbnails(long blogId, long postId, boolean isPrivate) {
         // get rid of any views already added
         mContainer.removeAllViews();
 
@@ -78,10 +78,15 @@ public class ReaderThumbnailStrip extends LinearLayout {
             return;
         }
 
+        final EnumSet<PhotoViewerOption> photoViewerOptions = EnumSet.of(PhotoViewerOption.IS_GALLERY_IMAGE);
+        if (isPrivate) {
+            photoViewerOptions.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
+        }
+
         // add a separate imageView for each image up to the max
         int numAdded = 0;
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        for (String imageUrl: imageList) {
+        for (final String imageUrl: imageList) {
             View view = inflater.inflate(R.layout.reader_thumbnail_strip_image, mContainer, false);
             WPNetworkImageView imageView = (WPNetworkImageView) view.findViewById(R.id.thumbnail_strip_image);
             mContainer.addView(view);
@@ -89,30 +94,26 @@ public class ReaderThumbnailStrip extends LinearLayout {
             String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailWidth, mThumbnailHeight);
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
 
+            // tapping a thumbnail opens the photo viewer
+            imageView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderPhotoViewer(
+                            view.getContext(),
+                            imageUrl,
+                            content,
+                            view,
+                            photoViewerOptions,
+                            0,
+                            0);
+                }
+            });
+
             numAdded++;
             if (numAdded >= IMAGE_COUNT) {
                 break;
             }
         }
-
-        // tapping anywhere opens the first image
-        mView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EnumSet<PhotoViewerOption> options = EnumSet.of(PhotoViewerOption.IS_GALLERY_IMAGE);
-                if (isPrivate) {
-                    options.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
-                }
-                ReaderActivityLauncher.showReaderPhotoViewer(
-                        view.getContext(),
-                        imageList.get(0),
-                        content,
-                        view,
-                        options,
-                        0,
-                        0);
-            }
-        });
 
         if (mView.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(mView, AniUtils.Duration.SHORT);
