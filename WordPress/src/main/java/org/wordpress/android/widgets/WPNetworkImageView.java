@@ -104,16 +104,6 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     /*
-     * determine whether we can show a thumbnail image for the passed video - currently
-     * we support YouTube, Vimeo & standard images
-     */
-    public static boolean canShowVideoThumbnail(String videoUrl) {
-        return ReaderVideoUtils.isVimeoLink(videoUrl)
-                || ReaderVideoUtils.isYouTubeVideoLink(videoUrl)
-                || MediaUtils.isValidImage(videoUrl);
-    }
-
-    /*
      * retrieves and displays the thumbnail for the passed video
      */
     public void setVideoUrl(final long postId, final String videoUrl) {

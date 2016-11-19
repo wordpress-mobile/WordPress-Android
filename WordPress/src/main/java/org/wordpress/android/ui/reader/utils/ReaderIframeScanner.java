@@ -2,9 +2,6 @@ package org.wordpress.android.ui.reader.utils;
 
 import android.text.TextUtils;
 
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.widgets.WPNetworkImageView;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,8 +40,7 @@ public class ReaderIframeScanner {
         while (matcher.find()) {
             String tag = mContent.substring(matcher.start(), matcher.end());
             String src = ReaderHtmlUtils.getSrcAttrValue(tag);
-            if (!TextUtils.isEmpty(src) && WPNetworkImageView.canShowVideoThumbnail(src)) {
-                AppLog.w(AppLog.T.READER, "VIDEO: " + src);
+            if (!TextUtils.isEmpty(src) && ReaderVideoUtils.canShowVideoThumbnail(src)) {
                 return src;
             }
         }
