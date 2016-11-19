@@ -1,5 +1,7 @@
 package org.wordpress.android.models;
 
+import android.support.annotation.NonNull;
+
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
@@ -14,11 +16,16 @@ public enum ReaderCardType {
     PHOTO,
     GALLERY;
 
-    private static final int MAX_TEXT_CHARS = 100;
+    private static final int MIN_CONTENT_CHARS = 100;
 
     public static ReaderCardType fromReaderPost(ReaderPost post) {
         if (post == null) {
             return DEFAULT;
+        }
+
+        // posts with a featured image and little or no text get the photo card treatment
+        if (post.hasFeaturedImage() && hasMinContent(post)) {
+            return PHOTO;
         }
 
         // if this post is a gallery, scan it to make sure we have enough images to
@@ -31,22 +38,20 @@ public enum ReaderCardType {
             }
         }
 
-        // posts with a featured image and little or no text get the photo card treatment - note
-        // that we have to strip HTML tags from the text to determine its length, which can be
-        // an expensive operation so we try to avoid it
-        if (post.hasFeaturedImage()) {
-            if (post.getExcerpt().length() > MAX_TEXT_CHARS) {
-                return DEFAULT;
-            }
-            if (post.getText().length() < MAX_TEXT_CHARS) {
-                return PHOTO;
-            }
-            if (HtmlUtils.fastStripHtml(post.getText()).length() < MAX_TEXT_CHARS) {
-                return PHOTO;
-            }
-        }
-
         return DEFAULT;
+    }
+
+    /*
+     * returns true if the post's content is 100 characters or less
+     */
+    private static boolean hasMinContent(@NonNull ReaderPost post) {
+        if (post.getExcerpt().length() > MIN_CONTENT_CHARS) {
+            return false;
+        }
+        if (post.getText().length() <= MIN_CONTENT_CHARS) {
+            return true;
+        }
+        return (HtmlUtils.fastStripHtml(post.getText()).length() <= MIN_CONTENT_CHARS);
     }
 
     public static String toString(ReaderCardType cardType) {
