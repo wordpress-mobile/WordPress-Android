@@ -377,15 +377,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 holder.thumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
                 holder.framePhoto.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;
+            } else if (post.getCardType() == ReaderCardType.VIDEO) {
+                holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
+                holder.framePhoto.setVisibility(View.VISIBLE);
+                holder.thumbnailStrip.setVisibility(View.GONE);
+                titleMargin = mMarginLarge;
             } else if (post.hasFeaturedImage()) {
                 holder.imgFeatured.setImageUrl(
                         post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
                         WPNetworkImageView.ImageType.PHOTO);
-                holder.framePhoto.setVisibility(View.VISIBLE);
-                holder.thumbnailStrip.setVisibility(View.GONE);
-                titleMargin = mMarginLarge;
-            } else if (post.hasFeaturedVideo() && WPNetworkImageView.canShowVideoThumbnail(post.getFeaturedVideo())) {
-                holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
                 holder.framePhoto.setVisibility(View.VISIBLE);
                 holder.thumbnailStrip.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;

@@ -6,6 +6,7 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * Used by the reader stream view to determine which type of "card" to use
@@ -29,8 +30,8 @@ public enum ReaderCardType {
             return PHOTO;
         }
 
-        // posts that have a featured video show an embedded video card
-        if (post.hasFeaturedVideo()) {
+        // posts that have a usable featured video show an embedded video card
+        if (post.hasFeaturedVideo() && WPNetworkImageView.canShowVideoThumbnail(post.getFeaturedVideo())) {
             return VIDEO;
         }
 
