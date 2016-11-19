@@ -15,6 +15,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -31,6 +32,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
     private View mView;
     private LinearLayout mContainer;
     private int mThumbnailHeight;
+    private int mThumbnailWidth;
 
     public ReaderThumbnailStrip(Context context) {
         super(context);
@@ -57,6 +59,10 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mView = inflate(context, R.layout.reader_thumbnail_strip, this);
         mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
         mThumbnailHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_height);
+
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+        int margins = context.getResources().getDimensionPixelSize(R.dimen.reader_card_content_padding) * 2;
+        mThumbnailWidth = (displayWidth - margins) / IMAGE_COUNT;
     }
 
     public void loadThumbnails(long blogId, long postId, final boolean isPrivate) {
@@ -80,7 +86,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
             WPNetworkImageView imageView = (WPNetworkImageView) view.findViewById(R.id.thumbnail_strip_image);
             mContainer.addView(view);
 
-            String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailHeight, mThumbnailHeight);
+            String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailWidth, mThumbnailHeight);
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
 
             numAdded++;
