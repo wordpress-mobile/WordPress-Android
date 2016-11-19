@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -105,12 +104,6 @@ public class ReaderThumbnailStrip extends LinearLayout {
                 break;
             }
         }
-
-        // add the labels which include the image count
-        View labelView = inflater.inflate(R.layout.reader_thumbnail_strip_labels, mContainer, false);
-        TextView txtCount = (TextView) labelView.findViewById(R.id.text_gallery_count);
-        txtCount.setText(String.format(mCountStr, imageList.size()));
-        mContainer.addView(labelView);
 
         // tapping anywhere opens the first image
         mView.setOnClickListener(new OnClickListener() {
