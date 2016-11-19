@@ -95,6 +95,8 @@
     <dimen name="reader_card_gutters">1dp</dimen>
     <dimen name="reader_card_elevation">0dp</dimen>
 
+    <dimen name="reader_video_overlay_size">72dp</dimen>
+
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
 

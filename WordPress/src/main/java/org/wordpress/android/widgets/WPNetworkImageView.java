@@ -4,8 +4,10 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
@@ -362,6 +364,40 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     public void showDefaultBlavatarImage() {
         setImageResource(R.drawable.blavatar_placeholder);
+    }
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (mImageType == ImageType.VIDEO) {
+            drawVideoOverlay(canvas);
+        }
+    }
+
+    /*
+     * draw the circular player image on top of the canvas - used for videos
+     */
+    private void drawVideoOverlay(Canvas canvas) {
+        if (canvas == null) {
+            return;
+        }
+
+        int overlaySize = getContext().getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size);
+
+        // use the size of the view rather than the canvas
+        int srcWidth = this.getWidth();
+        int srcHeight = this.getHeight();
+
+        // skip if overlay is larger than source image
+        if (overlaySize > srcWidth || overlaySize > srcHeight) {
+            return;
+        }
+
+        int left = (srcWidth / 2) - (overlaySize / 2);
+        int top = (srcHeight / 2) - (overlaySize / 2);
+
+        Drawable overlay = getResources().getDrawable(R.drawable.ic_play_circle_filled_black_24dp);
+        overlay.setBounds(left, top, left + overlaySize, top + overlaySize);
+        overlay.draw(canvas);
     }
 
     // --------------------------------------------------------------------------------------------------
