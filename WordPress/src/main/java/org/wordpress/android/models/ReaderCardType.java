@@ -26,7 +26,7 @@ public enum ReaderCardType {
         if (post.isGallery()) {
             ReaderImageList imageList =
                     new ReaderImageScanner(post.getText(), post.isPrivate).getGalleryImageList();
-            if (imageList.size() >= ReaderThumbnailStrip.MIN_IMAGE_COUNT) {
+            if (imageList.size() >= ReaderThumbnailStrip.IMAGE_COUNT) {
                 return GALLERY;
             }
         }

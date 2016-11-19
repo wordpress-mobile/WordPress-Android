@@ -15,7 +15,6 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -27,13 +26,11 @@ import java.util.EnumSet;
  */
 public class ReaderThumbnailStrip extends LinearLayout {
 
-    public static final int MIN_IMAGE_COUNT = 4;
+    public static final int IMAGE_COUNT = 4;
 
     private View mView;
     private LinearLayout mContainer;
-    private int mThumbnailSize;
-    private int mMaxImageCount;
-    private String mCountStr;
+    private int mThumbnailHeight;
 
     public ReaderThumbnailStrip(Context context) {
         super(context);
@@ -59,20 +56,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
     private void initView(Context context) {
         mView = inflate(context, R.layout.reader_thumbnail_strip, this);
         mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
-        mThumbnailSize = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_size);
-        mCountStr = context.getResources().getString(R.string.reader_label_image_count_multi);
-
-        // base max image count on display width
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        if (displayWidth <= 800) {
-            mMaxImageCount = 2;
-        } else if (displayWidth <= 1024) {
-            mMaxImageCount = 3;
-        } else if (displayWidth <= 1440) {
-            mMaxImageCount = 4;
-        } else {
-            mMaxImageCount = 5;
-        }
+        mThumbnailHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_height);
     }
 
     public void loadThumbnails(long blogId, long postId, final boolean isPrivate) {
@@ -83,7 +67,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
         final String content = ReaderPostTable.getPostText(blogId, postId);
         final ReaderImageList imageList =
                 new ReaderImageScanner(content, isPrivate).getGalleryImageList();
-        if (imageList.size() < MIN_IMAGE_COUNT) {
+        if (imageList.size() < IMAGE_COUNT) {
             mView.setVisibility(View.GONE);
             return;
         }
@@ -91,16 +75,16 @@ public class ReaderThumbnailStrip extends LinearLayout {
         // add a separate imageView for each image up to the max
         int numAdded = 0;
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        for (final String imageUrl: imageList) {
+        for (String imageUrl: imageList) {
             View view = inflater.inflate(R.layout.reader_thumbnail_strip_image, mContainer, false);
             WPNetworkImageView imageView = (WPNetworkImageView) view.findViewById(R.id.thumbnail_strip_image);
             mContainer.addView(view);
 
-            String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailSize, mThumbnailSize);
+            String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailHeight, mThumbnailHeight);
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
 
             numAdded++;
-            if (numAdded >= mMaxImageCount) {
+            if (numAdded >= IMAGE_COUNT) {
                 break;
             }
         }
