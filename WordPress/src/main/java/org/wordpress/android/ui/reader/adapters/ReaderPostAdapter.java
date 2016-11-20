@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -197,6 +199,22 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     ReaderPost post = getItem(position);
                     if (post != null) {
                         ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                    }
+                }
+            });
+
+            // when the photo frame (featured image) is tapped, and the post is a video card,
+            // open the video in the player app
+            framePhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    ReaderPost post = getItem(position);
+                    if (post != null && post.getCardType() == ReaderCardType.VIDEO) {
+                        Uri videoUri = Uri.parse(post.getFeaturedVideo());
+                        Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
+                        //intent.setDataAndType(videoUri, "video/*");
+                        view.getContext().startActivity(intent);
                     }
                 }
             });

@@ -205,8 +205,9 @@ public class ReaderPost {
 
         // if there's no featured image or featured video and the post contains an iframe, scan
         // the content for a suitable featured video
-        // TODO: skip if there's a featured image
-        if (!post.hasFeaturedVideo() && post.getText().contains("<iframe")) {
+        if (!post.hasFeaturedImage()
+                && !post.hasFeaturedVideo()
+                && post.getText().contains("<iframe")) {
             post.setFeaturedVideo(new ReaderIframeScanner(post.getText()).getFirstUsableVideo());
         }
 
