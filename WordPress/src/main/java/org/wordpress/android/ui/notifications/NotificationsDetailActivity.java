@@ -59,6 +59,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
 
+    private String mNoteId;
+    private boolean mAllowHorizontalNavigation;
+
     private WPViewPager mViewPager;
     private NotificationDetailFragmentAdapter mAdapter;
 
@@ -75,58 +78,61 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         if (savedInstanceState == null) {
-            String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
-            if (noteId == null) {
-                showErrorToastAndFinish();
-                return;
+            mAllowHorizontalNavigation = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA, false);
+            mNoteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+        } else {
+            if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
             }
-
-            final Note note = NotificationsTable.getNoteById(noteId);
-            if (note == null) {
-                showErrorToastAndFinish();
-                return;
-            }
-
-            // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
-            NotificationsActions.updateSeenTimestamp(note);
-
-            Map<String, String> properties = new HashMap<>();
-            properties.put("notification_type", note.getType());
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
-
-            //set up the viewpager and adapter for lateral navigation
-            mViewPager = (WPViewPager) findViewById(R.id.viewpager);
-            mViewPager.setPageTransformer(false,
-                    new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
-
-            boolean allowNavigateList = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA, false);
-            NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
-            if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
-                filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
-            }
-            mAdapter = buildNoteListAdapterAndSetPosition(allowNavigateList, note, filter);
-
-            //set title
-            setActionBarTitleForNote(note);
-            markNoteAsRead(note);
-
-            mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                @Override
-                public void onPageSelected(int position) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
-                    //change the action bar title for the current note
-                    Note currentNote = mAdapter.getNoteAtPosition(position);
-                    if (currentNote != null) {
-                        setActionBarTitleForNote(currentNote);
-                        markNoteAsRead(currentNote);
-                    }
-                }
-            });
-
-
-        } else if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
+            mNoteId = savedInstanceState.getString(NotificationsListFragment.NOTE_ID_EXTRA);
+            mAllowHorizontalNavigation = savedInstanceState.getBoolean(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA);
         }
+
+        if (mNoteId == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+
+        final Note note = NotificationsTable.getNoteById(mNoteId);
+        if (note == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+
+        // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
+        NotificationsActions.updateSeenTimestamp(note);
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("notification_type", note.getType());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+
+        //set up the viewpager and adapter for lateral navigation
+        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
+        mViewPager.setPageTransformer(false,
+                new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
+
+        NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
+        if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
+            filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
+        }
+        mAdapter = buildNoteListAdapterAndSetPosition(mAllowHorizontalNavigation, note, filter);
+
+        //set title
+        setActionBarTitleForNote(note);
+        markNoteAsRead(note);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
+                //change the action bar title for the current note
+                Note currentNote = mAdapter.getNoteAtPosition(position);
+                if (currentNote != null) {
+                    setActionBarTitleForNote(currentNote);
+                    markNoteAsRead(currentNote);
+                }
+            }
+        });
 
         // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
@@ -150,7 +156,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (getSupportActionBar() != null && getSupportActionBar().getTitle() != null) {
             outState.putString(ARG_TITLE, getSupportActionBar().getTitle().toString());
         }
-
+        outState.putBoolean(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA, mAllowHorizontalNavigation);
+        outState.putString(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
         super.onSaveInstanceState(outState);
     }
 
