@@ -261,11 +261,27 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 return "trash";
             // Defaults (don't exist in XMLRPC)
             default:
+            case DELETED:
             case ALL:
             case UNSPAM:
             case UNTRASH:
                 return "approve";
         }
+    }
+
+    private CommentStatus getCommentStatusFromXMLRPCStatusString(String stringStatus) {
+        // Default
+        CommentStatus status = CommentStatus.APPROVED;
+        if ("approve".equals(stringStatus)) {
+            status = CommentStatus.APPROVED;
+        } else if ("hold".equals(stringStatus)) {
+            status = CommentStatus.UNAPPROVED;
+        } else if ("spam".equals(stringStatus)) {
+            status = CommentStatus.SPAM;
+        } else if ("trash".equals(stringStatus)) {
+            status = CommentStatus.TRASH;
+        }
+        return status;
     }
 
     private List<CommentModel> commentsResponseToCommentList(Object response, SiteModel site) {
@@ -293,7 +309,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         comment.setRemoteCommentId(XMLRPCUtils.safeGetMapValue(commentMap, "comment_id", 0L));
         comment.setLocalSiteId(site.getId());
         comment.setRemoteSiteId(site.getSelfHostedSiteId());
-        comment.setStatus(XMLRPCUtils.safeGetMapValue(commentMap, "status", "approve"));
+        String stringStatus = XMLRPCUtils.safeGetMapValue(commentMap, "status", "approve");
+        comment.setStatus(getCommentStatusFromXMLRPCStatusString(stringStatus).toString());
         Date datePublished = XMLRPCUtils.safeGetMapValue(commentMap, "date_created_gmt", new Date());
         comment.setDatePublished(DateTimeUtils.iso8601UTCFromDate(datePublished));
         comment.setContent(XMLRPCUtils.safeGetMapValue(commentMap, "content", ""));
