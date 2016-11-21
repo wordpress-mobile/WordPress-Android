@@ -98,6 +98,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private SuggestionAutoCompleteText mEditReply;
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
+    private ViewGroup mCommentContentLayout;
     private View mBtnLikeComment;
     private ImageView mBtnLikeIcon;
     private TextView mBtnLikeTextView;
@@ -217,6 +218,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnModerateTextView = (TextView) mLayoutButtons.findViewById(R.id.btn_moderate_text);
         mBtnSpamComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
         mBtnTrashComment = (TextView) mLayoutButtons.findViewById(R.id.image_trash_comment);
+
+        //as we are using CommentDetailFragment in a ViewPager, and we also use nested fragments within
+        //CommentDetailFragment itself:
+        //it is important to have a live reference to the Comment Container layout at the moment this
+        //layout is inflated (onCreateView), so we can make sure we set its ID correctly once we have an actual Comment
+        //object to populate it with. Otherwise, we could be searching and finding the container for _another fragment/page
+        //in the viewpager_, which would cause strange results (changing the views for a different fragment than we intended to).
+        mCommentContentLayout = (ViewGroup) view.findViewById(R.id.comment_content_container);
 
         setTextDrawable(mBtnSpamComment, R.drawable.ic_action_spam);
         setTextDrawable(mBtnTrashComment, R.drawable.ic_action_trash);
@@ -360,6 +369,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void setComment(int localBlogId, final Comment comment) {
         mComment = comment;
         mLocalBlogId = localBlogId;
+
+        setIdForCommentContainer();
 
         // is this comment on one of the user's blogs? it won't be if this was displayed from a
         // notification about a reply to a comment this user posted on someone else's blog
@@ -1045,22 +1056,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             commentText.setVisibility(View.GONE);
         }
 
-        // Now we'll add a detail fragment list
-        FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note.getId());
-        mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
-        // Listen for note changes from the detail list fragment, so we can update the status buttons
-        mNotificationsDetailListFragment.setOnNoteChangeListener(new NotificationsDetailListFragment.OnNoteChangeListener() {
-            @Override
-            public void onNoteChanged(Note note) {
-                mNote = note;
-                mComment = mNote.buildComment();
-                updateStatusViews();
-            }
-        });
-        fragmentTransaction.replace(R.id.comment_content_container, mNotificationsDetailListFragment);
-        fragmentTransaction.commitAllowingStateLoss();
+        // note that the local blog id won't be found if the comment is from someone else's blog
+        int localBlogId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(mRemoteBlogId);
 
         /*
          * determine which actions to enable for this comment - if the comment is from this user's
@@ -1068,14 +1065,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
          * this user made on someone else's blog
          */
         mEnabledActions = note.getEnabledActions();
-
-        // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
-        if (!TextUtils.isEmpty(mNote.getCommentAuthorName()) && mNote.getCommentAuthorName().length() < 28) {
-            mEditReply.setHint(String.format(getString(R.string.comment_reply_to_user), mNote.getCommentAuthorName()));
-        }
-
-        // note that the local blog id won't be found if the comment is from someone else's blog
-        int localBlogId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(mRemoteBlogId);
 
         //adjust enabledActions if this is a Jetpack site
         if (canLike()) {
@@ -1086,9 +1075,38 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         }
 
+        // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
+        if (!TextUtils.isEmpty(mNote.getCommentAuthorName()) && mNote.getCommentAuthorName().length() < 28) {
+            mEditReply.setHint(String.format(getString(R.string.comment_reply_to_user), mNote.getCommentAuthorName()));
+        }
+
         setComment(localBlogId, note.buildComment());
 
+        // Now we'll add a detail fragment list
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note.getId());
+        mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
+        // Listen for note changes from the detail list fragment, so we can update the status buttons
+        mNotificationsDetailListFragment.setOnNoteChangeListener(new NotificationsDetailListFragment.OnNoteChangeListener() {
+            @Override
+            public void onNoteChanged(Note note) {
+                mNote = note;
+                mComment = mNote.buildComment();
+                setIdForCommentContainer();
+                updateStatusViews();
+            }
+        });
+        fragmentTransaction.replace(mCommentContentLayout.getId(), mNotificationsDetailListFragment);
+        fragmentTransaction.commitAllowingStateLoss();
+
         getFragmentManager().invalidateOptionsMenu();
+    }
+
+    private void setIdForCommentContainer(){
+        if (mComment != null && mCommentContentLayout != null) {
+            mCommentContentLayout.setId((int)mComment.commentID);
+        }
     }
 
     // Like or unlike a comment via the REST API
