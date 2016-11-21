@@ -254,6 +254,13 @@ public class StatsService extends Service {
             return START_NOT_STICKY;
         }
 
+        int[] sectionFromIntent = intent.getIntArrayExtra(ARG_SECTION);
+        if (sectionFromIntent == null || sectionFromIntent.length == 0) {
+            // No sections to update
+            AppLog.e(T.STATS, "StatsService was started without valid sections info");
+            return START_NOT_STICKY;
+        }
+
         final StatsTimeframe period;
         if (intent.hasExtra(ARG_PERIOD)) {
             period = (StatsTimeframe) intent.getSerializableExtra(ARG_PERIOD);
@@ -273,8 +280,6 @@ public class StatsService extends Service {
 
         final int maxResultsRequested = intent.getIntExtra(ARG_MAX_RESULTS, DEFAULT_NUMBER_OF_RESULTS);
         final int pageRequested = intent.getIntExtra(ARG_PAGE_REQUESTED, -1);
-
-        int[] sectionFromIntent = intent.getIntArrayExtra(ARG_SECTION);
 
         this.mServiceStartId = startId;
         for (int i=0; i < sectionFromIntent.length; i++){
