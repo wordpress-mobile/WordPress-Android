@@ -125,6 +125,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             @Override
             public void onPageSelected(int position) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
+                AppPrefs.setSwipeToNavigateShown(true);
                 //change the action bar title for the current note
                 Note currentNote = mAdapter.getNoteAtPosition(position);
                 if (currentNote != null) {
@@ -164,23 +165,11 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        //first time we show this screen, hint the user they can navigate through notifications detail
+        //if the user hasn't used swipe yet, hint the user they can navigate through notifications detail
         //using swipe on the ViewPager
         if (!AppPrefs.isSwipeToNavigateShown()) {
-            showSwipeSuggestionSnackbar();
+            Snackbar.make(mViewPager, getString(R.string.notifications_label_swipe_for_more_snackbar), Snackbar.LENGTH_LONG).show();
         }
-    }
-
-    private void showSwipeSuggestionSnackbar(){
-        Snackbar snackbar = Snackbar.make(mViewPager, getString(R.string.notifications_label_swipe_for_more_snackbar), Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.notifications_label_swipe_snackbar_dont_show_again, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_NAVIGATION_SNACKBAR_TAPPED);
-                AppPrefs.setSwipeToNavigateShown(true);
-            }
-        });
-        snackbar.show();
     }
 
     private void showErrorToastAndFinish() {
