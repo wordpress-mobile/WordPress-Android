@@ -465,6 +465,7 @@ public class NotificationsProcessingService extends Service {
             // Bump analytics
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED);
 
+            // FIXME: replace this
             WordPress.getRestClientUtils().likeComment(mNote.getSiteId(),
                     String.valueOf(mNote.getCommentId()),
                     true,

@@ -911,7 +911,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (mNote != null && canLike()) {
             mBtnLikeComment.setVisibility(View.VISIBLE);
-
             toggleLikeButton(mNote.hasLikedComment());
         } else {
             mBtnLikeComment.setVisibility(View.GONE);
