@@ -121,6 +121,7 @@ public class CommentStore extends Store {
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
+        INVALID_INPUT,
         UNKNOWN_COMMENT,
         UNKNOWN_POST,
         DUPLICATE_COMMENT
@@ -308,9 +309,9 @@ public class CommentStore extends Store {
 
     private void deleteComment(RemoteCommentPayload payload) {
         if (payload.site.isWPCom()) {
-            mCommentRestClient.deleteComment(payload.site, payload.comment);
+            mCommentRestClient.deleteComment(payload.site, payload.remoteCommentId, payload.comment);
         } else {
-            mCommentXMLRPCClient.deleteComment(payload.site, payload.comment);
+            mCommentXMLRPCClient.deleteComment(payload.site, payload.remoteCommentId, payload.comment);
         }
     }
 
@@ -354,6 +355,13 @@ public class CommentStore extends Store {
     }
 
     private void pushComment(RemoteCommentPayload payload) {
+        if (payload.comment == null) {
+            OnCommentChanged event = new OnCommentChanged(0);
+            event.causeOfChange = CommentAction.PUSH_COMMENT;
+            event.error = new CommentError(CommentErrorType.INVALID_INPUT, "comment can't be null");
+            emitChange(event);
+            return;
+        }
         if (payload.site.isWPCom()) {
             mCommentRestClient.pushComment(payload.site, payload.comment);
         } else {
@@ -374,21 +382,9 @@ public class CommentStore extends Store {
 
     private void fetchComment(RemoteCommentPayload payload) {
         if (payload.site.isWPCom()) {
-            if (payload.comment == null) {
-                // fetch by comment remote Id
-                mCommentRestClient.fetchComment(payload.site, payload.remoteCommentId, null);
-            } else {
-                // fetch by comment
-                mCommentRestClient.fetchComment(payload.site, payload.comment);
-            }
+            mCommentRestClient.fetchComment(payload.site, payload.remoteCommentId, payload.comment);
         } else {
-            if (payload.comment == null) {
-                // fetch by comment remote Id
-                mCommentXMLRPCClient.fetchComment(payload.site, payload.remoteCommentId, null);
-            } else {
-                // fetch by comment
-                mCommentXMLRPCClient.fetchComment(payload.site, payload.comment);
-            }
+            mCommentXMLRPCClient.fetchComment(payload.site, payload.remoteCommentId, payload.comment);
         }
     }
 

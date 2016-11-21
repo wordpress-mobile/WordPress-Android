@@ -67,7 +67,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void pushComment(final SiteModel site, final CommentModel comment) {
+    public void pushComment(final SiteModel site, @NonNull final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).getUrlV1_1();
         Map<String, Object> params = new HashMap<>();
         params.put("content", comment.getContent());
@@ -96,7 +96,12 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchComment(final SiteModel site, final long remoteCommentId, @Nullable final CommentModel comment) {
+    public void fetchComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment) {
+        // Prioritize CommentModel over comment id.
+        if (comment != null) {
+            remoteCommentId = comment.getRemoteCommentId();
+        }
+
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).getUrlV1_1();
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
                 url, null, CommentWPComRestResponse.class,
@@ -120,12 +125,13 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchComment(final SiteModel site, final CommentModel comment) {
-        fetchComment(site, comment.getRemoteCommentId(), comment);
-    }
+    public void deleteComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment) {
+        // Prioritize CommentModel over comment id.
+        if (comment != null) {
+            remoteCommentId = comment.getRemoteCommentId();
+        }
 
-    public void deleteComment(final SiteModel site, final CommentModel comment) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).delete
+        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).delete
                 .getUrlV1_1();
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, null, CommentWPComRestResponse.class,

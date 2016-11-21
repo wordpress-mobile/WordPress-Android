@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.comment;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -34,8 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import static android.R.attr.offset;
 
 public class CommentXMLRPCClient extends BaseXMLRPCClient {
     @Inject
@@ -75,7 +74,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void pushComment(final SiteModel site, final CommentModel comment) {
+    public void pushComment(final SiteModel site, @NonNull final CommentModel comment) {
         List<Object> params = new ArrayList<>(5);
         Map<String, Object> commentParams = new HashMap<>();
         commentParams.put("content", comment.getContent());
@@ -108,9 +107,14 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchComment(final SiteModel site, final long remoteCommentId, final CommentModel comment) {
+    public void fetchComment(final SiteModel site, long remoteCommentId, final CommentModel comment) {
+        // Prioritize CommentModel over comment id.
+        if (comment != null) {
+            remoteCommentId = comment.getRemoteCommentId();
+        }
+
         List<Object> params = new ArrayList<>(4);
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(remoteCommentId);
@@ -135,16 +139,17 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchComment(final SiteModel site, final CommentModel comment) {
-        fetchComment(site, comment.getRemoteCommentId(), comment);
-    }
+    public void deleteComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment) {
+        // Prioritize CommentModel over comment id.
+        if (comment != null) {
+            remoteCommentId = comment.getRemoteCommentId();
+        }
 
-    public void deleteComment(final SiteModel site, final CommentModel comment) {
         List<Object> params = new ArrayList<>(4);
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
-        params.add(comment.getRemoteCommentId());
+        params.add(remoteCommentId);
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.DELETE_COMMENT, params,
                 new Listener<Object>() {
@@ -179,7 +184,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
      */
     public void createNewReply(final SiteModel site, final CommentModel comment, final CommentModel reply) {
         // Comment parameters
-        Map<String, Object> replyParams = new HashMap<>();
+        Map<String, Object> replyParams = new HashMap<>(5);
 
         // Use remote comment id as reply comment parent
         replyParams.put("comment_parent", comment.getRemoteCommentId());
@@ -198,7 +203,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
      */
     public void createNewComment(final SiteModel site, final PostModel post, final CommentModel comment) {
         // Comment parameters
-        Map<String, Object> commentParams = new HashMap<>();
+        Map<String, Object> commentParams = new HashMap<>(5);
         commentParams.put("comment_parent", comment.getRemoteParentCommentId());
         commentParams.put("content", comment.getContent());
         commentParams.put("author", comment.getAuthorName());
