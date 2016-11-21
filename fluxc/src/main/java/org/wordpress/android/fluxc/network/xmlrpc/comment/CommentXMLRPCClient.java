@@ -49,7 +49,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         commentParams.put("number", number);
         commentParams.put("offset", offset);
 
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(commentParams);
@@ -82,7 +82,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         String status = getXMLRPCCommentStatus(CommentStatus.fromString(comment.getStatus()));
         commentParams.put("status", status);
 
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(comment.getRemoteCommentId());
@@ -218,7 +218,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
     private void newComment(final SiteModel site, long remotePostId, final CommentModel comment, final long parentId,
                             Map<String, Object> commentParams) {
         List<Object> params = new ArrayList<>(5);
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(remotePostId);
@@ -292,7 +292,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
 
         comment.setRemoteCommentId(XMLRPCUtils.safeGetMapValue(commentMap, "comment_id", 0L));
         comment.setLocalSiteId(site.getId());
-        comment.setRemoteSiteId(site.getSiteId());
+        comment.setRemoteSiteId(site.getSelfHostedSiteId());
         comment.setStatus(XMLRPCUtils.safeGetMapValue(commentMap, "status", "approve"));
         Date datePublished = XMLRPCUtils.safeGetMapValue(commentMap, "date_created_gmt", new Date());
         comment.setDatePublished(DateTimeUtils.iso8601UTCFromDate(datePublished));
