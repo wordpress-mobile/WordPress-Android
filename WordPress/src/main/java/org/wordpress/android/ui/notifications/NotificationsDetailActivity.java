@@ -10,8 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -132,33 +130,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_notifications_navigation, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
-        }
-        else if (item.getItemId() == R.id.menu_notifications_left) {
-            //swipe prev item
-            int prevItem = mViewPager.getCurrentItem()-1;
-            if (prevItem >= 0) {
-                mViewPager.setCurrentItem(prevItem, true);
-            }
-        }
-        else if (item.getItemId() == R.id.menu_notifications_right) {
-            //swipe next item
-            int nextItem = mViewPager.getCurrentItem()+1;
-            if (nextItem < mViewPager.getAdapter().getCount()) {
-                mViewPager.setCurrentItem(nextItem, true);
-            }
         }
 
         return super.onOptionsItemSelected(item);
