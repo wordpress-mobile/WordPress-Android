@@ -391,23 +391,8 @@ public class CommentsListFragment extends Fragment {
 
         if (!NetworkUtils.checkConnection(getActivity())) return;
 
-        final int dlgId;
-        switch (newStatus) {
-            case APPROVED:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_APPROVING;
-                break;
-            case UNAPPROVED:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_DISAPPROVING;
-                break;
-            case SPAM:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_SPAMMING;
-                break;
-            case TRASH:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_TRASHING;
-                break;
-            default :
-                return;
-        }
+        getAdapter().clearSelectedComments();
+        finishActionMode();
 
         moderateComments(updateComments, newStatus);
     }
