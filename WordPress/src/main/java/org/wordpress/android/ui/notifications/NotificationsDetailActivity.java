@@ -113,6 +113,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                 @Override
                 public void onPageSelected(int position) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
                     //change the action bar title for the current note
                     Note currentNote = mAdapter.getNoteAtPosition(position);
                     if (currentNote != null) {
@@ -168,6 +169,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         snackbar.setAction(R.string.notifications_label_swipe_snackbar_dont_show_again, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_NAVIGATION_SNACKBAR_TAPPED);
                 AppPrefs.setSwipeToNavigateShown(true);
             }
         });
