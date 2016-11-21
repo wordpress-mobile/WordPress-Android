@@ -467,17 +467,17 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
         @Override
         protected Boolean doInBackground(Void... params) {
+            List<CommentModel> comments;
             if (mStatusFilter == null) {
-                tmpComments = (CommentList) mCommentStore.getCommentsForSite(mSite, CommentStatus.ALL);
+                comments = mCommentStore.getCommentsForSite(mSite, CommentStatus.ALL);
             } else {
-                tmpComments = (CommentList) mCommentStore.getCommentsForSite(mSite, mStatusFilter);
+                comments = mCommentStore.getCommentsForSite(mSite, mStatusFilter);
             }
 
-            if (mComments.isSameList(tmpComments)) {
-                return false;
-            }
+            tmpComments = new CommentList();
+            tmpComments.addAll(comments);
 
-            return true;
+            return !mComments.isSameList(tmpComments);
         }
         @Override
         protected void onPostExecute(Boolean result) {

@@ -61,8 +61,8 @@ public class CommentsListFragment extends Fragment {
             return name();
         }
 
-        public void fromCommentStatus(CommentStatus status) {
-            valueOf(status.name());
+        public static CommentStatusCriteria fromCommentStatus(CommentStatus status) {
+            return valueOf(status.name());
         }
 
         public CommentStatus toCommentStatus() {
@@ -364,7 +364,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     public void setCommentStatusFilter(CommentStatus statusFilter) {
-        mCommentStatusFilter.fromCommentStatus(statusFilter);
+        mCommentStatusFilter = CommentStatusCriteria.fromCommentStatus(statusFilter);
     }
 
     private void dismissDialog(int id) {
