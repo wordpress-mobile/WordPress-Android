@@ -3,7 +3,6 @@ package org.wordpress.android.ui.comments;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.Note;
 
 /**
@@ -24,14 +23,6 @@ public class CommentActions {
     public interface CommentActionListener {
         void onActionResult(CommentActionResult result);
     }
-
-    /*
-     * listener when comments are moderated or deleted
-     */
-    public interface OnCommentsModeratedListener {
-        void onCommentsModerated(final CommentList moderatedComments);
-    }
-
     /*
      * used by comment fragments to alert container activity of a change to one or more
      * comments (moderated, deleted, added, etc.)
