@@ -31,6 +31,9 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -484,6 +487,18 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (result) {
                 mComments.clear();
                 mComments.addAll(tmpComments);
+                // Sort by date
+                Collections.sort(mComments, new Comparator<CommentModel>() {
+                    @Override
+                    public int compare(CommentModel commentModel, CommentModel t1) {
+                        Date d0 = DateTimeUtils.dateFromIso8601(commentModel.getDatePublished());
+                        Date d1 = DateTimeUtils.dateFromIso8601(t1.getDatePublished());
+                        if (d0 == null || d1 == null) {
+                            return 0;
+                        }
+                        return d1.compareTo(d0);
+                    }
+                });
                 notifyDataSetChanged();
             }
 
