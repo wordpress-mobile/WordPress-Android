@@ -186,14 +186,21 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         // Comment parameters
         Map<String, Object> replyParams = new HashMap<>(5);
 
+        // Reply parameters
+        replyParams.put("content", reply.getContent());
+
         // Use remote comment id as reply comment parent
         replyParams.put("comment_parent", comment.getRemoteCommentId());
 
-        // Reply parameters
-        replyParams.put("content", reply.getContent());
-        replyParams.put("author", reply.getAuthorName());
-        replyParams.put("author_url", reply.getAuthorUrl());
-        replyParams.put("author_email", reply.getAuthorEmail());
+        if (reply.getAuthorName() != null) {
+            replyParams.put("author", reply.getAuthorName());
+        }
+        if (reply.getAuthorUrl() != null) {
+            replyParams.put("author_url", reply.getAuthorUrl());
+        }
+        if (reply.getAuthorEmail() != null) {
+            replyParams.put("author_email", reply.getAuthorEmail());
+        }
 
         newComment(site, comment.getRemotePostId(), reply, comment.getRemoteCommentId(), replyParams);
     }
@@ -204,12 +211,19 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
     public void createNewComment(final SiteModel site, final PostModel post, final CommentModel comment) {
         // Comment parameters
         Map<String, Object> commentParams = new HashMap<>(5);
-        commentParams.put("comment_parent", comment.getRemoteParentCommentId());
         commentParams.put("content", comment.getContent());
-        commentParams.put("author", comment.getAuthorName());
-        commentParams.put("author_url", comment.getAuthorUrl());
-        commentParams.put("author_email", comment.getAuthorEmail());
-
+        if (comment.getRemoteParentCommentId() != 0) {
+            commentParams.put("comment_parent", comment.getRemoteParentCommentId());
+        }
+        if (comment.getAuthorName() != null) {
+            commentParams.put("author", comment.getAuthorName());
+        }
+        if (comment.getAuthorUrl() != null) {
+            commentParams.put("author_url", comment.getAuthorUrl());
+        }
+        if (comment.getAuthorEmail() != null) {
+            commentParams.put("author_email", comment.getAuthorEmail());
+        }
         newComment(site, post.getRemotePostId(), comment, comment.getRemoteParentCommentId(), commentParams);
     }
 
