@@ -591,13 +591,15 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     private void showNewUnseenNotificationsUI() {
         if (!isAdded()) return;
-        mRecyclerView.clearOnScrollListeners(); // Just one listener. Multiple notes received here add multiple listeners.
 
-        if(!isFirstItemVisible()) {
-            showNewNotificationsBar();
+        // Make sure the RecyclerView is configured
+        if (mRecyclerView == null || mRecyclerView.getLayoutManager() == null) {
+            return;
         }
 
-        // assign the scroll listener to hide the bar when the recycler is scrolled, but don't assign
+        mRecyclerView.clearOnScrollListeners(); // Just one listener. Multiple notes received here add multiple listeners.
+
+        // Assign the scroll listener to hide the bar when the recycler is scrolled, but don't assign
         // it right away since the user may be scrolling when the bar appears (which would cause it
         // to disappear as soon as it's displayed)
         mRecyclerView.postDelayed(new Runnable() {
@@ -609,7 +611,11 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             }
         }, 1000L);
 
-
+        // Check if the first item is visible on the screen
+        View child = mRecyclerView.getLayoutManager().getChildAt(0);
+        if (child != null && mRecyclerView.getLayoutManager().getPosition(child) > 0) {
+            showNewNotificationsBar();
+        }
     }
 
     /*
@@ -649,19 +655,5 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             public void onAnimationRepeat(Animation animation) { }
         };
         AniUtils.startAnimation(mNewNotificationsBar, R.anim.notifications_bottom_bar_out, listener);
-    }
-
-    /*
-     * returns true if the first item is still visible in the RecyclerView - will return
-     * false if the first item is scrolled out of view, or if the list is empty
-     */
-    private boolean isFirstItemVisible() {
-        if (mRecyclerView == null
-                || mRecyclerView.getLayoutManager() == null) {
-            return false;
-        }
-
-        View child = mRecyclerView.getLayoutManager().getChildAt(0);
-        return (child != null && mRecyclerView.getLayoutManager().getPosition(child) == 0);
     }
 }
