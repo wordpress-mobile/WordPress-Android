@@ -855,6 +855,8 @@
     <string name="follows">Follows</string>
     <string name="notifications_label_new_notifications">New notifications</string>
     <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
+    <string name="notifications_label_swipe_for_more_snackbar">Swipe for more notifications →</string>
+    <string name="notifications_label_swipe_snackbar_dont_show_again">OKAY</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>

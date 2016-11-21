@@ -3,15 +3,20 @@ package org.wordpress.android.ui.notifications;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -27,6 +32,7 @@ import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderViewPagerTransformer;
@@ -148,6 +154,27 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //first time we show this screen, hint the user they can navigate through notifications detail
+        //using swipe on the ViewPager
+        if (!AppPrefs.isSwipeToNavigateShown()) {
+            showSwipeSuggestionSnackbar();
+        }
+    }
+
+    private void showSwipeSuggestionSnackbar(){
+        Snackbar snackbar = Snackbar.make(mViewPager, getString(R.string.notifications_label_swipe_for_more_snackbar), Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.notifications_label_swipe_snackbar_dont_show_again, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AppPrefs.setSwipeToNavigateShown(true);
+            }
+        });
+        snackbar.show();
     }
 
     private void showErrorToastAndFinish() {
