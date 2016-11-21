@@ -14,8 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -110,12 +108,10 @@ public class CommentsActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-        mDispatcher.register(this);
     }
 
     @Override
     public void onStop() {
-        mDispatcher.unregister(this);
         super.onStop();
     }
 
@@ -271,16 +267,17 @@ public class CommentsActivity extends AppCompatActivity
         }
 
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
-            getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), true);
+            // getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), true);
             getListFragment().updateEmptyView();
             comment.setStatus(newStatus.toString());
+            mDispatcher.dispatch(CommentActionBuilder.newUpdateCommentAction(comment));
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite,
                     comment)));
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH
                 || newStatus == CommentStatus.DELETED) {
             mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
-            getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), true);
+            // getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), true);
             getListFragment().updateEmptyView();
 
             String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) :
@@ -290,7 +287,7 @@ public class CommentsActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     mTrashedComments.remove(comment);
-                    getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), false);
+                    // getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), false);
                     getListFragment().loadComments();
                 }
             };
@@ -338,19 +335,5 @@ public class CommentsActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    // OnChanged events
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCommentChanged(CommentStore.OnCommentChanged event) {
-        if (getListFragment() != null) {
-            // FIXME: getListFragment().setCommentIsModerating(event.comments, false);
-            getListFragment().loadComments();
-        }
-        reloadCommentList();
-        if (event.isError()) {
-            ToastUtils.showToast(this, R.string.error_moderate_comment, ToastUtils.Duration.LONG);
-        }
     }
 }

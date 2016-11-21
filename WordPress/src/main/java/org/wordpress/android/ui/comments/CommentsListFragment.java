@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
@@ -454,7 +455,9 @@ public class CommentsListFragment extends Fragment {
 
     private void moderateComments(CommentList comments, CommentStatus status) {
         for (CommentModel comment: comments) {
+            // Preemptive update
             comment.setStatus(status.toString());
+            // Actual update
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
         }
     }
@@ -635,9 +638,14 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.hideLoadingProgress();
         mFilteredCommentsView.setRefreshing(false);
 
-        if (event.isError()) {
-            ToastUtils.showToast(getActivity(), R.string.error_refresh_comments);
+        if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
+            // Don't refresh the list on push, we already updated comments
+            loadComments();
         }
-        loadComments();
+        if (event.isError()) {
+            ToastUtils.showToast(getActivity(), event.error.message);
+            // Reload the comment list in case of an error, we want to revert the UI to the previous state.
+            loadComments();
+        }
     }
 }
