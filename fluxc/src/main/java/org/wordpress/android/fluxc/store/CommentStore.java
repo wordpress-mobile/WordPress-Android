@@ -327,10 +327,16 @@ public class CommentStore extends Store {
     }
 
     private void deleteComment(RemoteCommentPayload payload) {
+        // If the comment is stored locally, we want to update it locally (needed because in some
+        // cases we use this to update comments by remote id).
+        CommentModel comment = payload.comment;
+        if (payload.comment == null) {
+            getCommentBySiteAndRemoteId(payload.site, payload.remoteCommentId);
+        }
         if (payload.site.isWPCom()) {
-            mCommentRestClient.deleteComment(payload.site, payload.remoteCommentId, payload.comment);
+            mCommentRestClient.deleteComment(payload.site, payload.remoteCommentId, comment);
         } else {
-            mCommentXMLRPCClient.deleteComment(payload.site, payload.remoteCommentId, payload.comment);
+            mCommentXMLRPCClient.deleteComment(payload.site, payload.remoteCommentId, comment);
         }
     }
 
@@ -340,8 +346,8 @@ public class CommentStore extends Store {
         event.error = payload.error;
         if (!payload.isError()) {
             // Delete once means "send to trash", so we don't want to remove it from the DB, just update it's
-            // status. Delete twice means "farewell comment, we won't you ever again". Only delete from the DB if the
-            // status is "deleted".
+            // status. Delete twice means "farewell comment, we won't see you ever again". Only delete from the DB if
+            // the status is "deleted".
             if (payload.comment.getStatus().equals(CommentStatus.DELETED.toString())) {
                 CommentSqlUtils.removeComment(payload.comment);
             } else {
@@ -377,7 +383,7 @@ public class CommentStore extends Store {
         if (payload.comment == null) {
             OnCommentChanged event = new OnCommentChanged(0);
             event.causeOfChange = CommentAction.PUSH_COMMENT;
-            event.error = new CommentError(CommentErrorType.INVALID_INPUT, "comment can't be null");
+            event.error = new CommentError(CommentErrorType.INVALID_INPUT, "Comment can't be null");
             emitChange(event);
             return;
         }
