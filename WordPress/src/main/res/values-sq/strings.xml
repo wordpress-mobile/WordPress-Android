@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-10-26 09:56:05+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: sq_AL
+-->
 <resources>
+	<string name="reader_label_global_related_posts">Më tepër mbi WordPress.com</string>
+	<string name="reader_label_local_related_posts">Më tepër ten %s</string>
+	<string name="preference_open_device_settings">Hap rregullime pajisjeje</string>
+	<string name="comment_moderated_unapproved">Komentit iu hoq miratimi</string>
 	<string name="invite_invalid_email">%s: Email i pavlefshëm</string>
 	<string name="invite_user_blocked_invites">%s: Ftesa të bllokuara nga përdoruesi</string>
 	<string name="invite_already_following">%s: E ndiqni tashmë</string>
@@ -92,7 +102,6 @@
 	<string name="dlg_confirm_clear_search_history">Të spastrohet historiku?</string>
 	<string name="reader_empty_posts_in_search_description">S&amp;#8217;u gjetën postime në gjuhën tuaj për %s</string>
 	<string name="reader_label_post_search_running">Po kërkohet…</string>
-	<string name="reader_label_related_posts">Lexime të Afërta</string>
 	<string name="reader_empty_posts_in_search_title">S&amp;#8217;u gjetën postime</string>
 	<string name="reader_label_post_search_explainer">Kërkoni në krejt blogjet publike WordPress.com</string>
 	<string name="reader_hint_post_search">Kërkoni te WordPress.com</string>

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-09-13 18:13:53+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: gl_ES
+-->
 <resources>
 	<string name="reader_label_image_count_one">1 imaxe</string>
 	<string name="timespan_now">agora</string>
@@ -84,7 +90,6 @@
 	<string name="dlg_confirm_clear_search_history">Limpar o historial de busca?</string>
 	<string name="reader_empty_posts_in_search_description">Non se atoparon artigos para %s na túa lingua</string>
 	<string name="reader_empty_posts_in_search_title">Non se atoparon artigos</string>
-	<string name="reader_label_related_posts">Lecturas relacionadas</string>
 	<string name="reader_label_post_search_running">Buscando...</string>
 	<string name="reader_label_post_search_explainer">Buscar en todos os blogues públicos de WordPress.com</string>
 	<string name="reader_hint_post_search">Buscar en WordPress.com</string>

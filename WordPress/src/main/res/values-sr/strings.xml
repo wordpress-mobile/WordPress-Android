@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2015-09-21 11:11:47+0000
+Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
+Generator: GlotPress/2.3.0-alpha
+Language: sr_RS
+-->
 <resources>
 	<string name="error_open_list_from_notification">Чланак или страна је објављена на другом веб месту</string>
 	<string name="reader_short_comment_count_multi">%s коментара</string>

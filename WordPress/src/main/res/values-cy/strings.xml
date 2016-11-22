@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-11-14 17:57:45+0000
+Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;
+Generator: GlotPress/2.3.0-alpha
+Language: cy_GB
+-->
 <resources>
+	<string name="reader_label_global_related_posts">Rhagor am WordPress.com</string>
+	<string name="reader_label_local_related_posts">Rhagor yn %s</string>
+	<string name="preference_open_device_settings">Agor gosodiadau\'r ddyfais</string>
+	<string name="comment_moderated_unapproved">Sylwadau heb eu cymeradwyo</string>
+	<string name="invite_invalid_email">%s: E-bost annilys</string>
+	<string name="invite_user_blocked_invites">%s: Mae\'r defnyddiwr wedi rhwystro gwahoddiadau</string>
+	<string name="invite_already_following">%s: Eisoes yn dilyn</string>
+	<string name="invite_already_a_member">%s: Eisoes yn aelod</string>
+	<string name="invite_username_not_found">%s: Heb ganfod y defnyddiwr</string>
+	<string name="comment_moderated_approved">Sylw wedi ei gymeradwyo!</string>
+	<string name="like">Hoffi</string>
 	<string name="reader_label_image_count_one">1 Delwedd</string>
 	<string name="timespan_now">nawr</string>
 	<string name="role_viewer">Darllenydd</string>
@@ -12,6 +29,7 @@
 	<string name="alignment_right">De</string>
 	<string name="alignment_left">Chwith</string>
 	<string name="alignment_none">Dim</string>
+	<string name="site_settings_list_editor_action_mode_title">Dewis %1$d</string>
 	<string name="error_fetch_users_list">Methu adfer defnyddiwr y wefan</string>
 	<string name="plans_manage">Rheoli eich cynllun yn\nWordPress.com/plans</string>
 	<string name="title_email_follower">Dilynwr e-bost</string>
@@ -84,7 +102,6 @@
 	<string name="dlg_confirm_clear_search_history">Clirio hanes chwilio?</string>
 	<string name="reader_empty_posts_in_search_description">Dim cofnodion gan %s yn eich iaith</string>
 	<string name="reader_empty_posts_in_search_title">Heb ganfod unrhyw gofnod</string>
-	<string name="reader_label_related_posts">Darllen Perthnasol</string>
 	<string name="reader_label_post_search_running">Chwilio…</string>
 	<string name="reader_label_post_search_explainer">Chwilio pob blog WordPress.com gyhoeddus</string>
 	<string name="reader_hint_post_search">Chwilio WordPress.com</string>

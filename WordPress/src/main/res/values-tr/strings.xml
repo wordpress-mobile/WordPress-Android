@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-10-31 02:15:00+0000
+Plural-Forms: nplurals=2; plural=(n > 1);
+Generator: GlotPress/2.3.0-alpha
+Language: tr
+-->
 <resources>
+	<string name="reader_label_global_related_posts">WordPress.com üzerinden daha fazlası</string>
+	<string name="reader_label_local_related_posts">%s üzerinden daha fazlası</string>
+	<string name="preference_open_device_settings">Cihaz ayarlarını aç</string>
+	<string name="comment_moderated_unapproved">Yorumun onayı geri alındı</string>
 	<string name="invite_invalid_email">%s: Geçersiz e-posta</string>
 	<string name="invite_user_blocked_invites">%s: Kullanıcı bloklu davetler</string>
 	<string name="invite_already_following">%s: Zaten takip edenler</string>
@@ -92,7 +102,6 @@
 	<string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
 	<string name="reader_empty_posts_in_search_description">Dilinizde %s için hiç yazı bulunamadı</string>
 	<string name="reader_empty_posts_in_search_title">Yazı bulunamadı</string>
-	<string name="reader_label_related_posts">İlişkili okuma</string>
 	<string name="reader_label_post_search_running">Aranıyor...</string>
 	<string name="reader_label_post_search_explainer">Tüm halka açık WordPress.com bloglarında ara</string>
 	<string name="reader_hint_post_search">WordPress.com üzerinde ara</string>
