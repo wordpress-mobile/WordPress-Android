@@ -30,18 +30,15 @@
                 android:id="@+id/btn_like_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
-                android:paddingBottom="0dp"
-                app:srcCompat="@drawable/gridicons_star"
-                android:tint="@color/gray"
+                android:paddingTop="@dimen/margin_small"
+                app:srcCompat="@drawable/ic_action_like"
                 android:contentDescription="@string/reader_label_like" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_like_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
                 android:text="@string/reader_label_like"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_small" />

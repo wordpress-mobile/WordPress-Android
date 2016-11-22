@@ -572,7 +572,7 @@ public class GCMMessageService extends GcmListenerService {
             commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
             PendingIntent commentLikePendingIntent =  getCommentActionPendingIntenForService(context, commentLikeIntent);
-            builder.addAction(R.drawable.gridicons_star, getText(R.string.like),
+            builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                     commentLikePendingIntent);
         }
 
