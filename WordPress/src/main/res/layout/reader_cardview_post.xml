@@ -115,7 +115,9 @@
                 android:layout_width="@dimen/reader_video_overlay_size"
                 android:layout_height="@dimen/reader_video_overlay_size"
                 android:layout_gravity="center"
-                android:src="@drawable/reader_video_overlay" />
+                android:src="@drawable/reader_video_overlay"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </FrameLayout>
 
         <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip

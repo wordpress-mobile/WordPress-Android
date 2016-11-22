@@ -134,6 +134,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ReaderIconCountView likeCount;
 
         private final ImageView imgMore;
+        private final ImageView imgVideoOverlay;
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatarOrBlavatar;
@@ -166,6 +167,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             framePhoto = (ViewGroup) itemView.findViewById(R.id.frame_photo);
             txtPhotoTitle = (TextView) framePhoto.findViewById(R.id.text_photo_title);
             imgFeatured = (WPNetworkImageView) framePhoto.findViewById(R.id.image_featured);
+            imgVideoOverlay = (ImageView) framePhoto.findViewById(R.id.image_video_overlay);
 
             imgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
@@ -203,14 +205,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
 
-            // when the photo frame (featured image) is tapped, and the post is a video card,
-            // open the video in the player app
-            framePhoto.setOnClickListener(new View.OnClickListener() {
+            // play the featured video when the overlay image is tapped - note that the overlay
+            // image only appears when there's a featured video
+            imgVideoOverlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     ReaderPost post = getItem(position);
-                    if (post != null && post.getCardType() == ReaderCardType.VIDEO) {
+                    if (post != null && post.hasFeaturedVideo()) {
                         Uri videoUri = Uri.parse(post.getFeaturedVideo());
                         Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
                         //intent.setDataAndType(videoUri, "video/*");
@@ -417,6 +419,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.txtTitle.getLayoutParams();
             params.topMargin = titleMargin;
         }
+
+        // show the video overlay (play icon) when there's a featured video
+        holder.imgVideoOverlay.setVisibility(post.getCardType() == ReaderCardType.VIDEO ? View.VISIBLE : View.GONE);
 
         showLikes(holder, post);
         showComments(holder, post);
