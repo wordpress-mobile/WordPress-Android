@@ -487,10 +487,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void onPause() {
         super.onPause();
-        // Reset comment if this is from a notification
-        if (mNote != null) {
-            mComment = null;
-        }
     }
 
     @Override
@@ -589,8 +585,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     return;
                 }
             }
-            showCommentForNote(mNote);
             return;
+        }
+
+        if (mNote != null) {
+            showCommentForNote(mNote);
         }
 
         scrollView.setVisibility(View.VISIBLE);
@@ -801,16 +800,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNote != null && mOnNoteCommentActionListener != null) {
             mOnNoteCommentActionListener.onModerateCommentForNote(mNote, newStatus);
             trackModerationFromNotification(newStatus);
-            return;
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onModerateComment(mSite, mComment, newStatus);
-            return;
         }
 
-        if (mNote == null) return;
-
-        // Basic moderation support
-        // Uses WP.com REST API and requires a note object
+        // Actual moderation
         mPreviousStatus = mComment.getStatus();
         mComment.setStatus(newStatus.toString());
         updateStatusViews();
@@ -1049,15 +1043,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note.getId());
         mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
-        // Listen for note changes from the detail list fragment, so we can update the status buttons
-        mNotificationsDetailListFragment.setOnNoteChangeListener(new NotificationsDetailListFragment.OnNoteChangeListener() {
-            @Override
-            public void onNoteChanged(Note note) {
-                mNote = note;
-                mComment = mNote.buildComment();
-                updateStatusViews();
-            }
-        });
         fragmentTransaction.replace(R.id.comment_content_container, mNotificationsDetailListFragment);
         fragmentTransaction.commitAllowingStateLoss();
 
@@ -1080,7 +1065,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (mSite != null) {
-            setComment(note.buildComment(), mSite);
+           // setComment(note.buildComment(), mSite);
         }
         getFragmentManager().invalidateOptionsMenu();
     }
