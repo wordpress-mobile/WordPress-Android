@@ -1308,6 +1308,7 @@
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
     <string name="verification_code">Verification code</string>
     <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="invalid_verification_code_format">Must be six-digit number</string>
     <string name="verify">Verify</string>
     <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
     <string name="two_step_footer_button">Send code via text message</string>
