@@ -3,6 +3,7 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import java.util.ArrayList;
@@ -144,14 +146,30 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         mNote = note;
     }
 
-    private boolean setNoteWithNoteId(String noteId) {
+    private void setNoteWithNoteId(String noteId) {
         Note note = NotificationsTable.getNoteById(noteId);
         if (note != null) {
             mIsUnread = note.isUnread();
             setNote(note);
-            return true;
         }
-        return false;
+    }
+
+    private void showErrorToastAndFinish() {
+        AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
+        if (getActivity() != null) {
+            ToastUtils.showToast(getActivity(), R.string.error_notification_open);
+            getActivity().finish();
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (getNote() == null) {
+            showErrorToastAndFinish();
+        }
     }
 
     @Override
