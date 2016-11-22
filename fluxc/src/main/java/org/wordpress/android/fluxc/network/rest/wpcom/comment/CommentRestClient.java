@@ -214,6 +214,46 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void likeComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment,
+                            boolean like) {
+        // Prioritize CommentModel over comment id.
+        if (comment != null) {
+            remoteCommentId = comment.getRemoteCommentId();
+        }
+
+        String url;
+        if (like) {
+            url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).likes.new_.getUrlV1_1();
+        } else {
+            url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).likes.mine.delete
+                    .getUrlV1_1();
+        }
+        final WPComGsonRequest<CommentLikeWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
+                url, null, CommentLikeWPComRestResponse.class,
+                new Listener<CommentLikeWPComRestResponse>() {
+                    @Override
+                    public void onResponse(CommentLikeWPComRestResponse response) {
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+
+                        if (comment != null) {
+                            comment.setILike(response.i_like);
+                        }
+                        mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(payload));
+
+                    }
+                },
+
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(
+                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
+                    }
+                }
+        );
+        add(request);
+    }
+
     // Private methods
 
     private List<CommentModel> commentsResponseToCommentList(CommentsWPComRestResponse response, SiteModel site) {
