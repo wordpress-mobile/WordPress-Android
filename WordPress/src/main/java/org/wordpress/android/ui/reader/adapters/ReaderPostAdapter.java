@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +30,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
@@ -213,10 +212,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     int position = getAdapterPosition();
                     ReaderPost post = getItem(position);
                     if (post != null && post.hasFeaturedVideo()) {
-                        Uri videoUri = Uri.parse(post.getFeaturedVideo());
-                        Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
-                        //intent.setDataAndType(videoUri, "video/*");
-                        view.getContext().startActivity(intent);
+                        ReaderVideoUtils.playVideoUrl(view.getContext(), post.getFeaturedVideo());
                     }
                 }
             });
