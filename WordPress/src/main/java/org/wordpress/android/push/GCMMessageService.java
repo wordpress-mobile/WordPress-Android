@@ -591,7 +591,7 @@ public class GCMMessageService extends GcmListenerService {
             commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
             PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntenForService(context, commentApproveIntent);
-            builder.addAction(R.drawable.gridicons_checkmark, getText(R.string.approve),
+            builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
                     commentApprovePendingIntent);
         }
 
@@ -968,7 +968,7 @@ public class GCMMessageService extends GcmListenerService {
                 PendingIntent authApprovePendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
-                builder.addAction(R.drawable.gridicons_checkmark, getText(R.string.approve),
+                builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
                         authApprovePendingIntent);
 
 
