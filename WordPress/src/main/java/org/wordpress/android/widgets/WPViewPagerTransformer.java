@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader;
+package org.wordpress.android.widgets;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -11,7 +11,7 @@ import android.view.View;
  * zoom & depth are based on examples here, with many fixes and simplifications:
  * http://developer.android.com/training/animation/screen-slide.html#pagetransformer
  */
-public class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
+public class WPViewPagerTransformer implements ViewPager.PageTransformer {
     public enum TransformType {
         FLOW,
         DEPTH,
@@ -20,7 +20,7 @@ public class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
     }
     private final TransformType mTransformType;
 
-    public ReaderViewPagerTransformer(TransformType transformType) {
+    public WPViewPagerTransformer(TransformType transformType) {
         mTransformType = transformType;
     }
 
