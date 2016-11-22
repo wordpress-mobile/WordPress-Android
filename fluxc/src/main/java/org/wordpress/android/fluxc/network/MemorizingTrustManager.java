@@ -61,6 +61,7 @@ public class MemorizingTrustManager implements X509TrustManager {
         try {
             return mLocalKeyStoreFutureTask.get(FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            AppLog.e(T.API, e);
             throw new IllegalStateException("Couldn't find KeyStore");
         }
     }
@@ -70,6 +71,7 @@ public class MemorizingTrustManager implements X509TrustManager {
         try {
             return mTrustManagerFutureTask.get(FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            AppLog.e(T.API, e);
             throw new IllegalStateException("Couldn't find X509TrustManager");
         }
     }
