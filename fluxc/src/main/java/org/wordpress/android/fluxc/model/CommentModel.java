@@ -153,7 +153,7 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
         return mILike;
     }
 
-    public void setILike(boolean ILike) {
-        mILike = ILike;
+    public void setILike(boolean iLike) {
+        mILike = iLike;
     }
 }

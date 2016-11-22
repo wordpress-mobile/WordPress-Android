@@ -239,7 +239,6 @@ public class CommentRestClient extends BaseWPComRestClient {
                             comment.setILike(response.i_like);
                         }
                         mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(payload));
-
                     }
                 },
 
