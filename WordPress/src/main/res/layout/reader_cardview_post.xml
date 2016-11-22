@@ -110,10 +110,12 @@
                 android:textStyle="bold"
                 tools:text="text_photo_title" />
 
-            <org.wordpress.android.ui.reader.views.ReaderVideoOverlay
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+            <ImageView
+                android:id="@+id/image_video_overlay"
+                android:layout_width="@dimen/reader_video_overlay_size"
+                android:layout_height="@dimen/reader_video_overlay_size"
+                android:layout_gravity="center"
+                android:src="@drawable/reader_video_overlay" />
         </FrameLayout>
 
         <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
