@@ -29,4 +29,5 @@ public class CommentWPComRestResponse {
     public String date;
     public String status;
     public String content;
+    public boolean i_like;
 }
