@@ -68,6 +68,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.widgets.ContextMenuEditText;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
@@ -102,7 +103,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected EditText mUsernameEditText;
     protected EditText mPasswordEditText;
     protected EditText mUrlEditText;
-    protected EditText mTwoStepEditText;
+    protected ContextMenuEditText mTwoStepEditText;
 
     protected LinearLayout mBottomButtonsLayout;
     protected RelativeLayout mUsernameLayout;
@@ -211,20 +212,44 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPasswordEditText.setOnEditorActionListener(mEditorAction);
         mUrlEditText.setOnEditorActionListener(mEditorAction);
 
-        mTwoStepEditText = (EditText) rootView.findViewById(R.id.nux_two_step);
+        mTwoStepEditText = (ContextMenuEditText) rootView.findViewById(R.id.nux_two_step);
         mTwoStepEditText.addTextChangedListener(this);
-        mTwoStepEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (keyCode == EditorInfo.IME_ACTION_DONE)) {
-                    if (fieldsFilled()) {
-                        signIn();
+        mTwoStepEditText.setOnKeyListener(
+            new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (keyCode == EditorInfo.IME_ACTION_DONE)) {
+                        if (fieldsFilled()) {
+                            signIn();
+                        }
                     }
+
+                    return false;
+                }
+            }
+        );
+        mTwoStepEditText.setOnContextMenuListener(
+            new ContextMenuEditText.OnContextMenuListener() {
+                @Override
+                public void onCut() {
                 }
 
-                return false;
+                @Override
+                public void onCopy() {
+                }
+
+                @Override
+                public void onPaste() {
+                    String code = getAuthCodeFromClipboard();
+
+                    if (!TextUtils.isEmpty(code)) {
+                        mTwoStepEditText.setText(code);
+                    } else {
+                        showTwoStepCodeError(R.string.invalid_verification_code_format);
+                    }
+                }
             }
-        });
+        );
 
         WPTextView twoStepFooterButton = (WPTextView) rootView.findViewById(R.id.two_step_footer_button);
         twoStepFooterButton.setText(Html.fromHtml("<u>" + getString(R.string.two_step_footer_button) + "</u>"));
@@ -286,7 +311,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             setTwoStepAuthVisibility(true);
         // Insert authentication code if copied to clipboard
         } else if (TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.VISIBLE) {
-            insertAuthCodeFromClipboard();
+            mTwoStepEditText.setText(getAuthCodeFromClipboard());
         }
 
         if (!mToken.isEmpty() && !mInhibitMagicLogin) {
@@ -748,7 +773,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 public void run() {
                     if (twoStepCodeRequired) {
                         setTwoStepAuthVisibility(true);
-                        insertAuthCodeFromClipboard();
+                        mTwoStepEditText.setText(getAuthCodeFromClipboard());
                         endProgress();
                         return;
                     }
@@ -781,7 +806,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private void insertAuthCodeFromClipboard() {
+    private String getAuthCodeFromClipboard() {
         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
 
         if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null) {
@@ -790,9 +815,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mTwoStepAuthCodeMatcher.reset(code);
 
             if (!code.isEmpty() && mTwoStepAuthCodeMatcher.matches()) {
-                mTwoStepEditText.setText(code);
+                return code;
             }
         }
+
+        return "";
     }
 
     private void setTwoStepAuthVisibility(boolean isVisible) {
