@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -32,8 +31,6 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
             mVideoUrl = savedInstanceState.getString(ReaderConstants.ARG_VIDEO_URL);
         }
 
-        showProgress();
-
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
 
@@ -48,14 +45,6 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private void showProgress() {
-        findViewById(R.id.progress).setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgress() {
-        findViewById(R.id.progress).setVisibility(View.GONE);
-    }
-
     private class ReaderVideoWebViewClient extends WebViewClient {
         ReaderVideoWebViewClient() {
             // noop
@@ -63,7 +52,7 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            hideProgress();
+
         }
     }
 }
