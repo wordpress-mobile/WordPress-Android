@@ -398,7 +398,7 @@ public class MediaStore extends Store {
             return;
         } else {
             for (MediaModel media : payload.media) {
-                if (media.getTitle() == null || media.getDescription() == null) {
+                if (media == null || media.getMediaId() < 0) {
                     // list contained media items with insufficient data
                     notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, MediaAction.PUSH_MEDIA, payload.media);
                     return;
