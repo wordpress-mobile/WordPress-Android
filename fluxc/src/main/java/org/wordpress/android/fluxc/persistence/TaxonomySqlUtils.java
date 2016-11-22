@@ -22,6 +22,7 @@ public class TaxonomySqlUtils {
                 .beginGroup()
                 .equals(TermModelTable.REMOTE_TERM_ID, term.getRemoteTermId())
                 .equals(TermModelTable.LOCAL_SITE_ID, term.getLocalSiteId())
+                .equals(TermModelTable.TAXONOMY, term.getTaxonomy())
                 .endGroup()
                 .endGroup().endWhere().getAsModel();
 
