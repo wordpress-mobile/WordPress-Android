@@ -260,7 +260,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
      * Tries to pick the correct fragment detail type for a given note
      * Defaults to NotificationDetailListFragment
      */
-    private Fragment getDetailFragmentForNote(Note note) {
+    private Fragment getDetailFragmentForNote(Note note, int idForFragmentContainer) {
         if (note == null)
             return null;
 
@@ -268,7 +268,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (note.isCommentType()) {
             // show comment detail for comment notifications
             boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-            fragment = CommentDetailFragment.newInstance(note.getId(), getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
+            fragment = CommentDetailFragment.newInstance(note.getId(), getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA), idForFragmentContainer);
 
             // fragment is never null at this point, and always of CommentDetailFragment type. Just add this check for safety :)
             if ( fragment != null && fragment instanceof  CommentDetailFragment) {
@@ -366,7 +366,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         @Override
         public Fragment getItem(int position) {
-            return getDetailFragmentForNote(mNoteList.get(position));
+            return getDetailFragmentForNote(mNoteList.get(position), position);
         }
 
         @Override

@@ -89,6 +89,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
     private static final String KEY_COMMENT_ID = "comment_id";
     private static final String KEY_NOTE_ID = "note_id";
+    private int mIdForFragmentContainer;
     private int mLocalBlogId;
     private int mRemoteBlogId;
     private Comment mComment;
@@ -145,10 +146,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from notification list for a comment notification
      */
-    public static CommentDetailFragment newInstance(final String noteId, final String replyText) {
+    public static CommentDetailFragment newInstance(final String noteId, final String replyText, final int idForFragmentContainer) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         fragment.setNoteWithNoteId(noteId);
         fragment.setReplyText(replyText);
+        fragment.setIdForFragmentContainer(idForFragmentContainer + R.id.note_comment_fragment_container_base_id);
         return fragment;
     }
 
@@ -156,7 +158,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * used when called from notifications to load a comment that doesn't already exist in the note
      */
     public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId) {
-        CommentDetailFragment fragment = newInstance(noteId, null);
+        CommentDetailFragment fragment = newInstance(noteId, null, 0);
         fragment.enableShouldRequestCommentFromNote();
         return fragment;
     }
@@ -430,6 +432,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setNote(note);
         setRemoteBlogId(note.getSiteId());
     }
+
+    private void setIdForFragmentContainer(int id){
+        if (id > 0) {
+            mIdForFragmentContainer = id;
+        }
+    }
+
 
     private void setReplyText(String replyText) {
         if (replyText == null) return;
@@ -1127,8 +1136,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setIdForCommentContainer(){
-        if (mComment != null && mCommentContentLayout != null) {
-            mCommentContentLayout.setId((int)mComment.commentID);
+        if (mCommentContentLayout != null) {
+            mCommentContentLayout.setId(mIdForFragmentContainer);
         }
     }
 
