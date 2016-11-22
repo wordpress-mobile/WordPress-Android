@@ -25,13 +25,9 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -49,6 +45,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
@@ -905,7 +902,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (mNote != null && canLike()) {
             mBtnLikeComment.setVisibility(View.VISIBLE);
-            toggleLikeButton(mNote.hasLikedComment());
+            if (mComment != null) {
+                toggleLikeButton(mComment.getILike());
+            } else {
+                mNote.hasLikedComment();
+            }
         } else {
             mBtnLikeComment.setVisibility(View.GONE);
         }
@@ -1083,7 +1084,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // Bump analytics
         AnalyticsTracker.track(mBtnLikeComment.isActivated() ? Stat.NOTIFICATION_LIKED : Stat.NOTIFICATION_UNLIKED);
 
-        boolean commentWasUnapproved = false;
         if (mNotificationsDetailListFragment != null && mComment != null) {
             // Optimistically set comment to approved when liking an unapproved comment
             // WP.com will set a comment to approved if it is liked while unapproved
@@ -1091,46 +1091,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mComment.setStatus(APPROVED.toString());
                 mNotificationsDetailListFragment.refreshBlocksForCommentStatus(APPROVED);
                 setModerateButtonForStatus(APPROVED);
-                commentWasUnapproved = true;
             }
         }
-
-        final boolean commentStatusShouldRevert = commentWasUnapproved;
-        WordPress.getRestClientUtils().likeComment(mNote.getSiteId(),
-                String.valueOf(mNote.getCommentId()),
-                mBtnLikeComment.isActivated(),
-                new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if (response != null && !response.optBoolean("success")) {
-                            if (!isAdded()) return;
-
-                            // Failed, so switch the button state back
-                            toggleLikeButton(!mBtnLikeComment.isActivated());
-
-                            if (commentStatusShouldRevert) {
-                                setCommentStatusUnapproved();
-                            }
-                        }
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (!isAdded()) return;
-
-                        toggleLikeButton(!mBtnLikeComment.isActivated());
-
-                        if (commentStatusShouldRevert) {
-                            setCommentStatusUnapproved();
-                        }
-                    }
-                });
-    }
-
-    private void setCommentStatusUnapproved() {
-        mComment.setStatus(CommentStatus.UNAPPROVED.toString());
-        mNotificationsDetailListFragment.refreshBlocksForCommentStatus(CommentStatus.UNAPPROVED);
-        setModerateButtonForStatus(CommentStatus.UNAPPROVED);
+        mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
+                new RemoteLikeCommentPayload(mSite, mComment, mBtnLikeComment.isActivated())));
     }
 
     private void toggleLikeButton(boolean isLiked) {
@@ -1204,6 +1168,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
+    private void onCommentLiked(CommentStore.OnCommentChanged event) {
+        if (event.isError()) {
+            // Revert button state in case of an error
+            toggleLikeButton(!mBtnLikeComment.isActivated());
+        }
+    }
+
     // OnChanged events
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1220,6 +1191,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // New comment (reply)
         if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
             onCommentCreated(event);
+            return;
+        }
+
+        // Like/Unlike
+        if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
+            onCommentLiked(event);
             return;
         }
 
