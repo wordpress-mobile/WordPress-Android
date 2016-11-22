@@ -95,7 +95,6 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
                 app:srcCompat="@drawable/gridicons_pencil"
-                android:tint="@color/gray"
                 android:contentDescription="@string/edit_comment" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -128,7 +127,6 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
                 app:srcCompat="@drawable/gridicons_trash"
-                android:tint="@color/gray"
                 android:contentDescription="@string/edit_comment" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -161,7 +159,6 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
                 app:srcCompat="@drawable/gridicons_spam"
-                android:tint="@color/gray"
                 android:contentDescription="@string/mnu_comment_spam" />
 
             <org.wordpress.android.widgets.WPTextView
