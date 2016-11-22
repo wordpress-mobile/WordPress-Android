@@ -1,13 +1,14 @@
 package org.wordpress.android.ui.reader;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.MediaController;
-import android.widget.VideoView;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 
 /**
  *
@@ -16,14 +17,14 @@ import org.wordpress.android.R;
 public class ReaderVideoViewerActivity extends AppCompatActivity {
 
     private String mVideoUrl;
-    private VideoView mVideoView;
+    private WebView mWebView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_video_player);
-        mVideoView = (VideoView) findViewById(R.id.video_view);
+        mWebView = (WebView) findViewById(R.id.web_view);
 
         if (savedInstanceState == null) {
             mVideoUrl = getIntent().getStringExtra(ReaderConstants.ARG_VIDEO_URL);
@@ -31,16 +32,38 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
             mVideoUrl = savedInstanceState.getString(ReaderConstants.ARG_VIDEO_URL);
         }
 
-        MediaController mediacontroller = new MediaController(this);
-        mediacontroller.setAnchorView(mVideoView);
-        mVideoView.setMediaController(mediacontroller);
-        mVideoView.setVideoURI(Uri.parse(mVideoUrl));
-        mVideoView.requestFocus();
+        showProgress();
+
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
+
+        mWebView.setWebViewClient(new ReaderVideoWebViewClient());
+
+        mWebView.loadUrl(mVideoUrl);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(ReaderConstants.ARG_VIDEO_URL, mVideoUrl);
         super.onSaveInstanceState(outState);
+    }
+
+    private void showProgress() {
+        findViewById(R.id.progress).setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        findViewById(R.id.progress).setVisibility(View.GONE);
+    }
+
+    private class ReaderVideoWebViewClient extends WebViewClient {
+        ReaderVideoWebViewClient() {
+            // noop
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            hideProgress();
+        }
     }
 }
