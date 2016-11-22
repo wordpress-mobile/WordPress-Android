@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.reader.utils;
 
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -169,12 +167,6 @@ public class ReaderVideoUtils {
         JsonArrayRequest request = new JsonArrayRequest(url, listener, errorListener);
 
         WordPress.requestQueue.add(request);
-    }
-
-    public static void playVideoUrl(Context context, String videoUrl) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.parse(videoUrl), "video/*");
-        context.startActivity(intent);
     }
 
     public interface VideoThumbnailListener {

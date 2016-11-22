@@ -30,7 +30,6 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
@@ -212,7 +211,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     int position = getAdapterPosition();
                     ReaderPost post = getItem(position);
                     if (post != null && post.hasFeaturedVideo()) {
-                        ReaderVideoUtils.playVideoUrl(view.getContext(), post.getFeaturedVideo());
+                        ReaderActivityLauncher.showReaderVideoViewer(view.getContext(), post.getFeaturedVideo());
                     }
                 }
             });

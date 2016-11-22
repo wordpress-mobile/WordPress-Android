@@ -4,7 +4,7 @@
     and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
 -->
 <resources>
-    <style name="ReaderPhotoViewerTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="ReaderMediaViewerTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorAccent">@color/accent_material_dark</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
