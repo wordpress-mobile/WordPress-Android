@@ -109,6 +109,11 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 tools:text="text_photo_title" />
+
+            <org.wordpress.android.ui.reader.views.ReaderVideoOverlay
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
         </FrameLayout>
 
         <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip

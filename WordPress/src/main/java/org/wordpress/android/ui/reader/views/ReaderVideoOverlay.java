@@ -38,8 +38,12 @@ public class ReaderVideoOverlay extends ImageView {
 
     private void initialize(Context context) {
         mOverlaySize = context.getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size);
-        getLayoutParams().height = mOverlaySize;
-        getLayoutParams().width = mOverlaySize;
+        setImageResource(R.drawable.reader_video_overlay);
+    }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(mOverlaySize, mOverlaySize);
     }
 }

@@ -369,7 +369,7 @@ public class WPNetworkImageView extends AppCompatImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mImageType == ImageType.VIDEO) {
-            drawVideoOverlay(canvas);
+            //drawVideoOverlay(canvas);
         }
     }
 
