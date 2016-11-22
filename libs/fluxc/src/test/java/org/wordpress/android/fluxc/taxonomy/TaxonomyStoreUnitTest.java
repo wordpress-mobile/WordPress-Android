@@ -126,4 +126,32 @@ public class TaxonomyStoreUnitTest {
 
         assertEquals(category, mTaxonomyStore.getCategoryByRemoteId(site, category.getRemoteTermId()));
     }
+
+    @Test
+    public void testClearTaxonomy() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        TermModel category = TaxonomyTestUtils.generateSampleCategory();
+        TaxonomySqlUtils.insertOrUpdateTerm(category);
+
+        TermModel category2 = TaxonomyTestUtils.generateSampleCategory();
+        category2.setRemoteTermId(6);
+        category2.setName("Something");
+        TaxonomySqlUtils.insertOrUpdateTerm(category2);
+
+        TermModel tag = TaxonomyTestUtils.generateSampleTag();
+        TaxonomySqlUtils.insertOrUpdateTerm(tag);
+
+        TermModel author = TaxonomyTestUtils.generateSampleAuthor();
+        TaxonomySqlUtils.insertOrUpdateTerm(author);
+
+        assertEquals(4, TaxonomyTestUtils.getTermsCount());
+        assertEquals(2, mTaxonomyStore.getCategoriesForSite(site).size());
+
+        TaxonomySqlUtils.clearTaxonomyForSite(site, TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
+
+        assertEquals(0, mTaxonomyStore.getCategoriesForSite(site).size());
+        assertEquals(2, TaxonomyTestUtils.getTermsCount());
+    }
 }
