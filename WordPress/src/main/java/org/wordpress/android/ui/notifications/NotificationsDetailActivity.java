@@ -167,7 +167,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         super.onStart();
         //if the user hasn't used swipe yet, hint the user they can navigate through notifications detail
         //using swipe on the ViewPager
-        if (!AppPrefs.isSwipeToNavigateShown()) {
+        if (!AppPrefs.isSwipeToNavigateShown() && mAllowHorizontalNavigation && (mAdapter.getCount() > 1)) {
             Snackbar.make(mViewPager, getString(R.string.notifications_label_swipe_for_more_snackbar), Snackbar.LENGTH_LONG).show();
         }
     }
