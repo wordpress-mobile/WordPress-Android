@@ -60,6 +60,19 @@ public class CommentStore extends Store {
         }
     }
 
+    public static class RemoteLikeCommentPayload extends RemoteCommentPayload {
+        public final boolean like;
+        public RemoteLikeCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment, boolean like) {
+            super(site, comment);
+            this.like = like;
+        }
+
+        public RemoteLikeCommentPayload(@NonNull SiteModel site, long remoteCommentId, boolean like) {
+            super(site, remoteCommentId);
+            this.like = like;
+        }
+    }
+
     public static class InstantiateCommentPayload extends Payload {
         public final SiteModel site;
 
@@ -234,6 +247,12 @@ public class CommentStore extends Store {
             case DELETED_COMMENT:
                 handleDeletedCommentResponse((RemoteCommentResponsePayload) action.getPayload());
                 break;
+            case LIKE_COMMENT:
+                likeComment((RemoteLikeCommentPayload) action.getPayload());
+                break;
+            case LIKED_COMMENT:
+                handleLikedCommentResponse((RemoteCommentResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -395,6 +414,34 @@ public class CommentStore extends Store {
         }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.FETCH_COMMENT;
+        event.error = payload.error;
+        emitChange(event);
+    }
+
+    private void likeComment(RemoteLikeCommentPayload payload) {
+        // If the comment is stored locally, we want to update it locally (needed because in some
+        // cases we use this to update comments by remote id).
+        CommentModel comment = payload.comment;
+        if (payload.comment == null) {
+            getCommentBySiteAndRemoteId(payload.site, payload.remoteCommentId);
+        }
+        if (payload.site.isWPCom()) {
+            mCommentRestClient.likeComment(payload.site, payload.remoteCommentId, comment, payload.like);
+        } else {
+            OnCommentChanged event = new OnCommentChanged(0);
+            event.causeOfChange = CommentAction.LIKE_COMMENT;
+            event.error = new CommentError(CommentErrorType.INVALID_INPUT, "Can't like a comment on XMLRPC API");
+            emitChange(event);
+        }
+    }
+
+    private void handleLikedCommentResponse(RemoteCommentResponsePayload payload) {
+        int rowsAffected = 0;
+        if (!payload.isError()) {
+            rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
+        }
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.causeOfChange = CommentAction.LIKE_COMMENT;
         event.error = payload.error;
         emitChange(event);
     }
