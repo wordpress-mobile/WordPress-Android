@@ -79,7 +79,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
                         CommentModel newComment = commentResponseToComment(response, site);
-                        newComment.setId(newComment.getId()); // reconciliate local instance and newly created object
+                        newComment.setId(comment.getId()); // reconciliate local instance and newly created object
                         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
                     }
@@ -131,15 +131,17 @@ public class CommentRestClient extends BaseWPComRestClient {
             remoteCommentId = comment.getRemoteCommentId();
         }
 
-        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).delete
-                .getUrlV1_1();
+        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).delete.getUrlV1_1();
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, null, CommentWPComRestResponse.class,
                 new Listener<CommentWPComRestResponse>() {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
                         CommentModel modifiedComment = commentResponseToComment(response, site);
-                        modifiedComment.setId(comment.getId()); // reconciliate local instance and newly created object
+                        if (comment != null) {
+                            // reconciliate local instance and newly created object if it exists locally
+                            modifiedComment.setId(comment.getId());
+                        }
                         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(modifiedComment);
                         mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
                     }
@@ -234,6 +236,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         comment.setStatus(response.status);
         comment.setDatePublished(response.date);
         comment.setContent(response.content);
+        comment.setILike(response.i_like);
 
         if (response.author != null) {
             comment.setAuthorUrl(response.author.URL);
