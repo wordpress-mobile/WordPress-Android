@@ -58,4 +58,5 @@ public enum ReaderCardType {
         }
         return DEFAULT;
     }
+
 }
