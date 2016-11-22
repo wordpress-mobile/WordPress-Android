@@ -240,11 +240,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
                 @Override
                 public void onPaste() {
-                    String code = getAuthCodeFromClipboard();
+                    mTwoStepEditText.setText(getAuthCodeFromClipboard());
 
-                    if (!TextUtils.isEmpty(code)) {
-                        mTwoStepEditText.setText(code);
-                    } else {
+                    if (TextUtils.isEmpty(mTwoStepEditText.getText().toString())) {
                         showTwoStepCodeError(R.string.invalid_verification_code_format);
                     }
                 }
