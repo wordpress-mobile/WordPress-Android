@@ -175,6 +175,12 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         Map<String, Object> contentStruct = postModelToContentStruct(post);
 
+        if (post.isLocalDraft()) {
+            // For first time publishing, set the comment status (open or closed) to the default value for the site
+            // (respect the existing comment status when editing posts)
+            contentStruct.put("comment_status", site.getDefaultCommentStatus());
+        }
+
         List<Object> params = new ArrayList<>(5);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
