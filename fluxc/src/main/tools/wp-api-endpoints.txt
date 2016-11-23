@@ -1,0 +1,13 @@
+/posts/
+/posts/<id>/
+
+/pages/
+/pages/<id>/
+
+/media/
+/media/<id>/
+
+/comments/
+/comments/<id>/
+
+/settings/
