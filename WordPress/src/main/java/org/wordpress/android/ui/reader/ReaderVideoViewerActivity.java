@@ -57,6 +57,12 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        mWebView.onPause();
+        super.onDestroy();
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(ReaderConstants.ARG_VIDEO_URL, mVideoUrl);
         mWebView.saveState(outState);
