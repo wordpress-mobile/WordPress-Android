@@ -62,6 +62,7 @@ public class MediaEditFragment extends Fragment {
 
     public interface MediaEditFragmentCallback {
         void onResume(Fragment fragment);
+        void setLookClosable();
         void onPause(Fragment fragment);
         void onSavedEdit(String mediaId, boolean result);
     }
@@ -115,6 +116,7 @@ public class MediaEditFragment extends Fragment {
         super.onResume();
         if (hasCallback()) {
             mCallback.onResume(this);
+            mCallback.setLookClosable();
         }
     }
 

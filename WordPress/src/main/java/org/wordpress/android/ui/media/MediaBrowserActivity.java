@@ -71,6 +71,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private MediaAddFragment mMediaAddFragment;
     private PopupWindow mAddMediaPopup;
 
+    private Toolbar mToolbar;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
     private Menu mMenu;
@@ -102,8 +103,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         setContentView(R.layout.media_browser_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.media);
@@ -428,6 +429,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
+    public void setLookClosable() {
+        mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+    }
+
+    @Override
     public void onPause(Fragment fragment) {
         invalidateOptionsMenu();
     }
@@ -482,6 +488,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
+
+            // reset the button to "back" as it may have been altered by a fragment
+            mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         } else {
             super.onBackPressed();
         }
