@@ -114,7 +114,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     }
 
     private void finishIfNoVisibleBlogs() {
-        // If not signed in, then ask to sign in, else inform the user to set at least one blog
+        // If not logged in, then ask to log in, else inform the user to set at least one blog
         // visible
         if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);

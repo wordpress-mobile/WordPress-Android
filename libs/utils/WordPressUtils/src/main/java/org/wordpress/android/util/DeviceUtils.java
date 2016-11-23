@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -80,6 +81,11 @@ public class DeviceUtils {
             }
         }
         return model;
+    }
+
+    public boolean isDeviceLocked(Context context){
+        KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        return myKM.inKeyguardRestrictedInputMode();
     }
 
     private String capitalize(String s) {

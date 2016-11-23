@@ -42,7 +42,9 @@ import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.networking.OAuthAuthenticator;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -56,6 +58,7 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
+import java.util.EnumSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -344,7 +347,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
     /**
      * In case an error happened after the user creation steps, we don't want to show the sign up screen.
-     * Show the sign in screen with username and password prefilled, plus a toast message to explain what happened.
+     * Show the log in screen with username and password prefilled, plus a toast message to explain what happened.
      *
      * Note: this should be called only if the user has been created.
      */
@@ -362,7 +365,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         } catch (IllegalStateException e) {
             // Catch the ISE exception, because we can't check for the fragment state here
             // finishAndShowSignInScreen will be called in an Network onError callback so we can't guarantee, the
-            // fragment transaction will be executed. In that case the user already is back on the Sign In screen.
+            // fragment transaction will be executed. In that case the user already is back on the Log In screen.
             AppLog.e(T.NUX, e);
         }
         ToastUtils.showToast(getActivity(), R.string.signup_succeed_signin_failed, Duration.LONG);
@@ -561,11 +564,17 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             updateProgress(getString(R.string.creating_your_site));
             mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
 
-            // On WordPress.com login, configure Simperium
-            AppLog.i(T.NOTIFS, "Configuring Simperium");
-            SimperiumUtils.configureSimperium(getContext(), mAccountStore.getAccessToken());
             // Setup legacy access token storage
             OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
+
+            // Get reader tags so they're available as soon as the Reader is accessed - done for
+            // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
+            // uses the application context since the activity is finished immediately below
+            ReaderUpdateService.startService(getActivity().getApplicationContext(),
+                    EnumSet.of(UpdateTask.TAGS));
+
+            // Start the notification service
+            NotificationsUpdateService.startService(getActivity().getApplicationContext());
         }
     }
 

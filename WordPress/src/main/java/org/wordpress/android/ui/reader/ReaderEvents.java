@@ -149,4 +149,30 @@ public class ReaderEvents {
             return mGlobalRelatedPosts.size() > 0;
         }
     }
+
+    public static class PostSlugsRequestCompleted {
+        private final int mStatusCode;
+        private final long mBlogId;
+        private final long mPostId;
+
+        public PostSlugsRequestCompleted(int statusCode, long blogId, long postId) {
+            mStatusCode = statusCode;
+            mBlogId = blogId;
+            mPostId = postId;
+        }
+
+        public int getStatusCode() {
+            return mStatusCode;
+        }
+
+        public long getBlogId() {
+            return mBlogId;
+        }
+
+        public long getPostId() {
+            return mPostId;
+        }
+    }
+
+    public static class DoSignIn {}
 }
