@@ -13,7 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
 /**
- *
+ * Full screen landscape video player for the reader
  */
 
 public class ReaderVideoViewerActivity extends AppCompatActivity {
@@ -58,6 +58,8 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        // the video must be paused here or else the audio will continue to play
+        // even though the activity has been destroyed
         mWebView.onPause();
         super.onDestroy();
     }
