@@ -2,11 +2,12 @@ package org.wordpress.android.fluxc.network.discovery;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Xml;
 import android.webkit.URLUtil;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
+import com.android.volley.ServerError;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
@@ -19,11 +20,8 @@ import org.wordpress.android.fluxc.utils.WPUrlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.IOException;
-import java.io.StringReader;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -44,13 +42,14 @@ public class SelfHostedEndpointFinder {
     private final BaseXMLRPCClient mClient;
 
     public enum DiscoveryError implements OnChangedError {
-        SITE_URL_CANNOT_BE_EMPTY,
         INVALID_URL,
         MISSING_XMLRPC_METHOD,
         ERRONEOUS_SSL_CERTIFICATE,
         HTTP_AUTH_REQUIRED,
         NO_SITE_ERROR,
         WORDPRESS_COM_SITE,
+        XMLRPC_BLOCKED,
+        XMLRPC_FORBIDDEN,
         GENERIC_ERROR
     }
 
@@ -175,7 +174,7 @@ public class SelfHostedEndpointFinder {
         // Ordered set of Strings that contains the URLs we want to try
         final LinkedHashSet<String> urlsToTry = getOrderedVerifyUrlsToTry(siteUrl);
 
-        AppLog.i(T.NUX, "The app will call system.listMethods on the following URLs: " + urlsToTry);
+        AppLog.i(T.NUX, "Calling system.listMethods on the following URLs: " + urlsToTry);
         for (String url : urlsToTry) {
             try {
                 if (checkXMLRPCEndpointValidity(url, httpUsername, httpPassword)) {
@@ -186,7 +185,8 @@ public class SelfHostedEndpointFinder {
                 // Stop execution for errors requiring user interaction
                 if (e.discoveryError == DiscoveryError.ERRONEOUS_SSL_CERTIFICATE
                     || e.discoveryError == DiscoveryError.HTTP_AUTH_REQUIRED
-                    || e.discoveryError == DiscoveryError.MISSING_XMLRPC_METHOD) {
+                    || e.discoveryError == DiscoveryError.MISSING_XMLRPC_METHOD
+                    || e.discoveryError == DiscoveryError.XMLRPC_BLOCKED) {
                     throw e;
                 }
                 // Otherwise. swallow the error since we are just verifying various URLs
@@ -219,7 +219,7 @@ public class SelfHostedEndpointFinder {
             urlsToTry.add(sanitizeSiteUrl(siteUrl, false));
         }
 
-        AppLog.i(AppLog.T.NUX, "The app will call the RSD discovery process on the following URLs: " + urlsToTry);
+        AppLog.i(AppLog.T.NUX, "Running RSD discovery process on the following URLs: " + urlsToTry);
 
         String xmlrpcUrl = null;
         for (String currentURL : urlsToTry) {
@@ -236,10 +236,6 @@ public class SelfHostedEndpointFinder {
 
             // Try to find the RSD tag with a regex
             String rsdUrl = getRSDMetaTagHrefRegEx(responseHTML);
-            // If the regex approach fails try to parse the HTML doc and retrieve the RSD tag.
-            if (rsdUrl == null) {
-                rsdUrl = getRSDMetaTagHref(responseHTML);
-            }
             rsdUrl = UrlUtils.addUrlSchemeIfNeeded(rsdUrl, false);
 
             // If the RSD URL is empty here, try to see if the pingback or Apilink are in the doc, as the user
@@ -265,7 +261,7 @@ public class SelfHostedEndpointFinder {
                         false);
             }
             if (xmlrpcUrl != null) {
-                AppLog.i(AppLog.T.NUX, "Found the XML-RPC endpoint in the HTML document!!!");
+                AppLog.i(AppLog.T.NUX, "Found the XML-RPC endpoint in the HTML document");
                 break;
             } else {
                 AppLog.i(AppLog.T.NUX, "XML-RPC endpoint not found");
@@ -279,7 +275,7 @@ public class SelfHostedEndpointFinder {
             }
         }
 
-        throw new DiscoveryException(DiscoveryError.NO_SITE_ERROR, null);
+        throw new DiscoveryException(DiscoveryError.NO_SITE_ERROR, xmlrpcUrl);
     }
 
 
@@ -298,68 +294,12 @@ public class SelfHostedEndpointFinder {
     /**
      * Returns RSD URL based on regex match.
      */
-    private String getRSDMetaTagHrefRegEx(String urlString) throws DiscoveryException {
-        String html = getResponse(urlString);
-        if (html != null) {
-            Matcher matcher = RSD_LINK.matcher(html);
-            if (matcher.find()) {
-                return matcher.group(1);
-            }
+    private String getRSDMetaTagHrefRegEx(@NonNull String html) throws DiscoveryException {
+        Matcher matcher = RSD_LINK.matcher(html);
+        if (matcher.find()) {
+            return matcher.group(1);
         }
         return null;
-    }
-
-    /**
-     * Returns RSD URL based on html tag search.
-     */
-    private String getRSDMetaTagHref(String urlString) throws DiscoveryException {
-        // Get the html code
-        String data = getResponse(urlString);
-
-        // Parse the html and get the attribute for xmlrpc endpoint
-        if (data != null) {
-            StringReader stringReader = new StringReader(data);
-            XmlPullParser parser = Xml.newPullParser();
-            try {
-                // Auto-detect the encoding from the stream
-                parser.setInput(stringReader);
-                int eventType = parser.getEventType();
-                while (eventType != XmlPullParser.END_DOCUMENT) {
-                    String name;
-                    String rel = "";
-                    String type = "";
-                    String href = "";
-                    if (eventType == XmlPullParser.START_TAG) {
-                        name = parser.getName();
-                        if (name.equalsIgnoreCase("link")) {
-                            for (int i = 0; i < parser.getAttributeCount(); i++) {
-                                String attrName = parser.getAttributeName(i);
-                                String attrValue = parser.getAttributeValue(i);
-                                if (attrName.equals("rel")) {
-                                    rel = attrValue;
-                                } else if (attrName.equals("type")) {
-                                    type = attrValue;
-                                } else if (attrName.equals("href")) {
-                                    href = attrValue;
-                                }
-                            }
-
-                            if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
-                                return href;
-                            }
-                        }
-                    }
-                    eventType = parser.next();
-                }
-            } catch (XmlPullParserException e) {
-                AppLog.e(T.API, e);
-                return null;
-            } catch (IOException e) {
-                AppLog.e(T.API, e);
-                return null;
-            }
-        }
-        return null; // Never found the rsd tag
     }
 
     /**
@@ -372,13 +312,23 @@ public class SelfHostedEndpointFinder {
         try {
             return future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | TimeoutException e) {
-            AppLog.e(T.API, "Couldn't get XML-RPC response.");
+            AppLog.e(T.API, "Couldn't get XML-RPC response");
         } catch (ExecutionException e) {
             if (e.getCause() instanceof AuthFailureError) {
-                throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
-            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
-                       && e.getCause().getCause() instanceof SSLHandshakeException) {
-                // In the event of an SSL error we should stop attempting discovery
+                NetworkResponse networkResponse = ((AuthFailureError) e.getCause()).networkResponse;
+                if (networkResponse == null) {
+                    return null;
+                }
+
+                if (networkResponse.statusCode == 401) {
+                    throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
+                } else if (networkResponse.statusCode == 403) {
+                    throw new DiscoveryException(DiscoveryError.XMLRPC_FORBIDDEN, url);
+                }
+            } else if (e.getCause() instanceof NoConnectionError
+                    && e.getCause().getCause() instanceof SSLHandshakeException
+                    && e.getCause().getCause().getCause() instanceof CertificateException) {
+                // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             }
         }
@@ -390,7 +340,7 @@ public class SelfHostedEndpointFinder {
         String url = siteUrl.trim();
 
         if (TextUtils.isEmpty(url)) {
-            throw new DiscoveryException(DiscoveryError.SITE_URL_CANNOT_BE_EMPTY, siteUrl);
+            throw new DiscoveryException(DiscoveryError.INVALID_URL, siteUrl);
         }
 
         // Convert IDN names to punycode if necessary
@@ -418,7 +368,7 @@ public class SelfHostedEndpointFinder {
                 return false;
             }
             // Exit the loop on the first URL that replies with a XML-RPC doc.
-            AppLog.i(T.NUX, "system.listMethods replied with XML-RPC objects on the URL: " + url);
+            AppLog.i(T.NUX, "system.listMethods replied with XML-RPC objects for " + url);
             AppLog.i(T.NUX, "Validating the XML-RPC response...");
             if (DiscoveryUtils.validateListMethodsResponse(methods)) {
                 // Endpoint address found and works fine.
@@ -431,12 +381,16 @@ public class SelfHostedEndpointFinder {
                 throw new DiscoveryException(DiscoveryError.MISSING_XMLRPC_METHOD, url);
             }
         } catch (DiscoveryException e) {
-            AppLog.e(T.NUX, "system.listMethods failed on: " + url, e);
+            AppLog.e(T.NUX, "system.listMethods failed for " + url, e);
             if (DiscoveryUtils.isHTTPAuthErrorMessage(e)
                 || e.discoveryError.equals(DiscoveryError.HTTP_AUTH_REQUIRED)) {
                 throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
             } else if (e.discoveryError.equals(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE)) {
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
+            } else if (e.discoveryError.equals(DiscoveryError.XMLRPC_BLOCKED)) {
+                throw new DiscoveryException(DiscoveryError.XMLRPC_BLOCKED, url);
+            } else if (e.discoveryError.equals(DiscoveryError.MISSING_XMLRPC_METHOD)) {
+                throw new DiscoveryException(DiscoveryError.MISSING_XMLRPC_METHOD, url);
             }
         } catch (IllegalArgumentException e) {
             // The XML-RPC client returns this error in case of redirect to an invalid URL.
@@ -449,7 +403,7 @@ public class SelfHostedEndpointFinder {
     private Object[] doSystemListMethodsXMLRPC(String url, String httpUsername, String httpPassword) throws
             DiscoveryException {
         if (!UrlUtils.isValidUrlAndHostNotNull(url)) {
-            AppLog.e(T.NUX, "invalid URL: " + url);
+            AppLog.e(T.NUX, "Invalid URL: " + url);
             throw new DiscoveryException(DiscoveryError.INVALID_URL, url);
         }
 
@@ -468,11 +422,34 @@ public class SelfHostedEndpointFinder {
             AppLog.e(T.API, "Couldn't get XML-RPC response.");
         } catch (ExecutionException e) {
             if (e.getCause() instanceof AuthFailureError) {
-                throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
-            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
-                       && e.getCause().getCause() instanceof SSLHandshakeException) {
-                // In the event of an SSL error we should stop attempting discovery
+                NetworkResponse networkResponse = ((AuthFailureError) e.getCause()).networkResponse;
+                if (networkResponse == null) {
+                    return null;
+                }
+
+                if (networkResponse.statusCode == 401) {
+                    throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
+                } else if (networkResponse.statusCode == 403) {
+                    throw new DiscoveryException(DiscoveryError.XMLRPC_FORBIDDEN, url);
+                }
+            } else if (e.getCause() instanceof NoConnectionError
+                    && e.getCause().getCause() instanceof SSLHandshakeException
+                    && e.getCause().getCause().getCause() instanceof CertificateException) {
+                // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
+            } else if (e.getCause() instanceof ServerError) {
+                NetworkResponse networkResponse = ((ServerError) e.getCause()).networkResponse;
+                if (networkResponse == null) {
+                    return null;
+                }
+
+                if (networkResponse.statusCode == 405 && !new String(networkResponse.data).contains(
+                        "XML-RPC server accepts POST requests only.")) {
+                    // XML-RPC is blocked by the server (POST request returns a 405 "Method Not Allowed" error)
+                    // We exclude the case where Volley followed a 301 redirect and tried to GET the xmlrpc endpoint,
+                    // which also returns a 405 error but with the message "XML-RPC server accepts POST requests only."
+                    throw new DiscoveryException(DiscoveryError.XMLRPC_BLOCKED, url);
+                }
             }
         }
         return null;
