@@ -126,6 +126,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             reloadNoteBlocks();
             mRestoredNoteId = null;
         }
+
+        if (getNote() == null) {
+            showErrorToastAndFinish();
+        }
     }
 
     @Override
@@ -159,16 +163,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         if (getActivity() != null) {
             ToastUtils.showToast(getActivity(), R.string.error_notification_open);
             getActivity().finish();
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if (getNote() == null) {
-            showErrorToastAndFinish();
         }
     }
 
