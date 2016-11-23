@@ -702,6 +702,11 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Notification - Flagged Spam");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_notifications_flagged_as_spam");
                 break;
+            case NOTIFICATION_SWIPE_PAGE_CHANGED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Swipe Page Changed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_swipe_page_changed");
+                break;
             case NOTIFICATION_LIKED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notifications - Liked Comment");
