@@ -89,6 +89,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private static final String KEY_LOCAL_BLOG_ID = "local_blog_id";
     private static final String KEY_COMMENT_ID = "comment_id";
     private static final String KEY_NOTE_ID = "note_id";
+    private static final String KEY_FRAGMENT_CONTAINER_ID = "fragment_container_id";
     private int mIdForFragmentContainer;
     private int mLocalBlogId;
     private int mRemoteBlogId;
@@ -171,6 +172,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 // The note will be set in onResume()
                 // See WordPress.deferredInit()
                 mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
+                mIdForFragmentContainer = savedInstanceState.getInt(KEY_FRAGMENT_CONTAINER_ID);
             } else {
                 int localBlogId = savedInstanceState.getInt(KEY_LOCAL_BLOG_ID);
                 long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
@@ -196,6 +198,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         outState.putInt(KEY_REMOTE_BLOG_ID, mRemoteBlogId);
+        outState.putInt(KEY_FRAGMENT_CONTAINER_ID, mIdForFragmentContainer);
 
     }
 
@@ -414,6 +417,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void setNote(Note note) {
         mNote = note;
         if (isAdded() && mNote != null) {
+            setIdForCommentContainer();
             showComment();
         }
     }
