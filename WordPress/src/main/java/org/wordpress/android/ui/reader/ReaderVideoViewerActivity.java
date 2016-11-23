@@ -40,13 +40,15 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
                     mProgress.setVisibility(View.GONE);
                 } else {
                     mProgress.setProgress(progress);
+                    if (mProgress.getVisibility() != View.VISIBLE) {
+                        mProgress.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
 
         if (savedInstanceState == null) {
             mVideoUrl = getIntent().getStringExtra(ReaderConstants.ARG_VIDEO_URL);
-            mProgress.setVisibility(View.VISIBLE);
             mWebView.loadUrl(mVideoUrl);
         } else {
             mVideoUrl = savedInstanceState.getString(ReaderConstants.ARG_VIDEO_URL);
