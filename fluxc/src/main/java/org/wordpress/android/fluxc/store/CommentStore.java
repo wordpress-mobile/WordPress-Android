@@ -32,11 +32,20 @@ public class CommentStore extends Store {
 
     public static class FetchCommentsPayload extends Payload {
         public final SiteModel site;
+        public final CommentStatus status;
         public final int number;
         public final int offset;
 
         public FetchCommentsPayload(@NonNull SiteModel site, int number, int offset) {
             this.site = site;
+            this.status = CommentStatus.ALL;
+            this.number = number;
+            this.offset = offset;
+        }
+
+        public FetchCommentsPayload(@NonNull SiteModel site, CommentStatus status, int number, int offset) {
+            this.site = site;
+            this.status = status;
             this.number = number;
             this.offset = offset;
         }
@@ -360,9 +369,9 @@ public class CommentStore extends Store {
 
     private void fetchComments(FetchCommentsPayload payload) {
         if (payload.site.isWPCom()) {
-            mCommentRestClient.fetchComments(payload.site, payload.number, payload.offset, CommentStatus.ALL);
+            mCommentRestClient.fetchComments(payload.site, payload.number, payload.offset, payload.status);
         } else {
-            mCommentXMLRPCClient.fetchComments(payload.site, payload.number, payload.offset, CommentStatus.ALL);
+            mCommentXMLRPCClient.fetchComments(payload.site, payload.number, payload.offset, payload.status);
         }
     }
 
