@@ -21,8 +21,4 @@
     <issue id="IconDipSize" severity="error" />
     <issue id="InconsistentArrays" severity="error" />
     <issue id="StringFormatCount" severity="error" />
-
-    <issue id="MissingPrefix">
-        <ignore regexp="Unexpected namespace prefix &quot;app&quot; found for tag `Image.*`" />
-    </issue>
 </lint>
