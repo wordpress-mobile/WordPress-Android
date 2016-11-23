@@ -21,50 +21,44 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
     private String mVideoUrl;
     private WebView mWebView;
     private ProgressBar mProgress;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_video_player);
 
         mWebView = (WebView) findViewById(R.id.web_view);
-        mWebView.setBackgroundColor(Color.TRANSPARENT);
-
         mProgress = (ProgressBar) findViewById(R.id.progress);
 
-        if (savedInstanceState == null) {
-            mVideoUrl = getIntent().getStringExtra(ReaderConstants.ARG_VIDEO_URL);
-        } else {
-            mVideoUrl = savedInstanceState.getString(ReaderConstants.ARG_VIDEO_URL);
-        }
-
+        mWebView.setBackgroundColor(Color.TRANSPARENT);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
 
-        showProgress();
         mWebView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
-                mProgress.setProgress(progress);
                 if (progress == 100) {
-                    hideProgress();
+                    mProgress.setVisibility(View.GONE);
+                } else {
+                    mProgress.setProgress(progress);
                 }
             }
         });
 
-        mWebView.loadUrl(mVideoUrl);
+        if (savedInstanceState == null) {
+            mVideoUrl = getIntent().getStringExtra(ReaderConstants.ARG_VIDEO_URL);
+            mProgress.setVisibility(View.VISIBLE);
+            mWebView.loadUrl(mVideoUrl);
+        } else {
+            mVideoUrl = savedInstanceState.getString(ReaderConstants.ARG_VIDEO_URL);
+            mWebView.restoreState(savedInstanceState);
+        }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(ReaderConstants.ARG_VIDEO_URL, mVideoUrl);
+        mWebView.saveState(outState);
         super.onSaveInstanceState(outState);
-    }
-
-    private void showProgress() {
-        mProgress.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgress() {
-        mProgress.setVisibility(View.GONE);
     }
 
 }
