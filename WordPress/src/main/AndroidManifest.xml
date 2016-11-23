@@ -347,7 +347,11 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
-            android:theme="@style/ReaderPhotoViewerTheme" />
+            android:theme="@style/ReaderMediaViewerTheme" />
+        <activity
+            android:name=".ui.reader.ReaderVideoViewerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/ReaderMediaViewerTheme" />
 
         <!-- Other activities -->
 

@@ -132,6 +132,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ReaderIconCountView likeCount;
 
         private final ImageView imgMore;
+        private final ImageView imgVideoOverlay;
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatarOrBlavatar;
@@ -164,6 +165,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             framePhoto = (ViewGroup) itemView.findViewById(R.id.frame_photo);
             txtPhotoTitle = (TextView) framePhoto.findViewById(R.id.text_photo_title);
             imgFeatured = (WPNetworkImageView) framePhoto.findViewById(R.id.image_featured);
+            imgVideoOverlay = (ImageView) framePhoto.findViewById(R.id.image_video_overlay);
 
             imgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
@@ -197,6 +199,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     ReaderPost post = getItem(position);
                     if (post != null) {
                         ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                    }
+                }
+            });
+
+            // play the featured video when the overlay image is tapped - note that the overlay
+            // image only appears when there's a featured video
+            imgVideoOverlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    ReaderPost post = getItem(position);
+                    if (post != null && post.hasFeaturedVideo()) {
+                        ReaderActivityLauncher.showReaderVideoViewer(view.getContext(), post.getFeaturedVideo());
                     }
                 }
             });
@@ -377,15 +392,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 holder.thumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
                 holder.framePhoto.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;
+            } else if (post.getCardType() == ReaderCardType.VIDEO) {
+                holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
+                holder.framePhoto.setVisibility(View.VISIBLE);
+                holder.thumbnailStrip.setVisibility(View.GONE);
+                titleMargin = mMarginLarge;
             } else if (post.hasFeaturedImage()) {
                 holder.imgFeatured.setImageUrl(
                         post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
                         WPNetworkImageView.ImageType.PHOTO);
-                holder.framePhoto.setVisibility(View.VISIBLE);
-                holder.thumbnailStrip.setVisibility(View.GONE);
-                titleMargin = mMarginLarge;
-            } else if (post.hasFeaturedVideo() && WPNetworkImageView.canShowVideoThumbnail(post.getFeaturedVideo())) {
-                holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
                 holder.framePhoto.setVisibility(View.VISIBLE);
                 holder.thumbnailStrip.setVisibility(View.GONE);
                 titleMargin = mMarginLarge;
@@ -399,6 +414,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.txtTitle.getLayoutParams();
             params.topMargin = titleMargin;
         }
+
+        // show the video overlay (play icon) when there's a featured video
+        holder.imgVideoOverlay.setVisibility(post.getCardType() == ReaderCardType.VIDEO ? View.VISIBLE : View.GONE);
 
         showLikes(holder, post);
         showComments(holder, post);
