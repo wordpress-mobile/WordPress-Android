@@ -2,6 +2,9 @@ package org.wordpress.android.models;
 
 import android.support.annotation.NonNull;
 
+import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
+import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.HtmlUtils;
 
 /**
@@ -10,7 +13,8 @@ import org.wordpress.android.util.HtmlUtils;
 
 public enum ReaderCardType {
     DEFAULT,
-    PHOTO;
+    PHOTO,
+    GALLERY;
 
     private static final int MIN_CONTENT_CHARS = 100;
 
@@ -22,6 +26,14 @@ public enum ReaderCardType {
         // posts with a featured image and little or no text get the photo card treatment
         if (post.hasFeaturedImage() && hasMinContent(post)) {
             return PHOTO;
+        }
+
+        // if this post has enough usable images to fill the stream's thumbnail strip, treat is
+        // as a gallery
+        if (post.hasImages()
+                && new ReaderImageScanner(post.getText(), post.isPrivate)
+                    .hasUsableImageCount(ReaderThumbnailStrip.IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)) {
+            return GALLERY;
         }
 
         return DEFAULT;
@@ -47,6 +59,8 @@ public enum ReaderCardType {
         switch (cardType) {
             case PHOTO:
                 return "PHOTO";
+            case GALLERY:
+                return "GALLERY";
             default:
                 return "DEFAULT";
         }
@@ -55,6 +69,9 @@ public enum ReaderCardType {
     public static ReaderCardType fromString(String s) {
         if ("PHOTO".equals(s)) {
             return PHOTO;
+        }
+        if ("GALLERY".equals(s)) {
+            return GALLERY;
         }
         return DEFAULT;
     }

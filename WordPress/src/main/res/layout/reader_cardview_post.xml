@@ -111,6 +111,15 @@
                 tools:text="text_photo_title" />
         </FrameLayout>
 
+        <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
+            android:id="@+id/thumbnail_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
             style="@style/ReaderTextView.Post.Title"
@@ -127,16 +136,6 @@
             android:layout_marginRight="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_medium"
             tools:text="text_excerpt" />
-
-        <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
-            android:id="@+id/thumbnail_strip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/reader_card_content_padding"
-            android:layout_marginRight="@dimen/reader_card_content_padding"
-            android:layout_marginTop="@dimen/margin_large"
-            android:visibility="gone"
-            tools:visibility="visible" />
 
         <!-- attribution section for discover posts -->
         <LinearLayout
