@@ -168,6 +168,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         return null;
     }
 
+    public void replaceNote(Note newNote) {
+        int position = getPositionForNoteUnfiltered(newNote.getId());
+        mNotes.set(position, newNote);
+    }
+
     private boolean isValidPosition(int position) {
         return (position >= 0 && position < mFilteredNotes.size());
     }
@@ -299,6 +304,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public int getPositionForNote(String noteId) {
         for (int i = 0; i < mFilteredNotes.size(); i++) {
             String noteKey = mFilteredNotes.get(i).getId();
+            if (noteKey != null && noteKey.equals(noteId)) {
+                return i;
+            }
+        }
+
+        return RecyclerView.NO_POSITION;
+    }
+
+    private int getPositionForNoteUnfiltered(String noteId) {
+        for (int i = 0; i < mNotes.size(); i++) {
+            String noteKey = mNotes.get(i).getId();
             if (noteKey != null && noteKey.equals(noteId)) {
                 return i;
             }

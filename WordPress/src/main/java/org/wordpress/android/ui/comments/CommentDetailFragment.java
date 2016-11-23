@@ -47,6 +47,7 @@ import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -1161,14 +1162,20 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        if (response != null && !response.optBoolean("success")) {
-                            if (!isAdded()) return;
+                        if (response != null) {
+                            if (response.optBoolean("success")) {
+                                // send signal for listeners to perform any needed updates
+                                EventBus.getDefault().postSticky(new NotificationEvents.NoteLikeStatusChanged(mNote.getId()));
+                            } else {
+                                //rollback op in UI
+                                if (!isAdded()) return;
 
-                            // Failed, so switch the button state back
-                            toggleLikeButton(!mBtnLikeComment.isActivated());
+                                // Failed, so switch the button state back
+                                toggleLikeButton(!mBtnLikeComment.isActivated());
 
-                            if (commentStatusShouldRevert) {
-                                setCommentStatusUnapproved();
+                                if (commentStatusShouldRevert) {
+                                    setCommentStatusUnapproved();
+                                }
                             }
                         }
                     }

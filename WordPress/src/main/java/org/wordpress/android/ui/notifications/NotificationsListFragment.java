@@ -24,7 +24,9 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -564,6 +566,27 @@ public class NotificationsListFragment extends Fragment
                     }
             );
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(final NotificationEvents.NoteLikeStatusChanged event) {
+        // Like/unlike done -> refresh the note and update db
+        NotificationsActions.downloadNoteAndUpdateDB(event.noteId,
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeStatusChanged.class);
+                        //now re-set the object in our list adapter with the note saved in the updated DB
+                        Note note = NotificationsTable.getNoteById(event.noteId);
+                        mNotesAdapter.replaceNote(note);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeStatusChanged.class);
+                    }
+                }
+        );
     }
 
     @SuppressWarnings("unused")
