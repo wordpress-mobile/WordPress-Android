@@ -39,6 +39,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPBase62Utils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.UnsupportedEncodingException;
@@ -60,6 +61,13 @@ import de.greenrobot.event.EventBus;
  * http[s]://wordpress.com/read/blogs/{blogId}/posts/{postId}
  * http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
  * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/#comments
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/#comment-123
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/#respond
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/?replytocom=123#respond
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/?like_actor=actorId&like=1
+ * http[s]://{username}.wordpress.com/{year}/{month}/{day}/{postSlug}/?like_actor=actorId&lcommentid=123&ike=1
+ * http[s]://wp.me/p{blogidEncoded62}-{postIdEncoded62}
  *
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
@@ -73,7 +81,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private enum InterceptType {
         READER_BLOG,
         READER_FEED,
-        WPCOM_POST_SLUG
+        WPCOM_POST_SLUG,
+        WPME_SHORTLING,
     }
 
     /**
@@ -231,7 +240,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             return;
         }
 
-        InterceptType interceptType = InterceptType.READER_BLOG;
+        mIsSinglePostView = true;
+        mIsRelatedPostView = false;
+
         String blogIdentifier = null; // can be an id or a slug
         String postIdentifier = null; // can be an id or a slug
 
@@ -239,10 +250,12 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         List<String> segments = uri.getPathSegments();
 
-        // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
-        //  with the first segment being 'read'.
         if (segments != null) {
             if (segments.get(0).equals("read")) {
+                // Handled URLs look like this: http[s]://wordpress.com/read/blogs/{blogId}/posts/{postId}
+                // or this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
+                InterceptType interceptType = InterceptType.READER_BLOG;
+
                 if (segments.size() > 2) {
                     blogIdentifier = segments.get(2);
 
@@ -261,7 +274,25 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 parseFragment(uri);
 
                 showPost(interceptType, blogIdentifier, postIdentifier);
-                return;
+            } else if (segments.size() == 1) {
+                // Handled URLs look like this: http[s]://wp.me/p{blogidEncoded62}-{postIdEncoded62}
+                String segment = segments.get(0);
+
+                // make sure the type is 'p'
+                String type = segment.substring(0, 1); //first character is the type
+                if (!"p".equals(type)) {
+                    AppLog.w(AppLog.T.READER, "Shortlink type not supported: " + type);
+                    ToastUtils.showToast(this, R.string.reader_toast_err_shortlink_type_not_supported);
+                    return;
+                }
+
+                // decode the blogId and postId
+                String[] splits = segment.substring(1).split("-");
+                if (splits.length > 1) {
+                    blogIdentifier = Long.toString(WPBase62Utils.sixtwo2dec(splits[0]));
+                    postIdentifier = Long.toString(WPBase62Utils.sixtwo2dec(splits[1]));
+                    showPost(InterceptType.WPME_SHORTLING, blogIdentifier, postIdentifier);
+                }
             } else if (segments.size() == 4) {
                 blogIdentifier = uri.getHost();
                 try {
@@ -274,24 +305,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 parseFragment(uri);
                 detectLike(uri);
 
-                interceptType = InterceptType.WPCOM_POST_SLUG;
-                showPost(interceptType, blogIdentifier, postIdentifier);
-                return;
+                showPost(InterceptType.WPCOM_POST_SLUG, blogIdentifier, postIdentifier);
             }
         }
-
-        // at this point, just show the entry screen
-        Intent intent = new Intent(this, WPLaunchActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     private void showPost(@NonNull InterceptType interceptType, final String blogIdentifier, final String
             postIdentifier) {
         if (!TextUtils.isEmpty(blogIdentifier) && !TextUtils.isEmpty(postIdentifier)) {
-            mIsSinglePostView = true;
-            mIsRelatedPostView = false;
-
             switch (interceptType) {
                 case READER_BLOG:
                     if (parseIds(blogIdentifier, postIdentifier)) {
@@ -355,6 +376,15 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         mPostSlugsResolutionUnderway = true;
                     }
 
+                    break;
+                case WPME_SHORTLING:
+                    if (parseIds(blogIdentifier, postIdentifier)) {
+                        AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_WPME_SHORTLINK_INTERCEPTED,
+                                mBlogId, mPostId);
+                        // IDs have now been set so, let ReaderPostPagerActivity normally display the post
+                    } else {
+                        ToastUtils.showToast(this, R.string.error_generic);
+                    }
                     break;
             }
         } else {

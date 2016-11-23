@@ -322,6 +322,18 @@
                     android:scheme="http" >
                 </data>
 
+                <!-- capture wp.me shortlinks to posts -->
+                <data
+                    android:host="wp.me"
+                    android:pathPattern="/p.*-.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wp.me"
+                    android:pathPattern="/p.*-.*"
+                    android:scheme="http" >
+                </data>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
