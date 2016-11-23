@@ -28,13 +28,12 @@ public enum ReaderCardType {
             return PHOTO;
         }
 
-        // if this post is a gallery, scan its content to make sure we have enough images to
-        // show in the stream's thumbnail strip
-        if (post.isGallery()) {
-            ReaderImageScanner scanner = new ReaderImageScanner(post.getText(), post.isPrivate);
-            if (scanner.hasUsableImageCount(ReaderThumbnailStrip.IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)) {
-                return GALLERY;
-            }
+        // if this post has enough usable images to fill the stream's thumbnail strip, treat is
+        // as a gallery
+        if (post.hasImages()
+                && new ReaderImageScanner(post.getText(), post.isPrivate)
+                    .hasUsableImageCount(ReaderThumbnailStrip.IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)) {
+            return GALLERY;
         }
 
         return DEFAULT;
