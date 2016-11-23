@@ -133,6 +133,9 @@
 
     <dimen name="reader_related_post_image_width">72dp</dimen>
 
+    <item name="reader_photo_title_shadow_offset" type="dimen" format="float">3.0</item>
+    <item name="reader_photo_title_shadow_radius" type="dimen" format="float">1.5</item>
+
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
 

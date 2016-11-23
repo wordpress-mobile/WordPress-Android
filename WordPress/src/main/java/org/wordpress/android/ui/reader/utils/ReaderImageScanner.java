@@ -81,25 +81,7 @@ public class ReaderImageScanner {
      * least `minImageWidth` in size
      */
     public boolean hasUsableImageCount(int minImageCount, int minImageWidth) {
-        if (!mContentContainsImages) {
-            return false;
-        }
-
-        int numFound = 0;
-        Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
-        while (imgMatcher.find()) {
-            String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
-            String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imgTag);
-            int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag), ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
-            if (width >= minImageWidth) {
-                numFound++;
-                if (numFound >= minImageCount) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return getImageList(minImageCount, minImageWidth).size() == minImageCount;
     }
 
     /*

@@ -3,11 +3,9 @@ package org.wordpress.android.models;
 import android.support.annotation.NonNull;
 
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * Used by the reader stream view to determine which type of "card" to use
@@ -16,8 +14,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 public enum ReaderCardType {
     DEFAULT,
     PHOTO,
-    GALLERY,
-    VIDEO;
+    GALLERY;
 
     private static final int MIN_CONTENT_CHARS = 100;
 
@@ -31,18 +28,12 @@ public enum ReaderCardType {
             return PHOTO;
         }
 
-        // posts that have a featured video show an embedded video card
-        if (post.hasFeaturedVideo()) {
-            return VIDEO;
-        }
-
-        // if this post is a gallery, scan its content to make sure we have enough images to
-        // show in the stream's thumbnail strip
-        if (post.isGallery()) {
-            ReaderImageScanner scanner = new ReaderImageScanner(post.getText(), post.isPrivate);
-            if (scanner.hasUsableImageCount(ReaderThumbnailStrip.IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)) {
-                return GALLERY;
-            }
+        // if this post has enough usable images to fill the stream's thumbnail strip, treat is
+        // as a gallery
+        if (post.hasImages()
+                && new ReaderImageScanner(post.getText(), post.isPrivate)
+                    .hasUsableImageCount(ReaderThumbnailStrip.IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)) {
+            return GALLERY;
         }
 
         return DEFAULT;
@@ -70,8 +61,6 @@ public enum ReaderCardType {
                 return "PHOTO";
             case GALLERY:
                 return "GALLERY";
-            case VIDEO:
-                return "VIDEO";
             default:
                 return "DEFAULT";
         }
@@ -84,9 +73,7 @@ public enum ReaderCardType {
         if ("GALLERY".equals(s)) {
             return GALLERY;
         }
-        if ("VIDEO".equals(s)) {
-            return VIDEO;
-        }
         return DEFAULT;
     }
+
 }
