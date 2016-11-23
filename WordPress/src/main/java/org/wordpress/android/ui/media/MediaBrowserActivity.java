@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.media;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -46,6 +48,7 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 
@@ -487,13 +490,38 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
 
-            // reset the button to "back" as it may have been altered by a fragment
-            mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+            if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mMediaEditFragment.isDirty()) {
+                // alert the user that there are unsaved changes
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.confirm_discard_changes_title)
+                        .setMessage(R.string.confirm_discard_changes)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // make sure the keyboard is dimissed
+                                    WPActivityUtils.hideKeyboard(getCurrentFocus());
+
+                                    // pop the edit fragment
+                                    doPopBackStack(getFragmentManager());
+                                }})
+                        .setNegativeButton(R.string.cancel, null)
+                        .create()
+                        .show();
+            } else {
+                doPopBackStack(fm);
+            }
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void doPopBackStack(FragmentManager fm) {
+        fm.popBackStack();
+
+        // reset the button to "back" as it may have been altered by a fragment
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
     }
 
     @SuppressWarnings("unused")

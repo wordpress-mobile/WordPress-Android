@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -31,6 +32,8 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
@@ -50,6 +53,10 @@ public class MediaEditFragment extends Fragment {
     private EditText mCaptionView;
     private EditText mDescriptionView;
     private Button mSaveButton;
+
+    private String mTitleOriginal;
+    private String mDescriptionOriginal;
+    private String mCaptionOriginal;
 
     private MediaEditFragmentCallback mCallback;
 
@@ -324,11 +331,17 @@ public class MediaEditFragment extends Fragment {
         mDescriptionView.setEnabled(!isLocal);
 
         mMediaId = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID));
-        mTitleView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE)));
+
+        mTitleOriginal = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE));
+        mTitleView.setText(mTitleOriginal);
         mTitleView.requestFocus();
         mTitleView.setSelection(mTitleView.getText().length());
-        mCaptionView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION)));
-        mDescriptionView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION)));
+
+        mCaptionOriginal = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION));
+        mCaptionView.setText(mCaptionOriginal);
+
+        mDescriptionOriginal = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION));
+        mDescriptionView.setText(mDescriptionOriginal);
 
         refreshImageView(cursor, isLocal);
         disableEditingOnOldVersion();
@@ -383,5 +396,12 @@ public class MediaEditFragment extends Fragment {
                 task.execute(filePath);
             }
         }
+    }
+
+    public boolean isDirty() {
+        return mMediaId != null &&
+                (!StringUtils.equals(mTitleOriginal, mTitleView.getText().toString())
+                || !StringUtils.equals(mCaptionOriginal, mCaptionView.getText().toString())
+                || !StringUtils.equals(mDescriptionOriginal, mDescriptionView.getText().toString()));
     }
 }
