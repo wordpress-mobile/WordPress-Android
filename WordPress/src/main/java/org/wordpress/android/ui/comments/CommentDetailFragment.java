@@ -13,9 +13,6 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -105,10 +102,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private ImageView mBtnLikeIcon;
     private TextView mBtnLikeTextView;
     private View mBtnModerateComment;
+    private View mBtnEditComment;
     private ImageView mBtnModerateIcon;
     private TextView mBtnModerateTextView;
-    private TextView mBtnSpamComment;
-    private TextView mBtnTrashComment;
+    private View mBtnSpamComment;
+    private TextView mBtnSpamCommentText;
+    private View mBtnTrashComment;
+    private TextView mBtnTrashCommentText;
     private String mRestoredReplyText;
     private String mRestoredNoteId;
     private boolean mIsUsersBlog = false;
@@ -218,11 +218,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnModerateComment = mLayoutButtons.findViewById(R.id.btn_moderate);
         mBtnModerateIcon = (ImageView) mLayoutButtons.findViewById(R.id.btn_moderate_icon);
         mBtnModerateTextView = (TextView) mLayoutButtons.findViewById(R.id.btn_moderate_text);
-        mBtnSpamComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
-        mBtnTrashComment = (TextView) mLayoutButtons.findViewById(R.id.image_trash_comment);
+        mBtnEditComment = mLayoutButtons.findViewById(R.id.btn_edit);
+        mBtnSpamComment = mLayoutButtons.findViewById(R.id.btn_spam);
+        mBtnSpamCommentText = (TextView) mLayoutButtons.findViewById(R.id.btn_spam_text);
+        mBtnTrashComment = mLayoutButtons.findViewById(R.id.btn_trash);
+        mBtnTrashCommentText = (TextView) mLayoutButtons.findViewById(R.id.btn_trash_text);
 
-        setTextDrawable(mBtnSpamComment, R.drawable.ic_action_spam);
-        setTextDrawable(mBtnTrashComment, R.drawable.ic_action_trash);
+        mBtnEditComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editComment();
+            }
+        });
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
@@ -488,26 +495,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (mOnCommentChangeListener != null)
                 mOnCommentChangeListener.onCommentChanged(ChangeType.EDITED);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-        inflater.inflate(R.menu.comment_detail, menu);
-        if (!canEdit()) {
-            menu.removeItem(R.id.menu_edit_comment);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.menu_edit_comment) {
-            editComment();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private boolean hasComment() {
@@ -895,13 +882,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * sets the drawable for moderation buttons
-     */
-    private void setTextDrawable(final TextView view, int resId) {
-        view.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getActivity(), resId), null, null);
-    }
-
-    /*
      * update the text, drawable & click listener for mBtnModerate based on
      * the current status of the comment, show mBtnSpam if the comment isn't
      * already marked as spam, and show the current status of the comment
@@ -970,9 +950,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (canMarkAsSpam()) {
             mBtnSpamComment.setVisibility(View.VISIBLE);
             if (mComment.getStatusEnum() == CommentStatus.SPAM) {
-                mBtnSpamComment.setText(R.string.mnu_comment_unspam);
+                mBtnSpamCommentText.setText(R.string.mnu_comment_unspam);
             } else {
-                mBtnSpamComment.setText(R.string.mnu_comment_spam);
+                mBtnSpamCommentText.setText(R.string.mnu_comment_spam);
             }
         } else {
             mBtnSpamComment.setVisibility(View.GONE);
@@ -984,12 +964,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mBtnModerateIcon.setImageResource(R.drawable.ic_action_restore);
                 //mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.notification_status_unapproved_dark));
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
-                mBtnTrashComment.setText(R.string.mnu_comment_delete_permanently);
+                mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
-                mBtnTrashComment.setText(R.string.mnu_comment_trash);
+                mBtnTrashCommentText.setText(R.string.mnu_comment_trash);
             }
         } else {
             mBtnTrashComment.setVisibility(View.GONE);
+        }
+
+        if (canEdit()) {
+            mBtnEditComment.setVisibility(View.VISIBLE);
         }
 
         mLayoutButtons.setVisibility(View.VISIBLE);
