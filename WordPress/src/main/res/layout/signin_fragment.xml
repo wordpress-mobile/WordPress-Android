@@ -165,7 +165,7 @@
                 android:animateLayoutChanges="true"
                 android:visibility="gone">
 
-                <org.wordpress.android.widgets.WPEditText
+                <org.wordpress.android.widgets.ContextMenuEditText
                     android:id="@+id/nux_two_step"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,13 +29,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
@@ -63,9 +62,12 @@ import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
@@ -76,9 +78,11 @@ import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.widgets.ContextMenuEditText;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -88,7 +92,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import static com.android.volley.Request.Method.HEAD;
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String TAG = "sign_in_fragment_tag";
@@ -100,6 +104,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
     private static final Pattern DOT_COM_RESERVED_NAMES =
             Pattern.compile("^(?:admin|administrator|invite|main|root|web|www|[^@]*wordpress[^@]*)$");
+    private static final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -107,7 +112,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected EditText mUsernameEditText;
     protected EditText mPasswordEditText;
     protected EditText mUrlEditText;
-    protected EditText mTwoStepEditText;
+    protected ContextMenuEditText mTwoStepEditText;
 
     protected LinearLayout mBottomButtonsLayout;
     protected RelativeLayout mUsernameLayout;
@@ -150,6 +155,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected boolean mAccountFetched = false;
 
     private final Matcher mReservedNameMatcher = DOT_COM_RESERVED_NAMES.matcher("");
+    private final Matcher mTwoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
 
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
@@ -231,20 +237,42 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPasswordEditText.setOnEditorActionListener(mEditorAction);
         mUrlEditText.setOnEditorActionListener(mEditorAction);
 
-        mTwoStepEditText = (EditText) rootView.findViewById(R.id.nux_two_step);
+        mTwoStepEditText = (ContextMenuEditText) rootView.findViewById(R.id.nux_two_step);
         mTwoStepEditText.addTextChangedListener(this);
-        mTwoStepEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (keyCode == EditorInfo.IME_ACTION_DONE)) {
-                    if (fieldsFilled()) {
-                        signIn();
+        mTwoStepEditText.setOnKeyListener(
+            new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (keyCode == EditorInfo.IME_ACTION_DONE)) {
+                        if (fieldsFilled()) {
+                            signIn();
+                        }
                     }
+
+                    return false;
+                }
+            }
+        );
+        mTwoStepEditText.setOnContextMenuListener(
+            new ContextMenuEditText.OnContextMenuListener() {
+                @Override
+                public void onCut() {
                 }
 
-                return false;
+                @Override
+                public void onCopy() {
+                }
+
+                @Override
+                public void onPaste() {
+                    mTwoStepEditText.setText(getAuthCodeFromClipboard());
+
+                    if (TextUtils.isEmpty(mTwoStepEditText.getText().toString())) {
+                        showTwoStepCodeError(R.string.invalid_verification_code_format);
+                    }
+                }
             }
-        });
+        );
 
         WPTextView twoStepFooterButton = (WPTextView) rootView.findViewById(R.id.two_step_footer_button);
         twoStepFooterButton.setText(Html.fromHtml("<u>" + getString(R.string.two_step_footer_button) + "</u>"));
@@ -304,6 +332,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Ensure two-step form is shown if needed
         if (!TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.GONE) {
             setTwoStepAuthVisibility(true);
+        // Insert authentication code if copied to clipboard
+        } else if (TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.VISIBLE) {
+            mTwoStepEditText.setText(getAuthCodeFromClipboard());
         }
 
         // show progress indicator while waiting for network response when migrating access token
@@ -715,6 +746,22 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    private String getAuthCodeFromClipboard() {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
+
+        if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null) {
+            String code = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+
+            mTwoStepAuthCodeMatcher.reset(code);
+
+            if (!code.isEmpty() && mTwoStepAuthCodeMatcher.matches()) {
+                return code;
+            }
+        }
+
+        return "";
+    }
+
     private void setTwoStepAuthVisibility(boolean isVisible) {
         mTwoStepLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         mTwoStepFooter.setVisibility(isVisible ? View.VISIBLE : View.GONE);
@@ -1028,6 +1075,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 break;
             case NEEDS_2FA:
                 setTwoStepAuthVisibility(true);
+                mTwoStepEditText.setText(getAuthCodeFromClipboard());
                 break;
             case INVALID_REQUEST:
                 // TODO: STORES: could be specific?
@@ -1189,13 +1237,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             case NO_SITE_ERROR:
                 showGenericErrorDialog(getResources().getString(R.string.no_site_error));
                 break;
-            case SITE_URL_CANNOT_BE_EMPTY:
             case INVALID_URL:
                 showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message));
                 break;
             case MISSING_XMLRPC_METHOD:
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error));
                 break;
+            case XMLRPC_BLOCKED:
+                // TODO: show a better error message
+            case XMLRPC_FORBIDDEN:
+                // TODO: show a better error message
             case GENERIC_ERROR:
                 showGenericErrorDialog(getResources().getString(R.string.nux_cannot_log_in));
                 break;
