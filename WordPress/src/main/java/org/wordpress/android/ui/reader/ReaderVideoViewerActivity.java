@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.reader;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -17,13 +20,16 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
 
     private String mVideoUrl;
     private WebView mWebView;
-
+    private ProgressBar mProgress;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.reader_activity_video_player);
+
         mWebView = (WebView) findViewById(R.id.web_view);
+        mWebView.setBackgroundColor(Color.TRANSPARENT);
+
+        mProgress = (ProgressBar) findViewById(R.id.progress);
 
         if (savedInstanceState == null) {
             mVideoUrl = getIntent().getStringExtra(ReaderConstants.ARG_VIDEO_URL);
@@ -34,7 +40,15 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
 
-        mWebView.setWebViewClient(new ReaderVideoWebViewClient());
+        showProgress();
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                mProgress.setProgress(progress);
+                if (progress == 100) {
+                    hideProgress();
+                }
+            }
+        });
 
         mWebView.loadUrl(mVideoUrl);
     }
@@ -45,14 +59,12 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private class ReaderVideoWebViewClient extends WebViewClient {
-        ReaderVideoWebViewClient() {
-            // noop
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-
-        }
+    private void showProgress() {
+        mProgress.setVisibility(View.VISIBLE);
     }
+
+    private void hideProgress() {
+        mProgress.setVisibility(View.GONE);
+    }
+
 }
