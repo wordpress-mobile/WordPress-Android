@@ -83,8 +83,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *  129 - denormalized post storage, dropped tbl_post_tags
      *  130 - added tbl_posts.blog_image_url
      *  131 - added tbl_posts.card_type
-     *  132 - no schema changes, simply clearing to accomodate gallery card_type
-     *  133 - no schema changes, simply clearing to accomodate video card_type
+     *  132 - no schema changes, simply clearing to accommodate gallery card_type
+     *  133 - no schema changes, simply clearing to accommodate video card_type
      */
 
     /*
