@@ -17,12 +17,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
@@ -213,41 +209,16 @@ public class EditCommentActivity extends AppCompatActivity {
         }
 
         // make sure we have an active connection
-        if (!NetworkUtils.checkConnection(this))
+        if (!NetworkUtils.checkConnection(this)) {
             return;
-
-        if (mNote != null) {
-
-            showSaveDialog();
-            // FIXME: replace the following
-            WordPress.getRestClientUtils().editCommentContent(mNote.getSiteId(),
-                    mNote.getCommentId(),
-                    EditTextUtils.getText(editContent),
-                    new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if (isFinishing()) return;
-
-                            dismissSaveDialog();
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (isFinishing()) return;
-
-                            dismissSaveDialog();
-                            showEditErrorAlert();
-                        }
-                    });
-        } else {
-            mComment.setAuthorEmail(getEditTextStr(R.id.author_email));
-            mComment.setAuthorUrl(getEditTextStr(R.id.author_url));
-            mComment.setAuthorName(getEditTextStr(R.id.author_name));
-            mComment.setContent(getEditTextStr(R.id.edit_comment_content));
-            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
         }
+
+        showSaveDialog();
+        mComment.setAuthorEmail(getEditTextStr(R.id.author_email));
+        mComment.setAuthorUrl(getEditTextStr(R.id.author_url));
+        mComment.setAuthorName(getEditTextStr(R.id.author_name));
+        mComment.setContent(getEditTextStr(R.id.edit_comment_content));
+        mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
     }
 
     /*

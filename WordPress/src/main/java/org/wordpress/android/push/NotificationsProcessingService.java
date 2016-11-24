@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -465,23 +466,13 @@ public class NotificationsProcessingService extends Service {
             // Bump analytics
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED);
 
-            // FIXME: replace this
-            WordPress.getRestClientUtils().likeComment(mNote.getSiteId(),
-                    String.valueOf(mNote.getCommentId()),
-                    true,
-                    new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if (response != null && response.optBoolean("success")) {
-                                requestCompleted(ARG_ACTION_LIKE);
-                            }
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            requestFailed(ARG_ACTION_LIKE);
-                        }
-                    });
+            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+            if (site != null) {
+                mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
+                        new RemoteLikeCommentPayload(site, mNote.getCommentId(), true)));
+            } else {
+                AppLog.e(T.NOTIFS, "Site with id: " + mNote.getSiteId() + " doesn't exist in the Site store");
+            }
         }
 
         private void approveComment() {
@@ -574,11 +565,20 @@ public class NotificationsProcessingService extends Service {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(CommentStore.OnCommentChanged event) {
+        if (mQuickActionProcessor == null) {
+            return;
+        }
         if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
-            if (event.isError() && mQuickActionProcessor != null) {
+            if (event.isError()) {
                 mQuickActionProcessor.requestFailed(ARG_ACTION_APPROVE);
             } else {
                 mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
+            }
+        } else if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
+            if (event.isError()) {
+                mQuickActionProcessor.requestFailed(ARG_ACTION_LIKE);
+            } else {
+                mQuickActionProcessor.requestCompleted(ARG_ACTION_LIKE);
             }
         }
     }

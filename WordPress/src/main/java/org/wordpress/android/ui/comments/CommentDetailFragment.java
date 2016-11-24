@@ -829,25 +829,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
         progress.setVisibility(View.VISIBLE);
 
-        CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
-            @Override
-            public void onActionResult(CommentActionResult result) {
-                mIsSubmittingReply = false;
-                if (result.isSuccess() && mOnCommentChangeListener != null)
-                    mOnCommentChangeListener.onCommentChanged(ChangeType.REPLIED);
-                if (isAdded()) {
-                    if (result.isSuccess()) {
-                    } else {
-                        String errorMessage = TextUtils.isEmpty(result.getMessage()) ? getString(R.string.reply_failed) : result.getMessage();
-                        String strUnEscapeHTML = StringEscapeUtils.unescapeHtml(errorMessage);
-                        ToastUtils.showToast(getActivity(), strUnEscapeHTML, ToastUtils.Duration.LONG);
-                        // refocus editor on failure and show soft keyboard
-                        EditTextUtils.showSoftInput(mEditReply);
-                    }
-                }
-            }
-        };
-
         mIsSubmittingReply = true;
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
