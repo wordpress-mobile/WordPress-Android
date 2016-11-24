@@ -12,7 +12,6 @@ import static org.junit.Assert.assertNull;
 
 @RunWith(RobolectricTestRunner.class)
 public class PayloadTest {
-
     private class CloneablePayload extends Payload implements Cloneable {
         @Override
         public CloneablePayload clone() {
