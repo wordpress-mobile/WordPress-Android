@@ -25,6 +25,8 @@ public enum CommentAction implements IAction {
     PUSH_COMMENT,
     @Action(payloadType = RemoteCommentPayload.class)
     DELETE_COMMENT,
+    @Action(payloadType = RemoteCommentPayload.class)
+    LIKE_COMMENT,
 
     // Remote responses
     @Action(payloadType = FetchCommentsResponsePayload.class)
@@ -37,6 +39,8 @@ public enum CommentAction implements IAction {
     PUSHED_COMMENT,
     @Action(payloadType = RemoteCommentResponsePayload.class)
     DELETED_COMMENT,
+    @Action(payloadType = RemoteCommentResponsePayload.class)
+    LIKED_COMMENT,
 
     // Local actions
     @Action(payloadType = InstantiateCommentPayload.class)

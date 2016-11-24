@@ -1,8 +1,10 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.CommentAction;
@@ -31,11 +33,20 @@ public class CommentStore extends Store {
 
     public static class FetchCommentsPayload extends Payload {
         public final SiteModel site;
+        public final CommentStatus status;
         public final int number;
         public final int offset;
 
         public FetchCommentsPayload(@NonNull SiteModel site, int number, int offset) {
             this.site = site;
+            this.status = CommentStatus.ALL;
+            this.number = number;
+            this.offset = offset;
+        }
+
+        public FetchCommentsPayload(@NonNull SiteModel site, CommentStatus status, int number, int offset) {
+            this.site = site;
+            this.status = status;
             this.number = number;
             this.offset = offset;
         }
@@ -44,10 +55,31 @@ public class CommentStore extends Store {
     public static class RemoteCommentPayload extends Payload {
         public final SiteModel site;
         public final CommentModel comment;
+        public final long remoteCommentId;
 
         public RemoteCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment) {
             this.site = site;
             this.comment = comment;
+            this.remoteCommentId = 0;
+        }
+
+        public RemoteCommentPayload(@NonNull SiteModel site, long remoteCommentId) {
+            this.site = site;
+            this.comment = null;
+            this.remoteCommentId = remoteCommentId;
+        }
+    }
+
+    public static class RemoteLikeCommentPayload extends RemoteCommentPayload {
+        public final boolean like;
+        public RemoteLikeCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment, boolean like) {
+            super(site, comment);
+            this.like = like;
+        }
+
+        public RemoteLikeCommentPayload(@NonNull SiteModel site, long remoteCommentId, boolean like) {
+            super(site, remoteCommentId);
+            this.like = like;
         }
     }
 
@@ -70,7 +102,7 @@ public class CommentStore extends Store {
     public static class RemoteCommentResponsePayload extends Payload {
         public final CommentModel comment;
         public CommentError error;
-        public RemoteCommentResponsePayload(@NonNull CommentModel comment) {
+        public RemoteCommentResponsePayload(@Nullable CommentModel comment) {
             this.comment = comment;
         }
     }
@@ -112,6 +144,7 @@ public class CommentStore extends Store {
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
+        INVALID_INPUT,
         UNKNOWN_COMMENT,
         UNKNOWN_POST,
         DUPLICATE_COMMENT
@@ -163,6 +196,10 @@ public class CommentStore extends Store {
         return CommentSqlUtils.getCommentsCountForSite(site, status);
     }
 
+    public CommentModel getCommentBySiteAndRemoteId(SiteModel site, long remoteCommentId) {
+        return CommentSqlUtils.getCommentBySiteAndRemoteId(site, remoteCommentId);
+    }
+
     public CommentModel getCommentByLocalId(int localId) {
         return CommentSqlUtils.getCommentByLocalCommentId(localId);
     }
@@ -170,7 +207,7 @@ public class CommentStore extends Store {
     // Store Methods
 
     @Override
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onAction(Action action) {
         IAction actionType = action.getType();
         if (!(actionType instanceof CommentAction)) {
@@ -219,6 +256,12 @@ public class CommentStore extends Store {
                 break;
             case DELETED_COMMENT:
                 handleDeletedCommentResponse((RemoteCommentResponsePayload) action.getPayload());
+                break;
+            case LIKE_COMMENT:
+                likeComment((RemoteLikeCommentPayload) action.getPayload());
+                break;
+            case LIKED_COMMENT:
+                handleLikedCommentResponse((RemoteCommentResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -294,10 +337,16 @@ public class CommentStore extends Store {
     }
 
     private void deleteComment(RemoteCommentPayload payload) {
+        // If the comment is stored locally, we want to update it locally (needed because in some
+        // cases we use this to update comments by remote id).
+        CommentModel comment = payload.comment;
+        if (payload.comment == null) {
+            getCommentBySiteAndRemoteId(payload.site, payload.remoteCommentId);
+        }
         if (payload.site.isWPCom()) {
-            mCommentRestClient.deleteComment(payload.site, payload.comment);
+            mCommentRestClient.deleteComment(payload.site, payload.remoteCommentId, comment);
         } else {
-            mCommentXMLRPCClient.deleteComment(payload.site, payload.comment);
+            mCommentXMLRPCClient.deleteComment(payload.site, payload.remoteCommentId, comment);
         }
     }
 
@@ -307,8 +356,8 @@ public class CommentStore extends Store {
         event.error = payload.error;
         if (!payload.isError()) {
             // Delete once means "send to trash", so we don't want to remove it from the DB, just update it's
-            // status. Delete twice means "farewell comment, we won't you ever again". Only delete from the DB if the
-            // status is "deleted".
+            // status. Delete twice means "farewell comment, we won't see you ever again". Only delete from the DB if
+            // the status is "deleted".
             if (payload.comment.getStatus().equals(CommentStatus.DELETED.toString())) {
                 CommentSqlUtils.removeComment(payload.comment);
             } else {
@@ -321,9 +370,9 @@ public class CommentStore extends Store {
 
     private void fetchComments(FetchCommentsPayload payload) {
         if (payload.site.isWPCom()) {
-            mCommentRestClient.fetchComments(payload.site, payload.number, payload.offset, CommentStatus.ALL);
+            mCommentRestClient.fetchComments(payload.site, payload.number, payload.offset, payload.status);
         } else {
-            mCommentXMLRPCClient.fetchComments(payload.site, payload.number, payload.offset, CommentStatus.ALL);
+            mCommentXMLRPCClient.fetchComments(payload.site, payload.number, payload.offset, payload.status);
         }
     }
 
@@ -341,6 +390,13 @@ public class CommentStore extends Store {
     }
 
     private void pushComment(RemoteCommentPayload payload) {
+        if (payload.comment == null) {
+            OnCommentChanged event = new OnCommentChanged(0);
+            event.causeOfChange = CommentAction.PUSH_COMMENT;
+            event.error = new CommentError(CommentErrorType.INVALID_INPUT, "Comment can't be null");
+            emitChange(event);
+            return;
+        }
         if (payload.site.isWPCom()) {
             mCommentRestClient.pushComment(payload.site, payload.comment);
         } else {
@@ -361,9 +417,9 @@ public class CommentStore extends Store {
 
     private void fetchComment(RemoteCommentPayload payload) {
         if (payload.site.isWPCom()) {
-            mCommentRestClient.fetchComment(payload.site, payload.comment);
+            mCommentRestClient.fetchComment(payload.site, payload.remoteCommentId, payload.comment);
         } else {
-            mCommentXMLRPCClient.fetchComment(payload.site, payload.comment);
+            mCommentXMLRPCClient.fetchComment(payload.site, payload.remoteCommentId, payload.comment);
         }
     }
 
@@ -374,6 +430,34 @@ public class CommentStore extends Store {
         }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.FETCH_COMMENT;
+        event.error = payload.error;
+        emitChange(event);
+    }
+
+    private void likeComment(RemoteLikeCommentPayload payload) {
+        // If the comment is stored locally, we want to update it locally (needed because in some
+        // cases we use this to update comments by remote id).
+        CommentModel comment = payload.comment;
+        if (payload.comment == null) {
+            getCommentBySiteAndRemoteId(payload.site, payload.remoteCommentId);
+        }
+        if (payload.site.isWPCom()) {
+            mCommentRestClient.likeComment(payload.site, payload.remoteCommentId, comment, payload.like);
+        } else {
+            OnCommentChanged event = new OnCommentChanged(0);
+            event.causeOfChange = CommentAction.LIKE_COMMENT;
+            event.error = new CommentError(CommentErrorType.INVALID_INPUT, "Can't like a comment on XMLRPC API");
+            emitChange(event);
+        }
+    }
+
+    private void handleLikedCommentResponse(RemoteCommentResponsePayload payload) {
+        int rowsAffected = 0;
+        if (!payload.isError()) {
+            rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
+        }
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.causeOfChange = CommentAction.LIKE_COMMENT;
         event.error = payload.error;
         emitChange(event);
     }
