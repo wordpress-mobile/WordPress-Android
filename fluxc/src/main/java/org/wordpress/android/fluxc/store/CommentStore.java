@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.CommentAction;
@@ -206,7 +207,7 @@ public class CommentStore extends Store {
     // Store Methods
 
     @Override
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onAction(Action action) {
         IAction actionType = action.getType();
         if (!(actionType instanceof CommentAction)) {
