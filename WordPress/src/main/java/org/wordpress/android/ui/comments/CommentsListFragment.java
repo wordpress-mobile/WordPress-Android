@@ -509,7 +509,7 @@ public class CommentsListFragment extends Fragment {
         }
 
         mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(new FetchCommentsPayload(mSite,
-                COMMENTS_PER_PAGE, offset)));
+                mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE, offset)));
     }
 
     public void setCommentIsModerating(long commentId, boolean isModerating) {
