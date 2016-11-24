@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.comment;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -35,8 +36,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import static android.R.attr.offset;
-
 public class CommentXMLRPCClient extends BaseXMLRPCClient {
     @Inject
     public CommentXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
@@ -50,7 +49,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         commentParams.put("number", number);
         commentParams.put("offset", offset);
 
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(commentParams);
@@ -75,7 +74,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void pushComment(final SiteModel site, final CommentModel comment) {
+    public void pushComment(final SiteModel site, @NonNull final CommentModel comment) {
         List<Object> params = new ArrayList<>(5);
         Map<String, Object> commentParams = new HashMap<>();
         commentParams.put("content", comment.getContent());
@@ -83,7 +82,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         String status = getXMLRPCCommentStatus(CommentStatus.fromString(comment.getStatus()));
         commentParams.put("status", status);
 
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(comment.getRemoteCommentId());
@@ -108,12 +107,17 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchComment(final SiteModel site, final CommentModel comment) {
+    public void fetchComment(final SiteModel site, long remoteCommentId, final CommentModel comment) {
+        // Prioritize CommentModel over comment id.
+        if (comment != null) {
+            remoteCommentId = comment.getRemoteCommentId();
+        }
+
         List<Object> params = new ArrayList<>(4);
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
-        params.add(comment.getRemoteCommentId());
+        params.add(remoteCommentId);
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_COMMENT, params,
                 new Listener<Object>() {
@@ -135,26 +139,33 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void deleteComment(final SiteModel site, final CommentModel comment) {
+    public void deleteComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment) {
+        // Prioritize CommentModel over comment id.
+        if (comment != null) {
+            remoteCommentId = comment.getRemoteCommentId();
+        }
+
         List<Object> params = new ArrayList<>(4);
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
-        params.add(comment.getRemoteCommentId());
+        params.add(remoteCommentId);
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.DELETE_COMMENT, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
                         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
-                        // This is ugly but the XMLRPC response doesn't contain any info about the update comment.
-                        // So we're copying the logic here: if the comment status was "trash" before and the delete
-                        // call is successful, then we want to delete this comment. Setting the "deleted" status will
-                        // ensure the comment is deleted in the CommentStore.
-                        if (CommentStatus.TRASH.toString().equals(comment.getStatus())) {
-                            comment.setStatus(CommentStatus.DELETED.toString());
-                        } else {
-                            comment.setStatus(CommentStatus.TRASH.toString());
+                        if (comment != null) {
+                            // This is ugly but the XMLRPC response doesn't contain any info about the update comment.
+                            // So we're copying the logic here: if the comment status was "trash" before and the delete
+                            // call is successful, then we want to delete this comment. Setting the "deleted" status
+                            // will ensure the comment is deleted in the CommentStore.
+                            if (CommentStatus.TRASH.toString().equals(comment.getStatus())) {
+                                comment.setStatus(CommentStatus.DELETED.toString());
+                            } else {
+                                comment.setStatus(CommentStatus.TRASH.toString());
+                            }
                         }
                         mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
                     }
@@ -175,16 +186,23 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
      */
     public void createNewReply(final SiteModel site, final CommentModel comment, final CommentModel reply) {
         // Comment parameters
-        Map<String, Object> replyParams = new HashMap<>();
+        Map<String, Object> replyParams = new HashMap<>(5);
+
+        // Reply parameters
+        replyParams.put("content", reply.getContent());
 
         // Use remote comment id as reply comment parent
         replyParams.put("comment_parent", comment.getRemoteCommentId());
 
-        // Reply parameters
-        replyParams.put("content", reply.getContent());
-        replyParams.put("author", reply.getAuthorName());
-        replyParams.put("author_url", reply.getAuthorUrl());
-        replyParams.put("author_email", reply.getAuthorEmail());
+        if (reply.getAuthorName() != null) {
+            replyParams.put("author", reply.getAuthorName());
+        }
+        if (reply.getAuthorUrl() != null) {
+            replyParams.put("author_url", reply.getAuthorUrl());
+        }
+        if (reply.getAuthorEmail() != null) {
+            replyParams.put("author_email", reply.getAuthorEmail());
+        }
 
         newComment(site, comment.getRemotePostId(), reply, comment.getRemoteCommentId(), replyParams);
     }
@@ -194,13 +212,20 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
      */
     public void createNewComment(final SiteModel site, final PostModel post, final CommentModel comment) {
         // Comment parameters
-        Map<String, Object> commentParams = new HashMap<>();
-        commentParams.put("comment_parent", comment.getRemoteParentCommentId());
+        Map<String, Object> commentParams = new HashMap<>(5);
         commentParams.put("content", comment.getContent());
-        commentParams.put("author", comment.getAuthorName());
-        commentParams.put("author_url", comment.getAuthorUrl());
-        commentParams.put("author_email", comment.getAuthorEmail());
-
+        if (comment.getRemoteParentCommentId() != 0) {
+            commentParams.put("comment_parent", comment.getRemoteParentCommentId());
+        }
+        if (comment.getAuthorName() != null) {
+            commentParams.put("author", comment.getAuthorName());
+        }
+        if (comment.getAuthorUrl() != null) {
+            commentParams.put("author_url", comment.getAuthorUrl());
+        }
+        if (comment.getAuthorEmail() != null) {
+            commentParams.put("author_email", comment.getAuthorEmail());
+        }
         newComment(site, post.getRemotePostId(), comment, comment.getRemoteParentCommentId(), commentParams);
     }
 
@@ -209,7 +234,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
     private void newComment(final SiteModel site, long remotePostId, final CommentModel comment, final long parentId,
                             Map<String, Object> commentParams) {
         List<Object> params = new ArrayList<>(5);
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(remotePostId);
@@ -252,11 +277,27 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 return "trash";
             // Defaults (don't exist in XMLRPC)
             default:
+            case DELETED:
             case ALL:
             case UNSPAM:
             case UNTRASH:
                 return "approve";
         }
+    }
+
+    private CommentStatus getCommentStatusFromXMLRPCStatusString(String stringStatus) {
+        // Default
+        CommentStatus status = CommentStatus.APPROVED;
+        if ("approve".equals(stringStatus)) {
+            status = CommentStatus.APPROVED;
+        } else if ("hold".equals(stringStatus)) {
+            status = CommentStatus.UNAPPROVED;
+        } else if ("spam".equals(stringStatus)) {
+            status = CommentStatus.SPAM;
+        } else if ("trash".equals(stringStatus)) {
+            status = CommentStatus.TRASH;
+        }
+        return status;
     }
 
     private List<CommentModel> commentsResponseToCommentList(Object response, SiteModel site) {
@@ -283,8 +324,9 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
 
         comment.setRemoteCommentId(XMLRPCUtils.safeGetMapValue(commentMap, "comment_id", 0L));
         comment.setLocalSiteId(site.getId());
-        comment.setRemoteSiteId(site.getSiteId());
-        comment.setStatus(XMLRPCUtils.safeGetMapValue(commentMap, "status", "approve"));
+        comment.setRemoteSiteId(site.getSelfHostedSiteId());
+        String stringStatus = XMLRPCUtils.safeGetMapValue(commentMap, "status", "approve");
+        comment.setStatus(getCommentStatusFromXMLRPCStatusString(stringStatus).toString());
         Date datePublished = XMLRPCUtils.safeGetMapValue(commentMap, "date_created_gmt", new Date());
         comment.setDatePublished(DateTimeUtils.iso8601UTCFromDate(datePublished));
         comment.setContent(XMLRPCUtils.safeGetMapValue(commentMap, "content", ""));
