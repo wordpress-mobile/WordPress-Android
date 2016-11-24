@@ -76,6 +76,18 @@ public class CommentSqlUtils {
         return results.get(0);
     }
 
+    public static CommentModel getCommentBySiteAndRemoteId(SiteModel site, long remoteCommentId) {
+        List<CommentModel> results = WellSql.select(CommentModel.class)
+                .where()
+                .equals(CommentModelTable.REMOTE_COMMENT_ID, remoteCommentId)
+                .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().getAsModel();
+        if (results.isEmpty()) {
+            return null;
+        }
+        return results.get(0);
+    }
+
     private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, CommentStatus status) {
         if (site == null) {
             return null;
