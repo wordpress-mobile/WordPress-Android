@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.OkHttpStack;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
+import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
@@ -133,6 +134,14 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
+    public BaseWPAPIRestClient provideBaseWPAPIClient(Dispatcher dispatcher,
+                                                    @Named("custom-ssl") RequestQueue requestQueue,
+                                                    UserAgent userAgent) {
+        return new BaseWPAPIRestClient(dispatcher, requestQueue, userAgent);
+    }
+
+    @Singleton
+    @Provides
     public SiteRestClient provideSiteRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
                                                 AppSecrets appSecrets,
@@ -231,8 +240,9 @@ public class ReleaseNetworkModule {
     @Singleton
     @Provides
     public SelfHostedEndpointFinder provideSelfHostedEndpointFinder(Dispatcher dispatcher,
-                                                                    BaseXMLRPCClient baseXMLRPCClient) {
-        return new SelfHostedEndpointFinder(dispatcher, baseXMLRPCClient);
+                                                                    BaseXMLRPCClient baseXMLRPCClient,
+                                                                    BaseWPAPIRestClient baseWPAPIRestClient) {
+        return new SelfHostedEndpointFinder(dispatcher, baseXMLRPCClient, baseWPAPIRestClient);
     }
 
     @Singleton

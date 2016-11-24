@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.network.BaseRequestFuture;
+import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.store.Store.OnChangedError;
 import org.wordpress.android.fluxc.utils.WPUrlUtils;
@@ -41,6 +42,7 @@ public class SelfHostedEndpointFinder {
 
     private final Dispatcher mDispatcher;
     private final BaseXMLRPCClient mXMLRPCClient;
+    private final BaseWPAPIRestClient mBaseWPAPIRestClient;
 
     public enum DiscoveryError implements OnChangedError {
         INVALID_URL,
@@ -86,9 +88,11 @@ public class SelfHostedEndpointFinder {
     }
 
     @Inject
-    public SelfHostedEndpointFinder(Dispatcher dispatcher, BaseXMLRPCClient baseXMLRPCClient) {
+    public SelfHostedEndpointFinder(Dispatcher dispatcher, BaseXMLRPCClient baseXMLRPCClient,
+                                    BaseWPAPIRestClient baseWPAPIRestClient) {
         mDispatcher = dispatcher;
         mXMLRPCClient = baseXMLRPCClient;
+        mBaseWPAPIRestClient = baseWPAPIRestClient;
     }
 
     public void findEndpoint(final String url, final String username, final String password) {
