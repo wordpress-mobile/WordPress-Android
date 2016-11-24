@@ -19,13 +19,14 @@
             android:key="wp_pref_custom_notification_sound"
             android:ringtoneType="notification"
             android:showDefault="true"
+            android:defaultValue="content://settings/system/notification_sound"
             android:title="@string/notification_sound"/>
         <SwitchPreference
             android:defaultValue="false"
             android:key="wp_pref_notification_vibrate"
             android:title="@string/notification_vibrate"/>
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="wp_pref_notification_light"
             android:title="@string/notification_blink"/>
     </PreferenceCategory>
