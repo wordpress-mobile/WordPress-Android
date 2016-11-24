@@ -401,6 +401,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_trashed";
             case NOTIFICATION_FLAGGED_AS_SPAM:
                 return "notifications_flagged_as_spam";
+            case NOTIFICATION_SWIPE_PAGE_CHANGED:
+                return "notifications_swipe_page_changed";
             case NOTIFICATION_LIKED:
             case NOTIFICATION_QUICK_ACTIONS_LIKED:
                 return "notifications_comment_liked";

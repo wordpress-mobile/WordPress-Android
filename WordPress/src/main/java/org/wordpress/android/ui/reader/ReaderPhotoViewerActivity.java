@@ -13,7 +13,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
+import org.wordpress.android.widgets.WPViewPagerTransformer;
+import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
@@ -60,7 +61,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
             mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
         }
 
-        mViewPager.setPageTransformer(false, new ReaderViewPagerTransformer(TransformType.FLOW));
+        mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.FLOW));
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
