@@ -17,7 +17,6 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class EndpointNodeTest {
-
     @Test
     public void testEndpointNodeSetup() {
         EndpointNode root = new EndpointNode("/sites/");

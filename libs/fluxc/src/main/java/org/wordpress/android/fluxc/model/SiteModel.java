@@ -31,6 +31,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private boolean mIsWPCom;
     @Column private boolean mIsAdmin;
     @Column private boolean mIsFeaturedImageSupported;
+    @Column private String mDefaultCommentStatus = "open";
     @Column private String mTimezone;
 
 
@@ -207,6 +208,14 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
 
     public void setIsFeaturedImageSupported(boolean featuredImageSupported) {
         mIsFeaturedImageSupported = featuredImageSupported;
+    }
+
+    public String getDefaultCommentStatus() {
+        return mDefaultCommentStatus;
+    }
+
+    public void setDefaultCommentStatus(String defaultCommentStatus) {
+        mDefaultCommentStatus = defaultCommentStatus;
     }
 
     public String getSoftwareVersion() {

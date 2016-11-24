@@ -68,8 +68,8 @@ public class PostModelTest {
         testPost.setCategoryIdList(categoryIds);
 
         assertEquals(2, testPost.getCategoryIdList().size());
-        assertTrue(categoryIds.containsAll(testPost.getCategoryIdList()) &&
-                testPost.getCategoryIdList().containsAll(categoryIds));
+        assertTrue(categoryIds.containsAll(testPost.getCategoryIdList())
+                   && testPost.getCategoryIdList().containsAll(categoryIds));
     }
 
     @Test
