@@ -32,6 +32,9 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
     @Column private String mDatePublished;
     @Column private String mContent;
 
+    // WPCOM only
+    @Column private boolean mILike; // current user likes this comment
+
     @Override
     public int getId() {
         return mId;
@@ -144,5 +147,13 @@ public class CommentModel extends Payload implements Identifiable, Serializable 
 
     public void setRemoteParentCommentId(long remoteParentCommentId) {
         mRemoteParentCommentId = remoteParentCommentId;
+    }
+
+    public boolean getILike() {
+        return mILike;
+    }
+
+    public void setILike(boolean iLike) {
+        mILike = iLike;
     }
 }
