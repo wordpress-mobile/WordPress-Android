@@ -461,13 +461,13 @@ public class GCMMessageService extends GcmListenerService {
             }
 
 
-            showGroupNotificationForActiveNotificationsMap(context, pushId, wpcomNoteID,
+            showNotification(context, pushId, wpcomNoteID,
                     noteType, data.getString("icon"), title, message, dontPlaySound);
         }
 
-        private void showGroupNotificationForActiveNotificationsMap(Context context, int pushId, String wpcomNoteID, String noteType,
-                                                                    String largeIconUri, String title, String message,
-                                                                    boolean dontPlaySound) {
+        private void showNotification(Context context, int pushId, String wpcomNoteID, String noteType,
+                                      String largeIconUri, String title, String message,
+                                      boolean dontPlaySound) {
 
             // Build the new notification, add group to support wearable stacking
             NotificationCompat.Builder builder = getNotificationBuilder(context, title, message);
@@ -480,7 +480,8 @@ public class GCMMessageService extends GcmListenerService {
             showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId, dontPlaySound);
 
             // Also add a group summary notification, which is required for non-wearable devices
-            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message, dontPlaySound);
+            // Do not need to play the sound again. We've already played it in the individual builder.
+            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message, true);
         }
 
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
@@ -767,17 +768,13 @@ public class GCMMessageService extends GcmListenerService {
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-            boolean shouldPlaySound = prefs.getBoolean("wp_pref_notification_sound", false);
-            boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
-            boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", false);
-            String notificationSound = prefs.getString("wp_pref_custom_notification_sound", null); //"" if None is selected
-
-
             if (!dontPlaySound) {
-                // use default sound if the legacy sound preference was ON but the custom sound was not selected (null)
-                if (shouldPlaySound && notificationSound == null) {
-                    builder.setSound(Uri.parse("content://settings/system/notification_sound"));
-                } else if (!TextUtils.isEmpty(notificationSound)) {
+
+                boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
+                boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", true);
+                String notificationSound = prefs.getString("wp_pref_custom_notification_sound", "content://settings/system/notification_sound"); //"" if None is selected
+
+                if (!TextUtils.isEmpty(notificationSound)) {
                     builder.setSound(Uri.parse(notificationSound));
                 }
 
