@@ -22,12 +22,16 @@ public enum TaxonomyAction implements IAction {
     FETCH_TERMS,
     @Action(payloadType = RemoteTermPayload.class)
     FETCH_TERM,
+    @Action(payloadType = RemoteTermPayload.class)
+    PUSH_TERM,
 
     // Remote responses
     @Action(payloadType = FetchTermsResponsePayload.class)
     FETCHED_TERMS,
     @Action(payloadType = FetchTermResponsePayload.class)
     FETCHED_TERM,
+    @Action(payloadType = RemoteTermPayload.class)
+    PUSHED_TERM,
 
     // Local actions
     @Action(payloadType = SiteModel.class)

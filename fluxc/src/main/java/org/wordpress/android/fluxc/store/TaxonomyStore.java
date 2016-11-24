@@ -113,6 +113,14 @@ public class TaxonomyStore extends Store {
         }
     }
 
+    public class OnTermUploaded extends OnChanged<TaxonomyError> {
+        public TermModel term;
+
+        public OnTermUploaded(TermModel term) {
+            this.term = term;
+        }
+    }
+
     public static class TaxonomyError implements OnChangedError {
         public TaxonomyErrorType type;
         public String message;
@@ -133,8 +141,8 @@ public class TaxonomyStore extends Store {
     }
 
     public enum TaxonomyErrorType {
-        // TODO: Fill in
         INVALID_TAXONOMY,
+        DUPLICATE,
         UNAUTHORIZED,
         INVALID_RESPONSE,
         GENERIC_ERROR;
@@ -246,6 +254,12 @@ public class TaxonomyStore extends Store {
                 InstantiateTermPayload payload = (InstantiateTermPayload) action.getPayload();
                 instantiateTerm(payload.site, payload.taxonomy.getName());
                 break;
+            case PUSH_TERM:
+                pushTerm((RemoteTermPayload) action.getPayload());
+                break;
+            case PUSHED_TERM:
+                handlePushTermCompleted((RemoteTermPayload) action.getPayload());
+                break;
         }
     }
 
@@ -318,6 +332,21 @@ public class TaxonomyStore extends Store {
         }
     }
 
+    private void handlePushTermCompleted(RemoteTermPayload payload) {
+        if (payload.isError()) {
+            OnTermUploaded onTermUploaded = new OnTermUploaded(payload.term);
+            onTermUploaded.error = payload.error;
+            emitChange(onTermUploaded);
+        } else {
+            if (payload.site.isWPCom()) {
+                // The WP.COM REST API response contains the modified term, so we're already in sync with the server
+                // All we need to do is store it and emit OnTaxonomyChanged
+                updateTerm(payload.term);
+                emitChange(new OnTermUploaded(payload.term));
+            }
+        }
+    }
+
     private void instantiateTerm(SiteModel site, String taxonomy) {
         TermModel newTerm = new TermModel();
         newTerm.setLocalSiteId(site.getId());
@@ -327,6 +356,14 @@ public class TaxonomyStore extends Store {
         newTerm = TaxonomySqlUtils.insertTermForResult(newTerm);
 
         emitChange(new OnTermInstantiated(newTerm));
+    }
+
+    private void pushTerm(RemoteTermPayload payload) {
+        if (payload.site.isWPCom()) {
+            mTaxonomyRestClient.pushTerm(payload.term, payload.site);
+        } else {
+            // TODO: XML-RPC support
+        }
     }
 
     private void updateTerm(TermModel term) {

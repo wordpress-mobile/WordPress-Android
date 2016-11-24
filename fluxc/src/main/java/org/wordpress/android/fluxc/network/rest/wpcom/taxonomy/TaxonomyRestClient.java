@@ -22,10 +22,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse.TermsResponse;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermResponsePayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload;
+import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -108,6 +112,44 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void pushTerm(final TermModel term, final SiteModel site) {
+        final String taxonomy = term.getTaxonomy();
+        String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms.new_.getUrlV1_1();
+
+        Map<String, Object> body = termModelToParams(term);
+
+        final WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body,
+                TermWPComRestResponse.class,
+                new Listener<TermWPComRestResponse>() {
+                    @Override
+                    public void onResponse(TermWPComRestResponse response) {
+                        TermModel uploadedTerm = termResponseToTermModel(response);
+
+                        uploadedTerm.setId(term.getId());
+                        uploadedTerm.setLocalSiteId(site.getId());
+                        uploadedTerm.setTaxonomy(taxonomy);
+
+                        RemoteTermPayload payload = new RemoteTermPayload(uploadedTerm, site);
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // Possible non-generic errors: 400 invalid_taxonomy, 409 duplicate
+                        RemoteTermPayload payload = new RemoteTermPayload(term, site);
+                        payload.error = new TaxonomyError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
+                    }
+                }
+        );
+
+        request.addQueryParameter("context", "edit");
+
+        request.disableRetries();
+        add(request);
+    }
+
     private TermModel termResponseToTermModel(TermWPComRestResponse from) {
         TermModel term = new TermModel();
         term.setRemoteTermId(from.ID);
@@ -117,5 +159,15 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         term.setParentRemoteId(from.parent);
 
         return term;
+    }
+
+    private Map<String, Object> termModelToParams(TermModel term) {
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("name", StringUtils.notNullStr(term.getName()));
+        body.put("description", StringUtils.notNullStr(term.getDescription()));
+        body.put("parent", String.valueOf(term.getParentRemoteId()));
+
+        return body;
     }
 }
