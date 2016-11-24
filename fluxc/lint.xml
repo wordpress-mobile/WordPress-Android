@@ -2,5 +2,14 @@
 <lint>
     <issue id="InvalidPackage">
         <ignore regexp="robolectric-2.4.jar" />
+        <ignore regexp="okio-1.9.0.jar" />
     </issue>
+
+    <issue id="HardcodedText" severity="error" />
+    <issue id="IconDuplicates" severity="error" />
+    <issue id="IconDipSize" severity="error" />
+    <issue id="InconsistentArrays" severity="error" />
+    <issue id="StringFormatCount" severity="error" />
+    <issue id="DefaultLocale" severity="error" />
+    <issue id="SimpleDateFormat" severity="error" />
 </lint>

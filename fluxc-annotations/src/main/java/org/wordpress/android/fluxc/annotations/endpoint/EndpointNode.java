@@ -68,7 +68,12 @@ public class EndpointNode {
     }
 
     public String getCleanEndpointName() {
-        return getLocalEndpoint().replaceAll("/|\\$|#.*|_ID|_id", "").replaceAll("-", "_");
+        if (getLocalEndpoint().contains(":")) {
+            // For 'mixed' endpoints, e.g. item:$theItem, return the label part ('item')
+            return getLocalEndpoint().substring(0, getLocalEndpoint().indexOf(":")).replaceAll("-", "_");
+        } else {
+            return getLocalEndpoint().replaceAll("/|\\$|#.*|_ID|_id|<|>", "").replaceAll("-", "_");
+        }
     }
 
     public List<String> getEndpointTypes() {

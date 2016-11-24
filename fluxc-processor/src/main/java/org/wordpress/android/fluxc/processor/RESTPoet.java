@@ -13,11 +13,12 @@ import org.wordpress.android.fluxc.annotations.endpoint.EndpointNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.lang.model.element.Modifier;
 
 public class RESTPoet {
-    // TODO: Need to support "/sites/$site/posts/slug:$post_slug"-type endpoints
     private static final String[] JAVA_KEYWORDS = {
             "new", "abstract", "assert", "boolean",
             "break", "byte", "case", "catch", "char", "class", "const",
@@ -31,9 +32,12 @@ public class RESTPoet {
     };
 
     private static TypeName sBaseEndpointClass;
+    private static Pattern sVariableEndpointPattern;
 
-    public static TypeSpec generate(EndpointNode rootNode, String fileName, Class baseEndpointClass) {
+    public static TypeSpec generate(EndpointNode rootNode, String fileName, Class baseEndpointClass,
+                                    Pattern variableEndpointPattern) {
         sBaseEndpointClass = ClassName.get(baseEndpointClass);
+        sVariableEndpointPattern = variableEndpointPattern;
 
         TypeSpec.Builder wpcomRestBuilder = TypeSpec.classBuilder(fileName)
                 .addModifiers(Modifier.PUBLIC);
@@ -46,7 +50,9 @@ public class RESTPoet {
     }
 
     private static void addEndpointToBuilder(EndpointNode endpointNode, TypeSpec.Builder classBuilder) {
-        if (endpointNode.getLocalEndpoint().contains("$")) {
+        Matcher variableEndpointMatcher = sVariableEndpointPattern.matcher(endpointNode.getLocalEndpoint());
+
+        if (variableEndpointMatcher.find()) {
             processVariableEndpointNode(endpointNode, classBuilder);
         } else {
             processStaticEndpointNode(endpointNode, classBuilder);
@@ -67,7 +73,7 @@ public class RESTPoet {
 
             if (endpointNode.getParent().isRoot()) {
                 endpointFieldBuilder.addModifiers(Modifier.STATIC)
-                        .initializer("new $T($S)", sBaseEndpointClass, endpointNode.getLocalEndpoint());
+                        .initializer("new $T($S)", sBaseEndpointClass, "/" + endpointNode.getLocalEndpoint());
             } else {
                 endpointFieldBuilder
                         .initializer("new $T(getEndpoint() + $S)", sBaseEndpointClass, endpointNode.getLocalEndpoint());
@@ -124,7 +130,7 @@ public class RESTPoet {
 
         if (!endpointNode.hasChildren()) {
             // Build annotated accessor method for variable endpoint and add it to the class
-            List<MethodSpec> endpointMethods = generateEndpointMethodsForClass(endpointNode, sBaseEndpointClass);
+            List<MethodSpec> endpointMethods = generateEndpointMethods(endpointNode, sBaseEndpointClass);
 
             for (MethodSpec endpointMethod : endpointMethods) {
                 classBuilder.addMethod(endpointMethod);
@@ -144,21 +150,30 @@ public class RESTPoet {
 
             // Add a constructor for each type this endpoint accepts (usually long)
             for (Class endpointType : getVariableEndpointTypes(endpointNode)) {
-                String variableName = endpointType.equals(String.class) ? endpointName : endpointName + "Id";
+                String variableName = endpointName;
+                if (endpointType.equals(long.class) && !endpointName.equals("id")) {
+                    variableName = endpointName + "Id";
+                }
 
-                MethodSpec endpointConstructor = MethodSpec.constructorBuilder()
+                MethodSpec.Builder endpointConstructorBuilder = MethodSpec.constructorBuilder()
                         .addModifiers(Modifier.PRIVATE)
                         .addParameter(String.class, "previousEndpoint")
-                        .addParameter(endpointType, variableName)
-                        .addStatement("super($L, $L)", "previousEndpoint", variableName)
-                        .build();
-                endpointClassBuilder.addMethod(endpointConstructor);
+                        .addParameter(endpointType, variableName);
+
+                if (endpointNode.getLocalEndpoint().contains(":")) {
+                    // Special case for endpoints of type '/item:$item/'
+                    endpointConstructorBuilder.addStatement("super($L, $S + $L)", "previousEndpoint",
+                            endpointName + ":", variableName);
+                } else {
+                    endpointConstructorBuilder.addStatement("super($L, $L)", "previousEndpoint", variableName);
+                }
+                endpointClassBuilder.addMethod(endpointConstructorBuilder.build());
             }
 
             TypeName endpointClassName = ClassName.get("", innerClassName);
 
             // Build annotated accessor method for variable endpoint
-            List<MethodSpec> endpointMethods = generateEndpointMethodsForClass(endpointNode, endpointClassName);
+            List<MethodSpec> endpointMethods = generateEndpointMethods(endpointNode, endpointClassName);
 
             for (EndpointNode childEndpoint : endpointNode.getChildren()) {
                 addEndpointToBuilder(childEndpoint, endpointClassBuilder);
@@ -172,7 +187,7 @@ public class RESTPoet {
         }
     }
 
-    private static List<MethodSpec> generateEndpointMethodsForClass(EndpointNode endpointNode, TypeName endpointClassName) {
+    private static List<MethodSpec> generateEndpointMethods(EndpointNode endpointNode, TypeName endpointClassName) {
         List<MethodSpec> endpointMethods = new ArrayList<>();
 
         for (Class endpointType : getVariableEndpointTypes(endpointNode)) {
@@ -184,7 +199,10 @@ public class RESTPoet {
                 methodName = "item";
             }
 
-            String variableName = endpointType.equals(String.class) ? endpointName : endpointName + "Id";
+            String variableName = endpointName;
+            if (endpointType.equals(long.class) && !endpointName.equals("id")) {
+                variableName = endpointName + "Id";
+            }
 
             MethodSpec.Builder endpointMethodBuilder = MethodSpec.methodBuilder(methodName)
                     .addModifiers(Modifier.PUBLIC)
@@ -195,11 +213,27 @@ public class RESTPoet {
                             .build());
 
             if (endpointNode.getParent().isRoot()) {
-                endpointMethodBuilder.addModifiers(Modifier.STATIC)
-                        .addStatement("return new $T($S, $L)", endpointClassName, "/", variableName);
+                if (endpointNode.getLocalEndpoint().contains(":") && !endpointNode.hasChildren()) {
+                    // Special case for endpoints of type '/item:$item/'
+                    // (the case with children is covered in the constructor, not here)
+                    endpointMethodBuilder.addModifiers(Modifier.STATIC)
+                            .addStatement("return new $T($S, $S + $L)", endpointClassName, "/",
+                                    endpointName + ":", variableName);
+                } else {
+                    endpointMethodBuilder.addModifiers(Modifier.STATIC)
+                            .addStatement("return new $T($S, $L)", endpointClassName, "/", variableName);
+                }
             } else {
-                endpointMethodBuilder
-                        .addStatement("return new $T(getEndpoint(), $L)", endpointClassName, variableName);
+                if (endpointNode.getLocalEndpoint().contains(":") && !endpointNode.hasChildren()) {
+                    // Special case for endpoints of type '/item:$item/'
+                    // (the case with children is covered in the constructor, not here)
+                    endpointMethodBuilder
+                            .addStatement("return new $T(getEndpoint(), $S + $L)", endpointClassName,
+                                    endpointName + ":", variableName);
+                } else {
+                    endpointMethodBuilder
+                            .addStatement("return new $T(getEndpoint(), $L)", endpointClassName, variableName);
+                }
             }
             endpointMethods.add(endpointMethodBuilder.build());
         }

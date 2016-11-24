@@ -19,9 +19,12 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.Di
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
@@ -29,6 +32,7 @@ import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -99,6 +103,21 @@ public class AccountStore extends Store {
         public boolean dryRun;
     }
 
+    public class OnAvailabilityChecked extends OnChanged<IsAvailableError> {
+        public IsAvailable type;
+        public String value;
+        public boolean isAvailable;
+        public List<String> suggestions;
+
+        public OnAvailabilityChecked(IsAvailable type, String value, boolean isAvailable) {
+            this.type = type;
+            this.value = value;
+            this.isAvailable = isAvailable;
+        }
+    }
+
+    public class OnAuthEmailSent extends OnChanged<AuthEmailError> {}
+
     public static class AuthenticationError implements OnChangedError {
         public AuthenticationErrorType type;
         public String message;
@@ -160,6 +179,65 @@ public class AccountStore extends Store {
         SETTINGS_FETCH_ERROR,
         SETTINGS_POST_ERROR,
         GENERIC_ERROR
+    }
+
+    public static class IsAvailableError implements OnChangedError {
+        public IsAvailableErrorType type;
+        public String message;
+
+        public IsAvailableError(@NonNull String type, @NonNull String message) {
+            this.type = IsAvailableErrorType.fromString(type);
+            this.message = message;
+        }
+    }
+
+    public enum IsAvailableErrorType {
+        INVALID,
+        GENERIC_ERROR;
+
+        public static IsAvailableErrorType fromString(String string) {
+            if (string != null) {
+                for (IsAvailableErrorType v : IsAvailableErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+    }
+
+    public static class AuthEmailError implements OnChangedError {
+        public AuthEmailErrorType type;
+        public String message;
+
+        public AuthEmailError(AuthEmailErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+
+        public AuthEmailError(@NonNull String type, @NonNull String message) {
+            this.type = AuthEmailErrorType.fromString(type);
+            this.message = message;
+        }
+    }
+
+    public enum AuthEmailErrorType {
+        INVALID_INPUT,
+        NO_SUCH_USER,
+        UNSUCCESSFUL,
+        GENERIC_ERROR;
+
+        public static AuthEmailErrorType fromString(String string) {
+            if (string != null) {
+                for (AuthEmailErrorType v : AuthEmailErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public static class NewUserError implements OnChangedError {
@@ -272,6 +350,21 @@ public class AccountStore extends Store {
             case FETCHED_ACCOUNT:
                 handleFetchAccountCompleted((AccountRestPayload) payload);
                 break;
+            case IS_AVAILABLE_BLOG:
+                mAccountRestClient.isAvailable((String) payload, IsAvailable.BLOG);
+                break;
+            case IS_AVAILABLE_DOMAIN:
+                mAccountRestClient.isAvailable((String) payload, IsAvailable.DOMAIN);
+                break;
+            case IS_AVAILABLE_EMAIL:
+                mAccountRestClient.isAvailable((String) payload, IsAvailable.EMAIL);
+                break;
+            case IS_AVAILABLE_USERNAME:
+                mAccountRestClient.isAvailable((String) payload, IsAvailable.USERNAME);
+                break;
+            case CHECKED_IS_AVAILABLE:
+                handleCheckedIsAvailable((IsAvailableResponsePayload) payload);
+                break;
         }
     }
 
@@ -289,6 +382,12 @@ public class AccountStore extends Store {
             case DISCOVERY_RESULT:
                 discoveryResult((DiscoveryResultPayload) payload);
                 break;
+            case SEND_AUTH_EMAIL:
+                mAuthenticator.sendAuthEmail((String) payload);
+                break;
+            case SENT_AUTH_EMAIL:
+                handleSentAuthEmail((AuthEmailResponsePayload) payload);
+                break;
         }
     }
 
@@ -297,6 +396,7 @@ public class AccountStore extends Store {
         event.error = payload.error;
         emitChange(event);
     }
+
     private void discoverEndPoint(RefreshSitesXMLRPCPayload payload) {
         mSelfHostedEndpointFinder.findEndpoint(payload.url, payload.username, payload.password);
     }
@@ -357,6 +457,17 @@ public class AccountStore extends Store {
         emitChange(onNewUserCreated);
     }
 
+    private void handleCheckedIsAvailable(IsAvailableResponsePayload payload) {
+        OnAvailabilityChecked event = new OnAvailabilityChecked(payload.type, payload.value, payload.isAvailable);
+        event.suggestions = payload.suggestions;
+
+        if (payload.isError()) {
+            event.error = payload.error;
+        }
+
+        emitChange(event);
+    }
+
     private void emitAccountChangeError(AccountErrorType errorType) {
         OnAccountChanged event = new OnAccountChanged();
         event.error = new AccountError(errorType, null);
@@ -399,6 +510,7 @@ public class AccountStore extends Store {
 
     private void updateToken(UpdateTokenPayload updateTokenPayload) {
         mAccessToken.set(updateTokenPayload.token);
+        emitChange(new OnAuthenticationChanged());
     }
 
     private void updateDefaultAccount(AccountModel accountModel, AccountAction cause) {
@@ -438,6 +550,17 @@ public class AccountStore extends Store {
                         emitChange(event);
                     }
                 });
+    }
+
+    private void handleSentAuthEmail(final AuthEmailResponsePayload payload) {
+        if (payload.isError()) {
+            OnAuthEmailSent event = new OnAuthEmailSent();
+            event.error = payload.error;
+            emitChange(event);
+        } else {
+            OnAuthEmailSent event = new OnAuthEmailSent();
+            emitChange(event);
+        }
     }
 
     private boolean checkError(AccountRestPayload payload, String log) {

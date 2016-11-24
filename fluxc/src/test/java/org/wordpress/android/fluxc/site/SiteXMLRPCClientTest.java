@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.wordpress.android.fluxc.utils.SiteUtils.*;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generateWPComSite;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteXMLRPCClientTest {
@@ -87,47 +87,51 @@ public class SiteXMLRPCClientTest {
 
     @Test
     public void testFetchSite() throws Exception {
-        SiteModel site = generateDotComSite();
+        SiteModel site = generateWPComSite();
         mCountDownLatch = new CountDownLatch(1);
-        mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<methodResponse>\n" +
-                "  <params>\n" +
-                "    <param>\n" +
-                "      <value>\n" +
-                "      <struct>\n" +
-                "  <member><name>post_thumbnail</name><value><struct>\n" +
-                "  <member><name>value</name><value><boolean>1</boolean></value></member>\n" +
-                "</struct></value></member>\n" +
-                "  <member><name>time_zone</name><value><struct>\n" +
-                "  <member><name>value</name><value><string>0</string></value></member>\n" +
-                "</struct></value></member>\n" +
-                "  <member><name>login_url</name><value><struct>\n" +
-                "  <member><name>value</name><value><string>https://taliwutblog.wordpress.com/wp-login.php</string></value></member>\n" +
-                "</struct></value></member>\n" +
-                "  <member><name>blog_public</name><value><struct>\n" +
-                "  <member><name>value</name><value><string>0</string></value></member>\n" +
-                "</struct></value></member>\n" +
-                "  <member><name>blog_title</name><value><struct>\n" +
-                "  <member><name>value</name><value><string>@tal&amp;amp;wut blog</string></value></member>\n" +
-                "</struct></value></member>\n" +
-                "  <member><name>admin_url</name><value><struct>\n" +
-                "  <member><name>readonly</name><value><boolean>1</boolean></value></member>\n" +
-                "  <member><name>value</name><value><string>https://taliwutblog.wordpress.com/wp-admin/</string></value></member>\n" +
-                "</struct></value></member>\n" +
-                "  <member><name>software_version</name><value><struct>\n" +
-                "  <member><name>value</name><value><string>4.5.3-20160628</string></value></member>\n" +
-                "</struct></value></member>\n" +
-                "  <member><name>jetpack_client_id</name><value><struct>\n" +
-                "  <member><name>value</name><value><string>false</string></value></member>\n" +
-                "</struct></value></member>\n" +
-                "  <member><name>home_url</name><value><struct>\n" +
-                "  <member><name>value</name><value><string>http://taliwutblog.wordpress.com</string></value></member>\n" +
-                "</struct></value></member>\n" +
-                "</struct>\n" +
-                "      </value>\n" +
-                "    </param>\n" +
-                "  </params>\n" +
-                "</methodResponse>\n";
+        mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                          + "<methodResponse><params><param><value>\n"
+                          + "  <struct>\n"
+                          + "  <member><name>post_thumbnail</name><value><struct>\n"
+                          + "  <member><name>value</name><value><boolean>1</boolean></value></member>\n"
+                          + "  </struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>time_zone</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>0</string></value></member>\n"
+                          + "  </struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>login_url</name><value><struct>\n"
+                          + "  <member><name>value</name><value>\n"
+                          + "  <string>https://taliwutblog.wordpress.com/wp-login.php</string>\n"
+                          + "  </value></member></struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>blog_public</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>0</string></value></member></struct>\n"
+                          + "  </value></member>\n"
+                          + "  \n"
+                          + "  <member><name>blog_title</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>@tal&amp;amp;wut blog</string>\n"
+                          + "  </value></member></struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>admin_url</name><value><struct>\n"
+                          + "  <member><name>readonly</name><value><boolean>1</boolean></value></member>\n"
+                          + "  <member><name>value</name><value>\n"
+                          + "  <string>https://taliwutblog.wordpress.com/wp-admin/</string>\n"
+                          + "  </value></member></struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>software_version</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>4.5.3-20160628</string></value></member>\n"
+                          + "  </struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>jetpack_client_id</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>false</string></value></member></struct>\n"
+                          + "  </value></member>\n"
+                          + "  \n"
+                          + "  <member><name>home_url</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>http://taliwutblog.wordpress.com</string>\n"
+                          + "  </value></member></struct></value></member>\n"
+                          + "  </struct>\n"
+                          + "</value></param></params></methodResponse>";
         mSiteXMLRPCClient.fetchSite(site);
         assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }

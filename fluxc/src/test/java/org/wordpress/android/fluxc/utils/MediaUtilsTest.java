@@ -78,7 +78,7 @@ public class MediaUtilsTest {
 
     @Test
     public void testSupportedImageRecognition() {
-        final String[] unsupportedImageTypes = { "bmp", "tif", "tiff", "ppm", "pgm", "svg" };
+        final String[] unsupportedImageTypes = {"bmp", "tif", "tiff", "ppm", "pgm", "svg"};
         for (String supportedImageType : MediaUtils.SUPPORTED_IMAGE_SUBTYPES) {
             String supportedImageMimeType = MediaUtils.MIME_TYPE_IMAGE + supportedImageType;
             Assert.assertTrue(MediaUtils.isSupportedImageMimeType(supportedImageMimeType));
@@ -95,7 +95,7 @@ public class MediaUtilsTest {
 
     @Test
     public void testSupportedVideoRecognition() {
-        final String[] unsupportedVideoTypes = { "flv", "webm", "vob", "yuv", "mpeg", "m2v" };
+        final String[] unsupportedVideoTypes = {"flv", "webm", "vob", "yuv", "mpeg", "m2v"};
         for (String supportedVideoType : MediaUtils.SUPPORTED_VIDEO_SUBTYPES) {
             String supportedVideoMimeType = MediaUtils.MIME_TYPE_VIDEO + supportedVideoType;
             Assert.assertTrue(MediaUtils.isSupportedVideoMimeType(supportedVideoMimeType));
@@ -112,7 +112,7 @@ public class MediaUtilsTest {
 
     @Test
     public void testSupportedAudioRecognition() {
-        final String[] unsupportedAudioTypes = { "m4p", "raw", "tta", "wma", "dss", "webm" };
+        final String[] unsupportedAudioTypes = {"m4p", "raw", "tta", "wma", "dss", "webm"};
         for (String supportedAudioType : MediaUtils.SUPPORTED_AUDIO_SUBTYPES) {
             String supportedAudioMimeType = MediaUtils.MIME_TYPE_AUDIO + supportedAudioType;
             Assert.assertTrue(MediaUtils.isSupportedAudioMimeType(supportedAudioMimeType));
@@ -129,7 +129,7 @@ public class MediaUtilsTest {
 
     @Test
     public void testSupportedApplicationRecognition() {
-        final String[] unsupportedApplicationTypes = { "com", "bin", "exe", "jar", "xif", "xsl" };
+        final String[] unsupportedApplicationTypes = {"com", "bin", "exe", "jar", "xif", "xsl"};
         for (String supportedApplicationType : MediaUtils.SUPPORTED_APPLICATION_SUBTYPES) {
             String supportedApplicationMimeType = MediaUtils.MIME_TYPE_APPLICATION + supportedApplicationType;
             Assert.assertTrue(MediaUtils.isSupportedApplicationMimeType(supportedApplicationMimeType));
@@ -167,22 +167,22 @@ public class MediaUtilsTest {
             Assert.assertTrue(mimeType.equals(MediaUtils.MIME_TYPE_APPLICATION + supportedApplicationExtension));
         }
 
-        final String[] unsupportedImageTypes = { "bmp", "tif", "tiff", "ppm", "pgm", "svg" };
+        final String[] unsupportedImageTypes = {"bmp", "tif", "tiff", "ppm", "pgm", "svg"};
         for (String supportedImageExtension : unsupportedImageTypes) {
             String mimeType = MediaUtils.getMimeTypeForExtension(supportedImageExtension);
             Assert.assertNull(mimeType);
         }
-        final String[] unsupportedVideoTypes = { "flv", "webm", "vob", "yuv", "mpeg", "m2v" };
+        final String[] unsupportedVideoTypes = {"flv", "webm", "vob", "yuv", "mpeg", "m2v"};
         for (String supportedVideoExtension : unsupportedVideoTypes) {
             String mimeType = MediaUtils.getMimeTypeForExtension(supportedVideoExtension);
             Assert.assertNull(mimeType);
         }
-        final String[] unsupportedAudioTypes = { "m4p", "raw", "tta", "wma", "dss", "webm" };
+        final String[] unsupportedAudioTypes = {"m4p", "raw", "tta", "wma", "dss", "webm"};
         for (String supportedAudioExtension : unsupportedAudioTypes) {
             String mimeType = MediaUtils.getMimeTypeForExtension(supportedAudioExtension);
             Assert.assertNull(mimeType);
         }
-        final String[] unsupportedApplicationTypes = { "com", "bin", "exe", "jar", "xif", "xsl" };
+        final String[] unsupportedApplicationTypes = {"com", "bin", "exe", "jar", "xif", "xsl"};
         for (String supportedApplicationExtension : unsupportedApplicationTypes) {
             String mimeType = MediaUtils.getMimeTypeForExtension(supportedApplicationExtension);
             Assert.assertNull(mimeType);

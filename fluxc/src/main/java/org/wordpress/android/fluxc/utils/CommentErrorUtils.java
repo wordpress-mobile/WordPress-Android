@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.utils;
 
+import android.support.annotation.Nullable;
+
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
@@ -14,9 +16,8 @@ import java.util.ArrayList;
 
 public class CommentErrorUtils {
     public static RemoteCommentResponsePayload commentErrorToFetchCommentPayload(BaseNetworkError error,
-                                                                                 CommentModel comment) {
-        RemoteCommentResponsePayload payload = new org.wordpress.android.fluxc.store.CommentStore
-                .RemoteCommentResponsePayload(comment);
+                                                                                 @Nullable CommentModel comment) {
+        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
         payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
     }
