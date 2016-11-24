@@ -171,7 +171,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public void replaceNote(Note newNote) {
         if (newNote != null) {
             int position = getPositionForNoteUnfiltered(newNote.getId());
-            mNotes.set(position, newNote);
+            if (position != RecyclerView.NO_POSITION && position < mNotes.size()) {
+                mNotes.set(position, newNote);
+            }
         }
     }
 
