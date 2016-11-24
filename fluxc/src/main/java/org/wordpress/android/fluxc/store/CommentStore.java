@@ -314,11 +314,17 @@ public class CommentStore extends Store {
     }
 
     private void removeComment(CommentModel payload) {
-        CommentSqlUtils.removeComment(payload);
+        int rowsAffected = CommentSqlUtils.removeComment(payload);
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.causeOfChange = CommentAction.REMOVE_COMMENT;
+        emitChange(event);
     }
 
     private void removeComments(SiteModel payload) {
-        CommentSqlUtils.removeComments(payload);
+        int rowsAffected = CommentSqlUtils.removeComments(payload);
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.causeOfChange = CommentAction.REMOVE_COMMENTS;
+        emitChange(event);
     }
 
     private void instantiateComment(InstantiateCommentPayload payload) {
