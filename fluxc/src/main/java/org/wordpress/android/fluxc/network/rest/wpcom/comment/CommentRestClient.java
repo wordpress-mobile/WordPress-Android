@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.comment;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -66,7 +67,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void pushComment(final SiteModel site, final CommentModel comment) {
+    public void pushComment(final SiteModel site, @NonNull final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).getUrlV1_1();
         Map<String, Object> params = new HashMap<>();
         params.put("content", comment.getContent());
@@ -78,7 +79,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
                         CommentModel newComment = commentResponseToComment(response, site);
-                        newComment.setId(newComment.getId()); // reconciliate local instance and newly created object
+                        newComment.setId(comment.getId()); // reconciliate local instance and newly created object
                         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(newComment);
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(payload));
                     }
@@ -95,8 +96,13 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchComment(final SiteModel site, final CommentModel comment) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).getUrlV1_1();
+    public void fetchComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment) {
+        // Prioritize CommentModel over comment id.
+        if (comment != null) {
+            remoteCommentId = comment.getRemoteCommentId();
+        }
+
+        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).getUrlV1_1();
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildGetRequest(
                 url, null, CommentWPComRestResponse.class,
                 new Listener<CommentWPComRestResponse>() {
@@ -119,16 +125,23 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void deleteComment(final SiteModel site, final CommentModel comment) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId()).delete
-                .getUrlV1_1();
+    public void deleteComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment) {
+        // Prioritize CommentModel over comment id.
+        if (comment != null) {
+            remoteCommentId = comment.getRemoteCommentId();
+        }
+
+        String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).delete.getUrlV1_1();
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, null, CommentWPComRestResponse.class,
                 new Listener<CommentWPComRestResponse>() {
                     @Override
                     public void onResponse(CommentWPComRestResponse response) {
                         CommentModel modifiedComment = commentResponseToComment(response, site);
-                        modifiedComment.setId(comment.getId()); // reconciliate local instance and newly created object
+                        if (comment != null) {
+                            // reconciliate local instance and newly created object if it exists locally
+                            modifiedComment.setId(comment.getId());
+                        }
                         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(modifiedComment);
                         mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(payload));
                     }
@@ -201,6 +214,45 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void likeComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment,
+                            boolean like) {
+        // Prioritize CommentModel over comment id.
+        if (comment != null) {
+            remoteCommentId = comment.getRemoteCommentId();
+        }
+
+        String url;
+        if (like) {
+            url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).likes.new_.getUrlV1_1();
+        } else {
+            url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).likes.mine.delete
+                    .getUrlV1_1();
+        }
+        final WPComGsonRequest<CommentLikeWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
+                url, null, CommentLikeWPComRestResponse.class,
+                new Listener<CommentLikeWPComRestResponse>() {
+                    @Override
+                    public void onResponse(CommentLikeWPComRestResponse response) {
+                        RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
+
+                        if (comment != null) {
+                            comment.setILike(response.i_like);
+                        }
+                        mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(payload));
+                    }
+                },
+
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(
+                                CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
+                    }
+                }
+        );
+        add(request);
+    }
+
     // Private methods
 
     private List<CommentModel> commentsResponseToCommentList(CommentsWPComRestResponse response, SiteModel site) {
@@ -223,6 +275,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         comment.setStatus(response.status);
         comment.setDatePublished(response.date);
         comment.setContent(response.content);
+        comment.setILike(response.i_like);
 
         if (response.author != null) {
             comment.setAuthorUrl(response.author.URL);
