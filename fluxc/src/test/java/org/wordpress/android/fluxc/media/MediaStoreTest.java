@@ -24,8 +24,10 @@ import org.wordpress.android.fluxc.utils.MediaUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.wordpress.android.fluxc.media.MediaTestUtils.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static org.wordpress.android.fluxc.media.MediaTestUtils.insertRandomMediaIntoDatabase;
 
 @RunWith(RobolectricTestRunner.class)
 public class MediaStoreTest {
