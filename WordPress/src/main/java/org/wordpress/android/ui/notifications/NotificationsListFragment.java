@@ -578,7 +578,9 @@ public class NotificationsListFragment extends Fragment
                         EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeStatusChanged.class);
                         //now re-set the object in our list adapter with the note saved in the updated DB
                         Note note = NotificationsTable.getNoteById(event.noteId);
-                        mNotesAdapter.replaceNote(note);
+                        if (note != null) {
+                            mNotesAdapter.replaceNote(note);
+                        }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
