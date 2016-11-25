@@ -47,12 +47,12 @@ public class NotificationsUpdateService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        AppLog.i(AppLog.T.NOTIFS, "notifications service > created");
+        AppLog.i(AppLog.T.NOTIFS, "notifications update service > created");
     }
 
     @Override
     public void onDestroy() {
-        AppLog.i(AppLog.T.NOTIFS, "notifications service > destroyed");
+        AppLog.i(AppLog.T.NOTIFS, "notifications update service > destroyed");
         super.onDestroy();
     }
 
@@ -132,7 +132,7 @@ public class NotificationsUpdateService extends Service {
     }
 
     private void completed() {
-        AppLog.i(AppLog.T.NOTIFS, "notifications service > completed");
+        AppLog.i(AppLog.T.NOTIFS, "notifications update service > completed");
         running = false;
         stopSelf();
     }

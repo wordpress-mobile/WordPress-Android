@@ -1233,6 +1233,24 @@ public class WordPressDB {
         }
     }
 
+    /*
+     * returns list of posts that are in draft or have local changes
+     */
+    public ArrayList<Post> getDraftPostList(int localBlogId) {
+        ArrayList<Post> postList = new ArrayList<>();
+
+        String[] args = {Integer.toString(localBlogId)};
+        Cursor c = db.query(POSTS_TABLE, null, "blogID=? AND (localDraft=1 OR isLocalChange=1)", args, null, null, "localDraft DESC, date_created_gmt DESC");
+        try {
+            while (c.moveToNext()) {
+                postList.add(getPostFromCursor(c));
+            }
+            return postList;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
     private Post getPostFromCursor(Cursor c) {
         Post post = new Post();
 
