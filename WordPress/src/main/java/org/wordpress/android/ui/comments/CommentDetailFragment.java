@@ -438,7 +438,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             setIdForCommentContainer();
             showComment();
         }
-        setRemoteBlogId(note.getSiteId());
+
+        mRemoteBlogId = note.getSiteId();
     }
 
     private void setIdForFragmentContainer(int id){
@@ -532,10 +533,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private int getRemoteBlogId() {
         return mRemoteBlogId;
-    }
-
-    private void setRemoteBlogId(int remoteBlogId) {
-        mRemoteBlogId = remoteBlogId;
     }
 
     /*
