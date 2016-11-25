@@ -3,7 +3,6 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.app.Activity;
 import android.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -63,7 +62,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private String mRestoredNoteId;
     private int mBackgroundColor;
     private int mCommentListPosition = ListView.INVALID_POSITION;
-    private boolean mIsUnread;
 
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
     private OnNoteChangeListener mOnNoteChangeListener;
@@ -153,7 +151,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private void setNoteWithNoteId(String noteId) {
         Note note = NotificationsTable.getNoteById(noteId);
         if (note != null) {
-            mIsUnread = note.isUnread();
             setNote(note);
         }
     }
