@@ -150,7 +150,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     public static CommentDetailFragment newInstance(final String noteId, final String replyText, final int idForFragmentContainer) {
         CommentDetailFragment fragment = new CommentDetailFragment();
-        fragment.setNoteWithNoteId(noteId);
+        fragment.setNote(noteId);
         fragment.setReplyText(replyText);
         fragment.setIdForFragmentContainer(idForFragmentContainer + R.id.note_comment_fragment_container_base_id);
         return fragment;
@@ -355,7 +355,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // Set the note if we retrieved the noteId from savedInstanceState
         if (!TextUtils.isEmpty(mRestoredNoteId)) {
-            setNoteWithNoteId(mRestoredNoteId);
+            setNote(mRestoredNoteId);
             mRestoredNoteId = null;
         }
     }
@@ -422,15 +422,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @Override
-    public void setNote(Note note) {
-        mNote = note;
-        if (isAdded() && mNote != null) {
-            setIdForCommentContainer();
-            showComment();
-        }
-    }
-
-    private void setNoteWithNoteId(String noteId) {
+    public void setNote(String noteId) {
         if (noteId == null) {
             showErrorToastAndFinish();
             return;
@@ -441,8 +433,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             showErrorToastAndFinish();
             return;
         }
-        setNote(note);
-        setRemoteBlogId(note.getSiteId());
+
+        mNote = note;
+        if (isAdded()) {
+            setIdForCommentContainer();
+            showComment();
+        }
+
+        mRemoteBlogId = note.getSiteId();
     }
 
     private void setIdForFragmentContainer(int id){
@@ -536,10 +534,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private int getRemoteBlogId() {
         return mRemoteBlogId;
-    }
-
-    private void setRemoteBlogId(int remoteBlogId) {
-        mRemoteBlogId = remoteBlogId;
     }
 
     /*
