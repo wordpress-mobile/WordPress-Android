@@ -15,5 +15,4 @@ public interface NotificationFragment {
     }
 
     Note getNote();
-    void setNote(Note note);
 }

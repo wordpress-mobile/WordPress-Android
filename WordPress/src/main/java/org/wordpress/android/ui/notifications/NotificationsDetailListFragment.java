@@ -143,16 +143,18 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         return mNote;
     }
 
-    @Override
-    public void setNote(Note note) {
-        mNote = note;
-    }
-
     private void setNoteWithNoteId(String noteId) {
-        Note note = NotificationsTable.getNoteById(noteId);
-        if (note != null) {
-            setNote(note);
+        if (noteId == null) {
+            showErrorToastAndFinish();
+            return;
         }
+
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+        mNote = note;
     }
 
     private void showErrorToastAndFinish() {

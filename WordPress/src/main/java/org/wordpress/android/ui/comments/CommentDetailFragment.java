@@ -421,15 +421,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return mNote;
     }
 
-    @Override
-    public void setNote(Note note) {
-        mNote = note;
-        if (isAdded() && mNote != null) {
-            setIdForCommentContainer();
-            showComment();
-        }
-    }
-
     private void setNoteWithNoteId(String noteId) {
         if (noteId == null) {
             showErrorToastAndFinish();
@@ -441,7 +432,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             showErrorToastAndFinish();
             return;
         }
-        setNote(note);
+
+        mNote = note;
+        if (isAdded()) {
+            setIdForCommentContainer();
+            showComment();
+        }
         setRemoteBlogId(note.getSiteId());
     }
 
