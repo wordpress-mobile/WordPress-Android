@@ -155,10 +155,6 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
     }
 
-    public boolean isAutomattic() {
-        return tagType == ReaderTagType.DEFAULT && getTagTitle().equals("Automattic");
-    }
-
     public boolean isDiscover() {
         return tagType == ReaderTagType.DEFAULT && getTagSlug().equals(TAG_TITLE_DISCOVER);
     }
