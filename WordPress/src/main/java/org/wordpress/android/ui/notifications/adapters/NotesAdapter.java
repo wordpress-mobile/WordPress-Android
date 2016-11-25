@@ -306,24 +306,22 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     public int getPositionForNote(String noteId) {
-        for (int i = 0; i < mFilteredNotes.size(); i++) {
-            String noteKey = mFilteredNotes.get(i).getId();
-            if (noteKey != null && noteKey.equals(noteId)) {
-                return i;
-            }
-        }
-
-        return RecyclerView.NO_POSITION;
+        return getPositionForNoteInArray(noteId, mFilteredNotes);
     }
 
     private int getPositionForNoteUnfiltered(String noteId) {
-        for (int i = 0; i < mNotes.size(); i++) {
-            String noteKey = mNotes.get(i).getId();
-            if (noteKey != null && noteKey.equals(noteId)) {
-                return i;
+        return getPositionForNoteInArray(noteId, mNotes);
+    }
+
+    private int getPositionForNoteInArray(String noteId, ArrayList<Note> notes) {
+        if (notes != null && noteId != null) {
+            for (int i = 0; i < notes.size(); i++) {
+                String noteKey = notes.get(i).getId();
+                if (noteKey != null && noteKey.equals(noteId)) {
+                    return i;
+                }
             }
         }
-
         return RecyclerView.NO_POSITION;
     }
 
