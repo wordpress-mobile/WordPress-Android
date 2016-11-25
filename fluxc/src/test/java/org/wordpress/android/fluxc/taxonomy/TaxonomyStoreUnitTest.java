@@ -20,7 +20,12 @@ import org.wordpress.android.fluxc.persistence.TaxonomySqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY;
+import static org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG;
 
 @RunWith(RobolectricTestRunner.class)
 public class TaxonomyStoreUnitTest {
@@ -64,10 +69,10 @@ public class TaxonomyStoreUnitTest {
         assertEquals(1, TaxonomyTestUtils.getTermsCount());
         assertEquals(category, TaxonomyTestUtils.getTerms().get(0));
 
-        assertEquals(1, TaxonomySqlUtils.getTermsForSite(site, TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(1, TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_CATEGORY).size());
         assertEquals(1, mTaxonomyStore.getCategoriesForSite(site).size());
 
-        assertEquals(0, TaxonomySqlUtils.getTermsForSite(site, TaxonomyStore.DEFAULT_TAXONOMY_TAG).size());
+        assertEquals(0, TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_TAG).size());
         assertEquals(0, mTaxonomyStore.getTagsForSite(site).size());
 
         assertEquals(0, TaxonomySqlUtils.getTermsForSite(site, "author").size());
@@ -85,10 +90,10 @@ public class TaxonomyStoreUnitTest {
         assertEquals(1, TaxonomyTestUtils.getTermsCount());
         assertEquals(tag, TaxonomyTestUtils.getTerms().get(0));
 
-        assertEquals(1, TaxonomySqlUtils.getTermsForSite(site, TaxonomyStore.DEFAULT_TAXONOMY_TAG).size());
+        assertEquals(1, TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_TAG).size());
         assertEquals(1, mTaxonomyStore.getTagsForSite(site).size());
 
-        assertEquals(0, TaxonomySqlUtils.getTermsForSite(site, TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(0, TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_CATEGORY).size());
         assertEquals(0, mTaxonomyStore.getCategoriesForSite(site).size());
 
         assertEquals(0, TaxonomySqlUtils.getTermsForSite(site, "author").size());
@@ -109,10 +114,10 @@ public class TaxonomyStoreUnitTest {
         assertEquals(1, TaxonomySqlUtils.getTermsForSite(site, "author").size());
         assertEquals(1, mTaxonomyStore.getTermsForSite(site, "author").size());
 
-        assertEquals(0, TaxonomySqlUtils.getTermsForSite(site, TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(0, TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_CATEGORY).size());
         assertEquals(0, mTaxonomyStore.getCategoriesForSite(site).size());
 
-        assertEquals(0, TaxonomySqlUtils.getTermsForSite(site, TaxonomyStore.DEFAULT_TAXONOMY_TAG).size());
+        assertEquals(0, TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_TAG).size());
         assertEquals(0, mTaxonomyStore.getTagsForSite(site).size());
     }
 
@@ -149,9 +154,47 @@ public class TaxonomyStoreUnitTest {
         assertEquals(4, TaxonomyTestUtils.getTermsCount());
         assertEquals(2, mTaxonomyStore.getCategoriesForSite(site).size());
 
-        TaxonomySqlUtils.clearTaxonomyForSite(site, TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
+        TaxonomySqlUtils.clearTaxonomyForSite(site, DEFAULT_TAXONOMY_CATEGORY);
 
         assertEquals(0, mTaxonomyStore.getCategoriesForSite(site).size());
         assertEquals(2, TaxonomyTestUtils.getTermsCount());
+    }
+
+    @Test
+    public void testGetCategoriesFromPost() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        TermModel category = TaxonomyTestUtils.generateSampleCategory();
+        TaxonomySqlUtils.insertOrUpdateTerm(category);
+
+        TermModel category2 = TaxonomyTestUtils.generateSampleCategory();
+        category2.setRemoteTermId(6);
+        category2.setName("Something");
+        TaxonomySqlUtils.insertOrUpdateTerm(category2);
+
+        List<Long> idList = new ArrayList<>();
+        idList.add(category.getRemoteTermId());
+        idList.add(category2.getRemoteTermId());
+
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+
+        // Unsynced category ID should be ignored in the final list
+        TermModel unsyncedCategory = TaxonomyTestUtils.generateSampleCategory();
+        unsyncedCategory.setRemoteTermId(66);
+        unsyncedCategory.setName("More");
+        idList.add(unsyncedCategory.getRemoteTermId());
+
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+
+        // Empty list should return empty category list
+        idList.clear();
+
+        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+
+        // List with only unsynced categories should return empty category list
+        idList.add(unsyncedCategory.getRemoteTermId());
+
+        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
     }
 }
