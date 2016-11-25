@@ -72,7 +72,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     public static NotificationsDetailListFragment newInstance(final String noteId) {
         NotificationsDetailListFragment fragment = new NotificationsDetailListFragment();
-        fragment.setNoteWithNoteId(noteId);
+        fragment.setNote(noteId);
         return fragment;
     }
 
@@ -120,7 +120,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
         // Set the note if we retrieved the noteId from savedInstanceState
         if (!TextUtils.isEmpty(mRestoredNoteId)) {
-            setNoteWithNoteId(mRestoredNoteId);
+            setNote(mRestoredNoteId);
             reloadNoteBlocks();
             mRestoredNoteId = null;
         }
@@ -143,7 +143,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         return mNote;
     }
 
-    private void setNoteWithNoteId(String noteId) {
+    @Override
+    public void setNote(String noteId) {
         if (noteId == null) {
             showErrorToastAndFinish();
             return;
