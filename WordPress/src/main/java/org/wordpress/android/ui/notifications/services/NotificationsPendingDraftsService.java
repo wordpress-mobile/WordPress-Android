@@ -1,14 +1,17 @@
 package org.wordpress.android.ui.notifications.services;
 
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.push.NativeNotificationsUtils;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
@@ -20,6 +23,8 @@ public class NotificationsPendingDraftsService extends Service {
 
     private boolean running = false;
     private static final int PENDING_DRAFTS_NOTIFICATION_ID = GENERIC_LOCAL_NOTIFICATION_ID + 1;
+    public static final String POST_ID_EXTRA = "postId";
+    public static final String IS_PAGE_EXTRA = "isPage";
 
     public static void startService(Context context) {
         if (context == null) {
@@ -63,6 +68,8 @@ public class NotificationsPendingDraftsService extends Service {
         1) check all “local” drafts, and check that they have been pending for more than 3 days.
         2) make notification if ONE draft and if more than ONE make another text
         ONE: “You’ve got this draft pending for publishing for xxx days. Would you like to check it?”
+        (we also have a generic message if we can't determine for how long a draft has been sitting there or it's been
+        more than 30 days)
         MORE: “You’ve got 2 posts in drafts. Want to check them?”
         * */
         new Thread(new Runnable() {
@@ -78,10 +85,10 @@ public class NotificationsPendingDraftsService extends Service {
                     long daysInDraft = 0;
                     for (Post post : draftPosts) {
                         //FIXME: change LESS THAN for GREATER THAN !!!!!
-                        if (post.getDateCreated() < three_days_ago) {
+                        if (post.getDateLastUpdated() < three_days_ago) {
                             //daysInDraft = (now - post.getDateCreated()) / one_day;
-                            daysInDraft = post.getDateCreated();
-                            daysInDraft = now - post.getDateCreated();
+                            daysInDraft = post.getDateLastUpdated(); //fixme delete this line
+                            daysInDraft = now - post.getDateLastUpdated();
                             daysInDraft = daysInDraft / one_day;
                             draftPostsOlderThan3Days.add(post);
                         }
@@ -89,7 +96,16 @@ public class NotificationsPendingDraftsService extends Service {
 
                     //check the size and build the notification accordingly
                     if (draftPostsOlderThan3Days.size() == 1) {
-                        buildSinglePendingDraftNotification(daysInDraft);
+                        Post post = draftPostsOlderThan3Days.get(0);
+                        long postId = post.getLocalTablePostId();
+                        boolean isPage = post.isPage();
+                        if (daysInDraft < 30) {
+                            buildSinglePendingDraftNotification(daysInDraft, postId, isPage);
+                        } else {
+                            //if it' been more than 30 days, or if we don't know (i.e. value for lastUpdated
+                            //is zero) then just show a generic message
+                            buildSinglePendingDraftNotification(postId, isPage);
+                        }
                     } else if (draftPostsOlderThan3Days.size() > 1) {
                         buildPendingDraftsNotification(draftPostsOlderThan3Days.size());
                     }
@@ -98,17 +114,40 @@ public class NotificationsPendingDraftsService extends Service {
         }).start();
     }
 
-    private void buildSinglePendingDraftNotification(long daysInDraft){
-        NativeNotificationsUtils.showFinalMessageToUser(String.format(getString(R.string.pending_draft_one), daysInDraft),
-                PENDING_DRAFTS_NOTIFICATION_ID, this);
-        completed();
+    private void buildSinglePendingDraftNotification(long daysInDraft, long postId, boolean isPage){
+        buildNotificationWithIntent(String.format(getString(R.string.pending_draft_one), daysInDraft), postId, isPage);
+    }
+
+    private void buildSinglePendingDraftNotification(long postId, boolean isPage){
+        buildNotificationWithIntent(getString(R.string.pending_draft_one_generic), postId, isPage);
     }
 
     private void buildPendingDraftsNotification(int count) {
-        NativeNotificationsUtils.showFinalMessageToUser(String.format(getString(R.string.pending_draft_more), count),
+        buildNotificationWithIntent(String.format(getString(R.string.pending_draft_more), count), 0, false);
+    }
+
+    private void buildNotificationWithIntent(String message, long postId, boolean isPage) {
+        NotificationCompat.Builder builder = NativeNotificationsUtils.getBuilder(this);
+
+        Intent resultIntent = new Intent(this, WPMainActivity.class);
+        resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        resultIntent.setAction("android.intent.action.MAIN");
+        resultIntent.addCategory("android.intent.category.LAUNCHER");
+        resultIntent.putExtra(POST_ID_EXTRA, postId);
+        resultIntent.putExtra(IS_PAGE_EXTRA, isPage);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+
+        NativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
                 PENDING_DRAFTS_NOTIFICATION_ID, this);
+
         completed();
     }
+
 
     private void completed() {
         AppLog.i(AppLog.T.NOTIFS, "notifications pending drafts service > completed");

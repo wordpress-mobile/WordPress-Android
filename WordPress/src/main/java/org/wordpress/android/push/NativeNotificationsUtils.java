@@ -21,6 +21,11 @@ public class NativeNotificationsUtils {
 
     public static void showMessageToUser(String message, boolean intermediateMessage, int pushId, Context context) {
         NotificationCompat.Builder builder = getBuilder(context).setContentText(message).setTicker(message);
+        showMessageToUserWithBuilder(builder, message, intermediateMessage, pushId, context);
+    }
+
+    public static void showMessageToUserWithBuilder(NotificationCompat.Builder builder, String message,
+                                                    boolean intermediateMessage, int pushId, Context context) {
         if (!intermediateMessage) {
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         }

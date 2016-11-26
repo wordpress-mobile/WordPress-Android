@@ -44,6 +44,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
@@ -208,7 +209,12 @@ public class WPMainActivity extends AppCompatActivity {
                         false));
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
-                    launchWithNoteId();
+                    if (getIntent().hasExtra(NotificationsPendingDraftsService.POST_ID_EXTRA)) {
+                        launchWithPostId(getIntent().getLongExtra(NotificationsPendingDraftsService.POST_ID_EXTRA, 0),
+                                getIntent().getBooleanExtra(NotificationsPendingDraftsService.IS_PAGE_EXTRA, false));
+                    } else {
+                        launchWithNoteId();
+                    }
                 } else {
                     int position = AppPrefs.getMainTabIndex();
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
@@ -345,6 +351,15 @@ public class WPMainActivity extends AppCompatActivity {
         }
 
         GCMMessageService.removeAllNotifications(this);
+    }
+
+    /*
+    * called from an internal pending draft notification, so the user can land in the local draft and take action
+    * such as finish editing and publish, or delete the post, etc. */
+    private void launchWithPostId(long postId, boolean isPage) {
+        if (isFinishing() || getIntent() == null) return;
+
+        ActivityLauncher.editBlogPostOrPageForResult(this, postId, isPage);
     }
 
     @Override

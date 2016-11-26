@@ -86,7 +86,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 50;
+    private static final int DATABASE_VERSION = 51;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -107,6 +107,7 @@ public class WordPressDB {
             + "title text default '',"
             + "dateCreated date,"
             + "date_created_gmt date,"
+            + "dateLastUpdated date,"
             + "categories text default '',"
             + "custom_fields text default '',"
             + "description text default '',"
@@ -229,6 +230,9 @@ public class WordPressDB {
 
     // add capabilities to blog
     private static final String ADD_BLOGS_CAPABILITIES = "alter table accounts add capabilities text default '';";
+
+    // add field to store last used blog
+    private static final String ADD_DRAFT_POST_LAST_UPDATED_DATE = "alter table posts add dateLastUpdated date;";
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
@@ -434,6 +438,9 @@ public class WordPressDB {
             case 49:
                 // Delete simperium DB since we're removing Simperium from the app.
                 ctx.deleteDatabase("simperium-store");
+                currentVersion++;
+            case 50:
+                db.execSQL(ADD_DRAFT_POST_LAST_UPDATED_DATE);
                 currentVersion++;
 
         }
@@ -1260,6 +1267,7 @@ public class WordPressDB {
         post.setTitle(StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title"))));
         post.setDateCreated(c.getLong(c.getColumnIndex("dateCreated")));
         post.setDate_created_gmt(c.getLong(c.getColumnIndex("date_created_gmt")));
+        post.setDateLastUpdated(c.getLong(c.getColumnIndex("dateLastUpdated")));
         post.setCategories(c.getString(c.getColumnIndex("categories")));
         post.setCustomFields(c.getString(c.getColumnIndex("custom_fields")));
         post.setDescription(c.getString(c.getColumnIndex("description")));
@@ -1302,6 +1310,7 @@ public class WordPressDB {
             values.put("blogID", post.getLocalTableBlogId());
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
+            values.put("dateLastUpdated", post.getDateLastUpdated());
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
 
@@ -1337,6 +1346,7 @@ public class WordPressDB {
             ContentValues values = new ContentValues();
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
+            values.put("dateLastUpdated", post.getDateLastUpdated());
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
             values.put("postid", post.getRemotePostId());
