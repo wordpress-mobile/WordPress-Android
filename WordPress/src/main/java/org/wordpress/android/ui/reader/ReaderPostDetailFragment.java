@@ -1153,9 +1153,9 @@ public class ReaderPostDetailFragment extends Fragment
             return true;
         }
 
-        // if the mime type starts with "application" open externally - if there's an associated
-        // app it will handle it, otherwise the default browser will (which is still better than
-        // showing it internally)
+        // if the mime type starts with "application" open it externally - this will either
+        // open it in the associated app or the default browser (which will enable the user
+        // to download it)
         String mimeType = UrlUtils.getUrlMimeType(url);
         if (mimeType != null && mimeType.startsWith("application")) {
             return true;
