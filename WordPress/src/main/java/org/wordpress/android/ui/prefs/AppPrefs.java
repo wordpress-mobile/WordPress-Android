@@ -428,8 +428,7 @@ public class AppPrefs {
     }
 
     public static boolean isNotificationsSwipeToNavigateShown() {
-        // TODO:
-        return false;// getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, false);
+        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, false);
     }
 
     public static void setNotificationsSwipeToNavigateShown(boolean alreadyShown) {

@@ -39,8 +39,9 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPViewPagerTransformer;
+import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -631,6 +632,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                             trackPostAtPositionIfNeeded(currentPosition);
+                        }
+
+                        // let the user know they can swipe between posts
+                        if (adapter.getCount() > 1) {
+                            WPSwipeSnackbar.show(mViewPager);
                         }
                     }
                 });
