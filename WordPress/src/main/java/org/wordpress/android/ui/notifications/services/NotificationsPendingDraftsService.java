@@ -11,6 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.push.NativeNotificationsUtils;
+import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.util.AppLog;
 
@@ -22,7 +23,7 @@ import static org.wordpress.android.push.GCMMessageService.GENERIC_LOCAL_NOTIFIC
 public class NotificationsPendingDraftsService extends Service {
 
     private boolean running = false;
-    private static final int PENDING_DRAFTS_NOTIFICATION_ID = GENERIC_LOCAL_NOTIFICATION_ID + 1;
+    public static final int PENDING_DRAFTS_NOTIFICATION_ID = GENERIC_LOCAL_NOTIFICATION_ID + 1;
     public static final String POST_ID_EXTRA = "postId";
     public static final String IS_PAGE_EXTRA = "isPage";
 
@@ -128,6 +129,7 @@ public class NotificationsPendingDraftsService extends Service {
 
     private void buildNotificationWithIntent(String message, long postId, boolean isPage) {
         NotificationCompat.Builder builder = NativeNotificationsUtils.getBuilder(this);
+        builder.setPriority(NotificationCompat.PRIORITY_MAX);
 
         Intent resultIntent = new Intent(this, WPMainActivity.class);
         resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
@@ -145,7 +147,9 @@ public class NotificationsPendingDraftsService extends Service {
         //only add quick actions if we do have a post/page id to link to
         if (postId != 0) {
             addOpenDraftActionForNotification(this, builder, postId, isPage);
+            addIgnoreActionForNotification(this, builder, postId, isPage);
         }
+        addDismissActionForNotification(this,builder, postId, isPage);
 
         NativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
                 PENDING_DRAFTS_NOTIFICATION_ID, this);
@@ -164,6 +168,32 @@ public class NotificationsPendingDraftsService extends Service {
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ab_icon_edit, getText(R.string.edit),
                 pendingIntent);
+    }
+
+    private void addIgnoreActionForNotification(Context context, NotificationCompat.Builder builder, long postId, boolean isPage) {
+        // Call processing service when user taps on IGNORE - we should remember this decision for this post
+        Intent ignoreIntent = new Intent(context, NotificationsProcessingService.class);
+        ignoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_IGNORE);
+        ignoreIntent.putExtra(POST_ID_EXTRA, postId);
+        ignoreIntent.putExtra(IS_PAGE_EXTRA, isPage);
+        PendingIntent dismissPendingIntent =  PendingIntent.getService(context,
+                0, ignoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.addAction(R.drawable.ic_close_white_24dp, getText(R.string.ignore),
+                dismissPendingIntent);
+
+    }
+
+    private void addDismissActionForNotification(Context context, NotificationCompat.Builder builder, long postId, boolean isPage) {
+        // Call processing service when notification is dismissed
+        Intent notificationDeletedIntent = new Intent(context, NotificationsProcessingService.class);
+        notificationDeletedIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_DISMISS);
+        if (postId != 0 ) {
+            notificationDeletedIntent.putExtra(POST_ID_EXTRA, postId);
+            notificationDeletedIntent.putExtra(IS_PAGE_EXTRA, isPage);
+        }
+        PendingIntent pendingDeleteIntent =
+                PendingIntent.getBroadcast(context, PENDING_DRAFTS_NOTIFICATION_ID, notificationDeletedIntent, 0);
+        builder.setDeleteIntent(pendingDeleteIntent);
     }
 
     private void completed() {

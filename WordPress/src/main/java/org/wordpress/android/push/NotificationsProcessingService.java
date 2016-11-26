@@ -37,6 +37,7 @@ import static org.wordpress.android.push.GCMMessageService.AUTH_PUSH_NOTIFICATIO
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
 import static org.wordpress.android.push.GCMMessageService.GROUP_NOTIFICATION_ID;
 import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
+import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID;
 
 /**
  * service which makes it possible to process Notifications quick actions in the background,
@@ -55,6 +56,9 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_APPROVE = "action_approve";
     public static final String ARG_ACTION_AUTH_APPROVE = "action_auth_aprove";
     public static final String ARG_ACTION_AUTH_IGNORE = "action_auth_ignore";
+    public static final String ARG_ACTION_DRAFT_PENDING_EDIT = "action_draft_pending_edit";
+    public static final String ARG_ACTION_DRAFT_PENDING_DISMISS = "action_draft_pending_dismiss";
+    public static final String ARG_ACTION_DRAFT_PENDING_IGNORE = "action_draft_pending_ignore";
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
     public static final String ARG_NOTE_ID = "note_id";
 
@@ -163,6 +167,22 @@ public class NotificationsProcessingService extends Service {
                     GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
 
                     AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
+                    return;
+                }
+
+                // check special cases for pending draft notifications - ignore
+                if (mActionType.equals(ARG_ACTION_DRAFT_PENDING_IGNORE)) {
+                    //dismiss notif
+                    NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, mContext);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_IGNORED);
+                    return;
+                }
+
+                // check special cases for pending draft notifications - dismiss
+                if (mActionType.equals(ARG_ACTION_DRAFT_PENDING_DISMISS)) {
+                    //dismiss notif
+                    NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, mContext);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_DISMISSED);
                     return;
                 }
 

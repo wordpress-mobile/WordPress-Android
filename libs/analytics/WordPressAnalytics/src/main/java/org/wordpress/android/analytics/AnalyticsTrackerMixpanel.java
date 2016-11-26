@@ -722,6 +722,21 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Notifications - Unliked Comment");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_comment_unlikes_from_notification");
                 break;
+            case NOTIFICATION_PENDING_DRAFTS_TAPPED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Pending Drafts Tapped");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_tapped");
+                break;
+            case NOTIFICATION_PENDING_DRAFTS_IGNORED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Pending Drafts Ignored");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_ignored");
+                break;
+            case NOTIFICATION_PENDING_DRAFTS_DISMISSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Pending Drafts Dismissed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_dismissed");
+                break;
             case OPENED_POSTS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Posts");
