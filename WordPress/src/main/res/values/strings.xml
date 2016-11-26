@@ -337,7 +337,7 @@
     <string name="comment_q_action_replying">Replying…</string>
 
     <!-- pending draft local notifications -->
-    <string name="pending_draft_one">You\'ve got this draft pending for publishing for xxx days. Would you like to check it?</string>
+    <string name="pending_draft_one">You\'ve got one draft pending for publishing for %d days. Would you like to check it?</string>
     <string name="pending_draft_more">You\'ve got %d posts in drafts. Want to check them?</string>
 
 

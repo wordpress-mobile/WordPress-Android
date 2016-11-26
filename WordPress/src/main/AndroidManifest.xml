@@ -484,6 +484,10 @@
             android:name=".push.NotificationsScreenLockWatchService"
             android:exported="false"
             android:label="Notifications Screen Lock watch Service" />
+        <service
+            android:name=".ui.notifications.services.NotificationsPendingDraftsService"
+            android:exported="false"
+            android:label="Notifications Pending Drafts Service" />
 
 
         <uses-library

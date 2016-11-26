@@ -69,20 +69,27 @@ public class NotificationsPendingDraftsService extends Service {
             @Override
             public void run() {
                 ArrayList<Post> draftPosts =  WordPress.wpDB.getDraftPostList(WordPress.getCurrentBlog().getLocalTableBlogId());
-                ArrayList<Post> draftPostsOlderThan3Days = new ArrayList<Post>();
+                ArrayList<Post> draftPostsOlderThan3Days = new ArrayList<>();
                 if (draftPosts != null && draftPosts.size() > 0) {
                     //now check those that have been sitting there for more than 3 days now.
                     long one_day = 24 * 60 * 60 * 1000;
-                    long three_days_ago = System.currentTimeMillis() - (one_day * 3);
+                    long now = System.currentTimeMillis();
+                    long three_days_ago = now - (one_day * 3);
+                    long daysInDraft = 0;
                     for (Post post : draftPosts) {
+                        //FIXME: change LESS THAN for GREATER THAN !!!!!
                         if (post.getDateCreated() < three_days_ago) {
+                            //daysInDraft = (now - post.getDateCreated()) / one_day;
+                            daysInDraft = post.getDateCreated();
+                            daysInDraft = now - post.getDateCreated();
+                            daysInDraft = daysInDraft / one_day;
                             draftPostsOlderThan3Days.add(post);
                         }
                     }
 
                     //check the size and build the notification accordingly
                     if (draftPostsOlderThan3Days.size() == 1) {
-                        buildSinglePendingDraftNotification();
+                        buildSinglePendingDraftNotification(daysInDraft);
                     } else if (draftPostsOlderThan3Days.size() > 1) {
                         buildPendingDraftsNotification(draftPostsOlderThan3Days.size());
                     }
@@ -91,8 +98,8 @@ public class NotificationsPendingDraftsService extends Service {
         }).start();
     }
 
-    private void buildSinglePendingDraftNotification(){
-        NativeNotificationsUtils.showFinalMessageToUser(getString(R.string.pending_draft_one),
+    private void buildSinglePendingDraftNotification(long daysInDraft){
+        NativeNotificationsUtils.showFinalMessageToUser(String.format(getString(R.string.pending_draft_one), daysInDraft),
                 PENDING_DRAFTS_NOTIFICATION_ID, this);
         completed();
     }
