@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -31,7 +30,6 @@ import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
-import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsTimeframe;
@@ -40,7 +38,9 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -124,7 +124,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             @Override
             public void onPageSelected(int position) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
-                AppPrefs.setSwipeToNavigateShown(true);
+                AppPrefs.setNotificationsSwipeToNavigateShown(true);
                 //change the action bar title for the current note
                 Note currentNote = mAdapter.getNoteAtPosition(position);
                 if (currentNote != null) {
@@ -166,8 +166,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         super.onStart();
         //if the user hasn't used swipe yet, hint the user they can navigate through notifications detail
         //using swipe on the ViewPager
-        if (!AppPrefs.isSwipeToNavigateShown() && mAllowHorizontalNavigation && (mAdapter.getCount() > 1)) {
-            Snackbar.make(mViewPager, getString(R.string.notifications_label_swipe_for_more_snackbar), Snackbar.LENGTH_LONG).show();
+        if (!AppPrefs.isNotificationsSwipeToNavigateShown() && mAllowHorizontalNavigation && (mAdapter.getCount() > 1)) {
+            WPSwipeSnackbar.show(mViewPager);
         }
     }
 

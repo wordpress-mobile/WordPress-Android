@@ -84,6 +84,7 @@
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
     <string name="send">Send</string>
+    <string name="swipe_for_more">Swipe for more</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -855,7 +856,6 @@
     <string name="follows">Follows</string>
     <string name="notifications_label_new_notifications">New notifications</string>
     <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
-    <string name="notifications_label_swipe_for_more_snackbar">Swipe for more notifications</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
@@ -1397,6 +1397,8 @@
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
     <string name="vertical_line" translatable="false">\u007C</string>
+    <string name="arrow_left" translatable="false">\uffe9</string>
+    <string name="arrow_right" translatable="false">\uffeb</string>
 
     <!-- Noticons -->
     <string name="noticon_clock" translatable="false">\uf303</string>
