@@ -28,6 +28,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -190,6 +191,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 super.onPageSelected(position);
                 onShowHideToolbar(true);
                 trackPostAtPositionIfNeeded(position);
+
+                // don't show the swipe indicator in the future since the user knows how to swipe
+                AppPrefs.setReaderSwipeToNavigateShown(true);
 
                 // pause the previous web view - important because otherwise embedded content
                 // will continue to play
@@ -635,7 +639,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         }
 
                         // let the user know they can swipe between posts
-                        if (adapter.getCount() > 1) {
+                        if (adapter.getCount() > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
                             WPSwipeSnackbar.show(mViewPager);
                         }
                     }

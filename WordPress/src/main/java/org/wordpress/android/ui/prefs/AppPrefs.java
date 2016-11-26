@@ -99,6 +99,9 @@ public class AppPrefs {
 
         // When we need to show the snackbar indicating how notifications can be navigated through
         SWIPE_TO_NAVIGATE_NOTIFICATIONS,
+
+        // Same as above but for the reader
+        SWIPE_TO_NAVIGATE_READER,
     }
 
     private static SharedPreferences prefs() {
@@ -433,6 +436,14 @@ public class AppPrefs {
 
     public static void setNotificationsSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, alreadyShown);
+    }
+
+    public static boolean isReaderSwipeToNavigateShown() {
+        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, false);
+    }
+
+    public static void setReaderSwipeToNavigateShown(boolean alreadyShown) {
+        setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
     }
 
 }
