@@ -129,7 +129,8 @@ public class NotificationsPendingDraftsService extends Service {
 
     private void buildNotificationWithIntent(String message, long postId, boolean isPage) {
         NotificationCompat.Builder builder = NativeNotificationsUtils.getBuilder(this);
-        builder.setPriority(NotificationCompat.PRIORITY_MAX);
+        builder.setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_MAX);
 
         Intent resultIntent = new Intent(this, WPMainActivity.class);
         resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
