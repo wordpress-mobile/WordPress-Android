@@ -359,6 +359,8 @@ public class WPMainActivity extends AppCompatActivity {
     private void launchWithPostId(long postId, boolean isPage) {
         if (isFinishing() || getIntent() == null) return;
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
+
         ActivityLauncher.editBlogPostOrPageForResult(this, postId, isPage);
     }
 
