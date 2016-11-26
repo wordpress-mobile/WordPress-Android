@@ -116,11 +116,15 @@ public class NotificationsPendingDraftsService extends Service {
 
                     } else if (draftPostsOlderThan3Days.size() > 1) {
                         long longestLivingDraft = 0;
+                        boolean onlyPagesFound = true;
                         for (Post post : draftPostsOlderThan3Days) {
                             //update each post dateLastNotified field to now
                             if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
                                 if (post.getDateLastNotified() > longestLivingDraft) {
                                     longestLivingDraft = post.getDateLastNotified();
+                                    if (!post.isPage()) {
+                                        onlyPagesFound = false;
+                                    }
                                 }
                                 post.setDateLastNotified(now);
                                 WordPress.wpDB.updatePost(post);
@@ -130,7 +134,7 @@ public class NotificationsPendingDraftsService extends Service {
                         //if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
                         //then show the notification again
                         if (longestLivingDraft > 0) {
-                            buildPendingDraftsNotification(draftPostsOlderThan3Days.size());
+                            buildPendingDraftsNotification(draftPostsOlderThan3Days.size(), onlyPagesFound);
                         }
                     }
 
@@ -148,8 +152,8 @@ public class NotificationsPendingDraftsService extends Service {
         buildNotificationWithIntent(getString(R.string.pending_draft_one_generic), postId, isPage);
     }
 
-    private void buildPendingDraftsNotification(int count) {
-        buildNotificationWithIntent(String.format(getString(R.string.pending_draft_more), count), 0, false);
+    private void buildPendingDraftsNotification(int count, boolean showPages) {
+        buildNotificationWithIntent(String.format(getString(R.string.pending_draft_more), count), 0, showPages);
     }
 
     private void buildNotificationWithIntent(String message, long postId, boolean isPage) {

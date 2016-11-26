@@ -364,7 +364,17 @@ public class WPMainActivity extends AppCompatActivity {
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
         NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, this);
 
-        ActivityLauncher.editBlogPostOrPageForResult(this, postId, isPage);
+        //if no specific post id passed, show the list
+        if (postId == 0 ) {
+            //show list
+            if (isPage) {
+                ActivityLauncher.viewCurrentBlogPages(this);
+            } else {
+                ActivityLauncher.viewCurrentBlogPosts(this);
+            }
+        } else {
+            ActivityLauncher.editBlogPostOrPageForResult(this, postId, isPage);
+        }
     }
 
     @Override
