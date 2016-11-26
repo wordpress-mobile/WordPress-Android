@@ -142,8 +142,10 @@ public class NotificationsPendingDraftsService extends Service {
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
 
-        addOpenDraftActionForNotification(this, builder, postId, isPage);
-
+        //only add quick actions if we do have a post/page id to link to
+        if (postId != 0) {
+            addOpenDraftActionForNotification(this, builder, postId, isPage);
+        }
 
         NativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
                 PENDING_DRAFTS_NOTIFICATION_ID, this);
