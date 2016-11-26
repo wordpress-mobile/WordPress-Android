@@ -192,16 +192,16 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 onShowHideToolbar(true);
                 trackPostAtPositionIfNeeded(position);
 
-                // don't show the swipe indicator in the future since the user knows how to swipe
-                AppPrefs.setReaderSwipeToNavigateShown(true);
-
-                // pause the previous web view - important because otherwise embedded content
-                // will continue to play
                 if (mLastSelectedPosition > -1 && mLastSelectedPosition != position) {
+                    // pause the previous web view - important because otherwise embedded content
+                    // will continue to play
                     ReaderPostDetailFragment lastFragment = getDetailFragmentAtPosition(mLastSelectedPosition);
                     if (lastFragment != null) {
                         lastFragment.pauseWebView();
                     }
+
+                    // don't show the swipe indicator in the future since the user knows how to swipe
+                    AppPrefs.setReaderSwipeToNavigateShown(true);
                 }
 
                 // resume the newly active webView if it was previously paused
