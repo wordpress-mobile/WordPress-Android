@@ -142,12 +142,27 @@ public class NotificationsPendingDraftsService extends Service {
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
 
+        addOpenDraftActionForNotification(this, builder, postId, isPage);
+
+
         NativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
                 PENDING_DRAFTS_NOTIFICATION_ID, this);
 
         completed();
     }
 
+    private void addOpenDraftActionForNotification(Context context, NotificationCompat.Builder builder, long postId, boolean isPage) {
+        // adding open draft action
+        Intent openDraftIntent = new Intent(context, WPMainActivity.class);
+        openDraftIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+        openDraftIntent.putExtra(POST_ID_EXTRA, postId);
+        openDraftIntent.putExtra(IS_PAGE_EXTRA, isPage);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, openDraftIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.addAction(R.drawable.ab_icon_edit, getText(R.string.edit),
+                pendingIntent);
+    }
 
     private void completed() {
         AppLog.i(AppLog.T.NOTIFS, "notifications pending drafts service > completed");
