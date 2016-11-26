@@ -26,6 +26,10 @@ public class NotificationsPendingDraftsService extends Service {
     public static final int PENDING_DRAFTS_NOTIFICATION_ID = GENERIC_LOCAL_NOTIFICATION_ID + 1;
     public static final String POST_ID_EXTRA = "postId";
     public static final String IS_PAGE_EXTRA = "isPage";
+    private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 30 * 60 * 1000; //30 minutes
+    private static final long MAX_DAYS_TO_COUNT_DAYS = 30; //30 days
+
+    private static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
     public static void startService(Context context) {
         if (context == null) {
@@ -80,36 +84,57 @@ public class NotificationsPendingDraftsService extends Service {
                 ArrayList<Post> draftPostsOlderThan3Days = new ArrayList<>();
                 if (draftPosts != null && draftPosts.size() > 0) {
                     //now check those that have been sitting there for more than 3 days now.
-                    long one_day = 24 * 60 * 60 * 1000;
                     long now = System.currentTimeMillis();
-                    long three_days_ago = now - (one_day * 3);
-                    long daysInDraft = 0;
+                    long three_days_ago = now - (ONE_DAY * 3);
                     for (Post post : draftPosts) {
-                        //FIXME: change LESS THAN for GREATER THAN !!!!!
                         if (post.getDateLastUpdated() < three_days_ago) {
-                            //daysInDraft = (now - post.getDateCreated()) / one_day;
-                            daysInDraft = post.getDateLastUpdated(); //fixme delete this line
-                            daysInDraft = now - post.getDateLastUpdated();
-                            daysInDraft = daysInDraft / one_day;
                             draftPostsOlderThan3Days.add(post);
                         }
                     }
 
                     //check the size and build the notification accordingly
+                    long daysInDraft = 0;
                     if (draftPostsOlderThan3Days.size() == 1) {
                         Post post = draftPostsOlderThan3Days.get(0);
+                        daysInDraft = (now - post.getDateLastUpdated()) / ONE_DAY;
                         long postId = post.getLocalTablePostId();
                         boolean isPage = post.isPage();
-                        if (daysInDraft < 30) {
-                            buildSinglePendingDraftNotification(daysInDraft, postId, isPage);
-                        } else {
-                            //if it' been more than 30 days, or if we don't know (i.e. value for lastUpdated
-                            //is zero) then just show a generic message
-                            buildSinglePendingDraftNotification(postId, isPage);
+
+                        //only notify the user if the last time they have been notified about this particular post was at least
+                        //30 minutes ago, but let's not do it constantly each time the app comes to the foreground
+                        if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
+                            post.setDateLastNotified(now);
+                            if (daysInDraft < MAX_DAYS_TO_COUNT_DAYS) {
+                                buildSinglePendingDraftNotification(daysInDraft, postId, isPage);
+                            } else {
+                                //if it's been more than MAX_DAYS_TO_COUNT_DAYS days, or if we don't know (i.e. value for lastUpdated
+                                //is zero) then just show a generic message
+                                buildSinglePendingDraftNotification(postId, isPage);
+                            }
+                            WordPress.wpDB.updatePost(post);
                         }
+
                     } else if (draftPostsOlderThan3Days.size() > 1) {
-                        buildPendingDraftsNotification(draftPostsOlderThan3Days.size());
+                        long longestLivingDraft = 0;
+                        for (Post post : draftPostsOlderThan3Days) {
+                            //update each post dateLastNotified field to now
+                            if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
+                                if (post.getDateLastNotified() > longestLivingDraft) {
+                                    longestLivingDraft = post.getDateLastNotified();
+                                }
+                                post.setDateLastNotified(now);
+                                WordPress.wpDB.updatePost(post);
+                            }
+                        }
+
+                        //if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
+                        //then show the notification again
+                        if (longestLivingDraft > 0) {
+                            buildPendingDraftsNotification(draftPostsOlderThan3Days.size());
+                        }
                     }
+
+                    completed();
                 }
             }
         }).start();
@@ -154,8 +179,6 @@ public class NotificationsPendingDraftsService extends Service {
 
         NativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
                 PENDING_DRAFTS_NOTIFICATION_ID, this);
-
-        completed();
     }
 
     private void addOpenDraftActionForNotification(Context context, NotificationCompat.Builder builder, long postId, boolean isPage) {
@@ -165,7 +188,7 @@ public class NotificationsPendingDraftsService extends Service {
         openDraftIntent.putExtra(POST_ID_EXTRA, postId);
         openDraftIntent.putExtra(IS_PAGE_EXTRA, isPage);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, openDraftIntent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, openDraftIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ab_icon_edit, getText(R.string.edit),
                 pendingIntent);
@@ -178,7 +201,7 @@ public class NotificationsPendingDraftsService extends Service {
         ignoreIntent.putExtra(POST_ID_EXTRA, postId);
         ignoreIntent.putExtra(IS_PAGE_EXTRA, isPage);
         PendingIntent dismissPendingIntent =  PendingIntent.getService(context,
-                0, ignoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                2, ignoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.addAction(R.drawable.ic_close_white_24dp, getText(R.string.ignore),
                 dismissPendingIntent);
 

@@ -26,7 +26,8 @@ public class Post implements Serializable {
     private String customFields;
     private long dateCreated;
     private long dateCreatedGmt;
-    private long dateLastUpdated; //only used for drafts
+    private long dateLastUpdated; //only used for drafts - last time the user updated this draft
+    private long dateLastNotified; //only used for drafts - last time we notified the user this post was too long in drafts
     private String description;
     private String link;
     private boolean allowComments;
@@ -511,5 +512,13 @@ public class Post implements Serializable {
 
     public void setDateLastUpdated(long dateLastUpdated) {
         this.dateLastUpdated = dateLastUpdated;
+    }
+
+    public long getDateLastNotified() {
+        return dateLastNotified;
+    }
+
+    public void setDateLastNotified(long dateLastNotified) {
+        this.dateLastNotified = dateLastNotified;
     }
 }

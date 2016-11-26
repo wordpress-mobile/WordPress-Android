@@ -36,6 +36,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.push.NotificationsScreenLockWatchService;
 import org.wordpress.android.ui.ActivityId;
@@ -72,6 +73,7 @@ import org.wordpress.android.widgets.WPViewPager;
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
+import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -360,6 +362,7 @@ public class WPMainActivity extends AppCompatActivity {
         if (isFinishing() || getIntent() == null) return;
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
+        NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, this);
 
         ActivityLauncher.editBlogPostOrPageForResult(this, postId, isPage);
     }
