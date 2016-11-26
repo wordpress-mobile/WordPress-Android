@@ -7,8 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.text.TextUtils;
 
@@ -159,9 +157,9 @@ public class NotificationsProcessingService extends Service {
                 // check special cases for authorization push
                 if (mActionType.equals(ARG_ACTION_AUTH_IGNORE)) {
                     //dismiss notifs
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
-                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
+                    NativeNotificationsUtils.dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID, mContext);
+                    NativeNotificationsUtils.dismissNotification(AUTH_PUSH_NOTIFICATION_ID, mContext);
+                    NativeNotificationsUtils.dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
                     GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
 
                     AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
@@ -173,7 +171,7 @@ public class NotificationsProcessingService extends Service {
                     //because we've got inline-reply there with its own spinner to show progress
                     // no op
                 } else {
-                    showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
+                    NativeNotificationsUtils.showIntermediateMessageToUser(getProcessingTitleForAction(mActionType), mContext);
                 }
 
                 //if we still don't have a Note, go get it from the REST API
@@ -335,9 +333,9 @@ public class NotificationsProcessingService extends Service {
             NotificationsActions.markNoteAsRead(mNote);
 
             //dismiss any other pending result notification
-            dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+            NativeNotificationsUtils.dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID, mContext);
             //update notification indicating the operation succeeded
-            showFinalMessageToUser(successMessage, ACTIONS_PROGRESS_NOTIFICATION_ID);
+            NativeNotificationsUtils.showFinalMessageToUser(successMessage, ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
             //remove the original notification from the system bar
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(mContext, mNoteId);
 
@@ -345,7 +343,7 @@ public class NotificationsProcessingService extends Service {
             Handler handler = new Handler(getMainLooper());
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
+                    NativeNotificationsUtils.dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
                 }}, 3000); // show the success message for 3 seconds, then dismiss
 
             stopSelf(mTaskId);
@@ -369,15 +367,15 @@ public class NotificationsProcessingService extends Service {
                 errorMessage = getString(R.string.error_generic);
             }
             resetOriginalNotification();
-            dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
-            showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
+            NativeNotificationsUtils.dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
+            NativeNotificationsUtils.showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID, mContext);
 
             //after 3 seconds, dismiss the error message notification
             Handler handler = new Handler(getMainLooper());
             handler.postDelayed(new Runnable() {
                 public void run() {
                     //remove the error notification from the system bar
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                    NativeNotificationsUtils.dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID, mContext);
                 }}, 3000); // show the success message for 3 seconds, then dismiss
 
             stopSelf(mTaskId);
@@ -389,7 +387,7 @@ public class NotificationsProcessingService extends Service {
                 errorMessage = getString(R.string.error_generic);
             }
             resetOriginalNotification();
-            showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
+            NativeNotificationsUtils.showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID, mContext);
 
             if (autoDismiss) {
                 //after 3 seconds, dismiss the error message notification
@@ -397,38 +395,11 @@ public class NotificationsProcessingService extends Service {
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         //remove the error notification from the system bar
-                        dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                        NativeNotificationsUtils.dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID, mContext);
                     }}, 3000); // show the success message for 3 seconds, then dismiss
             }
 
             stopSelf(mTaskId);
-        }
-
-        private void showIntermediateMessageToUser(String message) {
-            showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID);
-        }
-
-        private void showFinalMessageToUser(String message, int pushId) {
-            showMessageToUser(message, false, pushId);
-        }
-
-        private void showMessageToUser(String message, boolean intermediateMessage, int pushId) {
-            NotificationCompat.Builder builder = getBuilder().setContentText(message).setTicker(message);
-            if (!intermediateMessage) {
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-            }
-            builder.setProgress(0, 0, intermediateMessage);
-
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-            notificationManager.notify(pushId, builder.build());
-        }
-
-        private NotificationCompat.Builder getBuilder() {
-            return new NotificationCompat.Builder(mContext)
-                    .setSmallIcon(R.drawable.notification_icon)
-                    .setColor(getResources().getColor(R.color.blue_wordpress))
-                    .setContentTitle(getString(R.string.app_name))
-                    .setAutoCancel(true);
         }
 
         private void getNoteFromNoteId(String noteId, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
@@ -508,16 +479,11 @@ public class NotificationsProcessingService extends Service {
                 });
             } else {
                 //cancel the current notification
-                dismissNotification(mPushId);
-                hideStatusBar();
+                NativeNotificationsUtils.dismissNotification(mPushId, mContext);
+                NativeNotificationsUtils.hideStatusBar(mContext);
                 //and just trigger the Activity to allow the user to write a reply
                 startReplyToCommentActivity();
             }
-        }
-
-        private void dismissNotification(int pushId) {
-            final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-            notificationManager.cancel(pushId);
         }
 
         private void startReplyToCommentActivity() {
@@ -530,11 +496,6 @@ public class NotificationsProcessingService extends Service {
             intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
             intent.putExtra(NOTE_INSTANT_REPLY_EXTRA, true);
             startActivity(intent);
-        }
-
-        private void hideStatusBar() {
-            Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-            sendBroadcast(closeIntent);
         }
 
         private void resetOriginalNotification(){
