@@ -67,6 +67,7 @@ public class GCMMessageService extends GcmListenerService {
     public static final int GROUP_NOTIFICATION_ID = 30000;
     public static final int ACTIONS_RESULT_NOTIFICATION_ID = 40000;
     public static final int ACTIONS_PROGRESS_NOTIFICATION_ID = 50000;
+    public static final int GENERIC_LOCAL_NOTIFICATION_ID = 60000;
     private static final int AUTH_PUSH_REQUEST_CODE_APPROVE = 0;
     private static final int AUTH_PUSH_REQUEST_CODE_IGNORE = 1;
     private static final int AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG = 2;

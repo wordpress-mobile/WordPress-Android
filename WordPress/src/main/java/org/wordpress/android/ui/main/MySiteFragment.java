@@ -28,6 +28,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
+import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -85,8 +86,10 @@ public class MySiteFragment extends Fragment
 
     public void setBlog(@Nullable final Blog blog) {
         mBlogLocalId = BlogUtils.getBlogLocalId(blog);
-
         refreshBlogDetails(blog);
+
+        //once the user switches to another blog, check if they have any drafts pending
+        NotificationsPendingDraftsService.startService(getActivity());
     }
 
     @Override

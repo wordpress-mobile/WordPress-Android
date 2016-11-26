@@ -4,44 +4,27 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
-import org.wordpress.android.datasets.NotificationsTable;
-import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.ui.notifications.NotificationEvents;
-import org.wordpress.android.ui.notifications.utils.NotificationsActions;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import de.greenrobot.event.EventBus;
+import static org.wordpress.android.push.GCMMessageService.GENERIC_LOCAL_NOTIFICATION_ID;
 
 
 public class NotificationsPendingDraftsService extends Service {
 
     private boolean running = false;
-    private Context mContext;
+    private static final int PENDING_DRAFTS_NOTIFICATION_ID = GENERIC_LOCAL_NOTIFICATION_ID + 1;
 
     public static void startService(Context context) {
         if (context == null) {
             return;
         }
-        mContext = context;
         Intent intent = new Intent(context, NotificationsPendingDraftsService.class);
         context.startService(intent);
     }
@@ -76,7 +59,6 @@ public class NotificationsPendingDraftsService extends Service {
             return;
         }
         running = true;
-        //TODO:
         /*
         1) check all “local” drafts, and check that they have been pending for more than 3 days.
         2) make notification if ONE draft and if more than ONE make another text
@@ -102,32 +84,24 @@ public class NotificationsPendingDraftsService extends Service {
                     if (draftPostsOlderThan3Days.size() == 1) {
                         buildSinglePendingDraftNotification();
                     } else if (draftPostsOlderThan3Days.size() > 1) {
-                        buildPendingDraftsNotification();
+                        buildPendingDraftsNotification(draftPostsOlderThan3Days.size());
                     }
                 }
             }
         }).start();
     }
 
-    private NotificationCompat.Builder getBuilder() {
-        return new NotificationCompat.Builder(mContext)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setContentTitle(getString(R.string.app_name))
-                .setAutoCancel(true);
+    private void buildSinglePendingDraftNotification(){
+        NativeNotificationsUtils.showFinalMessageToUser(getString(R.string.pending_draft_one),
+                PENDING_DRAFTS_NOTIFICATION_ID, this);
+        completed();
     }
 
-    private void showMessageToUser(String message, boolean intermediateMessage, int pushId) {
-        NotificationCompat.Builder builder = getBuilder().setContentText(message).setTicker(message);
-        if (!intermediateMessage) {
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-        }
-        builder.setProgress(0, 0, intermediateMessage);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-        notificationManager.notify(pushId, builder.build());
+    private void buildPendingDraftsNotification(int count) {
+        NativeNotificationsUtils.showFinalMessageToUser(String.format(getString(R.string.pending_draft_more), count),
+                PENDING_DRAFTS_NOTIFICATION_ID, this);
+        completed();
     }
-
 
     private void completed() {
         AppLog.i(AppLog.T.NOTIFS, "notifications pending drafts service > completed");
