@@ -48,13 +48,13 @@ public class WPSwipeSnackbar {
         String text;
         switch (arrows) {
             case LEFT:
-                text = arrowLeft + " " + swipeText;
+                text = arrowLeft + "  " + swipeText;
                 break;
             case RIGHT:
-                text = swipeText + " " + arrowRight;
+                text = swipeText + "  " + arrowRight;
                 break;
             case BOTH:
-                text = arrowLeft + " " + swipeText + " " + arrowRight;
+                text = arrowLeft + "  " + swipeText + "  " + arrowRight;
                 break;
             default:
                 text = swipeText;
