@@ -427,11 +427,12 @@ public class AppPrefs {
         setLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, time);
     }
 
-    public static boolean isSwipeToNavigateShown() {
-        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, false);
+    public static boolean isNotificationsSwipeToNavigateShown() {
+        // TODO:
+        return false;// getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, false);
     }
 
-    public static void setSwipeToNavigateShown(boolean alreadyShown) {
+    public static void setNotificationsSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, alreadyShown);
     }
 
