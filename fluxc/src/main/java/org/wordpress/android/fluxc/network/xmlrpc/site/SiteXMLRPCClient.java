@@ -89,7 +89,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchSite(final SiteModel site) {
         List<Object> params = new ArrayList<>(2);
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(new String[] {
@@ -118,7 +118,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPostFormats(final SiteModel site) {
         List<Object> params = new ArrayList<>(2);
-        params.add(site.getSiteId());
+        params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         final XMLRPCRequest request = new XMLRPCRequest(
