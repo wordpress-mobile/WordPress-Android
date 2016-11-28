@@ -13,17 +13,23 @@ import android.widget.Spinner;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 public class AddCategoryActivity extends AppCompatActivity {
     private SiteModel mSite;
+
+    @Inject TaxonomyStore mTaxonomyStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.add_category);
 
@@ -107,7 +113,7 @@ public class AddCategoryActivity extends AppCompatActivity {
     }
 
     private void loadCategories() {
-        CategoryNode rootCategory = CategoryNode.createCategoryTreeFromDB(mSite.getId());
+        CategoryNode rootCategory = CategoryNode.createCategoryTreeFromList(mTaxonomyStore.getCategoriesForSite(mSite));
         ArrayList<CategoryNode> categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory);
         categoryLevels.add(0, new CategoryNode(0, 0, getString(R.string.none)));
         if (categoryLevels.size() > 0) {

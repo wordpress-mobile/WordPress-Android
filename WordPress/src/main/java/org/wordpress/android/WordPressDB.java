@@ -296,24 +296,6 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public List<String> loadCategories(int id) {
-        Cursor c = db.query(CATEGORIES_TABLE, new String[] { "id", "wp_id",
-                "category_name" }, "blog_id=" + Integer.toString(id), null, null, null, null);
-        int numRows = c.getCount();
-        c.moveToFirst();
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < numRows; ++i) {
-            String category_name = c.getString(2);
-            if (category_name != null) {
-                list.add(category_name);
-            }
-            c.moveToNext();
-        }
-        c.close();
-
-        return list;
-    }
-
     public int getCategoryId(int id, String category) {
         Cursor c = db.query(CATEGORIES_TABLE, new String[] { "wp_id" },
                 "category_name=? AND blog_id=?", new String[] {category, String.valueOf(id)},

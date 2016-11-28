@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -57,6 +58,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
+    @Inject TaxonomyStore mTaxonomyStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,7 +139,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     }
 
     private void populateCategoryList() {
-        mCategories = CategoryNode.createCategoryTreeFromDB(mSite.getId());
+        mCategories = CategoryNode.createCategoryTreeFromList(mTaxonomyStore.getCategoriesForSite(mSite));
         mCategoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(mCategories);
         for (int i = 0; i < mCategoryLevels.size(); i++) {
             mCategoryNames.put(StringUtils.unescapeHTML(mCategoryLevels.get(i).getName()), i);
