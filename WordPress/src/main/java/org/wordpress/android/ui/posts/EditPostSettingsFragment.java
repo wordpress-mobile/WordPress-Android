@@ -506,11 +506,11 @@ public class EditPostSettingsFragment extends Fragment
             showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
-            bundle.putInt("id", mSite.getId());
             if (mCategories != null && mCategories.size() > 0) {
                 bundle.putSerializable("categories", new HashSet<>(mCategories));
             }
             Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
+            categoriesIntent.putExtra(WordPress.SITE, mSite);
             categoriesIntent.putExtras(bundle);
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.categoryButton) {

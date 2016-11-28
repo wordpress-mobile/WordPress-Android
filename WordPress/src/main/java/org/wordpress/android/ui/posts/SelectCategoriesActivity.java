@@ -95,12 +95,6 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            int blogId = extras.getInt("id");
-            SiteModel site = mSiteStore.getSiteByLocalId(blogId);
-            if (site == null) {
-                Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
-                finish();
-            }
             if (extras.containsKey("categories")) {
                 mSelectedCategories = (HashSet<String>) extras.getSerializable("categories");
             }
