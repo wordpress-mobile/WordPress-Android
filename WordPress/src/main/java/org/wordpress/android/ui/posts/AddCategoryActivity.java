@@ -12,12 +12,14 @@ import android.widget.Spinner;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 
 public class AddCategoryActivity extends AppCompatActivity {
-    private int id;
+    private SiteModel mSite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +27,18 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         setContentView(R.layout.add_category);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            id = extras.getInt("id");
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
         loadCategories();
 
         final Button cancelButton = (Button) findViewById(R.id.cancel);
@@ -48,7 +58,7 @@ public class AddCategoryActivity extends AppCompatActivity {
                     parent_category = ((CategoryNode) sCategories.getSelectedItem()).getName().trim();
                 int parent_id = 0;
                 if (sCategories.getSelectedItemPosition() != 0) {
-                    parent_id = WordPress.wpDB.getCategoryId(id, parent_category);
+                    parent_id = WordPress.wpDB.getCategoryId(mSite.getId(), parent_category);
                 }
 
                 if (category_name.replaceAll(" ", "").equals("")) {
@@ -97,7 +107,7 @@ public class AddCategoryActivity extends AppCompatActivity {
     }
 
     private void loadCategories() {
-        CategoryNode rootCategory = CategoryNode.createCategoryTreeFromDB(id);
+        CategoryNode rootCategory = CategoryNode.createCategoryTreeFromDB(mSite.getId());
         ArrayList<CategoryNode> categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory);
         categoryLevels.add(0, new CategoryNode(0, 0, getString(R.string.none)));
         if (categoryLevels.size() > 0) {
