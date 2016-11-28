@@ -52,18 +52,15 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         okButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                EditText categoryNameET = (EditText) findViewById(R.id.category_name);
-                String category_name = categoryNameET.getText().toString();
-                EditText categorySlugET = (EditText) findViewById(R.id.category_slug);
-                String category_slug = categorySlugET.getText().toString();
-                EditText categoryDescET = (EditText) findViewById(R.id.category_desc);
-                String category_desc = categoryDescET.getText().toString();
-                Spinner sCategories = (Spinner) findViewById(R.id.parent_category);
+                String categoryName = ((EditText) findViewById(R.id.category_name)).getText().toString();
+                String categorySlug = ((EditText) findViewById(R.id.category_slug)).getText().toString();
+                String categoryDesc = ((EditText) findViewById(R.id.category_desc)).getText().toString();
+                Spinner categorySpinner = (Spinner) findViewById(R.id.parent_category);
 
-                CategoryNode selectedCategory = (CategoryNode) sCategories.getSelectedItem();
-                long parent_id = (selectedCategory != null) ? selectedCategory.getCategoryId() : 0;
+                CategoryNode selectedCategory = (CategoryNode) categorySpinner.getSelectedItem();
+                long parentId = (selectedCategory != null) ? selectedCategory.getCategoryId() : 0;
 
-                if (category_name.replaceAll(" ", "").equals("")) {
+                if (categoryName.replaceAll(" ", "").equals("")) {
                     //    Name field cannot be empty
 
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddCategoryActivity.this);
@@ -81,10 +78,10 @@ public class AddCategoryActivity extends AppCompatActivity {
                 } else {
                     Bundle bundle = new Bundle();
 
-                    bundle.putString("category_name", category_name);
-                    bundle.putString("category_slug", category_slug);
-                    bundle.putString("category_desc", category_desc);
-                    bundle.putLong("parent_id", parent_id);
+                    bundle.putString("category_name", categoryName);
+                    bundle.putString("category_slug", categorySlug);
+                    bundle.putString("category_desc", categoryDesc);
+                    bundle.putLong("parent_id", parentId);
                     bundle.putString("continue", "TRUE");
                     Intent mIntent = new Intent();
                     mIntent.putExtras(bundle);
