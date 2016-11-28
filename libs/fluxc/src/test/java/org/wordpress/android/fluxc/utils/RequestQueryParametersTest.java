@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.utils;
 
-import com.android.volley.Request.Method;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;

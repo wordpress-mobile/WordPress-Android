@@ -28,7 +28,11 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.wordpress.android.fluxc.utils.SiteUtils.*;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSite;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOverRestOnly;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generatePostFormats;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedNonJPSite;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generateWPComSite;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteStoreUnitTest {
@@ -57,12 +61,11 @@ public class SiteStoreUnitTest {
 
     @Test
     public void testInsertOrUpdateSite() {
-        SiteModel site = generateDotComSite();
+        SiteModel site = generateWPComSite();
         SiteSqlUtils.insertOrUpdateSite(site);
 
         assertTrue(mSiteStore.hasSiteWithLocalId(site.getId()));
         assertEquals(site.getSiteId(), mSiteStore.getSiteByLocalId(site.getId()).getSiteId());
-
     }
 
     @Test
@@ -71,8 +74,8 @@ public class SiteStoreUnitTest {
         assertTrue(mSiteStore.getSites().isEmpty());
 
         // Test counts with .COM site
-        SiteModel dotComSite = generateDotComSite();
-        SiteSqlUtils.insertOrUpdateSite(dotComSite);
+        SiteModel wpComSite = generateWPComSite();
+        SiteSqlUtils.insertOrUpdateSite(wpComSite);
 
         assertTrue(mSiteStore.hasSite());
         assertTrue(mSiteStore.hasWPComSite());
@@ -83,8 +86,8 @@ public class SiteStoreUnitTest {
         assertEquals(1, mSiteStore.getWPComSitesCount());
 
         // Test counts with one .COM and one self-hosted site
-        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
-        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
+        SiteModel selfHostedSite = generateSelfHostedNonJPSite();
+        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
         assertTrue(mSiteStore.hasSite());
         assertTrue(mSiteStore.hasWPComSite());
@@ -128,13 +131,13 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testHasDotComOrJetpackSiteWithSiteId() {
+    public void testHasWPComOrJetpackSiteWithSiteId() {
         assertFalse(mSiteStore.hasWPComOrJetpackSiteWithSiteId(673));
 
-        SiteModel dotComSite = generateDotComSite();
-        SiteSqlUtils.insertOrUpdateSite(dotComSite);
+        SiteModel wpComSite = generateWPComSite();
+        SiteSqlUtils.insertOrUpdateSite(wpComSite);
 
-        assertTrue(mSiteStore.hasWPComOrJetpackSiteWithSiteId(dotComSite.getSiteId()));
+        assertTrue(mSiteStore.hasWPComOrJetpackSiteWithSiteId(wpComSite.getSiteId()));
 
         SiteModel jetpackSite = generateJetpackSite();
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
@@ -146,7 +149,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testDotComSiteVisibility() {
+    public void testWPComSiteVisibility() {
         // Should not cause any errors
         mSiteStore.isWPComSiteVisibleByLocalId(45);
         SiteSqlUtils.setSiteVisibility(null, true);
@@ -160,17 +163,17 @@ public class SiteStoreUnitTest {
         assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
 
 
-        SiteModel dotComSite = generateDotComSite();
-        SiteSqlUtils.insertOrUpdateSite(dotComSite);
+        SiteModel wpComSite = generateWPComSite();
+        SiteSqlUtils.insertOrUpdateSite(wpComSite);
 
         // Attempt to use with legitimate .com site
         SiteSqlUtils.setSiteVisibility(selfHostedNonJPSite, false);
-        assertFalse(mSiteStore.getSiteByLocalId(dotComSite.getId()).isVisible());
-        assertFalse(mSiteStore.isWPComSiteVisibleByLocalId(dotComSite.getId()));
+        assertFalse(mSiteStore.getSiteByLocalId(wpComSite.getId()).isVisible());
+        assertFalse(mSiteStore.isWPComSiteVisibleByLocalId(wpComSite.getId()));
     }
 
     @Test
-    public void testSetAllDotComSitesVisibility() {
+    public void testSetAllWPComSitesVisibility() {
         SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
         SiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
 
@@ -181,21 +184,21 @@ public class SiteStoreUnitTest {
         // The self-hosted site should not be affected
         assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
 
-        SiteModel dotComSite1 = generateDotComSite();
-        SiteModel dotComSite2 = generateDotComSite();
-        dotComSite2.setId(44);
-        dotComSite2.setSiteId(284);
+        SiteModel wpComSite1 = generateWPComSite();
+        SiteModel wpComSite2 = generateWPComSite();
+        wpComSite2.setId(44);
+        wpComSite2.setSiteId(284);
 
-        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
-        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite1);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite2);
 
         // Attempt to use with legitimate .com site
         for (SiteModel site : mSiteStore.getWPComSites()) {
             SiteSqlUtils.setSiteVisibility(site, false);
         }
         assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
-        assertFalse(mSiteStore.getSiteByLocalId(dotComSite1.getId()).isVisible());
-        assertFalse(mSiteStore.getSiteByLocalId(dotComSite2.getId()).isVisible());
+        assertFalse(mSiteStore.getSiteByLocalId(wpComSite1.getId()).isVisible());
+        assertFalse(mSiteStore.getSiteByLocalId(wpComSite2.getId()).isVisible());
     }
 
     @Test
@@ -221,27 +224,28 @@ public class SiteStoreUnitTest {
         assertEquals(0, mSiteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(2626, ""));
         assertEquals(0, mSiteStore.getSiteIdForLocalId(5577));
 
-        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
-        SiteModel dotComSite = generateDotComSite();
+        SiteModel selfHostedSite = generateSelfHostedNonJPSite();
+        SiteModel wpComSite = generateWPComSite();
         SiteModel jetpackSite = generateJetpackSite();
-        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
-        SiteSqlUtils.insertOrUpdateSite(dotComSite);
+        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite);
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
-        assertEquals(dotOrgSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(dotOrgSite.getSelfHostedSiteId()));
-        assertEquals(dotComSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(dotComSite.getSiteId()));
+        assertEquals(selfHostedSite.getId(),
+                mSiteStore.getLocalIdForRemoteSiteId(selfHostedSite.getSelfHostedSiteId()));
+        assertEquals(wpComSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(wpComSite.getSiteId()));
 
         // Should be able to look up a Jetpack site by .com and by .org id (assuming it's been set)
         assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(jetpackSite.getSiteId()));
         assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(jetpackSite.getSelfHostedSiteId()));
 
-        assertEquals(dotOrgSite.getId(), mSiteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(
-                dotOrgSite.getSelfHostedSiteId(), dotOrgSite.getXmlRpcUrl()));
+        assertEquals(selfHostedSite.getId(), mSiteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(
+                selfHostedSite.getSelfHostedSiteId(), selfHostedSite.getXmlRpcUrl()));
         assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(
                 jetpackSite.getSelfHostedSiteId(), jetpackSite.getXmlRpcUrl()));
 
-        assertEquals(dotOrgSite.getSelfHostedSiteId(), mSiteStore.getSiteIdForLocalId(dotOrgSite.getId()));
-        assertEquals(dotComSite.getSiteId(), mSiteStore.getSiteIdForLocalId(dotComSite.getId()));
+        assertEquals(selfHostedSite.getSelfHostedSiteId(), mSiteStore.getSiteIdForLocalId(selfHostedSite.getId()));
+        assertEquals(wpComSite.getSiteId(), mSiteStore.getSiteIdForLocalId(wpComSite.getId()));
         assertEquals(jetpackSite.getSiteId(), mSiteStore.getSiteIdForLocalId(jetpackSite.getId()));
     }
 
@@ -249,27 +253,27 @@ public class SiteStoreUnitTest {
     public void testGetSiteBySiteId() {
         assertNull(mSiteStore.getSiteBySiteId(555));
 
-        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
-        SiteModel dotComSite = generateDotComSite();
+        SiteModel selfHostedSite = generateSelfHostedNonJPSite();
+        SiteModel wpComSite = generateWPComSite();
         SiteModel jetpackSite = generateJetpackSite();
-        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
-        SiteSqlUtils.insertOrUpdateSite(dotComSite);
+        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite);
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
-        assertNotNull(mSiteStore.getSiteBySiteId(dotComSite.getSiteId()));
+        assertNotNull(mSiteStore.getSiteBySiteId(wpComSite.getSiteId()));
         assertNotNull(mSiteStore.getSiteBySiteId(jetpackSite.getSiteId()));
-        assertNull(mSiteStore.getSiteBySiteId(dotOrgSite.getSiteId()));
+        assertNull(mSiteStore.getSiteBySiteId(selfHostedSite.getSiteId()));
     }
 
     @Test
     public void testDeleteSite() {
-        SiteModel dotComSite = generateDotComSite();
+        SiteModel wpComSite = generateWPComSite();
 
         // Should not cause any errors
-        SiteSqlUtils.deleteSite(dotComSite);
+        SiteSqlUtils.deleteSite(wpComSite);
 
-        SiteSqlUtils.insertOrUpdateSite(dotComSite);
-        int affectedRows = SiteSqlUtils.deleteSite(dotComSite);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite);
+        int affectedRows = SiteSqlUtils.deleteSite(wpComSite);
 
         assertEquals(1, affectedRows);
         assertEquals(0, mSiteStore.getSitesCount());
@@ -277,25 +281,25 @@ public class SiteStoreUnitTest {
 
     @Test
     public void testGetWPComSites() {
-        SiteModel dotComSite = generateDotComSite();
-        SiteModel jetpackSiteOverDotOrg = generateJetpackSite();
+        SiteModel wpComSite = generateWPComSite();
+        SiteModel jetpackSiteOverSelfHosted = generateJetpackSite();
         SiteModel jetpackSiteOverRestOnly = generateJetpackSiteOverRestOnly();
 
-        SiteSqlUtils.insertOrUpdateSite(dotComSite);
-        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverDotOrg);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite);
+        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverSelfHosted);
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
 
         List<SiteModel> wpComSites = SiteSqlUtils.getAllWPComSites();
 
         assertEquals(2, wpComSites.size());
         for (SiteModel site : wpComSites) {
-            assertNotEquals(jetpackSiteOverDotOrg.getId(), site.getId());
+            assertNotEquals(jetpackSiteOverSelfHosted.getId(), site.getId());
         }
     }
 
     @Test
     public void testGetPostFormats() {
-        SiteModel site = generateDotComSite();
+        SiteModel site = generateWPComSite();
         SiteSqlUtils.insertOrUpdateSite(site);
 
         // Set 3 post formats
@@ -311,16 +315,16 @@ public class SiteStoreUnitTest {
 
     @Test
     public void testSearchSitesByNameMatching() {
-        SiteModel dotComSite1 = generateDotComSite();
-        dotComSite1.setName("Doctor Emmet Brown Homepage");
-        SiteModel dotComSite2 = generateDotComSite();
-        dotComSite2.setName("Shield Eyes from light");
-        SiteModel dotComSite3 = generateDotComSite();
-        dotComSite3.setName("I remember when this was all farmland as far as the eye could see");
+        SiteModel wpComSite1 = generateWPComSite();
+        wpComSite1.setName("Doctor Emmet Brown Homepage");
+        SiteModel wpComSite2 = generateWPComSite();
+        wpComSite2.setName("Shield Eyes from light");
+        SiteModel wpComSite3 = generateWPComSite();
+        wpComSite3.setName("I remember when this was all farmland as far as the eye could see");
 
-        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
-        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
-        SiteSqlUtils.insertOrUpdateSite(dotComSite3);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite1);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite2);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite3);
 
         List<SiteModel> matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrName("eye");
         assertEquals(2, matchingSites.size());
@@ -331,16 +335,16 @@ public class SiteStoreUnitTest {
 
     @Test
     public void testSearchSitesByNameOrUrlMatching() {
-        SiteModel dotComSite1 = generateDotComSite();
-        dotComSite1.setName("Doctor Emmet Brown Homepage");
-        SiteModel dotComSite2 = generateDotComSite();
-        dotComSite2.setUrl("shieldeyesfromlight.wordpress.com");
-        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
-        dotOrgSite.setName("I remember when this was all farmland as far as the eye could see.");
+        SiteModel wpComSite1 = generateWPComSite();
+        wpComSite1.setName("Doctor Emmet Brown Homepage");
+        SiteModel wpComSite2 = generateWPComSite();
+        wpComSite2.setUrl("shieldeyesfromlight.wordpress.com");
+        SiteModel selfHostedSite = generateSelfHostedNonJPSite();
+        selfHostedSite.setName("I remember when this was all farmland as far as the eye could see.");
 
-        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
-        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
-        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite1);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite2);
+        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
         List<SiteModel> matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrName("eye");
         assertEquals(2, matchingSites.size());
@@ -350,17 +354,17 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testSearchDotComSitesByNameOrUrlMatching() {
-        SiteModel dotComSite1 = generateDotComSite();
-        dotComSite1.setName("Doctor Emmet Brown Homepage");
-        SiteModel dotComSite2 = generateDotComSite();
-        dotComSite2.setUrl("shieldeyesfromlight.wordpress.com");
-        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
-        dotOrgSite.setName("I remember when this was all farmland as far as the eye could see.");
+    public void testSearchWPComSitesByNameOrUrlMatching() {
+        SiteModel wpComSite1 = generateWPComSite();
+        wpComSite1.setName("Doctor Emmet Brown Homepage");
+        SiteModel wpComSite2 = generateWPComSite();
+        wpComSite2.setUrl("shieldeyesfromlight.wordpress.com");
+        SiteModel selfHostedSite = generateSelfHostedNonJPSite();
+        selfHostedSite.setName("I remember when this was all farmland as far as the eye could see.");
 
-        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
-        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
-        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite1);
+        SiteSqlUtils.insertOrUpdateSite(wpComSite2);
+        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
         List<SiteModel> matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(
                 SiteModelTable.IS_WPCOM, true, "eye");

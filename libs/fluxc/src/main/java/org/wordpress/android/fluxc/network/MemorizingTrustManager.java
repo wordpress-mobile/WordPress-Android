@@ -61,6 +61,7 @@ public class MemorizingTrustManager implements X509TrustManager {
         try {
             return mLocalKeyStoreFutureTask.get(FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            AppLog.e(T.API, e);
             throw new IllegalStateException("Couldn't find KeyStore");
         }
     }
@@ -70,6 +71,7 @@ public class MemorizingTrustManager implements X509TrustManager {
         try {
             return mTrustManagerFutureTask.get(FUTURE_TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            AppLog.e(T.API, e);
             throw new IllegalStateException("Couldn't find X509TrustManager");
         }
     }
@@ -81,8 +83,7 @@ public class MemorizingTrustManager implements X509TrustManager {
         } catch (FileNotFoundException e) {
             // Init the key store for the first time
             try {
-                initLocalKeyStoreFile();
-                localKeyStore = loadTrustStore();
+                localKeyStore = initLocalKeyStoreFile();
             } catch (IOException | GeneralSecurityException e1) {
                 throw new IllegalStateException(e1);
             }
@@ -137,7 +138,7 @@ public class MemorizingTrustManager implements X509TrustManager {
         }
     }
 
-    private void initLocalKeyStoreFile() throws GeneralSecurityException, IOException {
+    private KeyStore initLocalKeyStoreFile() throws GeneralSecurityException, IOException {
         FileOutputStream out = null;
         try {
             File localKeyStoreFile = new File(mContext.getFilesDir(), KEYSTORE_FILENAME);
@@ -145,6 +146,7 @@ public class MemorizingTrustManager implements X509TrustManager {
             KeyStore localTrustStore = KeyStore.getInstance(KeyStore.getDefaultType());
             localTrustStore.load(null, KEYSTORE_PASSWORD.toCharArray());
             localTrustStore.store(out, KEYSTORE_PASSWORD.toCharArray());
+            return localTrustStore;
         } finally {
             if (out != null) {
                 try {
