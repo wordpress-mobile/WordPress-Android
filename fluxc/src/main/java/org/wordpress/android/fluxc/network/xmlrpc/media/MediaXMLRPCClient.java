@@ -115,7 +115,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params, new Listener() {
             @Override
             public void onResponse(Object response) {
-                List<MediaModel> media = getMediaListFromXmlrpcResponse(response, site.getSiteId());
+                List<MediaModel> media = getMediaListFromXmlrpcResponse(response, site.getSelfHostedSiteId());
                 if (media != null) {
                     AppLog.v(T.MEDIA, "Fetched all media for site via XMLRPC.GET_MEDIA_LIBRARY");
                     notifyMediaFetched(MediaAction.FETCH_ALL_MEDIA, site, media, null);
@@ -147,7 +147,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     MediaModel responseMedia = getMediaFromXmlrpcResponse((HashMap) response);
                     if (responseMedia != null) {
                         AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
-                        responseMedia.setSiteId(site.getSiteId());
+                        responseMedia.setSiteId(site.getSelfHostedSiteId());
                         notifyMediaFetched(MediaAction.FETCH_MEDIA, site, responseMedia, null);
                     } else {
                         AppLog.w(T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
@@ -346,7 +346,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     public static final String CAPTION_EDIT_KEY     = "post_excerpt";
 
     // media list responses should be of type Object[] with each media item in the array represented by a HashMap
-    private List<MediaModel> getMediaListFromXmlrpcResponse(Object response, long siteId) {
+    private List<MediaModel> getMediaListFromXmlrpcResponse(Object response, long selfHostedSiteId) {
         if (response == null || !(response instanceof Object[])) return null;
 
         Object[] responseArray = (Object[]) response;
@@ -355,7 +355,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             if (!(mediaObject instanceof HashMap)) continue;
             MediaModel media = getMediaFromXmlrpcResponse((HashMap) mediaObject);
             if (media != null) {
-                media.setSiteId(siteId);
+                media.setSiteId(selfHostedSiteId);
                 responseMedia.add(media);
             }
         }
