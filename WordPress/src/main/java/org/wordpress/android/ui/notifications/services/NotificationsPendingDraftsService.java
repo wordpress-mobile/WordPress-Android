@@ -26,7 +26,7 @@ public class NotificationsPendingDraftsService extends Service {
     public static final int PENDING_DRAFTS_NOTIFICATION_ID = GENERIC_LOCAL_NOTIFICATION_ID + 1;
     public static final String POST_ID_EXTRA = "postId";
     public static final String IS_PAGE_EXTRA = "isPage";
-    private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 30 * 60 * 1000; //30 minutes
+    private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 24 * 60 * 60 * 1000; //a full 24 hours day
     private static final long MAX_DAYS_TO_COUNT_DAYS = 30; //30 days
 
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
