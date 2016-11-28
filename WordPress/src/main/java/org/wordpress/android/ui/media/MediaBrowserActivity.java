@@ -494,7 +494,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mMediaEditFragment.isDirty()) {
                 // alert the user that there are unsaved changes
                 new AlertDialog.Builder(this)
-                        .setTitle(R.string.confirm_discard_changes_title)
                         .setMessage(R.string.confirm_discard_changes)
                         .setCancelable(true)
                         .setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
