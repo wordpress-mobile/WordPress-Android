@@ -14,9 +14,6 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -532,26 +529,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (mOnCommentChangeListener != null)
                 mOnCommentChangeListener.onCommentChanged(ChangeType.EDITED);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-        inflater.inflate(R.menu.comment_detail, menu);
-        if (!canEdit()) {
-            menu.removeItem(R.id.menu_edit_comment);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.menu_edit_comment) {
-            editComment();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
