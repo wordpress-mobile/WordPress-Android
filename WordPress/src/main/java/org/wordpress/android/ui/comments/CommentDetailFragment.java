@@ -100,6 +100,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private static final String KEY_COMMENT = "KEY_COMMENT";
     private static final String KEY_NOTE_ID = "KEY_NOTE_ID";
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
+    private static final String KEY_FRAGMENT_CONTAINER_ID = "KEY_FRAGMENT_CONTAINER_ID";
 
     private static final int INTENT_COMMENT_EDITOR     = 1010;
     private static final int FROM_BLOG_COMMENT = 1;
@@ -109,6 +110,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private SiteModel mSite;
 
     private Note mNote;
+    private int mIdForFragmentContainer;
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
     private TextView mTxtStatus;
@@ -117,14 +119,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private SuggestionAutoCompleteText mEditReply;
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
+    private ViewGroup mCommentContentLayout;
     private View mBtnLikeComment;
     private ImageView mBtnLikeIcon;
     private TextView mBtnLikeTextView;
     private View mBtnModerateComment;
+    private View mBtnEditComment;
     private ImageView mBtnModerateIcon;
     private TextView mBtnModerateTextView;
-    private TextView mBtnSpamComment;
-    private TextView mBtnTrashComment;
+    private View mBtnSpamComment;
+    private TextView mBtnSpamCommentText;
+    private View mBtnTrashComment;
+    private TextView mBtnTrashCommentText;
     private String mRestoredReplyText;
     private String mRestoredNoteId;
     private boolean mIsUsersBlog = false;
@@ -167,12 +173,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from notification list for a comment notification
      */
-    public static CommentDetailFragment newInstance(final String noteId, final String replyText) {
+    public static CommentDetailFragment newInstance(final String noteId, final String replyText,
+                                                    final int idForFragmentContainer) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
         args.putInt(KEY_MODE, FROM_NOTE);
         args.putString(KEY_NOTE_ID, noteId);
         args.putString(KEY_REPLY_TEXT, replyText);
+        args.putInt(KEY_FRAGMENT_CONTAINER_ID, idForFragmentContainer + R.id.note_comment_fragment_container_base_id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -198,6 +206,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 // The note will be set in onResume()
                 // See WordPress.deferredInit()
                 mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
+                mIdForFragmentContainer = savedInstanceState.getInt(KEY_FRAGMENT_CONTAINER_ID);
             } else {
                 SiteModel site = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
                 CommentModel comment = (CommentModel) savedInstanceState.getSerializable(KEY_COMMENT);
@@ -219,6 +228,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNote != null) {
             outState.putString(KEY_NOTE_ID, mNote.getId());
         }
+        outState.putInt(KEY_FRAGMENT_CONTAINER_ID, mIdForFragmentContainer);
     }
 
     @Override
@@ -243,11 +253,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnModerateComment = mLayoutButtons.findViewById(R.id.btn_moderate);
         mBtnModerateIcon = (ImageView) mLayoutButtons.findViewById(R.id.btn_moderate_icon);
         mBtnModerateTextView = (TextView) mLayoutButtons.findViewById(R.id.btn_moderate_text);
-        mBtnSpamComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
-        mBtnTrashComment = (TextView) mLayoutButtons.findViewById(R.id.image_trash_comment);
+        mBtnEditComment = mLayoutButtons.findViewById(R.id.btn_edit);
+        mBtnSpamComment = mLayoutButtons.findViewById(R.id.btn_spam);
+        mBtnSpamCommentText = (TextView) mLayoutButtons.findViewById(R.id.btn_spam_text);
+        mBtnTrashComment = mLayoutButtons.findViewById(R.id.btn_trash);
+        mBtnTrashCommentText = (TextView) mLayoutButtons.findViewById(R.id.btn_trash_text);
 
-        setTextDrawable(mBtnSpamComment, R.drawable.ic_action_spam);
-        setTextDrawable(mBtnTrashComment, R.drawable.ic_action_trash);
+        //as we are using CommentDetailFragment in a ViewPager, and we also use nested fragments within
+        //CommentDetailFragment itself:
+        //it is important to have a live reference to the Comment Container layout at the moment this
+        //layout is inflated (onCreateView), so we can make sure we set its ID correctly once we have an actual Comment
+        //object to populate it with. Otherwise, we could be searching and finding the container for _another fragment/page
+        //in the viewpager_, which would cause strange results (changing the views for a different fragment than we intended to).
+        mCommentContentLayout = (ViewGroup) view.findViewById(R.id.comment_content_container);
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
@@ -338,6 +356,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
+        mBtnEditComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editComment();
+            }
+        });
+
         setupSuggestionServiceAndAdapter();
 
         return view;
@@ -383,6 +408,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mComment = comment;
         mSite = site;
 
+        setIdForCommentContainer();
+
         // is this comment on one of the user's blogs? it won't be if this was displayed from a
         // notification about a reply to a comment this user posted on someone else's blog
         mIsUsersBlog = (comment != null && site != null);
@@ -413,6 +440,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mNote = note;
         mSite = mSiteStore.getSiteBySiteId(note.getSiteId());
         if (isAdded() && mNote != null) {
+            setIdForCommentContainer();
             showComment();
         }
     }
@@ -430,6 +458,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
         setNote(note);
     }
+
+    private void setIdForFragmentContainer(int id){
+        if (id > 0) {
+            mIdForFragmentContainer = id;
+        }
+    }
+
 
     private void setReplyText(String replyText) {
         if (replyText == null) return;
@@ -842,13 +877,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * sets the drawable for moderation buttons
-     */
-    private void setTextDrawable(final TextView view, int resId) {
-        view.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(getActivity(), resId), null, null);
-    }
-
-    /*
      * update the text, drawable & click listener for mBtnModerate based on
      * the current status of the comment, show mBtnSpam if the comment isn't
      * already marked as spam, and show the current status of the comment
@@ -921,9 +949,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (canMarkAsSpam()) {
             mBtnSpamComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.SPAM) {
-                mBtnSpamComment.setText(R.string.mnu_comment_unspam);
+                mBtnSpamCommentText.setText(R.string.mnu_comment_unspam);
             } else {
-                mBtnSpamComment.setText(R.string.mnu_comment_spam);
+                mBtnSpamCommentText.setText(R.string.mnu_comment_spam);
             }
         } else {
             mBtnSpamComment.setVisibility(View.GONE);
@@ -935,12 +963,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mBtnModerateIcon.setImageResource(R.drawable.ic_action_restore);
                 //mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.notification_status_unapproved_dark));
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
-                mBtnTrashComment.setText(R.string.mnu_comment_delete_permanently);
+                mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
-                mBtnTrashComment.setText(R.string.mnu_comment_trash);
+                mBtnTrashCommentText.setText(R.string.mnu_comment_trash);
             }
         } else {
             mBtnTrashComment.setVisibility(View.GONE);
+        }
+
+        if (canEdit()) {
+            mBtnEditComment.setVisibility(View.VISIBLE);
         }
 
         mLayoutButtons.setVisibility(View.VISIBLE);
@@ -1020,14 +1052,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             commentText.setVisibility(View.GONE);
         }
 
-        // Now we'll add a detail fragment list
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note.getId());
-        mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
-        fragmentTransaction.replace(R.id.comment_content_container, mNotificationsDetailListFragment);
-        fragmentTransaction.commitAllowingStateLoss();
-
         /*
          * determine which actions to enable for this comment - if the comment is from this user's
          * blog then all actions will be enabled, but they won't be if it's a reply to a comment
@@ -1049,7 +1073,22 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mSite != null) {
            // setComment(note.buildComment(), mSite);
         }
+
+        // Now we'll add a detail fragment list
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note.getId());
+        mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
+        fragmentTransaction.replace(mCommentContentLayout.getId(), mNotificationsDetailListFragment);
+        fragmentTransaction.commitAllowingStateLoss();
+
         getFragmentManager().invalidateOptionsMenu();
+    }
+
+    private void setIdForCommentContainer(){
+        if (mCommentContentLayout != null) {
+            mCommentContentLayout.setId(mIdForFragmentContainer);
+        }
     }
 
     // Like or unlike a comment via the REST API

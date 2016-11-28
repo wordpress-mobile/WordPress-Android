@@ -127,7 +127,7 @@ dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~201-commentstore-new-getters-SNAPSHOT') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:develop-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 

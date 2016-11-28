@@ -41,6 +41,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.UnsupportedEncodingException;
@@ -217,7 +218,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         });
 
         mViewPager.setPageTransformer(false,
-                new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
+                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
     }
 
     private boolean isDeepLinking() {

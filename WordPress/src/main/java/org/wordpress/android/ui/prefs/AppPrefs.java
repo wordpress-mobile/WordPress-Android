@@ -102,6 +102,9 @@ public class AppPrefs {
 
         // When we need to show the Gravatar Change Promo Tooltip
         GRAVATAR_CHANGE_PROMO_REQUIRED,
+
+        // When we need to show the snackbar indicating how notifications can be navigated through
+        SWIPE_TO_NAVIGATE_NOTIFICATIONS,
     }
 
     private static SharedPreferences prefs() {
@@ -458,4 +461,13 @@ public class AppPrefs {
     public static void setLastPushNotificationTime(long time) {
         setLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, time);
     }
+
+    public static boolean isSwipeToNavigateShown() {
+        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, false);
+    }
+
+    public static void setSwipeToNavigateShown(boolean alreadyShown) {
+        setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, alreadyShown);
+    }
+
 }

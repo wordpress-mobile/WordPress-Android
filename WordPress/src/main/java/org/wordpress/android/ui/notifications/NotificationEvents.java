@@ -25,6 +25,12 @@ public class NotificationEvents {
             this.isModerating = isModerating;
         }
     }
+    public static class NoteLikeStatusChanged {
+        final String noteId;
+        public NoteLikeStatusChanged(String noteId) {
+            this.noteId = noteId;
+        }
+    }
     public static class NoteVisibilityChanged {
         final boolean isHidden;
         final String noteId;

@@ -42,7 +42,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         FILTER_FOLLOW
     }
 
-    private FILTERS currentFilter = FILTERS.FILTER_ALL;
+    private FILTERS mCurrentFilter = FILTERS.FILTER_ALL;
 
     public interface DataLoadedListener {
         void onDataLoaded(int itemsCount);
@@ -69,8 +69,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     public void setFilter(FILTERS newFilter) {
-        currentFilter = newFilter;
+        mCurrentFilter = newFilter;
         myNotifyDatasetChanged();
+    }
+
+    public FILTERS getCurrentFilter() {
+        return mCurrentFilter;
     }
 
     public void addHiddenNoteId(String noteId) {
@@ -108,7 +112,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     private void myNotifyDatasetChanged() {
-        buildFilteredNotesList();
+        buildFilteredNotesList(mFilteredNotes, mNotes, mCurrentFilter);
         notifyDataSetChanged();
         if (mDataLoadedListener != null) {
             mDataLoadedListener.onDataLoaded(getItemCount());
@@ -124,32 +128,32 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     // Instead of building the filterd notes list dinamically, create it once and re-use it.
     // Otherwise it's re-created so many times during layout.
-    private void buildFilteredNotesList() {
-        mFilteredNotes.clear();
-        if (mNotes.isEmpty() || currentFilter == FILTERS.FILTER_ALL) {
-            mFilteredNotes.addAll(mNotes);
+    public static void buildFilteredNotesList(ArrayList<Note> filteredNotes, ArrayList<Note> notes, FILTERS filter) {
+        filteredNotes.clear();
+        if (notes.isEmpty() || filter == FILTERS.FILTER_ALL) {
+            filteredNotes.addAll(notes);
             return;
         }
-        for( Note currentNote : mNotes) {
-            switch (currentFilter) {
+        for( Note currentNote : notes) {
+            switch (filter) {
                 case FILTER_COMMENT:
                     if (currentNote.isCommentType()) {
-                        mFilteredNotes.add(currentNote);
+                        filteredNotes.add(currentNote);
                     }
                     break;
                 case FILTER_FOLLOW:
                     if (currentNote.isFollowType()) {
-                        mFilteredNotes.add(currentNote);
+                        filteredNotes.add(currentNote);
                     }
                     break;
                 case FILTER_UNREAD:
                     if (currentNote.isUnread()) {
-                        mFilteredNotes.add(currentNote);
+                        filteredNotes.add(currentNote);
                     }
                     break;
                 case FILTER_LIKE:
                     if (currentNote.isLikeType()) {
-                        mFilteredNotes.add(currentNote);
+                        filteredNotes.add(currentNote);
                     }
                     break;
             }
@@ -162,6 +166,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
 
         return null;
+    }
+
+    public void replaceNote(Note newNote) {
+        if (newNote != null) {
+            int position = getPositionForNoteUnfiltered(newNote.getId());
+            if (position != RecyclerView.NO_POSITION && position < mNotes.size()) {
+                mNotes.set(position, newNote);
+            }
+        }
     }
 
     private boolean isValidPosition(int position) {
@@ -295,6 +308,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public int getPositionForNote(String noteId) {
         for (int i = 0; i < mFilteredNotes.size(); i++) {
             String noteKey = mFilteredNotes.get(i).getId();
+            if (noteKey != null && noteKey.equals(noteId)) {
+                return i;
+            }
+        }
+
+        return RecyclerView.NO_POSITION;
+    }
+
+    private int getPositionForNoteUnfiltered(String noteId) {
+        for (int i = 0; i < mNotes.size(); i++) {
+            String noteKey = mNotes.get(i).getId();
             if (noteKey != null && noteKey.equals(noteId)) {
                 return i;
             }
