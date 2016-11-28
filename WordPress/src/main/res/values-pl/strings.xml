@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-11-07 12:40:01+0000
+Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
+Generator: GlotPress/2.3.0-alpha
+Language: pl
+-->
 <resources>
+	<string name="reader_label_global_related_posts">Więcej na WordPress.com</string>
+	<string name="reader_label_local_related_posts">Więcej w %s</string>
+	<string name="preference_open_device_settings">Przejdź do ustawień urządzenia</string>
+	<string name="comment_moderated_unapproved">Komentarz niezatwierdzony</string>
 	<string name="invite_invalid_email">%s: Nieprawidłowy email</string>
 	<string name="invite_user_blocked_invites">%s: Użytkownik zablokował zaproszenia</string>
 	<string name="invite_already_following">%s: Już śledzi</string>
@@ -92,7 +102,6 @@
 	<string name="dlg_confirm_clear_search_history">Usunąć historię wyszukiwania?</string>
 	<string name="reader_empty_posts_in_search_description">Nie odnaleziono żadnych wpisów zawierających %s w twoim języku</string>
 	<string name="reader_empty_posts_in_search_title">Nie odnaleziono wpisów</string>
-	<string name="reader_label_related_posts">Powiązana treść</string>
 	<string name="reader_label_post_search_running">Szukanie...</string>
 	<string name="reader_label_post_search_explainer">Przeszukaj wszystkie publiczne blogi WordPress.com</string>
 	<string name="reader_hint_post_search">Przeszukaj WordPress.com</string>
@@ -125,7 +134,7 @@
 	<string name="logging_in">Logowanie</string>
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Uzyskaj odnośnik przesłany na twój adres email aby się szybko zalogować</string>
 	<string name="enter_your_password_instead">Wprowadź swoje hasło</string>
-	<string name="web_address_dialog_hint">Pokazany publicznie kiedy komentujesz</string>
+	<string name="web_address_dialog_hint">Pokazywany publicznie kiedy komentujesz</string>
 	<string name="username_email">Email lub użytkownik</string>
 	<string name="jetpack_not_connected_message">Wtyczka Jetpack jest zainstalowana, ale nie jest połączona z WordPress.com. Czy chcesz włączyć Jetpack?</string>
 	<string name="jetpack_not_connected">Wtyczka Jetpack nie jest podłączona</string>
@@ -439,8 +448,8 @@
 	<string name="notifications_no_search_results">\'%s\' nie pasuje do żadnej witryny</string>
 	<string name="search_sites">Szukaj witryn</string>
 	<string name="unread">Nieprzeczytane</string>
-	<string name="notifications_empty_view_reader">Zobacz Czytnik</string>
-	<string name="notifications_empty_action_followers_likes">Bądź powiadomiony: komentuj wpisy, które przeczytałeś.</string>
+	<string name="notifications_empty_view_reader">Przejdź do Czytnika</string>
+	<string name="notifications_empty_action_followers_likes">Zostań zauważony: komentuj wpisy, które przeczytałeś.</string>
 	<string name="notifications_empty_action_comments">Dołącz do konwersacji: komentuj wpisy z blogów, które śledzisz</string>
 	<string name="notifications_empty_action_unread">Ożyw dyskusję: dodaj nowy wpis.</string>
 	<string name="notifications_empty_action_all">Bądź aktywny! Skomentuj wpisy z blogów, które śledzisz.</string>

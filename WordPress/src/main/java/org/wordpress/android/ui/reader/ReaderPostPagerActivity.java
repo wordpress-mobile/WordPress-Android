@@ -28,6 +28,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -39,7 +40,9 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -189,13 +192,16 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 onShowHideToolbar(true);
                 trackPostAtPositionIfNeeded(position);
 
-                // pause the previous web view - important because otherwise embedded content
-                // will continue to play
                 if (mLastSelectedPosition > -1 && mLastSelectedPosition != position) {
+                    // pause the previous web view - important because otherwise embedded content
+                    // will continue to play
                     ReaderPostDetailFragment lastFragment = getDetailFragmentAtPosition(mLastSelectedPosition);
                     if (lastFragment != null) {
                         lastFragment.pauseWebView();
                     }
+
+                    // don't show the swipe indicator in the future since the user knows how to swipe
+                    AppPrefs.setReaderSwipeToNavigateShown(true);
                 }
 
                 // resume the newly active webView if it was previously paused
@@ -209,7 +215,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         });
 
         mViewPager.setPageTransformer(false,
-                new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
+                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
     }
 
     private boolean isDeepLinking() {
@@ -630,6 +636,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                             trackPostAtPositionIfNeeded(currentPosition);
+                        }
+
+                        // let the user know they can swipe between posts
+                        if (adapter.getCount() > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
+                            WPSwipeSnackbar.show(mViewPager);
                         }
                     }
                 });

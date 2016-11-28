@@ -6,6 +6,6 @@
         android:id="@+id/menu_save_media"
         android:icon="@drawable/ic_save_ffffffff_24dp"
         app:showAsAction="ifRoom"
-        android:title="@string/new_media"/>
+        android:title="@string/save"/>
 
 </menu>

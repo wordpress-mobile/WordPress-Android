@@ -52,7 +52,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    app:srcCompat="@drawable/ic_edit_ff000000_24dp"
+                    app:srcCompat="@drawable/ic_pencil_ff000000_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>
