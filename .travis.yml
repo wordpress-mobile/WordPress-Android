@@ -30,8 +30,6 @@ env:
 before_install:
   # TODO: Remove the following line when Travis' platform-tools are updated to v25+
   - echo yes | android update sdk -a --filter platform-tools --no-ui --force
-  - echo yes | android update sdk -a --filter build-tools-25.0.1 --no-ui --force
-  - echo yes | android update sdk -a --filter build-tools-25.0.0 --no-ui --force
 
 install:
   # Setup gradle.properties
