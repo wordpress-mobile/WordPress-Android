@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -11,10 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -33,7 +30,6 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPUrlUtils;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
@@ -52,7 +48,6 @@ public class MediaEditFragment extends Fragment {
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mDescriptionView;
-    private Button mSaveButton;
 
     private String mTitleOriginal;
     private String mDescriptionOriginal;
@@ -156,13 +151,6 @@ public class MediaEditFragment extends Fragment {
         mDescriptionView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_description);
         mLocalImageView = (ImageView) mScrollView.findViewById(R.id.media_edit_fragment_image_local);
         mNetworkImageView = (NetworkImageView) mScrollView.findViewById(R.id.media_edit_fragment_image_network);
-        mSaveButton = (Button) mScrollView.findViewById(R.id.media_edit_save_button);
-        mSaveButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editMedia();
-            }
-        });
 
         disableEditingOnOldVersion();
 
@@ -176,7 +164,6 @@ public class MediaEditFragment extends Fragment {
             return;
         }
 
-        mSaveButton.setEnabled(false);
         mTitleView.setEnabled(false);
         mCaptionView.setEnabled(false);
         mDescriptionView.setEnabled(false);
@@ -221,7 +208,7 @@ public class MediaEditFragment extends Fragment {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
                         }
-                        setMediaUpdating(false);
+                        mIsMediaUpdating = false;
                         if (hasCallback()) {
                             mCallback.onSavedEdit(mediaId, true);
                         }
@@ -233,7 +220,7 @@ public class MediaEditFragment extends Fragment {
                             Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
                             getActivity().invalidateOptionsMenu();
                         }
-                        setMediaUpdating(false);
+                        mIsMediaUpdating = false;
                         if (hasCallback()) {
                             mCallback.onSavedEdit(mediaId, false);
                         }
@@ -245,19 +232,8 @@ public class MediaEditFragment extends Fragment {
         apiArgs.add(currentBlog);
 
         if (!isMediaUpdating()) {
-            setMediaUpdating(true);
+            mIsMediaUpdating = true;
             task.execute(apiArgs);
-        }
-    }
-
-    private void setMediaUpdating(boolean isUpdating) {
-        mIsMediaUpdating = isUpdating;
-        mSaveButton.setEnabled(!isUpdating);
-
-        if (isUpdating) {
-            mSaveButton.setText(R.string.saving);
-        } else {
-            mSaveButton.setText(R.string.save);
         }
     }
 
@@ -325,7 +301,6 @@ public class MediaEditFragment extends Fragment {
         }
 
         // user can't edit local files
-        mSaveButton.setEnabled(!isLocal);
         mTitleView.setEnabled(!isLocal);
         mCaptionView.setEnabled(!isLocal);
         mDescriptionView.setEnabled(!isLocal);
