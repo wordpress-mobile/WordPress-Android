@@ -183,6 +183,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     }
 
                     AppLog.v(T.MEDIA, "Successful response from XMLRPC.DELETE_MEDIA");
+                    notifyMediaDeleted(MediaAction.DELETE_MEDIA, site, media, null);
                 }
             }, new BaseRequest.BaseErrorListener() {
                 @Override
