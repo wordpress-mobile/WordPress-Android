@@ -11,7 +11,6 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 public class DateTimeUtilsTest {
-
     @Test
     public void test8601DateStringToDateObject() {
         String iso8601date = "1955-11-05T06:15:00-0800";

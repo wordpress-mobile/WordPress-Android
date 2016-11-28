@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SiteUtils {
-    public static SiteModel generateDotComSite() {
+    public static SiteModel generateWPComSite() {
         SiteModel example = new SiteModel();
         example.setSiteId(556);
         example.setIsWPCom(true);

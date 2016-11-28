@@ -23,10 +23,10 @@ public class XMLSerializerUtilsTest {
     @Test
     public void testXmlRpcResponseScrubWithPhpWarning() {
         final String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><nothing></nothing>";
-        final String junk1 = "Warning: virtual() [function.virtual2]: Unable to include '/cgi-bin/script/l' - request" +
-                " execution failed in /home/mysite/public_html/index.php on line 2\n";
-        final String junk2 = "Warning: virtual() [function.virtual2]: Unable to include '/cgi-bin/script/l' - request" +
-                " execution failed in /home/mysite/public_html/index.php on line 3\n";
+        final String junk1 = "Warning: virtual() [function.virtual2]: Unable to include '/cgi-bin/script/l' - request"
+                             + " execution failed in /home/mysite/public_html/index.php on line 2\n";
+        final String junk2 = "Warning: virtual() [function.virtual2]: Unable to include '/cgi-bin/script/l' - request"
+                             + " execution failed in /home/mysite/public_html/index.php on line 3\n";
         final String result = scrub(junk1 + junk2 + xml, xml.length());
         Assert.assertEquals(xml, result);
     }
