@@ -72,11 +72,5 @@ public class WPStartOverPreference extends WPPreference {
                 }
             });
         }
-
-        if (view.findViewById(R.id.domain) != null) {
-            TextView textView = (TextView) view.findViewById(R.id.domain);
-            Blog blog = WordPress.getCurrentBlog();
-            textView.setText(UrlUtils.getHost(blog.getHomeURL()));
-        }
     }
 }
