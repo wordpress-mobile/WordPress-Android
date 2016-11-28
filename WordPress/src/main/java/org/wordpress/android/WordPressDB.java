@@ -296,21 +296,6 @@ public class WordPressDB {
         return (returnValue);
     }
 
-    public int getCategoryId(int id, String category) {
-        Cursor c = db.query(CATEGORIES_TABLE, new String[] { "wp_id" },
-                "category_name=? AND blog_id=?", new String[] {category, String.valueOf(id)},
-                null, null, null);
-        if (c.getCount() == 0)
-            return 0;
-        c.moveToFirst();
-        int categoryID = 0;
-        categoryID = c.getInt(0);
-
-        c.close();
-
-        return categoryID;
-    }
-
     public int getCategoryParentId(int id, String category) {
         Cursor c = db.query(CATEGORIES_TABLE, new String[] { "parent_id" },
                 "category_name=? AND blog_id=?", new String[] {category, String.valueOf(id)},

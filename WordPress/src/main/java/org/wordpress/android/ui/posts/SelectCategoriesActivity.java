@@ -303,7 +303,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                     final String category_name = extras.getString("category_name");
                     final String category_slug = extras.getString("category_slug");
                     final String category_desc = extras.getString("category_desc");
-                    final int parent_id = extras.getInt("parent_id");
+                    final long parent_id = extras.getInt("parent_id");
 
                     // Check if the category name already exists
                     if (!mCategoryNames.keySet().contains(category_name)) {

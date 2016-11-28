@@ -59,13 +59,9 @@ public class AddCategoryActivity extends AppCompatActivity {
                 EditText categoryDescET = (EditText) findViewById(R.id.category_desc);
                 String category_desc = categoryDescET.getText().toString();
                 Spinner sCategories = (Spinner) findViewById(R.id.parent_category);
-                String parent_category = "";
-                if (sCategories.getSelectedItem() != null)
-                    parent_category = ((CategoryNode) sCategories.getSelectedItem()).getName().trim();
-                int parent_id = 0;
-                if (sCategories.getSelectedItemPosition() != 0) {
-                    parent_id = WordPress.wpDB.getCategoryId(mSite.getId(), parent_category);
-                }
+
+                CategoryNode selectedCategory = (CategoryNode) sCategories.getSelectedItem();
+                long parent_id = (selectedCategory != null) ? selectedCategory.getCategoryId() : 0;
 
                 if (category_name.replaceAll(" ", "").equals("")) {
                     //    Name field cannot be empty
@@ -88,7 +84,7 @@ public class AddCategoryActivity extends AppCompatActivity {
                     bundle.putString("category_name", category_name);
                     bundle.putString("category_slug", category_slug);
                     bundle.putString("category_desc", category_desc);
-                    bundle.putInt("parent_id", parent_id);
+                    bundle.putLong("parent_id", parent_id);
                     bundle.putString("continue", "TRUE");
                     Intent mIntent = new Intent();
                     mIntent.putExtras(bundle);
