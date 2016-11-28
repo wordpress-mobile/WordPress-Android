@@ -468,8 +468,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     public void onSavedEdit(String mediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
-            FragmentManager fm = getFragmentManager();
-            fm.popBackStack();
+            doPopBackStack(getFragmentManager());
 
             // refresh media item details (phone-only)
             if (mMediaItemFragment != null)
@@ -552,7 +551,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 if (mMediaEditFragment.isInLayout()) {
                     mMediaEditFragment.loadMedia(null);
                 } else {
-                    getFragmentManager().popBackStack();
+                    doPopBackStack(getFragmentManager());
                 }
             }
         }
@@ -575,7 +574,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         Set<String> sanitizedIds = new HashSet<>(ids.size());
 
         // phone layout: pop the item fragment if it's visible
-        getFragmentManager().popBackStack();
+        doPopBackStack(getFragmentManager());
 
         // Make sure there are no media in "uploading"
         for (String currentID : ids) {
