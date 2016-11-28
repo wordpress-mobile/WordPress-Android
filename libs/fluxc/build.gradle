@@ -19,13 +19,13 @@ repositories {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         versionCode 4
         versionName "0.1"
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 25
     }
     buildTypes {
         release {
