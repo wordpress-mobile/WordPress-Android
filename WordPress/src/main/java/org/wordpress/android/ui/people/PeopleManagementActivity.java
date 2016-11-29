@@ -233,7 +233,9 @@ public class PeopleManagementActivity extends AppCompatActivity
                 if (!TextUtils.isEmpty(dotComBlogId)) {
                     peopleInviteFragment = PeopleInviteFragment.newInstance(dotComBlogId);
                 } else {
-                    AppLog.e(T.PEOPLE, "getDotComBlogId() returned null or empty string!");
+                    String blogUrl = blog.getUrl();
+                    AppLog.e(T.PEOPLE, "getDotComBlogId() returned null or empty string! Blog URL: " +
+                            (blogUrl == null ? "null" : blogUrl));
                     ToastUtils.showToast(this, R.string.error_generic).show();
                 }
             }
