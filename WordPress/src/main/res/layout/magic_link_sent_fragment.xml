@@ -31,8 +31,7 @@
         android:layout_weight="1"
         android:animateLayoutChanges="true"
         android:gravity="center"
-        android:orientation="vertical"
-        app:maxWidth="@dimen/nux_width">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -91,8 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:animateLayoutChanges="true"
-        android:orientation="vertical"
-        app:maxWidth="@dimen/nux_width">
+        android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/password_layout"
