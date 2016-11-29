@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-06-29 21:54:17+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: es_CL
+-->
 <resources>
 	<string name="editor_failed_uploads_switch_html">Algunas cargas de archivos fallaron. Puedes cambiar a modo HTML en este estado. ¿Eliminar los archivos que fallaron y continuar?</string>
 	<string name="format_bar_description_html">Modo HTML</string>
@@ -26,22 +32,13 @@
 	<string name="alert_action_while_uploading">Actualmente estás subiendo archivos. Por favor, espera hasta que termine.</string>
 	<string name="alert_insert_image_html_mode">No se puede insertar medios directamente en modo HTML. Por favor, cambia al modo visual.</string>
 	<string name="uploading_gallery_placeholder">Cargando Galería...</string>
-	<string name="invite_error_some_failed">¡Se envió la invitación pero sucedió un error!</string>
 	<string name="invite_sent">Invitación enviada exitosamente</string>
 	<string name="tap_to_try_again">¡Toca para volver a intentarlo!</string>
-	<string name="invite_error_sending">¡Se ha produjo un error al intentar enviar la invitación!</string>
-	<string name="invite_error_invalid_usenames_multiple">No se puede enviar: hay nombres de usuario o correos no válidos</string>
-	<string name="invite_error_invalid_usenames_one">No se puede enviar: un nombre de usuario o dirección de correo electrónico no es válido</string>
-	<string name="invite_error_no_usenames">Por favor agrega al menos un nombre de usuario</string>
 	<string name="invite_message_info">(Opcional) Puedes escribir un mensaje personalizado de hasta 500 caracteres que serán incluidos en la invitación a lo(s) usuario(s).</string>
 	<string name="invite_message_remaining_other">%d caracteres restantes</string>
 	<string name="invite_message_remaining_one">1 caracter restantes</string>
 	<string name="invite_message_remaining_zero">0 caracteres restantes</string>
-	<string name="invite_invalid_email">La dirección de correo electrónico \'%s\' no es válida</string>
 	<string name="invite_message_title">Mensaje Personalizado</string>
-	<string name="invite_already_a_member">Ya hay un miembro con nombre de usuario \'%s\'</string>
-	<string name="invite_username_not_found">No se encontró ningún usuario para el nombre de usuario \'%s\'</string>
-	<string name="invite_names_hint">Escribe una dirección de correo electrónico o nombre de usuario...</string>
 	<string name="invite">Invitar</string>
 	<string name="invite_names_title">Nombres de usuario o correo electrónico</string>
 	<string name="interface_language">Idioma de la interfaz</string>
@@ -65,9 +62,7 @@
 	<string name="reader_short_like_count_one">1 Me gusta</string>
 	<string name="reader_label_follow_count">%,d seguidores</string>
 	<string name="reader_short_like_count_none">Me gusta</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Editar etiquetas y blogs</string>
-	<string name="reader_label_word_count">%,d palabras</string>
 	<string name="reader_title_post_detail">Entrada del lector</string>
 	<string name="local_draft_explainer">Esta entrada tiene un borrador local que no ha sido publicado</string>
 	<string name="local_changes_explainer">Esta entrada tiene cambios en local que no han sido publicados</string>
@@ -573,7 +568,6 @@
 	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="jetpack_message">Necesitas el pluging Jetpack para tener estadísticas estadísticas. ¿Quieres instalar Jetpack?</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
-	<string name="reader_timespan_now">ahora</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_share_subject">Compartido desde %s</string>
 	<string name="reader_btn_share">Compartir</string>

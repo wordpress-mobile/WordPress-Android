@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:clickable="true"
     android:clipToPadding="false"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:clickable="true"
-    android:scrollbarStyle="outsideInset" >
+    android:scrollbarStyle="outsideInset">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,16 +20,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/invite_names_title"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            android:text="@string/invite_names_title"/>
+            android:textSize="@dimen/text_sz_large" />
 
         <LinearLayout
             android:id="@+id/usernames_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="@dimen/margin_extra_large"
+            android:layout_marginTop="5dp"
             android:animateLayoutChanges="true"
             android:orientation="vertical">
 
@@ -38,29 +37,29 @@
                 android:id="@+id/usernames"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:background="@drawable/invites_border"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp"
                 android:paddingBottom="@dimen/margin_large"
-                android:animateLayoutChanges="true" >
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp">
 
                 <org.wordpress.android.widgets.MultiUsernameEditText
                     android:id="@+id/invite_usernames"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/transparent"
-                    android:paddingTop="@dimen/margin_large"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:minWidth="40dp"
                     android:paddingBottom="0dp"
                     android:paddingLeft="@dimen/margin_medium"
                     android:paddingRight="@dimen/margin_medium"
+                    android:paddingTop="@dimen/margin_large"
                     android:singleLine="true"
-                    android:textColor="#444444"
+                    android:textColor="@color/grey_dark"
                     android:textColorHint="#AAAAAA"
                     android:textSize="@dimen/text_sz_medium"
-                    tools:text="sdfwefef"
-                    android:inputType="text"
-                    android:imeOptions="actionDone"
-                    android:minWidth="40dp" />
+                    tools:text="sdfwefef" />
             </org.wordpress.android.widgets.FlowLayout>
 
             <org.wordpress.android.widgets.WPTextView
@@ -71,6 +70,14 @@
                 android:textSize="@dimen/text_sz_small"
                 android:textStyle="italic"
                 android:text="@string/invite_message_usernames_limit"/>
+
+            <LinearLayout
+                android:id="@+id/username_errors_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,26 +91,44 @@
             android:background="?android:selectableItemBackground"
             android:orientation="vertical">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:text="@string/role"
-                android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_large"
-                tools:text="@string/role"/>
+                android:orientation="horizontal">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:text="@string/role"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/text_sz_large"
+                    tools:text="@string/role" />
+
+                <ImageView
+                    android:id="@+id/imgRoleInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/margin_small"
+                    android:paddingRight="@dimen/margin_small"
+                    android:src="@drawable/dashicon_info" />
+            </LinearLayout>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/role"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="1dp"
+                android:layout_marginTop="5dp"
+                android:drawableRight="@drawable/arrow"
                 android:ellipsize="end"
+                android:gravity="center_vertical"
                 android:maxLines="1"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_medium"
-                tools:text="@string/role"/>
+                tools:text="@string/role" />
 
         </LinearLayout>
 
@@ -112,15 +137,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
+            android:text="@string/invite_message_title"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            android:text="@string/invite_message_title"/>
+            android:textSize="@dimen/text_sz_large" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/invites_border"
             android:layout_marginTop="5dp"
+            android:background="@drawable/invites_border"
             android:padding="2dp">
 
             <org.wordpress.android.widgets.WPEditText
@@ -128,21 +153,21 @@
                 style="@style/WordPress.NUXEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="top"
                 android:layout_marginLeft="0dp"
+                android:gravity="top"
                 android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
-                android:minLines="4"
-                android:maxLength="@integer/invite_message_char_limit"/>
+                android:maxLength="@integer/invite_message_char_limit"
+                android:minLines="4" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/message_remaining"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
                 android:layout_below="@+id/message"
+                android:gravity="right"
                 android:padding="5dp"
                 android:textColor="@color/grey_lighten_10"
-                android:textSize="@dimen/text_sz_small"/>
+                android:textSize="@dimen/text_sz_small" />
         </RelativeLayout>
 
         <org.wordpress.android.widgets.WPTextView
@@ -150,9 +175,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
+            android:text="@string/invite_message_info"
             android:textColor="@color/grey_lighten_10"
             android:textSize="@dimen/text_sz_small"
-            android:textStyle="italic"
-            android:text="@string/invite_message_info"/>
+            android:textStyle="italic" />
     </LinearLayout>
 </ScrollView>

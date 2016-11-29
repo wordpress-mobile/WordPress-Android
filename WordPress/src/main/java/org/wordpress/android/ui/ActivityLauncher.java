@@ -9,9 +9,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.optimizely.Optimizely;
-import com.optimizely.Variable.LiveVariable;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -22,7 +19,6 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -48,15 +44,12 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
-    private static LiveVariable<Boolean> isMagicLinkEnabledVariable = Optimizely.booleanForKey("isMagicLinkEnabled", false);
-
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, blogLocalTableId);
@@ -261,13 +254,8 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        if (isMagicLinkEnabledVariable.get() && WPActivityUtils.isEmailClientAvailable(activity)) {
-            Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
-            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-        } else {
-            Intent intent = new Intent(activity, SignInActivity.class);
-            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-        }
+        Intent intent = new Intent(activity, SignInActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
     public static void viewStatsSinglePostDetails(Context context, Post post, boolean isPage) {
@@ -299,5 +287,12 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, SignInActivity.class);
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static void loginWithoutMagicLink(Activity activity) {
+        Intent signInIntent = new Intent(activity, SignInActivity.class);
+        signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
+        activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);
     }
 }

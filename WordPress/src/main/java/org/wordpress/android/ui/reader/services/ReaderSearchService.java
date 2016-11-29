@@ -19,7 +19,6 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import de.greenrobot.event.EventBus;
@@ -112,9 +111,7 @@ public class ReaderSearchService extends Service {
             @Override
             public void run() {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-                if (ReaderPostTable.comparePosts(serverPosts).isNewOrChanged()) {
-                    ReaderPostTable.addOrUpdatePosts(getTagForSearchQuery(query), serverPosts);
-                }
+                ReaderPostTable.addOrUpdatePosts(getTagForSearchQuery(query), serverPosts);
                 EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, offset, true));
             }
         }.start();

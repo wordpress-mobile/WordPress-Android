@@ -46,6 +46,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -240,7 +241,14 @@ public class StatsService extends Service {
 
         final String blogId = intent.getStringExtra(ARG_BLOG_ID);
         if (TextUtils.isEmpty(blogId)) {
-            AppLog.e(T.STATS, "StatsService was started with a blank blog_id ");
+            AppLog.e(T.STATS, "StatsService was started with a blank blog_id");
+            return START_NOT_STICKY;
+        }
+
+        int[] sectionFromIntent = intent.getIntArrayExtra(ARG_SECTION);
+        if (sectionFromIntent == null || sectionFromIntent.length == 0) {
+            // No sections to update
+            AppLog.e(T.STATS, "StatsService was started without valid sections info");
             return START_NOT_STICKY;
         }
 
@@ -264,8 +272,6 @@ public class StatsService extends Service {
 
         final int maxResultsRequested = intent.getIntExtra(ARG_MAX_RESULTS, DEFAULT_NUMBER_OF_RESULTS);
         final int pageRequested = intent.getIntExtra(ARG_PAGE_REQUESTED, -1);
-
-        int[] sectionFromIntent = intent.getIntArrayExtra(ARG_SECTION);
 
         this.mServiceStartId = startId;
         for (int i=0; i < sectionFromIntent.length; i++){
@@ -348,11 +354,11 @@ public class StatsService extends Service {
 
         final String periodDateMaxPlaceholder =  "?period=%s&date=%s&max=%s";
 
-        String path = String.format("/sites/%s/stats/" + sectionToUpdate.getRestEndpointPath(), blogId);
+        String path = String.format(Locale.US, "/sites/%s/stats/" + sectionToUpdate.getRestEndpointPath(), blogId);
         synchronized (mStatsNetworkRequests) {
             switch (sectionToUpdate) {
                 case VISITS:
-                    path = String.format(path + "?unit=%s&quantity=15&date=%s", period, date);
+                    path = String.format(Locale.US, path + "?unit=%s&quantity=15&date=%s", period, date);
                     break;
                 case TOP_POSTS:
                 case REFERRERS:
@@ -361,36 +367,36 @@ public class StatsService extends Service {
                 case AUTHORS:
                 case VIDEO_PLAYS:
                 case SEARCH_TERMS:
-                    path = String.format(path + periodDateMaxPlaceholder, period, date, maxResultsRequested);
+                    path = String.format(Locale.US, path + periodDateMaxPlaceholder, period, date, maxResultsRequested);
                     break;
                 case TAGS_AND_CATEGORIES:
                 case PUBLICIZE:
-                    path = String.format(path + "?max=%s", maxResultsRequested);
+                    path = String.format(Locale.US, path + "?max=%s", maxResultsRequested);
                     break;
                 case COMMENTS:
                     // No parameters
                     break;
                 case FOLLOWERS_WPCOM:
                     if (pageRequested < 1) {
-                        path = String.format(path + "&max=%s", maxResultsRequested);
+                        path = String.format(Locale.US, path + "&max=%s", maxResultsRequested);
                     } else {
-                        path = String.format(path + "&period=%s&date=%s&max=%s&page=%s",
+                        path = String.format(Locale.US, path + "&period=%s&date=%s&max=%s&page=%s",
                                 period, date, maxResultsRequested, pageRequested);
                     }
                     break;
                 case FOLLOWERS_EMAIL:
                     if (pageRequested < 1) {
-                        path = String.format(path + "&max=%s", maxResultsRequested);
+                        path = String.format(Locale.US, path + "&max=%s", maxResultsRequested);
                     } else {
-                        path = String.format(path + "&period=%s&date=%s&max=%s&page=%s",
+                        path = String.format(Locale.US, path + "&period=%s&date=%s&max=%s&page=%s",
                                 period, date, maxResultsRequested, pageRequested);
                     }
                     break;
                 case COMMENT_FOLLOWERS:
                     if (pageRequested < 1) {
-                        path = String.format(path + "?max=%s", maxResultsRequested);
+                        path = String.format(Locale.US, path + "?max=%s", maxResultsRequested);
                     } else {
-                        path = String.format(path + "?period=%s&date=%s&max=%s&page=%s", period,
+                        path = String.format(Locale.US, path + "?period=%s&date=%s&max=%s&page=%s", period,
                                 date, maxResultsRequested, pageRequested);
                     }
                     break;
@@ -398,16 +404,16 @@ public class StatsService extends Service {
                 case INSIGHTS_POPULAR:
                     break;
                 case INSIGHTS_TODAY:
-                    path = String.format(path + "?period=day&date=%s", date);
+                    path = String.format(Locale.US, path + "?period=day&date=%s", date);
                     break;
                 case INSIGHTS_LATEST_POST_SUMMARY:
                     // This is an edge cases since  we're not loading stats but posts
-                    path = String.format("/sites/%s/%s", blogId, sectionToUpdate.getRestEndpointPath()
+                    path = String.format(Locale.US, "/sites/%s/%s", blogId, sectionToUpdate.getRestEndpointPath()
                             + "?order_by=date&number=1&type=post&fields=ID,title,URL,discussion,like_count,date");
                     break;
                 case INSIGHTS_LATEST_POST_VIEWS:
                     // This is a kind of edge case, since we used the pageRequested parameter to request a single postID
-                    path = String.format(path + "/%s?fields=views", pageRequested);
+                    path = String.format(Locale.US, path + "/%s?fields=views", pageRequested);
                     break;
                 default:
                     AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name());
@@ -567,7 +573,7 @@ public class StatsService extends Service {
                     // Check here if this is an authentication error
                     // .com authentication errors are handled automatically by the app
                     if (volleyError instanceof com.android.volley.AuthFailureError) {
-                        int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(
+                        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(
                                 Integer.parseInt(mRequestBlogId)
                         );
                         Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);

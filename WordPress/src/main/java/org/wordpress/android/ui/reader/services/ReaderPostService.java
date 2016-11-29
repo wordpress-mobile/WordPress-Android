@@ -178,11 +178,11 @@ public class ReaderPostService extends Service {
         switch (updateAction) {
             case REQUEST_OLDER:
                 // request posts older than the oldest existing post with this tag
-                beforeDate = ReaderPostTable.getOldestPubDateWithTag(tag);
+                beforeDate = ReaderPostTable.getOldestDateWithTag(tag);
                 break;
             case REQUEST_OLDER_THAN_GAP:
                 // request posts older than the post with the gap marker for this tag
-                beforeDate = ReaderPostTable.getGapMarkerPubDateForTag(tag);
+                beforeDate = ReaderPostTable.getGapMarkerDateForTag(tag);
                 break;
             default:
                 beforeDate = null;

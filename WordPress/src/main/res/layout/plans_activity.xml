@@ -23,6 +23,7 @@
             android:background="@color/tab_background"
             android:visibility="gone"
             app:tabIndicatorColor="@color/tab_indicator"
+            app:tabMode="scrollable"
             tools:visibility="visible" />
 
     </android.support.design.widget.AppBarLayout>

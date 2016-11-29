@@ -39,8 +39,10 @@ public class ReaderPost {
     private String primaryTag;    // most popular tag on this post based on usage in blog
     private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
-    public double sortIndex;
-    private String published;
+    private String dateLiked;
+    private String dateTagged;
+    private String datePublished;
+    public double score;
 
     private String url;
     private String shortUrl;
@@ -49,7 +51,6 @@ public class ReaderPost {
 
     public int numReplies;        // includes comments, trackbacks & pingbacks
     public int numLikes;
-    public int wordCount;
 
     public boolean isLikedByCurrentUser;
     public boolean isFollowedByCurrentUser;
@@ -65,6 +66,8 @@ public class ReaderPost {
 
     public long xpostPostId;
     public long xpostBlogId;
+
+    private String railcarJson;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -95,7 +98,6 @@ public class ReaderPost {
         post.setBlogUrl(JSONUtils.getString(json, "site_URL"));
 
         post.numLikes = json.optInt("like_count");
-        post.wordCount = json.optInt("word_count");
         post.isLikedByCurrentUser = JSONUtils.getBool(json, "i_like");
         post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
         post.isExternal = JSONUtils.getBool(json, "is_external");
@@ -116,18 +118,13 @@ public class ReaderPost {
 
         post.featuredImage = JSONUtils.getString(json, "featured_image");
         post.blogName = JSONUtils.getStringDecoded(json, "site_name");
-        post.published = JSONUtils.getString(json, "date");
 
-        // sort index determines how posts are sorted - this is a "score" for search results,
-        // liked date for liked posts, and published date for all others
-        if (json.has("score")) {
-            post.sortIndex = json.optDouble("score");
-        } else if (json.has("date_liked")) {
-            String likeDate = JSONUtils.getString(json, "date_liked");
-            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(likeDate);
-        } else {
-            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(post.published);
-        }
+        post.datePublished = JSONUtils.getString(json, "date");
+        post.dateLiked = JSONUtils.getString(json, "date_liked");
+        post.dateTagged = JSONUtils.getString(json, "tagged_on");
+
+        // "score" only exists for search results
+        post.score = json.optDouble("score");
 
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt()) {
@@ -199,6 +196,12 @@ public class ReaderPost {
                     .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
 
+        // "railcar" data - currently used in search streams, used by TrainTracks
+        JSONObject jsonRailcar = json.optJSONObject("railcar");
+        if (jsonRailcar != null) {
+            post.setRailcarJson(jsonRailcar.toString());
+        }
+
         return post;
     }
 
@@ -240,8 +243,20 @@ public class ReaderPost {
 
         post.authorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
         post.authorFirstName = JSONUtils.getStringDecoded(jsonAuthor, "first_name");
-        post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
         post.authorId = jsonAuthor.optLong("ID");
+
+        // v1.2 endpoint contains a "has_avatar" boolean which tells us whether the author
+        // has a valid avatar - if this field exists and is set to false, skip setting
+        // the avatar URL
+        boolean hasAvatar;
+        if (jsonAuthor.has("has_avatar")) {
+            hasAvatar = jsonAuthor.optBoolean("has_avatar");
+        } else {
+            hasAvatar = true;
+        }
+        if (hasAvatar) {
+            post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
+        }
 
         // site_URL doesn't exist for /sites/ endpoints, so get it from the author
         if (TextUtils.isEmpty(post.blogUrl)) {
@@ -269,6 +284,7 @@ public class ReaderPost {
 
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
+            String thisTagName = JSONUtils.getStringDecoded(jsonThisTag, "slug");
 
             // if the number of posts on this blog that use this tag is higher than previous,
             // set this as the most popular tag, and set the second most popular tag to
@@ -276,8 +292,10 @@ public class ReaderPost {
             int postCount = jsonThisTag.optInt("post_count");
             if (postCount > popularCount) {
                 nextMostPopularTag = mostPopularTag;
-                mostPopularTag = JSONUtils.getStringDecoded(jsonThisTag, "slug");
+                mostPopularTag = thisTagName;
                 popularCount = postCount;
+            } else if (nextMostPopularTag == null) {
+                nextMostPopularTag = thisTagName;
             }
         }
 
@@ -428,11 +446,25 @@ public class ReaderPost {
         this.pseudoId = StringUtils.notNullStr(pseudoId);
     }
 
-    public String getPublished() {
-        return StringUtils.notNullStr(published);
+    public String getDatePublished() {
+        return StringUtils.notNullStr(datePublished);
     }
-    public void setPublished(String published) {
-        this.published = StringUtils.notNullStr(published);
+    public void setDatePublished(String dateStr) {
+        this.datePublished = StringUtils.notNullStr(dateStr);
+    }
+
+    public String getDateLiked() {
+        return StringUtils.notNullStr(dateLiked);
+    }
+    public void setDateLiked(String dateStr) {
+        this.dateLiked = StringUtils.notNullStr(dateStr);
+    }
+
+    public String getDateTagged() {
+        return StringUtils.notNullStr(dateTagged);
+    }
+    public void setDateTagged(String dateStr) {
+        this.dateTagged = StringUtils.notNullStr(dateStr);
     }
 
     public String getPrimaryTag() {
@@ -444,7 +476,7 @@ public class ReaderPost {
             this.primaryTag = StringUtils.notNullStr(tagName);
         }
     }
-    boolean hasPrimaryTag() {
+    public boolean hasPrimaryTag() {
         return !TextUtils.isEmpty(primaryTag);
     }
 
@@ -455,6 +487,9 @@ public class ReaderPost {
         if (!ReaderTag.isDefaultTagTitle(tagName)) {
             this.secondaryTag = StringUtils.notNullStr(tagName);
         }
+    }
+    public boolean hasSecondaryTag() {
+        return !TextUtils.isEmpty(secondaryTag);
     }
 
     /*
@@ -587,6 +622,17 @@ public class ReaderPost {
         return (isWP() || isJetpack) && (!isDiscoverPost());
     }
 
+
+    public String getRailcarJson() {
+        return StringUtils.notNullStr(railcarJson);
+    }
+    public void setRailcarJson(String jsonRailcar) {
+        this.railcarJson = StringUtils.notNullStr(jsonRailcar);
+    }
+    public boolean hasRailcar() {
+        return !TextUtils.isEmpty(railcarJson);
+    }
+
     /****
      * the following are transient variables - not stored in the db or returned in the json - whose
      * sole purpose is to cache commonly-used values for the post that speeds up using them inside
@@ -637,14 +683,14 @@ public class ReaderPost {
     }
 
     /*
-     * converts iso8601 published date to an actual java date
+     * converts iso8601 pubDate to a java date for display - this is the date that appears on posts
      */
-    private transient java.util.Date dtPublished;
-    public java.util.Date getDatePublished() {
-        if (dtPublished == null) {
-            dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
+    private transient java.util.Date dtDisplay;
+    public java.util.Date getDisplayDate() {
+        if (dtDisplay == null) {
+            dtDisplay = DateTimeUtils.dateFromIso8601(this.datePublished);
         }
-        return dtPublished;
+        return dtDisplay;
     }
 
     /*

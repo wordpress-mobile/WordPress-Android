@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2015-10-27 17:48:23+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: nb_NO
+-->
 <resources>
 	<string name="reader_short_comment_count_multi">%s kommentarer</string>
 	<string name="reader_short_comment_count_one">1 kommentar</string>
 	<string name="reader_label_follow_count">%,d følgere</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min.</string>
-	<string name="reader_label_word_count">%,d ord</string>
 	<string name="local_draft_explainer">Dette innlegget er en lokal kladd som ikke er publisert</string>
 	<string name="local_changes_explainer">Dette innlegget har lokale endringer som ikke er publisert</string>
 	<string name="replies_to_your_comments">Svar på dine kommentarer</string>
@@ -240,7 +244,6 @@
 	<string name="nux_welcome_create_account">Opprett konto</string>
 	<string name="nux_oops_not_selfhosted_blog">Logg inn på WordPress.com</string>
 	<string name="signing_in">Logger inn …</string>
-	<string name="reader_timespan_now">nå</string>
 	<string name="reader_btn_share">Del</string>
 	<string name="reader_btn_follow">Følg</string>
 	<string name="jetpack_not_found">Fant ikke utvidelsen Jetpack</string>
@@ -384,6 +387,7 @@
 	<string name="location">Sted</string>
 	<string name="media">Media</string>
 	<string name="delete">Slett</string>
+	<string name="approve">Godkjenn</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Blogger</string>
 	<string name="select_photo">Velg et foto fra galleriet</string>

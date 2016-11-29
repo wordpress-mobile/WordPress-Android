@@ -35,7 +35,7 @@ public class ReaderSearchTable {
      * adds the passed query string, updating the usage date
      */
     public static void addOrUpdateQueryString(@NonNull String query) {
-        String date = DateTimeUtils.javaDateToIso8601(new Date());
+        String date = DateTimeUtils.iso8601FromDate(new Date());
 
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(
                 "INSERT OR REPLACE INTO tbl_search_suggestions (query_string, date_used) VALUES (?1,?2)");

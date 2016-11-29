@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class PeopleUtils {
@@ -59,7 +61,7 @@ public class PeopleUtils {
         params.put("offset", Integer.toString(offset));
         params.put("order_by", "display_name");
         params.put("order", "ASC");
-        String path = String.format("sites/%s/users", blogId);
+        String path = String.format(Locale.US, "sites/%s/users", blogId);
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
@@ -112,7 +114,7 @@ public class PeopleUtils {
         params.put("max", Integer.toString(FETCH_LIMIT));
         params.put("page", Integer.toString(page));
         params.put("type", isEmailFollower ? "email" : "wp_com");
-        String path = String.format("sites/%s/stats/followers", blogId);
+        String path = String.format(Locale.US, "sites/%s/stats/followers", blogId);
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
@@ -152,11 +154,11 @@ public class PeopleUtils {
         Map<String, String> params = new HashMap<>();
         params.put("number", Integer.toString(FETCH_LIMIT));
         params.put("page", Integer.toString(page));
-        String path = String.format("sites/%s/viewers", blogId);
+        String path = String.format(Locale.US,"sites/%s/viewers", blogId);
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void updateRole(final String blogId, long personID, String newRole, final int localTableBlogId,
+    public static void updateRole(final String blogId, long personID, Role newRole, final int localTableBlogId,
                                   final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -188,8 +190,8 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("roles", newRole.toLowerCase());
-        String path = String.format("sites/%s/users/%d", blogId, personID);
+        params.put("roles", newRole.toRESTString());
+        String path = String.format(Locale.US, "sites/%s/users/%d", blogId, personID);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
@@ -220,7 +222,7 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format("sites/%s/users/%d/delete", blogId, personID);
+        String path = String.format(Locale.US, "sites/%s/users/%d/delete", blogId, personID);
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
@@ -253,9 +255,9 @@ public class PeopleUtils {
 
         String path;
         if (personType == Person.PersonType.EMAIL_FOLLOWER) {
-            path = String.format("sites/%s/email-followers/%d/delete", blogId, personID);
+            path = String.format(Locale.US, "sites/%s/email-followers/%d/delete", blogId, personID);
         } else {
-            path = String.format("sites/%s/followers/%d/delete", blogId, personID);
+            path = String.format(Locale.US, "sites/%s/followers/%d/delete", blogId, personID);
         }
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
@@ -287,7 +289,7 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format("sites/%s/viewers/%d/delete", blogId, personID);
+        String path = String.format(Locale.US, "sites/%s/viewers/%d/delete", blogId, personID);
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
@@ -341,7 +343,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void validateUsernames(final List<String> usernames, String dotComBlogId, final
+    public static void validateUsernames(final List<String> usernames, Role role, String dotComBlogId, final
             ValidateUsernameCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -374,6 +376,12 @@ public class PeopleUtils {
                                     break;
                                 case "invalid_input_has_role":
                                     callback.onUsernameValidation(username, ValidationResult.ALREADY_MEMBER);
+                                    continue;
+                                case "invalid_input_following":
+                                    callback.onUsernameValidation(username, ValidationResult.ALREADY_FOLLOWING);
+                                    continue;
+                                case "invalid_user_blocked_invites":
+                                    callback.onUsernameValidation(username, ValidationResult.BLOCKED_INVITES);
                                     continue;
                             }
 
@@ -420,12 +428,12 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format("sites/%s/invites/validate", dotComBlogId);
+        String path = String.format(Locale.US, "sites/%s/invites/validate", dotComBlogId);
         Map<String, String> params = new HashMap<>();
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
         }
-        params.put("role", "follower"); // the specific role is not important, just needs to be a valid one
+        params.put("role", role.toRESTString());
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
@@ -433,6 +441,8 @@ public class PeopleUtils {
         enum ValidationResult {
             USER_NOT_FOUND,
             ALREADY_MEMBER,
+            ALREADY_FOLLOWING,
+            BLOCKED_INVITES,
             INVALID_EMAIL,
             USER_FOUND
         }
@@ -442,7 +452,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void sendInvitations(final List<String> usernames, String role, String message, String dotComBlogId,
+    public static void sendInvitations(final List<String> usernames, Role role, String message, String dotComBlogId,
                                        final InvitationsSendCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -501,12 +511,12 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format("sites/%s/invites/new", dotComBlogId);
+        String path = String.format(Locale.US, "sites/%s/invites/new", dotComBlogId);
         Map<String, String> params = new HashMap<>();
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
         }
-        params.put("role", role);
+        params.put("role", role.toRESTString());
         params.put("message", message);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="content_margin">@dimen/content_margin_tablet_big</dimen>
+    <dimen name="reader_card_margin">@dimen/reader_card_margin_tablet_big</dimen>
+    <dimen name="reader_detail_margin">@dimen/reader_detail_margin_tablet_big</dimen>
     <dimen name="reader_webview_width">680dp</dimen>
+    <dimen name="notifications_content_margin">@dimen/content_margin_tablet_big</dimen>
 </resources>

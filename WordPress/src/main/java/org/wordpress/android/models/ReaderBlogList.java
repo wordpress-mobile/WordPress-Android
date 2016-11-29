@@ -1,5 +1,7 @@
 package org.wordpress.android.models;
 
+import android.support.annotation.NonNull;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -44,28 +46,38 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
         return -1;
     }
 
-    private int indexOfFeedId(long feedId) {
-        for (int i = 0; i < size(); i++) {
-            if (this.get(i).feedId == feedId) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     public boolean isSameList(ReaderBlogList blogs) {
         if (blogs == null || blogs.size() != this.size()) {
             return false;
         }
 
         for (ReaderBlog blogInfo: blogs) {
-            int index;
-            if (blogInfo.feedId != 0) {
-                index = indexOfFeedId(blogInfo.feedId);
-            } else {
-                index = indexOfBlogId(blogInfo.blogId);
+            int index = indexOfBlogId(blogInfo.blogId);
+            if (index == -1) {
+                return false;
             }
-            if (index == -1 || !this.get(index).isSameAs(blogInfo)) {
+            ReaderBlog thisInfo = this.get(index);
+            if (!thisInfo.isSameAs(blogInfo)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /*
+     * returns true if the passed blog list has the same blogs that are in this list - differs
+     * from isSameList() in that isSameList() checks for *any* changes (subscription count, etc.)
+     * whereas this only checks if the passed list has any blogs that are not in this list, or
+     * this list has any blogs that are not in the passed list
+     */
+    public boolean hasSameBlogs(@NonNull ReaderBlogList blogs) {
+        if (blogs.size() != this.size()) {
+            return false;
+        }
+
+        for (ReaderBlog blogInfo: blogs) {
+            if (indexOfBlogId(blogInfo.blogId) == -1) {
                 return false;
             }
         }

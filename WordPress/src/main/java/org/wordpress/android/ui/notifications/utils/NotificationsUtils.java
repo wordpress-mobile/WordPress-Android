@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.text.Layout;
@@ -33,11 +35,13 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.comments.CommentActionResult;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationFailed;
@@ -51,6 +55,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
 
 import java.lang.reflect.Field;
@@ -72,7 +77,7 @@ public class NotificationsUtils {
     public static final String WPCOM_PUSH_DEVICE_TOKEN = "wp_pref_notifications_token";
 
     public static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
-    private static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
+    public static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
 
     private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
     private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
@@ -80,6 +85,12 @@ public class NotificationsUtils {
     private static final String WPCOM_SETTINGS_ENDPOINT = "/me/notifications/settings/";
 
     private static boolean mSnackbarDidUndo;
+
+    public interface TwoFactorAuthCallback {
+        void onTokenValid(String token, String title, String message);
+        void onTokenInvalid();
+    }
+
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
@@ -108,6 +119,7 @@ public class NotificationsUtils {
         contentStruct.put("device_name", deviceName);
         contentStruct.put("device_model", Build.MANUFACTURER + " " + Build.MODEL);
         contentStruct.put("app_version", WordPress.versionName);
+        contentStruct.put("version_code", String.valueOf(PackageUtils.getVersionCode(ctx)));
         contentStruct.put("os_version", Build.VERSION.RELEASE);
         contentStruct.put("device_uuid", uuid);
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -394,6 +406,27 @@ public class NotificationsUtils {
         return spannable != null && index < spannable.length() && spannable.charAt(index) == character;
     }
 
+    public static boolean validate2FAuthorizationTokenFromIntentExtras(Intent intent, TwoFactorAuthCallback callback) {
+        // Check for push authorization request
+        if (intent != null && intent.hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
+            Bundle extras = intent.getExtras();
+            String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
+            String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
+            String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
+            long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
+
+            long now = System.currentTimeMillis() / 1000;
+            if (expires > 0 && now > expires) {
+                callback.onTokenInvalid();
+                return false;
+            } else {
+                callback.onTokenValid(token, title, message);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static void showPushAuthAlert(Context context, final String token, String title, String message) {
         if (context == null ||
@@ -409,19 +442,7 @@ public class NotificationsUtils {
         builder.setPositiveButton(R.string.mnu_comment_approve, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // ping the push auth endpoint with the token, wp.com will take care of the rest!
-                Map<String, String> tokenMap = new HashMap<>();
-                tokenMap.put("action", "authorize_login");
-                tokenMap.put("push_token", token);
-                WordPress.getRestClientUtilsV1_1().post(PUSH_AUTH_ENDPOINT, tokenMap, null, null,
-                        new RestRequest.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_FAILED);
-                            }
-                        });
-
-                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_APPROVED);
+                sendTwoFactorAuthToken(token);
             }
         });
 
@@ -434,6 +455,22 @@ public class NotificationsUtils {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public static void sendTwoFactorAuthToken(String token){
+        // ping the push auth endpoint with the token, wp.com will take care of the rest!
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("action", "authorize_login");
+        tokenMap.put("push_token", token);
+        WordPress.getRestClientUtilsV1_1().post(PUSH_AUTH_ENDPOINT, tokenMap, null, null,
+                new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_FAILED);
+                    }
+                });
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_APPROVED);
     }
 
     private static void showUndoBarForNote(final Note note,
@@ -453,8 +490,8 @@ public class NotificationsUtils {
         Snackbar snackbar = Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.undo, undoListener);
 
-        // Deleted notifications in Simperium never come back, so we won't
-        // make the request until the undo bar fades away
+
+
         snackbar.setCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
@@ -462,6 +499,8 @@ public class NotificationsUtils {
                 if (mSnackbarDidUndo) {
                     return;
                 }
+                // Delete the notifications from the local DB as soon as the undo bar fades away.
+                NotificationsTable.deleteNoteById(note.getId());
                 CommentActions.moderateCommentForNote(note, status,
                         new CommentActions.CommentActionListener() {
                             @Override
@@ -485,7 +524,6 @@ public class NotificationsUtils {
     public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final View parentView) {
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             note.setLocalStatus(CommentStatus.toRESTString(newStatus));
-            note.save();
             EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), true));
             CommentActions.moderateCommentForNote(note, newStatus,
                     new CommentActions.CommentActionListener() {
@@ -494,7 +532,6 @@ public class NotificationsUtils {
                             EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), false));
                             if (!result.isSuccess()) {
                                 note.setLocalStatus(null);
-                                note.save();
                                 EventBus.getDefault().postSticky(new NoteModerationFailed());
                             }
                         }
@@ -530,11 +567,40 @@ public class NotificationsUtils {
                 return ((int) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
             } catch (ClassNotFoundException | NoSuchFieldException | NoSuchMethodException |
                     IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e.getMessage());
             }
         }
 
         // Default to assuming notifications are enabled
         return true;
+    }
+
+    public static boolean buildNoteObjectFromBundleAndSaveIt(Bundle data) {
+        Note note = buildNoteObjectFromBundle(data);
+        if (note != null) {
+            return NotificationsTable.saveNote(note);
+        }
+
+        return false;
+    }
+
+    public static Note buildNoteObjectFromBundle(Bundle data) {
+
+        if (data == null) {
+            AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + GCMMessageService.PUSH_ARG_NOTE_ID + "'.");
+            return null;
+        }
+
+        Note note;
+        String noteId = data.getString(GCMMessageService.PUSH_ARG_NOTE_ID, "");
+        String base64FullData = data.getString(GCMMessageService.PUSH_ARG_NOTE_FULL_DATA);
+        note = Note.buildFromBase64EncodedData(noteId, base64FullData);
+        if (note == null) {
+            // At this point we don't have the note :(
+            AppLog.w(T.NOTIFS, "Cannot build the Note object by using info available in the PN payload. Please see " +
+                    "previous log messages for detailed information about the error.");
+        }
+
+        return note;
     }
 }

@@ -11,18 +11,25 @@ public class ReaderConstants {
 
     public static final int MIN_FEATURED_IMAGE_WIDTH = 640;                 // min width for an image to be suitable featured image
 
+    public static final long DISCOVER_SITE_ID = 53424024;                    // site id for discover.wordpress.com
+
     // min size for images in post content to be shown in a gallery (thumbnail strip) - matches
     // the Calypso web reader
     public static int MIN_GALLERY_IMAGE_WIDTH  = 144;
 
     public static final String HTTP_REFERER_URL = "https://wordpress.com";  // referrer url for reader posts opened in a browser
 
+    public static final String UNICODE_BULLET_WITH_SPACE = " \u2022 ";
+
     // intent arguments / keys
     static final String ARG_TAG               = "tag";
+    static final String ARG_IS_FEED           = "is_feed";
     static final String ARG_BLOG_ID           = "blog_id";
     static final String ARG_FEED_ID           = "feed_id";
     static final String ARG_POST_ID           = "post_id";
+    static final String ARG_INTERCEPTED_URI   = "intercepted_uri";
     static final String ARG_COMMENT_ID        = "comment_id";
+    static final String ARG_DIRECT_OPERATION  = "direct_operation";
     static final String ARG_IMAGE_URL         = "image_url";
     static final String ARG_IS_PRIVATE        = "is_private";
     static final String ARG_IS_GALLERY        = "is_gallery";
@@ -32,12 +39,16 @@ public class ReaderConstants {
     static final String ARG_IS_RELATED_POST   = "is_related_post";
     static final String ARG_SEARCH_QUERY      = "search_query";
 
+    static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";
     static final String KEY_ALREADY_UPDATED   = "already_updated";
     static final String KEY_ALREADY_REQUESTED = "already_requested";
     static final String KEY_RESTORE_POSITION  = "restore_position";
     static final String KEY_WAS_PAUSED        = "was_paused";
     static final String KEY_ERROR_MESSAGE     = "error_message";
     static final String KEY_FIRST_LOAD        = "first_load";
+
+    static final String KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS = "already_tracked_global_related_posts";
+    static final String KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS  = "already_tracked_local_related_posts";
 
     // JSON key names
     //  tag endpoints

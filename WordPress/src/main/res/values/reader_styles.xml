@@ -107,9 +107,13 @@
         <item name="android:layout_width">@dimen/avatar_sz_extra_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_extra_small</item>
     </style>
+    <style name="ReaderImageView.Avatar.Tiny" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/avatar_sz_tiny</item>
+        <item name="android:layout_height">@dimen/avatar_sz_tiny</item>
+    </style>
 
     <!-- progress bars -->
-    <style name="ReaderProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar" />
+    <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />
 
     <style name="ReaderTabStripTextAppearance">
         <item name="android:textSize">@dimen/text_sz_medium</item>

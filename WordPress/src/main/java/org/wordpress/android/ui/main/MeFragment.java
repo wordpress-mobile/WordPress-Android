@@ -1,12 +1,5 @@
 package org.wordpress.android.ui.main;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.github.xizzhu.simpletooltip.ToolTip;
-import com.github.xizzhu.simpletooltip.ToolTipView;
-import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropActivity;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,6 +30,14 @@ import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Cache;
+import com.android.volley.Request;
+import com.github.xizzhu.simpletooltip.ToolTip;
+import com.github.xizzhu.simpletooltip.ToolTipView;
+import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.UCropActivity;
+
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -312,13 +313,14 @@ public class MeFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void addDropShadowToAvatar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mAvatarImageView.setOutlineProvider(new ViewOutlineProvider() {
+            mAvatarContainer.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                    int padding = (mAvatarContainer.getWidth() - mAvatarImageView.getWidth()) / 2;
+                    outline.setOval(padding, padding, view.getWidth() - padding, view.getHeight() - padding);
                 }
             });
-            mAvatarImageView.setElevation(mAvatarImageView.getResources().getDimensionPixelSize(R.dimen.card_elevation));
+            mAvatarContainer.setElevation(mAvatarContainer.getResources().getDimensionPixelSize(R.dimen.card_elevation));
         }
     }
 
@@ -383,8 +385,9 @@ public class MeFragment extends Fragment {
                 EventBus.getDefault().post(new GravatarLoadFinished(false));
             }
 
-            // invalidate the WPNetworkImageView
-            mAvatarImageView.invalidateImage();
+            // reset the WPNetworkImageView
+            mAvatarImageView.resetImage();
+            mAvatarImageView.removeCurrentUrlFromSkiplist();
         }
 
         mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, new WPNetworkImageView
@@ -504,13 +507,14 @@ public class MeFragment extends Fragment {
     }
 
     private void askForCameraOrGallery() {
-        WordPressMediaUtils.launchPictureLibraryOrCapture(MeFragment.this, new WordPressMediaUtils
-                .LaunchCameraCallback() {
-            @Override
-            public void onMediaCapturePathReady(String mediaCapturePath) {
-                mMediaCapturePath = mediaCapturePath;
-            }
-        });
+        WordPressMediaUtils
+                .launchPictureLibraryOrCapture(MeFragment.this, BuildConfig.APPLICATION_ID,
+                        new WordPressMediaUtils.LaunchCameraCallback() {
+                            @Override
+                            public void onMediaCapturePathReady(String mediaCapturePath) {
+                                mMediaCapturePath = mediaCapturePath;
+                            }
+                        });
     }
 
     private void startCropActivity(Uri uri) {

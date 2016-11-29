@@ -64,7 +64,7 @@ public class ReaderCommentActions {
         newComment.setText(commentText);
 
         Date dtPublished = DateTimeUtils.nowUTC();
-        newComment.setPublished(DateTimeUtils.javaDateToIso8601(dtPublished));
+        newComment.setPublished(DateTimeUtils.iso8601FromDate(dtPublished));
         newComment.timestamp = dtPublished.getTime();
 
         ReaderUser currentUser = ReaderUserTable.getCurrentUser();

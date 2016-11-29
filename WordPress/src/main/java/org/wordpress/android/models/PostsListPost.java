@@ -164,7 +164,7 @@ public class PostsListPost {
         if (getStatusEnum() == PostStatus.SCHEDULED) {
             return DateUtils.formatDateTime(WordPress.getContext(), dateCreatedGmt, DateUtils.FORMAT_ABBREV_ALL);
         } else {
-            return DateTimeUtils.javaDateToTimeSpan(new Date(dateCreatedGmt));
+            return DateTimeUtils.javaDateToTimeSpan(new Date(dateCreatedGmt), WordPress.getContext());
         }
     }
 

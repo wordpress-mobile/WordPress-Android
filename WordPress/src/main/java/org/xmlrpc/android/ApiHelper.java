@@ -450,7 +450,7 @@ public class ApiHelper {
             authorEmail = contentHash.get("author_email").toString();
             postTitle = contentHash.get("post_title").toString();
             date = (java.util.Date) contentHash.get("date_created_gmt");
-            pubDate = DateTimeUtils.javaDateToIso8601(date);
+            pubDate = DateTimeUtils.iso8601FromDate(date);
 
             Comment comment = new Comment(
                     postID,

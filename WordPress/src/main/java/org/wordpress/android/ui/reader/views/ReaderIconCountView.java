@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.FormatUtils;
 
 /*
  * used when showing comment + comment count, like + like count
@@ -86,10 +85,13 @@ public class ReaderIconCountView extends LinearLayout {
     }
 
     public void setCount(int count) {
-        if (mIconType == ICON_LIKE) {
-            mTextCount.setText(ReaderUtils.getShortLikeLabelText(getContext(), count));
-        } else {
-            mTextCount.setText(FormatUtils.formatInt(count));
+        switch (mIconType) {
+            case ICON_LIKE:
+                mTextCount.setText(ReaderUtils.getShortLikeLabelText(getContext(), count));
+                break;
+            case ICON_COMMENT:
+                mTextCount.setText(ReaderUtils.getShortCommentLabelText(getContext(), count));
+                break;
         }
     }
 }
