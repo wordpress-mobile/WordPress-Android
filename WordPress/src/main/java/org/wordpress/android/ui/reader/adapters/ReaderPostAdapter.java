@@ -437,11 +437,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.imgMore.setOnClickListener(null);
         }
 
-        // follow button doesn't show for "Followed Sites" or when there's a site header (Discover, site preview)
-        boolean showFollowButton = !hasSiteHeader()
-                && !mIsLoggedOutReader
-                && !isFollowedSites();
-        if (showFollowButton) {
+        if (shouldShowFollowButton()) {
             holder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
             holder.followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -478,6 +474,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mRenderedIds.add(post.getPseudoId());
             AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
         }
+    }
+
+    /*
+     * follow button only shows for tags and "Posts I Like" - it doesn't show for Followed Sites,
+     * Discover, lists, etc.
+     */
+    private boolean shouldShowFollowButton() {
+        return mCurrentTag != null
+                && (mCurrentTag.isTagTopic() || mCurrentTag.isPostsILike())
+                && !mIsLoggedOutReader;
     }
 
     /*
@@ -584,10 +590,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean isDiscover() {
         return mCurrentTag != null && mCurrentTag.isDiscover();
-    }
-
-    private boolean isFollowedSites() {
-        return mCurrentTag != null && mCurrentTag.isFollowedSites();
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
