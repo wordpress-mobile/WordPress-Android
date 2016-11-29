@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
@@ -229,7 +230,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             if (peopleInviteFragment == null) {
                 Blog blog = WordPress.getCurrentBlog();
                 String dotComBlogId = blog.getDotComBlogId();
-                if (dotComBlogId != null && !dotComBlogId.isEmpty()) {
+                if (!TextUtils.isEmpty(dotComBlogId)) {
                     peopleInviteFragment = PeopleInviteFragment.newInstance(dotComBlogId);
                 } else {
                     AppLog.e(T.PEOPLE, "getDotComBlogId() returned null or empty string!");
