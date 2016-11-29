@@ -20,6 +20,8 @@ import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -226,9 +228,15 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             if (peopleInviteFragment == null) {
                 Blog blog = WordPress.getCurrentBlog();
-                peopleInviteFragment = PeopleInviteFragment.newInstance(blog.getDotComBlogId());
+                String dotComBlogId = blog.getDotComBlogId();
+                if (dotComBlogId != null && !dotComBlogId.isEmpty()) {
+                    peopleInviteFragment = PeopleInviteFragment.newInstance(dotComBlogId);
+                } else {
+                    AppLog.e(T.PEOPLE, "getDotComBlogId() returned null or empty string!");
+                    ToastUtils.showToast(this, R.string.error_generic).show();
+                }
             }
-            if (!peopleInviteFragment.isAdded()) {
+            if (peopleInviteFragment != null && !peopleInviteFragment.isAdded()) {
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
                 fragmentTransaction.addToBackStack(null);
