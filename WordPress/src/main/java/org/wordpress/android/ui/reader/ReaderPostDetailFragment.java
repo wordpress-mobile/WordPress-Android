@@ -1139,16 +1139,30 @@ public class ReaderPostDetailFragment extends Fragment
             return true;
         }
 
-        // open YouTube videos in external app so they launch the YouTube player, open all other
-        // urls using an AuthenticatedWebViewActivity
-        final OpenUrlType openUrlType;
-        if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
-            openUrlType = OpenUrlType.EXTERNAL;
-        } else {
-            openUrlType = OpenUrlType.INTERNAL;
-        }
+        OpenUrlType openUrlType = shouldOpenExternal(url) ? OpenUrlType.EXTERNAL : OpenUrlType.INTERNAL;
         ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType);
         return true;
+    }
+
+    /*
+     * returns True if the passed URL should be opened in the external browser app
+     */
+    private boolean shouldOpenExternal(String url) {
+        // open YouTube videos in external app so they launch the YouTube player
+        if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
+            return true;
+        }
+
+        // if the mime type starts with "application" open it externally - this will either
+        // open it in the associated app or the default browser (which will enable the user
+        // to download it)
+        String mimeType = UrlUtils.getUrlMimeType(url);
+        if (mimeType != null && mimeType.startsWith("application")) {
+            return true;
+        }
+
+        // open all other urls using an AuthenticatedWebViewActivity
+        return false;
     }
 
     @Override
