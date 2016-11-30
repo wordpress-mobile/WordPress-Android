@@ -6,6 +6,7 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 
@@ -81,7 +82,7 @@ public class TaxonomyModel extends Payload implements Identifiable, Serializable
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
+        if (other == null || !(other instanceof TaxonomyModel)) return false;
 
         TaxonomyModel otherTaxonomy = (TaxonomyModel) other;
 
@@ -89,9 +90,8 @@ public class TaxonomyModel extends Payload implements Identifiable, Serializable
                 && getLocalSiteId() == otherTaxonomy.getLocalSiteId()
                 && isHierarchical() == otherTaxonomy.isHierarchical()
                 && isPublic() == otherTaxonomy.isPublic()
-                && (getName() != null ? getName().equals(otherTaxonomy.getName()) : otherTaxonomy.getName() == null)
-                && (getLabel() != null ? getLabel().equals(otherTaxonomy.getLabel()) : otherTaxonomy.getLabel() == null)
-                && (getDescription() != null
-                 ? getDescription().equals(otherTaxonomy.getDescription()) : otherTaxonomy.getDescription() == null);
+                && StringUtils.equals(getName(), otherTaxonomy.getName())
+                && StringUtils.equals(getLabel(), otherTaxonomy.getLabel())
+                && StringUtils.equals(getDescription(), otherTaxonomy.getDescription());
     }
 }
