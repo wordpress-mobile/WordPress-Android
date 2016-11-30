@@ -472,6 +472,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected Boolean doInBackground(Void... params) {
             List<CommentModel> comments;
             if (mStatusFilter == null) {
+                // We want
                 comments = mCommentStore.getCommentsForSite(mSite, CommentStatus.ALL);
             } else {
                 comments = mCommentStore.getCommentsForSite(mSite, mStatusFilter);

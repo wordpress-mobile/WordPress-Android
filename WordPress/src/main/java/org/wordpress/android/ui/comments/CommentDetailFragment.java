@@ -256,12 +256,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnTrashComment = mLayoutButtons.findViewById(R.id.btn_trash);
         mBtnTrashCommentText = (TextView) mLayoutButtons.findViewById(R.id.btn_trash_text);
 
-        //as we are using CommentDetailFragment in a ViewPager, and we also use nested fragments within
-        //CommentDetailFragment itself:
-        //it is important to have a live reference to the Comment Container layout at the moment this
-        //layout is inflated (onCreateView), so we can make sure we set its ID correctly once we have an actual Comment
-        //object to populate it with. Otherwise, we could be searching and finding the container for _another fragment/page
-        //in the viewpager_, which would cause strange results (changing the views for a different fragment than we intended to).
+        // As we are using CommentDetailFragment in a ViewPager, and we also use nested fragments within
+        // CommentDetailFragment itself:
+        // It is important to have a live reference to the Comment Container layout at the moment this layout is
+        // inflated (onCreateView), so we can make sure we set its ID correctly once we have an actual Comment object
+        // to populate it with. Otherwise, we could be searching and finding the container for _another fragment/page
+        // in the viewpager_, which would cause strange results (changing the views for a different fragment than we
+        // intended to).
         mCommentContentLayout = (ViewGroup) view.findViewById(R.id.comment_content_container);
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
@@ -456,13 +457,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setNote(note);
     }
 
-    private void setIdForFragmentContainer(int id){
-        if (id > 0) {
-            mIdForFragmentContainer = id;
-        }
-    }
-
-
     private void setReplyText(String replyText) {
         if (replyText == null) return;
         mRestoredReplyText = replyText;
@@ -479,14 +473,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @SuppressWarnings("deprecation") // TODO: Remove when minSdkVersion >= 23
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof OnCommentChangeListener)
+        if (activity instanceof OnCommentChangeListener) {
             mOnCommentChangeListener = (OnCommentChangeListener) activity;
-        if (activity instanceof OnPostClickListener)
+        }
+        if (activity instanceof OnPostClickListener) {
             mOnPostClickListener = (OnPostClickListener) activity;
-        if (activity instanceof OnCommentActionListener)
+        }
+        if (activity instanceof OnCommentActionListener) {
             mOnCommentActionListener = (OnCommentActionListener) activity;
-        if (activity instanceof OnNoteCommentActionListener)
+        }
+        if (activity instanceof OnNoteCommentActionListener) {
             mOnNoteCommentActionListener = (OnNoteCommentActionListener) activity;
+        }
     }
 
     @Override
@@ -547,8 +545,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * open the comment for editing
      */
     private void editComment() {
-        if (!isAdded() || mComment == null)
+        if (!isAdded() || mComment == null) {
             return;
+        }
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
@@ -594,20 +593,20 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     return;
                 }
             }
-            return;
-        }
 
-        if (mNote != null) {
-            showCommentForNote(mNote);
+            if (mNote != null) {
+                showCommentForNote(mNote);
+            }
+
+            return;
         }
 
         scrollView.setVisibility(View.VISIBLE);
         layoutBottom.setVisibility(View.VISIBLE);
 
         // Add action buttons footer
-        if (mNote == null && mLayoutButtons.getParent() == null) {
-            ViewGroup commentContentLayout = (ViewGroup) getView().findViewById(R.id.comment_content_container);
-            commentContentLayout.addView(mLayoutButtons);
+        if (mLayoutButtons.getParent() == null) {
+            mCommentContentLayout.addView(mLayoutButtons);
         }
 
         final WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
@@ -859,8 +858,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * already marked as spam, and show the current status of the comment
      */
     private void updateStatusViews() {
-        if (!isAdded() || mComment == null)
+        if (!isAdded() || mComment == null) {
             return;
+        }
 
         final int statusTextResId;      // string resource id for status text
         final int statusColor;          // color for status text
@@ -886,15 +886,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 break;
         }
 
-        if (mNote != null && canLike()) {
+        if (canLike()) {
             mBtnLikeComment.setVisibility(View.VISIBLE);
             if (mComment != null) {
                 toggleLikeButton(mComment.getILike());
-            } else {
+            } else if (mNote != null) {
                 mNote.hasLikedComment();
             }
-        } else {
-            mBtnLikeComment.setVisibility(View.GONE);
         }
 
         // comment status is only shown if this comment is from one of this user's blogs and the
@@ -1070,9 +1068,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     // Like or unlike a comment via the REST API
     private void likeComment(boolean forceLike) {
-        if (mNote == null) return;
-        if (!isAdded()) return;
-        if (forceLike && mBtnLikeComment.isActivated()) return;
+        if (!isAdded()) {
+            return;
+        }
+        if (forceLike && mBtnLikeComment.isActivated()) {
+            return;
+        }
 
         toggleLikeButton(!mBtnLikeComment.isActivated());
 
