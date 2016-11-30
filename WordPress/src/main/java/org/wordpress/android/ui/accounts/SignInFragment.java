@@ -405,10 +405,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void switchToDotOrgIcon(boolean showDotOrg) {
-        if (mIconSwitcher.getDisplayedChild() == 0 && showDotOrg) {
-            mIconSwitcher.showNext();
+        if (mIconSwitcher.getDisplayedChild() == 0) {
+            if (showDotOrg) mIconSwitcher.showNext();
         } else {
-            mIconSwitcher.showPrevious();
+            if (!showDotOrg) mIconSwitcher.showPrevious();
         }
     }
 
