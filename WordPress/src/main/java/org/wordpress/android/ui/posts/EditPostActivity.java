@@ -411,6 +411,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
+    public void onLowMemory() {
+        // Autosave the content of the post when the app is being to be killed by the system.
+        // This could happen when the user start a new post/edit a post, and send the app to background (home button)
+        // before saving locally or publishing the post.
+        super.onLowMemory();
+        updatePostObject(true);
+        savePostToDb();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
