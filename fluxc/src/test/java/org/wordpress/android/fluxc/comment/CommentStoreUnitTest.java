@@ -10,9 +10,12 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.CommentSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -49,41 +52,124 @@ public class CommentStoreUnitTest {
         SiteModel siteModel = new SiteModel();
         siteModel.setId(21);
 
-        // Init Comment Models
-        CommentModel commentModel = new CommentModel();
-        commentModel.setLocalSiteId(siteModel.getId());
-        commentModel.setContent("Pony #1");
-        commentModel.setRemoteCommentId(1);
-        CommentSqlUtils.insertOrUpdateComment(commentModel);
-
-        commentModel = new CommentModel();
-        commentModel.setLocalSiteId(siteModel.getId());
-        commentModel.setContent("Pony #2");
-        commentModel.setRemoteCommentId(2);
-        CommentSqlUtils.insertOrUpdateComment(commentModel);
-
-        commentModel = new CommentModel();
-        commentModel.setLocalSiteId(siteModel.getId());
-        commentModel.setContent("Pony #3");
-        commentModel.setRemoteCommentId(3);
-        CommentSqlUtils.insertOrUpdateComment(commentModel);
+        insertTestComments(siteModel);
 
         // Get comment by site and remote id
-        CommentModel queriedComment = CommentSqlUtils.getCommentBySiteAndRemoteId(siteModel, 1);
-        assertEquals("Pony #1", queriedComment.getContent());
+        CommentModel queriedComment = CommentSqlUtils.getCommentBySiteAndRemoteId(siteModel, 10);
+        assertEquals("Pony #10", queriedComment.getContent());
 
         // Get comment by site and remote id
-        queriedComment = CommentSqlUtils.getCommentBySiteAndRemoteId(siteModel, 3);
-        assertEquals("Pony #3", queriedComment.getContent());
+        queriedComment = CommentSqlUtils.getCommentBySiteAndRemoteId(siteModel, 11);
+        assertEquals("Pony #11", queriedComment.getContent());
 
         // Get comment by site and remote id
-        queriedComment = CommentSqlUtils.getCommentBySiteAndRemoteId(siteModel, 2);
-        assertEquals("Pony #2", queriedComment.getContent());
+        queriedComment = CommentSqlUtils.getCommentBySiteAndRemoteId(siteModel, 12);
+        assertEquals("Pony #12", queriedComment.getContent());
     }
-
 
     @Test
     public void testFailToGetCommentBySiteAndRemoteId() {
         assertEquals(null, CommentSqlUtils.getCommentBySiteAndRemoteId(new SiteModel(), 42));
+    }
+
+    @Test
+    public void testGetCommentsBySingleStatus() {
+        SiteModel siteModel = new SiteModel();
+        siteModel.setId(21);
+
+        insertTestComments(siteModel);
+
+        // Get APPROVED comments
+        List<CommentModel> queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, CommentStatus.APPROVED);
+        assertEquals(8, queriedComments.size());
+
+        // Get TRASH comments
+        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, CommentStatus.TRASH);
+        assertEquals(1, queriedComments.size());
+
+        // Get ALL comments
+        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, CommentStatus.ALL);
+        assertEquals(15, queriedComments.size());
+    }
+
+    @Test
+    public void testGetCommentsByMultipleStatuses() {
+        SiteModel siteModel = new SiteModel();
+        siteModel.setId(21);
+
+        insertTestComments(siteModel);
+
+        // Get APPROVED, UNAPPROVED and SPAM comments
+        List<CommentModel> queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, CommentStatus.APPROVED,
+                CommentStatus.SPAM, CommentStatus.UNAPPROVED);
+        assertEquals(14, queriedComments.size());
+
+        // Get SPAM and UNAPPROVED comments
+        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, CommentStatus.SPAM, CommentStatus.UNAPPROVED);
+        assertEquals(6, queriedComments.size());
+    }
+
+    @Test
+    public void testGetCommentCountBySingleStatus() {
+        SiteModel siteModel = new SiteModel();
+        siteModel.setId(21);
+
+        insertTestComments(siteModel);
+
+        // Get APPROVED count
+        assertEquals(8, CommentSqlUtils.getCommentsCountForSite(siteModel, CommentStatus.APPROVED));
+
+        // Get TRASH count
+        assertEquals(1, CommentSqlUtils.getCommentsCountForSite(siteModel, CommentStatus.TRASH));
+
+        // Get ALL comments
+        assertEquals(15, CommentSqlUtils.getCommentsCountForSite(siteModel, CommentStatus.ALL));
+    }
+
+    @Test
+    public void testGetCommentCountByMultipleStatuses() {
+        SiteModel siteModel = new SiteModel();
+        siteModel.setId(21);
+
+        insertTestComments(siteModel);
+
+        // Get SPAM and UNAPPROVED comments
+        assertEquals(6, CommentSqlUtils.getCommentsCountForSite(siteModel, CommentStatus.SPAM,
+                CommentStatus.UNAPPROVED));
+
+        // Get ALL (and SPAM) comments
+        assertEquals(15, CommentSqlUtils.getCommentsCountForSite(siteModel, CommentStatus.SPAM, CommentStatus.ALL));
+    }
+
+
+    private void insertTestComments(SiteModel siteModel) {
+        // Init Comment Models
+        insertNewComment(siteModel, "Pony #10", 10, CommentStatus.APPROVED);
+        insertNewComment(siteModel, "Pony #11", 11, CommentStatus.APPROVED);
+        insertNewComment(siteModel, "Pony #12", 12, CommentStatus.APPROVED);
+        insertNewComment(siteModel, "Pony #13", 13, CommentStatus.APPROVED);
+        insertNewComment(siteModel, "Pony #14", 14, CommentStatus.APPROVED);
+        insertNewComment(siteModel, "Pony #15", 15, CommentStatus.APPROVED);
+        insertNewComment(siteModel, "Pony #16", 16, CommentStatus.APPROVED);
+        insertNewComment(siteModel, "Pony #17", 17, CommentStatus.APPROVED);
+
+        insertNewComment(siteModel, "Pony #20", 20, CommentStatus.UNAPPROVED);
+        insertNewComment(siteModel, "Pony #21", 21, CommentStatus.UNAPPROVED);
+        insertNewComment(siteModel, "Pony #22", 22, CommentStatus.UNAPPROVED);
+        insertNewComment(siteModel, "Pony #23", 23, CommentStatus.UNAPPROVED);
+
+        insertNewComment(siteModel, "Pony #30", 30, CommentStatus.SPAM);
+        insertNewComment(siteModel, "Pony #31", 31, CommentStatus.SPAM);
+
+        insertNewComment(siteModel, "Pony #40", 40, CommentStatus.TRASH);
+    }
+
+    private void insertNewComment(SiteModel site, String content, long remoteId, CommentStatus status) {
+        CommentModel commentModel = new CommentModel();
+        commentModel.setLocalSiteId(site.getId());
+        commentModel.setContent(content);
+        commentModel.setRemoteCommentId(remoteId);
+        commentModel.setStatus(status.toString());
+        CommentSqlUtils.insertOrUpdateComment(commentModel);
     }
 }
