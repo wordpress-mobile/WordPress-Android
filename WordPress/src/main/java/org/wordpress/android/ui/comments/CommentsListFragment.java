@@ -83,7 +83,7 @@ public class CommentsListFragment extends Fragment {
     private FilteredRecyclerView mFilteredCommentsView;
     private CommentAdapter mAdapter;
     private ActionMode mActionMode;
-    private CommentStatusCriteria mCommentStatusFilter;
+    private CommentStatusCriteria mCommentStatusFilter = CommentStatusCriteria.ALL;
 
     private SiteModel mSite;
 
