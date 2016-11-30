@@ -65,8 +65,6 @@ public class TaxonomyStore extends Store {
         public TermModel term;
         public SiteModel site;
 
-        public RemoteTermPayload() {}
-
         public RemoteTermPayload(TermModel term, SiteModel site) {
             this.term = term;
             this.site = site;
