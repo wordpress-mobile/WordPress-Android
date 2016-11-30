@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:propertyName="backgroundColor"
+    android:duration="600"
+    android:valueFrom="@color/nux_background"
+    android:valueTo="@color/nux_background_org"/>

@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipboardManager;
@@ -392,6 +394,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUrlButtonLayout.setVisibility(View.GONE);
         mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
         switchToDotOrgIcon(false);
+        switchBackgroundToDotOrg(false);
     }
 
     protected void showSelfHostedSignInForm(){
@@ -402,6 +405,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
         showPasswordField();
         switchToDotOrgIcon(true);
+        switchBackgroundToDotOrg(true);
     }
 
     private void switchToDotOrgIcon(boolean showDotOrg) {
@@ -410,6 +414,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         } else {
             if (!showDotOrg) mIconSwitcher.showPrevious();
         }
+    }
+
+    private void switchBackgroundToDotOrg(boolean useDotOrg) {
+        Animator animator = AnimatorInflater.loadAnimator(getContext(), useDotOrg ? R.animator
+                .nux_background_switch_to_dotorg : R.animator.nux_background_switch_to_wpcom);
+        animator.setTarget(getView());
+        animator.start();
     }
 
     protected void track(Stat stat, Map<String, Boolean> properties) {
@@ -527,9 +538,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             } else {
                 setSecondaryButtonVisible(false);
             }
+
+            // make the top padding match the bottom padding of the logo so the logo doesn't touch the screen top
+            mIconSwitcher.setPadding(mIconSwitcher.getPaddingLeft(), mIconSwitcher.getPaddingBottom(), mIconSwitcher
+                    .getPaddingRight(), mIconSwitcher.getPaddingBottom());
         } else {
             mBottomButtonsLayout.setOrientation(LinearLayout.VERTICAL);
             setSecondaryButtonVisible(false);
+
+            // revert the top padding to zero when in portrait
+            mIconSwitcher.setPadding(mIconSwitcher.getPaddingLeft(), 0, mIconSwitcher.getPaddingRight(), mIconSwitcher
+                    .getPaddingBottom());
         }
     }
 
