@@ -43,7 +43,7 @@ public class TaxonomySqlUtils {
     }
 
     public static List<TermModel> getTermsForSite(SiteModel site, String taxonomyName) {
-        if (site == null) {
+        if (site == null || taxonomyName == null) {
             return Collections.emptyList();
         }
 
@@ -56,7 +56,7 @@ public class TaxonomySqlUtils {
     }
 
     public static TermModel getTermByRemoteId(SiteModel site, long remoteTermId, String taxonomyName) {
-        if (site == null) {
+        if (site == null || taxonomyName == null) {
             return null;
         }
 
@@ -75,7 +75,7 @@ public class TaxonomySqlUtils {
     }
 
     public static List<TermModel> getTermsFromRemoteIdList(List<Long> remoteTermIds, String taxonomyName) {
-        if (remoteTermIds == null || remoteTermIds.isEmpty()) {
+        if (taxonomyName == null || remoteTermIds == null || remoteTermIds.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -88,7 +88,7 @@ public class TaxonomySqlUtils {
     }
 
     public static int clearTaxonomyForSite(SiteModel site, String taxonomyName) {
-        if (site == null) {
+        if (site == null || taxonomyName == null) {
             return 0;
         }
 
