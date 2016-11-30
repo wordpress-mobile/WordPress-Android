@@ -71,6 +71,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
@@ -486,11 +487,11 @@
             android:exported="false"
             android:label="Notifications Screen Lock watch Service" />
 
-
+        <!-- Samsung multiwindow support -->
         <uses-library
             android:name="com.sec.android.app.multiwindow"
             android:required="false" />
-
+        <!-- Samsung multiwindow support -->
         <meta-data
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
