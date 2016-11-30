@@ -3,4 +3,11 @@
     android:id="@+id/notifications_detail_container"
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context="org.wordpress.android.ui.notifications.NotificationsDetailActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame" >
+
+    <org.wordpress.android.widgets.WPViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</FrameLayout>

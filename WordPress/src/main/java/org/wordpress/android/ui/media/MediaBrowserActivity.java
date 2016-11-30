@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.media;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -46,6 +48,7 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -69,6 +72,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private MediaAddFragment mMediaAddFragment;
     private PopupWindow mAddMediaPopup;
 
+    private Toolbar mToolbar;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
     private Menu mMenu;
@@ -107,8 +111,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         setContentView(R.layout.media_browser_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.media);
@@ -417,6 +421,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
+    public void setLookClosable() {
+        mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+    }
+
+    @Override
     public void onPause(Fragment fragment) {
         invalidateOptionsMenu();
     }
@@ -448,8 +457,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     public void onSavedEdit(String mediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
-            FragmentManager fm = getFragmentManager();
-            fm.popBackStack();
+            doPopBackStack(getFragmentManager());
 
             // refresh media item details (phone-only)
             if (mMediaItemFragment != null)
@@ -472,10 +480,37 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
+
+            if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mMediaEditFragment.isDirty()) {
+                // alert the user that there are unsaved changes
+                new AlertDialog.Builder(this)
+                        .setMessage(R.string.confirm_discard_changes)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // make sure the keyboard is dimissed
+                                    WPActivityUtils.hideKeyboard(getCurrentFocus());
+
+                                    // pop the edit fragment
+                                    doPopBackStack(getFragmentManager());
+                                }})
+                        .setNegativeButton(R.string.cancel, null)
+                        .create()
+                        .show();
+            } else {
+                doPopBackStack(fm);
+            }
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void doPopBackStack(FragmentManager fm) {
+        fm.popBackStack();
+
+        // reset the button to "back" as it may have been altered by a fragment
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
     }
 
     @SuppressWarnings("unused")
@@ -507,7 +542,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 if (mMediaEditFragment.isInLayout()) {
                     mMediaEditFragment.loadMedia(null);
                 } else {
-                    getFragmentManager().popBackStack();
+                    doPopBackStack(getFragmentManager());
                 }
             }
         }
@@ -530,7 +565,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         Set<String> sanitizedIds = new HashSet<>(ids.size());
 
         // phone layout: pop the item fragment if it's visible
-        getFragmentManager().popBackStack();
+        doPopBackStack(getFragmentManager());
 
         // Make sure there are no media in "uploading"
         for (String currentID : ids) {
