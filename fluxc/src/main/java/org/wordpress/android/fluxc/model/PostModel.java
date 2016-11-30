@@ -342,7 +342,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
+        if (other == null || !(other instanceof PostModel)) return false;
 
         PostModel otherPost = (PostModel) other;
 
