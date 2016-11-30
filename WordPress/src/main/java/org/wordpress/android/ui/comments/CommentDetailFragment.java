@@ -193,7 +193,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         (SiteModel) getArguments().getSerializable(WordPress.SITE));
                 break;
             case FROM_NOTE:
-                setNoteWithNoteId(getArguments().getString(KEY_NOTE_ID));
+                setNote(getArguments().getString(KEY_NOTE_ID));
                 setReplyText(getArguments().getString(KEY_REPLY_TEXT));
                 break;
         }
@@ -372,7 +372,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // Set the note if we retrieved the noteId from savedInstanceState
         if (!TextUtils.isEmpty(mRestoredNoteId)) {
-            setNoteWithNoteId(mRestoredNoteId);
+            setNote(mRestoredNoteId);
             mRestoredNoteId = null;
         }
     }
@@ -432,7 +432,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return mNote;
     }
 
-    @Override
     public void setNote(Note note) {
         mNote = note;
         mSite = mSiteStore.getSiteBySiteId(note.getSiteId());
@@ -442,7 +441,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
-    private void setNoteWithNoteId(String noteId) {
+    @Override
+    public void setNote(String noteId) {
         if (noteId == null) {
             showErrorToastAndFinish();
             return;
@@ -1048,7 +1048,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (mSite != null) {
-           // setComment(note.buildComment(), mSite);
+            // FIXME: setComment(note.buildComment(), mSite);
         }
 
         // Now we'll add a detail fragment list

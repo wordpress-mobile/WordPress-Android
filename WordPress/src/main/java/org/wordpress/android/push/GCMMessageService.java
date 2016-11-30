@@ -377,10 +377,10 @@ public class GCMMessageService extends GcmListenerService {
                 return;
             }
 
-            buildAndShowNotificationFromNoteData(context, data, false);
+            buildAndShowNotificationFromNoteData(context, data);
         }
 
-        private void buildAndShowNotificationFromNoteData(Context context, Bundle data, boolean dontPlaySound) {
+        private void buildAndShowNotificationFromNoteData(Context context, Bundle data) {
             if (data == null) {
                 AppLog.e(T.NOTIFS, "Push notification received without a valid Bundle!");
                 return;
@@ -397,8 +397,7 @@ public class GCMMessageService extends GcmListenerService {
             NotificationsUtils.buildNoteObjectFromBundleAndSaveIt(data);
             EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
             // Always do this, since a note can be updated on the server after a PN is sent
-            NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID,
-                    null, null);
+            NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID, null, null);
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
@@ -469,27 +468,18 @@ public class GCMMessageService extends GcmListenerService {
             }
 
 
-            showNotification(context, pushId, wpcomNoteID,
-                    noteType, data.getString("icon"), title, message, dontPlaySound);
-        }
-
-        private void showNotification(Context context, int pushId, String wpcomNoteID, String noteType,
-                                      String largeIconUri, String title, String message,
-                                      boolean dontPlaySound) {
-
             // Build the new notification, add group to support wearable stacking
             NotificationCompat.Builder builder = getNotificationBuilder(context, title, message);
-
-            Bitmap largeIconBitmap = getLargeIconBitmap(largeIconUri, shouldCircularizeNoteIcon(noteType));
+            Bitmap largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(noteType));
             if (largeIconBitmap != null) {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
-            showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId, dontPlaySound);
+            showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId, true);
 
             // Also add a group summary notification, which is required for non-wearable devices
             // Do not need to play the sound again. We've already played it in the individual builder.
-            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message, true);
+            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message, false);
         }
 
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
@@ -679,9 +669,9 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void showGroupNotificationForBuilder(Context context, NotificationCompat.Builder builder,
-                                                     String wpcomNoteID, String message, boolean dontPlaySound) {
+                                                     String wpcomNoteID, String message, boolean notifyUser) {
 
-            if (builder == null) {
+            if (builder == null || context == null) {
                 return;
             }
 
@@ -729,12 +719,12 @@ public class GCMMessageService extends GcmListenerService {
                         .setContentText(subject)
                         .setStyle(inboxStyle);
 
-                showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, dontPlaySound);
+                showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, notifyUser);
 
             } else {
                 // Set the individual notification we've already built as the group summary
                 builder.setGroupSummary(true);
-                showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, dontPlaySound);
+                showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, notifyUser);
             }
             //reinsert 2fa bundle if it was present
             if (authPNBundle != null) {
@@ -743,10 +733,9 @@ public class GCMMessageService extends GcmListenerService {
 
         }
 
-        private void showIndividualNotificationForBuilder(Context context, NotificationCompat.Builder builder,
-                                                          String noteType, String wpcomNoteID, int pushId,
-                                                          boolean dontPlaySound) {
-            if (builder == null) {
+        private void showSingleNotificationForBuilder(Context context, NotificationCompat.Builder builder,
+                                                      String noteType, String wpcomNoteID, int pushId, boolean notifyUser) {
+            if (builder == null || context == null) {
                 return;
             }
 
@@ -754,12 +743,12 @@ public class GCMMessageService extends GcmListenerService {
                 addActionsForCommentNotification(context, builder, wpcomNoteID);
             }
 
-            showNotificationForBuilder(builder, context, wpcomNoteID, pushId, dontPlaySound);
+            showNotificationForBuilder(builder, context, wpcomNoteID, pushId, notifyUser);
         }
 
         // Displays a notification to the user
         private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context,
-                                                String wpcomNoteID, int pushId, boolean dontPlaySound) {
+                                                String wpcomNoteID, int pushId, boolean notifyUser) {
             if (builder == null || context == null) {
                 return;
             }
@@ -777,7 +766,7 @@ public class GCMMessageService extends GcmListenerService {
              }
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-            if (!dontPlaySound) {
+            if (notifyUser) {
 
                 boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
                 boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", true);
@@ -861,7 +850,7 @@ public class GCMMessageService extends GcmListenerService {
                     noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
                     if (!sActiveNotificationsMap.isEmpty()) {
-                        showIndividualNotificationForBuilder(context, builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0), true);
+                        showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0), false);
                     }
                 }
             }
@@ -882,7 +871,7 @@ public class GCMMessageService extends GcmListenerService {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
-            showGroupNotificationForBuilder(context, builder,  wpcomNoteID, message, true);
+            showGroupNotificationForBuilder(context, builder,  wpcomNoteID, message, false);
 
             //reinsert 2fa bundle if it was present
             if (authPNBundle != null) {

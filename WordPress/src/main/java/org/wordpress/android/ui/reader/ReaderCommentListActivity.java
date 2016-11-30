@@ -391,9 +391,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     if (!isFinishing()) {
                         if (isEmpty || !mHasUpdatedComments) {
                             updateComments(isEmpty, false);
-                        } else if (mCommentId > 0) {
-                            // Scroll to the commentId once if it was passed to this activity
-                            smoothScrollToCommentId(mCommentId);
+                        } else if (mCommentId > 0 || mDirectOperation != null) {
+                            if (mCommentId > 0) {
+                                // Scroll to the commentId once if it was passed to this activity
+                                smoothScrollToCommentId(mCommentId);
+                            }
 
                             doDirectOperation();
                         } else if (mRestorePosition > 0) {
