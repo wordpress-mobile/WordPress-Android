@@ -215,7 +215,6 @@ public class ReleaseNetworkModule {
     @Provides
     public TaxonomyRestClient provideTaxonomyRestClient(Context appContext, Dispatcher dispatcher,
                                                         @Named("regular") RequestQueue requestQueue,
-                                                        AppSecrets appSecrets,
                                                         AccessToken token, UserAgent userAgent) {
         return new TaxonomyRestClient(appContext, dispatcher, requestQueue, token, userAgent);
     }
