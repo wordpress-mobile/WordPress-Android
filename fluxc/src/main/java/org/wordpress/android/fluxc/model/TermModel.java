@@ -6,6 +6,7 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 
@@ -90,7 +91,7 @@ public class TermModel extends Payload implements Identifiable, Serializable {
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
+        if (other == null || !(other instanceof TermModel)) return false;
 
         TermModel otherTerm = (TermModel) other;
 
@@ -98,11 +99,9 @@ public class TermModel extends Payload implements Identifiable, Serializable {
                 && getLocalSiteId() == otherTerm.getLocalSiteId()
                 && getRemoteTermId() == otherTerm.getRemoteTermId()
                 && getParentRemoteId() == otherTerm.getParentRemoteId()
-                && (getSlug() != null ? getSlug().equals(otherTerm.getSlug()) : otherTerm.getSlug() == null)
-                && (getName() != null ? getName().equals(otherTerm.getName()) : otherTerm.getName() == null)
-                && (getTaxonomy() != null
-                 ? getTaxonomy().equals(otherTerm.getTaxonomy()) : otherTerm.getTaxonomy() == null)
-                && (getDescription() != null
-                 ? getDescription().equals(otherTerm.getDescription()) : otherTerm.getDescription() == null);
+                && StringUtils.equals(getSlug(), otherTerm.getSlug())
+                && StringUtils.equals(getName(), otherTerm.getName())
+                && StringUtils.equals(getTaxonomy(), otherTerm.getTaxonomy())
+                && StringUtils.equals(getDescription(), otherTerm.getDescription());
     }
 }
