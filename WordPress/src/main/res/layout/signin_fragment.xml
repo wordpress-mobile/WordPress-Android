@@ -47,16 +47,63 @@
             app:maxWidth="@dimen/nux_width">
 
             <RelativeLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="24dp">
 
-                <ImageView
-                    android:id="@+id/nux_fragment_icon"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerInParent="true"
-                    app:srcCompat="@drawable/nux_icon_wp" />
+                <ViewSwitcher
+                    android:id="@+id/icon_switcher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:inAnimation="@anim/fade_in"
+                    android:outAnimation="@anim/fade_out" >
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal">
+
+                        <View
+                            android:layout_width="52dp"
+                            android:layout_height="52dp"
+                            android:background="@drawable/circle_solid"
+                            android:backgroundTint="@color/gray_dotorg"
+                            android:layout_centerInParent="true"/>
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:scaleType="fitCenter"
+                            android:layout_centerInParent="true"
+                            app:srcCompat="@drawable/nux_icon_wordpressorg" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal">
+
+                        <ImageView
+                            android:id="@+id/wpcom_logo"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/nux_icon_wp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/nux_wordpress_logotype"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/wpcom_logo"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            app:wpFontFamily="opensans"
+                            android:gravity="center_horizontal"
+                            android:text="@string/wordpress_dot_com_capitalized"/>
+                    </RelativeLayout>
+                </ViewSwitcher>
 
                 <ImageView
                     android:id="@+id/info_button_secondary"
@@ -65,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="false"
-                    android:layout_alignTop="@+id/nux_fragment_icon"
+                    android:layout_alignTop="@+id/icon_switcher"
                     android:layout_marginRight="16dp"
                     android:contentDescription="@string/help"
                     app:srcCompat="@drawable/dashicon_info"

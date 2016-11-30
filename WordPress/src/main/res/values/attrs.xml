@@ -42,6 +42,7 @@
             <enum name="defaultNormal" value="0" />
             <enum name="defaultLight" value="1" />
             <enum name="merriweather" value="2" />
+            <enum name="opensans" value="3" />
         </attr>
         <attr name="fixWidowWords" format="boolean"/>
     </declare-styleable>

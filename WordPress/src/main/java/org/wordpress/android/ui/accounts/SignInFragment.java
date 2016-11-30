@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -105,6 +106,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected EditText mUrlEditText;
     protected ContextMenuEditText mTwoStepEditText;
 
+    protected ViewSwitcher mIconSwitcher;
+    protected View mWpcomLogotype;
     protected LinearLayout mBottomButtonsLayout;
     protected RelativeLayout mUsernameLayout;
     protected RelativeLayout mPasswordLayout;
@@ -160,6 +163,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
+        mIconSwitcher = (ViewSwitcher) rootView.findViewById(R.id.icon_switcher);
+        mWpcomLogotype = rootView.findViewById(R.id.nux_wordpress_logotype);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mTwoStepLayout = (RelativeLayout) rootView.findViewById(R.id.two_factor_layout);
         mTwoStepFooter = (LinearLayout) rootView.findViewById(R.id.two_step_footer);
@@ -383,16 +388,28 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void showDotComSignInForm(){
+        mWpcomLogotype.setVisibility(View.VISIBLE);
         mUrlButtonLayout.setVisibility(View.GONE);
         mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
+        switchToDotOrgIcon(false);
     }
 
     protected void showSelfHostedSignInForm(){
         endProgress();
         mSelfHosted = true;
+        mWpcomLogotype.setVisibility(View.GONE);
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
         showPasswordField();
+        switchToDotOrgIcon(true);
+    }
+
+    private void switchToDotOrgIcon(boolean showDotOrg) {
+        if (mIconSwitcher.getDisplayedChild() == 0 && showDotOrg) {
+            mIconSwitcher.showNext();
+        } else {
+            mIconSwitcher.showPrevious();
+        }
     }
 
     protected void track(Stat stat, Map<String, Boolean> properties) {

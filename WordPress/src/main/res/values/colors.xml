@@ -23,6 +23,7 @@
     <color name="transparent">#00000000</color>
     <color name="light_gray">@color/grey_lighten_30</color>
     <color name="gray">@color/grey_lighten_20</color>
+    <color name="gray_dotorg">#FF464646</color>
     <color name="white">#FFFFFF</color>
     <!-- note that black should NOT be used for text - use grey_dark instead -->
     <color name="black">#000000</color>
