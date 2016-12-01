@@ -379,8 +379,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 }
             });
 
-            // Enable post title click if we came from notifications with a commentId
-            if (mCommentId > 0) {
+            // Enable post title click if we came here directly from notifications or deep linking
+            if (mDirectOperation != null) {
                 mCommentAdapter.enableHeaderClicks();
             }
 
@@ -391,9 +391,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     if (!isFinishing()) {
                         if (isEmpty || !mHasUpdatedComments) {
                             updateComments(isEmpty, false);
-                        } else if (mCommentId > 0) {
-                            // Scroll to the commentId once if it was passed to this activity
-                            smoothScrollToCommentId(mCommentId);
+                        } else if (mCommentId > 0 || mDirectOperation != null) {
+                            if (mCommentId > 0) {
+                                // Scroll to the commentId once if it was passed to this activity
+                                smoothScrollToCommentId(mCommentId);
+                            }
 
                             doDirectOperation();
                         } else if (mRestorePosition > 0) {

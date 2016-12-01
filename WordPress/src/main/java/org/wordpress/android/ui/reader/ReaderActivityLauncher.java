@@ -227,7 +227,7 @@ public class ReaderActivityLauncher {
             intent.putExtra(ReaderConstants.ARG_CONTENT, content);
         }
 
-        if (context instanceof Activity) {
+        if (context instanceof Activity && sourceView != null) {
             Activity activity = (Activity) context;
             ActivityOptionsCompat options =
                     ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);

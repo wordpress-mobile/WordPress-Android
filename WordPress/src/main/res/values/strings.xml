@@ -85,6 +85,7 @@
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
     <string name="send">Send</string>
+    <string name="swipe_for_more">Swipe for more</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -174,6 +175,7 @@
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
+    <string name="confirm_discard_changes">Discard unsaved changes?</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Delete selected item?</string>
@@ -1399,6 +1401,8 @@
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
     <string name="vertical_line" translatable="false">\u007C</string>
+    <string name="arrow_left" translatable="false">\uffe9</string>
+    <string name="arrow_right" translatable="false">\uffeb</string>
 
     <!-- Noticons -->
     <string name="noticon_clock" translatable="false">\uf303</string>

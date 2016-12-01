@@ -15,5 +15,5 @@ public interface NotificationFragment {
     }
 
     Note getNote();
-    void setNote(Note note);
+    void setNote(String noteId);
 }
