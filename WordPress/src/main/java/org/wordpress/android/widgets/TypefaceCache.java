@@ -19,7 +19,6 @@ public class TypefaceCache {
     public static final int FAMILY_DEFAULT = 0;
     public static final int FAMILY_DEFAULT_LIGHT = 1;
     public static final int FAMILY_MERRIWEATHER = 2;
-    public static final int FAMILY_OPENSANS = 3;
 
     private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<>();
 
@@ -45,23 +44,6 @@ public class TypefaceCache {
                     break;
                 default:
                     typefaceName = "Merriweather-Regular.ttf";
-                    break;
-            }
-            return getTypefaceForTypefaceName(context, typefaceName);
-        } else if (family == FAMILY_OPENSANS) {
-            final String typefaceName;
-            switch (fontStyle) {
-                case Typeface.BOLD:
-                    typefaceName = "OpenSans-Bold.ttf";
-                    break;
-                case Typeface.ITALIC:
-                    typefaceName = "OpenSans-Italic.ttf";
-                    break;
-                case Typeface.BOLD_ITALIC:
-                    typefaceName = "OpenSans-BoldItalic.ttf";
-                    break;
-                default:
-                    typefaceName = "OpenSans-Regular.ttf";
                     break;
             }
             return getTypefaceForTypefaceName(context, typefaceName);

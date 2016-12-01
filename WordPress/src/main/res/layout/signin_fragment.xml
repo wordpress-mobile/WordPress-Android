@@ -72,16 +72,16 @@
                             android:scaleType="fitCenter"
                             app:srcCompat="@drawable/nux_icon_wp" />
 
-                        <org.wordpress.android.widgets.WPTextView
+                        <ImageView
                             android:id="@+id/nux_wordpress_logotype"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="28dp"
                             android:layout_below="@+id/wpcom_logo"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/nux_logotype_font_size"
-                            app:wpFontFamily="opensans"
-                            android:gravity="center_horizontal"
-                            android:text="@string/wordpress_dot_com_capitalized"/>
+                            android:layout_marginTop="10dp"
+                            android:layout_centerHorizontal="true"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/nux_wpcom_logotype"
+                            android:tint="@color/white"/>
                     </RelativeLayout>
 
                     <ImageView
