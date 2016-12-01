@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.posts.services;
 
 import android.app.Notification;
-import android.app.Notification.Builder;
-import android.app.NotificationManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -855,8 +855,8 @@ public class PostUploadService extends Service {
     }
 
     private class PostUploadNotifier {
-        private final NotificationManager mNotificationManager;
-        private final Builder mNotificationBuilder;
+        private final NotificationManagerCompat mNotificationManager;
+        private final NotificationCompat.Builder mNotificationBuilder;
         private final int mNotificationId;
         private int mNotificationErrorId = 0;
         private int mTotalMediaItems;
@@ -865,9 +865,9 @@ public class PostUploadService extends Service {
 
         public PostUploadNotifier(Post post, String title, String message) {
             // add the uploader to the notification bar
-            mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
-                    Context.NOTIFICATION_SERVICE);
-            mNotificationBuilder = new Notification.Builder(getApplicationContext());
+            mNotificationManager = NotificationManagerCompat.from(PostUploadService.this);
+
+            mNotificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
             if (title != null) {
                 mNotificationBuilder.setContentTitle(title);
@@ -900,7 +900,7 @@ public class PostUploadService extends Service {
             }
 
             // Notification builder
-            Builder notificationBuilder = new Notification.Builder(getApplicationContext());
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
                     .page_published) : mContext.getResources().getText(R.string.post_published));
             if (!isFirstPublishing) {
@@ -953,7 +953,7 @@ public class PostUploadService extends Service {
         public void updateNotificationError(String mErrorMessage, boolean isMediaError, boolean isPage) {
             AppLog.d(T.POSTS, "updateNotificationError: " + mErrorMessage);
 
-            Builder notificationBuilder = new Notification.Builder(getApplicationContext());
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
                     : mContext.getResources().getText(R.string.post_id));
             Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
@@ -970,11 +970,14 @@ public class PostUploadService extends Service {
                         + mContext.getResources().getText(R.string.error);
             }
 
+            String message = (isMediaError) ? mErrorMessage : postOrPage + " " + errorText
+                    + ": " + mErrorMessage;
             notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
             notificationBuilder.setContentTitle((isMediaError) ? errorText :
                     mContext.getResources().getText(R.string.upload_failed));
             notificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText
                     + ": " + mErrorMessage);
+            notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             notificationBuilder.setContentIntent(pendingIntent);
             notificationBuilder.setAutoCancel(true);
             if (mNotificationErrorId == 0) {
