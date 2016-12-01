@@ -916,6 +916,7 @@ public class PostUploadService extends Service {
             }
             notificationBuilder.setContentTitle(notificationTitle);
             notificationBuilder.setContentText(post.getTitle());
+            notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(post.getTitle()));
             notificationBuilder.setAutoCancel(true);
 
             // Tap notification intent (open the post list)
@@ -975,8 +976,7 @@ public class PostUploadService extends Service {
             notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
             notificationBuilder.setContentTitle((isMediaError) ? errorText :
                     mContext.getResources().getText(R.string.upload_failed));
-            notificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText
-                    + ": " + mErrorMessage);
+            notificationBuilder.setContentText(message);
             notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             notificationBuilder.setContentIntent(pendingIntent);
             notificationBuilder.setAutoCancel(true);
