@@ -249,8 +249,8 @@ public class PostStoreUnitTest {
         assertEquals(1, mPostStore.getPostsCountForSite(site));
         assertEquals(1, mPostStore.getPagesCountForSite(site));
 
-        assertEquals(false, PostTestUtils.getPosts().get(0).isPage());
-        assertEquals(true, PostTestUtils.getPosts().get(1).isPage());
+        assertFalse(PostTestUtils.getPosts().get(0).isPage());
+        assertTrue(PostTestUtils.getPosts().get(1).isPage());
 
         assertEquals(1, mPostStore.getUploadedPostsCountForSite(site));
         assertEquals(1, mPostStore.getUploadedPagesCountForSite(site));
