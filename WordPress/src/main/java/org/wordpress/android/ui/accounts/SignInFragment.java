@@ -9,11 +9,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.transition.Transition;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.Html;
@@ -436,10 +438,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             return;
         }
 
-        Animator animator = AnimatorInflater.loadAnimator(getContext(), useDotOrg ? R.animator
-                .nux_background_switch_to_dotorg : R.animator.nux_background_switch_to_wpcom);
-        animator.setTarget(getView());
-        animator.start();
+        TransitionDrawable transition = (TransitionDrawable) getView().getBackground();
+        if (useDotOrg) {
+            transition.startTransition(500);
+        } else {
+            transition.reverseTransition(500);
+        }
     }
 
     protected void track(Stat stat, Map<String, Boolean> properties) {
