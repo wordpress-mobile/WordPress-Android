@@ -101,18 +101,7 @@ public class CommentSqlUtils {
 
         // Check if statuses contains ALL
         if (!Arrays.asList(statuses).contains(CommentStatus.ALL)) {
-            selectQueryBuilder = selectQueryBuilder.beginGroup();
-            int i = 0;
-            for (CommentStatus status : statuses) {
-                // Insert an "OR" operand between status equalities.
-                if (i != 0) {
-                    selectQueryBuilder = selectQueryBuilder.or();
-                }
-                i += 1;
-                // Actual status check
-                selectQueryBuilder = selectQueryBuilder.equals(CommentModelTable.STATUS, status.toString());
-            }
-            selectQueryBuilder = selectQueryBuilder.endGroup();
+            selectQueryBuilder.isIn(CommentModelTable.STATUS, Arrays.asList(statuses));
         }
         return selectQueryBuilder.endGroup().endWhere();
     }
