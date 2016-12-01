@@ -16,18 +16,15 @@
 
     <color name="fab_normal">@color/color_accent</color>
     <color name="fab_pressed">@color/orange_fire</color>
-    <color name="list_selected">@color/semi_transparent_blue_light</color>
+    <color name="list_selected">@color/blue_light_translucent_80</color>
 
     <!-- Default Colors -->
-    <color name="translucent">#80000000</color>
     <color name="transparent">#00000000</color>
     <color name="light_gray">@color/grey_lighten_30</color>
     <color name="gray">@color/grey_lighten_20</color>
     <color name="white">#FFFFFF</color>
-    <color name="white_60">#99ffffff</color>
     <!-- note that black should NOT be used for text - use grey_dark instead -->
     <color name="black">#000000</color>
-    <color name="black_40">#66000000</color>
     <color name="default_background">@color/grey_lighten_30</color>
 
     <!-- ==================================== -->
@@ -63,13 +60,17 @@
     <color name="alert_green">#4ab866</color>
 
     <!-- Translucent -->
-    <color name="semi_transparent_grey_dark">#B32e4453</color>
-    <color name="semi_transparent_blue_light">#cc78dcfa</color>
-    <color name="translucent_grey_dark">#802e4453</color>
-    <color name="translucent_grey_lighten_10">#80a8bece</color>
-    <color name="translucent_grey_lighten_20">#80c8d7e1</color>
-    <color name="translucent_grey_lighten_30">#80e9eff3</color>
-    <color name="translucent_grey">#80888888</color>
+    <color name="black_translucent_40">#66000000</color>
+    <color name="black_translucent_50">#80000000</color>
+    <color name="blue_light_translucent_80">#cc78dcfa</color>
+    <color name="grey_dark_translucent_50">#802e4453</color>
+    <color name="grey_dark_translucent_70">#b32e4453</color>
+    <color name="grey_translucent_50">#80888888</color>
+    <color name="grey_lighten_10_translucent_50">#80a8bece</color>
+    <color name="grey_lighten_20_translucent_50">#80c8d7e1</color>
+    <color name="grey_lighten_30_translucent_50">#80e9eff3</color>
+    <color name="white_translucent_60">#99ffffff</color>
+    <color name="white_translucent_65">#a6ffffff</color>
 
     <!-- END WordPress.com Colors -->
     <!-- ======================== -->
@@ -93,7 +94,7 @@
     <color name="action_mode_status_bar_tint">#ff517188</color>
 
     <!-- Media Gallery -->
-    <color name="media_gallery_grid_label_bg">@color/semi_transparent_grey_dark</color>
+    <color name="media_gallery_grid_label_bg">@color/grey_dark_translucent_70</color>
     <color name="media_gallery_grid_label">@color/white</color>
     <color name="media_gallery_bg">@color/grey_darken_30</color>
     <color name="media_gallery_option_selected">@color/grey_dark</color>
@@ -120,7 +121,7 @@
     <color name="stats_bar_graph_main_series_highlight">@color/orange_jazzy</color>
     <color name="stats_bar_graph_outer_highlight">#1Af0821e</color> <!-- 10% Opacity on orange_jazzy #f0821e -->
     <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
-    <color name="stats_empty_placeholder_color">@color/translucent_grey_lighten_30</color>
+    <color name="stats_empty_placeholder_color">@color/grey_lighten_30_translucent_50</color>
 
     <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
@@ -152,9 +153,8 @@
     <color name="snackbar_background_color">#323232</color>
 
     <!-- Misc -->
-    <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>
+    <color name="pressed_wordpress">@color/blue_light_translucent_80</color>
     <color name="background_grey">@color/grey_lighten_30</color>
-    <color name="translucent_white">#A6FFFFFF</color>
 
     <!--Me-->
     <color name="me_divider">#D8E3EA</color>

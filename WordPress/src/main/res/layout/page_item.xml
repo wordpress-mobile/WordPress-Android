@@ -99,7 +99,7 @@
             android:id="@+id/disabled_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/translucent_white"
+            android:background="@color/white_translucent_65"
             android:clickable="true"
             android:focusable="true">
 
