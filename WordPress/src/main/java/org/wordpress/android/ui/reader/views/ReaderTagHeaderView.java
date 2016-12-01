@@ -49,15 +49,18 @@ public class ReaderTagHeaderView extends RelativeLayout {
     }
 
     public void setCurrentTag(final ReaderTag tag) {
-        if (tag == null || ReaderTag.isSameTag(tag, mCurrentTag)) return;
+        if (tag == null) return;
+
+        if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
+            mTxtAttribution.setText(null);
+            mImageView.resetImage();
+        }
 
         mCurrentTag = tag;
 
         TextView txtTagName = (TextView) findViewById(R.id.text_tag);
         txtTagName.setText(ReaderUtils.makeHashTag(tag.getTagSlug()));
 
-        mTxtAttribution.setText(null);
-        mImageView.resetImage();
         getImageAndAttribution();
     }
 
