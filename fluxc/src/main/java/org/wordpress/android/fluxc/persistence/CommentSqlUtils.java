@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class CommentSqlUtils {
         return results.get(0);
     }
 
-    private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, CommentStatus status) {
+    private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, CommentStatus... statuses) {
         if (site == null) {
             return null;
         }
@@ -97,27 +98,29 @@ public class CommentSqlUtils {
                 WellSql.select(CommentModel.class)
                         .where().beginGroup()
                         .equals(CommentModelTable.LOCAL_SITE_ID, site.getId());
-        if (status != CommentStatus.ALL) {
-            selectQueryBuilder = selectQueryBuilder.equals(CommentModelTable.STATUS, status.toString());
+
+        // Check if statuses contains ALL
+        if (!Arrays.asList(statuses).contains(CommentStatus.ALL)) {
+            selectQueryBuilder.isIn(CommentModelTable.STATUS, Arrays.asList(statuses));
         }
         return selectQueryBuilder.endGroup().endWhere();
     }
 
-    public static List<CommentModel> getCommentsForSite(SiteModel site, CommentStatus status) {
+    public static List<CommentModel> getCommentsForSite(SiteModel site, CommentStatus... statuses) {
         if (site == null) {
             return Collections.emptyList();
         }
 
-        return getCommentsQueryForSite(site, status)
+        return getCommentsQueryForSite(site, statuses)
                 .orderBy(CommentModelTable.DATE_PUBLISHED, SelectQuery.ORDER_ASCENDING)
                 .getAsModel();
     }
 
-    public static int getCommentsCountForSite(SiteModel site, CommentStatus status) {
+    public static int getCommentsCountForSite(SiteModel site, CommentStatus... statuses) {
         if (site == null) {
             return 0;
         }
 
-        return getCommentsQueryForSite(site, status).getAsCursor().getCount();
+        return getCommentsQueryForSite(site, statuses).getAsCursor().getCount();
     }
 }

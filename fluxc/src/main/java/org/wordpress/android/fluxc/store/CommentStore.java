@@ -188,12 +188,12 @@ public class CommentStore extends Store {
 
     // Getters
 
-    public List<CommentModel> getCommentsForSite(SiteModel site, CommentStatus status) {
-        return CommentSqlUtils.getCommentsForSite(site, status);
+    public List<CommentModel> getCommentsForSite(SiteModel site, CommentStatus... statuses) {
+        return CommentSqlUtils.getCommentsForSite(site, statuses);
     }
 
-    public int getNumberOfCommentsForSite(SiteModel site, CommentStatus status) {
-        return CommentSqlUtils.getCommentsCountForSite(site, status);
+    public int getNumberOfCommentsForSite(SiteModel site, CommentStatus... statuses) {
+        return CommentSqlUtils.getCommentsCountForSite(site, statuses);
     }
 
     public CommentModel getCommentBySiteAndRemoteId(SiteModel site, long remoteCommentId) {
