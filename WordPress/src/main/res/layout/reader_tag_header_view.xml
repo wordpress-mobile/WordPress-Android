@@ -10,10 +10,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_thumbnail_strip_image_height"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:layout_marginLeft="@dimen/reader_card_content_padding"
-        android:layout_marginRight="@dimen/reader_card_content_padding"
-        android:layout_marginTop="@dimen/margin_extra_large"
         android:background="@color/grey"
         android:paddingLeft="@dimen/reader_card_margin"
         android:paddingRight="@dimen/reader_card_margin">
@@ -56,7 +52,7 @@
             android:shadowDy="@dimen/reader_photo_title_shadow_offset"
             android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_extra_small"
+            android:textSize="@dimen/text_sz_small"
             tools:text="text_attribution" />
 
     </RelativeLayout>

@@ -49,7 +49,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
     }
 
     public void setCurrentTag(final ReaderTag tag) {
-        if (tag == null) return;
+        if (tag == null || ReaderTag.isSameTag(tag, mCurrentTag)) return;
 
         mCurrentTag = tag;
 
@@ -57,49 +57,10 @@ public class ReaderTagHeaderView extends RelativeLayout {
         txtTagName.setText(ReaderUtils.makeHashTag(tag.getTagSlug()));
 
         mTxtAttribution.setText(null);
-        mImageView.setImageDrawable(null);
+        mImageView.resetImage();
         getImageAndAttribution();
     }
 
-    /*
-    {
-	"body": {
-		"images": [
-			{
-				"attachment_id": 3594,
-				"author": "Eileen On",
-				"blog_id": 75481429,
-				"blog_title": "Eileen On",
-				"blog_url": "http://eileenon.wordpress.com",
-				"feed_id": 24565206,
-				"height": 3387,
-				"post_id": 3593,
-				"post_title": "Picture Postcard - Knoxville Tennessee",
-				"post_url": "https://eileenon.wordpress.com/?p=3593",
-				"railcar": {
-					"fetch_algo": "read:tag:image/1",
-					"fetch_lang": "en",
-					"fetch_position": 0,
-					"fetch_query": "knoxville",
-					"railcar": "UQ!o&Ik&l!IQ",
-					"rec_blog_id": 75481429,
-					"rec_post_id": 3593,
-					"rec_url": "eileenon.files.wordpress.com/2016/10/postcard-tennessee-knoxville.jpg"
-				},
-				"url": "eileenon.files.wordpress.com/2016/10/postcard-tennessee-knoxville.jpg",
-				"width": 2406
-			}
-		]
-	},
-	"code": 200,
-	"headers": [
-		{
-			"name": "Content-Type",
-			"value": "application/json"
-		}
-	]
-}
-     */
     private void getImageAndAttribution() {
         if (mCurrentTag == null) return;
 
