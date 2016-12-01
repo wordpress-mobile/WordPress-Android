@@ -7,21 +7,13 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-    <org.wordpress.android.ui.reader.views.ReaderFollowButton
-        android:id="@+id/follow_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/reader_card_content_padding"
-        android:padding="@dimen/reader_follow_button_padding" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_thumbnail_strip_image_height"
-        android:layout_below="@+id/follow_button"
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_marginLeft="@dimen/reader_card_content_padding"
         android:layout_marginRight="@dimen/reader_card_content_padding"
+        android:layout_marginTop="@dimen/margin_extra_large"
         android:background="@color/grey"
         android:paddingLeft="@dimen/reader_card_margin"
         android:paddingRight="@dimen/reader_card_margin">
