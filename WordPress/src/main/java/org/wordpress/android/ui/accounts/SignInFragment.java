@@ -417,6 +417,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void switchBackgroundToDotOrg(boolean useDotOrg) {
+        if (getView() == null) {
+            return;
+        }
+
         Animator animator = AnimatorInflater.loadAnimator(getContext(), useDotOrg ? R.animator
                 .nux_background_switch_to_dotorg : R.animator.nux_background_switch_to_wpcom);
         animator.setTarget(getView());
