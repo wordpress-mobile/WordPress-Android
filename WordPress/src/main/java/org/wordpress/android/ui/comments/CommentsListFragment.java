@@ -251,7 +251,6 @@ public class CommentsListFragment extends Fragment {
 
         if (!mHasAutoRefreshedComments) {
             updateComments(false);
-            mFilteredCommentsView.setRefreshing(true);
             mHasAutoRefreshedComments = true;
         }
     }
@@ -507,6 +506,7 @@ public class CommentsListFragment extends Fragment {
             offset = getAdapter().getItemCount();
             mFilteredCommentsView.showLoadingProgress();
         }
+        mFilteredCommentsView.setRefreshing(true);
 
         mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(new FetchCommentsPayload(mSite,
                 mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE, offset)));
