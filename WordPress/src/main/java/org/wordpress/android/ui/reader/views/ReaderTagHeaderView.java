@@ -3,7 +3,7 @@ package org.wordpress.android.ui.reader.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wordpress.rest.RestRequest;
@@ -24,7 +24,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 /**
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
  */
-public class ReaderTagHeaderView extends LinearLayout {
+public class ReaderTagHeaderView extends RelativeLayout {
 
     private ReaderFollowButton mFollowButton;
     private WPNetworkImageView mImageView;
