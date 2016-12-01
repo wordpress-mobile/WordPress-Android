@@ -585,7 +585,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasTagHeader() {
-        return getPostListType() == ReaderTypes.ReaderPostListType.TAG_PREVIEW;
+        return mCurrentTag != null && mCurrentTag.isTagTopic();
     }
 
     private boolean isDiscover() {

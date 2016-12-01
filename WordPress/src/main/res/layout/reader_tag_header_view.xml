@@ -5,43 +5,66 @@
     android:id="@+id/layout_tag_info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:orientation="vertical">
+
+    <org.wordpress.android.ui.reader.views.ReaderFollowButton
+        android:id="@+id/follow_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="@dimen/reader_card_content_padding"
+        android:padding="@dimen/reader_follow_button_padding" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/toolbar_height"
         android:layout_marginLeft="@dimen/reader_card_content_padding"
         android:layout_marginRight="@dimen/reader_card_content_padding"
-        android:minHeight="@dimen/toolbar_height"
+        android:background="@color/grey"
         android:paddingLeft="@dimen/reader_card_margin"
         android:paddingRight="@dimen/reader_card_margin">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_tag_header"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/follow_button"
+            android:layout_centerInParent="true"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
-            android:textColor="@color/grey_dark"
+            android:shadowColor="@color/grey_dark"
+            android:shadowDx="@dimen/reader_photo_title_shadow_offset"
+            android:shadowDy="@dimen/reader_photo_title_shadow_offset"
+            android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
             tools:text="text_tag" />
 
-        <org.wordpress.android.ui.reader.views.ReaderFollowButton
-            android:id="@+id/follow_button"
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_attribution"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/reader_follow_button_padding" />
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:shadowColor="@color/grey_dark"
+            android:shadowDx="@dimen/reader_photo_title_shadow_offset"
+            android:shadowDy="@dimen/reader_photo_title_shadow_offset"
+            android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_small"
+            tools:text="text_attribution" />
 
     </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey_lighten_20" />
 
 </LinearLayout>
