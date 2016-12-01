@@ -6,18 +6,19 @@
     android:viewportWidth="54.0" >
 
     <path
-        android:fillColor="#ffc2d2dd"
+        android:fillColor="@color/grey_lighten_20"
         android:pathData="M54,0v70H0V0H54z" >
     </path>
 
     <path
-        android:pathData="M23,21H7V7h16V21"
-        android:fillColor="#ff90aec2" >
+        android:fillColor="@color/grey"
+        android:pathData="M23,21H7V7h16V21" >
     </path>
 
     <path
-        android:pathData="M54,70H11V0h43V70z"
-        android:fillColor="#8090aec2" >
+        android:fillAlpha="0.5"
+        android:fillColor="@color/grey"
+        android:pathData="M54,70H11V0h43V70z" >
     </path>
 
 </vector>

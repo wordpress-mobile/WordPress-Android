@@ -6,17 +6,18 @@
     android:viewportWidth="56.0" >
 
     <path
-        android:fillColor="#8090aec2"
+        android:fillAlpha="0.5"
+        android:fillColor="@color/grey"
         android:pathData="M42,59H0V0h42V59z" >
     </path>
 
     <path
-        android:fillColor="#c2d2dd"
+        android:fillColor="@color/grey_lighten_20"
         android:pathData="M56,4v70H4V4H56z" >
     </path>
 
     <path
-        android:fillColor="#ff90aec2"
+        android:fillColor="@color/grey"
         android:pathData="M29,23H11v-4h18V23zM29,15H11v-4h18V15zM37,11v12h12V11H37z" >
     </path>
 

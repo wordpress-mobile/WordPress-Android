@@ -24,8 +24,10 @@
     <color name="light_gray">@color/grey_lighten_30</color>
     <color name="gray">@color/grey_lighten_20</color>
     <color name="white">#FFFFFF</color>
+    <color name="white_60">#99ffffff</color>
     <!-- note that black should NOT be used for text - use grey_dark instead -->
     <color name="black">#000000</color>
+    <color name="black_40">#66000000</color>
     <color name="default_background">@color/grey_lighten_30</color>
 
     <!-- ==================================== -->
@@ -71,6 +73,18 @@
 
     <!-- END WordPress.com Colors -->
     <!-- ======================== -->
+
+    <!-- Material Design -->
+    <color name="grey_50">#fffafafa</color>
+    <color name="grey_100">#fff5f5f5</color>
+    <color name="grey_200">#ffeeeeee</color>
+    <color name="grey_300">#ffe0e0e0</color>
+    <color name="grey_400">#ffbdbdbd</color>
+    <color name="grey_500">#ff9e9e9e</color>
+    <color name="grey_600">#ff757575</color>
+    <color name="grey_700">#ff616161</color>
+    <color name="grey_800">#ff424242</color>
+    <color name="grey_900">#ff212121</color>
 
     <!-- App specific colors -->
     <!-- We could use blue_dark for the status bar color, but to adhere to the material design spec very closely,
