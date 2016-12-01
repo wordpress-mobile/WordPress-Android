@@ -17,7 +17,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
+        android:layout_height="@dimen/reader_thumbnail_strip_image_height"
         android:layout_below="@+id/follow_button"
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_marginLeft="@dimen/reader_card_content_padding"
@@ -29,11 +29,12 @@
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_tag_header"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="@dimen/reader_thumbnail_strip_image_height"
+            android:scaleType="centerCrop" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_tag"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:ellipsize="end"
@@ -57,14 +58,13 @@
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
             android:ellipsize="end"
-            android:gravity="center"
             android:maxLines="1"
             android:shadowColor="@color/grey_dark"
             android:shadowDx="@dimen/reader_photo_title_shadow_offset"
             android:shadowDy="@dimen/reader_photo_title_shadow_offset"
             android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_small"
+            android:textSize="@dimen/text_sz_extra_small"
             tools:text="text_attribution" />
 
     </RelativeLayout>

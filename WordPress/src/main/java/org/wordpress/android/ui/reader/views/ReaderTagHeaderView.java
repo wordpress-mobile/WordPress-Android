@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -124,17 +126,30 @@ public class ReaderTagHeaderView extends RelativeLayout {
         String tagNameForApi = ReaderUtils.sanitizeWithDashes(mCurrentTag.getTagSlug());
         String path = "read/tags/" + tagNameForApi + "/images?number=1";
 
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_2().get(path, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                JSONObject jsonImages = JSONUtils.getJSONChild(jsonObject, "body/images");
-                if (jsonImages == null) return;
+                if (jsonObject == null) return;
 
-                String imageUrl = JSONUtils.getString(jsonImages, "url");
-                mImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_ROUNDED);
+                JSONArray jsonArray = jsonObject.optJSONArray("images");
+                if (jsonArray == null) return;
 
-                String author = JSONUtils.getString(jsonImages, "author");
-                String blogTitle = JSONUtils.getString(jsonImages, "blog_title");
+                JSONObject jsonImage = jsonArray.optJSONObject(0);
+                if (jsonImage == null) return;
+
+                String imageUrl = JSONUtils.getString(jsonImage, "url");
+                // current endpoint doesn't include the protocol
+                if (!imageUrl.startsWith("http")) {
+                    imageUrl = "https://" + imageUrl;
+                }
+
+                int imageWidth = mImageView.getWidth();
+                int imageHeight = getContext().getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_height);
+                String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, imageWidth, imageHeight);
+                mImageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE);
+
+                String author = JSONUtils.getString(jsonImage, "author");
+                String blogTitle = JSONUtils.getString(jsonImage, "blog_title");
                 boolean hasAuthor = !author.isEmpty();
                 boolean hasTitle = !blogTitle.isEmpty();
                 String attribution;
@@ -149,9 +164,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 }
                 mTxtAttribution.setText(attribution);
             }
-        };
-
-        WordPress.getRestClientUtilsV1_1().post(path, listener, null);
+        }, null);
     }
 
     private void toggleFollowStatus() {
