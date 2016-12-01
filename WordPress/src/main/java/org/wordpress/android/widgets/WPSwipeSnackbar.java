@@ -43,8 +43,8 @@ public class WPSwipeSnackbar {
     private static Snackbar show(@NonNull ViewPager viewPager, @NonNull SwipeArrows arrows) {
         Context context = viewPager.getContext();
         String swipeText = context.getResources().getString(R.string.swipe_for_more);
-        String arrowLeft = context.getResources().getString(R.string.arrow_left);
-        String arrowRight = context.getResources().getString(R.string.arrow_right);
+        String arrowLeft = context.getResources().getString(R.string.previous_button);
+        String arrowRight = context.getResources().getString(R.string.next_button);
 
         String text;
         switch (arrows) {
