@@ -74,14 +74,13 @@ public class PostLocation implements Serializable {
     }
 
     public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        } else if (other instanceof PostLocation) {
-            PostLocation otherLocation = (PostLocation) other;
-            return this.mLatitude == otherLocation.mLatitude
-                    && this.mLongitude == otherLocation.mLongitude;
-        }
-        return false;
+        if (this == other) return true;
+        if (other == null || !(other instanceof PostLocation)) return false;
+
+        PostLocation otherLocation = (PostLocation) other;
+
+        return getLatitude() == otherLocation.getLatitude()
+                && getLongitude() == otherLocation.getLongitude();
     }
 
     public static boolean equals(Object a, Object b) {
