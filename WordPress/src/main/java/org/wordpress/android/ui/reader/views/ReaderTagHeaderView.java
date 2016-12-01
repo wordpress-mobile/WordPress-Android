@@ -97,7 +97,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 }
 
                 int imageWidth = mImageView.getWidth();
-                int imageHeight = getContext().getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height_cardview);
+                int imageHeight = getContext().getResources().getDimensionPixelSize(R.dimen.reader_tag_header_image_height);
                 String photonUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, imageWidth, imageHeight);
                 mImageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
 
