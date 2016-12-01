@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/theme_grid_card_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -99,7 +98,6 @@
                         android:background="?android:attr/selectableItemBackground"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/button_more"
-                        app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp"
                         card_view:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
 
                 </LinearLayout>
