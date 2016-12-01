@@ -980,7 +980,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (canTrash()) {
             mBtnTrashComment.setVisibility(View.VISIBLE);
             if (mComment.getStatusEnum() == CommentStatus.TRASH) {
-                mBtnModerateIcon.setImageResource(R.drawable.ic_undo_ff87a6bc_32dp);
+                mBtnModerateIcon.setImageResource(R.drawable.ic_undo_grey_32dp);
                 //mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.notification_status_unapproved_dark));
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
@@ -1016,11 +1016,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private void setModerateButtonForStatus(CommentStatus status) {
         if (status == CommentStatus.APPROVED) {
-            mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_fff0821e_32dp);
+            mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_orange_jazzy_32dp);
             mBtnModerateTextView.setText(R.string.comment_status_approved);
             mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.notification_status_unapproved_dark));
         } else {
-            mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_ff90aec2_32dp);
+            mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_grey_32dp);
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
             mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey));
         }
@@ -1197,12 +1197,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (isLiked) {
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.orange_jazzy));
-            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_fff0821e_32dp));
+            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_orange_jazzy_32dp));
             mBtnLikeComment.setActivated(true);
         } else {
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey));
-            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_ff90aec2_32dp));
+            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_grey_32dp));
             mBtnLikeComment.setActivated(false);
         }
     }

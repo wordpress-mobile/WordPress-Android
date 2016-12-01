@@ -8,5 +8,5 @@
     android:textColor="@color/white"
     android:paddingRight="0dp"
     android:paddingLeft="0dp"
-    android:drawableRight="@drawable/ic_dropdown_ff78dcfa_24dp"
+    android:drawableRight="@drawable/ic_dropdown_blue_light_24dp"
     tools:text="spinner item"/>

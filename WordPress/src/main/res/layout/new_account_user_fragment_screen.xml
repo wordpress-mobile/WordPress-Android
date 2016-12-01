@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/info_button"
-                app:srcCompat="@drawable/ic_info_ff000000_24dp"
+                app:srcCompat="@drawable/ic_info_black_24dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/help"
@@ -68,7 +68,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    app:srcCompat="@drawable/ic_email_ff000000_24dp"
+                    app:srcCompat="@drawable/ic_email_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>
@@ -99,7 +99,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    app:srcCompat="@drawable/ic_user_ff000000_24dp"
+                    app:srcCompat="@drawable/ic_user_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>
@@ -128,7 +128,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    app:srcCompat="@drawable/ic_lock_ff000000_24dp"
+                    app:srcCompat="@drawable/ic_lock_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>
@@ -140,7 +140,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    app:srcCompat="@drawable/ic_visible_off_ff000000_24dp"
+                    app:srcCompat="@drawable/ic_visible_off_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:layout_alignParentRight="true"
@@ -194,7 +194,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    app:srcCompat="@drawable/ic_globe_ff000000_24dp"
+                    app:srcCompat="@drawable/ic_globe_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>

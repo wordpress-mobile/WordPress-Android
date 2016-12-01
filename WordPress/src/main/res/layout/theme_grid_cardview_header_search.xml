@@ -39,7 +39,8 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/search"
                 android:layout_alignParentLeft="true"
-                app:srcCompat="@drawable/ic_search_ff000000_24dp" />
+                app:srcCompat="@drawable/ic_search_black_24dp"
+                card_view:srcCompat="@drawable/ic_search_black_24dp" />
 
         </RelativeLayout>
 

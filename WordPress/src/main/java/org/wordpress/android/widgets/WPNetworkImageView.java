@@ -366,12 +366,12 @@ public class WPNetworkImageView extends AppCompatImageView {
         if (getContext() == null) return;
         new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
                 getContext().getResources(),
-                R.drawable.ic_placeholder_gravatar_ffc8d8e4_100dp
+                R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
         ));
     }
 
     public void showDefaultBlavatarImage() {
-        setImageResource(R.drawable.ic_placeholder_blavatar_ffc8d7e1_40dp);
+        setImageResource(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
     }
 
     // --------------------------------------------------------------------------------------------------

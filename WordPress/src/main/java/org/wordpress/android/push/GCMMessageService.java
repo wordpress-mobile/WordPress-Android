@@ -137,7 +137,7 @@ public class GCMMessageService extends GcmListenerService {
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             AnalyticsTrackerMixpanel.showNotification(this, pendingIntent,
-                    R.drawable.ic_my_sites_ffffffff_24dp, title, mpMessage);
+                    R.drawable.ic_my_sites_white_24dp, title, mpMessage);
             return;
         }
 
@@ -540,7 +540,7 @@ public class GCMMessageService extends GcmListenerService {
                     .setLabel(replyLabel)
                     .build();
             NotificationCompat.Action action =
-                    new NotificationCompat.Action.Builder(R.drawable.ic_reply_ffffffff_24dp,
+                    new NotificationCompat.Action.Builder(R.drawable.ic_reply_white_24dp,
                             getString(R.string.reply), commentReplyPendingIntent)
                             .addRemoteInput(remoteInput)
                             .build();
@@ -564,7 +564,7 @@ public class GCMMessageService extends GcmListenerService {
             commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
             PendingIntent commentLikePendingIntent =  getCommentActionPendingIntenForService(context, commentLikeIntent);
-            builder.addAction(R.drawable.ic_star_ff90aec2_32dp, getText(R.string.like),
+            builder.addAction(R.drawable.ic_star_grey_32dp, getText(R.string.like),
                     commentLikePendingIntent);
         }
 
@@ -583,7 +583,7 @@ public class GCMMessageService extends GcmListenerService {
             commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
             PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntenForService(context, commentApproveIntent);
-            builder.addAction(R.drawable.ic_checkmark_ff90aec2_32dp, getText(R.string.approve),
+            builder.addAction(R.drawable.ic_checkmark_grey_32dp, getText(R.string.approve),
                     commentApprovePendingIntent);
         }
 
@@ -653,7 +653,7 @@ public class GCMMessageService extends GcmListenerService {
         private NotificationCompat.Builder getNotificationBuilder(Context context, String title, String message){
             // Build the new notification, add group to support wearable stacking
            return new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_my_sites_ffffffff_24dp)
+                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                     .setColor(getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
@@ -704,7 +704,7 @@ public class GCMMessageService extends GcmListenerService {
 
                 String subject = String.format(getString(R.string.new_notifications), sActiveNotificationsMap.size());
                 NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_my_sites_ffffffff_24dp)
+                        .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                         .setColor(getResources().getColor(R.color.blue_wordpress))
                         .setGroup(NOTIFICATION_GROUP_KEY)
                         .setGroupSummary(true)
@@ -924,7 +924,7 @@ public class GCMMessageService extends GcmListenerService {
             pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_my_sites_ffffffff_24dp)
+                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                     .setColor(getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
@@ -955,7 +955,7 @@ public class GCMMessageService extends GcmListenerService {
                 PendingIntent authApprovePendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
-                builder.addAction(R.drawable.ic_checkmark_ff90aec2_32dp, getText(R.string.approve),
+                builder.addAction(R.drawable.ic_checkmark_grey_32dp, getText(R.string.approve),
                         authApprovePendingIntent);
 
 
@@ -963,7 +963,7 @@ public class GCMMessageService extends GcmListenerService {
                 authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
                 PendingIntent authIgnorePendingIntent =  PendingIntent.getService(context,
                         AUTH_PUSH_REQUEST_CODE_IGNORE, authIgnoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                builder.addAction(R.drawable.ic_cross_ffffffff_24dp, getText(R.string.ignore),
+                builder.addAction(R.drawable.ic_cross_white_24dp, getText(R.string.ignore),
                         authIgnorePendingIntent);
             }
 

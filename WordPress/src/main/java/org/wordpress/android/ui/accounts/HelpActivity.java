@@ -25,7 +25,7 @@ public class HelpActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_cross_ffffffff_24dp);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setElevation(0); //remove shadow

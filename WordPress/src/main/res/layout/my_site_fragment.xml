@@ -74,7 +74,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/margin_large"
                             android:background="?android:attr/selectableItemBackground"
-                            android:drawableLeft="@drawable/ic_arrow_left_ff87a6bc_16dp"
+                            android:drawableLeft="@drawable/ic_arrow_left_grey_16dp"
                             android:drawablePadding="@dimen/margin_small"
                             android:gravity="center_vertical"
                             android:minHeight="0dp"
@@ -97,7 +97,7 @@
                 <ImageView
                     android:id="@+id/my_site_stats_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_stats_alt_ff87a6bc_24dp" />
+                    app:srcCompat="@drawable/ic_stats_alt_grey_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_stats_text_view"
@@ -115,7 +115,7 @@
                 <ImageView
                     android:id="@+id/my_site_plan_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_clipboard_ff87a6bc_24dp" />
+                    app:srcCompat="@drawable/ic_clipboard_grey_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_plan_text_view"
@@ -162,7 +162,7 @@
                         android:id="@+id/my_site_blog_posts_icon"
                         style="@style/MySiteListRowIcon"
                         android:contentDescription="@string/my_site_btn_blog_posts"
-                        app:srcCompat="@drawable/ic_posts_ff87a6bc_24dp" />
+                        app:srcCompat="@drawable/ic_posts_grey_24dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_blog_posts_text_view"
@@ -181,7 +181,7 @@
                 <ImageView
                     android:id="@+id/my_site_media_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_media_ff87a6bc_24dp" />
+                    app:srcCompat="@drawable/ic_media_grey_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_media_text_view"
@@ -199,7 +199,7 @@
                 <ImageView
                     android:id="@+id/my_site_pages_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_pages_ff87a6bc_24dp" />
+                    app:srcCompat="@drawable/ic_pages_grey_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_pages_text_view"
@@ -217,7 +217,7 @@
                 <ImageView
                     android:id="@+id/my_site_comments_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_comment_ff87a6bc_24dp" />
+                    app:srcCompat="@drawable/ic_comment_grey_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_comments_text_view"
@@ -248,7 +248,7 @@
                 <ImageView
                     android:id="@+id/my_site_themes_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_themes_ff87a6bc_24dp" />
+                    app:srcCompat="@drawable/ic_themes_grey_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_themes_text_view"
@@ -280,7 +280,7 @@
                     android:id="@+id/my_site_people_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/people"
-                    app:srcCompat="@drawable/ic_user_ff87a6bc_24dp" />
+                    app:srcCompat="@drawable/ic_user_grey_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_people_management_text_view"
@@ -298,7 +298,7 @@
                 <ImageView
                     android:id="@+id/my_site_settings_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_cog_ff87a6bc_24dp" />
+                    app:srcCompat="@drawable/ic_cog_grey_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_settings_text_view"
@@ -333,7 +333,7 @@
                     <ImageView
                         android:id="@+id/my_site_view_site_icon"
                         style="@style/MySiteListRowIcon"
-                        app:srcCompat="@drawable/ic_globe_ff87a6bc_24dp" />
+                        app:srcCompat="@drawable/ic_globe_grey_24dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_view_site_text_view"
@@ -346,7 +346,7 @@
                         style="@style/MySiteListRowSecondaryIcon"
                         android:layout_toRightOf="@+id/my_site_view_site_text_view"
                         android:tint="@color/grey_darken_10"
-                        app:srcCompat="@drawable/ic_external_ff000000_24dp" />
+                        app:srcCompat="@drawable/ic_external_black_24dp" />
 
                 </RelativeLayout>
 
@@ -358,7 +358,7 @@
                     <ImageView
                         android:id="@+id/my_site_view_admin_icon"
                         style="@style/MySiteListRowIcon"
-                        app:srcCompat="@drawable/ic_my_sites_ff87a6bc_24dp" />
+                        app:srcCompat="@drawable/ic_my_sites_grey_24dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_view_admin_text_view"
@@ -371,7 +371,7 @@
                         style="@style/MySiteListRowSecondaryIcon"
                         android:layout_toRightOf="@+id/my_site_view_admin_text_view"
                         android:tint="@color/grey_darken_10"
-                        app:srcCompat="@drawable/ic_external_ff000000_24dp" />
+                        app:srcCompat="@drawable/ic_external_black_24dp" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -460,7 +460,7 @@
             android:layout_gravity="end|bottom"
             android:layout_marginBottom="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_create_ffffffff_24dp"
+            app:srcCompat="@drawable/ic_create_white_24dp"
             android:contentDescription="@string/new_post"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed" />

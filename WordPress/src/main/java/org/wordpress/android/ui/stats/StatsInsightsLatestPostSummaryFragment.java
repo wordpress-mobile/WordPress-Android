@@ -255,14 +255,14 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     private Drawable getTabIcon(final StatsVisitorsAndViewsFragment.OverviewLabel labelItem) {
         switch (labelItem) {
             case VISITORS:
-                return getResources().getDrawable(R.drawable.ic_user_ff2e4453_12dp);
+                return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
             case COMMENTS:
-                return getResources().getDrawable(R.drawable.ic_comment_ff2e4453_12dp);
+                return getResources().getDrawable(R.drawable.ic_comment_grey_dark_12dp);
             case LIKES:
-                return getResources().getDrawable(R.drawable.ic_star_ff2e4453_12dp);
+                return getResources().getDrawable(R.drawable.ic_star_grey_dark_12dp);
             default:
                 // Views and when no prev match
-                return getResources().getDrawable(R.drawable.ic_visible_on_ff2e4453_12dp);
+                return getResources().getDrawable(R.drawable.ic_visible_on_grey_dark_12dp);
         }
     }
 

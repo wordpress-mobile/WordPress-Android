@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/menu_browse"
-        android:icon="@drawable/ic_globe_ffffffff_24dp"
+        android:icon="@drawable/ic_globe_white_24dp"
         android:title="@string/view_in_browser"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_share"
-        android:icon="@drawable/ic_share_ffffffff_24dp"
+        android:icon="@drawable/ic_share_white_24dp"
         android:title="@string/share_action"
         app:showAsAction="always" />
 

@@ -33,7 +33,7 @@
         android:paddingEnd="8dp"
         android:paddingRight="8dp"
         android:paddingTop="4dp"
-        android:background="@drawable/ic_wordpress_ffffffff_24dp"
+        android:background="@drawable/ic_wordpress_white_24dp"
         android:scaleType="centerInside" />
 
 </org.wordpress.mediapicker.CheckableFrameLayout>

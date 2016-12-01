@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/ic_themes_ffe9eff3_18dp"
+        android:drawable="@drawable/ic_themes_grey_lighten_30_18dp"
         android:gravity="center" />
 
     <item

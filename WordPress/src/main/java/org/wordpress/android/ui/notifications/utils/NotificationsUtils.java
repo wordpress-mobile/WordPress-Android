@@ -271,7 +271,7 @@ public class NotificationsUtils {
 
         Drawable loading = context.getResources().getDrawable(
             org.wordpress.android.editor.R.drawable.legacy_dashicon_format_image_big_grey);
-        Drawable failed = context.getResources().getDrawable(R.drawable.ic_notice_ff979797_48dp);
+        Drawable failed = context.getResources().getDrawable(R.drawable.ic_notice_grey_500_48dp);
         // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle,
         // otherwise it would load blank white
         WPImageGetter imageGetter = new WPImageGetter(

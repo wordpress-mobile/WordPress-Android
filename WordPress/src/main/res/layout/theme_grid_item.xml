@@ -99,7 +99,8 @@
                         android:background="?android:attr/selectableItemBackground"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/button_more"
-                        app:srcCompat="@drawable/ic_ellipsis_ffa8bece_24dp" />
+                        app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp"
+                        card_view:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
 
                 </LinearLayout>
 

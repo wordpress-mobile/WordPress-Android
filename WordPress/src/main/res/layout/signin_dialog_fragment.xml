@@ -20,7 +20,7 @@
             android:id="@+id/nux_dialog_image"
             android:layout_width="50dp"
             android:layout_height="52dp"
-            app:srcCompat="@drawable/ic_my_sites_ffffffff_50dp"
+            app:srcCompat="@drawable/ic_my_sites_white_50dp"
             android:tint="@color/white"
             android:layout_marginBottom="16dp"/>
 

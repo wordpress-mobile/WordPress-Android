@@ -4,6 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/ic_my_sites_ffffffff_50dp"/>
+        android:drawable="@drawable/ic_my_sites_white_50dp"/>
 
 </selector>

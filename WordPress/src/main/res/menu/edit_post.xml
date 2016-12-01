@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_post_settings"
-        android:icon="@drawable/ic_cog_ffffffff_24dp"
+        android:icon="@drawable/ic_cog_white_24dp"
         app:showAsAction="always"
         android:title="@string/settings"/>
     <item

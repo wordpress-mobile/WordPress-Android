@@ -5,6 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:drawableRight="@drawable/ic_cross_ff757575_24dp"
+    android:drawableRight="@drawable/ic_cross_grey_600_24dp"
     android:padding="8dp"
     android:textColor="@color/grey_dark" />

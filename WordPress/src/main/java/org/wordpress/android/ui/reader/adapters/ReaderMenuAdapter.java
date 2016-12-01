@@ -65,12 +65,12 @@ public class ReaderMenuAdapter extends BaseAdapter {
             case ITEM_FOLLOW:
                 textRes = R.string.reader_btn_follow;
                 textColorRes = R.color.reader_follow;
-                iconRes = R.drawable.ic_reader_follow_ff2e4453_24dp;
+                iconRes = R.drawable.ic_reader_follow_grey_dark_24dp;
                 break;
             case ITEM_UNFOLLOW:
                 textRes = R.string.reader_btn_unfollow;
                 textColorRes = R.color.reader_following;
-                iconRes = R.drawable.ic_reader_following_ff4ab866_24dp;
+                iconRes = R.drawable.ic_reader_following_alert_green_24dp;
                 break;
             case ITEM_BLOCK:
                 textRes = R.string.reader_menu_block_blog;

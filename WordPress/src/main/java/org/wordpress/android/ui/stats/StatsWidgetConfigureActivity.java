@@ -105,7 +105,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_cross_ffffffff_24dp);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp);
             actionBar.setHomeButtonEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

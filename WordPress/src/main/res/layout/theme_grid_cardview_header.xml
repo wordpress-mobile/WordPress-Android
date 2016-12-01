@@ -70,7 +70,8 @@
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/customize"
-                        app:srcCompat="@drawable/ic_customize_ff2e4453_18dp" />
+                        app:srcCompat="@drawable/ic_customize_grey_dark_18dp"
+                        card_view:srcCompat="@drawable/ic_customize_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
@@ -101,7 +102,8 @@
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/details"
-                        app:srcCompat="@drawable/ic_info_outline_ff2e4453_18dp" />
+                        app:srcCompat="@drawable/ic_info_outline_grey_dark_18dp"
+                        card_view:srcCompat="@drawable/ic_info_outline_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
@@ -132,7 +134,8 @@
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/support"
-                        app:srcCompat="@drawable/ic_help_outline_ff2e4453_18dp" />
+                        app:srcCompat="@drawable/ic_help_outline_grey_dark_18dp"
+                        card_view:srcCompat="@drawable/ic_help_outline_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"

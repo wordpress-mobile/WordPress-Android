@@ -45,7 +45,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW || getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             // show an X in the toolbar which closes the activity - if this is tag preview, then
             // using the back button will navigate through tags if the user explores beyond a single tag
-            toolbar.setNavigationIcon(R.drawable.ic_cross_ffffffff_24dp);
+            toolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

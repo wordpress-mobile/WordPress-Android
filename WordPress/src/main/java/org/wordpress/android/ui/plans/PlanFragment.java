@@ -158,7 +158,7 @@ public class PlanFragment extends Fragment {
         if (!TextUtils.isEmpty(iconUrl)) {
             imgIcon.setImageUrl(iconUrl, WordPress.imageLoader);
         } else {
-            imgIcon.setDefaultImageResId(R.drawable.ic_reader_ff0087be_16dp);
+            imgIcon.setDefaultImageResId(R.drawable.ic_reader_blue_wordpress_16dp);
         }
 
         mPlanContainerView.addView(view);

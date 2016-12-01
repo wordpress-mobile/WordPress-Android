@@ -23,7 +23,7 @@
             android:id="@+id/text_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_time_ff668eaa_16dp"
+            android:drawableLeft="@drawable/ic_time_grey_darken_10_16dp"
             android:drawablePadding="@dimen/margin_small"
             android:padding="@dimen/margin_medium"
             android:textColor="@color/grey_darken_10"
@@ -76,7 +76,7 @@
                     android:textColor="@color/grey_darken_10"
                     android:textSize="@dimen/text_sz_small"
                     android:visibility="gone"
-                    tools:drawableLeft="@drawable/noticon_scheduled_f0b849_16dp"
+                    tools:drawableLeft="@drawable/noticon_scheduled_alert_yellow_16dp"
                     tools:text="text_status"
                     tools:visibility="visible" />
 
@@ -92,7 +92,7 @@
                 android:background="?android:selectableItemBackground"
                 android:padding="@dimen/margin_medium"
                 android:contentDescription="@string/more"
-                app:srcCompat="@drawable/ic_ellipsis_ff0087be_32dp" />
+                app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp" />
         </RelativeLayout>
 
         <RelativeLayout

@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_small"
-                app:srcCompat="@drawable/ic_star_ff90aec2_32dp"
+                app:srcCompat="@drawable/ic_star_grey_32dp"
                 android:contentDescription="@string/reader_label_like" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_small"
-                app:srcCompat="@drawable/ic_checkmark_ff90aec2_32dp"
+                app:srcCompat="@drawable/ic_checkmark_grey_32dp"
                 android:contentDescription="@string/reader_label_like" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -95,7 +95,7 @@
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
-                app:srcCompat="@drawable/ic_pencil_ff87a6bc_32dp"
+                app:srcCompat="@drawable/ic_pencil_grey_32dp"
                 android:contentDescription="@string/edit_comment" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -128,7 +128,7 @@
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
-                app:srcCompat="@drawable/ic_trash_ff87a6bc_32dp"
+                app:srcCompat="@drawable/ic_trash_grey_32dp"
                 android:contentDescription="@string/edit_comment" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -160,7 +160,7 @@
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
-                app:srcCompat="@drawable/ic_spam_ff87a6bc_32dp"
+                app:srcCompat="@drawable/ic_spam_grey_32dp"
                 android:contentDescription="@string/mnu_comment_spam" />
 
             <org.wordpress.android.widgets.WPTextView

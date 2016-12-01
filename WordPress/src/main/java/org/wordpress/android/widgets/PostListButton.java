@@ -110,23 +110,23 @@ public class PostListButton extends LinearLayout {
     public static int getButtonIconResId(int buttonType) {
         switch (buttonType) {
             case BUTTON_EDIT:
-                return R.drawable.ic_pencil_ff0087be_16dp;
+                return R.drawable.ic_pencil_blue_wordpress_16dp;
             case BUTTON_VIEW:
-                return R.drawable.ic_external_ff0087be_12dp;
+                return R.drawable.ic_external_blue_wordpress_12dp;
             case BUTTON_PREVIEW:
-                return R.drawable.ic_external_ff0087be_12dp;
+                return R.drawable.ic_external_blue_wordpress_12dp;
             case BUTTON_STATS:
-                return R.drawable.ic_stats_alt_ff0087be_16dp;
+                return R.drawable.ic_stats_alt_blue_wordpress_16dp;
             case BUTTON_TRASH:
-                return R.drawable.ic_trash_ff0087be_16dp;
+                return R.drawable.ic_trash_blue_wordpress_16dp;
             case BUTTON_DELETE:
-                return R.drawable.ic_trash_ff0087be_16dp;
+                return R.drawable.ic_trash_blue_wordpress_16dp;
             case BUTTON_PUBLISH:
-                return R.drawable.ic_reader_ff0087be_16dp;
+                return R.drawable.ic_reader_blue_wordpress_16dp;
             case BUTTON_MORE:
-                return R.drawable.ic_ellipsis_ff0087be_16dp;
+                return R.drawable.ic_ellipsis_blue_wordpress_16dp;
             case BUTTON_BACK:
-                return R.drawable.ic_chevron_left_ff0087be_16dp;
+                return R.drawable.ic_chevron_left_blue_wordpress_16dp;
             default:
                 return 0;
         }

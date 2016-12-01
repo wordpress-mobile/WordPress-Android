@@ -25,7 +25,7 @@
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginRight="@dimen/margin_medium"
-        app:srcCompat="@drawable/ic_wordpress_ff87a6bc_20dp" />
+        app:srcCompat="@drawable/ic_wordpress_grey_20dp" />
 
     <View
         android:layout_width="match_parent"

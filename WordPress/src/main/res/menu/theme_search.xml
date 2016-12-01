@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_theme_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        android:icon="@drawable/ic_search_ff000000_19dp"
+        android:icon="@drawable/ic_search_black_19dp"
         app:showAsAction="collapseActionView|ifRoom"
         android:title="@string/search"/>
 </menu>

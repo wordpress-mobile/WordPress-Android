@@ -504,7 +504,7 @@ public class ReaderPostListFragment extends Fragment
         // the following will change the look and feel of the toolbar to match the current design
         mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.blue_medium));
         mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
-        mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_ff78dcfa_24dp);
+        mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
                 getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);

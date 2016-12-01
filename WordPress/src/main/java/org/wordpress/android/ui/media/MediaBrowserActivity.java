@@ -519,7 +519,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         fm.popBackStack();
 
         // reset the button to "back" as it may have been altered by a fragment
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_left_ffffffff_24dp);
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
     }
 
     @SuppressWarnings("unused")
