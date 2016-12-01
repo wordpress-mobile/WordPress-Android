@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -26,6 +27,8 @@ public class ReaderTagHeaderView extends RelativeLayout {
     private WPNetworkImageView mImageView;
     private TextView mTxtAttribution;
     private ReaderTag mCurrentTag;
+
+    private String mImageUrl;
 
     public ReaderTagHeaderView(Context context) {
         super(context);
@@ -81,19 +84,32 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 JSONObject jsonImage = jsonArray.optJSONObject(0);
                 if (jsonImage == null) return;
 
-                String imageUrl = JSONUtils.getString(jsonImage, "url");
+                String url = JSONUtils.getString(jsonImage, "url");
+                String author = JSONUtils.getString(jsonImage, "author");
+                String blogTitle = JSONUtils.getString(jsonImage, "blog_title");
+                final long blogId = jsonImage.optLong("blog_id");
+
                 // current endpoint doesn't include the protocol
-                if (!imageUrl.startsWith("http")) {
-                    imageUrl = "https://" + imageUrl;
+                if (!url.startsWith("http")) {
+                    mImageUrl = "https://" + url;
+                } else {
+                    mImageUrl = url;
                 }
 
                 int imageWidth = mImageView.getWidth();
-                int imageHeight = getContext().getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_height);
-                String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, imageWidth, imageHeight);
-                mImageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE);
+                int imageHeight = getContext().getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height_cardview);
+                String photonUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, imageWidth, imageHeight);
+                mImageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
 
-                String author = JSONUtils.getString(jsonImage, "author");
-                String blogTitle = JSONUtils.getString(jsonImage, "blog_title");
+                // show photo fullscreen when tapped
+                mImageView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ReaderActivityLauncher.showReaderPhotoViewer(view.getContext(), mImageUrl, null);
+                    }
+                });
+
+                // show attribution line
                 boolean hasAuthor = !author.isEmpty();
                 boolean hasTitle = !blogTitle.isEmpty();
                 String attribution;
@@ -107,6 +123,16 @@ public class ReaderTagHeaderView extends RelativeLayout {
                     attribution = null;
                 }
                 mTxtAttribution.setText(attribution);
+
+                // show blog preview when attribution line is tapped
+                if (blogId != 0) {
+                    mTxtAttribution.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), blogId);
+                        }
+                    });
+                }
             }
         }, null);
     }

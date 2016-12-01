@@ -9,15 +9,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_thumbnail_strip_image_height"
-        android:background="@color/grey"
+        android:layout_height="@dimen/reader_featured_image_height_cardview"
+        android:layout_marginBottom="@dimen/margin_large"
         android:paddingLeft="@dimen/reader_card_margin"
         android:paddingRight="@dimen/reader_card_margin">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_tag_header"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/reader_thumbnail_strip_image_height"
+            android:layout_height="@dimen/reader_featured_image_height_cardview"
             android:scaleType="centerCrop" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -33,7 +33,7 @@
             android:shadowDy="@dimen/reader_photo_title_shadow_offset"
             android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_large"
+            android:textSize="@dimen/text_sz_extra_large"
             android:textStyle="bold"
             tools:text="text_tag" />
 
