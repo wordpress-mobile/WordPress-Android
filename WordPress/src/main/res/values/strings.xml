@@ -1167,6 +1167,7 @@
     <string name="reader_label_image_count_one">1 image</string>
     <string name="reader_label_image_count_multi">%d images</string>
     <string name="reader_label_visit">Visit</string>
+    <string name="reader_photo_by">Photo by %s</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
