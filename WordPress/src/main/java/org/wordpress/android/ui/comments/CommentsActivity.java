@@ -271,8 +271,7 @@ public class CommentsActivity extends AppCompatActivity
             getListFragment().updateEmptyView();
             comment.setStatus(newStatus.toString());
             mDispatcher.dispatch(CommentActionBuilder.newUpdateCommentAction(comment));
-            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite,
-                    comment)));
+            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH
                 || newStatus == CommentStatus.DELETED) {
             mTrashedComments.add(comment);
@@ -306,13 +305,22 @@ public class CommentsActivity extends AppCompatActivity
                         return;
                     }
                     mTrashedComments.remove(comment);
-                    comment.setStatus(newStatus.toString());
-                    mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite,
-                            comment)));
+                    moderateComment(comment, newStatus);
                 }
             });
 
             snackbar.show();
+        }
+    }
+
+    private void moderateComment(CommentModel comment, CommentStatus newStatus) {
+        if (newStatus == CommentStatus.DELETED) {
+            // For deletion, we need to dispatch a specific action.
+            mDispatcher.dispatch(CommentActionBuilder.newDeleteCommentAction(new RemoteCommentPayload(mSite, comment)));
+        } else {
+            // Actual moderation (push the modified comment).
+            comment.setStatus(newStatus.toString());
+            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
         }
     }
 

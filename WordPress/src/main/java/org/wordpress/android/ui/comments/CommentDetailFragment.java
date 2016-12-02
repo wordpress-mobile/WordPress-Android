@@ -796,27 +796,39 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * approve, disapprove, spam, or trash the current comment
      */
-    private void moderateComment(final CommentStatus newStatus) {
-        if (!isAdded() || mComment == null)
+    private void moderateComment(CommentStatus newStatus) {
+        if (!isAdded() || mComment == null) {
             return;
-        if (!NetworkUtils.checkConnection(getActivity()))
+        }
+        if (!NetworkUtils.checkConnection(getActivity())) {
             return;
+        }
+
+        mPreviousStatus = mComment.getStatus();
 
         // Fire the appropriate listener if we have one
         if (mNote != null && mOnNoteCommentActionListener != null) {
             mOnNoteCommentActionListener.onModerateCommentForNote(mNote, newStatus);
             trackModerationFromNotification(newStatus);
+            dispatchModerationAction(newStatus);
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onModerateComment(mSite, mComment, newStatus);
+            // Sad, but onModerateComment does the moderation itself (due to the undo bar), this should be refactored,
+            // That's why we don't call dispatchModerationAction() here.
         }
 
-        if (newStatus == CommentStatus.DELETED)
-
-        // Actual moderation
-        mPreviousStatus = mComment.getStatus();
-        mComment.setStatus(newStatus.toString());
         updateStatusViews();
-        mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
+    }
+
+    private void dispatchModerationAction(CommentStatus newStatus) {
+        if (newStatus == CommentStatus.DELETED) {
+            // For deletion, we need to dispatch a specific action.
+            mDispatcher.dispatch(CommentActionBuilder.newDeleteCommentAction(new RemoteCommentPayload(mSite, mComment)));
+        } else {
+            // Actual moderation (push the modified comment).
+            mComment.setStatus(newStatus.toString());
+            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
+        }
     }
 
     /*
