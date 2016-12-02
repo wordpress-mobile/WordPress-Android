@@ -422,7 +422,7 @@ public class Note {
         comment.setContent(getCommentText());
         comment.setStatus(getCommentStatus().toString());
         comment.setAuthorUrl(getCommentAuthorUrl());
-        comment.setPostTitle(""); // unavailable in note model
+        comment.setPostTitle(getTitle()); // unavailable in note model
         comment.setAuthorEmail(""); // unavailable in note model
         comment.setAuthorProfileImageUrl(getIconURL());
         comment.setILike(hasLikedComment());

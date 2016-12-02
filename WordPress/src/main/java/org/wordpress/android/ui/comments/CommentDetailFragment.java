@@ -190,15 +190,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             case FROM_NOTE:
                 setNote(getArguments().getString(KEY_NOTE_ID));
                 setReplyText(getArguments().getString(KEY_REPLY_TEXT));
+                setIdForFragmentContainer(getArguments().getInt(KEY_FRAGMENT_CONTAINER_ID));
                 break;
         }
 
         if (savedInstanceState != null) {
+            mIdForFragmentContainer = savedInstanceState.getInt(KEY_FRAGMENT_CONTAINER_ID);
             if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
                 // The note will be set in onResume()
                 // See WordPress.deferredInit()
                 mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
-                mIdForFragmentContainer = savedInstanceState.getInt(KEY_FRAGMENT_CONTAINER_ID);
             } else {
                 SiteModel site = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
                 CommentModel comment = (CommentModel) savedInstanceState.getSerializable(KEY_COMMENT);
@@ -455,6 +456,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setNote(note);
     }
 
+    private void setIdForFragmentContainer(int id) {
+        if (id > 0) {
+            mIdForFragmentContainer = id;
+        }
+    }
+
     private void setReplyText(String replyText) {
         if (replyText == null) return;
         mRestoredReplyText = replyText;
@@ -518,9 +525,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
-            if (mNote == null) {
-                reloadComment();
-            }
+            reloadComment();
             // tell the host to reload the comment list
             if (mOnCommentChangeListener != null)
                 mOnCommentChangeListener.onCommentChanged(ChangeType.EDITED);
@@ -531,12 +536,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * Reload the current comment from the local database
      */
     private void reloadComment() {
-        // TODO: make sure this method is useful
         if (mComment == null) {
             return;
         }
         CommentModel updatedComment = mCommentStore.getCommentByLocalId(mComment.getLocalSiteId());
-        setComment(updatedComment, mSite);
+        if (updatedComment != null) {
+            setComment(updatedComment, mSite);
+        }
     }
 
     /**
@@ -584,29 +590,25 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         setComment(comment, site);
                         return;
                     }
+
                     mCommentidToFetch = mNote.getParentCommentId() > 0 ? mNote.getParentCommentId() : mNote.getCommentId();
                     RemoteCommentPayload payload = new RemoteCommentPayload(site, mCommentidToFetch);
                     mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
                     setProgressVisible(true);
-                    return;
+
+                    if (mNote != null) {
+                        showCommentForNote(mNote, site);
+                    }
                 }
             }
-
-            if (mNote != null) {
-                showCommentForNote(mNote);
-            }
-
             return;
         }
-
-        // Make sure we have the latest version (in case the comment was locally modified)
-        mComment = mCommentStore.getCommentByLocalId(mComment.getId());
 
         scrollView.setVisibility(View.VISIBLE);
         layoutBottom.setVisibility(View.VISIBLE);
 
         // Add action buttons footer
-        if (mLayoutButtons.getParent() == null) {
+        if (mNote == null && mLayoutButtons.getParent() == null) {
             mCommentContentLayout.addView(mLayoutButtons);
         }
 
@@ -951,7 +953,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnTrashComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.TRASH) {
                 mBtnModerateIcon.setImageResource(R.drawable.ic_action_restore);
-                //mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.notification_status_unCommentStatus.APPROVED_dark));
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
@@ -1027,7 +1028,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * display the comment associated with the passed notification
      */
-    private void showCommentForNote(Note note) {
+    private void showCommentForNote(Note note, SiteModel site) {
         if (getView() == null) return;
         View view = getView();
 
@@ -1055,13 +1056,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // adjust enabledActions if this is a Jetpack site
-        if (canLike() && mSite != null && mSite.isJetpack()) {
+        if (canLike() && site != null && site.isJetpack()) {
             // delete LIKE action from enabledActions for Jetpack sites
             mEnabledActions.remove(EnabledActions.ACTION_LIKE);
         }
 
-        if (mSite != null) {
-            // FIXME: setComment(note.buildComment(), mSite);
+        if (site != null) {
+            setComment(note.buildComment(), site);
         }
 
         // Now we'll add a detail fragment list
