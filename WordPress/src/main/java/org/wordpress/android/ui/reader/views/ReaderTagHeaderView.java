@@ -14,6 +14,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.models.ReaderTagHeaderInfo;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -27,8 +28,6 @@ public class ReaderTagHeaderView extends RelativeLayout {
     private WPNetworkImageView mImageView;
     private TextView mTxtAttribution;
     private ReaderTag mCurrentTag;
-
-    private String mImageUrl;
 
     public ReaderTagHeaderView(Context context) {
         super(context);
@@ -67,6 +66,32 @@ public class ReaderTagHeaderView extends RelativeLayout {
         getImageAndAttribution();
     }
 
+    private void setTagHeaderInfo(final ReaderTagHeaderInfo info) {
+        int imageWidth = mImageView.getWidth();
+        int imageHeight = getContext().getResources().getDimensionPixelSize(R.dimen.reader_tag_header_image_height);
+        String photonUrl = PhotonUtils.getPhotonImageUrl(info.getImageUrl(), imageWidth, imageHeight);
+        mImageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
+
+        // show attribution line - author name when available, otherwise blog name or nothing
+        if (info.hasAuthorName()) {
+            mTxtAttribution.setText(getContext().getString(R.string.reader_photo_by, info.getAuthorName()));
+        } else if (info.hasBlogName()) {
+            mTxtAttribution.setText(getContext().getString(R.string.reader_photo_by, info.getBlogName()));
+        }
+
+        // show the source post when the attribution line is clicked
+        if (info.hasSourcePost()) {
+            mTxtAttribution.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderPostDetail(view.getContext(), info.getSourceBlogId(), info.getSourcePostId());
+                }
+            });
+        } else {
+            mTxtAttribution.setOnClickListener(null);
+        }
+    }
+
     private void getImageAndAttribution() {
         if (mCurrentTag == null) return;
 
@@ -84,43 +109,21 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 JSONObject jsonImage = jsonArray.optJSONObject(0);
                 if (jsonImage == null) return;
 
-                String url = JSONUtils.getString(jsonImage, "url");
-                String author = JSONUtils.getString(jsonImage, "author");
-                String blogTitle = JSONUtils.getString(jsonImage, "blog_title");
-
-                final long blogId = jsonImage.optLong("blog_id");
-                final long postId = jsonImage.optLong("post_id");
-
                 // current endpoint doesn't include the protocol
+                String url = JSONUtils.getString(jsonImage, "url");
                 if (!url.startsWith("http")) {
-                    mImageUrl = "https://" + url;
+                    url = "https://" + url;
                 } else {
-                    mImageUrl = url;
+                    url = url;
                 }
 
-                int imageWidth = mImageView.getWidth();
-                int imageHeight = getContext().getResources().getDimensionPixelSize(R.dimen.reader_tag_header_image_height);
-                String photonUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, imageWidth, imageHeight);
-                mImageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
-
-                // show attribution line - author name when available, otherwise blog name or nothing
-                if (!author.isEmpty()) {
-                    mTxtAttribution.setText(getContext().getString(R.string.reader_photo_by, author));
-                } else if (!blogTitle.isEmpty()) {
-                    mTxtAttribution.setText(getContext().getString(R.string.reader_photo_by, blogTitle));
-                }
-
-                // show the source post when the attribution line is clicked
-                if (blogId != 0 && postId != 0) {
-                    mTxtAttribution.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ReaderActivityLauncher.showReaderPostDetail(view.getContext(), blogId, postId);
-                        }
-                    });
-                } else {
-                    mTxtAttribution.setOnClickListener(null);
-                }
+                ReaderTagHeaderInfo info = new ReaderTagHeaderInfo();
+                info.setImageUrl(url);
+                info.setAuthorName(JSONUtils.getString(jsonImage, "author"));
+                info.setBlogName(JSONUtils.getString(jsonImage, "blog_title"));
+                info.setSourceBlogId(jsonImage.optLong("blog_id"));
+                info.setSourcePostId(jsonImage.optLong("post_id"));
+                setTagHeaderInfo(info);
             }
         }, null);
     }
