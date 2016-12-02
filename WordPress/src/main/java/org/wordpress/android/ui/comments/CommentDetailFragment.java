@@ -387,12 +387,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private void setReplyUniqueId() {
         if (mEditReply != null && isAdded()) {
-            if (mSite == null || mComment == null) {
-                mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d",
-                        mNote.getSiteId(), mNote.getCommentId()));
-            } else {
-                mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d",
-                        mSite.getSiteId(), mComment.getRemoteCommentId()));
+            String sId = null;
+            if (mSite != null && mComment != null) {
+                sId = String.format(Locale.US, "%d-%d", mSite.getSiteId(), mComment.getRemoteCommentId());
+            } else if (mNote != null) {
+                sId = String.format(Locale.US, "%d-%d", mNote.getSiteId(), mNote.getCommentId());
+            }
+            if (sId != null) {
+                mEditReply.getAutoSaveTextHelper().setUniqueId(sId);
+                mEditReply.getAutoSaveTextHelper().loadString(mEditReply);
             }
         }
     }
