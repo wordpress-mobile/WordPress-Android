@@ -41,14 +41,15 @@ import org.wordpress.android.util.ToastUtils;
 import javax.inject.Inject;
 
 public class EditCommentActivity extends AppCompatActivity {
-    static final String ARG_COMMENT = "ARG_COMMENT";
-    static final String ARG_NOTE_ID = "ARG_NOTE_ID";
+    static final String KEY_COMMENT = "KEY_COMMENT";
+    static final String KEY_NOTE_ID = "KEY_NOTE_ID";
 
     private static final int ID_DIALOG_SAVING = 0;
 
     private SiteModel mSite;
     private CommentModel mComment;
     private Note mNote;
+    private boolean mFetchingComment;
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -92,8 +93,8 @@ public class EditCommentActivity extends AppCompatActivity {
         }
 
         mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
-        mComment = (CommentModel) intent.getSerializableExtra(ARG_COMMENT);
-        final String noteId = intent.getStringExtra(ARG_NOTE_ID);
+        mComment = (CommentModel) intent.getSerializableExtra(KEY_COMMENT);
+        final String noteId = intent.getStringExtra(KEY_NOTE_ID);
 
         // If the noteId is passed, load the comment from the note
         if (noteId != null) {
@@ -115,6 +116,7 @@ public class EditCommentActivity extends AppCompatActivity {
             setFetchProgressVisible(true);
             mSite = mSiteStore.getSiteBySiteId(mNote.getSiteId());
             RemoteCommentPayload payload = new RemoteCommentPayload(mSite, mNote.getCommentId());
+            mFetchingComment = true;
             mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
         } else {
             showErrorAndFinish();
@@ -331,8 +333,8 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void onCommentFetched(CommentStore.OnCommentChanged event) {
-        if (isFinishing()) return;
-
+        if (isFinishing() || !mFetchingComment) return;
+        mFetchingComment = false;
         setFetchProgressVisible(false);
 
         if (event.isError()) {
@@ -341,7 +343,9 @@ public class EditCommentActivity extends AppCompatActivity {
             return;
         }
 
-        mComment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mNote.getCommentId());
+        if (mNote != null) {
+            mComment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mNote.getCommentId());
+        }
         configureViews();
     }
 

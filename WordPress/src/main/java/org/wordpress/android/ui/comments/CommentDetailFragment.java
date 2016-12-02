@@ -553,9 +553,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // https://code.google.com/p/android/issues/detail?id=15394#c45
         Intent intent = new Intent(getActivity(), EditCommentActivity.class);
         intent.putExtra(WordPress.SITE, mSite);
-        intent.putExtra(KEY_COMMENT, mComment);
-        if (mNote != null) {
-            intent.putExtra(EditCommentActivity.ARG_NOTE_ID, mNote.getId());
+        intent.putExtra(EditCommentActivity.KEY_COMMENT, mComment);
+        if (mNote != null && mComment == null) {
+            intent.putExtra(EditCommentActivity.KEY_NOTE_ID, mNote.getId());
         }
         startActivityForResult(intent, INTENT_COMMENT_EDITOR);
     }
@@ -600,6 +600,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
             return;
         }
+
+        // Make sure we have the latest version (in case the comment was locally modified)
+        mComment = mCommentStore.getCommentByLocalId(mComment.getId());
 
         scrollView.setVisibility(View.VISIBLE);
         layoutBottom.setVisibility(View.VISIBLE);
