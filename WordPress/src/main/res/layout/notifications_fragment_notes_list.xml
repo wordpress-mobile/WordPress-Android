@@ -73,17 +73,19 @@
             app:layout_scrollFlags="scroll|enterAlways">
 
             <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:fillViewport="true">
 
                 <RadioGroup
                     android:id="@+id/notifications_radio_group"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:layout_marginLeft="@dimen/margin_extra_large"
-                    android:layout_marginRight="@dimen/margin_extra_large"
-                    android:layout_marginTop="@dimen/margin_medium"
                     android:background="@drawable/calypso_segmented_control_background"
                     android:checkedButton="@+id/notifications_filter_all"
                     android:orientation="horizontal">
