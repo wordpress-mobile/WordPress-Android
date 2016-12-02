@@ -57,7 +57,9 @@ public class ReaderTagHeaderView extends RelativeLayout {
     public void setCurrentTag(final ReaderTag tag) {
         if (tag == null) return;
 
-        if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
+        boolean isTagChanged = !ReaderTag.isSameTag(tag, mCurrentTag);
+
+        if (isTagChanged) {
             mTxtAttribution.setText(null);
             mImageView.resetImage();
             mCurrentTag = tag;
@@ -66,10 +68,10 @@ public class ReaderTagHeaderView extends RelativeLayout {
         TextView txtTagName = (TextView) findViewById(R.id.text_tag);
         txtTagName.setText(tag.getLabel());
 
-        // use cached info if it's available, otherwise request it
+        // use cached info if it's available, otherwise request it if the tag has changed
         if (mTagInfoCache.hasInfoForTag(tag)) {
             setTagHeaderInfo(mTagInfoCache.getInfoForTag(tag));
-        } else {
+        } else if (isTagChanged) {
             getTagHeaderInfo();
         }
     }
