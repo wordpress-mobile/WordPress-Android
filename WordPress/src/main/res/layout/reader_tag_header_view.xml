@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:drawableLeft="@drawable/ic_genericon_tag_white_24dp"
-            android:drawablePadding="@dimen/margin_medium"
+            android:drawablePadding="@dimen/margin_small"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"

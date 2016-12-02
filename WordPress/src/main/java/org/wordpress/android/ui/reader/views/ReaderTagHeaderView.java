@@ -62,7 +62,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
         mCurrentTag = tag;
 
         TextView txtTagName = (TextView) findViewById(R.id.text_tag);
-        txtTagName.setText(tag.getTagSlug());
+        txtTagName.setText(tag.getLabel());
 
         getImageAndAttribution();
     }
