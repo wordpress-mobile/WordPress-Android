@@ -16,13 +16,7 @@ public class CommentActions {
     private CommentActions() {
         throw new AssertionError();
     }
-
-    /*
-     * listener when a comment action is performed
-     */
-    public interface CommentActionListener {
-        void onActionResult(CommentActionResult result);
-    }
+    
     /*
      * used by comment fragments to alert container activity of a change to one or more
      * comments (moderated, deleted, added, etc.)
