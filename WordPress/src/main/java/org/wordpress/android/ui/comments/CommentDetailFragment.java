@@ -83,11 +83,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.fluxc.model.CommentStatus.APPROVED;
-import static org.wordpress.android.fluxc.model.CommentStatus.SPAM;
-import static org.wordpress.android.fluxc.model.CommentStatus.TRASH;
-import static org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED;
-
 /**
  * comment detail displayed from both the notification list and the comment list
  * prior to this there were separate comment detail screens for each list
@@ -308,10 +303,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             public void onClick(View v) {
                 if (mComment == null) return;
 
-                if (CommentStatus.fromString(mComment.getStatus()) == SPAM) {
-                    moderateComment(APPROVED);
+                if (CommentStatus.fromString(mComment.getStatus()) == CommentStatus.SPAM) {
+                    moderateComment(CommentStatus.APPROVED);
                 } else {
-                    moderateComment(SPAM);
+                    moderateComment(CommentStatus.SPAM);
                 }
             }
         });
@@ -324,7 +319,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 String status = mComment.getStatus();
 
                 // If the comment status is trash or spam, next deletion is a permanent deletion.
-                if (TRASH.equals(status) || SPAM.equals(status)) {
+                if (status.equals(CommentStatus.TRASH.toString()) || status.equals(CommentStatus.SPAM.toString())) {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
                     dialogBuilder.setTitle(getResources().getText(R.string.delete));
                     dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
@@ -341,7 +336,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     dialogBuilder.create().show();
 
                 } else {
-                    moderateComment(TRASH);
+                    moderateComment(CommentStatus.TRASH);
                 }
 
             }
@@ -787,7 +782,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 AnalyticsTracker.track(Stat.NOTIFICATION_APPROVED);
                 break;
             case UNAPPROVED:
-                AnalyticsTracker.track(Stat.NOTIFICATION_UNAPPROVED);
+                AnalyticsTracker.track(Stat.NOTIFICATION_APPROVED);
                 break;
             case SPAM:
                 AnalyticsTracker.track(Stat.NOTIFICATION_FLAGGED_AS_SPAM);
@@ -814,6 +809,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onModerateComment(mSite, mComment, newStatus);
         }
+
+        if (newStatus == CommentStatus.DELETED)
 
         // Actual moderation
         mPreviousStatus = mComment.getStatus();
@@ -899,8 +896,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // comment status is only shown if this comment is from one of this user's blogs and the
-        // comment hasn't been approved
-        if (mIsUsersBlog && commentStatus != APPROVED) {
+        // comment hasn't been CommentStatus.APPROVED
+        if (mIsUsersBlog && commentStatus != CommentStatus.APPROVED) {
             mTxtStatus.setText(getString(statusTextResId).toUpperCase());
             mTxtStatus.setTextColor(statusColor);
             if (mTxtStatus.getVisibility() != View.VISIBLE) {
@@ -937,9 +934,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (canTrash()) {
             mBtnTrashComment.setVisibility(View.VISIBLE);
-            if (commentStatus == TRASH) {
+            if (commentStatus == CommentStatus.TRASH) {
                 mBtnModerateIcon.setImageResource(R.drawable.ic_action_restore);
-                //mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.notification_status_unapproved_dark));
+                //mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.notification_status_unCommentStatus.APPROVED_dark));
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
@@ -963,7 +960,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         CommentStatus newStatus = CommentStatus.APPROVED;
         if (mComment.getStatus().equals(CommentStatus.APPROVED.toString())) {
-            newStatus = UNAPPROVED;
+            newStatus = CommentStatus.UNAPPROVED;
         }
 
         mComment.setStatus(newStatus.toString());
@@ -973,7 +970,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setModerateButtonForStatus(CommentStatus status) {
-        if (status == APPROVED) {
+        if (status == CommentStatus.APPROVED) {
             mBtnModerateIcon.setImageResource(R.drawable.ic_action_approve_active);
             mBtnModerateTextView.setText(R.string.comment_status_approved);
             mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.notification_status_unapproved_dark));
@@ -1089,9 +1086,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             // Optimistically set comment to approved when liking an unapproved comment
             // WP.com will set a comment to approved if it is liked while unapproved
             if (mBtnLikeComment.isActivated() && mComment.getStatus().equals(CommentStatus.UNAPPROVED.toString())) {
-                mComment.setStatus(APPROVED.toString());
-                mNotificationsDetailListFragment.refreshBlocksForCommentStatus(APPROVED);
-                setModerateButtonForStatus(APPROVED);
+                mComment.setStatus(CommentStatus.APPROVED.toString());
+                mNotificationsDetailListFragment.refreshBlocksForCommentStatus(CommentStatus.APPROVED);
+                setModerateButtonForStatus(CommentStatus.APPROVED);
             }
         }
         mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(

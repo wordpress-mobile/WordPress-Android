@@ -345,6 +345,9 @@ public class EditCommentActivity extends AppCompatActivity {
 
         if (mNote != null) {
             mComment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mNote.getCommentId());
+        } else if (mComment != null) {
+            // Reload the comment
+            mComment = mCommentStore.getCommentByLocalId(mComment.getId());
         }
         configureViews();
     }
