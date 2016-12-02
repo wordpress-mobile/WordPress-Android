@@ -2,62 +2,54 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_tag_info"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:layout_height="@dimen/reader_tag_header_image_height"
+    android:layout_marginBottom="@dimen/margin_extra_small"
+    tools:background="@color/grey">
 
-    <RelativeLayout
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_tag_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_tag_header_image_height"
-        android:layout_marginBottom="@dimen/margin_extra_small"
-        tools:background="@color/grey">
+        android:scaleType="centerCrop" />
 
-        <org.wordpress.android.widgets.WPNetworkImageView
-            android:id="@+id/image_tag_header"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/reader_tag_header_image_height"
-            android:scaleType="centerCrop" />
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableLeft="@drawable/ic_genericon_tag_white_24dp"
+        android:drawablePadding="@dimen/margin_small"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:shadowColor="@color/grey_dark"
+        android:shadowDx="@dimen/reader_photo_title_shadow_offset"
+        android:shadowDy="@dimen/reader_photo_title_shadow_offset"
+        android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_double_extra_large"
+        android:textStyle="bold"
+        tools:text="text_tag" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:drawableLeft="@drawable/ic_genericon_tag_white_24dp"
-            android:drawablePadding="@dimen/margin_small"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:shadowColor="@color/grey_dark"
-            android:shadowDx="@dimen/reader_photo_title_shadow_offset"
-            android:shadowDy="@dimen/reader_photo_title_shadow_offset"
-            android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_double_extra_large"
-            android:textStyle="bold"
-            tools:text="text_tag" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_attribution"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
-            android:background="?android:selectableItemBackground"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:shadowColor="@color/grey_dark"
-            android:shadowDx="@dimen/reader_photo_title_shadow_offset"
-            android:shadowDy="@dimen/reader_photo_title_shadow_offset"
-            android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_medium"
-            android:textStyle="bold"
-            tools:text="text_attribution" />
-
-    </RelativeLayout>
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_attribution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:background="?android:selectableItemBackground"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:shadowColor="@color/grey_dark"
+        android:shadowDx="@dimen/reader_photo_title_shadow_offset"
+        android:shadowDy="@dimen/reader_photo_title_shadow_offset"
+        android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_medium"
+        android:textStyle="bold"
+        tools:text="text_attribution" />
 
 </RelativeLayout>
