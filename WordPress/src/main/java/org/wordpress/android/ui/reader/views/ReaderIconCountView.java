@@ -85,6 +85,6 @@ public class ReaderIconCountView extends LinearLayout {
     }
 
     public void setCount(int count) {
-        mTextCount.setText(String.valueOf(count));
+        mTextCount.setText(count != 0 ? String.valueOf(count) : "");
     }
 }
