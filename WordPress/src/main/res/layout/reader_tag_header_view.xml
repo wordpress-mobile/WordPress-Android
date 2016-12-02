@@ -56,7 +56,8 @@
             android:shadowDy="@dimen/reader_photo_title_shadow_offset"
             android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_small"
+            android:textSize="@dimen/text_sz_medium"
+            android:textStyle="bold"
             tools:text="text_attribution" />
 
     </RelativeLayout>

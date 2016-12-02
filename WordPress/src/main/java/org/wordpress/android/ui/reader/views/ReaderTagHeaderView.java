@@ -103,20 +103,12 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 String photonUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, imageWidth, imageHeight);
                 mImageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
 
-                // show attribution line
-                boolean hasAuthor = !author.isEmpty();
-                boolean hasTitle = !blogTitle.isEmpty();
-                String attribution;
-                if (hasAuthor && hasTitle && !author.equalsIgnoreCase(blogTitle)) {
-                    attribution = getContext().getString(R.string.reader_photo_by, author + ", " + blogTitle);
-                } else if (hasAuthor) {
-                    attribution = getContext().getString(R.string.reader_photo_by, author);
-                } else if (hasTitle) {
-                    attribution = getContext().getString(R.string.reader_photo_by, blogTitle);
-                } else {
-                    attribution = null;
+                // show attribution line - author name when available, otherwise blog name or nothing
+                if (!author.isEmpty()) {
+                    mTxtAttribution.setText(getContext().getString(R.string.reader_photo_by, author));
+                } else if (!blogTitle.isEmpty()) {
+                    mTxtAttribution.setText(getContext().getString(R.string.reader_photo_by, blogTitle));
                 }
-                mTxtAttribution.setText(attribution);
 
                 // show the source post when the attribution line is clicked
                 if (blogId != 0 && postId != 0) {
