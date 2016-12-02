@@ -87,7 +87,9 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 String url = JSONUtils.getString(jsonImage, "url");
                 String author = JSONUtils.getString(jsonImage, "author");
                 String blogTitle = JSONUtils.getString(jsonImage, "blog_title");
+
                 final long blogId = jsonImage.optLong("blog_id");
+                final long postId = jsonImage.optLong("post_id");
 
                 // current endpoint doesn't include the protocol
                 if (!url.startsWith("http")) {
@@ -100,14 +102,6 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 int imageHeight = getContext().getResources().getDimensionPixelSize(R.dimen.reader_tag_header_image_height);
                 String photonUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, imageWidth, imageHeight);
                 mImageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
-
-                // show photo fullscreen when tapped
-                mImageView.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ReaderActivityLauncher.showReaderPhotoViewer(view.getContext(), mImageUrl, null);
-                    }
-                });
 
                 // show attribution line
                 boolean hasAuthor = !author.isEmpty();
@@ -124,14 +118,16 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 }
                 mTxtAttribution.setText(attribution);
 
-                // show blog preview when attribution line is tapped
-                if (blogId != 0) {
+                // show the source post when the attribution line is clicked
+                if (blogId != 0 && postId != 0) {
                     mTxtAttribution.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), blogId);
+                            ReaderActivityLauncher.showReaderPostDetail(view.getContext(), blogId, postId);
                         }
                     });
+                } else {
+                    mTxtAttribution.setOnClickListener(null);
                 }
             }
         }, null);

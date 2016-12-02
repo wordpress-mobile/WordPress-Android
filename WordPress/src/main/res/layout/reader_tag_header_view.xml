@@ -12,7 +12,8 @@
         android:layout_height="@dimen/reader_tag_header_image_height"
         android:layout_marginBottom="@dimen/margin_extra_small"
         android:paddingLeft="@dimen/reader_card_margin"
-        android:paddingRight="@dimen/reader_card_margin">
+        android:paddingRight="@dimen/reader_card_margin"
+        tools:background="@color/grey">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_tag_header"
@@ -33,7 +34,7 @@
             android:shadowDy="@dimen/reader_photo_title_shadow_offset"
             android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_extra_large"
+            android:textSize="@dimen/text_sz_double_extra_large"
             android:textStyle="bold"
             tools:text="text_tag" />
 
@@ -43,8 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginRight="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:background="?android:selectableItemBackground"
             android:ellipsize="end"
             android:maxLines="1"
             android:shadowColor="@color/grey_dark"
