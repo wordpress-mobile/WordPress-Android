@@ -112,6 +112,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION = "10";
     private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID = "102";
 
+    private static final String MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_SECTION = "10";
+    private static final String MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_ID = "11";
+
+    private static final String INVALID_URL_HELPSHIFT_FAQ_SECTION = "10";
+    private static final String INVALID_URL_HELPSHIFT_FAQ_ID = "2";
+
+    private static final String NO_SITE_HELPSHIFT_FAQ_SECTION = "10";
+    private static final String NO_SITE_HELPSHIFT_FAQ_ID = "2"; //using the same as in INVALID URL
+
     protected EditText mUsernameEditText;
     protected EditText mPasswordEditText;
     protected EditText mUrlEditText;
@@ -1249,17 +1258,23 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 signInAndFetchBlogListWPCom();
                 break;
             case NO_SITE_ERROR:
-                showGenericErrorDialog(getResources().getString(R.string.no_site_error));
+                showGenericErrorDialog(getResources().getString(R.string.no_site_error),
+                        NO_SITE_HELPSHIFT_FAQ_ID,
+                        NO_SITE_HELPSHIFT_FAQ_SECTION);
                 break;
             case INVALID_URL:
-                showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message));
+                showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message),
+                        INVALID_URL_HELPSHIFT_FAQ_ID,
+                        INVALID_URL_HELPSHIFT_FAQ_SECTION);
                 break;
             case MISSING_XMLRPC_METHOD:
-                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error));
+                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error),
+                        MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_ID,
+                        MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_SECTION);
                 break;
             case XMLRPC_BLOCKED:
-                //TODO: use this to help the user a bit:  pass the Helpshift page ID or section ID
-                //on the rest of the error cases in this switch
+                // use this to help the user a bit:  pass the Helpshift page ID or section ID
+                // on the rest of the error cases in this switch
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_post_blocked_error),
                         XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID,
                         XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION);
