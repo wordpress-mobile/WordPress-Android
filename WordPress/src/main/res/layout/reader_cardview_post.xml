@@ -84,13 +84,15 @@
         <FrameLayout
             android:id="@+id/frame_photo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/reader_image_border"
+            android:layout_marginBottom="@dimen/margin_small">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_featured"
+                android:padding="1dp"
                 style="@style/ReaderImageView.Featured.CardView"
-                android:layout_marginBottom="@dimen/margin_small"
-                tools:background="@color/grey_dark" />
+                tools:background="@color/white" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_photo_title"
