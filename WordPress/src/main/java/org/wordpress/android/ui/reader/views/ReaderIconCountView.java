@@ -85,13 +85,6 @@ public class ReaderIconCountView extends LinearLayout {
     }
 
     public void setCount(int count) {
-        switch (mIconType) {
-            case ICON_LIKE:
-                mTextCount.setText(ReaderUtils.getShortLikeLabelText(getContext(), count));
-                break;
-            case ICON_COMMENT:
-                mTextCount.setText(ReaderUtils.getShortCommentLabelText(getContext(), count));
-                break;
-        }
+        mTextCount.setText(String.valueOf(count));
     }
 }
