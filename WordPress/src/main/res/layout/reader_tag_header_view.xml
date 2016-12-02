@@ -11,8 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_tag_header_image_height"
         android:layout_marginBottom="@dimen/margin_extra_small"
-        android:paddingLeft="@dimen/reader_card_margin"
-        android:paddingRight="@dimen/reader_card_margin"
         tools:background="@color/grey">
 
         <org.wordpress.android.widgets.WPNetworkImageView
