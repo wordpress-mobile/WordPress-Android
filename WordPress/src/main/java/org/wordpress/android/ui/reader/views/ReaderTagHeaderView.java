@@ -60,9 +60,8 @@ public class ReaderTagHeaderView extends RelativeLayout {
         if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
             mTxtAttribution.setText(null);
             mImageView.resetImage();
+            mCurrentTag = tag;
         }
-
-        mCurrentTag = tag;
 
         TextView txtTagName = (TextView) findViewById(R.id.text_tag);
         txtTagName.setText(tag.getLabel());
