@@ -20,6 +20,8 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.HashMap;
+
 /**
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
  */
@@ -28,6 +30,8 @@ public class ReaderTagHeaderView extends RelativeLayout {
     private WPNetworkImageView mImageView;
     private TextView mTxtAttribution;
     private ReaderTag mCurrentTag;
+
+    private static final ReaderTagHeaderInfoList mTagInfoCache = new ReaderTagHeaderInfoList();
 
     public ReaderTagHeaderView(Context context) {
         super(context);
@@ -63,7 +67,12 @@ public class ReaderTagHeaderView extends RelativeLayout {
         TextView txtTagName = (TextView) findViewById(R.id.text_tag);
         txtTagName.setText(tag.getLabel());
 
-        getImageAndAttribution();
+        // use cached info if it's available, otherwise request it
+        if (mTagInfoCache.hasInfoForTag(tag)) {
+            setTagHeaderInfo(mTagInfoCache.getInfoForTag(tag));
+        } else {
+            getTagHeaderInfo();
+        }
     }
 
     private void setTagHeaderInfo(final ReaderTagHeaderInfo info) {
@@ -92,7 +101,10 @@ public class ReaderTagHeaderView extends RelativeLayout {
         }
     }
 
-    private void getImageAndAttribution() {
+    /*
+     * performs a GET request for the info we display here
+     */
+    private void getTagHeaderInfo() {
         if (mCurrentTag == null) return;
 
         String tagNameForApi = ReaderUtils.sanitizeWithDashes(mCurrentTag.getTagSlug());
@@ -113,8 +125,6 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 String url = JSONUtils.getString(jsonImage, "url");
                 if (!url.startsWith("http")) {
                     url = "https://" + url;
-                } else {
-                    url = url;
                 }
 
                 ReaderTagHeaderInfo info = new ReaderTagHeaderInfo();
@@ -123,8 +133,31 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 info.setBlogName(JSONUtils.getString(jsonImage, "blog_title"));
                 info.setSourceBlogId(jsonImage.optLong("blog_id"));
                 info.setSourcePostId(jsonImage.optLong("post_id"));
+
+                // add to cached list then display it
+                mTagInfoCache.setInfoForTag(mCurrentTag, info);
                 setTagHeaderInfo(info);
             }
         }, null);
     }
+
+    /*
+     * cache of tag header info
+     */
+    private static class ReaderTagHeaderInfoList extends HashMap<String, ReaderTagHeaderInfo> {
+        public ReaderTagHeaderInfo getInfoForTag(ReaderTag tag) {
+            return this.get(getKeyForTag(tag));
+        }
+        public boolean hasInfoForTag(ReaderTag tag) {
+            return this.containsKey(getKeyForTag(tag));
+        }
+        public void setInfoForTag(ReaderTag tag, ReaderTagHeaderInfo info) {
+            this.put(getKeyForTag(tag), info);
+        }
+        private String getKeyForTag(ReaderTag tag) {
+            return tag.getTagSlug();
+        }
+    }
+
+
 }
