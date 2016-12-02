@@ -4,14 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/reader_tag_header_image_height"
-    android:layout_marginBottom="@dimen/margin_extra_small"
-    tools:background="@color/grey">
+    android:layout_marginBottom="@dimen/margin_extra_small">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_tag_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reader_tag_header_image_height"
         android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/reader_tag_header_image_height"
+        android:background="@color/translucent_grey_dark" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_tag"
