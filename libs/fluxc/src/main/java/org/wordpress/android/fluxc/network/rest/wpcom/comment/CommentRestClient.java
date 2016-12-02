@@ -280,7 +280,11 @@ public class CommentRestClient extends BaseWPComRestClient {
         if (response.author != null) {
             comment.setAuthorUrl(response.author.URL);
             comment.setAuthorName(response.author.name);
-            comment.setAuthorEmail(response.author.email);
+            if ("false".equals(response.author.email)) {
+                comment.setAuthorEmail("");
+            } else {
+                comment.setAuthorEmail(response.author.email);
+            }
             comment.setAuthorProfileImageUrl(response.author.avatar_URL);
         }
 
