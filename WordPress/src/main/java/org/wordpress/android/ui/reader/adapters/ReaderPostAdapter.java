@@ -133,6 +133,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ImageView imgMore;
         private final ImageView imgVideoOverlay;
+        private final ImageView imgVisit;
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatarOrBlavatar;
@@ -169,6 +170,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             imgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
+            imgVisit = (ImageView) itemView.findViewById(R.id.image_visit_icon);
 
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
             imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
@@ -180,7 +182,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             followButton = (ReaderFollowButton) postHeaderView.findViewById(R.id.follow_button);
 
             // show post in internal browser when "visit" is clicked
-            txtVisit.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener visitListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
@@ -189,7 +191,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         ReaderActivityLauncher.openUrl(view.getContext(), post.getUrl());
                     }
                 }
-            });
+            };
+            txtVisit.setOnClickListener(visitListener);
+            imgVisit.setOnClickListener(visitListener);
 
             // show blog preview when post header is tapped
             postHeaderView.setOnClickListener(new View.OnClickListener() {

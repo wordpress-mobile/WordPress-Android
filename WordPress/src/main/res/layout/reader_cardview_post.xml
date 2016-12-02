@@ -177,14 +177,22 @@
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small">
 
+            <ImageView
+                android:id="@+id/image_visit_icon"
+                android:layout_width="@dimen/reader_count_icon"
+                android:layout_height="@dimen/reader_count_icon"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_extra_small"
+                android:background="?android:selectableItemBackground"
+                app:srcCompat="@drawable/reader_visit" />
+
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_visit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_visit_icon"
                 android:background="?android:selectableItemBackground"
-                android:drawableLeft="@drawable/reader_visit"
-                android:drawablePadding="@dimen/margin_extra_small"
                 android:gravity="center_vertical"
                 android:text="@string/reader_label_visit"
                 android:textColor="@color/reader_count_text"
