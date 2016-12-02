@@ -1399,8 +1399,6 @@
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
     <string name="vertical_line" translatable="false">\u007C</string>
-    <string name="arrow_left" translatable="false">\uffe9</string>
-    <string name="arrow_right" translatable="false">\uffeb</string>
 
     <!-- Noticons -->
     <string name="noticon_clock" translatable="false">\uf303</string>
