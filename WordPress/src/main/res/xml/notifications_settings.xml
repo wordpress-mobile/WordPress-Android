@@ -2,17 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:key="wp_pref_notifications_root">
     <PreferenceCategory
-        android:key="@string/pref_notification_blogs"
-        android:title="@string/your_sites">
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:key="@string/pref_notification_other_category"
-        android:title="@string/notifications_other">
-        <PreferenceScreen
-            android:key="@string/pref_notification_other_blogs"
-            android:title="@string/notifications_comments_other_blogs"/>
-    </PreferenceCategory>
-    <PreferenceCategory
         android:key="@string/pref_notification_sights_sounds"
         android:title="@string/notifications_sights_and_sounds">
         <RingtonePreference
@@ -29,5 +18,16 @@
             android:defaultValue="true"
             android:key="wp_pref_notification_light"
             android:title="@string/notification_blink"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="@string/pref_notification_blogs"
+        android:title="@string/your_sites">
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="@string/pref_notification_other_category"
+        android:title="@string/notifications_other">
+        <PreferenceScreen
+            android:key="@string/pref_notification_other_blogs"
+            android:title="@string/notifications_comments_other_blogs"/>
     </PreferenceCategory>
 </PreferenceScreen>
