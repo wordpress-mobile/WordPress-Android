@@ -226,8 +226,6 @@
                 android:layout_centerVertical="true"
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/more"
-                android:paddingBottom="@dimen/margin_medium"
-                android:paddingTop="@dimen/margin_medium"
                 app:srcCompat="@drawable/ic_action_more_grey" />
 
         </RelativeLayout>
