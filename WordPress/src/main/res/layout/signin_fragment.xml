@@ -111,7 +111,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
-                    app:srcCompat="@drawable/dashicon_admin_users"
+                    app:srcCompat="@drawable/gridicons_user"
                     android:tint="@color/grey_darken_10" />
             </RelativeLayout>
 
@@ -141,7 +141,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
-                    app:srcCompat="@drawable/dashicon_lock"
+                    app:srcCompat="@drawable/gridicons_lock"
                     android:tint="@color/grey_darken_10" />
 
                 <ImageView
@@ -165,7 +165,7 @@
                 android:animateLayoutChanges="true"
                 android:visibility="gone">
 
-                <org.wordpress.android.widgets.WPEditText
+                <org.wordpress.android.widgets.ContextMenuEditText
                     android:id="@+id/nux_two_step"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
@@ -204,7 +204,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
-                    app:srcCompat="@drawable/dashicon_admin_site"
+                    app:srcCompat="@drawable/gridicons_globe"
                     android:tint="@color/grey_darken_10" />
             </RelativeLayout>
             <RelativeLayout

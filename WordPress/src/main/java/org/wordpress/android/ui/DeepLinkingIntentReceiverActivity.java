@@ -16,14 +16,10 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
-import java.util.List;
-
 /**
  * An activity to handle deep linking and intercepting
  *
  * wordpress://viewpost?blogId={blogId}&postId={postId}
- * http[s]://wordpress.com/read/blogs/{blogId}/posts/{postId}
- * http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
  *
  * Redirects users to the reader activity along with IDs passed in the intent
  */
@@ -36,7 +32,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         READER_FEED
     }
 
-    private InterceptType mInterceptType;
+    private String mInterceptedUri;
     private String mBlogId;
     private String mPostId;
 
@@ -51,36 +47,10 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
+            mInterceptedUri = uri.toString();
 
-            switch (uri.getScheme()) {
-                case "wordpress":
-                    mInterceptType = InterceptType.VIEWPOST;
-                    mBlogId = uri.getQueryParameter("blogId");
-                    mPostId = uri.getQueryParameter("postId");
-                    break;
-                case "http":
-                case "https":
-                    List<String> segments = uri.getPathSegments();
-
-                    // Handled URLs look like this: http[s]://wordpress.com/read/feeds/{feedId}/posts/{feedItemId}
-                    //  with the first segment being 'read'.
-                    if (segments != null && segments.get(0).equals("read")) {
-                        if (segments.size() > 2) {
-                            mBlogId = segments.get(2);
-
-                            if (segments.get(1).equals("blogs")) {
-                                mInterceptType = InterceptType.READER_BLOG;
-                            } else if (segments.get(1).equals("feeds")) {
-                                mInterceptType = InterceptType.READER_FEED;
-                            }
-                        }
-
-                        if (segments.size() > 4 && segments.get(3).equals("posts")) {
-                            mPostId = segments.get(4);
-                        }
-                    }
-                    break;
-            }
+            mBlogId = uri.getQueryParameter("blogId");
+            mPostId = uri.getQueryParameter("postId");
 
             // if user is logged in, show the post right away - otherwise show welcome activity
             // and then show the post once the user has logged in
@@ -109,25 +79,11 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                 final long blogId = Long.parseLong(mBlogId);
                 final long postId = Long.parseLong(mPostId);
 
-                if (mInterceptType != null) {
-                    switch (mInterceptType) {
-                        case VIEWPOST:
-                            AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED,
-                                    blogId, postId);
-                            break;
-                        case READER_BLOG:
-                            AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_BLOG_POST_INTERCEPTED,
-                                    blogId, postId);
-                            break;
-                        case READER_FEED:
-                            AnalyticsUtils.trackWithFeedPostDetails(AnalyticsTracker.Stat.READER_FEED_POST_INTERCEPTED,
-                                    blogId, postId);
-                            break;
-                    }
-                }
+                AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED,
+                        blogId, postId);
 
-                ReaderActivityLauncher.showReaderPostDetail(this, InterceptType.READER_FEED.equals(mInterceptType),
-                        blogId, postId, false);
+                ReaderActivityLauncher.showReaderPostDetail(this, false, blogId, postId, null, 0, false,
+                        mInterceptedUri);
             } catch (NumberFormatException e) {
                 AppLog.e(T.READER, e);
             }

@@ -16,6 +16,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -86,7 +87,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 50;
+    private static final int DATABASE_VERSION = 51;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -255,6 +256,7 @@ public class WordPressDB {
         SiteSettingsTable.createTable(db);
         CommentTable.createTables(db);
         SuggestionTable.createTables(db);
+        NotificationsTable.createTables(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -431,6 +433,10 @@ public class WordPressDB {
                 PeopleTable.createViewersTable(db);
                 currentVersion++;
             case 49:
+                // Delete simperium DB since we're removing Simperium from the app.
+                ctx.deleteDatabase("simperium-store");
+                currentVersion++;
+            case 50:
                 resetSiteSettingsTable();
                 currentVersion++;
         }

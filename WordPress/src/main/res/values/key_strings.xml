@@ -278,4 +278,6 @@
     <string name="asset_statements" translatable="false">
         [{\"include\": \"https://wordpress.com/.well-known/assetlinks.json\"}]
     </string>
+
+    <string name="wordpresscom_sample_post" translatable="false">https://en.blog.wordpress.com/2016/09/26/the-best-of-wordpress-september-2016/</string>
 </resources>

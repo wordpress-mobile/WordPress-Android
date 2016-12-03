@@ -71,6 +71,7 @@
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="sign_in">Log in</string>
     <string name="signing_out">Logging out…</string>
+    <string name="sign_in_wpcom">Log in to WordPress.com</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
@@ -83,6 +84,7 @@
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
     <string name="send">Send</string>
+    <string name="swipe_for_more">Swipe for more</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -172,6 +174,7 @@
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
+    <string name="confirm_discard_changes">Discard unsaved changes?</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Delete selected item?</string>
@@ -852,6 +855,8 @@
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
     <string name="unread">Unread</string>
     <string name="follows">Follows</string>
+    <string name="notifications_label_new_notifications">New notifications</string>
+    <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
@@ -1100,10 +1105,12 @@
     <string name="reader_untitled_post">(Untitled)</string>
 
     <!-- activity titles -->
+    <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_blog_preview">Reader Blog</string>
     <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_post_detail">Reader Post</string>
+    <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
@@ -1195,10 +1202,19 @@
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
+    <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
+    <string name="reader_toast_err_comment_not_found">Comment not found!</string>
+    <string name="reader_toast_err_already_liked">You have already liked that comment</string>
+
+    <!-- snackbar messages -->
+    <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
     <string name="reader_err_get_post_not_authorized">You\'re not authorized to view this post</string>
+    <string name="reader_err_get_post_not_authorized_fallback">You\'re not authorized to view this post. Use the top action button to try a browser instead.</string>
+    <string name="reader_err_get_post_not_authorized_signin">You\'re not authorized to view this post. Try signing in to WordPress.com first.</string>
+    <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorized to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
     <string name="reader_err_get_post_not_found">This post no longer exists</string>
 
     <!-- empty list/grid text -->
@@ -1293,6 +1309,7 @@
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
     <string name="verification_code">Verification code</string>
     <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="invalid_verification_code_format">Must be six-digit number</string>
     <string name="verify">Verify</string>
     <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
     <string name="two_step_footer_button">Send code via text message</string>

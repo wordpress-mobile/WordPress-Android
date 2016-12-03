@@ -92,6 +92,10 @@
                 <data
                     android:host="signin"
                     android:scheme="wordpress" />
+
+                <data
+                    android:host="magic-login"
+                    android:scheme="wordpress" />
             </intent-filter>
         </activity>
 
@@ -243,7 +247,8 @@
         <!-- Deep Linking Activity -->
         <activity
             android:name=".ui.DeepLinkingIntentReceiverActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/Calypso.NoActionBar"
+            android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -253,37 +258,6 @@
                 <data
                     android:host="viewpost"
                     android:scheme="wordpress" />
-            </intent-filter>
-
-            <intent-filter>
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/feeds/.*/posts/.*"
-                    android:scheme="https" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/feeds/.*/posts/.*"
-                    android:scheme="http" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/blogs/.*/posts/.*"
-                    android:scheme="https" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/blogs/.*/posts/.*"
-                    android:scheme="http" >
-                </data>
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
 
@@ -295,9 +269,65 @@
         </activity>
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
-            android:label="@string/reader_title_post_detail"
+            android:excludeFromRecents="true"
+            android:label="@string/reader_title_deeplink"
             android:theme="@style/Calypso.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" >
+            <intent-filter>
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/2.../../../.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/2.../../../.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/19../../../.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/19../../../.*"
+                    android:scheme="http" >
+                </data>
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
@@ -455,6 +485,15 @@
             android:name=".push.NotificationsProcessingService"
             android:exported="false"
             android:label="Notifications Quick Actions processing Service" />
+        <service
+            android:name=".ui.notifications.services.NotificationsUpdateService"
+            android:exported="false"
+            android:label="Notifications Update Service" />
+        <service
+            android:name=".push.NotificationsScreenLockWatchService"
+            android:exported="false"
+            android:label="Notifications Screen Lock watch Service" />
+
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"
@@ -483,6 +522,11 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
+        </receiver>
+        <receiver android:name=".ui.notifications.ScreenLockUnlockBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
         </receiver>
 
         <!-- Google Cloud Messaging receiver and services -->
@@ -520,23 +564,6 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-
-        <activity
-            android:theme="@style/Calypso.NoActionBar"
-            android:name=".ui.accounts.login.MagicLinkSignInActivity"
-            android:label="@string/sign_in"
-            android:windowSoftInputMode="stateAlwaysHidden">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="magic-login"
-                    android:scheme="wordpress" >
-                </data>
-            </intent-filter>
-        </activity>
 
         <activity
             android:name=".ui.HelpshiftDeepLinkReceiver">

@@ -130,6 +130,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STATS_PERIOD_YEARS_ACCESSED:
                 predefinedEventProperties.put("period", "years");
                 break;
+            case NOTIFICATION_QUICK_ACTIONS_LIKED:
+            case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
+            case NOTIFICATION_QUICK_ACTIONS_APPROVED:
+                predefinedEventProperties.put("is_quick_action", true);
+                break;
         }
 
         final String user;
@@ -256,12 +261,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_accessed";
             case READER_ARTICLE_COMMENTED_ON:
                 return "reader_article_commented_on";
+            case READER_ARTICLE_COMMENTS_OPENED:
+                return "reader_article_comments_opened";
+            case READER_ARTICLE_COMMENT_LIKED:
+                return "reader_article_comment_liked";
+            case READER_ARTICLE_COMMENT_UNLIKED:
+                return "reader_article_comment_unliked";
             case READER_ARTICLE_LIKED:
                 return "reader_article_liked";
             case READER_ARTICLE_OPENED:
                 return "reader_article_opened";
             case READER_ARTICLE_UNLIKED:
                 return "reader_article_unliked";
+            case READER_ARTICLE_RENDERED :
+                return "reader_article_rendered";
             case READER_BLOG_BLOCKED:
                 return "reader_blog_blocked";
             case READER_BLOG_FOLLOWED:
@@ -296,14 +309,24 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_searchcard_clicked";
             case READER_TAG_UNFOLLOWED:
                 return "reader_reader_tag_unfollowed";
-            case READER_RELATED_POST_CLICKED:
-                return "reader_related_post_clicked";
+            case READER_GLOBAL_RELATED_POST_CLICKED:
+                return "reader_related_post_from_other_site_clicked";
+            case READER_LOCAL_RELATED_POST_CLICKED:
+                return "reader_related_post_from_same_site_clicked";
             case READER_VIEWPOST_INTERCEPTED:
                 return "reader_viewpost_intercepted";
             case READER_BLOG_POST_INTERCEPTED:
                 return "reader_blog_post_intercepted";
             case READER_FEED_POST_INTERCEPTED:
                 return "reader_feed_post_intercepted";
+            case READER_WPCOM_BLOG_POST_INTERCEPTED:
+                return "reader_wpcom_blog_post_intercepted";
+            case READER_SIGN_IN_INITIATED:
+                return "reader_sign_in_initiated";
+            case READER_WPCOM_SIGN_IN_NEEDED:
+                return "reader_wpcom_sign_in_needed";
+            case READER_USER_UNAUTHORIZED:
+                return "reader_user_unauthorized";
             case EDITOR_CREATED_POST:
                 return "editor_post_created";
             case EDITOR_SAVED_DRAFT:
@@ -367,16 +390,21 @@ public class AnalyticsTrackerNosara extends Tracker {
             case NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS:
                 return "notifications_notification_details_opened";
             case NOTIFICATION_APPROVED:
+            case NOTIFICATION_QUICK_ACTIONS_APPROVED:
                 return "notifications_approved";
             case NOTIFICATION_UNAPPROVED:
                 return "notifications_unapproved";
             case NOTIFICATION_REPLIED_TO:
+            case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
                 return "notifications_replied_to";
             case NOTIFICATION_TRASHED:
                 return "notifications_trashed";
             case NOTIFICATION_FLAGGED_AS_SPAM:
                 return "notifications_flagged_as_spam";
+            case NOTIFICATION_SWIPE_PAGE_CHANGED:
+                return "notifications_swipe_page_changed";
             case NOTIFICATION_LIKED:
+            case NOTIFICATION_QUICK_ACTIONS_LIKED:
                 return "notifications_comment_liked";
             case NOTIFICATION_UNLIKED:
                 return "notifications_comment_unliked";
@@ -456,8 +484,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "push_notification_alert_tapped";
             case SUPPORT_OPENED_HELPSHIFT_SCREEN:
                 return "support_helpshift_screen_opened";
-            case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
-                return "support_reply_to_support_message_sent";
+            case SUPPORT_USER_ACCEPTED_THE_SOLUTION:
+                return "support_user_accepted_the_solution";
+            case SUPPORT_USER_REJECTED_THE_SOLUTION:
+                return "support_user_rejected_the_solution";
+            case SUPPORT_USER_SENT_SCREENSHOT:
+                return "support_user_sent_screenshot";
+            case SUPPORT_USER_REVIEWED_THE_APP:
+                return "support_user_reviewed_the_app";
+            case SUPPORT_USER_REPLIED_TO_HELPSHIFT:
+                return "support_user_replied_to_helpshift";
             case LOGIN_MAGIC_LINK_EXITED:
                 return "login_magic_link_exited";
             case LOGIN_MAGIC_LINK_FAILED:
@@ -590,6 +626,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "traintracks_interact";
             case DEEP_LINKED:
                 return "deep_linked";
+            case DEEP_LINKED_FALLBACK:
+                return "deep_linked_fallback";
+            case DEEP_LINK_NOT_DEFAULT_HANDER:
+                return "deep_link_not_default_handler";
             default:
                 return null;
         }

@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 public class RestClientUtils {
-    private static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
+    public static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
     private static final String COMMENT_REPLY_CONTENT_FIELD = "content";
     private static String sUserAgent = "WordPress Networking Android";
 
@@ -150,9 +150,6 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
     public void getNotifications(Map<String, String> params, Listener listener, ErrorListener errorListener) {
-        params.put("number", "40");
-        params.put("num_note_items", "20");
-        params.put("fields", NOTIFICATION_FIELDS);
         get("notifications", params, null, listener, errorListener);
     }
 
@@ -172,7 +169,23 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
     public void getNotifications(Listener listener, ErrorListener errorListener) {
+        Map<String, String> params = new HashMap<>();
+        params.put("number", "40");
+        params.put("num_note_items", "20");
+        params.put("fields", NOTIFICATION_FIELDS);
         getNotifications(new HashMap<String, String>(), listener, errorListener);
+    }
+
+    /**
+     * Get the notification identified by ID with default params.
+     * <p/>
+     * https://developer.wordpress.com/docs/api/1/get/notifications/%s
+     */
+    public void getNotification(String note_id, Listener listener, ErrorListener errorListener) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("fields", NOTIFICATION_FIELDS);
+        String path = String.format("notifications/%s", note_id);
+        get(path, params, null, listener, errorListener);
     }
 
     /**
@@ -184,6 +197,20 @@ public class RestClientUtils {
         Map<String, String> params = new HashMap<String, String>();
         params.put("time", timestamp);
         post("notifications/seen", params, null, listener, errorListener);
+    }
+
+    /**
+     * Mark a notification as read
+     * Decrement the unread count for a notification. Key=note_ID, Value=decrement amount.
+     *
+     * <p/>
+     * https://developer.wordpress.com/docs/api/1/post/notifications/read/
+     */
+    public void decrementUnreadCount(String noteId, String decrementAmount, Listener listener, ErrorListener errorListener) {
+        String path = "notifications/read";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(String.format("counts[%s]", noteId), decrementAmount);
+        post(path, params, null, listener, errorListener);
     }
 
     /**
@@ -466,6 +493,11 @@ public class RestClientUtils {
         HashMap<String, String> queryParams = new HashMap<>();
 
         Uri uri = Uri.parse(unsanitizedPath);
+
+        if (uri.getHost() == null) {
+            uri = Uri.parse("://" + unsanitizedPath); // path may contain a ":" leading to Uri.parse to misinterpret
+                    // it as opaque so, try it with a empty scheme in front
+        }
 
         if (uri.getQueryParameterNames() != null ) {
             Iterator iter = uri.getQueryParameterNames().iterator();

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2015-10-27 17:48:23+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: nb_NO
+-->
 <resources>
 	<string name="reader_short_comment_count_multi">%s kommentarer</string>
 	<string name="reader_short_comment_count_one">1 kommentar</string>

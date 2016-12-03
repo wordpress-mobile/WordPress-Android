@@ -16,11 +16,12 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -35,20 +36,26 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
-        showReaderPostDetail(context, false, blogId, postId, false);
+        showReaderPostDetail(context, false, blogId, postId, null, 0, false, null);
     }
 
     public static void showReaderPostDetail(Context context,
                                             boolean isFeed,
                                             long blogId,
                                             long postId,
-                                            boolean isRelatedPost) {
+                                            DirectOperation directOperation,
+                                            int commentId,
+                                            boolean isRelatedPost,
+                                            String interceptedUri) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
+        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+        intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
         context.startActivity(intent);
     }
 
@@ -144,18 +151,35 @@ public class ReaderActivityLauncher {
      * show comments for the passed Ids
      */
     public static void showReaderComments(Context context, long blogId, long postId) {
-        showReaderComments(context, blogId, postId, 0);
+        showReaderComments(context, blogId, postId, null, 0, null);
     }
 
 
     /*
-     * Show comments for passed Ids. Passing a commentId will scroll that comment into view
+     * show specific comment for the passed Ids
      */
     public static void showReaderComments(Context context, long blogId, long postId, long commentId) {
+        showReaderComments(context, blogId, postId, DirectOperation.COMMENT_JUMP, commentId, null);
+    }
+
+    /**
+     * Show comments for passed Ids and directly perform an action on a specifc comment
+     *
+     * @param context context to use to start the activity
+     * @param blogId blog id
+     * @param postId post id
+     * @param directOperation operation to perform on the specific comment. Can be null for no operation.
+     * @param commentId specific comment id to perform an action on
+     * @param interceptedUri URI to fall back into (i.e. to be able to open in external browser)
+     */
+    public static void showReaderComments(Context context, long blogId, long postId, DirectOperation
+            directOperation, long commentId, String interceptedUri) {
         Intent intent = new Intent(context, ReaderCommentListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
+        intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
         context.startActivity(intent);
     }
 
@@ -208,7 +232,7 @@ public class ReaderActivityLauncher {
             intent.putExtra(ReaderConstants.ARG_CONTENT, content);
         }
 
-        if (context instanceof Activity) {
+        if (context instanceof Activity && sourceView != null) {
             Activity activity = (Activity) context;
             ActivityOptionsCompat options =
                     ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);
@@ -255,12 +279,19 @@ public class ReaderActivityLauncher {
      */
     private static void openUrlExternal(Context context, @NonNull String url) {
         try {
+            // disable deeplinking activity so to not catch WP URLs
+            WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
+
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(intent);
             AppLockManager.getInstance().setExtendedTimeout();
+
         } catch (ActivityNotFoundException e) {
             String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
             ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
+        } finally {
+            // re-enable deeplinking
+            WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
         }
     }
 }

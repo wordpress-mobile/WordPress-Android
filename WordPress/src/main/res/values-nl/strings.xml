@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-10-28 10:51:02+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: nl
+-->
 <resources>
+	<string name="reader_label_global_related_posts">Meer op WordPress.com</string>
+	<string name="reader_label_local_related_posts">Meer in %s</string>
+	<string name="preference_open_device_settings">Open apparaat instellingen</string>
+	<string name="comment_moderated_unapproved">Reactie niet goedgekeurd</string>
 	<string name="invite_invalid_email">%s: Ongeldige e-mail</string>
 	<string name="invite_user_blocked_invites">%s: Gebruiker blokkeert uitnodigingen</string>
 	<string name="invite_already_following">%s: Volg je al</string>
@@ -92,7 +102,6 @@
 	<string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
 	<string name="reader_empty_posts_in_search_description">Geen berichten gevonden voor %s in je taal.</string>
 	<string name="reader_empty_posts_in_search_title">Geen berichten gevonden.</string>
-	<string name="reader_label_related_posts">Gerelateerd leesmateriaal</string>
 	<string name="reader_label_post_search_running">Zoeken ...</string>
 	<string name="reader_label_post_search_explainer">Zoek alle openbare WordPress.com-blogs</string>
 	<string name="reader_hint_post_search">Zoek op WordPress.com</string>

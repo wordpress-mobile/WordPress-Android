@@ -27,17 +27,17 @@ import org.wordpress.android.ui.comments.CommentActionResult;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
-import java.util.Map;
 
+import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.AUTH_PUSH_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
 import static org.wordpress.android.push.GCMMessageService.GROUP_NOTIFICATION_ID;
-import static org.wordpress.android.push.GCMMessageService.PUSH_ARG_NOTE_FULL_DATA;
 import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
 
 /**
@@ -46,6 +46,7 @@ import static org.wordpress.android.ui.notifications.NotificationsListFragment.N
  * - like
  * - reply-to-comment
  * - approve
+ * - 2fa approve & ignore
  */
 
 public class NotificationsProcessingService extends Service {
@@ -160,6 +161,9 @@ public class NotificationsProcessingService extends Service {
                     //dismiss notifs
                     dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
                     dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
+                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
+                    GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
+
                     AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
                     return;
                 }
@@ -172,47 +176,44 @@ public class NotificationsProcessingService extends Service {
                     showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
                 }
 
-                if (mActionType.equals(ARG_ACTION_AUTH_APPROVE)) {
-                    approveAuth();
-                } else { //all remaining actions are Comment REPLY, APPROVE, and LIKE
-
-                    //we probably have the note in the PN payload and such it's passed in the intent extras
-                    // bundle. If we have it, no need to go fetch it through REST API.
-                    getNoteFromBundleIfExists();
-
-                    //if we still don't have a Note, go get it from the REST API
-                    if (mNote == null) {
-                        RestRequest.Listener listener =
-                                new RestRequest.Listener() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        if (response != null && !response.optBoolean("success")) {
-                                            //build the Note object here
-                                            buildNoteFromJSONObject(response);
-                                            performRequestedAction();
-                                        }
+                //if we still don't have a Note, go get it from the REST API
+                if (mNote == null) {
+                    RestRequest.Listener listener =
+                            new RestRequest.Listener() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    if (response != null && !response.optBoolean("success")) {
+                                        //build the Note object here
+                                        buildNoteFromJSONObject(response);
+                                        performRequestedAction();
                                     }
-                                };
+                                }
+                            };
 
-                        RestRequest.ErrorListener errorListener =
-                                new RestRequest.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        requestFailed(mActionType);
-                                    }
-                                };
+                    RestRequest.ErrorListener errorListener =
+                            new RestRequest.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    requestFailed(mActionType);
+                                }
+                            };
 
-                        getNoteFromNoteId(mNoteId, listener, errorListener);
-                    } else {
-                        //we have a Note! just go ahead and perform the requested action
-                        performRequestedAction();
-                    }
+                    getNoteFromNoteId(mNoteId, listener, errorListener);
+                } else {
+                    //we have a Note! just go ahead and perform the requested action
+                    performRequestedAction();
                 }
-
             } else {
                 requestFailed(null);
             }
 
+        }
+
+        private void getNoteFromBundleIfExists() {
+            if (mIntent.hasExtra(ARG_NOTE_BUNDLE)) {
+                Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
+                mNote = NotificationsUtils.buildNoteObjectFromBundle(payload);
+            }
         }
 
         private void getDataFromIntent() {
@@ -235,16 +236,10 @@ public class NotificationsProcessingService extends Service {
                     obtainReplyTextFromRemoteInputBundle(remoteInput);
                 }
             }
-        }
 
-        private void getNoteFromBundleIfExists() {
-            if (mIntent.hasExtra(ARG_NOTE_BUNDLE)) {
-                Bundle payload = mIntent.getBundleExtra(ARG_NOTE_BUNDLE);
-                if (payload.containsKey(PUSH_ARG_NOTE_FULL_DATA)) {
-                    String base64FullData = payload.getString(PUSH_ARG_NOTE_FULL_DATA);
-                    mNote = new Note.Schema().buildFromBase64EncodedData(mNoteId, base64FullData);
-                }
-            }
+            //we probably have the note in the PN payload and such it's passed in the intent extras
+            // bundle. If we have it, no need to go fetch it through REST API.
+            getNoteFromBundleIfExists();
         }
 
         private String getProcessingTitleForAction(String actionType) {
@@ -281,7 +276,7 @@ public class NotificationsProcessingService extends Service {
                         jsonObject = jsonArray.getJSONObject(0);
                     }
                 }
-                mNote = new Note.Schema().build(mNoteId, jsonObject);
+                mNote = new Note(mNoteId, jsonObject);
 
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.NOTIFS, e.getMessage());
@@ -289,6 +284,9 @@ public class NotificationsProcessingService extends Service {
         }
 
         private void performRequestedAction(){
+            /*********************************************************/
+            /* possible actions are Comment REPLY, APPROVE, and LIKE */
+            /*********************************************************/
             if (mNote != null) {
                 if (mActionType != null) {
                     switch (mActionType) {
@@ -334,17 +332,20 @@ public class NotificationsProcessingService extends Service {
                 successMessage = getString(R.string.comment_q_action_done_generic);
             }
 
+            NotificationsActions.markNoteAsRead(mNote);
+
             //dismiss any other pending result notification
             dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
             //update notification indicating the operation succeeded
-            showFinalMessageToUser(successMessage, GROUP_NOTIFICATION_ID);
+            showFinalMessageToUser(successMessage, ACTIONS_PROGRESS_NOTIFICATION_ID);
+            //remove the original notification from the system bar
+            GCMMessageService.removeNotificationWithNoteIdFromSystemBar(mContext, mNoteId);
 
             //after 3 seconds, dismiss the notification that indicated success
             Handler handler = new Handler(getMainLooper());
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    //remove the original notification from the system bar
-                    GCMMessageService.removeNotificationWithNoteIdFromSystemBar(mContext, mNoteId);
+                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
                 }}, 3000); // show the success message for 3 seconds, then dismiss
 
             stopSelf(mTaskId);
@@ -368,6 +369,7 @@ public class NotificationsProcessingService extends Service {
                 errorMessage = getString(R.string.error_generic);
             }
             resetOriginalNotification();
+            dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
             showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
 
             //after 3 seconds, dismiss the error message notification
@@ -403,7 +405,7 @@ public class NotificationsProcessingService extends Service {
         }
 
         private void showIntermediateMessageToUser(String message) {
-            showMessageToUser(message, true, GROUP_NOTIFICATION_ID);
+            showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID);
         }
 
         private void showFinalMessageToUser(String message, int pushId) {
@@ -443,7 +445,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_LIKED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED);
 
             WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
                     String.valueOf(mNote.getCommentId()),
@@ -467,7 +469,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED);
 
             CommentActions.moderateCommentForNote(mNote, CommentStatus.APPROVED, new CommentActions.CommentActionListener() {
                 @Override
@@ -486,7 +488,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO);
 
 
             if (!TextUtils.isEmpty(mReplyText)) {
@@ -538,34 +540,5 @@ public class NotificationsProcessingService extends Service {
         private void resetOriginalNotification(){
             GCMMessageService.rebuildAndUpdateNotificationsOnSystemBarForThisNote(mContext, mNoteId);
         }
-
-        private void approveAuth(){
-            NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(mIntent,
-                    new NotificationsUtils.TwoFactorAuthCallback() {
-                @Override
-                public void onTokenValid(String token, String title, String message) {
-                    // ping the push auth endpoint with the token, wp.com will take care of the rest!
-                    NotificationsUtils.sendTwoFactorAuthToken(token);
-
-                    //dismiss notifs
-                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
-
-                    stopSelf(mTaskId);
-                }
-
-                @Override
-                public void onTokenInvalid() {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-                    //dismiss notifs
-                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(GROUP_NOTIFICATION_ID); //intermediate progress notif
-                    requestFailedWithMessage(getString(R.string.push_auth_expired), false);
-                }
-            });
-        }
-
     }
 }

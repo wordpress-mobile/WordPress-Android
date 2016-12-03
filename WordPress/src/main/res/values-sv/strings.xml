@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-09-28 10:06:33+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.3.0-alpha
+Language: sv_SE
+-->
 <resources>
 	<string name="reader_label_image_count_one">1 bild</string>
 	<string name="timespan_now">nu</string>
@@ -84,7 +90,6 @@
 	<string name="dlg_confirm_clear_search_history">Rensa sökhistoriken?</string>
 	<string name="reader_empty_posts_in_search_description">Inga inlägg hittade för %s på ditt språk</string>
 	<string name="reader_empty_posts_in_search_title">Hittade inga inlägg</string>
-	<string name="reader_label_related_posts">Relaterad läsning</string>
 	<string name="reader_label_post_search_running">Söker...</string>
 	<string name="reader_label_post_search_explainer">Sök alla offentliga WordPress.com-bloggar</string>
 	<string name="reader_hint_post_search">Sök på WordPress.com</string>
