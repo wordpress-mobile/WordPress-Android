@@ -173,9 +173,7 @@
         <RelativeLayout
             android:id="@+id/layout_footer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/image_visit_icon"
