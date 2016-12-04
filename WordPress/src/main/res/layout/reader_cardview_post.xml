@@ -87,8 +87,7 @@
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_featured"
-                style="@style/ReaderImageView.Featured.CardView"
-                android:padding="1dp" />
+                style="@style/ReaderImageView.Featured.CardView" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_photo_title"
