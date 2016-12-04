@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.accounts;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipboardManager;
@@ -15,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.transition.Transition;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.Html;
