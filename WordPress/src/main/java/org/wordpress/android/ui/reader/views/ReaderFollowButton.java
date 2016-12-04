@@ -54,7 +54,7 @@ public class ReaderFollowButton extends LinearLayout {
             }
         }
 
-        // hide follow text, enlarge the follow icon, and make the icon blue if there's no caption
+        // hide follow text and enlarge the follow icon if there's no caption
         if (!mShowCaption) {
             mTextFollow.setText(null);
             mTextFollow.setVisibility(View.GONE);

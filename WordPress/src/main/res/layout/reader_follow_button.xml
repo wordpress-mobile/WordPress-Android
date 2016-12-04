@@ -11,6 +11,7 @@
         android:id="@+id/image_follow_button"
         android:layout_width="@dimen/reader_follow_icon"
         android:layout_height="@dimen/reader_follow_icon"
+        android:layout_gravity="center_vertical"
         app:srcCompat="@drawable/reader_follow" />
 
     <org.wordpress.android.widgets.WPTextView
