@@ -1022,7 +1022,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private boolean canLike() {
-        return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE));
+        return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE)
+                && mSite != null && mSite.isWPCom());
     }
 
     /*
