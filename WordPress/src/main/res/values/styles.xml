@@ -193,7 +193,7 @@
     <style name="WordPress.NUXFlatButtonNoBg">
         <item name="android:textColor">@color/grey_lighten_10</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:padding">12dp</item>
+        <item name="android:padding">@dimen/margin_large</item>
         <item name="android:clickable">true</item>
     </style>
 
