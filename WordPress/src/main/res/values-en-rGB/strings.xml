@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-27 21:15:44+0000
+Translation-Revision-Date: 2016-11-17 14:40:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorised to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
+	<string name="reader_err_get_post_not_authorized_signin">You\'re not authorised to view this post. Try signing in to WordPress.com first.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">You\'re not authorised to view this post. Use the top action button to try a browser instead.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
+	<string name="reader_toast_err_already_liked">You have already liked that comment</string>
+	<string name="reader_toast_err_comment_not_found">Comment not found!</string>
+	<string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
+	<string name="reader_title_deeplink">WordPress Reader</string>
+	<string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
+	<string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
+	<string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
+	<string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
+	<string name="notifications_label_new_notifications">New notifications</string>
+	<string name="comment_q_action_replying">Replying…</string>
+	<string name="comment_q_action_approving">Approving…</string>
+	<string name="comment_q_action_liking">Liking…</string>
+	<string name="comment_q_action_processing">Processing…</string>
+	<string name="comment_q_action_done_generic">Action done!</string>
+	<string name="comment_liked">Comment liked</string>
+	<string name="signout">Log out</string>
+	<string name="sign_in_wpcom">Log in to WordPress.com</string>
 	<string name="reader_label_global_related_posts">More on WordPress.com</string>
 	<string name="reader_label_local_related_posts">More in %s</string>
 	<string name="preference_open_device_settings">Open device settings</string>
@@ -97,7 +119,7 @@ Language: en_GB
 	<string name="invite_people">Invite People</string>
 	<string name="my_site_header_external">External</string>
 	<string name="send_link">Send link</string>
-	<string name="signup_succeed_signin_failed">Your account has been created but an error occurred while we logged you\n        in. Try to log in with your newly created username and password.</string>
+	<string name="signup_succeed_signin_failed">Your account has been created but an error occured while we loggged you\n        in. Try to log in with your newly created username and password.</string>
 	<string name="label_clear_search_history">Clear search history</string>
 	<string name="dlg_confirm_clear_search_history">Clear search history?</string>
 	<string name="reader_empty_posts_in_search_description">No posts found for %s for your language</string>
@@ -568,7 +590,6 @@ Language: en_GB
 	<string name="my_site_header_configuration">Configuration</string>
 	<string name="notifications_account_required">Log in to WordPress.com for notifications</string>
 	<string name="stats_unknown_author">Unknown Author</string>
-	<string name="signout">Log out</string>
 	<string name="image_added">Image added</string>
 	<string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
 	<string name="select_all">Select all</string>

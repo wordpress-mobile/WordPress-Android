@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-26 15:48:12+0000
+Translation-Revision-Date: 2016-11-28 13:08:46+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.3.0-alpha
 Language: fr
 -->
 <resources>
+	<string name="reader_toast_err_comment_not_found">Commentaire introuvable !</string>
+	<string name="reader_title_post_detail_wpcom">Article WordPress.com</string>
+	<string name="reader_title_deeplink">Lecteur WordPress</string>
+	<string name="notifications_label_new_notifications">Nouvelles notifications</string>
+	<string name="comment_q_action_replying">Réponse en cours...</string>
+	<string name="comment_q_action_approving">Approbation en cours...</string>
+	<string name="comment_q_action_processing">Traitement en cours...</string>
+	<string name="comment_q_action_done_generic">Terminé !</string>
+	<string name="signout">Se déconnecter</string>
+	<string name="sign_in_wpcom">Se connecter à WordPress.com</string>
 	<string name="reader_label_global_related_posts">Articles connexes sur WordPress.com</string>
 	<string name="reader_label_local_related_posts">Articles connexes dans %s</string>
 	<string name="preference_open_device_settings">Réglages des appareils ouverts</string>
@@ -97,7 +107,7 @@ Language: fr
 	<string name="invite_people">Inviter des personnes</string>
 	<string name="my_site_header_external">Externe</string>
 	<string name="send_link">Envoyer le lien</string>
-	<string name="signup_succeed_signin_failed">Votre compte a été créé mais une erreur est survenue lors de votre connexion. Essayez de vous connecter avec votre nouvel identifiant et son mot de passe.</string>
+	<string name="signup_succeed_signin_failed">Votre compte a été créé mais une erreur est survenue lors de votre connexion. \nEssayez de vous connecter avec votre nouvel identifiant et son mot de passe.</string>
 	<string name="label_clear_search_history">Supprimer l\'historique de recherche</string>
 	<string name="dlg_confirm_clear_search_history">Supprimer l\'historique de recherche ?</string>
 	<string name="reader_empty_posts_in_search_description">Aucune article trouvé pour %s dans votre langue</string>
@@ -534,7 +544,7 @@ Language: fr
 	<string name="tabbar_accessibility_label_my_site">Mon site</string>
 	<string name="editor_toast_changes_saved">Modifications enregistrées</string>
 	<string name="passcodelock_prompt_message">Entrer votre PIN</string>
-	<string name="push_auth_expired">La requête a expiré. Inscrivez-vous sur WordPress.com et réessayez.</string>
+	<string name="push_auth_expired">La requête a expiré. Connectez-vous à WordPress.com et réessayez.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% de vues</string>
 	<string name="ignore">Ignorer</string>
 	<string name="stats_insights_best_ever">Record de vues absolu</string>
@@ -544,7 +554,7 @@ Language: fr
 	<string name="stats_insights_popular">Jour et heure les plus prisés</string>
 	<string name="stats_insights_all_time">Articles, vues et visiteurs depuis la création</string>
 	<string name="stats_insights">Tendances</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Pour afficher vos statistiques, connectez-vous au compte WordPress.com que vous avez utilisé pour vous connecter à Jetpack.</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Pour afficher vos statistiques, connectez-vous au compte WordPress.com que vous avez utilisé pour vous connecter Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Vous recherchez vos autres statistiques récentes ? Elles se trouvent désormais sur la page Tendances.</string>
 	<string name="me_disconnect_from_wordpress_com">Se déconnecter de WordPress.com</string>
 	<string name="me_btn_login_logout">Se Connecter/Déconnecter</string>
@@ -568,9 +578,8 @@ Language: fr
 	<string name="my_site_header_configuration">Configuration</string>
 	<string name="notifications_account_required">Se connecter à WordPress.com pour voir vos notifications</string>
 	<string name="stats_unknown_author">Auteur inconnu</string>
-	<string name="signout">Se déconnecter</string>
 	<string name="image_added">Image ajoutée</string>
-	<string name="sign_out_wpcom_confirm">Se déconnecter de votre compte supprimera toutes les données liées à votre compte WordPress.com @%s’s sur cet appareil. Cela inclu les changements locaux et les brouillons.</string>
+	<string name="sign_out_wpcom_confirm">Se déconnecter de votre compte supprimera toutes les données liées au compte @%s de WordPress.com sur cet appareil. Cela inclus les changements locaux et les brouillons.</string>
 	<string name="select_all">Tout selectionner</string>
 	<string name="hide">Cacher</string>
 	<string name="show">Montrer</string>

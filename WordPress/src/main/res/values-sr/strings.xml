@@ -70,7 +70,6 @@ Language: sr_RS
 	<string name="tabbar_accessibility_label_my_site">Моје веб место</string>
 	<string name="passcodelock_prompt_message">Унесите свој PIN</string>
 	<string name="editor_toast_changes_saved">Измене су сачуване</string>
-	<string name="push_auth_expired">Захтев је истекао. Пријавите се на WordPress.com да бисте покушали поново.</string>
 	<string name="ignore">Занемари</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% прегледа</string>
 	<string name="stats_insights_best_ever">Најбољи погледи икада</string>
@@ -80,11 +79,8 @@ Language: sr_RS
 	<string name="stats_insights_today">Данашње статистике</string>
 	<string name="stats_insights_all_time">Чланци, погледи и посетиоци целог времена</string>
 	<string name="stats_insights">Увиди</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Да бисте видели своје статистике, пријавите се на WordPress.com налог који сте користили да се повежете са Џетпеком.</string>
 	<string name="stats_other_recent_stats_moved_label">Тражите своје друге скорашње статистике? Померили смо их на страницу Увиди.</string>
-	<string name="me_disconnect_from_wordpress_com">Прекини везу са WordPress.com</string>
 	<string name="me_btn_login_logout">Пријава/одјава</string>
-	<string name="me_connect_to_wordpress_com">Повежи са WordPress.com</string>
 	<string name="me_btn_support">Помоћ и подршка</string>
 	<string name="site_picker_cant_hide_current_site">"%s" није сакривен зато што је тренутно веб место</string>
 	<string name="site_picker_create_dotcom">Направи WordPress.com веб место</string>
@@ -101,13 +97,10 @@ Language: sr_RS
 	<string name="my_site_btn_site_settings">Подешавања</string>
 	<string name="my_site_header_configuration">Поставка</string>
 	<string name="reader_label_new_posts_subtitle">Притисните да бисте их показали</string>
-	<string name="notifications_account_required">Пријавите се на WordPress.com за пријаве</string>
 	<string name="stats_unknown_author">Непознат аутор</string>
 	<string name="image_added">Слика је додата</string>
-	<string name="signout">Прекини везу</string>
 	<string name="deselect_all">Одбаци све</string>
 	<string name="hide">Сакриј</string>
-	<string name="sign_out_wpcom_confirm">Прекидање везе са својим налогом ће уклонити све @%s’s WordPress.com податке са овог уређаја, укључујући локалне нацрте и локалне измене.</string>
 	<string name="select_all">Изабери све</string>
 	<string name="show">Прикажи</string>
 	<string name="select_from_new_picker">Изаберите више опција помоћу новог бирача</string>
@@ -126,9 +119,7 @@ Language: sr_RS
 	<string name="no_media">Не постоје медији</string>
 	<string name="loading_images">Учитавам слике</string>
 	<string name="loading_videos">Учитавам видео снимке</string>
-	<string name="sign_in_jetpack">Пријавите се на свој WordPress.com налог да бисте се повезали на Џетпек.</string>
 	<string name="two_step_sms_sent">Потражите верификациони код међу вашим текстуалним порукама.</string>
-	<string name="auth_required">Пријавите се поново како бисте наставили.</string>
 	<string name="two_step_footer_button">Пошаљите код путем текстуалне поруке</string>
 	<string name="two_step_footer_label">Унесите код са своје апликације за аутентикацију.</string>
 	<string name="verify">Провери</string>
@@ -247,7 +238,6 @@ Language: sr_RS
 	<string name="pages_empty_list">Не постоји ниједна страна. Зашто не бисте направили нову?</string>
 	<string name="reader_empty_posts_liked">Нисте означили да вам се свиђа ниједан чланак</string>
 	<string name="error_refresh_unauthorized_pages">Немате дозволу да прегледате или уређујете стране</string>
-	<string name="signing_out">Одјављивање...</string>
 	<string name="posting_post">Објављивање "%s"</string>
 	<string name="media_empty_list_custom_date">Не постоје медији у том временском периоду</string>
 	<string name="comment_reply_to_user">Одговор %s</string>
@@ -512,8 +502,6 @@ Language: sr_RS
 	<string name="nux_welcome_create_account">Направи налог</string>
 	<string name="nux_add_selfhosted_blog">Додај самостално угошћено веб место</string>
 	<string name="password_invalid">Потребна вам је сигурнија лозинка. Користите 7 или више знакова, употребите и велика и мала слова, бројеве и посебне знакове.</string>
-	<string name="nux_oops_not_selfhosted_blog">Пријавите се на WordPress.com</string>
-	<string name="signing_in">Пријављивање...</string>
 	<string name="nux_tap_continue">Настави</string>
 	<string name="reader_empty_followed_tags">Не пратите ниједну ознаку</string>
 	<string name="limit_reached">Ограничење достигнуто. Пробајте поново за 1 минут. Покушавање пре тога ће само повећати време које ћете морати да сачекате пре него што забрана истекне. Уколико мислите да је ово грешка, контактирајте службу за подршку.</string>
@@ -521,7 +509,6 @@ Language: sr_RS
 	<string name="media_add_new_media_gallery">Направи галерију</string>
 	<string name="nux_tutorial_get_started_title">Почните!</string>
 	<string name="username_invalid">Неисправно корисничко име</string>
-	<string name="connecting_wpcom">Повезивање на WordPress.com</string>
 	<string name="create_account_wpcom">Направите налог на WordPress.com</string>
 	<string name="reader_toast_err_url_intent">Није могуће отворити %s</string>
 	<string name="reader_toast_err_view_image">Није могуће прегледати слику</string>
@@ -602,7 +589,6 @@ Language: sr_RS
 	<string name="theme_auth_error_title">Неуспешно добављање тема</string>
 	<string name="stats_view_tags_and_categories">Ознаке и категорије</string>
 	<string name="upload">Отпремање</string>
-	<string name="sign_in">Пријави се</string>
 	<string name="notifications">Обавештења</string>
 	<string name="more_notifications">и %d још.</string>
 	<string name="new_notifications">%d нових обавештења</string>

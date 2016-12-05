@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-17 04:18:50+0000
+Translation-Revision-Date: 2016-12-01 04:20:36+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.3.0-alpha
 Language: th
 -->
 <resources>
+	<string name="reader_label_image_count_one">1 รูป</string>
+	<string name="timespan_now">ตอนนี้</string>
 	<string name="role_viewer">ผู้ชม</string>
 	<string name="role_follower">ผู้ติดตาม</string>
 	<string name="role_contributor">ผู้อุทิศตัว</string>
 	<string name="role_author">ผู้เขียน</string>
+	<string name="role_editor">ผู้แก้ไข</string>
+	<string name="role_admin">ผู้ควบคุม</string>
+	<string name="error_post_my_profile_no_connection">ไม่มีการเชื่อมต่อ ไม่สามารถบันทึกประวัติส่วนตัวของคุณได้</string>
 	<string name="alignment_right">ขวา</string>
 	<string name="alignment_left">ซ้าย</string>
 	<string name="alignment_none">ไม่มี</string>
 	<string name="site_settings_list_editor_action_mode_title">เลือก %1$d แล้ว</string>
+	<string name="error_fetch_users_list">ไม่สามารถดึงข้อมูลผู้ใช้งานเว็บไซต์</string>
+	<string name="plans_manage">จัดการแพลนของคุณที่\nWordPress.com/plans</string>
 	<string name="title_email_follower">อีเมลผู้ติดตาม</string>
 	<string name="title_follower">ผู้ติดตาม</string>
 	<string name="people_dropdown_item_viewers">ผู้ชม</string>
@@ -240,13 +247,14 @@ Language: th
 	<string name="stats_insights_popular">วันและชั่วโมงยอดนิยมที่สุด</string>
 	<string name="stats_insights_all_time">เรื่อง การดูและผู้เยี่ยมชมของเวลาทั้งหมด</string>
 	<string name="stats_insights">แบบละเอียด</string>
-	<string name="stats_sign_in_jetpack_different_com_account">เพื่อดูสถิติของคุณ  ลงทะเบียนเข้าสู่บัญชี WordPress.com  ที่คุณเคยเชื่อมต่อ Jetpack</string>
+	<string name="stats_sign_in_jetpack_different_com_account">เพื่อดูสถิติของคุณ  เข้าสู่ระบบบัญชี WordPress.com  ที่คุณเคยเชื่อมต่อ Jetpack</string>
 	<string name="stats_other_recent_stats_moved_label">กำลังหาสถิติล่าสุดอื่น ๆ ของคุณ?  เราได้ย้ายมันไปยังหน้ารายละเอียด (insight page)</string>
 	<string name="me_disconnect_from_wordpress_com">ตัดการติดต่อกับ WordPress.com</string>
 	<string name="me_btn_login_logout">เข้าสู่ระบบ/ออกจากระบบ</string>
 	<string name="me_connect_to_wordpress_com">เชื่อมต่อกับ WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">ไม่ได้ซ่อน "%s" เพราะว่ามันเป็นเว็บปัจจุบัน</string>
 	<string name="me_btn_support">ช่วยเหลือและสนับสนุน</string>
+	<string name="account_settings">ตั้งค่าบัญชี</string>
 	<string name="site_picker_create_dotcom">สร้างเว็บ WordPress.com</string>
 	<string name="site_picker_edit_visibility">แสดง/ซ่อน เว็บไซต์</string>
 	<string name="site_picker_add_self_hosted">เพิ่มเว็บไซต์บนโฮสท์ติดตั้งเอง</string>
@@ -261,11 +269,10 @@ Language: th
 	<string name="my_site_btn_blog_posts">เรื่องบล็อก</string>
 	<string name="reader_label_new_posts_subtitle">แตะเพื่อแสดงมัน</string>
 	<string name="my_site_header_configuration">การปรับแต่ง</string>
-	<string name="notifications_account_required">ลงทะเบียนเข้าสู่ WordPress.com สำหรับการเตือน</string>
+	<string name="notifications_account_required">เข้าสู่ระบบ WordPress.com สำหรับการเตือน</string>
 	<string name="stats_unknown_author">ผู้เขียนนิรนาม</string>
-	<string name="signout">ตัดการเชื่อมต่อ</string>
 	<string name="image_added">รูปที่เพิ่มแล้ว</string>
-	<string name="sign_out_wpcom_confirm">ตัดการเชื่อมต่อบัญชีของคุณจะลบข้อมูบทั้งหมดของ @%s’s WordPress.com ออกจากอุปกรณ์นี้  รวมถึงฉบับร่างและการเปลี่ยนแปลงในเครื่องด้วย</string>
+	<string name="sign_out_wpcom_confirm">ตัดการเชื่อมต่อบัญชีของคุณจะลบข้อมูลทั้งหมดของ @%s’s WordPress.com ออกจากอุปกรณ์นี้  รวมถึงฉบับร่างและการเปลี่ยนแปลงในเครื่องด้วย</string>
 	<string name="select_all">เลือกทั้งหมด</string>
 	<string name="hide">ซ่อน</string>
 	<string name="show">แสดง</string>
@@ -428,6 +435,7 @@ Language: th
 	<string name="reader_label_comments_on">ความเห็นบน</string>
 	<string name="reader_label_comments_closed">ปิดการแสดงความเห็น</string>
 	<string name="reader_label_comment_count_single">หนึ่งความเห็น</string>
+	<string name="reader_label_liked_by">ชื่นชอบโดย</string>
 	<string name="reader_label_like">ชื่นชอบ</string>
 	<string name="reader_label_view_original">ดูบทความเริ่มต้น</string>
 	<string name="reader_label_comment_count_multi">%,d ความเห็น</string>
@@ -524,6 +532,7 @@ Language: th
 	<string name="error_delete_post">มีความผิดพลาดเกิดขึ้นขณะกำลังลบ %s</string>
 	<string name="notifications_empty_list">ไม่มีการเตือน</string>
 	<string name="reply_failed">การตอบกลับล้มเหลว</string>
+	<string name="invalid_url_message">ตรวจสอบ URL ที่ใส่มาว่าใช้งานได้หรือไม่</string>
 	<string name="stats_bar_graph_empty">สถิติยังไม่พร้อมให้ดู</string>
 	<string name="stats_empty_comments">ยังไม่มีความเห็น</string>
 	<string name="sdcard_message">ต้องมี SD card เพื่อใช้ในการอัปโหลดไฟล์สื่อ</string>
@@ -683,6 +692,7 @@ Language: th
 	<string name="limit_reached">มาถึงขีดจำกัดแล้ว คุณสามารถลองใหม่อีกหนึ่งนาทีภายหลัง  การลองใหม่ก่อนหน้าหนึ่งนาทีจะเพิ่มเวลาที่คุณต้องรอก่อนพ้นการแบนให้ยาวไปอีก  ถ้าคุณคิดว่าสิ่งนี้เป็นความผิดพลาด  โปรดติดต่อฝ่ายช่วยเหลือ</string>
 	<string name="username_invalid">ชื่อผู้ใช้ไม่ถูกต้อง</string>
 	<string name="connecting_wpcom">เชื่อมต่อไปยัง WordPress.com</string>
+	<string name="button_next">ถัดไป</string>
 	<string name="create_account_wpcom">สร้างบัญชีบน  WordPress.com</string>
 	<string name="reader_empty_followed_tags">คุณยังไม่ได้ติดตามป้ายกำกับใด ๆ</string>
 	<string name="reader_toast_err_url_intent">ไม่สามารถเปิด %s</string>
@@ -800,6 +810,7 @@ Language: th
 	<string name="upload_scaled_image">อัปโหลดและลิงก์ไปยังภาพที่ปรับขนาด</string>
 	<string name="scheduled">กำหนดตารางเวลาแล้ว</string>
 	<string name="link_enter_url">URL</string>
+	<string name="uploading">กำลังอัปโหลด...</string>
 	<string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>
 	<string name="tos">เงื่อนไขบริการ</string>
 	<string name="version">รุ่น</string>
@@ -825,7 +836,9 @@ Language: th
 	<string name="categories">หมวดหมู่</string>
 	<string name="tags_separate_with_commas">ป้ายกำกับ (แยกป้ายกำกับด้วย commas)</string>
 	<string name="title">หัวข้อ</string>
+	<string name="dlg_deleting_comments">กำลังลบความเห็น</string>
 	<string name="notification_vibrate">สั่น</string>
+	<string name="notification_sound">เสียงการแจ้งเตือน </string>
 	<string name="notification_blink">เปิดไฟกระพริบการแจ้งเตือน</string>
 	<string name="status">สถานะ</string>
 	<string name="select_video">เลือกวีดีโอจาก gallery</string>
