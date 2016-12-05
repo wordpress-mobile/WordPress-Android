@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-27 17:48:32+0000
+Translation-Revision-Date: 2016-11-24 09:09:58+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.3.0-alpha
 Language: cs_CZ
 -->
 <resources>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Nemáte oprávnění pro zobrazení tohoto příspěvku. Zkuste se nejdřív přihlásit na WordPress.com nebo použijte akční tlačítko nahoře v prohlížeči.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Nemáte oprávnění pro zobrazení tohoto příspěvku. Zkuste se přihlásit nejdřív přihlásit WordPress.com.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Nemáte oprávnění pro zobrazení tohoto příspěvku. Pomocí akčního tlačítka výše můžete vyzkoušet v prohlížeči.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Nelze použít "to se mi líbí", protože jste odhlášený od WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Již jste tento komentář označili "to se mi líbí"</string>
+	<string name="reader_toast_err_comment_not_found">Komentář nebyl nalezen!</string>
+	<string name="reader_toast_err_cannot_like_post">Selhalo označení příspěvku "to se mi líbí"</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com příspěvek</string>
+	<string name="reader_title_deeplink">WordPress čtečka</string>
+	<string name="error_notif_q_action_reply">Nepodařilo se odpovědět na komentář. Zkuste to znovu později.</string>
+	<string name="error_notif_q_action_approve">Nepodařilo se schválit komentář. Zkuste to znovu později.</string>
+	<string name="error_notif_q_action_like">Nepodařilo se označit komentář to se mi líbí. Zkuste to znovu později.</string>
+	<string name="notifications_label_new_notifications_subtitle">Klepněte pro jejich zobrazení</string>
+	<string name="notifications_label_new_notifications">Nové upozornění</string>
+	<string name="comment_q_action_replying">Odpovídání...</string>
+	<string name="comment_q_action_approving">Schvalování...</string>
+	<string name="comment_q_action_liking">Laikování…</string>
+	<string name="comment_q_action_processing">Zpracování...</string>
+	<string name="comment_q_action_done_generic">Akce hotová!</string>
+	<string name="comment_liked">Komentář označen "to se mi líbí"</string>
+	<string name="signout">Odhlásit se</string>
+	<string name="sign_in_wpcom">Přihlásit se k WordPress.com</string>
 	<string name="reader_label_global_related_posts">Více informací o WordPress.com</string>
 	<string name="reader_label_local_related_posts">Více na %s</string>
 	<string name="preference_open_device_settings">Otevřít nastavení v zařízení</string>
@@ -453,7 +475,7 @@ Language: cs_CZ
 	<string name="notifications_empty_action_comments">Připojte se ke konverzaci: komentujte příspěvky z webů, které sledujete.</string>
 	<string name="notifications_empty_action_unread">Začněte konverzaci: napište nový příspěvek.</string>
 	<string name="notifications_empty_action_all">Buďte aktivní! Komentujte příspěvky z webů, které sledujete.</string>
-	<string name="notifications_empty_likes">Žádné nové liky...zatím.</string>
+	<string name="notifications_empty_likes">Žádné nové !to se mi líbí"...zatím.</string>
 	<string name="notifications_empty_followers">Žádný nový sledující...zatím.</string>
 	<string name="notifications_empty_comments">Žádné nové komentáře...zatím.</string>
 	<string name="notifications_empty_unread">Všechny jsou přečtené.</string>
@@ -479,10 +501,10 @@ Language: cs_CZ
 	<string name="reader_discover_attribution_blog">Původně publikováno %s</string>
 	<string name="reader_discover_attribution_author">Původně publikoval %s</string>
 	<string name="reader_discover_attribution_author_and_blog">Původně publikoval %1$s na webu %2$s</string>
-	<string name="reader_short_like_count_multi">%s To se mi líbí</string>
+	<string name="reader_short_like_count_multi">%s to se mi líbí</string>
 	<string name="reader_short_like_count_none">To se mi líbí</string>
 	<string name="reader_label_follow_count">sledující %,d</string>
-	<string name="reader_short_like_count_one">1 To se mi líbí</string>
+	<string name="reader_short_like_count_one">1 to se mi libí</string>
 	<string name="reader_menu_tags">Upravit štítky a weby</string>
 	<string name="reader_title_post_detail">Čtenáři příspěvku</string>
 	<string name="local_draft_explainer">Tento příspěvek je místní koncept, který zatím nebyl publikován</string>
@@ -568,7 +590,6 @@ Language: cs_CZ
 	<string name="my_site_header_configuration">Nastavení</string>
 	<string name="notifications_account_required">Přihlaste se přes WordPress.com kvůli notifikacím</string>
 	<string name="stats_unknown_author">Neznámý autor</string>
-	<string name="signout">Odpojit</string>
 	<string name="image_added">Obrázek byl přidán</string>
 	<string name="sign_out_wpcom_confirm">Po odpojení se vám z účtu vymažou všechny @%s  WordPress.com údaje z tohoto zařízení, včetně lokálních konceptů a změn.</string>
 	<string name="select_all">Vybrat vše</string>
@@ -645,7 +666,7 @@ Language: cs_CZ
 	<string name="stats_views">Zobrazení</string>
 	<string name="stats_timeframe_years">Roky</string>
 	<string name="stats_pagination_label">Stránka %1$s do %2$s</string>
-	<string name="stats_likes">To se mi líbí</string>
+	<string name="stats_likes">To se líbí</string>
 	<string name="stats_view_countries">Země</string>
 	<string name="stats_view_followers">Sledující</string>
 	<string name="stats_view_publicize">Publikovaná</string>
@@ -708,7 +729,7 @@ Language: cs_CZ
 	<string name="delete_sure_page">Smazat stránku</string>
 	<string name="delete_sure">Smazat koncept</string>
 	<string name="delete_sure_post">Smazat příspěvek</string>
-	<string name="signing_out">Odhlásit se </string>
+	<string name="signing_out">Odhlašuji...</string>
 	<string name="posting_post">Publikuji "%s"</string>
 	<string name="media_empty_list_custom_date">Žádné soubory v tomto časovém intervalu</string>
 	<string name="pages_empty_list">Žádné stránky. Přejete si nějakou vytvořit?</string>
@@ -716,7 +737,7 @@ Language: cs_CZ
 	<string name="posts_empty_list">Žádné příspěvky. Přejete si nějaký vytvořit?</string>
 	<string name="comment_trashed">Komentář byl přesunut do koše</string>
 	<string name="comment">Komentář</string>
-	<string name="mnu_comment_liked">Líbilo se mi</string>
+	<string name="mnu_comment_liked">To se mi líbí</string>
 	<string name="uploading_total">Nahrávám %1$d z %2$d</string>
 	<string name="sending_content">Nahrávání obsahu %s</string>
 	<string name="select_a_blog">Vybrat web WordPress</string>
@@ -733,7 +754,7 @@ Language: cs_CZ
 	<string name="reader_label_comments_on">Komentáře k</string>
 	<string name="reader_label_comments_closed">Komentáře jsou uzavřené</string>
 	<string name="reader_label_comment_count_single">Jeden komentář</string>
-	<string name="reader_label_liked_by">Tohle se líbí</string>
+	<string name="reader_label_liked_by">To se líbí</string>
 	<string name="reader_label_like">To se mi líbí</string>
 	<string name="reader_label_view_original">Zobrazit původní článek</string>
 	<string name="reader_label_comment_count_multi">%,d komentářů</string>
@@ -745,7 +766,7 @@ Language: cs_CZ
 	<string name="nux_help_description">Pro odpovědi na časté dotazy navštivte naše centrum nápovědy nebo fórum</string>
 	<string name="browse_our_faq_button">Prohledat časté dotazy</string>
 	<string name="faq_button">Časté dotazy</string>
-	<string name="reader_empty_posts_liked">Žádné příspěvky jste neoznačili jako To se mi líbí</string>
+	<string name="reader_empty_posts_liked">Žádné příspěvky jste neoznačili jako "to se mi líbí"</string>
 	<string name="reader_empty_followed_blogs_title">Zatím nesledujete žádné weby</string>
 	<string name="reader_menu_block_blog">Zablokovat tento web</string>
 	<string name="reader_toast_blog_blocked">Příspěvky z tohoto webu se již nebudou zobrazovat</string>

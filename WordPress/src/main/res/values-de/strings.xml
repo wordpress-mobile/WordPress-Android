@@ -97,7 +97,6 @@ Language: de
 	<string name="invite_people">Personen einladen</string>
 	<string name="my_site_header_external">Extern</string>
 	<string name="send_link">Link senden</string>
-	<string name="signup_succeed_signin_failed">Dein Konto wurde erstellt, aber bei deiner Anmeldung ist ein Fehler\n aufgetreten. Versuche, dich mit deinem neu erstellten Benutzernamen und Passwort anzumelden.</string>
 	<string name="label_clear_search_history">Lösche Suchverlauf</string>
 	<string name="dlg_confirm_clear_search_history">Suchverlauf löschen?</string>
 	<string name="reader_empty_posts_in_search_description">Keine Beiträge zu %s in deiner Sprache gefunden.</string>
@@ -132,7 +131,6 @@ Language: de
 	<string name="check_your_email">Überprüfe dein Postfach</string>
 	<string name="magic_link_unavailable_error_message">Zur Zeit nicht verfügbar. Bitte gib dein Passwort ein</string>
 	<string name="logging_in">Anmeldung läuft</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Lass dir einen Link für die sofortige Anmeldung per E-Mail zuschicken</string>
 	<string name="enter_your_password_instead">Gib stattdessen dein Passwort ein</string>
 	<string name="web_address_dialog_hint">Wird mit deinem Kommentar veröffentlicht.</string>
 	<string name="username_email">E-Mail-Adresse oder Benutzername</string>
@@ -303,7 +301,6 @@ Language: de
 	<string name="error_post_remote_site_settings">Website-Info konnte nicht gespeichert werden</string>
 	<string name="error_fetch_remote_site_settings">Website-Info konnte nicht abgerufen werden</string>
 	<string name="error_media_upload_connection">Beim Hochladen von Medien ist ein Verbindungsfehler aufgetreten.</string>
-	<string name="site_settings_disconnected_toast">Die Verbindung wurde getrennt, die Bearbeitung ist deaktiviert.</string>
 	<string name="site_settings_unsupported_version_error">Nicht unterstützte WordPress-Version</string>
 	<string name="site_settings_multiple_links_dialog_description">Kommentare mit mehr Links als hier angegeben müssen genehmigt werden.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Automatisch schließen</string>
@@ -370,7 +367,6 @@ Language: de
 	<string name="site_settings_paging_title">Seitennummerierung</string>
 	<string name="site_settings_threading_title">Verschachtelung</string>
 	<string name="site_settings_sort_by_title">Sortieren nach</string>
-	<string name="site_settings_account_required_title">Benutzer müssen angemeldet sein.</string>
 	<string name="site_settings_identity_required_title">Name und E-Mail-Adresse erforderlich</string>
 	<string name="site_settings_receive_pingbacks_title">Pingbacks erhalten</string>
 	<string name="site_settings_send_pingbacks_title">Pingbacks senden</string>
@@ -534,7 +530,6 @@ Language: de
 	<string name="tabbar_accessibility_label_my_site">Meine Website</string>
 	<string name="editor_toast_changes_saved">Änderungen gespeichert</string>
 	<string name="passcodelock_prompt_message">Gib deine PIN ein</string>
-	<string name="push_auth_expired">Die Anfrage ist nicht mehr gültig. Melde dich bei WordPress.com an, um es erneut zu versuchen.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% der Aufrufe</string>
 	<string name="ignore">Ignorieren</string>
 	<string name="stats_insights_best_ever">Bisher bestes Aufrufergebnis</string>
@@ -544,11 +539,8 @@ Language: de
 	<string name="stats_insights_popular">Beliebtester Tag und Uhrzeit</string>
 	<string name="stats_insights_all_time">Beiträge, Aufrufe und Besucher für den gesamten Zeitraum</string>
 	<string name="stats_insights">Einsichten</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Um deine Statistiken anzusehen, melde dich bei deinem WordPress.com-Konto an, das  du für die Jetpack Verbindung verwendest.</string>
 	<string name="stats_other_recent_stats_moved_label">Suchst du nach deinen anderen, aktuellen Statistiken? Die findest du jetzt auf der Seite Einsichten.</string>
-	<string name="me_disconnect_from_wordpress_com">Verbindung zu WordPress.com trennen</string>
 	<string name="me_btn_login_logout">Anmelden/Abmelden</string>
-	<string name="me_connect_to_wordpress_com">Mit WordPress.com verbinden</string>
 	<string name="site_picker_cant_hide_current_site">"%s" wurde nicht ausgeblendet, denn es ist die aktuelle Webseite</string>
 	<string name="me_btn_support">Hilfe &amp; Support</string>
 	<string name="account_settings">Kontoeinstellungen</string>
@@ -566,11 +558,8 @@ Language: de
 	<string name="my_site_btn_blog_posts">Blogbeiträge</string>
 	<string name="reader_label_new_posts_subtitle">Berühren zum Anzeigen</string>
 	<string name="my_site_header_configuration">Einrichtung</string>
-	<string name="notifications_account_required">Für Benachrichtigungen bei WordPress.com anmelden</string>
 	<string name="stats_unknown_author">Unbekannter Autor</string>
-	<string name="signout">Trennen</string>
 	<string name="image_added">Bild hinzugefügt</string>
-	<string name="sign_out_wpcom_confirm">Das Trennen deines Benutzerkontos wird alle WordPress.com Daten von @%s von diesem Gerät entfernen, einschließlich aller lokal gespeicherten Entwürfe und Änderungen.</string>
 	<string name="select_all">Alle auswählen</string>
 	<string name="hide">Ausblenden</string>
 	<string name="show">Anzeigen</string>
@@ -591,8 +580,6 @@ Language: de
 	<string name="no_media">Keine Medien</string>
 	<string name="loading_images">Lade Bilder</string>
 	<string name="loading_videos">Lade Videos</string>
-	<string name="auth_required">Nochmal anmelden, um fortzufahren.</string>
-	<string name="sign_in_jetpack">Melde dich in deinem WordPress.com-Konto an, um dich mit Jetpack zu verbinden.</string>
 	<string name="two_step_sms_sent">Der Überprüfungscode kommt per Textnachricht.</string>
 	<string name="two_step_footer_button">Sende Code via Textnachricht</string>
 	<string name="two_step_footer_label">Gib den Code aus der Authenticator-App ein.</string>
@@ -708,7 +695,6 @@ Language: de
 	<string name="delete_sure_page">Lösche diese Seite</string>
 	<string name="delete_sure">Lösche diesen Entwurf</string>
 	<string name="delete_sure_post">Lösche diesen Beitrag</string>
-	<string name="signing_out">Abmelden…</string>
 	<string name="posting_post">Veröffentliche "%s"</string>
 	<string name="media_empty_list_custom_date">Keine Medien in diesem Zeitabschnitt</string>
 	<string name="pages_empty_list">Keine Seiten bisher. Warum nicht jetzt Eine erstellen?</string>
@@ -981,16 +967,13 @@ Language: de
 	<string name="reader_empty_followed_blogs_description">Keine Bange, tippe einfach das Icon rechts oben an um zu stöbern!</string>
 	<string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
 	<string name="select_time">Zeit auswählen</string>
-	<string name="nux_oops_not_selfhosted_blog">Bei WordPress.com anmelden</string>
 	<string name="nux_add_selfhosted_blog">Selbst-gehostete Website hinzufügen</string>
-	<string name="signing_in">Anmelden…</string>
 	<string name="nux_welcome_create_account">Konto erstellen</string>
 	<string name="nux_tap_continue">Weiter</string>
 	<string name="password_invalid">Du benötigst ein sichereres Passwort. Stelle sicher, dass Du 7 oder mehr Zeichen benutzt und Groß- und Kleinbuchstaben enthalten sind, genau so wie Zahlen und Sonderzeichen.</string>
 	<string name="nux_tutorial_get_started_title">Los geht\'s!</string>
 	<string name="limit_reached">Limit erreicht. Du kannst es in 1 Minute nochmal versuchen. Ein weiterer Versuch vor Ablauf wird nur die Wartezeit verlängern, bis die Sperre aufgehoben wird. Falls du dies für einen Fehler hältst, kontaktiere bitte den Support.</string>
 	<string name="username_invalid">Ungültiger Benutzername</string>
-	<string name="connecting_wpcom">Verbinde zu WordPress.com</string>
 	<string name="button_next">Nächster</string>
 	<string name="create_account_wpcom">Erstelle ein Konto auf WordPress.com</string>
 	<string name="reader_empty_followed_tags">Du folgst keinen Schlagwörtern</string>
@@ -1081,7 +1064,6 @@ Language: de
 	<string name="follows">Folgt</string>
 	<string name="note_reply_successful">Antwort veröffentlicht</string>
 	<string name="notifications">Benachrichtigungen</string>
-	<string name="sign_in">Anmelden</string>
 	<string name="loading">Lädt...</string>
 	<string name="httppassword">HTTP-Passwort</string>
 	<string name="httpuser">HTTP-Benutzername</string>

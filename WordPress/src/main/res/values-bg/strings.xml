@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-09-18 06:09:10+0000
+Translation-Revision-Date: 2016-11-17 15:47:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: bg
 -->
 <resources>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Не сте оторизирани да разглеждате тази публикация. Опитайте да влезете в WordPress.com или използвайте горния бутон, за да я отворите в браузъра.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Не сте оторизирани да разглеждате тази публикация. Опитайте да влезете в WordPress.com.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Не сте оторизирани да разглеждате тази публикация. Използвайте горния бутон, за да я отворите в браузъра.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Трябва да влезете в WordPress.com, за да харесате</string>
+	<string name="reader_toast_err_already_liked">Вече сте харесали този коментар</string>
+	<string name="reader_toast_err_comment_not_found">Коментарът не е открит.</string>
+	<string name="reader_toast_err_cannot_like_post">Неуспешно харесване на публикацията.</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com публикация</string>
+	<string name="reader_title_deeplink">WordPress Reader</string>
+	<string name="error_notif_q_action_reply">Неуспешен отговор на коментара. Моля, опитайте по-късно.</string>
+	<string name="error_notif_q_action_approve">Неуспешно одобряване на коментара. Моля, опитайте по-късно.</string>
+	<string name="error_notif_q_action_like">Неуспешно харесване на коментара. Моля, опитайте по-късно.</string>
+	<string name="notifications_label_new_notifications_subtitle">Натиснете, за да ги покажете</string>
+	<string name="notifications_label_new_notifications">Нови уведомления</string>
+	<string name="comment_q_action_replying">Отговаряне...</string>
+	<string name="comment_q_action_approving">Одобряване...</string>
+	<string name="comment_q_action_liking">Харесване...</string>
+	<string name="comment_q_action_processing">Обработва се...</string>
+	<string name="comment_q_action_done_generic">Готово!</string>
+	<string name="comment_liked">Коментарът е харесан</string>
+	<string name="signout">Излизане</string>
+	<string name="sign_in_wpcom">Влизане в WordPress.com</string>
+	<string name="reader_label_global_related_posts">Още на WordPress.com</string>
+	<string name="reader_label_local_related_posts">Още в %s</string>
+	<string name="preference_open_device_settings">Настройки на устройството</string>
+	<string name="comment_moderated_unapproved">Коментарът е неодобрен</string>
+	<string name="invite_invalid_email">%s: Невалиден имейл</string>
+	<string name="invite_user_blocked_invites">%s: потребителят е забранил поканите</string>
+	<string name="invite_already_following">%s: вече сте абонирани</string>
+	<string name="invite_already_a_member">%s: вече е член</string>
+	<string name="invite_username_not_found">%s: потребителят не е намерен</string>
+	<string name="comment_moderated_approved">Коментарът бе одобрен.</string>
+	<string name="like">Харесвам</string>
 	<string name="reader_label_image_count_one">1 снимка</string>
 	<string name="timespan_now">сега</string>
 	<string name="role_viewer">Потребител</string>
@@ -18,6 +51,7 @@ Language: bg
 	<string name="alignment_right">Дясно</string>
 	<string name="alignment_left">Ляво</string>
 	<string name="alignment_none">Без</string>
+	<string name="site_settings_list_editor_action_mode_title">Избрано %1$d</string>
 	<string name="error_fetch_users_list">Неуспешно извикване на потребителите</string>
 	<string name="plans_manage">Управление на плана ви\nWordPress.com/plans</string>
 	<string name="title_email_follower">Абонат</string>
@@ -85,7 +119,7 @@ Language: bg
 	<string name="invite_people">Покана</string>
 	<string name="my_site_header_external">Външна</string>
 	<string name="send_link">Изпращане на връзка</string>
-	<string name="signup_succeed_signin_failed">Профилът ви беше създаден, но възникна грешка при добавянето му.\n       Опитайте да влезете с новите си име и парола.</string>
+	<string name="signup_succeed_signin_failed">Профилът ви беше създаден, но възникна грешка при вашето влизане. Опитайте да влезете с новите си потребителско име и парола.</string>
 	<string name="label_clear_search_history">Изчистване на историята на търсенето</string>
 	<string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
 	<string name="reader_empty_posts_in_search_description">Няма намерени публикации за %s на вашия език</string>
@@ -120,7 +154,7 @@ Language: bg
 	<string name="check_your_email">Проверете вашия имейл</string>
 	<string name="magic_link_unavailable_error_message">В момента не е налично. Въведете вашата парола</string>
 	<string name="logging_in">Влизане</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Изпратете си връзка по имейл за да влезете веднага</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Изпратете си връзка по имейл, за да влезете веднага.</string>
 	<string name="enter_your_password_instead">Въведете паролата си</string>
 	<string name="web_address_dialog_hint">Ще се показва когато коментирате.</string>
 	<string name="username_email">Имейл или потребителско име</string>
@@ -291,7 +325,7 @@ Language: bg
 	<string name="error_post_remote_site_settings">Грешка при запазване на информацията за сайта</string>
 	<string name="error_fetch_remote_site_settings">Грешка при зареждане на информацията за сайта</string>
 	<string name="error_media_upload_connection">Връзката изчезна докато файловете се качваха</string>
-	<string name="site_settings_disconnected_toast">Няма връзка, редактирането е изключено.</string>
+	<string name="site_settings_disconnected_toast">Излезли сте, редактирането е изключено.</string>
 	<string name="site_settings_unsupported_version_error">Тази версия на WordPress не се поддържа</string>
 	<string name="site_settings_multiple_links_dialog_description">Коментарите с повече от този брой връзки да изискват специално одобрение.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Автоматично затваряне</string>
@@ -522,7 +556,7 @@ Language: bg
 	<string name="tabbar_accessibility_label_my_site">Моят сайт</string>
 	<string name="editor_toast_changes_saved">Промените са запазени</string>
 	<string name="passcodelock_prompt_message">Въведете вашия ПИН</string>
-	<string name="push_auth_expired">Заявка е изтекла. Влезте в WordPress.com и опитайте отново.</string>
+	<string name="push_auth_expired">Заявката е изтекла. Влезте в WordPress.com и опитайте отново.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% преглеждания</string>
 	<string name="ignore">Игнориране</string>
 	<string name="stats_insights_best_ever">Най-добри преглеждания</string>
@@ -534,9 +568,9 @@ Language: bg
 	<string name="stats_insights">Данни</string>
 	<string name="stats_sign_in_jetpack_different_com_account">За да прегледате статистиката, влезте в профила си в WordPress.com, който използвате за връзка с Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Търсите другите скорошни статистики? Преместихме ги в страницата за проникновения.</string>
-	<string name="me_disconnect_from_wordpress_com">Прекъсване на връзката с WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Излизане от WordPress.com</string>
 	<string name="me_btn_login_logout">Вход/Изход</string>
-	<string name="me_connect_to_wordpress_com">Свързване с WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Влизане в WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" не беше скрит защото е текущият уебсайт</string>
 	<string name="me_btn_support">Помощ и поддръжка</string>
 	<string name="account_settings">Настройки на профила</string>
@@ -554,11 +588,10 @@ Language: bg
 	<string name="my_site_btn_blog_posts">Публикации</string>
 	<string name="reader_label_new_posts_subtitle">Натиснете за да ги прегледате</string>
 	<string name="my_site_header_configuration">Настройки</string>
-	<string name="notifications_account_required">За да прегледате вашите известявания влезте в WordPress.com</string>
+	<string name="notifications_account_required">За да прегледате вашите известявания, влезте в WordPress.com</string>
 	<string name="stats_unknown_author">Непознат автор</string>
-	<string name="signout">Изход</string>
 	<string name="image_added">Снимката е добавена</string>
-	<string name="sign_out_wpcom_confirm">Излизането от профила ще премахне вските данни на @%s в WordPress.com от това устройство. Включително локалните чернови и локалните промени.</string>
+	<string name="sign_out_wpcom_confirm">Излизането от профила ще премахне всички данни на @%s в WordPress.com от това устройство, включително локалните чернови и локалните промени.</string>
 	<string name="select_all">Избор на всичко</string>
 	<string name="hide">Скриване</string>
 	<string name="show">Показване</string>
@@ -579,8 +612,8 @@ Language: bg
 	<string name="no_media">Няма файлове</string>
 	<string name="loading_images">Зареждане на изображенията</string>
 	<string name="loading_videos">Видеата се зареждат</string>
-	<string name="auth_required">За да продължите влезте отново.</string>
-	<string name="sign_in_jetpack">За да се свържете с Jetpack влезте с WordPress.com акаунт.</string>
+	<string name="auth_required">За да продължите, влезте отново.</string>
+	<string name="sign_in_jetpack">За да се свържете с Jetpack влезте в WordPress.com.</string>
 	<string name="two_step_sms_sent">Проверете текстовите ви съобщения за верификационния код</string>
 	<string name="two_step_footer_button">Изпращане на кода чрез текстово съобщение</string>
 	<string name="two_step_footer_label">Въведете кода, предоставен от приложението за оторизиране</string>
@@ -978,7 +1011,7 @@ Language: bg
 	<string name="nux_tutorial_get_started_title">Начало!</string>
 	<string name="limit_reached">Достигнахте ограничение. Пробвайте отново след 1 минута. Ако пробвате по-скоро от една минута ще увеличите продължителността на ограничението. В случай, че това е грешка, трябва да се свържете с поддръжката.</string>
 	<string name="username_invalid">Невалидно потребителско име</string>
-	<string name="connecting_wpcom">Свързване с WordPress.com</string>
+	<string name="connecting_wpcom">Влизане в WordPress.com</string>
 	<string name="button_next">Нататък</string>
 	<string name="create_account_wpcom">Създайте профил в WordPress.com</string>
 	<string name="reader_empty_followed_tags">Вие не следвате етикети</string>

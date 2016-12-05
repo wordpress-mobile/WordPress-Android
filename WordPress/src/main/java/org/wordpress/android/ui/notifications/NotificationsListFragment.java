@@ -24,7 +24,9 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -46,6 +48,8 @@ public class NotificationsListFragment extends Fragment
     public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
+    public static final String NOTE_ALLOW_NAVIGATE_LIST_EXTRA = "allowNavigateList";
+    public static final String NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter";
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
 
@@ -239,7 +243,7 @@ public class NotificationsListFragment extends Fragment
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNoteForReply(getActivity(), noteId, false, null);
+            openNoteForReply(getActivity(), noteId, false, null, true, mNotesAdapter.getCurrentFilter());
         }
     };
 
@@ -256,7 +260,9 @@ public class NotificationsListFragment extends Fragment
     public static void openNoteForReply(Activity activity,
                                         String noteId,
                                         boolean shouldShowKeyboard,
-                                        String replyText) {
+                                        String replyText,
+                                        boolean allowNavigateList,
+                                        NotesAdapter.FILTERS filter) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -270,6 +276,15 @@ public class NotificationsListFragment extends Fragment
         if (!TextUtils.isEmpty(replyText)) {
             detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText);
         }
+        if (allowNavigateList) {
+            detailIntent.putExtra(NOTE_ALLOW_NAVIGATE_LIST_EXTRA, true);
+            detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter);
+        }
+
+        openNoteForReplyWithParams(detailIntent, activity);
+    }
+
+    private static void openNoteForReplyWithParams(Intent detailIntent, Activity activity) {
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 
@@ -554,6 +569,29 @@ public class NotificationsListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    public void onEventMainThread(final NotificationEvents.NoteLikeStatusChanged event) {
+        // Like/unlike done -> refresh the note and update db
+        NotificationsActions.downloadNoteAndUpdateDB(event.noteId,
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeStatusChanged.class);
+                        //now re-set the object in our list adapter with the note saved in the updated DB
+                        Note note = NotificationsTable.getNoteById(event.noteId);
+                        if (note != null) {
+                            mNotesAdapter.replaceNote(note);
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteLikeStatusChanged.class);
+                    }
+                }
+        );
+    }
+
+    @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NoteVisibilityChanged event) {
         setNoteIsHidden(event.noteId, event.isHidden);
 
@@ -596,13 +634,15 @@ public class NotificationsListFragment extends Fragment
 
     private void showNewUnseenNotificationsUI() {
         if (!isAdded()) return;
-        mRecyclerView.clearOnScrollListeners(); // Just one listener. Multiple notes received here add multiple listeners.
 
-        if(!isFirstItemVisible()) {
-            showNewNotificationsBar();
+        // Make sure the RecyclerView is configured
+        if (mRecyclerView == null || mRecyclerView.getLayoutManager() == null) {
+            return;
         }
 
-        // assign the scroll listener to hide the bar when the recycler is scrolled, but don't assign
+        mRecyclerView.clearOnScrollListeners(); // Just one listener. Multiple notes received here add multiple listeners.
+
+        // Assign the scroll listener to hide the bar when the recycler is scrolled, but don't assign
         // it right away since the user may be scrolling when the bar appears (which would cause it
         // to disappear as soon as it's displayed)
         mRecyclerView.postDelayed(new Runnable() {
@@ -614,7 +654,11 @@ public class NotificationsListFragment extends Fragment
             }
         }, 1000L);
 
-
+        // Check if the first item is visible on the screen
+        View child = mRecyclerView.getLayoutManager().getChildAt(0);
+        if (child != null && mRecyclerView.getLayoutManager().getPosition(child) > 0) {
+            showNewNotificationsBar();
+        }
     }
 
     /*
@@ -653,19 +697,5 @@ public class NotificationsListFragment extends Fragment
             public void onAnimationRepeat(Animation animation) { }
         };
         AniUtils.startAnimation(mNewNotificationsBar, R.anim.notifications_bottom_bar_out, listener);
-    }
-
-    /*
-     * returns true if the first item is still visible in the RecyclerView - will return
-     * false if the first item is scrolled out of view, or if the list is empty
-     */
-    private boolean isFirstItemVisible() {
-        if (mRecyclerView == null
-                || mRecyclerView.getLayoutManager() == null) {
-            return false;
-        }
-
-        View child = mRecyclerView.getLayoutManager().getChildAt(0);
-        return (child != null && mRecyclerView.getLayoutManager().getPosition(child) == 0);
     }
 }

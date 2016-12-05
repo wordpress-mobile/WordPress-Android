@@ -196,7 +196,7 @@ public class ActivityLauncher {
 
         // always add the preview parameter to avoid bumping stats when viewing posts
         String url = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
-        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
+        WPWebViewActivity.openPostOrPage(context, blog, post, url);
     }
 
     public static void addMedia(Activity activity) {

@@ -27,6 +27,7 @@ import org.wordpress.android.ui.comments.CommentActionResult;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 
@@ -37,7 +38,6 @@ import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFI
 import static org.wordpress.android.push.GCMMessageService.AUTH_PUSH_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
 import static org.wordpress.android.push.GCMMessageService.GROUP_NOTIFICATION_ID;
-import static org.wordpress.android.push.GCMMessageService.PUSH_ARG_NOTE_FULL_DATA;
 import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
 
 /**
@@ -332,6 +332,8 @@ public class NotificationsProcessingService extends Service {
                 successMessage = getString(R.string.comment_q_action_done_generic);
             }
 
+            NotificationsActions.markNoteAsRead(mNote);
+
             //dismiss any other pending result notification
             dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
             //update notification indicating the operation succeeded
@@ -443,7 +445,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_LIKED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED);
 
             WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
                     String.valueOf(mNote.getCommentId()),
@@ -467,7 +469,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED);
 
             CommentActions.moderateCommentForNote(mNote, CommentStatus.APPROVED, new CommentActions.CommentActionListener() {
                 @Override
@@ -486,7 +488,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO);
 
 
             if (!TextUtils.isEmpty(mReplyText)) {

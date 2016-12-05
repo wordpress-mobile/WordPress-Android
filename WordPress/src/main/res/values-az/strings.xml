@@ -47,7 +47,6 @@ Language: az
 	<string name="tabbar_accessibility_label_my_site">Saytım</string>
 	<string name="editor_toast_changes_saved">Dəyişikliklər qeyd edildi</string>
 	<string name="passcodelock_prompt_message">PIN kodunuzu daxil edin</string>
-	<string name="push_auth_expired">İstək müddəti doldu. WordPress.com saytında giriş edərək təkrar yoxlayın.</string>
 	<string name="stats_insights_most_popular_percent_views">Baxışlarda %1$d%% </string>
 	<string name="ignore">Yox say</string>
 	<string name="stats_insights_best_ever">Bü Günə Qədərki Ən Yaxşı Baxış</string>
@@ -57,11 +56,8 @@ Language: az
 	<string name="stats_insights_popular">Ən populyar gün və saat</string>
 	<string name="stats_insights_all_time">Bütün zamanlardakı yazılar, baxışlar və ziyarətçilər</string>
 	<string name="stats_insights">Tək Baxışda</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Statistikalarınıza baxmaq üçün, Jetpack-a qoşulmaq üçün istifadə etdiyiniz WordPress.com hesabına daxil olun.</string>
 	<string name="stats_other_recent_stats_moved_label">Digər Son Statistikaları axtarırsınızmı? Bu məlumatları Tək Baxışda səhifəsinə daşıdıq.</string>
-	<string name="me_disconnect_from_wordpress_com">WordPress.com Bağlantısını Kəs</string>
 	<string name="me_btn_login_logout">Giriş/Çıxış</string>
-	<string name="me_connect_to_wordpress_com">WordPress.com-a qoşul</string>
 	<string name="site_picker_cant_hide_current_site">"%s" hazırkı sayt olduğundan gizlədilə bilmədi</string>
 	<string name="me_btn_support">Yardım və Dəstək</string>
 	<string name="site_picker_create_dotcom">WordPress.com saytı yarat</string>
@@ -78,11 +74,8 @@ Language: az
 	<string name="my_site_btn_blog_posts">Bloq Yazıları</string>
 	<string name="reader_label_new_posts_subtitle">Göstərmək üçün toxunun</string>
 	<string name="my_site_header_configuration">Konfiqurasiya</string>
-	<string name="notifications_account_required">Bildirişlər üçün WordPress.com-a giriş et</string>
 	<string name="stats_unknown_author">Naməlum Müəllif</string>
-	<string name="signout">Bağlantını Kəs</string>
 	<string name="image_added">Təsvir əlavə edildi</string>
-	<string name="sign_out_wpcom_confirm">Hesabınızın bağlantısını kəsdiyinizdə yerli qaralama və dəyişikliklər daxil olmaq üzrə @%s istifadəçisinə aid bütün WordPress.com məlumatları bu cihazdan silinir.</string>
 	<string name="select_all">Tamamını seç</string>
 	<string name="hide">Gizlət</string>
 	<string name="show">Göstər</string>
@@ -103,8 +96,6 @@ Language: az
 	<string name="no_media">Media yoxdur</string>
 	<string name="loading_images">Təsvirlər yüklənir</string>
 	<string name="loading_videos">Videolar yüklənir</string>
-	<string name="auth_required">Davam etmək üçün giriş edin.</string>
-	<string name="sign_in_jetpack">Jetpack qoşulması üçün WordPress.com hesabınıza giriş edin.</string>
 	<string name="two_step_sms_sent">Mətn mesajlarınızı təsdiqləmə kodu üçün yoxlayın.</string>
 	<string name="two_step_footer_button">Kodu mətn mesajı olaraq göndər</string>
 	<string name="two_step_footer_label">Təsdiqləmə proqramınızdakı kodu daxil edin.</string>
@@ -217,7 +208,6 @@ Language: az
 	<string name="delete_sure_page">Bu səhifəni sil</string>
 	<string name="delete_sure">Bu qaralamanı sil</string>
 	<string name="delete_sure_post">Bu yazını sil</string>
-	<string name="signing_out">Çıxış…</string>
 	<string name="posting_post">Yazılan: "%s"</string>
 	<string name="media_empty_list_custom_date">Bu zaman aralığında media yoxdur</string>
 	<string name="pages_empty_list">Hələlik səhifə yoxdur. Bir səhifə yaratmağa nə deyərsiniz?</string>
@@ -484,16 +474,13 @@ Language: az
 	<string name="select_date">Tarix seç</string>
 	<string name="reader_likes_you_and_one">Siz və bir diğəri bunu bəyənir</string>
 	<string name="select_time">Saat seç</string>
-	<string name="nux_oops_not_selfhosted_blog">WordPress.com ilə daxil ol</string>
 	<string name="nux_add_selfhosted_blog">Öz-xostinq saytını əlavə et</string>
-	<string name="signing_in">Giriş…</string>
 	<string name="nux_welcome_create_account">Hesab yarat</string>
 	<string name="nux_tap_continue">Davam et</string>
 	<string name="password_invalid">Sizə daha etibarlı parol lazımdır. 7 simvoldan artıq böyük və kiçik hərflərin, rəqəm və ya özəl simvolların qarışığından istifadə edin.</string>
 	<string name="nux_tutorial_get_started_title">Başlayın!</string>
 	<string name="limit_reached">Limit həddini aşdınız. 1 dəqiqə ərzində təkrar yoxlaya bilərsiniz. Bir daha cəhd etsəniz qadağanın ləğv edilməsi üçün bir az gözləməli olacaqsınız. Bunun bir xəta olduğunu düşünürsünüzsə dəstək xidmətinə müraciət edin.</string>
 	<string name="username_invalid">Keçərsiz istifadəçi adı</string>
-	<string name="connecting_wpcom">WordPress.com-a qoşulma</string>
 	<string name="create_account_wpcom">WordPress.com-da hesab yaradın</string>
 	<string name="reader_empty_followed_tags">Siz hər hansı bir etiketi izləyə bilməyəcəksiniz</string>
 	<string name="reader_toast_err_url_intent">%s açmaq baş tutmadı</string>
@@ -583,7 +570,6 @@ Language: az
 	<string name="follows">İzləmələr</string>
 	<string name="note_reply_successful">Cavab dərc edildi</string>
 	<string name="notifications">Bildirişlər</string>
-	<string name="sign_in">Giriş</string>
 	<string name="loading">Yüklənir...</string>
 	<string name="httppassword">HTTP parolu</string>
 	<string name="httpuser">HTTP istifadəçi adı</string>

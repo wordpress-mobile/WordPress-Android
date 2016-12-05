@@ -13,7 +13,6 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -232,7 +231,7 @@ public class ReaderActivityLauncher {
             intent.putExtra(ReaderConstants.ARG_CONTENT, content);
         }
 
-        if (context instanceof Activity) {
+        if (context instanceof Activity && sourceView != null) {
             Activity activity = (Activity) context;
             ActivityOptionsCompat options =
                     ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);
@@ -267,8 +266,7 @@ public class ReaderActivityLauncher {
     private static void openUrlInternal(Context context, @NonNull String url) {
         // That won't work on wpcom sites with custom urls
         if (WPUrlUtils.isWordPressCom(url)) {
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
-                    AccountHelper.getDefaultAccount().getUserName());
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url);
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
         }

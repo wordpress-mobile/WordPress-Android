@@ -117,7 +117,6 @@ Language: mk
 	<string name="pages_empty_list">Сеуште нема страници. Зошто не создадете една?</string>
 	<string name="media_empty_list_custom_date">Нема медиа во овој временски интервал</string>
 	<string name="posting_post">Објавување "%s"</string>
-	<string name="signing_out">Одјавување...</string>
 	<string name="comment_trashed">Комента исфрлен</string>
 	<string name="reader_toast_err_generic">Неможе да се изврши ова дејство</string>
 	<string name="reader_toast_err_block_blog">Неможе да се блокира овој блог</string>
@@ -342,8 +341,6 @@ Language: mk
 	<string name="select_time">Избери време</string>
 	<string name="select_date">Избери дата</string>
 	<string name="account_two_step_auth_enabled">Оваа корисничка сметка има вклучено автентикација во два чекори. Посетете ги вашите безбедносни подесувања на WordPress.com за да генерирате лозинка за специфичната апликација.</string>
-	<string name="signing_in">Најавување...</string>
-	<string name="nux_oops_not_selfhosted_blog">Најави се на WordPress.com</string>
 	<string name="nux_tap_continue">Продолжи</string>
 	<string name="nux_welcome_create_account">Креирај корисничка сметка</string>
 	<string name="password_invalid">Потребна ви е посигурна лозинка. Употребете 7 или повеќе карактери помешани со големи и мали букви, бројки и специјални карактери.</string>
@@ -367,7 +364,6 @@ Language: mk
 	<string name="reader_toast_err_url_intent">Неможе да се отвори %s</string>
 	<string name="reader_empty_followed_tags">Вие не следите ниту едно обележување</string>
 	<string name="create_account_wpcom">Креирајте корисничка сметка на WordPress.com</string>
-	<string name="connecting_wpcom">Поврзување со WordPress.com</string>
 	<string name="username_invalid">Невалидно корисничко име</string>
 	<string name="limit_reached">Ограничувањето е достигнато. Може да се обидете повторно за 1 минута. Доколку се обидете повторно пред тоа време, ќе го зголемите времето за чекање пред да биде отстранета забраната. Доколку мислите дека ова е грешка, контактирајте ја поддршката.</string>
 	<string name="nux_tutorial_get_started_title">Започнете!</string>
@@ -436,7 +432,6 @@ Language: mk
 	<string name="notifications">Известувања</string>
 	<string name="new_notifications">%d нови известувања</string>
 	<string name="more_notifications">и уште %d .</string>
-	<string name="sign_in">Најави се</string>
 	<string name="note_reply_successful">Одговори на објавено</string>
 	<string name="loading">Вчитување...</string>
 	<string name="httpuser">HTTP корисничко име</string>
