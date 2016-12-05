@@ -375,7 +375,7 @@ public class MySiteFragment extends Fragment
 
         // Hide the Plan item if the Plans feature is not available for this blog
         String planShortName = blog.getPlanShortName();
-        if (!TextUtils.isEmpty(planShortName)) {
+        if (!TextUtils.isEmpty(planShortName) && blog.isAdmin()) {
             mCurrentPlanNameTextView.setText(planShortName);
             mPlanContainer.setVisibility(View.VISIBLE);
         } else {
