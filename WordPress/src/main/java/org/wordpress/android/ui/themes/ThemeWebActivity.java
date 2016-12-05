@@ -89,7 +89,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
         });
     }
 
-    private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, Blog blog, Boolean isCurrentTheme) {
+    private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, Blog blog,
+                                     boolean isCurrentTheme) {
         if (activity == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;

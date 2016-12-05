@@ -84,8 +84,8 @@ public class WPWebViewActivity extends WebViewActivity {
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
-    public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
-        openWPCOMURL(context, url, user);
+    public static void openUrlByUsingWPCOMCredentials(Context context, String url) {
+        openWPCOMURL(context, url);
     }
 
     // Note: The webview has links disabled!!
@@ -149,7 +149,7 @@ public class WPWebViewActivity extends WebViewActivity {
         context.startActivity(intent);
     }
 
-    private static void openWPCOMURL(Context context, String url, String user) {
+    private static void openWPCOMURL(Context context, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
