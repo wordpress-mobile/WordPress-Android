@@ -201,6 +201,18 @@ public class ReaderActivityLauncher {
     }
 
     /*
+     * play an external video
+     */
+    public static void showReaderVideoViewer(Context context, String videoUrl) {
+        if (context == null || TextUtils.isEmpty(videoUrl)) {
+            return;
+        }
+        Intent intent = new Intent(context, ReaderVideoViewerActivity.class);
+        intent.putExtra(ReaderConstants.ARG_VIDEO_URL, videoUrl);
+        context.startActivity(intent);
+    }
+
+    /*
      * show the passed imageUrl in the fullscreen photo activity - optional content is the
      * content of the post the image is in, used by the activity to show all images in
      * the post
