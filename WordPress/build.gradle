@@ -104,7 +104,7 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.automattic:rest:1.0.7'
     compile 'org.wordpress:graphview:3.4.0'
-    compile 'org.wordpress:persistentedittext:1.0.1'
+    compile 'org.wordpress:persistentedittext:1.0.2'
     compile 'org.wordpress:emailchecker2:1.1.0'
 
     compile 'com.yalantis:ucrop:2.2.0'

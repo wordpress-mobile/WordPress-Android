@@ -140,6 +140,8 @@
     <dimen name="empty_list_description_bottom_margin">8dp</dimen>
     <dimen name="empty_list_description_side_margin">48dp</dimen>
 
+    <dimen name="nux_logotype_margin_bottom">24dp</dimen>
+    <dimen name="nux_logotype_font_size">28sp</dimen>
     <dimen name="nux_title_font_size">28sp</dimen>
     <dimen name="nux_edit_field_font_size">16sp</dimen>
     <dimen name="nux_main_button_height">48dp</dimen>

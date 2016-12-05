@@ -506,7 +506,7 @@ public class PostUploadService extends Service {
         private void setUploadPostErrorMessage(Exception e) {
             mErrorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(),
                     mPost.isPage() ? mContext.getResources().getText(R.string.page).toString() :
-                            mContext.getResources().getText(R.string.post).toString()) + " " + e.getMessage();
+                            mContext.getResources().getText(R.string.post).toString()) + " - " + e.getMessage();
             mIsMediaError = false;
             AppLog.e(T.EDITOR, mErrorMessage, e);
         }
