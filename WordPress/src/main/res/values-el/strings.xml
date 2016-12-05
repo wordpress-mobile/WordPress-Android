@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-04 21:24:03+0000
+Translation-Revision-Date: 2016-12-05 09:23:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: el_GR
@@ -51,7 +51,7 @@ Language: el_GR
 	<string name="alignment_right">Δεξιά</string>
 	<string name="alignment_left">Αριστερά</string>
 	<string name="alignment_none">Καμμία</string>
-	<string name="site_settings_list_editor_action_mode_title">Επιλέχθηκαν %1$s</string>
+	<string name="site_settings_list_editor_action_mode_title">Επιλέχθηκαν %1$d</string>
 	<string name="error_fetch_users_list">Αδυναμία ανάκτησης χρηστών ιστοτόπου</string>
 	<string name="plans_manage">Διαχειριστείτε το πακέτο σας στο\nWordPress.com/plans</string>
 	<string name="title_email_follower">Ακόλουθος μέσω e-mail</string>
