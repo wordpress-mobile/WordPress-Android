@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -29,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -105,6 +108,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected EditText mUrlEditText;
     protected ContextMenuEditText mTwoStepEditText;
 
+    protected ViewSwitcher mIconSwitcher;
+    protected View mWpcomLogotype;
     protected LinearLayout mBottomButtonsLayout;
     protected RelativeLayout mUsernameLayout;
     protected RelativeLayout mPasswordLayout;
@@ -160,6 +165,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
+        mIconSwitcher = (ViewSwitcher) rootView.findViewById(R.id.icon_switcher);
+        mWpcomLogotype = rootView.findViewById(R.id.nux_wordpress_logotype);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mTwoStepLayout = (RelativeLayout) rootView.findViewById(R.id.two_factor_layout);
         mTwoStepFooter = (LinearLayout) rootView.findViewById(R.id.two_step_footer);
@@ -385,6 +392,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected void showDotComSignInForm(){
         mUrlButtonLayout.setVisibility(View.GONE);
         mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
+        switchToDotOrgIcon(false);
+        switchBackgroundToDotOrg(false);
     }
 
     protected void showSelfHostedSignInForm(){
@@ -393,6 +402,45 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
         showPasswordField();
+        switchToDotOrgIcon(true);
+        switchBackgroundToDotOrg(true);
+    }
+
+    private void switchToDotOrgIcon(boolean showDotOrg) {
+        if (mIconSwitcher.getDisplayedChild() == 0) {
+            if (showDotOrg) {
+                mIconSwitcher.showNext();
+                mWpcomLogotype.setVisibility(View.GONE);
+            }
+        } else {
+            if (!showDotOrg) {
+                mIconSwitcher.showPrevious();
+
+                // reinstate the logotype into the layout so the switcher can compute sizes
+                mWpcomLogotype.setVisibility(View.INVISIBLE);
+
+                // delay the actual appearance of the logotype for smoother coordination with the rest of animations
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWpcomLogotype.setVisibility(View.VISIBLE);
+                    }
+                }, 300);
+            }
+        }
+    }
+
+    private void switchBackgroundToDotOrg(boolean useDotOrg) {
+        if (getView() == null) {
+            return;
+        }
+
+        TransitionDrawable transition = (TransitionDrawable) getView().getBackground();
+        if (useDotOrg) {
+            transition.startTransition(500);
+        } else {
+            transition.reverseTransition(500);
+        }
     }
 
     protected void track(Stat stat, Map<String, Boolean> properties) {
@@ -510,9 +558,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             } else {
                 setSecondaryButtonVisible(false);
             }
+
+            // make the top padding match the bottom padding of the logo so the logo doesn't touch the screen top
+            mIconSwitcher.setPadding(mIconSwitcher.getPaddingLeft(), mIconSwitcher.getPaddingBottom(), mIconSwitcher
+                    .getPaddingRight(), mIconSwitcher.getPaddingBottom());
         } else {
             mBottomButtonsLayout.setOrientation(LinearLayout.VERTICAL);
             setSecondaryButtonVisible(false);
+
+            // revert the top padding to zero when in portrait
+            mIconSwitcher.setPadding(mIconSwitcher.getPaddingLeft(), 0, mIconSwitcher.getPaddingRight(), mIconSwitcher
+                    .getPaddingBottom());
         }
     }
 
