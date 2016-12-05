@@ -112,6 +112,18 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
 
+    private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION = "10";
+    private static final String XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID = "102";
+
+    private static final String MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_SECTION = "10";
+    private static final String MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_ID = "11";
+
+    private static final String INVALID_URL_HELPSHIFT_FAQ_SECTION = "10";
+    private static final String INVALID_URL_HELPSHIFT_FAQ_ID = "2";
+
+    private static final String NO_SITE_HELPSHIFT_FAQ_SECTION = "10";
+    private static final String NO_SITE_HELPSHIFT_FAQ_ID = "2"; //using the same as in INVALID URL
+
     protected EditText mUsernameEditText;
     protected EditText mPasswordEditText;
     protected EditText mUrlEditText;
@@ -1108,14 +1120,25 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         endProgress();
     }
     private void showGenericErrorDialog(String errorMessage) {
+        showGenericErrorDialog(errorMessage, null, null);
+    }
+
+    private void showGenericErrorDialog(String errorMessage, String faqId, String faqSection) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
 
+        int faqAction = SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT;
+        String thirdButtonLabel = getString(R.string.contact_us);
+        if (!TextUtils.isEmpty(faqId) || !TextUtils.isEmpty(faqSection)) {
+            faqAction = SignInDialogFragment.ACTION_OPEN_FAQ_PAGE;
+            thirdButtonLabel =  getString(R.string.tell_me_more);
+        }
         nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                 errorMessage, R.drawable.noticon_alert_big, 3,
-                getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
+                getString(R.string.cancel), getString(R.string.reader_title_applog), thirdButtonLabel,
                 SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
-                SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
+                SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG,
+                faqAction, faqId, faqSection);
 
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
@@ -1291,19 +1314,31 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 signInAndFetchBlogListWPCom();
                 break;
             case NO_SITE_ERROR:
-                showGenericErrorDialog(getResources().getString(R.string.no_site_error));
+                showGenericErrorDialog(getResources().getString(R.string.no_site_error),
+                        NO_SITE_HELPSHIFT_FAQ_ID,
+                        NO_SITE_HELPSHIFT_FAQ_SECTION);
                 break;
             case INVALID_URL:
-                showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message));
+                showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message),
+                        INVALID_URL_HELPSHIFT_FAQ_ID,
+                        INVALID_URL_HELPSHIFT_FAQ_SECTION);
                 break;
             case MISSING_XMLRPC_METHOD:
-                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error));
+                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error),
+                        MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_ID,
+                        MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_SECTION);
                 break;
             case XMLRPC_BLOCKED:
-                // TODO: show a better error message
+                // use this to help the user a bit:  pass the Helpshift page ID or section ID
+                // on the rest of the error cases in this switch
+                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_post_blocked_error),
+                        XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID,
+                        XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION);
+                break;
             case XMLRPC_FORBIDDEN:
                 // TODO: show a better error message
             case GENERIC_ERROR:
+            default:
                 showGenericErrorDialog(getResources().getString(R.string.nux_cannot_log_in));
                 break;
         }
