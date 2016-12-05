@@ -539,7 +539,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mComment == null) {
             return;
         }
-        CommentModel updatedComment = mCommentStore.getCommentByLocalId(mComment.getLocalSiteId());
+        CommentModel updatedComment = mCommentStore.getCommentByLocalId(mComment.getId());
         if (updatedComment != null) {
             setComment(updatedComment, mSite);
         }
