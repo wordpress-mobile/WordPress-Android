@@ -70,6 +70,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.ContextMenuEditText;
 import org.wordpress.android.widgets.WPTextView;
@@ -159,7 +160,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
 
         mInhibitMagicLogin = getActivity() != null
-                && getActivity().getIntent().getBooleanExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, false);
+                && (getActivity().getIntent().getBooleanExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, false)
+                || !WPActivityUtils.isEmailClientAvailable(getActivity()));
     }
 
     @Override
@@ -377,11 +379,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     protected void toggleSignInMode(){
         if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
-            configureMagicLinkUI();
+            if (mInhibitMagicLogin) {
+                showDotComSignInForm();
+            } else {
+                configureMagicLinkUI();
+            }
         } else {
             showSelfHostedSignInForm();
         }
-        
+
         if (fieldsFilled()) {
             mSignInButton.setEnabled(true);
         } else {
