@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -643,7 +644,9 @@ public class CommentsListFragment extends Fragment {
             loadComments();
         }
         if (event.isError()) {
-            ToastUtils.showToast(getActivity(), event.error.message);
+            if (!TextUtils.isEmpty(event.error.message)) {
+                ToastUtils.showToast(getActivity(), event.error.message);
+            }
             // Reload the comment list in case of an error, we want to revert the UI to the previous state.
             loadComments();
         }

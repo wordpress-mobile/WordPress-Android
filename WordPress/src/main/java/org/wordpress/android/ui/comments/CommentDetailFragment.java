@@ -1217,7 +1217,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (event.isError()) {
             AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
-            if (isAdded()) {
+            if (isAdded() && !TextUtils.isEmpty(event.error.message)) {
                 ToastUtils.showToast(getActivity(), event.error.message);
             }
             return;
