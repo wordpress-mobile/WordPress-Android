@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-26 08:53:14+0000
+Translation-Revision-Date: 2016-11-18 09:28:48+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.3.0-alpha
 Language: hr
@@ -43,7 +43,7 @@ Language: hr
 	<string name="error_post_remote_site_settings">Nije moguće snimiti info o web-stranici</string>
 	<string name="error_fetch_remote_site_settings">Nije moguće dohvatiti info o web-stranici</string>
 	<string name="error_media_upload_connection">Tijekom prijenosa medijskoga zapisa dogodila se greška u spajanju</string>
-	<string name="site_settings_disconnected_toast">Odspojeno, uređivanje onemogućeno</string>
+	<string name="site_settings_disconnected_toast">Odjavljeno, uređivanje onemogućeno</string>
 	<string name="site_settings_unsupported_version_error">WordPress inačica koja nije podržana</string>
 	<string name="site_settings_multiple_links_dialog_description">Potrebno odobrenje za komentare koji sadrže više od ovog broja komentara.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Automatski zatvori</string>
@@ -274,7 +274,7 @@ Language: hr
 	<string name="tabbar_accessibility_label_my_site">Moja stranica</string>
 	<string name="editor_toast_changes_saved">Promjene spremljene</string>
 	<string name="passcodelock_prompt_message">Unesi svoj PIN</string>
-	<string name="push_auth_expired">Zahtjev je istekao. Za ponovni pokušaj prijavite u WordPress.com.</string>
+	<string name="push_auth_expired">Zahtjev je istekao. Za ponovni pokušaj prijavite se u WordPress.com.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% pregleda</string>
 	<string name="ignore">Ignoriraj</string>
 	<string name="stats_insights_best_ever">Najviše pregleda</string>
@@ -286,9 +286,9 @@ Language: hr
 	<string name="stats_insights">Uvid</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Kako biste vidjeli statistiku, prijavite se sa istim onim WordPress.com računom koji ste upotrijebili za spajanje Jetpacka.</string>
 	<string name="stats_other_recent_stats_moved_label">Tražite Druge nedavne statistike? Premjestili smo ih na Insights stranicu</string>
-	<string name="me_disconnect_from_wordpress_com">Odspoji sa WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Odjava sa WordPress.com</string>
 	<string name="me_btn_login_logout">Prijava/Odjava</string>
-	<string name="me_connect_to_wordpress_com">Spoji sa WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Spoji se u WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" nije skriven jer je to trenutna web-stranica.</string>
 	<string name="me_btn_support">Pomoć i podrška</string>
 	<string name="account_settings">Postavke računa</string>
@@ -308,9 +308,8 @@ Language: hr
 	<string name="my_site_header_configuration">Konfiguracija</string>
 	<string name="notifications_account_required">Za obavijesti, prijavite se u WordPress.com</string>
 	<string name="stats_unknown_author">Nepoznati autor</string>
-	<string name="signout">Prekinuta veza</string>
 	<string name="image_added">Slika dodana</string>
-	<string name="sign_out_wpcom_confirm">Odspajanjem računa ukloniti će se svi @%s WordPress.com podaci sa ovog uređaja, uključujući lokalne skice i lokalne promjene.</string>
+	<string name="sign_out_wpcom_confirm">Odspajanjem računa ukloniti će se svi @%s’s WordPress.com podaci sa ovog uređaja, uključujući lokalne skice i lokalne promjene.</string>
 	<string name="select_all">Odaberi sve</string>
 	<string name="hide">Sakrij</string>
 	<string name="show">Prikaži</string>

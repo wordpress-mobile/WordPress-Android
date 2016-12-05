@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-09-11 16:23:35+0000
+Translation-Revision-Date: 2016-12-03 19:08:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: he_IL
 -->
 <resources>
+	<string name="reader_toast_err_comment_not_found">תגובה לא נמצאה!</string>
+	<string name="error_notif_q_action_reply">לא ניתן להגיב לתגובה. נא לנסות שנית מאוחר יותר.</string>
+	<string name="error_notif_q_action_approve">לא ניתן לאשר תגובה. נא לנסות שנית מאוחר יותר.</string>
+	<string name="notifications_label_new_notifications_subtitle">לחץ כדי להציג</string>
+	<string name="notifications_label_new_notifications">התראות חדשות</string>
+	<string name="comment_q_action_replying">מגיב...</string>
+	<string name="comment_q_action_approving">מאשר...</string>
+	<string name="comment_q_action_processing">מעבד...</string>
+	<string name="comment_q_action_done_generic">הפעולה הושלמה!</string>
+	<string name="signout">התנתק</string>
+	<string name="reader_label_global_related_posts">מידע נוסף ב-WordPress.com</string>
+	<string name="preference_open_device_settings">פתיחת הגדרות מכשיר</string>
+	<string name="invite_invalid_email">%s: אימייל לא תקין</string>
+	<string name="invite_user_blocked_invites">%s: משתמש חסם הזמנות</string>
+	<string name="invite_already_following">%s: כבר עוקב</string>
+	<string name="invite_already_a_member">%s: כבר חבר</string>
+	<string name="invite_username_not_found">%s: משתמש לא נמצא</string>
+	<string name="comment_moderated_approved">תגובה אושרה!</string>
+	<string name="reader_label_image_count_one">תמונה 1</string>
+	<string name="timespan_now">עכשיו</string>
 	<string name="role_viewer">צופה</string>
 	<string name="role_follower">עוקב</string>
 	<string name="role_contributor">תורם</string>
@@ -16,6 +36,7 @@ Language: he_IL
 	<string name="alignment_right">ימין</string>
 	<string name="alignment_left">שמאל</string>
 	<string name="alignment_none">ללא</string>
+	<string name="site_settings_list_editor_action_mode_title">%1$d נבחרו</string>
 	<string name="error_fetch_users_list">משיכת נתונים על משתמשי האתר נכשלה</string>
 	<string name="plans_manage">ניהול התוכנית שלך בכתובת\nWordPress.com/plans</string>
 	<string name="title_email_follower">עוקב אימייל</string>
@@ -33,6 +54,7 @@ Language: he_IL
 	<string name="viewer_remove_confirmation_message">לאחר הסרת צופה זה, הוא או היא לא יוכלו לבקר יותר באתר זה.\n\nבחרת להסיר צופה זה - האם ההחלטה סופית?</string>
 	<string name="follower_remove_confirmation_message">לאחר הסרת עוקב זה, הוא יפסיק לקבל הודעות לגבי אתר זה, אלא אם יגדיר מעקב מחדש.\n\nבחרת להסיר עוקב זה - האם ההחלטה סופית?</string>
 	<string name="follower_subscribed_since">מאז %1$s</string>
+	<string name="reader_label_image_count_multi">%d תמונות</string>
 	<string name="reader_label_view_gallery">הצגת גלריה</string>
 	<string name="error_remove_viewer">לא ניתן היה להסיר צופה</string>
 	<string name="error_remove_follower">לא ניתן היה להסיר עוקב</string>
@@ -82,7 +104,7 @@ Language: he_IL
 	<string name="invite_people">הזמנת אנשים</string>
 	<string name="my_site_header_external">חיצוני</string>
 	<string name="send_link">שלח קישור</string>
-	<string name="signup_succeed_signin_failed">החשבון שלך נוצר, אך אירעה שגיאה כשהכנסנו אותך\n . יש לנסות להיכנס עם שם המשתמש והסיסמה החדשים שיצרת.</string>
+	<string name="signup_succeed_signin_failed">החשבון שלך נוצר, אך אירעה שגיאה כשהכנסנו אותך. יש לנסות להיכנס עם שם המשתמש והסיסמה החדשים שיצרת.</string>
 	<string name="label_clear_search_history">ניקוי היסטוריית חיפוש</string>
 	<string name="dlg_confirm_clear_search_history">לנקות היסטוריית חיפוש?</string>
 	<string name="reader_empty_posts_in_search_description">לא נמצאו פוסטים עבור %s בשפה שבחרת</string>
@@ -355,7 +377,7 @@ Language: he_IL
 	<string name="site_settings_paging_title">עימוד</string>
 	<string name="site_settings_threading_title">שרשור</string>
 	<string name="site_settings_sort_by_title">מיון לפי</string>
-	<string name="site_settings_account_required_title">משתמשים חייבים להתחבר</string>
+	<string name="site_settings_account_required_title">משתמשים חייבים להיות מחוברים</string>
 	<string name="site_settings_identity_required_title">חובה לציין שם ואימייל</string>
 	<string name="site_settings_receive_pingbacks_title">קבלת פינגבאקים</string>
 	<string name="site_settings_send_pingbacks_title">שליחת פינגבאקים</string>
@@ -529,11 +551,11 @@ Language: he_IL
 	<string name="stats_insights_popular">היום והשעה הפופולרים ביותר</string>
 	<string name="stats_insights_all_time">פוסטים, צפיות ומבקרים מההתחלה ועד היום</string>
 	<string name="stats_insights">תובנות</string>
-	<string name="stats_sign_in_jetpack_different_com_account">להצגת הנתונים הסטטיסטיים שלך, יש להיכנס לוורדפרס.קום שבו השתמשת כדי לחבר את Jetpack.</string>
+	<string name="stats_sign_in_jetpack_different_com_account">להצגת הנתונים הסטטיסטיים שלך, יש להיכנס לחשבון וורדפרס.קום שבו השתמשת כדי לחבר את Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">מנסה למצוא נתונים סטטיסטיים אחרים מהזמן האחרון? העברנו אותם אל העמוד \'תובנות\'.</string>
 	<string name="me_disconnect_from_wordpress_com">התנתקות מוורדפרס.קום</string>
 	<string name="me_btn_login_logout">כניסה/יציאה</string>
-	<string name="me_connect_to_wordpress_com">התחברת לוורדפרס.קום</string>
+	<string name="me_connect_to_wordpress_com">התחברות לוורדפרס.קום</string>
 	<string name="site_picker_cant_hide_current_site">"%s" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
 	<string name="me_btn_support">עזרה ותמיכה</string>
 	<string name="account_settings">הגדרות חשבון</string>
@@ -553,7 +575,6 @@ Language: he_IL
 	<string name="my_site_header_configuration">הגדרות תצורה</string>
 	<string name="notifications_account_required">התחברות לוורדפרס.קום עבור התראות</string>
 	<string name="stats_unknown_author">מחבר לא ידוע</string>
-	<string name="signout">התנתקות</string>
 	<string name="image_added">תמונה נוספה</string>
 	<string name="sign_out_wpcom_confirm">ניתוק החשבון יסיר את כל נתוני וורדפרס.קום ‏של %s ממכשיר זה, כולל טיוטות מקומיות ושינויים מקומיים.</string>
 	<string name="select_all">בחר הכל</string>

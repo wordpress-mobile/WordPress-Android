@@ -78,7 +78,6 @@ Language: eu_ES
 	<string name="invite_people">Gonbidatu jendea</string>
 	<string name="my_site_header_external">Kanpokoak</string>
 	<string name="send_link">Bidali esteka</string>
-	<string name="signup_succeed_signin_failed">Zure kontua sortu da baina errore bat gertatu da zu sartzean. Saia zaitez berriro zure erabiltzaile eta pasahitz berriarekin sartzen.</string>
 	<string name="label_clear_search_history">Garbitu bilaketen historia</string>
 	<string name="dlg_confirm_clear_search_history">Bilaketen historia garbitu?</string>
 	<string name="reader_label_post_search_running">Bilatzen...</string>
@@ -96,7 +95,6 @@ Language: eu_ES
 	<string name="launch_your_email_app">Abiarazi zure e-posta app-a</string>
 	<string name="check_your_email">Egiaztatu zure e-posta</string>
 	<string name="logging_in">Saioa hasten</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Jaso esteka bat zure e-postan segituan saioa hasteko</string>
 	<string name="enter_your_password_instead">Sartu zure pasahitza ordez</string>
 	<string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
 	<string name="username_email">E-posta edo erabiltzailea</string>
@@ -300,7 +298,6 @@ Language: eu_ES
 	<string name="tabbar_accessibility_label_my_site">Nire gunea</string>
 	<string name="editor_toast_changes_saved">Aldaketak gorde dira</string>
 	<string name="passcodelock_prompt_message">Sartu zure PINa</string>
-	<string name="push_auth_expired">Eskaria iraungi da. Hasi saioa WordPress.com-en berriro saiatzeko.</string>
 	<string name="ignore">Ezikusi</string>
 	<string name="stats_insights_most_popular_hour">Ordurik jendetsuena</string>
 	<string name="stats_insights_most_popular_day">Egunik jendetsuena</string>
@@ -308,11 +305,8 @@ Language: eu_ES
 	<string name="stats_insights_popular">Egun eta ordu jendetsuena</string>
 	<string name="stats_insights_all_time">Inoizko bidalketa, ikustaldi eta bisitari guztiak</string>
 	<string name="stats_insights">Ezagutzak</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Zure estatistikak ikusteko, hasi saioa Jetpack-era konektatzeko erabili zenuen WordPress.com kontuarekin.</string>
 	<string name="stats_other_recent_stats_moved_label">\'Bestelako estatistika berrien\' bila zabiltza? Ezagutzak orrialdera mugitu dugu.</string>
-	<string name="me_disconnect_from_wordpress_com">WordPress.com-etik deskonektatu</string>
 	<string name="me_btn_login_logout">Hasi/itxi saioa</string>
-	<string name="me_connect_to_wordpress_com">WordPress.com-era konektatu</string>
 	<string name="me_btn_support">Laguntza eta euskarria</string>
 	<string name="account_settings">Kontuaren ezarpenak</string>
 	<string name="site_picker_create_dotcom">Sortu WordPress.com gunea</string>
@@ -329,9 +323,7 @@ Language: eu_ES
 	<string name="my_site_btn_blog_posts">Blogeko bidalketak</string>
 	<string name="reader_label_new_posts_subtitle">Egin tap berauek erakusteko</string>
 	<string name="my_site_header_configuration">Konfigurazioa</string>
-	<string name="notifications_account_required">Hasi saioa WordPress.com-en jakinarazpenentzako</string>
 	<string name="stats_unknown_author">Egile ezezaguna</string>
-	<string name="signout">Deskonektatu</string>
 	<string name="image_added">Irudia gehitua</string>
 	<string name="select_all">Aukeratu denak</string>
 	<string name="hide">Ezkutatu</string>
@@ -348,8 +340,6 @@ Language: eu_ES
 	<string name="no_blog_images">Irudirik ez</string>
 	<string name="no_device_videos">Bideorik ez</string>
 	<string name="no_media">Mediarik ez</string>
-	<string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
-	<string name="sign_in_jetpack">Hasi saioa WordPress.com-eko zure kontuan Jetpack-era konektatzeko.</string>
 	<string name="verify">Egiaztatu</string>
 	<string name="invalid_verification_code">Egiaztaketa kode okerra</string>
 	<string name="verification_code">Egiaztaketa kodea</string>
@@ -419,7 +409,6 @@ Language: eu_ES
 	<string name="delete_sure_page">Ezabatu orrialde hau</string>
 	<string name="delete_sure">Ezabatu zirriborro hau</string>
 	<string name="delete_sure_post">Ezabatu bidalketa hau</string>
-	<string name="signing_out">Saioa ixten...</string>
 	<string name="pages_empty_list">Orrialderik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
 	<string name="posts_empty_list">Bidalketarik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
 	<string name="select_a_blog">Aukeratu WordPress gune bat</string>
@@ -657,16 +646,13 @@ Language: eu_ES
 	<string name="select_date">Aukeratu eguna</string>
 	<string name="reader_likes_you_and_one">Zuk eta beste batek hau gustuko duzue.</string>
 	<string name="select_time">Aukeratu ordua</string>
-	<string name="nux_oops_not_selfhosted_blog">Hasi saioa WordPress.com-en</string>
 	<string name="nux_add_selfhosted_blog">Gehitu zuk ostatatutako gunea</string>
-	<string name="signing_in">Saioa hasten...</string>
 	<string name="nux_welcome_create_account">Sortu kontua</string>
 	<string name="nux_tap_continue">Jarraitu</string>
 	<string name="password_invalid">Pasahitz seguruago bat behar duzu. Ziurtatu gutxienez 7 karaktere erabiltzeaz, letra larri eta xeheak, zenbakiak eta karaktere bereziak nahasteaz.</string>
 	<string name="nux_tutorial_get_started_title">Hasi!</string>
 	<string name="limit_reached">Mugara iritsi zara. Minutu bat barru berriz proba dezakezu. Lehenago saiatuz gero debekua luzatzea besterik ez duzu lortuko. Hau errore bat dela baderitzozu, kontaktatu laguntza zerbitzua. </string>
 	<string name="username_invalid">Erabiltzaile-izen okerra</string>
-	<string name="connecting_wpcom">WordPress.com-era konektatzen</string>
 	<string name="button_next">Hurrengoa</string>
 	<string name="create_account_wpcom">Sortu kontu bat WordPress.com-en</string>
 	<string name="reader_empty_followed_tags">Ez duzu etiketatik jarraitzen</string>
@@ -756,7 +742,6 @@ Language: eu_ES
 	<string name="new_notifications">%d jakinarazpen berri</string>
 	<string name="note_reply_successful">Erantzuna argitaratuta.</string>
 	<string name="notifications">Jakinarazpenak</string>
-	<string name="sign_in">Hasi saioa</string>
 	<string name="loading">Kargatzen...</string>
 	<string name="httppassword">HTTP pasahitza</string>
 	<string name="httpuser">HTTP erabiltzaile-izena</string>

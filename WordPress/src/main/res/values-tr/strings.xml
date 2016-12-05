@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-31 02:15:00+0000
+Translation-Revision-Date: 2016-11-17 23:33:29+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.3.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Bu yazıyı görmeye yetkili değilsiniz. Önce WordPress.com hesabınıza giriş yapmayı deneyin ya da üst eylem tuşu ile bir tarayıcı açmayı deneyin.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Bu yazıyı görmeye yetkili değilsiniz. Önce WordPress.com hesabınıza giriş yapmayı deneyin.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Bu yazıyı görmeye yetkili değilsiniz. Üst eylem tuşu ile bir tarayıcı açmayı deneyin. </string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">WordPress.com hesabınızdan çıkış yapmışken beğenemezsiniz</string>
+	<string name="reader_toast_err_already_liked">Bu yorumu zaten beğenmişsiniz</string>
+	<string name="reader_toast_err_comment_not_found">Yorum bulunamadı!</string>
+	<string name="reader_toast_err_cannot_like_post">Yazı beğenme başarısız oldu</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com yazısı</string>
+	<string name="reader_title_deeplink">WordPress okuyucu</string>
+	<string name="error_notif_q_action_reply">Yorum cevaplanamıyor. Lütfen daha sonra tekrar deneyin.</string>
+	<string name="error_notif_q_action_approve">Yorum onaylanamıyor. Lütfen daha sonra tekrar deneyin.</string>
+	<string name="error_notif_q_action_like">Yorum beğenilemiyor. Lütfen daha sonra tekrar deneyin.</string>
+	<string name="notifications_label_new_notifications_subtitle">Görüntülemek için dokunun</string>
+	<string name="notifications_label_new_notifications">Yeni bildirimler</string>
+	<string name="comment_q_action_replying">Cevaplanıyor...</string>
+	<string name="comment_q_action_approving">Onaylanıyor...</string>
+	<string name="comment_q_action_liking">Beğeniliyor...</string>
+	<string name="comment_q_action_processing">İşleniyor...</string>
+	<string name="comment_q_action_done_generic">Eylem tamamlandı!</string>
+	<string name="comment_liked">Yorum beğenildi</string>
+	<string name="signout">Çıkış yap</string>
+	<string name="sign_in_wpcom">WordPress.com hesabına giriş yap</string>
 	<string name="reader_label_global_related_posts">WordPress.com üzerinden daha fazlası</string>
 	<string name="reader_label_local_related_posts">%s üzerinden daha fazlası</string>
 	<string name="preference_open_device_settings">Cihaz ayarlarını aç</string>
@@ -97,7 +119,7 @@ Language: tr
 	<string name="invite_people">İnsanları davet et</string>
 	<string name="my_site_header_external">Harici</string>
 	<string name="send_link">Bağlantı gönder</string>
-	<string name="signup_succeed_signin_failed">Hesabınız oluşturuldu fakat oturumunuzu açarken bir problem oluştu\n        Yeni oluşturulan hesabınıza kullanıcı adı ve parolanız ile giriş yapmayı deneyin.</string>
+	<string name="signup_succeed_signin_failed">Hesabınız oluşturuldu fakat oturumunuzu açarken bir problem oluştu.\n        Yeni oluşturulan hesabınıza kullanıcı adı ve parolanız ile giriş yapmayı deneyin.</string>
 	<string name="label_clear_search_history">Arama geçmişini temizle</string>
 	<string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
 	<string name="reader_empty_posts_in_search_description">Dilinizde %s için hiç yazı bulunamadı</string>
@@ -132,7 +154,7 @@ Language: tr
 	<string name="check_your_email">E-postanızı kontrol edin</string>
 	<string name="magic_link_unavailable_error_message">Şu an uygun değil. Lütfen parolanızı girin</string>
 	<string name="logging_in">Giriş yapılıyor</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Anında giriş için e-postanıza gönderilen bağlantıyı edinin</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Anında giriş için e-postanıza bir bağlantı gönderilmesini sağlayın</string>
 	<string name="enter_your_password_instead">Bunun yerine parola gir</string>
 	<string name="web_address_dialog_hint">Yorum yaptığınızda herkes tarafından görülebilir.</string>
 	<string name="username_email">E-posta ya da kullanıcı adı</string>
@@ -303,7 +325,7 @@ Language: tr
 	<string name="error_post_remote_site_settings">Site bilgileri kaydedilemedi</string>
 	<string name="error_fetch_remote_site_settings">Site bilgileri alınamadı</string>
 	<string name="error_media_upload_connection">Medya yüklenirken bağlantı hatası oluştu</string>
-	<string name="site_settings_disconnected_toast">Bağlantı kesik, düzenleme devre dışı.</string>
+	<string name="site_settings_disconnected_toast">Çıkış yapılmış, düzenleme devre dışı.</string>
 	<string name="site_settings_unsupported_version_error">Desteklenmeyen WordPress sürümü</string>
 	<string name="site_settings_multiple_links_dialog_description">Belirtilenden fazla sayıda bağlantı içeren yorumlar için onay iste.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Otomatik olarak kapat</string>
@@ -534,7 +556,7 @@ Language: tr
 	<string name="tabbar_accessibility_label_my_site">Sitem</string>
 	<string name="editor_toast_changes_saved">Değişiklikler kaydedildi</string>
 	<string name="passcodelock_prompt_message">PIN kodunuzu girin</string>
-	<string name="push_auth_expired">İstek süresi doldu. WordPress.com sitesinde giriş yaparak tekrar deneyin.</string>
+	<string name="push_auth_expired">İstek süresi doldu. WordPress.com\'a giriş yaparak tekrar deneyin.</string>
 	<string name="stats_insights_most_popular_percent_views">Görüntülemelerde %1$d%%</string>
 	<string name="ignore">Yoksay</string>
 	<string name="stats_insights_best_ever">Şimdiye Kadarki En İyi Görüntülemeler</string>
@@ -544,11 +566,11 @@ Language: tr
 	<string name="stats_insights_popular">En popüler gün ve saat</string>
 	<string name="stats_insights_all_time">Tüm zamanlardaki gönderiler, görüntülemeler ve ziyaretçiler</string>
 	<string name="stats_insights">Tek Bakışta</string>
-	<string name="stats_sign_in_jetpack_different_com_account">İstatistiklerinizi görüntülemek için, Jetpack\'e bağlanmak için kullandığınız WordPress.com hesabına giriş yapın.</string>
+	<string name="stats_sign_in_jetpack_different_com_account">İstatistiklerinizi görüntülemek için, Jetpack\'i bağladığınız WordPress.com hesabına giriş yapın.</string>
 	<string name="stats_other_recent_stats_moved_label">Diğer Son İstatistiklerinizi mi arıyorsunuz? Bu bilgileri Tek Bakışta sayfasına taşıdık.</string>
-	<string name="me_disconnect_from_wordpress_com">WordPress.com Bağlantısını Kes</string>
+	<string name="me_disconnect_from_wordpress_com">WordPress.com hesabından çıkış yap</string>
 	<string name="me_btn_login_logout">Giriş/Çıkış</string>
-	<string name="me_connect_to_wordpress_com">WordPress.com\'a bağlan</string>
+	<string name="me_connect_to_wordpress_com">WordPress.com hesabına giriş yap</string>
 	<string name="site_picker_cant_hide_current_site">"%s" şu anki site olduğundan gizlenmedi</string>
 	<string name="me_btn_support">Yardım &amp; Destek</string>
 	<string name="account_settings">Hesap ayarları</string>
@@ -566,11 +588,10 @@ Language: tr
 	<string name="my_site_btn_blog_posts">Blog Yazıları</string>
 	<string name="reader_label_new_posts_subtitle">Göstermek için dokunun</string>
 	<string name="my_site_header_configuration">Yapılandırma</string>
-	<string name="notifications_account_required">Bildirimler için WordPress.com\'a giriş yap</string>
+	<string name="notifications_account_required">Bildirimler için WordPress.com hesabına giriş yap</string>
 	<string name="stats_unknown_author">Bilinmeyen Yazar</string>
-	<string name="signout">Bağlantıyı Kes</string>
 	<string name="image_added">Resim eklendi</string>
-	<string name="sign_out_wpcom_confirm">Hesabınızın bağlantısını kestiğinizde yerel taslak ve değişiklikler dahil olmak üzere @%s kullanıcısına ait tüm WordPress.com verileri bu cihazdan kaldırılır.</string>
+	<string name="sign_out_wpcom_confirm">Hesabınızdan çıkış yaptığınızda yerel taslak ve değişiklikler dahil olmak üzere @%s kullanıcısına ait tüm WordPress.com verileri bu cihazdan kaldırılır.</string>
 	<string name="select_all">Tümünü seç</string>
 	<string name="hide">Gizle</string>
 	<string name="show">Göster</string>
@@ -591,7 +612,7 @@ Language: tr
 	<string name="no_media">Ortam yok</string>
 	<string name="loading_images">Görseller yükleniyor</string>
 	<string name="loading_videos">Videolar yükleniyor</string>
-	<string name="auth_required">Devam etmek için giriş yapın.</string>
+	<string name="auth_required">Devam etmek için tekrar giriş yapın.</string>
 	<string name="sign_in_jetpack">JetPack bağlantısı için WordPress.com hesabınıza giriş yapın.</string>
 	<string name="two_step_sms_sent">Metin mesajlarınızı doğrulama kodu için kontrol edin.</string>
 	<string name="two_step_footer_button">Kodu metin mesaj olarak gönder</string>

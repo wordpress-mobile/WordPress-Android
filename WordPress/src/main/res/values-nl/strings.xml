@@ -97,7 +97,6 @@ Language: nl
 	<string name="invite_people">Mensen uitnodigen</string>
 	<string name="my_site_header_external">Extern</string>
 	<string name="send_link">Stuur link</string>
-	<string name="signup_succeed_signin_failed">Je account is aangemaakt maar er is een fout opgetreden bij het\n aanmelden. Probeer je aan te melden met je nieuwe gebruikersnaam en wachtwoord.</string>
 	<string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
 	<string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
 	<string name="reader_empty_posts_in_search_description">Geen berichten gevonden voor %s in je taal.</string>
@@ -132,7 +131,6 @@ Language: nl
 	<string name="check_your_email">Controleer je e-mail</string>
 	<string name="magic_link_unavailable_error_message">Momenteel niet beschikbaar. Voer je wachtwoord in</string>
 	<string name="logging_in">Inloggen</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Ontvang een link die wordt verzonden naar je e-mail om je meteen aan te melden.</string>
 	<string name="enter_your_password_instead">Voer je wachtwoord in</string>
 	<string name="web_address_dialog_hint">Wordt openbaar getoond als je reageert.</string>
 	<string name="username_email">E-mail of gebruikersnaam</string>
@@ -303,7 +301,6 @@ Language: nl
 	<string name="error_post_remote_site_settings">Kan site-informatie niet opslaan</string>
 	<string name="error_fetch_remote_site_settings">Kan site-informatie niet ophalen</string>
 	<string name="error_media_upload_connection">Er is een verbindingsfout opgetreden bij het uploaden van media</string>
-	<string name="site_settings_disconnected_toast">Niet verbonden, bijwerken uitgeschakeld.</string>
 	<string name="site_settings_unsupported_version_error">Niet-ondersteunde versie van WordPress</string>
 	<string name="site_settings_multiple_links_dialog_description">Vereist goedkeuring voor reacties die meer dan dit aantal koppelingen bevatten.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Automatisch afsluiten</string>
@@ -370,7 +367,6 @@ Language: nl
 	<string name="site_settings_paging_title">Weergave pagina\'s</string>
 	<string name="site_settings_threading_title">Weergave threads</string>
 	<string name="site_settings_sort_by_title">Sorteren op</string>
-	<string name="site_settings_account_required_title">Gebruikers moeten aangemeld zijn</string>
 	<string name="site_settings_identity_required_title">Moet naam en e-mail bevatten</string>
 	<string name="site_settings_receive_pingbacks_title">Pingbacks ontvangen</string>
 	<string name="site_settings_send_pingbacks_title">Pingbacks verzenden</string>
@@ -534,7 +530,6 @@ Language: nl
 	<string name="tabbar_accessibility_label_my_site">Mijn site</string>
 	<string name="editor_toast_changes_saved">De wijzigingen zijn opgeslagen.</string>
 	<string name="passcodelock_prompt_message">Je PIN invullen.</string>
-	<string name="push_auth_expired">Je verzoek is verlopen. Je bij WordPress.com aanmelden en opnieuw proberen.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% van weergaven</string>
 	<string name="ignore">Negeren</string>
 	<string name="stats_insights_best_ever">Best bekeken ooit</string>
@@ -544,11 +539,8 @@ Language: nl
 	<string name="stats_insights_popular">De meest populaire dag en tijd.</string>
 	<string name="stats_insights_all_time">Alle berichten, weergaven en bezoekers</string>
 	<string name="stats_insights">Inzichten</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Om de statistieken te bekijken moet je bij je WordPress.com account aanmelden en deze verbinden met Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Op zoek naar je andere recente statistieken? We hebben ze verplaatst naar de pagina Inzichten.</string>
-	<string name="me_disconnect_from_wordpress_com">Loskoppelen van WordPress.com</string>
 	<string name="me_btn_login_logout">Inloggen/uitloggen</string>
-	<string name="me_connect_to_wordpress_com">Verbinden met WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" was niet verborgen omdat het de huidige site is</string>
 	<string name="me_btn_support">Help &amp; Support</string>
 	<string name="account_settings">Accountinstellingen</string>
@@ -566,11 +558,8 @@ Language: nl
 	<string name="my_site_btn_blog_posts">Blogberichten</string>
 	<string name="reader_label_new_posts_subtitle">Tik om ze te tonen</string>
 	<string name="my_site_header_configuration">Configuratie</string>
-	<string name="notifications_account_required">Meld je aan bij WordPress.com voor meldingen</string>
 	<string name="stats_unknown_author">Onbekende auteur</string>
-	<string name="signout">Verbinding verbreken</string>
 	<string name="image_added">Afbeelding toegevoegd</string>
-	<string name="sign_out_wpcom_confirm">Als je je account loskoppelt, worden alle WordPress.com gegevens van @%s verwijderd van dit apparaat, inclusief lokale concepten en lokale wijzigingen.</string>
 	<string name="select_all">Alles selecteren</string>
 	<string name="hide">Verbergen</string>
 	<string name="show">Tonen</string>
@@ -591,8 +580,6 @@ Language: nl
 	<string name="no_media">Geen media</string>
 	<string name="loading_images">Afbeeldingen laden</string>
 	<string name="loading_videos">Video\'s laden</string>
-	<string name="auth_required">Meld je opnieuw aan om door te gaan.</string>
-	<string name="sign_in_jetpack">Meld je aan bij je WordPress.com account om verbinding te maken met Jetpack.</string>
 	<string name="two_step_sms_sent">Kijk in je sms\'jes voor de verificatiecode.</string>
 	<string name="two_step_footer_button">Verzend code via sms</string>
 	<string name="two_step_footer_label">Voer de code in vanuit je Authenticator-app.</string>
@@ -708,7 +695,6 @@ Language: nl
 	<string name="delete_sure_page">Deze pagina verwijderen</string>
 	<string name="delete_sure">Dit concept verwijderen</string>
 	<string name="delete_sure_post">Dit bericht verwijderen</string>
-	<string name="signing_out">Uitloggen…</string>
 	<string name="posting_post">Publiceren "%s"</string>
 	<string name="media_empty_list_custom_date">Geen media in dit tijdsinterval</string>
 	<string name="pages_empty_list">Nog geen pagina\'s. Waarom maak je er niet een?</string>
@@ -981,16 +967,13 @@ Language: nl
 	<string name="reader_empty_followed_blogs_description">Geen zorgen, tap het tag icoon om te beginnen.</string>
 	<string name="reader_likes_you_and_one">Jij en één andere vinden dit leuk</string>
 	<string name="select_time">Selecteer tijd</string>
-	<string name="nux_oops_not_selfhosted_blog">Log in op WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Voeg zelf gehoste site toe</string>
-	<string name="signing_in">Inloggen…</string>
 	<string name="nux_welcome_create_account">Maak account aan</string>
 	<string name="nux_tap_continue">Ga door</string>
 	<string name="password_invalid">Je hebt een veiliger wachtwoord nodig. Let erop dat je 7 of meer karakters gebruikt, gebruik hoofd- en kleine letters, nummers of speciale karakters.</string>
 	<string name="nux_tutorial_get_started_title">Begin!</string>
 	<string name="limit_reached">Limiet bereikt. Je kan het na 1 minuut nogmaals proberen. Als je het eerder probeert dan zul je langer moeten wachten totdat de ban wordt opgeheven. Neem contact op met de helpdesk wanneer je denk dat dit niet klopt.</string>
 	<string name="username_invalid">Ongeldige gebruikersnaam</string>
-	<string name="connecting_wpcom">Verbinden met Wordpress.com</string>
 	<string name="button_next">Volgende</string>
 	<string name="create_account_wpcom">Maak een account op Wordpress.com aan</string>
 	<string name="reader_empty_followed_tags">Je volgt geen enkele tags</string>
@@ -1081,7 +1064,6 @@ Language: nl
 	<string name="follows">Volgt</string>
 	<string name="note_reply_successful">Reactie gepubliceerd</string>
 	<string name="notifications">Notificaties</string>
-	<string name="sign_in">Inloggen</string>
 	<string name="loading">Laden...</string>
 	<string name="httppassword">HTTP wachtwoord</string>
 	<string name="httpuser">HTTP gebruikersnaam</string>
