@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -106,7 +106,7 @@
         android:id="@+id/text_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:layout_marginLeft="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
         android:drawablePadding="@dimen/margin_small"
@@ -118,6 +118,19 @@
         tools:text="Error message"
         tools:visibility="visible" />
 
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/nux_sign_in_button"
+        style="@style/WordPress.NUXPrimaryButton"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/reader_detail_margin"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_below="@+id/text_error"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="@string/sign_in_wpcom"
+        android:visibility="gone" />
+
     <!-- container for webView custom view - this is where fullscreen video will appear -->
     <FrameLayout
         android:id="@+id/layout_custom_view_container"
@@ -126,4 +139,4 @@
         android:background="#80000000"
         android:visibility="gone" />
 
-</FrameLayout>
+</RelativeLayout>

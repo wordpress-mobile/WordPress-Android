@@ -94,7 +94,7 @@ public class SmartLockHelper {
                                     AppLog.d(T.NUX, "SmartLock: Failed to send resolution for credential request");
                                 }
                             } else {
-                                // The user must create an account or sign in manually.
+                                // The user must create an account or log in manually.
                                 AppLog.d(T.NUX, "SmartLock: Unsuccessful credential request.");
                             }
                         }

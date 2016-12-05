@@ -12,7 +12,6 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,24 +19,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.MediaAction;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
-import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
+import javax.inject.Inject;
 
 /**
  * An invisible fragment in charge of launching the right intents to camera, video, and image library.
@@ -47,11 +53,15 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
     private String mMediaCapturePath = "";
 
+    @Inject MediaStore mMediaStore;
+    @Inject Dispatcher mDispatcher;
+
     private SiteModel mSite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState == null) {
             if (getArguments() != null) {
@@ -93,11 +103,13 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         super.onStart();
         // register context for change in connection status
         getActivity().registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        mDispatcher.register(this);
     }
 
     @Override
     public void onStop() {
         getActivity().unregisterReceiver(mReceiver);
+        mDispatcher.unregister(this);
         super.onStop();
     }
 
@@ -177,14 +189,14 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         if (contentUri == null)
             return null;
 
-        String[] proj = { MediaStore.Images.Media.DATA };
+        String[] proj = { android.provider.MediaStore.Images.Media.DATA };
         CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();
 
         if (cursor == null)
             return null;
 
-        int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+        int column_index = cursor.getColumnIndex(proj[0]);
         if (column_index == -1) {
             cursor.close();
             return null;
@@ -234,9 +246,31 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         if (!TextUtils.isEmpty(mimeType)) {
             mediaFile.setMimeType(mimeType);
         }
-        WordPress.wpDB.saveMediaFile(mediaFile);
-        EventBus.getDefault().post(new MediaChanged(String.valueOf(mSite.getId()), mediaFile.getMediaId()));
+        saveMedia(mediaFile);
+//        WordPress.wpDB.saveMediaFile(mediaFile);
+//        EventBus.getDefault().post(new MediaChanged(String.valueOf(mSite.getId()), mediaFile.getMediaId()));
         startMediaUploadService();
+    }
+
+    private MediaModel fromMediaFile(MediaFile file) {
+        MediaModel mediaModel = new MediaModel();
+        mediaModel.setFileName(file.getFileName());
+        mediaModel.setFilePath(file.getFilePath());
+        mediaModel.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(file.getFilePath()));
+        mediaModel.setMimeType(file.getMimeType());
+        mediaModel.setThumbnailUrl(file.getThumbnailURL());
+        mediaModel.setTitle(file.getTitle());
+        mediaModel.setDescription(file.getDescription());
+        mediaModel.setCaption(file.getCaption());
+        mediaModel.setMediaId(Long.valueOf(file.getMediaId()));
+        return mediaModel;
+    }
+
+    private void saveMedia(MediaFile media) {
+        List<MediaModel> mediaList = new ArrayList<>();
+        mediaList.add(fromMediaFile(media));
+        MediaStore.MediaListPayload payload = new MediaStore.MediaListPayload(MediaAction.UPDATE_MEDIA, mSite, mediaList);
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(payload));
     }
 
     private void startMediaUploadService() {
@@ -301,6 +335,24 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             }
             else
                 Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        if (event.isError()) {
+            AppLog.d(AppLog.T.MEDIA, "Received onMediaChanged error:" + event.error.message);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+        if (event.isError()) {
+            AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.message);
+        } else if (event.completed) {
+            AppLog.d(AppLog.T.MEDIA, event.media.getTitle() + " upload complete");
         }
     }
 }

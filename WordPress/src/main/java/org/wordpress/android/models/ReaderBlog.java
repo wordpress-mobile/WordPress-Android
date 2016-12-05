@@ -7,6 +7,8 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import java.util.Locale;
+
 public class ReaderBlog {
     public long blogId;
     public long feedId;
@@ -150,7 +152,7 @@ public class ReaderBlog {
     public String getMshotsUrl(int width) {
         return "http://s.wordpress.com/mshots/v1/"
              + UrlUtils.urlEncode(getUrl())
-             + String.format("?w=%d", width);
+             + String.format(Locale.US, "?w=%d", width);
     }
 
     public boolean isSameAs(ReaderBlog blogInfo) {

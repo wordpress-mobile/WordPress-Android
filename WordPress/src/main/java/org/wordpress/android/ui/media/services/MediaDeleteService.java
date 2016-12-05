@@ -48,6 +48,7 @@ public class MediaDeleteService extends Service {
 
     @Override
     public void onStart(Intent intent, int startId) {
+        if (intent == null) return;
         mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
         if (mSite == null) {
             AppLog.e(T.API, "Site is null");

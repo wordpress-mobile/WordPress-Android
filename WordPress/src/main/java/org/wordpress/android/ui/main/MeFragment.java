@@ -39,17 +39,16 @@ import com.yalantis.ucrop.UCropActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -327,13 +326,14 @@ public class MeFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void addDropShadowToAvatar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mAvatarImageView.setOutlineProvider(new ViewOutlineProvider() {
+            mAvatarContainer.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                    int padding = (mAvatarContainer.getWidth() - mAvatarImageView.getWidth()) / 2;
+                    outline.setOval(padding, padding, view.getWidth() - padding, view.getHeight() - padding);
                 }
             });
-            mAvatarImageView.setElevation(mAvatarImageView.getResources().getDimensionPixelSize(R.dimen.card_elevation));
+            mAvatarContainer.setElevation(mAvatarContainer.getResources().getDimensionPixelSize(R.dimen.card_elevation));
         }
     }
 
@@ -401,8 +401,9 @@ public class MeFragment extends Fragment {
                 EventBus.getDefault().post(new GravatarLoadFinished(false));
             }
 
-            // invalidate the WPNetworkImageView
-            mAvatarImageView.invalidateImage();
+            // reset the WPNetworkImageView
+            mAvatarImageView.resetImage();
+            mAvatarImageView.removeCurrentUrlFromSkiplist();
         }
 
         mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, new WPNetworkImageView

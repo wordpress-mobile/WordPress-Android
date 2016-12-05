@@ -17,12 +17,11 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.wordpress.android.R;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.HelpActivity;
-import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.widgets.WPTextView;
 

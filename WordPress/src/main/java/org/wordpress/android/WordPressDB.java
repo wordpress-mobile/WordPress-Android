@@ -2,14 +2,13 @@ package org.wordpress.android;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -19,9 +18,6 @@ import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.BlogUtils;
-import org.wordpress.android.util.LanguageUtils;
-import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -32,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +58,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 50;
 
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
@@ -113,10 +108,7 @@ public class WordPressDB {
 
     private SQLiteDatabase db;
 
-    private Context context;
-
     public WordPressDB(Context ctx) {
-        this.context = ctx;
         db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
         // Create tables if they don't exist
@@ -127,6 +119,7 @@ public class WordPressDB {
         SiteSettingsTable.createTable(db);
         CommentTable.createTables(db);
         SuggestionTable.createTables(db);
+        NotificationsTable.createTables(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -259,6 +252,9 @@ public class WordPressDB {
             case 48:
                 PeopleTable.createViewersTable(db);
                 currentVersion++;
+            case 49:
+                // Delete simperium DB since we're removing Simperium from the app.
+                ctx.deleteDatabase("simperium-store");
         }
         db.setVersion(DATABASE_VERSION);
     }

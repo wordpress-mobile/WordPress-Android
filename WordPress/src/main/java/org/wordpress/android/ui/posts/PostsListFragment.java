@@ -264,6 +264,10 @@ public class PostsListFragment extends Fragment
             return;
         }
 
+        if (getPostListAdapter().getItemCount() == 0) {
+            updateEmptyView(EmptyViewMessageType.LOADING);
+        }
+
         mIsFetchingPosts = true;
         if (loadMore) {
             showLoadMoreProgress();
