@@ -546,11 +546,6 @@ public class WordPressDB {
         db.update(MEDIA_TABLE, values, "blogId=? AND uploadState=?", new String[]{blogId, "uploading"});
     }
 
-    /** Delete a media item from a blog locally **/
-    public void deleteMediaFile(String blogId, String mediaId) {
-        db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
-    }
-
     /** Mark media files for deletion without actually deleting them. **/
     public void setMediaFilesMarkedForDelete(String blogId, Set<String> ids) {
         // This is for queueing up files to delete on the server

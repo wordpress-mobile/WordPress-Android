@@ -1,131 +1,170 @@
 package org.wordpress.android.ui.media.services;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.os.Handler;
 import android.os.IBinder;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.action.MediaAction;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.xmlrpc.android.ApiHelper;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 /**
- * A service for deleting media files from the media browser.
- * Only one file is deleted at a time.
+ * A service for deleting media. Only one media item is deleted at a time.
  */
 public class MediaDeleteService extends Service {
-    // time to wait before trying to delete the next file
-    private static final int DELETE_WAIT_TIME = 1000;
-
-    private Context mContext;
-    private Handler mHandler = new Handler();
-    private boolean mDeleteInProgress;
     private SiteModel mSite;
+    private MediaModel mDeleteInProgress;
 
     @Inject Dispatcher mDispatcher;
-    @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         ((WordPress) getApplication()).component().inject(this);
-
-        mContext = this.getApplicationContext();
-        mDeleteInProgress = false;
+        mDeleteInProgress = null;
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
-        if (intent == null) return;
-        mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
-        if (mSite == null) {
-            AppLog.e(T.API, "Site is null");
-            return ;
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null) {
+            mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
         }
-        mHandler.post(mFetchQueueTask);
+
+        // start deleting queued media
+        deleteNextInQueue();
+
+        // only run while app process is running, allows service to be stopped by user force closing the app
+        return START_NOT_STICKY;
     }
 
-    private Runnable mFetchQueueTask = new Runnable() {
-        @Override
-        public void run() {
-            Cursor cursor = getQueueItem();
-            try {
-                if ((cursor == null || cursor.getCount() == 0 || mContext == null) && !mDeleteInProgress) {
-                    MediaDeleteService.this.stopSelf();
-                    return;
-                } else {
-                    if (mDeleteInProgress) {
-                        mHandler.postDelayed(this, DELETE_WAIT_TIME);
-                    } else {
-                        deleteMediaFile(cursor);
-                    }
+    @Override
+    public IBinder onBind(Intent intent) {
+        // not supported
+        return null;
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        if (mDeleteInProgress != null) {
+            if (event.isError()) {
+                switch (event.error.type) {
+                    case UNAUTHORIZED:
+                        handleUnauthorizedError();
+                        break;
+                    case MEDIA_NOT_FOUND:
+                        handleMediaNotFoundError();
+                        break;
+                    default:
+                        handleUnknownError();
+                        break;
                 }
-            } finally {
-                if (cursor != null)
-                    cursor.close();
+            } else if (event.media != null && !event.media.isEmpty() && matchesInProgressMedia(event.media.get(0))) {
+                switch (event.cause) {
+                    case DELETE_MEDIA:
+                    case REMOVE_MEDIA:
+                        AppLog.v(T.MEDIA, "Successfully deleted " + mDeleteInProgress.getTitle());
+                        break;
+                    case UPDATE_MEDIA:
+                        AppLog.v(T.MEDIA, mDeleteInProgress.getTitle() + " marked as deleted.");
+                        break;
+                }
+                mDeleteInProgress = null;
             }
-
         }
-    };
 
-    private Cursor getQueueItem() {
-        return WordPress.wpDB.getMediaDeleteQueueItem(String.valueOf(mSite.getId()));
+        deleteNextInQueue();
     }
 
-    private void deleteMediaFile(Cursor cursor) {
-        if (!cursor.moveToFirst())
+    /**
+     * Delete next media item in queue. Only one media item is deleted at a time.
+     */
+    private void deleteNextInQueue() {
+        // waiting for response to current delete request
+        if (mDeleteInProgress != null) {
             return;
+        }
 
-        mDeleteInProgress = true;
+        mDeleteInProgress = mMediaStore.getNextSiteMediaToDelete(mSite);
 
-        final String localSiteId = cursor.getString((cursor.getColumnIndex("blogId")));
-        final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
+        // no more items to delete, stop service
+        if (mDeleteInProgress == null) {
+            AppLog.v(T.MEDIA, "No more media items in delete queue. Stopping service.");
+            stopSelf();
+            return;
+        }
 
-        SiteModel site = mSiteStore.getSiteByLocalId(Integer.parseInt(localSiteId));
-        ApiHelper.DeleteMediaTask task = new ApiHelper.DeleteMediaTask(site, mediaId,
-                new ApiHelper.GenericCallback() {
-            @Override
-            public void onSuccess() {
-                // only delete them once we get an ok from the server
-                if (mediaId != null) {
-                    WordPress.wpDB.deleteMediaFile(localSiteId, mediaId);
-                }
+        AppLog.v(T.MEDIA, "Deleting " + mDeleteInProgress.getTitle() + " (id=" + mDeleteInProgress.getMediaId() + ")");
 
-                mDeleteInProgress = false;
-                mHandler.post(mFetchQueueTask);
-            }
+        // dispatch delete action
+        MediaListPayload payload = new MediaListPayload(MediaAction.DELETE_MEDIA, mSite, mediaList(mDeleteInProgress));
+        mDispatcher.dispatch(MediaActionBuilder.newDeleteMediaAction(payload));
+    }
 
-            @Override
-            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                // Ideally we would do handle the 401 (unauthorized) and 404 (not found) errors,
-                // but the XMLRPCExceptions don't seem to give messages when they are thrown.
+    /**
+     * Stop delete service until authorized to perform actions on site.
+     */
+    private void handleUnauthorizedError() {
+        AppLog.v(T.MEDIA, "Unauthorized site access. Stopping service.");
+        stopSelf();
+    }
 
-                // Instead we'll just set them as "deleted" so they don't show up in the delete queue.
-                // Otherwise the service will continuously try to delete an item they can't delete.
+    /**
+     * Remove media from local database.
+     */
+    private void handleMediaNotFoundError() {
+        if (mDeleteInProgress == null) {
+            return;
+        }
 
-                WordPress.wpDB.updateMediaUploadState(localSiteId, mediaId, MediaUploadState.DELETED);
+        MediaListPayload payload = new MediaListPayload(MediaAction.REMOVE_MEDIA, mSite, mediaList(mDeleteInProgress));
+        mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(payload));
+    }
 
-                mDeleteInProgress = false;
-                mHandler.post(mFetchQueueTask);
-            }
-        });
-        task.execute();
-        mHandler.post(mFetchQueueTask);
+    /**
+     * Mark media as deleted to prevent continuous delete requests.
+     */
+    private void handleUnknownError() {
+        if (mDeleteInProgress == null) {
+            return;
+        }
+
+        mDeleteInProgress.setDeleted(true);
+        MediaListPayload payload = new MediaListPayload(MediaAction.UPDATE_MEDIA, mSite, mediaList(mDeleteInProgress));
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(payload));
+    }
+
+    /**
+     * Compares site ID and media ID to determine if a given media item matches the current media item being deleted.
+     */
+    private boolean matchesInProgressMedia(final MediaModel media) {
+        if (media == null || mDeleteInProgress == null) {
+            return media == mDeleteInProgress;
+        }
+
+        return media.getSiteId() == mDeleteInProgress.getSiteId() &&
+               media.getMediaId() == mDeleteInProgress.getMediaId();
+    }
+
+    /**
+     * Creates a list for single media item.
+     */
+    private ArrayList<MediaModel> mediaList(final MediaModel media) {
+        ArrayList<MediaModel> mediaList = new ArrayList<>();
+        mediaList.add(media);
+        return mediaList;
     }
 }
