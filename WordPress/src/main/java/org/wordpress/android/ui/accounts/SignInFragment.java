@@ -49,8 +49,8 @@ import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -904,6 +904,23 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    private void onWPComEmailCheckError(boolean forceWordPressComDisplay) {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (forceWordPressComDisplay) {
+            showPasswordFieldAndFocus();
+            return;
+        }
+
+        if (isUsernameEmail()) {
+            showSelfHostedSignInForm();
+        } else {
+            showPasswordFieldAndFocus();
+        }
+    }
+
     private void requestWPComEmailCheck() {
         WordPress.getRestClientUtilsV0().isAvailable(mUsername, new RestRequest.Listener() {
             @Override
@@ -913,25 +930,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN) && mListener != null) {
                         mListener.onMagicLinkRequestSuccess(mUsername);
                     } else {
-                        if (isUsernameEmail()) {
-                            showSelfHostedSignInForm();
-                        } else {
-                            showPasswordFieldAndFocus();
-                        }
+                        onWPComEmailCheckError(false);
                     }
                 } catch (JSONException error) {
                     AppLog.e(AppLog.T.MAIN, error);
-                    if (isUsernameEmail()) {
-                        showSelfHostedSignInForm();
-                    } else {
-                        showPasswordFieldAndFocus();
-                    }
+                    onWPComEmailCheckError(false);
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                showPasswordFieldAndFocus();
+                onWPComEmailCheckError(true);
             }
         });
     }
