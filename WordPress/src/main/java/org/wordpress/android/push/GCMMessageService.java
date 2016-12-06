@@ -790,7 +790,6 @@ public class GCMMessageService extends GcmListenerService {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, pushId, resultIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(pendingIntent);
-
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(pushId, builder.build());
         }
