@@ -77,7 +77,6 @@ Language: zh_CN
 	<string name="invite_people">邀请用户</string>
 	<string name="my_site_header_external">外部</string>
 	<string name="send_link">发送链接</string>
-	<string name="signup_succeed_signin_failed">您的帐户已创建，但在您登录时出错\n。请尝试使用您新创建的用户名和密码登录。</string>
 	<string name="label_clear_search_history">清除搜索历史记录</string>
 	<string name="dlg_confirm_clear_search_history">清除搜索历史记录？</string>
 	<string name="reader_empty_posts_in_search_description">未找到与您的语言对应的符合“%s”搜索条件的文章</string>
@@ -109,7 +108,6 @@ Language: zh_CN
 	<string name="check_your_email">检查电子邮件</string>
 	<string name="magic_link_unavailable_error_message">目前不可用。请输入密码</string>
 	<string name="logging_in">正在登录</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">获取电子邮件中收到的链接，立即登录</string>
 	<string name="enter_your_password_instead">改为输入密码</string>
 	<string name="web_address_dialog_hint">公开显示您的评论。</string>
 	<string name="username_email">电子邮件或用户名</string>
@@ -279,7 +277,6 @@ Language: zh_CN
 	<string name="error_post_remote_site_settings">无法保存站点信息</string>
 	<string name="error_fetch_remote_site_settings">无法检索站点信息</string>
 	<string name="error_media_upload_connection">上传媒体文件时出现连接错误</string>
-	<string name="site_settings_disconnected_toast">已断开连接，编辑已被禁用。</string>
 	<string name="site_settings_unsupported_version_error">不受支持的 WordPress 版本</string>
 	<string name="site_settings_multiple_links_dialog_description">所含链接数超过此数量的评论需要进行审核。</string>
 	<string name="site_settings_close_after_dialog_switch_text">自动关闭</string>
@@ -346,7 +343,6 @@ Language: zh_CN
 	<string name="site_settings_paging_title">分页</string>
 	<string name="site_settings_threading_title">线程</string>
 	<string name="site_settings_sort_by_title">排序方式</string>
-	<string name="site_settings_account_required_title">用户必须注册</string>
 	<string name="site_settings_identity_required_title">必须包括名称和电子邮件</string>
 	<string name="site_settings_receive_pingbacks_title">接收 Pingback</string>
 	<string name="site_settings_send_pingbacks_title">发送 Pingback</string>
@@ -510,7 +506,6 @@ Language: zh_CN
 	<string name="tabbar_accessibility_label_my_site">我的站点</string>
 	<string name="editor_toast_changes_saved">更改已保存</string>
 	<string name="passcodelock_prompt_message">输入 PIN</string>
-	<string name="push_auth_expired">请求已过期。请登录到 WordPress.com 并重试。</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% 的阅读次数</string>
 	<string name="ignore">忽略</string>
 	<string name="stats_insights_best_ever">最受欢迎的文章</string>
@@ -520,11 +515,8 @@ Language: zh_CN
 	<string name="stats_insights_popular">人气最高的日期和时刻</string>
 	<string name="stats_insights_all_time">全时段的文章篇数、阅读次数和访客人数</string>
 	<string name="stats_insights">见解</string>
-	<string name="stats_sign_in_jetpack_different_com_account">要查看您的统计数据，请登录关联 Jetpack 时使用的 WordPress.com 帐户。</string>
 	<string name="stats_other_recent_stats_moved_label">要查找您的“其他最近统计数据”？我们已将其迁移至“见解”页面。</string>
-	<string name="me_disconnect_from_wordpress_com">从 WordPress.com 断开连接</string>
 	<string name="me_btn_login_logout">登录/注销</string>
-	<string name="me_connect_to_wordpress_com">连接至 WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">“%s”未隐藏，因为它是当前站点</string>
 	<string name="me_btn_support">帮助与支持</string>
 	<string name="account_settings">帐户设置</string>
@@ -542,11 +534,8 @@ Language: zh_CN
 	<string name="my_site_btn_blog_posts">博客文章</string>
 	<string name="reader_label_new_posts_subtitle">轻点以显示文章</string>
 	<string name="my_site_header_configuration">配置</string>
-	<string name="notifications_account_required">登录 WordPress.com，以查看通知</string>
 	<string name="stats_unknown_author">未知作者</string>
-	<string name="signout">断开连接</string>
 	<string name="image_added">图片已添加</string>
-	<string name="sign_out_wpcom_confirm">断开帐户连接将删除此设备上所有的 @%s WordPress.com 数据，其中包括本地草稿和本地更改。</string>
 	<string name="select_all">选择全部</string>
 	<string name="hide">隐藏</string>
 	<string name="show">显示</string>
@@ -567,8 +556,6 @@ Language: zh_CN
 	<string name="no_media">无任何媒体</string>
 	<string name="loading_images">正在加载图片</string>
 	<string name="loading_videos">正在加载视频</string>
-	<string name="auth_required">再次登录以继续操作。</string>
-	<string name="sign_in_jetpack">登录 WordPress.com 帐户来连接 Jetpack。</string>
 	<string name="two_step_sms_sent">查收短信查看验证码。</string>
 	<string name="two_step_footer_button">通过短信发送代码</string>
 	<string name="two_step_footer_label">输入您验证器应用程中的代码。</string>
@@ -684,7 +671,6 @@ Language: zh_CN
 	<string name="delete_sure_page">删除此页面</string>
 	<string name="delete_sure">删除此草稿</string>
 	<string name="delete_sure_post">删除此文章</string>
-	<string name="signing_out">正在注销…</string>
 	<string name="posting_post">正在发布“%s”</string>
 	<string name="media_empty_list_custom_date">此事件段内没有媒体</string>
 	<string name="pages_empty_list">还没有页面。为何不创建一个？</string>
@@ -956,16 +942,13 @@ Language: zh_CN
 	<string name="reader_empty_followed_blogs_description">别担心，只需轻点右上角的图标即可开始浏览！</string>
 	<string name="reader_likes_you_and_one">你和另一个人喜欢</string>
 	<string name="select_time">选择时间</string>
-	<string name="nux_oops_not_selfhosted_blog">登录到 WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">添加一个自己的站点</string>
-	<string name="signing_in">正在登录…</string>
 	<string name="nux_welcome_create_account">创建账户</string>
 	<string name="nux_tap_continue">继续</string>
 	<string name="password_invalid">你需要一个更安全的密码。确定使用7个或更多字符，混合大、小写字母、数字或特殊字符.</string>
 	<string name="nux_tutorial_get_started_title">开始!</string>
 	<string name="limit_reached">达到限制.你可以在1分钟后尝试.在这之前尝试只会增加你所需等待的时间 . 如果你觉得这是个错误,联系支持.</string>
 	<string name="username_invalid">无效的用户名</string>
-	<string name="connecting_wpcom">连接到 WordPress.com</string>
 	<string name="button_next">下一步</string>
 	<string name="create_account_wpcom">在 WordPress.com 上创建帐户</string>
 	<string name="reader_empty_followed_tags">您没有关注任何标签</string>
@@ -1056,7 +1039,6 @@ Language: zh_CN
 	<string name="follows">关注</string>
 	<string name="note_reply_successful">回复已发表</string>
 	<string name="notifications">通知</string>
-	<string name="sign_in">登录</string>
 	<string name="loading">正在加载…</string>
 	<string name="httppassword">HTTP 密码</string>
 	<string name="httpuser">HTTP 用户名</string>

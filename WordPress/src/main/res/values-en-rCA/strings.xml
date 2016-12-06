@@ -97,7 +97,6 @@ Language: en_CA
 	<string name="invite_people">Invite People</string>
 	<string name="my_site_header_external">External</string>
 	<string name="send_link">Send link</string>
-	<string name="signup_succeed_signin_failed">Your account has been created but an error occured while we logged you\n        in. Try to log in with your newly created username and password.</string>
 	<string name="label_clear_search_history">Clear search history</string>
 	<string name="dlg_confirm_clear_search_history">Clear search history?</string>
 	<string name="reader_empty_posts_in_search_description">No posts found for %s for your language</string>
@@ -132,7 +131,6 @@ Language: en_CA
 	<string name="check_your_email">Check your email</string>
 	<string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
 	<string name="logging_in">Logging in</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to log in instantly</string>
 	<string name="enter_your_password_instead">Enter your password instead</string>
 	<string name="web_address_dialog_hint">Shown publicly when you comment.</string>
 	<string name="username_email">Email or username</string>
@@ -303,7 +301,6 @@ Language: en_CA
 	<string name="error_post_remote_site_settings">Couldn\'t save site info</string>
 	<string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
 	<string name="error_media_upload_connection">A connection error occurred while uploading media</string>
-	<string name="site_settings_disconnected_toast">Logged out, editing disabled.</string>
 	<string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
 	<string name="site_settings_multiple_links_dialog_description">Require approval for comments that include more than this number of links.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Automatically close</string>
@@ -370,7 +367,6 @@ Language: en_CA
 	<string name="site_settings_paging_title">Paging</string>
 	<string name="site_settings_threading_title">Threading</string>
 	<string name="site_settings_sort_by_title">Sort by</string>
-	<string name="site_settings_account_required_title">Users must be logged in</string>
 	<string name="site_settings_identity_required_title">Must include name and email</string>
 	<string name="site_settings_receive_pingbacks_title">Receive Pingbacks</string>
 	<string name="site_settings_send_pingbacks_title">Send Pingbacks</string>
@@ -534,7 +530,6 @@ Language: en_CA
 	<string name="tabbar_accessibility_label_my_site">My Site</string>
 	<string name="editor_toast_changes_saved">Changes saved</string>
 	<string name="passcodelock_prompt_message">Enter your PIN</string>
-	<string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
 	<string name="ignore">Ignore</string>
 	<string name="stats_insights_best_ever">Best Views Ever</string>
@@ -544,11 +539,8 @@ Language: en_CA
 	<string name="stats_insights_popular">Most popular day and hour</string>
 	<string name="stats_insights_all_time">All-time posts, views, and visitors</string>
 	<string name="stats_insights">Insights</string>
-	<string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
-	<string name="me_disconnect_from_wordpress_com">Log out from WordPress.com</string>
 	<string name="me_btn_login_logout">Login/Logout</string>
-	<string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" wasn\'t hidden because it\'s the current site</string>
 	<string name="me_btn_support">Help &amp; Support</string>
 	<string name="account_settings">Account Settings</string>
@@ -566,11 +558,8 @@ Language: en_CA
 	<string name="my_site_btn_blog_posts">Blog Posts</string>
 	<string name="reader_label_new_posts_subtitle">Tap to show them</string>
 	<string name="my_site_header_configuration">Configuration</string>
-	<string name="notifications_account_required">Log in to WordPress.com for notifications</string>
 	<string name="stats_unknown_author">Unknown Author</string>
-	<string name="signout">Log out</string>
 	<string name="image_added">Image added</string>
-	<string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
 	<string name="select_all">Select all</string>
 	<string name="hide">Hide</string>
 	<string name="show">Show</string>
@@ -591,8 +580,6 @@ Language: en_CA
 	<string name="no_media">No media</string>
 	<string name="loading_images">Loading images</string>
 	<string name="loading_videos">Loading videos</string>
-	<string name="auth_required">Log in again to continue.</string>
-	<string name="sign_in_jetpack">Log in to your WordPress.com account to connect to Jetpack.</string>
 	<string name="two_step_sms_sent">Check your text messages for the verification code.</string>
 	<string name="two_step_footer_button">Send code via text message</string>
 	<string name="two_step_footer_label">Enter the code from your authenticator app.</string>
@@ -708,7 +695,6 @@ Language: en_CA
 	<string name="delete_sure_page">Delete this page</string>
 	<string name="delete_sure">Delete this draft</string>
 	<string name="delete_sure_post">Delete this post</string>
-	<string name="signing_out">Logging out…</string>
 	<string name="posting_post">Posting "%s"</string>
 	<string name="media_empty_list_custom_date">No media in this time interval</string>
 	<string name="pages_empty_list">No pages yet. Why not create one?</string>
@@ -981,16 +967,13 @@ Language: en_CA
 	<string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
 	<string name="reader_likes_you_and_one">You and one other like this</string>
 	<string name="select_time">Select time</string>
-	<string name="nux_oops_not_selfhosted_blog">Log in to WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Add self-hosted site</string>
-	<string name="signing_in">Logging in…</string>
 	<string name="nux_welcome_create_account">Create account</string>
 	<string name="nux_tap_continue">Continue</string>
 	<string name="password_invalid">You need a more secure password. Make sure to use 7 or more characters, mix uppercase and lowercase letters, numbers or special characters.</string>
 	<string name="nux_tutorial_get_started_title">Get started!</string>
 	<string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
 	<string name="username_invalid">Invalid username</string>
-	<string name="connecting_wpcom">Logging in to WordPress.com</string>
 	<string name="button_next">Next</string>
 	<string name="create_account_wpcom">Create an account on WordPress.com</string>
 	<string name="reader_empty_followed_tags">You don\'t follow any tags</string>
@@ -1081,7 +1064,6 @@ Language: en_CA
 	<string name="follows">Follows</string>
 	<string name="note_reply_successful">Reply published</string>
 	<string name="notifications">Notifications</string>
-	<string name="sign_in">Log in</string>
 	<string name="loading">Loading…</string>
 	<string name="httppassword">HTTP password</string>
 	<string name="httpuser">HTTP username</string>

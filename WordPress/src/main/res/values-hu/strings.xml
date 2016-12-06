@@ -13,8 +13,6 @@ Language: hu
 	<string name="role_author">Szerző</string>
 	<string name="role_contributor">Közreműködő</string>
 	<string name="role_follower">Követő</string>
-	<string name="sign_in_jetpack">Lépjünk be a WordPress.com felhasználói fiókunkba és csatlakozzunk a Jetpack-hez.</string>
-	<string name="auth_required">A folytatáshoz lépjünk be újra.</string>
 	<string name="two_step_footer_button">Kód küldése szöveges üzenetben</string>
 	<string name="verify">Ellenőrzés</string>
 	<string name="editor_toast_invalid_path">Érvénytelen fájl elérési útvonal</string>
@@ -213,7 +211,6 @@ Language: hu
 	<string name="passcode_preference_title">Azonosítókód lezárás</string>
 	<string name="upload">Feltöltés</string>
 	<string name="discard">Elvetés</string>
-	<string name="sign_in">Bejelentkezés</string>
 	<string name="notifications">Értesítések</string>
 	<string name="note_reply_successful">Válasz elküldve</string>
 	<string name="new_notifications">%d új értesítés</string>

@@ -22,7 +22,7 @@
         android:id="@+id/reader_webview"
         android:layout_width="@dimen/reader_webview_width"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_dateline"
+        android:layout_below="@+id/layout_dateline"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:scrollbars="none" />
 

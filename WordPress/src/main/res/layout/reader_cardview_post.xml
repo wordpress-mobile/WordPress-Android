@@ -11,7 +11,7 @@
     android:stateListAnimator="@anim/pressed_card"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="@dimen/cardview_default_radius"
-    card_view:cardElevation="@dimen/card_elevation"
+    card_view:cardElevation="@dimen/reader_card_elevation"
     tools:targetApi="LOLLIPOP">
 
     <LinearLayout
@@ -19,7 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/reader_card_content_padding"
+        android:paddingRight="@dimen/reader_card_content_padding">
 
         <RelativeLayout
             android:id="@+id/layout_post_header"
@@ -27,14 +29,11 @@
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:paddingBottom="@dimen/margin_large"
-            android:paddingLeft="@dimen/reader_card_content_padding"
-            android:paddingRight="@dimen/reader_card_content_padding"
             android:paddingTop="@dimen/margin_large">
 
             <org.wordpress.android.widgets.WPNetworkImageView
-                android:id="@+id/image_blavatar"
+                android:id="@+id/image_avatar_or_blavatar"
                 style="@style/ReaderImageView.Avatar"
-                android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/margin_large"
                 tools:src="@drawable/blavatar_placeholder" />
 
@@ -43,97 +42,99 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_large"
-                android:padding="@dimen/reader_follow_button_padding" />
+                android:paddingLeft="@dimen/reader_follow_button_padding" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/margin_large"
                 android:layout_toLeftOf="@+id/follow_button"
-                android:layout_toRightOf="@+id/image_blavatar"
-                android:orientation="vertical">
+                android:layout_toRightOf="@+id/image_avatar_or_blavatar">
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/text_blog_name"
+                    android:id="@+id/text_author_and_blog_name"
                     style="@style/ReaderTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/reader_hyperlink"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="text_blog_name" />
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/text_domain"
+                    android:id="@+id/text_dateline"
+                    style="@style/ReaderTextView.Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_small"
-                    tools:text="text_domain" />
-            </LinearLayout>
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/text_author_and_blog_name"
+                    android:gravity="center_vertical"
+                    tools:text="text_dateline" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
-        <org.wordpress.android.widgets.WPNetworkImageView
-            android:id="@+id/image_featured"
-            style="@style/ReaderImageView.Featured"
-            android:layout_marginBottom="@dimen/margin_small" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_title"
-            style="@style/ReaderTextView.Post.Title"
-            android:layout_marginLeft="@dimen/reader_card_content_padding"
-            android:layout_marginRight="@dimen/reader_card_content_padding"
-            android:layout_marginTop="@dimen/margin_large"
-            tools:text="text_title" />
-
-        <LinearLayout
-            android:id="@+id/layout_dateline"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:id="@+id/frame_photo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/reader_card_content_padding"
-            android:layout_marginRight="@dimen/reader_card_content_padding"
-            android:layout_marginTop="@dimen/margin_extra_small"
-            android:orientation="horizontal">
+            android:layout_marginBottom="@dimen/margin_small"
+            android:background="@drawable/reader_image_border">
 
             <org.wordpress.android.widgets.WPNetworkImageView
-                android:id="@+id/image_avatar"
-                style="@style/ReaderImageView.Avatar.Tiny"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/margin_medium"
-                tools:src="@drawable/gravatar_placeholder" />
+                android:id="@+id/image_featured"
+                style="@style/ReaderImageView.Featured.CardView" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_dateline"
-                style="@style/ReaderTextView.Label"
+                android:id="@+id/text_photo_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                tools:text="text_dateline" />
-        </LinearLayout>
+                android:layout_gravity="bottom|left"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:shadowColor="@color/grey_dark"
+                android:shadowDx="@dimen/reader_photo_title_shadow_offset"
+                android:shadowDy="@dimen/reader_photo_title_shadow_offset"
+                android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                tools:text="text_photo_title" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_excerpt"
-            style="@style/ReaderTextView.Post.Excerpt"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/reader_card_content_padding"
-            android:layout_marginRight="@dimen/reader_card_content_padding"
-            android:layout_marginTop="@dimen/margin_medium"
-            tools:text="text_excerpt" />
+            <ImageView
+                android:id="@+id/image_video_overlay"
+                android:layout_width="@dimen/reader_video_overlay_size"
+                android:layout_height="@dimen/reader_video_overlay_size"
+                android:layout_gravity="center"
+                android:src="@drawable/reader_video_overlay"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </FrameLayout>
 
         <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
             android:id="@+id/thumbnail_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/reader_card_content_padding"
-            android:layout_marginRight="@dimen/reader_card_content_padding"
-            android:layout_marginTop="@dimen/margin_large"
             android:visibility="gone"
             tools:visibility="visible" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_title"
+            style="@style/ReaderTextView.Post.Title"
+            android:layout_marginTop="@dimen/margin_large"
+            tools:text="text_title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_excerpt"
+            style="@style/ReaderTextView.Post.Excerpt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            tools:text="text_excerpt" />
 
         <!-- attribution section for discover posts -->
         <LinearLayout
@@ -141,12 +142,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginLeft="@dimen/reader_card_content_padding"
-            android:layout_marginRight="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_large"
             android:orientation="horizontal"
             android:visibility="gone"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_discover_avatar"
@@ -172,27 +171,29 @@
         <RelativeLayout
             android:id="@+id/layout_footer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginLeft="@dimen/reader_card_content_padding"
-            android:layout_marginRight="@dimen/reader_card_content_padding"
-            android:layout_marginTop="@dimen/margin_medium">
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/image_visit_icon"
+                android:layout_width="@dimen/reader_count_icon"
+                android:layout_height="@dimen/reader_count_icon"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="-2dp"
+                android:layout_marginRight="@dimen/margin_extra_small"
+                android:background="?android:selectableItemBackground"
+                app:srcCompat="@drawable/reader_visit" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_tag"
-                android:layout_width="match_parent"
+                android:id="@+id/text_visit"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/count_comments"
+                android:layout_toRightOf="@+id/image_visit_icon"
                 android:background="?android:selectableItemBackground"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="@dimen/margin_small"
-                android:paddingRight="@dimen/margin_small"
-                android:paddingTop="@dimen/margin_small"
-                android:textColor="@color/reader_hyperlink"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="#text_tag" />
+                android:gravity="center_vertical"
+                android:text="@string/reader_label_visit"
+                android:textColor="@color/reader_count_text"
+                android:textSize="@dimen/text_sz_medium" />
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
                 android:id="@+id/count_comments"
@@ -222,8 +223,6 @@
                 android:layout_centerVertical="true"
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/more"
-                android:paddingBottom="@dimen/margin_medium"
-                android:paddingTop="@dimen/margin_medium"
                 app:srcCompat="@drawable/ic_action_more_grey" />
 
         </RelativeLayout>

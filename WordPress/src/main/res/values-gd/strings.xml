@@ -64,7 +64,6 @@ Language: gd_GB
 	<string name="tabbar_accessibility_label_me">Mise</string>
 	<string name="editor_toast_changes_saved">Chaidh na h-atharraichean a shàbhaladh</string>
 	<string name="passcodelock_prompt_message">Cuir a-steach am PIN agad</string>
-	<string name="push_auth_expired">Dh’fhalbh an ùine air an iarrtas. Clàraich a-steach gu WordPress.com a dh’fheuchainn ris a-rithist.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% de sheallaidhean</string>
 	<string name="ignore">Leig seachad</string>
 	<string name="stats_insights_best_ever">Na seallaidhean as fhearr a-riamh</string>
@@ -74,11 +73,8 @@ Language: gd_GB
 	<string name="stats_insights_popular">An latha ’s uair as fhèillmhoire</string>
 	<string name="stats_insights_all_time">Puist, seallaidhean is aoighean air fad</string>
 	<string name="stats_insights">Insights</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Clàraich a-steach gun chunntas WordPress.com leis an do cheangail thu Jetpack ris gus sùil a thoirt air na stats agad.</string>
 	<string name="stats_other_recent_stats_moved_label">A bheil an corr dhe na stats a bha agad o chionn goirid a dhìth ort? Chaidh an gluasad gu duilleag nan Insights.</string>
-	<string name="me_disconnect_from_wordpress_com">Dì-cheangail o WordPress.com</string>
 	<string name="me_btn_login_logout">Clàraich a-steach/a-mach</string>
-	<string name="me_connect_to_wordpress_com">Ceangail ri WordPress.com</string>
 	<string name="me_btn_support">Cobhair ⁊ taic</string>
 	<string name="site_picker_cant_hide_current_site">Cha deach “%s” a chur am falach a chionn ’s gur e sin an làrach làithreach</string>
 	<string name="account_settings">Roghainnean a\' chunntais</string>
@@ -96,11 +92,8 @@ Language: gd_GB
 	<string name="my_site_btn_blog_posts">Puist bloga</string>
 	<string name="my_site_header_configuration">Rèiteachadh</string>
 	<string name="reader_label_new_posts_subtitle">Thoir gnogag gus an sealltainn</string>
-	<string name="notifications_account_required">Clàraich a-steach gu WordPress.com airson nam brathan</string>
 	<string name="stats_unknown_author">Ùghdar neo-aithnichte</string>
-	<string name="signout">Dì-cheangail</string>
 	<string name="image_added">Chaidh an dealbh a chur ris</string>
-	<string name="sign_out_wpcom_confirm">Ma dhì-cheanglas tu an cunntas agad, thèid an dàta WordPress.com air fad aig @%s a thoirt air falbh on uidheam seo, a’ gabhail a-steach dhreachdan is atharraichean ionadail.</string>
 	<string name="select_all">Tagh na h-uile</string>
 	<string name="hide">Falaich</string>
 	<string name="show">Seall</string>
@@ -121,8 +114,6 @@ Language: gd_GB
 	<string name="no_media">Chan eil meadhanan ann</string>
 	<string name="loading_images">A’ luchdadh nan dealbhan</string>
 	<string name="loading_videos">A’ luchdadh nan videothan</string>
-	<string name="sign_in_jetpack">Clàraich a-steach dhan chunntas WordPress.com agad airson ceangal ri Jetpack.</string>
-	<string name="auth_required">Clàraich a-steach a-rithist airson leantainn air adhart.</string>
 	<string name="two_step_sms_sent">Thoir sùil air na teachdaireachdan teacsa agad airson a’ chòd dearbhaidh.</string>
 	<string name="two_step_footer_button">Cuir an còd slighe teachdaireachd teacsa</string>
 	<string name="two_step_footer_label">Cuir a-steach on aplacaid dearbhaidh agad.</string>
@@ -238,7 +229,6 @@ Language: gd_GB
 	<string name="delete_sure_page">Sguab às an duilleag seo</string>
 	<string name="confirm_delete_multi_media">A bheil thu airson na rudan a thagh thu a sguabadh às?</string>
 	<string name="delete_sure_post">Sguab às am post seo</string>
-	<string name="signing_out">’Gad chlàradh a-mach…</string>
 	<string name="posting_post">A’ postadh “%s”</string>
 	<string name="media_empty_list_custom_date">Cha robh meadhan ann san eadaramh ùine seo</string>
 	<string name="comment_trashed">Chaidh am beachd a chur dhan sgudal</string>
@@ -514,8 +504,6 @@ Language: gd_GB
 	<string name="nux_tap_continue">Air adhart</string>
 	<string name="nux_welcome_create_account">Cruthaich cunntas</string>
 	<string name="nux_add_selfhosted_blog">Cuir làrach air fèin-òstaireachd ris</string>
-	<string name="nux_oops_not_selfhosted_blog">\'Gad chlàradh a-steach gu WordPress.com</string>
-	<string name="signing_in">’Gad chlàradh a-steach…</string>
 	<string name="media_add_popup_title">Cuir ri leabharlann nam meadhanan</string>
 	<string name="media_add_new_media_gallery">Cruthaich gailearaidh</string>
 	<string name="select_from_media_library">Tagh o leabhar-lann nam meadhanan</string>
@@ -536,7 +524,6 @@ Language: gd_GB
 	<string name="reader_toast_err_share_intent">Cha ghabh a cho-roinneadh</string>
 	<string name="reader_toast_err_view_image">Cha ghabh an dealbh seo a shealltainn</string>
 	<string name="reader_toast_err_url_intent">Cha ghabh %s fhosgladh</string>
-	<string name="connecting_wpcom">A\' ceangal ri WordPress.com</string>
 	<string name="username_invalid">Ainm-cleachdaiche mì-dhligheach</string>
 	<string name="limit_reached">Chleachd thu na tha ceadaichte dhut. Feuch ris a-rithist ann am mionaid. Ma dh\'fheuchas tu ris roimhe sin, fàsaidh an ùine mus dèid an toirmeasg a thoirt dhìot. Ma tha thu dhen bheachd gur e mearachd a tha seo, cuir fios gun sgioba taice.</string>
 	<string name="nux_tutorial_get_started_title">Toiseach tòiseachaidh!</string>
@@ -605,7 +592,6 @@ Language: gd_GB
 	<string name="passcode_turn_on">Cuir glas a\' PIN air</string>
 	<string name="upload">Luchdadh suas</string>
 	<string name="discard">Tilg air falbh</string>
-	<string name="sign_in">Clàraich a-steach</string>
 	<string name="notifications">Brathan</string>
 	<string name="note_reply_successful">Chaidh an fhreagairt fhoillseachadh</string>
 	<string name="new_notifications">%d brath(an) ùra</string>
