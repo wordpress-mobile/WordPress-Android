@@ -54,14 +54,13 @@ public class ReaderFollowButton extends LinearLayout {
             }
         }
 
-        // hide follow text, enlarge the follow icon, and make the icon blue if there's no caption
+        // hide follow text and enlarge the follow icon if there's no caption
         if (!mShowCaption) {
             mTextFollow.setText(null);
             mTextFollow.setVisibility(View.GONE);
             int iconSz = context.getResources().getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption);
             mImageFollow.getLayoutParams().width = iconSz;
             mImageFollow.getLayoutParams().height = iconSz;
-            mImageFollow.setImageResource(R.drawable.ic_reader_follow_blue_medium_24dp);
         }
     }
 
@@ -75,11 +74,9 @@ public class ReaderFollowButton extends LinearLayout {
         // blue icon if not followed and there is no caption
         int drawableId;
         if (mIsFollowed) {
-            drawableId = R.drawable.ic_reader_following_alert_green_24dp;
-        } else if (mShowCaption) {
-            drawableId = R.drawable.ic_reader_follow_grey_dark_24dp;
+            drawableId = R.drawable.reader_following;
         } else {
-            drawableId = R.drawable.ic_reader_follow_blue_medium_24dp;
+            drawableId = R.drawable.reader_follow;
         }
         mImageFollow.setImageResource(drawableId);
     }

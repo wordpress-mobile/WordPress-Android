@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
+import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -34,6 +35,7 @@ public class ReaderPost {
     private String authorFirstName;
     private String blogName;
     private String blogUrl;
+    private String blogImageUrl;
     private String postAvatar;
 
     private String primaryTag;    // most popular tag on this post based on usage in blog
@@ -68,6 +70,7 @@ public class ReaderPost {
     public long xpostBlogId;
 
     private String railcarJson;
+    private ReaderCardType cardType = ReaderCardType.DEFAULT;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -152,6 +155,10 @@ public class ReaderPost {
             post.blogName = JSONUtils.getString(jsonSite, "name");
             post.setBlogUrl(JSONUtils.getString(jsonSite, "URL"));
             post.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
+            JSONObject jsonSiteIcon = jsonSite.optJSONObject("icon");
+            if (jsonSiteIcon != null) {
+                post.blogImageUrl = JSONUtils.getString(jsonSiteIcon, "img");
+            }
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
         }
@@ -191,9 +198,17 @@ public class ReaderPost {
         }
         // if we *still* don't have a featured image but the text contains an IMG tag, check whether
         // we can find a suitable image from the text
-        if (!post.hasFeaturedImage() && post.hasText() && post.text.contains("<img")) {
+        if (!post.hasFeaturedImage() && post.hasImages()) {
             post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
                     .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+        }
+
+        // if there's no featured image or featured video and the post contains an iframe, scan
+        // the content for a suitable featured video
+        if (!post.hasFeaturedImage()
+                && !post.hasFeaturedVideo()
+                && post.getText().contains("<iframe")) {
+            post.setFeaturedVideo(new ReaderIframeScanner(post.getText()).getFirstUsableVideo());
         }
 
         // "railcar" data - currently used in search streams, used by TrainTracks
@@ -202,7 +217,15 @@ public class ReaderPost {
             post.setRailcarJson(jsonRailcar.toString());
         }
 
+        // set the card type last since it depends on information contained in the post - note
+        // that this is stored in the post table rather than calculated on-the-fly
+        post.setCardType(ReaderCardType.fromReaderPost(post));
+
         return post;
+    }
+
+    public boolean hasImages() {
+        return hasText() && text.contains("<img ");
     }
 
     /*
@@ -432,6 +455,13 @@ public class ReaderPost {
         this.blogUrl = StringUtils.notNullStr(blogUrl);
     }
 
+    public String getBlogImageUrl() {
+        return StringUtils.notNullStr(blogImageUrl);
+    }
+    public void setBlogImageUrl(String imageUrl) {
+        this.blogImageUrl = StringUtils.notNullStr(imageUrl);
+    }
+
     public String getPostAvatar() {
         return StringUtils.notNullStr(postAvatar);
     }
@@ -575,6 +605,10 @@ public class ReaderPost {
         return !TextUtils.isEmpty(blogUrl);
     }
 
+    public boolean hasBlogImageUrl() {
+        return !TextUtils.isEmpty(blogImageUrl);
+    }
+
     /*
      * returns true if this post is from a WordPress blog
      */
@@ -631,6 +665,13 @@ public class ReaderPost {
     }
     public boolean hasRailcar() {
         return !TextUtils.isEmpty(railcarJson);
+    }
+
+    public ReaderCardType getCardType() {
+        return cardType != null ? cardType : ReaderCardType.DEFAULT;
+    }
+    public void setCardType(ReaderCardType cardType) {
+        this.cardType = cardType;
     }
 
     /****

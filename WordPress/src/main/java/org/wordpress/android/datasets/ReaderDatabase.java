@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 129;
+    private static final int DB_VERSION = 133;
 
     /*
      * version history
@@ -81,6 +81,10 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *  127 - changed tbl_posts.sort_index to tbl_posts.score
      *  128 - added indexes on tbl_posts.date_published and tbl_posts.date_tagged
      *  129 - denormalized post storage, dropped tbl_post_tags
+     *  130 - added tbl_posts.blog_image_url
+     *  131 - added tbl_posts.card_type
+     *  132 - no schema changes, simply clearing to accommodate gallery card_type
+     *  133 - no schema changes, simply clearing to accommodate video card_type
      */
 
     /*
@@ -112,6 +116,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
         //copyDatabase(db);
+        //getDatabase().reset(db);
     }
 
     /*

@@ -80,7 +80,6 @@ import de.greenrobot.event.EventBus;
 
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
-                   ReaderInterfaces.OnTagSelectedListener,
                    ReaderInterfaces.OnPostPopupListener,
                    WPMainActivity.OnActivityBackPressedListener,
                    WPMainActivity.OnScrollToTopListener {
@@ -1004,7 +1003,6 @@ public class ReaderPostListFragment extends Fragment
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
             mPostAdapter.setOnPostSelectedListener(this);
-            mPostAdapter.setOnTagSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
@@ -1447,23 +1445,6 @@ public class ReaderPostListFragment extends Fragment
                 AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post);
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
-        }
-    }
-
-    /*
-     * called from adapter when user taps a tag on a post to display tag preview
-     */
-    @Override
-    public void onTagSelected(String tagName) {
-        if (!isAdded()) return;
-
-        ReaderTag tag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED);
-        if (getPostListType().equals(ReaderPostListType.TAG_PREVIEW)) {
-            // user is already previewing a tag, so change current tag in existing preview
-            setCurrentTag(tag);
-        } else {
-            // user isn't previewing a tag, so open in tag preview
-            ReaderActivityLauncher.showReaderTagPreview(getActivity(), tag);
         }
     }
 

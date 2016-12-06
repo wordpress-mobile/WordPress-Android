@@ -327,7 +327,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (isFinishing() || url == null) return;
 
         if (url.contains(DOMAIN_WPCOM)) {
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, AccountHelper.getDefaultAccount().getUserName());
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url);
         } else {
             WPWebViewActivity.openURL(this, url);
         }

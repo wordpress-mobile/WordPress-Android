@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-09-09 15:07:10+0000
+Translation-Revision-Date: 2016-12-04 21:11:09+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.3.0-alpha
 Language: ru
@@ -16,6 +16,7 @@ Language: ru
 	<string name="alignment_right">Справа</string>
 	<string name="alignment_left">Слева</string>
 	<string name="alignment_none">Нет</string>
+	<string name="site_settings_list_editor_action_mode_title">Выбрано %1$d</string>
 	<string name="error_fetch_users_list">Не удалось получить список пользователей сайта</string>
 	<string name="plans_manage">Управление тарифными планами:\nwordpress.com/plans</string>
 	<string name="title_email_follower">Подписчик по электронной почте</string>
@@ -81,7 +82,6 @@ Language: ru
 	<string name="invite_people">Пригласить людей</string>
 	<string name="my_site_header_external">Внешние ссылки</string>
 	<string name="send_link">Отправить ссылку</string>
-	<string name="signup_succeed_signin_failed">Ваша учётная запись создана, но при попытке входа произошла ошибка.\nПопробуйте войти с вашим недавно созданным именем пользователя и паролем.</string>
 	<string name="label_clear_search_history">Очистить историю поиска</string>
 	<string name="dlg_confirm_clear_search_history">Очистить историю поиска?</string>
 	<string name="reader_empty_posts_in_search_description">По запросу «%s» на вашем языке записей не найдено</string>
@@ -116,7 +116,6 @@ Language: ru
 	<string name="check_your_email">Проверьте электронную почту</string>
 	<string name="magic_link_unavailable_error_message">В настоящий момент ссылка недоступна. Введите пароль</string>
 	<string name="logging_in">Вход в систему</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Получите эл. письмо со ссылкой для моментального входа.</string>
 	<string name="enter_your_password_instead">Введите пароль.</string>
 	<string name="web_address_dialog_hint">Отображается для всех пользователей, когда вы добавляете комментарии.</string>
 	<string name="username_email">Адрес эл. почты или имя пользователя</string>
@@ -184,6 +183,7 @@ Language: ru
 	<string name="theme_premium">Премиум</string>
 	<string name="theme_all">Все</string>
 	<string name="theme_free">Бесплатно</string>
+	<string name="alignment_center">По центру</string>
 	<string name="post_format_video">Видео</string>
 	<string name="post_format_status">Статус</string>
 	<string name="post_format_standard">Стандартный</string>
@@ -286,7 +286,6 @@ Language: ru
 	<string name="error_post_remote_site_settings">Не удалось сохранить данные сайта.</string>
 	<string name="error_fetch_remote_site_settings">Не удалось получить данные сайта.</string>
 	<string name="error_media_upload_connection">Ошибка подключения при загрузке медиафайла</string>
-	<string name="site_settings_disconnected_toast">Отключено, редактирование невозможно.</string>
 	<string name="site_settings_unsupported_version_error">Неподдерживаемая версия WordPress</string>
 	<string name="site_settings_multiple_links_dialog_description">Включить обязательный этап одобрения для комментариев, которые содержат больше указанного числа ссылок.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Автоматически закрывать обсуждение</string>
@@ -353,7 +352,6 @@ Language: ru
 	<string name="site_settings_paging_title">Разбиение на страницы</string>
 	<string name="site_settings_threading_title">Ветвление</string>
 	<string name="site_settings_sort_by_title">Приоритет сортировки</string>
-	<string name="site_settings_account_required_title">Пользователи должны выполнять вход</string>
 	<string name="site_settings_identity_required_title">Необходимо указывать имя и эл. адрес</string>
 	<string name="site_settings_receive_pingbacks_title">Получать уведомления</string>
 	<string name="site_settings_send_pingbacks_title">Отправлять уведомления</string>
@@ -517,7 +515,6 @@ Language: ru
 	<string name="tabbar_accessibility_label_my_site">Мой сайт</string>
 	<string name="editor_toast_changes_saved">Обновления сохранены</string>
 	<string name="passcodelock_prompt_message">Введите ваш PIN-код</string>
-	<string name="push_auth_expired">Время запроса истекло. Авторизуйтесь на WordPress.com и попробуйте еще раз.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% просмотров</string>
 	<string name="ignore">Пропустить</string>
 	<string name="stats_insights_best_ever">Наибольшее количество просмотров</string>
@@ -527,11 +524,8 @@ Language: ru
 	<string name="stats_insights_popular">Самый популярный день и час</string>
 	<string name="stats_insights_all_time">Записи, просмотры и посетители за все время</string>
 	<string name="stats_insights">Тенденции</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Чтобы просмотреть статистику, войдите в учетную запись WordPress.com, которую вы использовали для подключения Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Ищете «Другую недавнюю статистику»? Мы перенесли эти данные на страницу «Тенденции».</string>
-	<string name="me_disconnect_from_wordpress_com">Отключение от WordPress.com</string>
 	<string name="me_btn_login_logout">Вход/выход</string>
-	<string name="me_connect_to_wordpress_com">Подключение к WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" не был скрыт, так как это текущий сайт.</string>
 	<string name="me_btn_support">Помощь и техническая поддержка</string>
 	<string name="account_settings">Настройки учётной записи</string>
@@ -551,9 +545,7 @@ Language: ru
 	<string name="my_site_header_configuration">Конфигурация</string>
 	<string name="notifications_account_required">Войти в WordPress.com для получения уведомлений</string>
 	<string name="stats_unknown_author">Неизвестный автор</string>
-	<string name="signout">Отключить</string>
 	<string name="image_added">Изображение добавлено.</string>
-	<string name="sign_out_wpcom_confirm">Отключение учётной записи приведет к удалению всех данных @%s WordPress.com с этого устройства, в том числе локальных черновиков и локальных изменений.</string>
 	<string name="select_all">Выделить все</string>
 	<string name="hide">Скрыть</string>
 	<string name="show">Показать</string>
@@ -963,7 +955,6 @@ Language: ru
 	<string name="reader_empty_followed_blogs_description">Просто нажмите на иконку справа вверху, чтобы найти что-нибудь интересное!</string>
 	<string name="reader_likes_you_and_one">Вам и ещё одному понравилось это</string>
 	<string name="select_time">Выберите время</string>
-	<string name="nux_oops_not_selfhosted_blog">Войти в WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Добавить автономный сайт</string>
 	<string name="signing_in">Вход в систему...</string>
 	<string name="nux_welcome_create_account">Создать аккаунт</string>
@@ -972,7 +963,6 @@ Language: ru
 	<string name="nux_tutorial_get_started_title">Начать работу!</string>
 	<string name="limit_reached">Достигнут лимит- попробуйте через минуту. При неудачных попытках время будет увеличиваться. Если вы думаете, что это ошибка, обратитесь к техподдержке.</string>
 	<string name="username_invalid">Неверное имя</string>
-	<string name="connecting_wpcom">Подключиться к WordPress.com</string>
 	<string name="button_next">Далее</string>
 	<string name="create_account_wpcom">Создайте учетную запись WordPress.com</string>
 	<string name="reader_empty_followed_tags">Вы не подписаны ни на одну метку.</string>

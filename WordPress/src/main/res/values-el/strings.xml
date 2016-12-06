@@ -1,11 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-08-01 20:39:49+0000
+Translation-Revision-Date: 2016-12-05 09:23:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: el_GR
 -->
 <resources>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Δεν είστε εγκεκριμένος να δείτε αυτό το άρθρο. Προσπαθήστε να συνδεθείτε στο WordPress.com πρώτα ή χρησιμοποιήστε το κουμπί στην μπάρα ενεργειών για να ανοίξετε έναν περιηγητή.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Δεν είστε εξουσιοδοτημένος να δείτε αυτό το άρθρο. Δοκιμάστε να συνδεθείτε στο WordPress.com πρώτα.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Δεν είστε εγκεκριμένος να δείτε το άρθρο αυτό. Εναλλακτικά, χρησιμοποιήστε το κουμπί στην μπάρα ενεργειών για να ανοίξετε έναν περιηγητή.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Δεν μπορείτε να κάνετε "like" όταν είστε αποσυνδεδεμένος από το WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Σας αρέσει ήδη αυτό το σχόλιο</string>
+	<string name="reader_toast_err_comment_not_found">Το σχόλιο δεν βρέθηκε!</string>
+	<string name="reader_toast_err_cannot_like_post">Δεν μπορέσατε να κάνετε "like" σε αυτό το άρθρο</string>
+	<string name="reader_title_post_detail_wpcom">Άρθρο του WordPress.com</string>
+	<string name="reader_title_deeplink">WordPress Αναγνώστης</string>
+	<string name="error_notif_q_action_reply">Δεν μπορέσατε να απαντήσετε στο σχόλιο. Παρακαλώ δοκιμάστε αργότερα.</string>
+	<string name="error_notif_q_action_approve">Σφάλμα κατά την έγκριση του σχολίου. Παρακαλώ δοκιμάστε αργότερα.</string>
+	<string name="error_notif_q_action_like">Δεν μπορέσατε να κάνετε "like" στο σχόλιο. Παρακαλώ δοκιμάστε αργότερα.</string>
+	<string name="notifications_label_new_notifications_subtitle">Αγγίξτε για να τα δείτε</string>
+	<string name="notifications_label_new_notifications">Νέες ειδοποιήσεις</string>
+	<string name="comment_q_action_replying">Απαντώντας...</string>
+	<string name="comment_q_action_approving">Εγκρίνοντας...</string>
+	<string name="comment_q_action_liking">Κάνοντας "like"...</string>
+	<string name="comment_q_action_processing">Επεξεργασία...</string>
+	<string name="comment_q_action_done_generic">Η ενέργεια ολοκληρώθηκε! </string>
+	<string name="comment_liked">Το σχόλιο σας αρέσει</string>
+	<string name="signout">Αποσύνδεση</string>
+	<string name="sign_in_wpcom">Σύνδεση στο WordPress.com</string>
+	<string name="reader_label_global_related_posts">Περισσότερα στο WordPress.com</string>
+	<string name="reader_label_local_related_posts">Περισσότερα σε %s</string>
+	<string name="preference_open_device_settings">Άνοιγμα ρυθμίσεων συσκευής</string>
+	<string name="comment_moderated_unapproved">Το σχόλιο δεν εγκρίθηκε</string>
+	<string name="invite_invalid_email">%s: Μη έγκυρο email</string>
+	<string name="invite_user_blocked_invites">%s: Ο χρήστης δεν δέχεται προσκλήσεις</string>
+	<string name="invite_already_following">%s: Τον/ην ακολουθείτε ήδη</string>
+	<string name="invite_already_a_member">%s: Είναι ήδη μέλος</string>
+	<string name="invite_username_not_found">%s: Ο χρήστης δεν βρέθηκε</string>
+	<string name="comment_moderated_approved">Το σχόλιο εγκρίθηκε!</string>
+	<string name="like">Μου αρέσει</string>
+	<string name="reader_label_image_count_one">1 εικόνα</string>
+	<string name="timespan_now">τώρα</string>
+	<string name="role_viewer">Αναγνώστης</string>
+	<string name="role_follower">Ακόλουθος</string>
+	<string name="role_contributor">Συνεργάτης</string>
+	<string name="role_author">Συντάκτης</string>
+	<string name="role_editor">Αρχισυντάκτης</string>
+	<string name="role_admin">Διαχειριστής</string>
+	<string name="error_post_my_profile_no_connection">Χωρίς σύνδεση, αδυναμία αποθήκευσης προφίλ</string>
+	<string name="alignment_right">Δεξιά</string>
+	<string name="alignment_left">Αριστερά</string>
+	<string name="alignment_none">Καμμία</string>
+	<string name="site_settings_list_editor_action_mode_title">Επιλέχθηκαν %1$d</string>
+	<string name="error_fetch_users_list">Αδυναμία ανάκτησης χρηστών ιστοτόπου</string>
+	<string name="plans_manage">Διαχειριστείτε το πακέτο σας στο\nWordPress.com/plans</string>
+	<string name="title_email_follower">Ακόλουθος μέσω e-mail</string>
+	<string name="title_follower">Ακόλουθος</string>
+	<string name="people_fetching">Λήψη χρηστών...</string>
+	<string name="people_empty_list_filtered_viewers">Δεν έχετε ακόμα κάποιες προβολές.</string>
+	<string name="people_empty_list_filtered_email_followers">Δεν σας ακολουθεί κανείς μέσω ηλ. ταχυδρομείου ακόμη.</string>
+	<string name="people_empty_list_filtered_followers">Δεν έχετε ακόλουθους ακόμη.</string>
+	<string name="people_empty_list_filtered_users">Δεν έχετε χρήστες ακόμη.</string>
+	<string name="people_dropdown_item_viewers">Αναγνώστες</string>
+	<string name="people_dropdown_item_email_followers">Ακόλουθοι μέσω e-mail</string>
+	<string name="people_dropdown_item_followers">Ακόλουθοι</string>
+	<string name="people_dropdown_item_team">Ομάδα</string>
+	<string name="invite_message_usernames_limit">Προσκαλέστε μέχρι 10 ηλ. διευθύνσεις και/ή ονόματα χρηστών του WordPress.com. Σε όσους χρειάζεται όνομα χρήστη θα αποσταλούν οδηγίες πως να το δημιουργήσουν.</string>
+	<string name="viewer_remove_confirmation_message">Αν αφαιρέσετε αυτόν τον αναγνώστη, αυτός ή αυτή δεν θα μπορεί να επισκεφθεί αυτό τον ιστότοπο.\n\nΘέλετε ακόμη να αφαιρέσετε αυτόν τον αναγνώστη;</string>
+	<string name="follower_remove_confirmation_message">Αν αφαιρεθεί, αυτός ο ακόλουθος θα σταματήσει να λαμβάνει ειδοποιήσεις για αυτόν τον ιστότοπο, εκτός και αν τον ακολουθήσει ξανά.\n\nΘέλετε ακόμα να αφαιρέσετε αυτόν τον ακόλουθο;</string>
+	<string name="follower_subscribed_since">Από %1$s</string>
+	<string name="reader_label_image_count_multi">%d εικόνες</string>
+	<string name="reader_label_view_gallery">Προβολή Συλλογής</string>
+	<string name="error_remove_viewer">Αδυναμία αφαίρεσης αναγνώστη</string>
+	<string name="error_remove_follower">Αδυναμία αφαίρεσης ακόλουθου</string>
+	<string name="error_fetch_email_followers_list">Αδυναμία ανάκτησης ακολούθων μέσω e-mail</string>
+	<string name="error_fetch_followers_list">Αδυναμία ανάκτησης ακολούθων ιστοτόπου</string>
 	<string name="editor_failed_uploads_switch_html">Μερικές μεταφορτώσεις πολυμέσων απέτυχαν. Δεν μπορείτε να μεταβείτε σε λειτουργία HTML \n        σε αυτή την κατάσταση. Αφαίρεση όλων των αποτυχημένων μεταφορτώσεων και συνέχεια;</string>
 	<string name="image_thumbnail">Μικρογραφία εικόνας</string>
 	<string name="visual_editor">Κειμενογράφος</string>
@@ -34,6 +103,12 @@ Language: el_GR
 	<string name="uploading_gallery_placeholder">Μεταφόρτωση συλλογής...</string>
 	<string name="tap_to_try_again">Πατήστε για να δοκιμάσετε ξανά!</string>
 	<string name="invite_sent">Η πρόσκληση στάλθηκε επιτυχώς</string>
+	<string name="invite_error_for_username">%1$s: %2$s</string>
+	<string name="invite_error_some_failed">Η πρόσκληση στάλθηκε αλλά παρουσιάστηκε(αν) σφάλμα(τα)!</string>
+	<string name="invite_error_sending">Παρουσιάστηκε σφάλμα κατά την προσπάθεια αποστολής της πρόσκλησης!</string>
+	<string name="invite_error_invalid_usernames_multiple">Αδυναμία αποστολής: Υπάρχουν μη έγκυρα ονόματα χρήστη ή ηλ. διευθύνσεις</string>
+	<string name="invite_error_invalid_usernames_one">Αδυναμία αποστολής: Μη έγκυρο όνομα χρήστη ή ηλ. διεύθυνση</string>
+	<string name="invite_error_no_usernames">Παρακαλώ προσθέστε τουλάχιστον ένα όνομα χρήστη</string>
 	<string name="invite_message_info">(Προαιρετικό) Μπορείτε να εισάγετε ένα προσαρμοσμένο μήνυμα με έως 500 χαρακτήρες που θα συμπεριλαμβάνεται στην πρόσκληση των χρηστών.</string>
 	<string name="invite_message_remaining_other">Απομένουν %d χαρακτήρες</string>
 	<string name="invite_message_remaining_one">Απομένει 1 χαρακτήρας</string>
@@ -57,6 +132,7 @@ Language: el_GR
 	<string name="preview_screen_links_disabled">Οι σύνδεσμοι είναι απενεργοποιημένοι στην οθόνη προεπισκόπησης</string>
 	<string name="draft_explainer">Αυτό το άρθρο είναι ένα προσχέδιο που δεν έχει δημοσιευθεί</string>
 	<string name="send">Αποστολή</string>
+	<string name="user_remove_confirmation_message">Αν αφαιρέσετε τον %1$s, αυτός ο χρήστης δεν θα μπορεί πλέον να συνδεθεί σε αυτό τον ιστότοπο αλλά ό,τι περιεχόμενο δημιουργήθηκε από τον %1$s θα παραμείνει στον ιστότοπο.\n\nΘέλετε ακόμη να αφαιρέσετε το χρήστη;</string>
 	<string name="person_remove_confirmation_title">Αφαίρεση %1$s</string>
 	<string name="role">Ρόλος</string>
 	<string name="edit_user">Επεξεργασία Χρήστη</string>
@@ -76,7 +152,6 @@ Language: el_GR
 	<string name="check_your_email">Ελέγξτε τα e-mail σας</string>
 	<string name="magic_link_unavailable_error_message">Μη διαθέσιμο αυτή τη στιγμή. Παρακαλούμε εισάγετε το συνθηματικό σας</string>
 	<string name="logging_in">Γίνεται σύνδεση</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Λάβετε ένα σύνδεσμο στο e-mail σας για να συνδεθείτε αμέσως</string>
 	<string name="enter_your_password_instead">Εναλλακτικά, εισάγετε το συνθηματικό σας</string>
 	<string name="web_address_dialog_hint">Εμφανίζεται δημοσίως όταν σχολιάζετε.</string>
 	<string name="username_email">E-mail ή όνομα χρήστη</string>
@@ -246,7 +321,6 @@ Language: el_GR
 	<string name="error_post_remote_site_settings">Αδυναμία αποθήκευσης πληροφοριών ιστοτόπου</string>
 	<string name="error_fetch_remote_site_settings">Αδυναμία ανάκτησης πληροφοριών ιστοτόπου</string>
 	<string name="error_media_upload_connection">Προέκυψε σφάλμα σύνδεσης κατά τη μεταφόρτωση των πολυμέσων</string>
-	<string name="site_settings_disconnected_toast">Αποσυνδεδεμένος, η επεξεργασία απενεργοποιήθηκε.</string>
 	<string name="site_settings_unsupported_version_error">Μη υποστηριζόμενη έκδοση του WordPress</string>
 	<string name="site_settings_multiple_links_dialog_description">Να απαιτείται έγκριση για σχόλια που περιλαμβάνουν πάνω από τόσους συνδέσμους.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Αυτόματο κλείσιμο</string>
@@ -313,7 +387,6 @@ Language: el_GR
 	<string name="site_settings_paging_title">Σελιδοποίηση</string>
 	<string name="site_settings_threading_title">Νήματα</string>
 	<string name="site_settings_sort_by_title">Ταξινόμηση κατά</string>
-	<string name="site_settings_account_required_title">Οι χρήστες πρέπει να είναι συνεδεμένοι</string>
 	<string name="site_settings_identity_required_title">Πρέπει να περιλαμβάνεται όνομα και e-mail</string>
 	<string name="site_settings_receive_pingbacks_title">Λήψη Παραθέσεων</string>
 	<string name="site_settings_send_pingbacks_title">Αποστολή Παραθέσεων</string>
@@ -477,7 +550,6 @@ Language: el_GR
 	<string name="tabbar_accessibility_label_my_site">Ο ιστότοπος μου</string>
 	<string name="editor_toast_changes_saved">Οι αλλαγές αποθηκεύτηκαν</string>
 	<string name="passcodelock_prompt_message">Εισάγετε το PIN σας</string>
-	<string name="push_auth_expired">Το αίτημα έληξε. Συνδεθείτε στο WordPress.com για να προσπαθήσετε ξανά.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% των προβολών</string>
 	<string name="ignore">Αγνοήστε</string>
 	<string name="stats_insights_best_ever">Περισσότερες προβολές ποτέ</string>
@@ -487,11 +559,8 @@ Language: el_GR
 	<string name="stats_insights_popular">Η πιο δημοφιλής ημέρα και ώρα</string>
 	<string name="stats_insights_all_time">Συνολικά άρθρα, προβολές και επισκέπτες</string>
 	<string name="stats_insights">Insights</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Για να δείτε τα στατιστικά σας, συνδεθείτε στο λογαριασμό του WordPress.com που χρησιμοποιήσατε για να συνδέσετε το Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Ψάχνετε για τα Άλλα Πρόσφατα Στατιστικά; Τα μετακινήσαμε στη σελίδα Insights.</string>
-	<string name="me_disconnect_from_wordpress_com">Αποσύνδεση από το WordPress.com</string>
 	<string name="me_btn_login_logout">Σύνδεση/Αποσύνδεση</string>
-	<string name="me_connect_to_wordpress_com">Συνδεθείτε στο WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">Το "%s" δεν κρύφτηκε επειδή είναι ο τρέχων ιστότοπος</string>
 	<string name="me_btn_support">Βοήθεια &amp; Υποστήριξη</string>
 	<string name="account_settings">Ρυθμίσεις Λογαριασμού</string>
@@ -506,14 +575,11 @@ Language: el_GR
 	<string name="my_site_header_publish">Δημοσιεύω</string>
 	<string name="my_site_header_look_and_feel">Κοίτα και Νιώσε</string>
 	<string name="my_site_btn_site_settings">Ρυθμίσεις</string>
-	<string name="my_site_btn_blog_posts">Ιστολόγημα</string>
+	<string name="my_site_btn_blog_posts">Άρθρο ιστολογίου</string>
 	<string name="reader_label_new_posts_subtitle">Πατήστε για να τα δείτε</string>
 	<string name="my_site_header_configuration">Ρυθμίσεις</string>
-	<string name="notifications_account_required">Συνδεθείτε στο WordPress.com για ειδοποιήσεις</string>
 	<string name="stats_unknown_author">Άγνωστος Συγγραφέας</string>
-	<string name="signout">Αποσύνδεση</string>
 	<string name="image_added">Η εικόνα προστέθηκε</string>
-	<string name="sign_out_wpcom_confirm">Η αποσύνδεση του λογαριασμού σας θα αφαιρέσει όλα τα δεδομένα του WordPress.com του @%s από αυτή τη συσκευή, συμπεριλαμβανομένων των τοπικών προσχεδίων και των τοπικών αλλαγών.</string>
 	<string name="select_all">Επιλογή όλων</string>
 	<string name="hide">Απόκρυψη</string>
 	<string name="show">Προβολή</string>
@@ -534,8 +600,6 @@ Language: el_GR
 	<string name="no_media">Δεν βρέθηκαν πολυμέσα</string>
 	<string name="loading_images">Φόρτωση εικόνων</string>
 	<string name="loading_videos">Φόρτωση βίντεο</string>
-	<string name="auth_required">Συνδεθείτε ξανά για να συνεχίσετε.</string>
-	<string name="sign_in_jetpack">Συνδεθείτε στο λογαριασμό σας του WordPress.com για να συνδεθείτε στο Jetpack.</string>
 	<string name="two_step_sms_sent">Ελέγξτε τα μηνύματα κειμένου σας για τον κωδικό επαλήθευσης.</string>
 	<string name="two_step_footer_button">Αποστολή κώδικα μέσω μηνύματος κειμένου</string>
 	<string name="two_step_footer_label">Εισάγετε τον κωδικό από την εφαρμογή σας πιστοποίησης.</string>
@@ -651,7 +715,6 @@ Language: el_GR
 	<string name="delete_sure_page">Διαγραφή της σελίδας</string>
 	<string name="delete_sure">Διαγραφή αυτού του προσχεδίου</string>
 	<string name="delete_sure_post">Διαγραφή αυτής της ανάρτησης</string>
-	<string name="signing_out">Αποσύνδεση...</string>
 	<string name="posting_post">Δημοσίευση "%s"</string>
 	<string name="media_empty_list_custom_date">Δεν υπάρχουν πολυμέσα σε αυτό το χρονικό διάστημα</string>
 	<string name="pages_empty_list">Δεν υπάρχουν σελίδες ακόμη. Γιατί να μη δημιουργήσετε μία;</string>
@@ -676,6 +739,7 @@ Language: el_GR
 	<string name="reader_label_comments_on">Σχόλια ανοιχτά</string>
 	<string name="reader_label_comments_closed">Τα σχόλια είναι κλειστά</string>
 	<string name="reader_label_comment_count_single">Ένα σχόλιο</string>
+	<string name="reader_label_liked_by">Έλαβε "like" από</string>
 	<string name="reader_label_like">Like</string>
 	<string name="reader_label_view_original">Προβολή αρχικού άρθρου</string>
 	<string name="reader_label_comment_count_multi">%,d σχόλια</string>
@@ -923,16 +987,13 @@ Language: el_GR
 	<string name="reader_empty_followed_blogs_description">Αλλά μην ανησυχείτε, απλά πατήστε το εικονίδιο επάνω δεξιά για να εξερευνήσετε!</string>
 	<string name="reader_likes_you_and_one">Αυτό αρέσει σε εσάς και ακόμη ένα χρήστη</string>
 	<string name="select_time">Επιλέξτε ώρα</string>
-	<string name="nux_oops_not_selfhosted_blog">Είσοδος στο WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Προσθέστε έναν ιστότοπο που φιλοξενείτε μόνοι σας</string>
-	<string name="signing_in">Σύνδεση...</string>
 	<string name="nux_welcome_create_account">Δημιουργία λογαριασμού</string>
 	<string name="nux_tap_continue">Συνέχεια</string>
 	<string name="password_invalid">Χρειάζεστε έναν πιο ασφαλή κωδικό πρόσβασης. Χρησιμοποιήστε 7 ή περισσότερους χαρακτήρες, μέσα στους οποίους υπάρχουν κεφαλαία και μικρά γράμματα, αριθμοί ή ειδικοί χαρακτήρες.</string>
 	<string name="nux_tutorial_get_started_title">Ξεκινήστε!</string>
 	<string name="limit_reached">Φτάσατε το όριο. Μπορείτε να προσπαθήσετε ξανά σε 1 λεπτό. Αν προσπαθήσετε ξανά πριν περάσει η χρονική περίοδος του 1 λεπτού το μόνο που θα καταφέρετε είναι να αυξήσετε το χρόνο αναμονής σας μέχρι να αρθεί η απαγόρευση. Εάν πιστεύετε ότι αυτό είναι σφάλμα, παρακαλώ επικοινωνήστε με την τεχνική υποστήριξη.</string>
 	<string name="username_invalid">Εσφαλμένο Όνομα Χρήστη</string>
-	<string name="connecting_wpcom">Σύνδεση με WordPress.com</string>
 	<string name="button_next">Επόμενο</string>
 	<string name="create_account_wpcom">Δημιουργήστε έναν λογαριασμό στο WordPress.com</string>
 	<string name="reader_empty_followed_tags">Δεν ακολουθείτε καμία ετικέτα</string>
@@ -1023,7 +1084,6 @@ Language: el_GR
 	<string name="follows">Ακόλουθοι</string>
 	<string name="note_reply_successful">Η απάντηση δημοσιεύτηκε</string>
 	<string name="notifications">Ενημερώσεις</string>
-	<string name="sign_in">Συνδεθείτε</string>
 	<string name="loading">Φορτώνει...</string>
 	<string name="httppassword">Κωδικός χρήστη HTTP</string>
 	<string name="httpuser">Όνομα χρήστη HTTP</string>
