@@ -129,7 +129,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
     private String mPreviousStatus;
-    private long mCommentidToFetch;
+    private long mCommentIdToFetch;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -592,8 +592,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         return;
                     }
 
-                    mCommentidToFetch = mNote.getParentCommentId() > 0 ? mNote.getParentCommentId() : mNote.getCommentId();
-                    RemoteCommentPayload payload = new RemoteCommentPayload(site, mCommentidToFetch);
+                    mCommentIdToFetch = mNote.getParentCommentId() > 0 ? mNote.getParentCommentId() : mNote.getCommentId();
+                    RemoteCommentPayload payload = new RemoteCommentPayload(site, mCommentIdToFetch);
                     mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
                     setProgressVisible(true);
 
@@ -1224,10 +1224,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        if (mCommentidToFetch != 0) {
-            CommentModel comment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mCommentidToFetch);
+        if (mCommentIdToFetch != 0) {
+            CommentModel comment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mCommentIdToFetch);
             setComment(comment, mSite);
-            mCommentidToFetch = 0;
+            mCommentIdToFetch = 0;
         }
     }
 }
