@@ -23,7 +23,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.Locale;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -162,10 +161,6 @@ public class Note {
 
     public boolean canTrash() {
         return canModerate();
-    }
-
-    public boolean canEdit(int localBlogId) {
-        return (localBlogId > 0 && canModerate());
     }
 
     public boolean canLike() {
@@ -348,13 +343,6 @@ public class Note {
         return mActions;
     }
 
-
-    private void updateJSON(JSONObject json) {
-        synchronized (mSyncLock) {
-            mNoteJSON = json;
-        }
-    }
-
     /*
      * returns the actions allowed on this note, assumes it's a comment notification
      */
@@ -492,38 +480,6 @@ public class Note {
         synchronized (mSyncLock) {
             return mNoteJSON.optJSONArray("header");
         }
-    }
-
-    /**
-     * Represents a user replying to a note.
-     */
-    public static class Reply {
-        private final String mContent;
-        private final String mRestPath;
-
-        Reply(String restPath, String content) {
-            mRestPath = restPath;
-            mContent = content;
-        }
-
-        public String getContent() {
-            return mContent;
-        }
-
-        public String getRestPath() {
-            return mRestPath;
-        }
-    }
-
-    public Reply buildReply(String content) {
-        String restPath;
-        if (this.isCommentType()) {
-            restPath = String.format(Locale.US, "sites/%d/comments/%d", getSiteId(), getCommentId());
-        } else {
-            restPath = String.format(Locale.US, "sites/%d/posts/%d", getSiteId(), getPostId());
-        }
-
-        return new Reply(String.format(Locale.US, "%s/replies/new", restPath), content);
     }
 
     public static synchronized Note buildFromBase64EncodedData(String noteId, String base64FullNoteData) {
