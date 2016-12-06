@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.CommentStore;
+import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
@@ -565,7 +565,7 @@ public class NotificationsProcessingService extends Service {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCommentChanged(CommentStore.OnCommentChanged event) {
+    public void onCommentChanged(OnCommentChanged event) {
         if (mQuickActionProcessor == null) {
             return;
         }

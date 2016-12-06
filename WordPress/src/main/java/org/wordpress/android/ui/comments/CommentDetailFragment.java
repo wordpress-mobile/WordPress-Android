@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore;
+import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
@@ -1133,7 +1134,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
-    private void onCommentModerated(CommentStore.OnCommentChanged event) {
+    private void onCommentModerated(OnCommentChanged event) {
         if (!isAdded()) return;
 
         if (!event.isError()) {
@@ -1149,7 +1150,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
-    private void onCommentCreated(CommentStore.OnCommentChanged event) {
+    private void onCommentCreated(OnCommentChanged event) {
         mIsSubmittingReply = false;
         mEditReply.setEnabled(true);
         mSubmitReplyBtn.setVisibility(View.VISIBLE);
@@ -1182,7 +1183,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
-    private void onCommentLiked(CommentStore.OnCommentChanged event) {
+    private void onCommentLiked(OnCommentChanged event) {
         if (event.isError()) {
             // Revert button state in case of an error
             toggleLikeButton(!mBtnLikeComment.isActivated());
@@ -1193,7 +1194,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCommentChanged(CommentStore.OnCommentChanged event) {
+    public void onCommentChanged(OnCommentChanged event) {
         setProgressVisible(false);
 
         // Moderating comment

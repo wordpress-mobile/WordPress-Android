@@ -406,19 +406,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return (position >= 0 && position < mComments.size());
     }
 
-    void replaceComments(CommentList comments) {
-        mComments.replaceComments(comments);
-        notifyDataSetChanged();
-    }
-
-    void deleteComments(CommentList comments) {
-        mComments.deleteComments(comments);
-        notifyDataSetChanged();
-        if (mOnDataLoadedListener != null) {
-            mOnDataLoadedListener.onDataLoaded(isEmpty());
-        }
-    }
-
     public void removeComment(CommentModel comment) {
         int position = indexOfCommentId(comment.getRemoteCommentId());
         if (position >= 0) {

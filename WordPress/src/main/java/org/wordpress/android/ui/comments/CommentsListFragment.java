@@ -26,8 +26,8 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
+import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FilterCriteria;
@@ -636,7 +636,7 @@ public class CommentsListFragment extends Fragment {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCommentChanged(CommentStore.OnCommentChanged event) {
+    public void onCommentChanged(OnCommentChanged event) {
         mFilteredCommentsView.hideLoadingProgress();
         mFilteredCommentsView.setRefreshing(false);
 

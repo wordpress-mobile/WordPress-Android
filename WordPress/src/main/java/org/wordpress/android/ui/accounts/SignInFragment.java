@@ -56,6 +56,8 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
+import org.wordpress.android.fluxc.store.AccountStore.OnDiscoveryResponse;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
@@ -1262,7 +1264,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDiscoverySucceeded(AccountStore.OnDiscoveryResponse event) {
+    public void onDiscoverySucceeded(OnDiscoveryResponse event) {
         if (event.isError()) {
             handleDiscoveryError(event.error, event.failedEndpoint);
             return;
@@ -1274,7 +1276,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAvailabilityChecked(AccountStore.OnAvailabilityChecked event) {
+    public void onAvailabilityChecked(OnAvailabilityChecked event) {
         if (event.isError()) {
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
         }

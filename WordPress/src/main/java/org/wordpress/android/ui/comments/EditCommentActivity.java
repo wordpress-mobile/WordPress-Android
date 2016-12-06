@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
+import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
@@ -317,7 +318,7 @@ public class EditCommentActivity extends AppCompatActivity {
         }
     }
 
-    private void onCommentPushed(CommentStore.OnCommentChanged event) {
+    private void onCommentPushed(OnCommentChanged event) {
         if (isFinishing()) return;
 
         dismissSaveDialog();
@@ -332,7 +333,7 @@ public class EditCommentActivity extends AppCompatActivity {
         finish();
     }
 
-    private void onCommentFetched(CommentStore.OnCommentChanged event) {
+    private void onCommentFetched(OnCommentChanged event) {
         if (isFinishing() || !mFetchingComment) return;
         mFetchingComment = false;
         setFetchProgressVisible(false);
@@ -356,7 +357,7 @@ public class EditCommentActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCommentChanged(CommentStore.OnCommentChanged event) {
+    public void onCommentChanged(OnCommentChanged event) {
         if (event.causeOfChange == CommentAction.FETCH_COMMENT) {
             onCommentFetched(event);
         }
