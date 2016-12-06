@@ -84,9 +84,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment;
-import org.wordpress.android.ui.media.MediaPickerActivity;
-import org.wordpress.android.ui.media.MediaSourceWPImages;
-import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
@@ -118,9 +115,6 @@ import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
-import org.wordpress.mediapicker.source.MediaSource;
-import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
-import org.wordpress.mediapicker.source.MediaSourceDeviceVideos;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
@@ -159,7 +153,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final int CAPTURE_VIDEO_MENU_POSITION = 3;
     private static final int ADD_GALLERY_MENU_POSITION = 4;
     private static final int SELECT_LIBRARY_MENU_POSITION = 5;
-    private static final int NEW_PICKER_MENU_POSITION = 6;
 
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
@@ -741,7 +734,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         menu.add(0, ADD_GALLERY_MENU_POSITION, 0, getResources().getText(R.string.media_add_new_media_gallery));
         menu.add(0, SELECT_LIBRARY_MENU_POSITION, 0, getResources().getText(R.string.select_from_media_library));
-        menu.add(0, NEW_PICKER_MENU_POSITION, 0, getResources().getText(R.string.select_from_new_picker));
     }
 
     @Override
@@ -764,9 +756,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 return true;
             case SELECT_LIBRARY_MENU_POSITION:
                 startMediaGalleryAddActivity();
-                return true;
-            case NEW_PICKER_MENU_POSITION:
-                startMediaSelection();
                 return true;
             default:
                 return false;
@@ -1584,13 +1573,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO ||
                 requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
-                case MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
-                    if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
-                        handleMediaSelectionResult(data);
-                    } else if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_GALLERY_CREATED) {
-                        handleGalleryResult(data);
-                    }
-                    break;
                 case MediaGalleryActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
                         handleMediaGalleryResult(data);
@@ -1666,127 +1648,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
         mEditorFragment.appendGallery(gallery);
-    }
-
-    /**
-     * Handles result from {@link org.wordpress.android.ui.media.MediaPickerActivity}. Uploads local
-     * media to users blog then adds a gallery to the Post with all the selected media.
-     *
-     * @param data
-     *  contains the selected media content with key
-     *  {@link org.wordpress.android.ui.media.MediaPickerActivity#SELECTED_CONTENT_RESULTS_KEY}
-     */
-    private void handleGalleryResult(Intent data) {
-        if (data != null) {
-            List<MediaItem> selectedContent = data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
-
-            if (selectedContent != null && selectedContent.size() > 0) {
-                ArrayList<Long> blogMediaIds = new ArrayList<>();
-                ArrayList<Long> localMediaIds = new ArrayList<>();
-
-                for (MediaItem content : selectedContent) {
-                    Uri source = content.getSource();
-
-                    if (source != null && content.getTag() != null) {
-                        final long id = Long.parseLong(content.getTag());
-                        final String sourceString = source.toString();
-
-                        if (MediaUtils.isVideo(sourceString)) {
-                            // Videos cannot be added to a gallery, insert inline instead
-                            addMedia(source);
-                        } else if (URLUtil.isNetworkUrl(sourceString)) {
-                            blogMediaIds.add(id);
-                        } else if (MediaUtils.isValidImage(sourceString)) {
-                            queueFileForUpload(sourceString, localMediaIds);
-                        }
-                    }
-                }
-
-                MediaGallery gallery = new MediaGallery();
-                gallery.setIds(blogMediaIds);
-
-                if (localMediaIds.size() > 0) {
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(
-                            Context.NOTIFICATION_SERVICE);
-
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-                    builder.setSmallIcon(android.R.drawable.stat_sys_upload);
-                    builder.setContentTitle("Uploading gallery");
-                    notificationManager.notify(10, builder.build());
-
-                    mPendingGalleryUploads.put(gallery.getUniqueId(), new ArrayList<>(localMediaIds));
-                }
-
-                // Only insert gallery span if images were added
-                if (localMediaIds.size() > 0 || blogMediaIds.size() > 0) {
-                    mEditorFragment.appendGallery(gallery);
-                }
-            }
-        }
-    }
-
-    /**
-     * Handles result from {@link org.wordpress.android.ui.media.MediaPickerActivity} by adding the
-     * selected media to the Post.
-     *
-     * @param data
-     *  result {@link android.content.Intent} with selected media items
-     */
-    private void handleMediaSelectionResult(Intent data) {
-        if (data == null) {
-            return;
-        }
-        final List<MediaItem> selectedContent =
-                data.getParcelableArrayListExtra(MediaPickerActivity.SELECTED_CONTENT_RESULTS_KEY);
-        if (selectedContent != null && selectedContent.size() > 0) {
-            for (MediaItem media : selectedContent) {
-                if (URLUtil.isNetworkUrl(media.getSource().toString())) {
-                    addExistingMediaToEditor(Long.parseLong(media.getTag()));
-                } else {
-                    addMedia(media.getSource());
-                }
-            }
-        }
-    }
-
-    /**
-     * Create image {@link org.wordpress.mediapicker.source.MediaSource}'s for media selection.
-     *
-     * @return
-     *  list containing all sources to gather image media from
-     */
-    private ArrayList<MediaSource> imageMediaSelectionSources() {
-        ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
-        imageMediaSources.add(new MediaSourceDeviceImages());
-
-        return imageMediaSources;
-    }
-
-    private ArrayList<MediaSource> blogImageMediaSelectionSources() {
-        ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
-        imageMediaSources.add(new MediaSourceWPImages(mSite));
-
-        return imageMediaSources;
-    }
-
-    private ArrayList<MediaSource> blogVideoMediaSelectionSources() {
-        ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
-        imageMediaSources.add(new MediaSourceWPVideos(mSite));
-
-        return imageMediaSources;
-    }
-
-    /**
-     * Create video {@link org.wordpress.mediapicker.source.MediaSource}'s for media selection.
-     *
-     * @return
-     *  list containing all sources to gather video media from
-     */
-    private ArrayList<MediaSource> videoMediaSelectionSources() {
-        ArrayList<MediaSource> videoMediaSources = new ArrayList<>();
-        videoMediaSources.add(new MediaSourceDeviceVideos());
-
-        return videoMediaSources;
     }
 
     private BroadcastReceiver mGalleryReceiver = new BroadcastReceiver() {
@@ -1892,21 +1753,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    /**
-     * Starts {@link org.wordpress.android.ui.media.MediaPickerActivity} after refreshing the blog media.
-     */
-    private void startMediaSelection() {
-        Intent intent = new Intent(this, MediaPickerActivity.class);
-        intent.putExtra(MediaPickerActivity.ACTIVITY_TITLE_KEY, getString(R.string.add_to_post));
-        intent.putParcelableArrayListExtra(MediaPickerActivity.DEVICE_IMAGE_MEDIA_SOURCES_KEY,
-                imageMediaSelectionSources());
-        intent.putParcelableArrayListExtra(MediaPickerActivity.DEVICE_VIDEO_MEDIA_SOURCES_KEY,
-                videoMediaSelectionSources());
-        if (mBlogMediaStatus != 0) {
-            intent.putParcelableArrayListExtra(MediaPickerActivity.BLOG_IMAGE_MEDIA_SOURCES_KEY,
-                    blogImageMediaSelectionSources());
-            intent.putParcelableArrayListExtra(MediaPickerActivity.BLOG_VIDEO_MEDIA_SOURCES_KEY,
-                    blogVideoMediaSelectionSources());
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {
             MediaStore.MediaListPayload payload = new MediaStore.MediaListPayload(MediaAction.FETCH_ALL_MEDIA, mSite, null);
@@ -1915,9 +1761,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mBlogMediaStatus = 0;
             ToastUtils.showToast(this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
         }
-
-        startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
-        overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
     }
 
     @SuppressWarnings("unused")

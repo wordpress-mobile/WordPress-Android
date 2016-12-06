@@ -38,8 +38,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 
-import static org.wordpress.mediapicker.MediaUtils.fadeInImage;
-
 public class WordPressMediaUtils {
     public interface LaunchCameraCallback {
         void onMediaCapturePathReady(String mediaCapturePath);
@@ -257,7 +255,8 @@ public class WordPressMediaUtils {
             if (imageView != null) {
                 if (imageView.getTag() == this) {
                     imageView.setImageBitmap(result);
-                    fadeInImage(imageView, result);
+                    // TODO
+//                    fadeInImage(imageView, result);
                 }
             }
         }

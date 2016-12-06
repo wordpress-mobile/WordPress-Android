@@ -222,10 +222,6 @@
 
         <!-- Media Activities -->
         <activity
-            android:name=".ui.media.MediaPickerActivity"
-            android:theme="@style/CalypsoTheme"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name=".ui.media.MediaBrowserActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity android:name=".ui.media.MediaGalleryActivity" />
