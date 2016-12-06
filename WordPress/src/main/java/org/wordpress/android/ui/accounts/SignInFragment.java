@@ -910,7 +910,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
 
         if (forceWordPressComDisplay) {
-            showSelfHostedSignInForm();
+            showPasswordFieldAndFocus();
             return;
         }
 
