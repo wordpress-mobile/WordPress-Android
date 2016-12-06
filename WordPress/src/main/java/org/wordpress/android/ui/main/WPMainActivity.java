@@ -485,10 +485,20 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void moderateCommentOnActivityResult(Intent data) {
+
         Note note = NotificationsTable.getNoteById(StringUtils.notNullStr(data.getStringExtra
                 (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+
+        if (note == null) {
+            // sometimes it could be that a note is set to be moderated but a refresh in the DB will
+            // make the note disappear, meaning it doesn't exist on the server anymore. So, it' ok
+            // to fail silently here.
+            return;
+        }
+
         CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                 NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
+
         NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
     }
 
