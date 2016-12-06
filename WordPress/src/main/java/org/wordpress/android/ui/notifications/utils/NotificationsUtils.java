@@ -69,13 +69,10 @@ public class NotificationsUtils {
 
     private static final String WPCOM_SETTINGS_ENDPOINT = "/me/notifications/settings/";
 
-    private static boolean mSnackbarDidUndo;
-
     public interface TwoFactorAuthCallback {
         void onTokenValid(String token, String title, String message);
         void onTokenInvalid();
     }
-
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
