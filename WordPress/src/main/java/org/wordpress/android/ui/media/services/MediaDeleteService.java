@@ -23,6 +23,7 @@ import javax.inject.Inject;
 /**
  * A service for deleting media. Only one media item is deleted at a time.
  */
+
 public class MediaDeleteService extends Service {
     private SiteModel mSite;
     private MediaModel mDeleteInProgress;
@@ -34,7 +35,14 @@ public class MediaDeleteService extends Service {
     public void onCreate() {
         super.onCreate();
         ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
         mDeleteInProgress = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        mDispatcher.unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -98,10 +106,8 @@ public class MediaDeleteService extends Service {
             return;
         }
 
-        mDeleteInProgress = mMediaStore.getNextSiteMediaToDelete(mSite);
-
-        // no more items to delete, stop service
-        if (mDeleteInProgress == null) {
+        // site is missing or there are no more items to delete, stop service
+        if (mSite == null || (mDeleteInProgress = mMediaStore.getNextSiteMediaToDelete(mSite)) == null) {
             AppLog.v(T.MEDIA, "No more media items in delete queue. Stopping service.");
             stopSelf();
             return;

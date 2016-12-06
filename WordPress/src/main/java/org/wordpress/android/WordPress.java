@@ -27,8 +27,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
 import com.yarolegovich.wellsql.WellSql;
 
@@ -83,7 +81,6 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

@@ -7,14 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
-import android.widget.ImageView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -35,8 +31,6 @@ import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.net.URL;
 
 public class WordPressMediaUtils {
     public interface LaunchCameraCallback {
@@ -220,46 +214,6 @@ public class WordPressMediaUtils {
     public static boolean canDeleteMedia(MediaModel mediaModel) {
         String state = mediaModel.getUploadState();
         return state == null || !state.equals("uploading");
-    }
-
-    public static class BackgroundDownloadWebImage extends AsyncTask<Uri, String, Bitmap> {
-        WeakReference<ImageView> mReference;
-
-        public BackgroundDownloadWebImage(ImageView resultStore) {
-            mReference = new WeakReference<>(resultStore);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Uri... params) {
-            try {
-                String uri = params[0].toString();
-                Bitmap bitmap = WordPress.getBitmapCache().getBitmap(uri);
-
-                if (bitmap == null) {
-                    URL url = new URL(uri);
-                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    WordPress.getBitmapCache().put(uri, bitmap);
-                }
-
-                return bitmap;
-            }
-            catch(IOException notFoundException) {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            ImageView imageView = mReference.get();
-
-            if (imageView != null) {
-                if (imageView.getTag() == this) {
-                    imageView.setImageBitmap(result);
-                    // TODO
-//                    fadeInImage(imageView, result);
-                }
-            }
-        }
     }
 
     /**
