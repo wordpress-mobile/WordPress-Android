@@ -9,6 +9,8 @@ import android.os.IBinder;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaUploadState;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
@@ -30,7 +32,9 @@ public class MediaDeleteService extends Service {
     private boolean mDeleteInProgress;
     private SiteModel mSite;
 
+    @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject MediaStore mMediaStore;
 
     @Override
     public IBinder onBind(Intent intent) {

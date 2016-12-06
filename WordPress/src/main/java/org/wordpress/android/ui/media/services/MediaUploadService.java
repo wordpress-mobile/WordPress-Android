@@ -7,11 +7,14 @@ import android.os.Handler;
 import android.os.IBinder;
 
 import org.wordpress.android.R;
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
@@ -22,6 +25,8 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
 
 import de.greenrobot.event.EventBus;
+
+import javax.inject.Inject;
 
 /**
  * A service for uploading media files from the media browser.
@@ -40,6 +45,9 @@ public class MediaUploadService extends Service {
 
     private SiteModel mSite;
 
+    @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -48,6 +56,8 @@ public class MediaUploadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
         sInstance = this;
     }
 
@@ -61,6 +71,28 @@ public class MediaUploadService extends Service {
         mHandler.post(mFetchQueueTask);
         cancelOldUploads();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        mDispatcher.unregister(this);
+        super.onDestroy();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+        if (event.isError()) {
+        } else {
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        if (event.isError()) {
+        } else {
+        }
     }
 
     public static MediaUploadService getInstance() {

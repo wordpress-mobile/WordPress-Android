@@ -262,14 +262,6 @@ public class WordPressMediaUtils {
         }
     }
 
-    public static Cursor getWordPressMediaImages(String blogId) {
-        return WordPress.wpDB.getMediaImagesForBlog(blogId);
-    }
-
-    public static Cursor getWordPressMediaVideos(String blogId) {
-        return WordPress.wpDB.getMediaFilesForBlog(blogId);
-    }
-
     /**
      * Given a media file cursor, returns the thumbnail network URL. Will use photon if available, using the specified
      * width.

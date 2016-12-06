@@ -32,6 +32,7 @@ import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaItemFragment;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -127,6 +128,7 @@ public interface AppComponent {
     void inject(PersonDetailFragment object);
     void inject(PlansActivity object);
     void inject(MediaBrowserActivity object);
+    void inject(MediaUploadService object);
     void inject(MediaGridFragment object);
     void inject(MediaAddFragment object);
     void inject(MediaItemFragment object);
