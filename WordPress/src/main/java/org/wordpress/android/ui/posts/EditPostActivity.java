@@ -1026,63 +1026,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return mMaxThumbWidth;
     }
 
-    private MediaFile createMediaFile(String blogId, final long mediaId) {
-        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, String.valueOf(mediaId));
-
-        if (cursor == null || !cursor.moveToFirst()) {
-            if (cursor != null) {
-                cursor.close();
-            }
-            return null;
-        }
-
-        String url = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-        if (url == null) {
-            cursor.close();
-            return null;
-        }
-
-        MediaFile mediaFile = new MediaFile();
-        mediaFile.setMediaId(String.valueOf(mediaId));
-        mediaFile.setBlogId(blogId);
-        mediaFile.setFileURL(url);
-        mediaFile.setCaption(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION)));
-        mediaFile.setDescription(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION)));
-        mediaFile.setTitle(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE)));
-        mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH)));
-        mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT)));
-        mediaFile.setFileName(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME)));
-        mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
-        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex(
-                WordPressDB.COLUMN_NAME_VIDEO_PRESS_SHORTCODE)));
-
-        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
-        mediaFile.setMimeType(mimeType);
-
-        if (mimeType != null && !mimeType.isEmpty()) {
-            mediaFile.setVideo(mimeType.contains("video"));
-        } else {
-            mediaFile.setVideo(MediaUtils.isVideo(url));
-        }
-
-        // Make sure we're using a valid thumbnail for video. XML-RPC returns the video URL itself as the thumbnail URL
-        // for videos. If we can't get a real thumbnail for the Media Library video (currently only possible for
-        // VideoPress videos), we should not set any thumbnail.
-        String thumbnailUrl = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
-        if (mediaFile.isVideo() && !MediaUtils.isValidImage(thumbnailUrl)) {
-            if (WPUrlUtils.isWordPressCom(url)) {
-                thumbnailUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(url);
-            } else {
-                thumbnailUrl = "";
-            }
-        }
-        mediaFile.setThumbnailURL(thumbnailUrl);
-
-        WordPress.wpDB.saveMediaFile(mediaFile);
-        cursor.close();
-        return mediaFile;
-    }
-
     private void addExistingMediaToEditor(long mediaId) {
         String blogId = String.valueOf(mSite.getId());
         MediaFile mediaFile = createMediaFile(blogId, mediaId);
@@ -1105,6 +1048,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // (using a Photon URL for video will result in a 404 error)
         if (mediaFile.isVideo()) {
             return mediaFile.getFileURL();
+        MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
+        if (media != null) {
+            trackAddMediaEvents(media.isVideo(), true);
+            // TODO: change signature of appendMediaFile to use MediaModel
+            mEditorFragment.appendMediaFile(media, media.getUrl(), WordPress.imageLoader);
         }
 
         String imageURL;

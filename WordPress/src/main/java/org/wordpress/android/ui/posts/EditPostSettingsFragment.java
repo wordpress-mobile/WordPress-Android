@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
@@ -47,11 +46,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -121,6 +122,7 @@ public class EditPostSettingsFragment extends Fragment
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Inject SiteStore mSiteStore;
+    @Inject MediaStore mMediaStore;
     @Inject Dispatcher mDispatcher;
 
     public static EditPostSettingsFragment newInstance(SiteModel site, PostModel post) {
@@ -427,24 +429,21 @@ public class EditPostSettingsFragment extends Fragment
         if (mFeaturedImageId != id) {
             mFeaturedImageId = id;
             if (mFeaturedImageId > 0) {
-                Cursor cursor = WordPress.wpDB.getMediaFile(String.valueOf(mSite.getId()),
-                        String.valueOf(mFeaturedImageId));
-                if (cursor != null && cursor.moveToFirst()) {
-                    mFeaturedImageView.setVisibility(View.VISIBLE);
-                    mFeaturedImageButton.setVisibility(View.GONE);
+                MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mFeaturedImageId);
 
-                    // Get max width for photon thumbnail
-                    int maxWidth = getResources().getDisplayMetrics().widthPixels;
-                    int padding = DisplayUtils.dpToPx(getActivity(), 16);
-                    int imageWidth = (maxWidth - padding);
-
-                    String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, mSite, imageWidth);
-                    WordPressMediaUtils.loadNetworkImage(thumbUrl, mFeaturedImageView);
+                if (media == null) {
+                    return;
                 }
 
-                if (cursor != null) {
-                    cursor.close();
-                }
+                mFeaturedImageView.setVisibility(View.VISIBLE);
+                mFeaturedImageButton.setVisibility(View.GONE);
+
+                // Get max width for photon thumbnail
+                int maxWidth = getResources().getDisplayMetrics().widthPixels;
+                int padding = DisplayUtils.dpToPx(getActivity(), 16);
+                int imageWidth = (maxWidth - padding);
+
+                WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl() + "?w=" + imageWidth, mFeaturedImageView);
             } else {
                 mFeaturedImageView.setVisibility(View.GONE);
                 mFeaturedImageButton.setVisibility(View.VISIBLE);

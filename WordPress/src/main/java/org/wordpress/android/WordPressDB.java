@@ -467,11 +467,6 @@ public class WordPressDB {
                 + "(uploadState IS NULL OR uploadState IN ('uploaded', 'queued', 'failed', 'uploading')) ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[] { blogId, "uploading" });
     }
 
-    /** For a given blogId, get the media file with the given media_id **/
-    public Cursor getMediaFile(String blogId, String mediaId) {
-        return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[]{blogId, mediaId});
-    }
-
     public String getMediaThumbnailUrl(int blogId, long mediaId) {
         String query = "SELECT " + COLUMN_NAME_THUMBNAIL_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?";
         return SqlUtils.stringForQuery(db, query, new String[]{Integer.toString(blogId), Long.toString(mediaId)});
