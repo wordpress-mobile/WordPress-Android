@@ -761,6 +761,7 @@ public class MeFragment extends Fragment {
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         refreshAccountDetails();

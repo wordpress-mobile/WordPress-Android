@@ -354,6 +354,7 @@ public class EditCommentActivity extends AppCompatActivity {
 
     // OnChanged events
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(CommentStore.OnCommentChanged event) {
         if (event.causeOfChange == CommentAction.FETCH_COMMENT) {

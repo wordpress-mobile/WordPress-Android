@@ -634,6 +634,7 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(CommentStore.OnCommentChanged event) {
         mFilteredCommentsView.hideLoadingProgress();

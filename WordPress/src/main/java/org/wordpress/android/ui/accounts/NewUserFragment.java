@@ -551,6 +551,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
     // OnChanged events
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         AppLog.i(T.NUX, event.toString());
@@ -578,6 +579,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewUserCreated(OnNewUserCreated event) {
         AppLog.i(T.NUX, event.toString());
@@ -597,6 +599,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
@@ -617,6 +620,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         fetchSiteAndAccount();
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         AppLog.i(T.NUX, event.toString());
@@ -628,6 +632,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());

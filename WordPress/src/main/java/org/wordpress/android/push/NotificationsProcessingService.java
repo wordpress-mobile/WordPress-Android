@@ -563,6 +563,7 @@ public class NotificationsProcessingService extends Service {
 
     // OnChanged events
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(CommentStore.OnCommentChanged event) {
         if (mQuickActionProcessor == null) {

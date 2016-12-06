@@ -313,6 +313,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
     // OnChanged events
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
@@ -325,6 +326,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());

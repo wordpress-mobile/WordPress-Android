@@ -1191,6 +1191,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     // OnChanged events
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(CommentStore.OnCommentChanged event) {
         setProgressVisible(false);
