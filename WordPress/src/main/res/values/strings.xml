@@ -337,10 +337,9 @@
     <string name="comment_q_action_replying">Replying…</string>
 
     <!-- pending draft local notifications -->
-    <string name="pending_draft_one_generic">You\'ve got one draft pending for publishing. Would you like to check it?</string>
-    <string name="pending_draft_one">One of your drafts has been pending for publishing for %d days. Would you like to check it?</string>
-    <string name="pending_draft_more">You\'ve got %d posts in drafts. Would you like to check them?</string>
-
+    <string name="pending_draft_one_generic">You drafted \'%s\' but never published it.</string>
+    <string name="pending_draft_one">You drafted \'%1$s\' %2$d days ago but never published it.</string>
+    <string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>

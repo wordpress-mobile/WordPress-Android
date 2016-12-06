@@ -26,7 +26,9 @@ public class NotificationsPendingDraftsService extends Service {
     public static final int PENDING_DRAFTS_NOTIFICATION_ID = GENERIC_LOCAL_NOTIFICATION_ID + 1;
     public static final String POST_ID_EXTRA = "postId";
     public static final String IS_PAGE_EXTRA = "isPage";
-    private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 24 * 60 * 60 * 1000; //a full 24 hours day
+    //FIXME change this below line
+    //private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 24 * 60 * 60 * 1000; //a full 24 hours day
+    private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 60 * 1000; //a full 24 hours day
     private static final long MAX_DAYS_TO_COUNT_DAYS = 30; //30 days
 
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
@@ -85,7 +87,9 @@ public class NotificationsPendingDraftsService extends Service {
                 if (draftPosts != null && draftPosts.size() > 0) {
                     //now check those that have been sitting there for more than 3 days now.
                     long now = System.currentTimeMillis();
-                    long three_days_ago = now - (ONE_DAY * 3);
+                    //FIXME change this below line
+                    //long three_days_ago = now - (ONE_DAY * 3);
+                    long three_days_ago = now - (30000);
                     for (Post post : draftPosts) {
                         if (post.getDateLastUpdated() < three_days_ago) {
                             draftPostsOlderThan3Days.add(post);
@@ -105,11 +109,11 @@ public class NotificationsPendingDraftsService extends Service {
                         if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
                             post.setDateLastNotified(now);
                             if (daysInDraft < MAX_DAYS_TO_COUNT_DAYS) {
-                                buildSinglePendingDraftNotification(daysInDraft, postId, isPage);
+                                buildSinglePendingDraftNotification(post.getTitle(), daysInDraft, postId, isPage);
                             } else {
                                 //if it's been more than MAX_DAYS_TO_COUNT_DAYS days, or if we don't know (i.e. value for lastUpdated
                                 //is zero) then just show a generic message
-                                buildSinglePendingDraftNotification(postId, isPage);
+                                buildSinglePendingDraftNotification(post.getTitle(), postId, isPage);
                             }
                             WordPress.wpDB.updatePost(post);
                         }
@@ -144,12 +148,12 @@ public class NotificationsPendingDraftsService extends Service {
         }).start();
     }
 
-    private void buildSinglePendingDraftNotification(long daysInDraft, long postId, boolean isPage){
-        buildNotificationWithIntent(String.format(getString(R.string.pending_draft_one), daysInDraft), postId, isPage);
+    private void buildSinglePendingDraftNotification(String postTitle, long daysInDraft, long postId, boolean isPage){
+        buildNotificationWithIntent(String.format(getString(R.string.pending_draft_one), postTitle, daysInDraft), postId, isPage);
     }
 
-    private void buildSinglePendingDraftNotification(long postId, boolean isPage){
-        buildNotificationWithIntent(getString(R.string.pending_draft_one_generic), postId, isPage);
+    private void buildSinglePendingDraftNotification(String postTitle, long postId, boolean isPage){
+        buildNotificationWithIntent(String.format(getString(R.string.pending_draft_one_generic), postTitle), postId, isPage);
     }
 
     private void buildPendingDraftsNotification(int count, boolean showPages) {
@@ -174,8 +178,10 @@ public class NotificationsPendingDraftsService extends Service {
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
 
-        addOpenDraftActionForNotification(this, builder, postId, isPage);
-        addIgnoreActionForNotification(this, builder, postId, isPage);
+        if (postId != 0) {
+            addOpenDraftActionForNotification(this, builder, postId, isPage);
+            addIgnoreActionForNotification(this, builder, postId, isPage);
+        }
         addDismissActionForNotification(this,builder, postId, isPage);
 
         NativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
