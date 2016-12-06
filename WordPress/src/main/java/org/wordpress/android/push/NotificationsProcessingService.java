@@ -400,27 +400,6 @@ public class NotificationsProcessingService extends Service {
             stopSelf(mTaskId);
         }
 
-        private void requestFailedWithMessage(String errorMessage, boolean autoDismiss) {
-            if (errorMessage == null) {
-                //show generic error here
-                errorMessage = getString(R.string.error_generic);
-            }
-            resetOriginalNotification();
-            showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
-
-            if (autoDismiss) {
-                //after 3 seconds, dismiss the error message notification
-                Handler handler = new Handler(getMainLooper());
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        //remove the error notification from the system bar
-                        dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    }}, 3000); // show the success message for 3 seconds, then dismiss
-            }
-
-            stopSelf(mTaskId);
-        }
-
         private void showIntermediateMessageToUser(String message) {
             showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID);
         }
