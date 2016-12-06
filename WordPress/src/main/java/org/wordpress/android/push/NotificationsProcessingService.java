@@ -488,7 +488,7 @@ public class NotificationsProcessingService extends Service {
             if (!TextUtils.isEmpty(mReplyText)) {
                 SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
                 if (site == null) {
-                    AppLog.e(T.NOTIFS, "Impossible to reply a comment on a site that is not in the App. SiteId: "
+                    AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App. SiteId: "
                                        + mNote.getSiteId());
                     requestFailed(ARG_ACTION_APPROVE);
                     return;
