@@ -1907,51 +1907,46 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     blogImageMediaSelectionSources());
             intent.putParcelableArrayListExtra(MediaPickerActivity.BLOG_VIDEO_MEDIA_SOURCES_KEY,
                     blogVideoMediaSelectionSources());
+    private void refreshBlogMedia() {
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            MediaStore.MediaListPayload payload = new MediaStore.MediaListPayload(MediaAction.FETCH_ALL_MEDIA, mSite, null);
+            mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
+        } else {
+            mBlogMediaStatus = 0;
+            ToastUtils.showToast(this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
         }
 
         startActivityForResult(intent, MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION);
         overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
     }
 
-    private void refreshBlogMedia() {
-        if (NetworkUtils.isNetworkAvailable(this)) {
-            ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
-                @Override
-                public void onSuccess(int count) {
-                    mBlogMediaStatus = 1;
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests.isEmpty()) {
-                                // If there are pending requests for video URLs from VideoPress ids, query the DB for
-                                // them again and notify the editor
-                                for (String videoId : mPendingVideoPressInfoRequests) {
-                                    String videoUrl = mMediaStore.
-                                            getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
-                                    String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
-
-                                    mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
-                                }
-
-                                mPendingVideoPressInfoRequests.clear();
-                            }
-                        }
-                    });
-                }
-
-                @Override
-                public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    mBlogMediaStatus = 0;
-                    ToastUtils.showToast(EditPostActivity.this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
-                }
-            };
-            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(0,
-                    MediaGridFragment.Filter.ALL, callback, mSite);
-            getMediaTask.execute();
-        } else {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        if (event.isError()) {
             mBlogMediaStatus = 0;
-            ToastUtils.showToast(this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(EditPostActivity.this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
+        } else {
+            mBlogMediaStatus = 1;
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests.isEmpty()) {
+                        // If there are pending requests for video URLs from VideoPress ids, query the DB for
+                        // them again and notify the editor
+                        for (String videoId : mPendingVideoPressInfoRequests) {
+                            String videoUrl = mMediaStore.
+                                    getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
+                            String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
+
+                            mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
+                        }
+
+                        mPendingVideoPressInfoRequests.clear();
+                    }
+                }
+            });
         }
     }
 
@@ -2209,11 +2204,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
                 break;
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        // no-op
     }
 
     @SuppressWarnings("unused")

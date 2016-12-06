@@ -44,7 +44,6 @@ import javax.net.ssl.SSLHandshakeException;
 public class ApiHelper {
 
     public static final class Method {
-        public static final String GET_MEDIA_LIBRARY  = "wp.getMediaLibrary";
         public static final String GET_POST_FORMATS   = "wp.getPostFormats";
         public static final String GET_CATEGORIES     = "wp.getCategories";
         public static final String GET_MEDIA_ITEM     = "wp.getMediaItem";
@@ -180,109 +179,6 @@ public class ApiHelper {
         }
 
         return comments;
-    }
-
-    public static class SyncMediaLibraryTask extends HelperAsyncTask<Void, Void, Integer> {
-        public interface Callback extends GenericErrorCallback {
-            public void onSuccess(int results);
-        }
-
-        private Callback mCallback;
-        private int mOffset;
-        private Filter mFilter;
-        private SiteModel mSite;
-
-        public SyncMediaLibraryTask(int offset, Filter filter, Callback callback, SiteModel site) {
-            mOffset = offset;
-            mCallback = callback;
-            mFilter = filter;
-            mSite = site;
-        }
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-            if (mSite == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
-                return 0;
-            }
-
-            String blogId = String.valueOf(mSite.getId());
-            URI xmlrpcUri = URI.create(mSite.getXmlRpcUrl());
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, "", "");
-            Map<String, Object> filter = new HashMap<String, Object>();
-            filter.put("number", 50);
-            filter.put("offset", mOffset);
-
-            if (mFilter == Filter.IMAGES) {
-                filter.put("mime_type","image/*");
-            } else if(mFilter == Filter.UNATTACHED) {
-                filter.put("parent_id", 0);
-            }
-
-            Object[] apiParams = {String.valueOf(mSite.getSiteId()), StringUtils.notNullStr(mSite.getUsername()),
-                    StringUtils.notNullStr(mSite.getPassword()), filter};
-
-            Object[] results = null;
-            try {
-                results = (Object[]) client.call(Method.GET_MEDIA_LIBRARY, apiParams);
-            } catch (ClassCastException cce) {
-                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-                return 0;
-            } catch (XMLRPCException e) {
-                prepareErrorMessage(e);
-                return 0;
-            } catch (IOException e) {
-                prepareErrorMessage(e);
-                return 0;
-            } catch (XmlPullParserException e) {
-                prepareErrorMessage(e);
-                return 0;
-            }
-
-            if (blogId == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "Invalid blogId");
-                return 0;
-            }
-
-            if (results == null) {
-                setError(ErrorType.INVALID_RESULT, "Invalid blogId");
-                return 0;
-            }
-
-            Map<?, ?> resultMap;
-            // results returned, so mark everything existing to deleted
-            // since offset is 0, we are doing a full refresh
-            if (mOffset == 0) {
-                WordPress.wpDB.setMediaFilesMarkedForDeleted(blogId);
-            }
-            for (Object result : results) {
-                resultMap = (Map<?, ?>) result;
-                MediaFile mediaFile = new MediaFile(blogId, resultMap, mSite.isWPCom());
-                WordPress.wpDB.saveMediaFile(mediaFile);
-            }
-            WordPress.wpDB.deleteFilesMarkedForDeleted(blogId);
-            return results.length;
-        }
-
-        private void prepareErrorMessage(Exception e) {
-            // user does not have permission to view media gallery
-            if (e.getMessage() != null && e.getMessage().contains("401")) {
-                setError(ErrorType.NO_UPLOAD_FILES_CAP, e.getMessage(), e);
-            } else {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            if (mCallback != null) {
-                if (mErrorType == ErrorType.NO_ERROR) {
-                    mCallback.onSuccess(result);
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
-                }
-            }
-        }
     }
 
     public static class EditMediaItemTask extends HelperAsyncTask<Void, Void, Boolean> {
@@ -689,7 +585,6 @@ public class ApiHelper {
 
     /**
      * Fetches the status of a comment
-     * @param blog the blog the comment is in
      * @param comment the comment to fetch its status
      * @return the status of the comment on the server, null if error
      */

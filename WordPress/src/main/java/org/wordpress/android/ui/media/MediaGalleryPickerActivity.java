@@ -15,13 +15,17 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.MediaAction;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
 
@@ -34,7 +38,15 @@ import javax.inject.Inject;
 public class MediaGalleryPickerActivity extends AppCompatActivity
         implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
                    AdapterView.OnItemClickListener {
-    @Inject MediaStore mMediaStore;
+    public static final int REQUEST_CODE = 4000;
+    public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
+    public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
+    public static final String RESULT_IDS = "RESULT_IDS";
+    public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
+
+    private static final String STATE_FILTERED_ITEMS = "STATE_FILTERED_ITEMS";
+    private static final String STATE_SELECTED_ITEMS = "STATE_SELECTED_ITEMS";
+    private static final String STATE_IS_SELECT_ONE_ITEM = "STATE_IS_SELECT_ONE_ITEM";
 
     private GridView mGridView;
     private MediaGridAdapter mGridAdapter;
@@ -45,18 +57,11 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
 
-    private static final String STATE_FILTERED_ITEMS = "STATE_FILTERED_ITEMS";
-    private static final String STATE_SELECTED_ITEMS = "STATE_SELECTED_ITEMS";
-    private static final String STATE_IS_SELECT_ONE_ITEM = "STATE_IS_SELECT_ONE_ITEM";
-
-    public static final int REQUEST_CODE = 4000;
-    public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
-    public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
-    public static final String RESULT_IDS = "RESULT_IDS";
-    public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
-
     private int mOldMediaSyncOffset = 0;
     private SiteModel mSite;
+
+    @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,9 +119,30 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         refreshViews();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            setResult(RESULT_CANCELED, new Intent());
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -127,25 +153,60 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
 
-    private void refreshViews() {
-        final Cursor cursor;
-        if (mFilteredItems != null) {
-            cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
-        } else {
-            cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
-            mGridAdapter.swapCursor(cursor);
-        }
-        if (cursor.getCount() == 0) {
-            refreshMediaFromServer(0);
-        }
-    }
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        mIsRefreshing = false;
+        if (event.isError()) {
+            MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+            mHasRetrievedAllMedia = true;
+            adapter.setHasRetrievedAll(true);
+            String message = null;
+            switch (event.error.type) {
+                case GENERIC_ERROR:
+                    message = getString(R.string.error_refresh_media);
+                    break;
+            }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            setResult(RESULT_CANCELED, new Intent());
-            finish();
+            if (message != null) {
+                Toast.makeText(MediaGalleryPickerActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+
+            // the activity may be done by the time we get this, so check for it
+            if (!isFinishing()) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mGridAdapter.setRefreshing(false);
+                    }
+                });
+            }
+        } else {
+            MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+            mHasRetrievedAllMedia = event.media.size() == 0;
+            adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
+            if (mMediaStore.getSiteMediaCount(mSite) == 0 && mHasRetrievedAllMedia) {
+                // There is no media at all
+                noMediaFinish();
+            }
+
+            // the activity may be gone by the time this finishes, so check for it
+            if (!isFinishing()) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mGridAdapter.setRefreshing(false);
+                        if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
+                            Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
+                            mGridAdapter.swapCursor(cursor);
+                        } else {
+                            Cursor cursor = mMediaStore.getSiteImagesAsCursor(mSite);
+                            mGridAdapter.swapCursor(cursor);
+                        }
+                    }
+                });
+            }
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -170,21 +231,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        return false;
-    }
-
-    @Override
     public void onDestroyActionMode(ActionMode mode) {
         Intent intent = new Intent();
         if (!com.helpshift.support.util.ListUtils.isEmpty(mGridAdapter.getSelectedItems())) {
@@ -202,12 +248,55 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        return false;
+    }
+
+    @Override
     public void onRetryUpload(long mediaId) {
     }
 
     @Override
     public boolean isInMultiSelect() {
         return false;
+    }
+
+    private void refreshViews() {
+        final Cursor cursor;
+        if (mFilteredItems != null) {
+            cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
+        } else {
+            cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
+            mGridAdapter.swapCursor(cursor);
+        }
+        if (cursor.getCount() == 0) {
+            refreshMediaFromServer(0);
+        }
+    }
+
+    private void refreshMediaFromServer(int offset) {
+        if (offset == 0 || !mIsRefreshing) {
+            if (offset == mOldMediaSyncOffset) {
+                // we're pulling the same data again for some reason. Pull from the beginning.
+                offset = 0;
+            }
+            mOldMediaSyncOffset = offset;
+            mIsRefreshing = true;
+            mGridAdapter.setRefreshing(true);
+
+            MediaListPayload payload = new MediaListPayload(MediaAction.FETCH_ALL_MEDIA, mSite, null);
+            mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
+        }
     }
 
     private void noMediaFinish() {
@@ -219,80 +308,5 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                 finish();
             }
         }, 1500);
-    }
-
-    void refreshMediaFromServer(int offset) {
-        if (offset == 0 || !mIsRefreshing) {
-            if (offset == mOldMediaSyncOffset) {
-                // we're pulling the same data again for some reason. Pull from the beginning.
-                offset = 0;
-            }
-            mOldMediaSyncOffset = offset;
-            mIsRefreshing = true;
-            mGridAdapter.setRefreshing(true);
-
-            ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
-                // refresh db from server. If returned count is 0, we've retrieved all the media.
-                // stop retrieving until the user manually refreshes
-
-                @Override
-                public void onSuccess(int count) {
-                    MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-                    mHasRetrievedAllMedia = (count == 0);
-                    adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
-                    if (mMediaStore.getSiteMediaCount(mSite) == 0 && count == 0) {
-                        // There is no media at all
-                        noMediaFinish();
-                    }
-                    mIsRefreshing = false;
-
-                    // the activity may be gone by the time this finishes, so check for it
-                    if (!isFinishing()) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //mListener.onMediaItemListDownloaded();
-                                mGridAdapter.setRefreshing(false);
-                                if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
-                                    Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
-                                    mGridAdapter.swapCursor(cursor);
-                                } else {
-                                    Cursor cursor = mMediaStore.getSiteImagesAsCursor(mSite);
-                                    mGridAdapter.swapCursor(cursor);
-                                }
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    if (errorType != ApiHelper.ErrorType.NO_ERROR) {
-                        String message = errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP
-                                ? getString(R.string.media_error_no_permission)
-                                : getString(R.string.error_refresh_media);
-                        Toast.makeText(MediaGalleryPickerActivity.this, message, Toast.LENGTH_SHORT).show();
-                        MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-                        mHasRetrievedAllMedia = true;
-                        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
-                    }
-
-                    // the activity may be cone by the time we get this, so check for it
-                    if (!isFinishing()) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mIsRefreshing = false;
-                                mGridAdapter.setRefreshing(false);
-                            }
-                        });
-                    }
-
-                }
-            };
-            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset,
-                    MediaGridFragment.Filter.ALL, callback, mSite);
-            getMediaTask.execute();
-        }
     }
 }
