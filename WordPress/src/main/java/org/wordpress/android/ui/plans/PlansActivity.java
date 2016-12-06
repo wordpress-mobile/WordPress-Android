@@ -121,8 +121,7 @@ public class PlansActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String domain = UrlUtils.getHost(mSelectedSite.getUrl());
                 String managePlansUrl = "https://wordpress.com/plans/" + domain;
-                ReaderActivityLauncher.openUrl(view.getContext(), managePlansUrl, OpenUrlType.EXTERNAL,
-                        mAccountStore.getAccount().getUserName());
+                ReaderActivityLauncher.openUrl(view.getContext(), managePlansUrl, OpenUrlType.EXTERNAL);
             }
         });
     }

@@ -104,16 +104,6 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     /*
-     * determine whether we can show a thumbnail image for the passed video - currently
-     * we support YouTube, Vimeo & standard images
-     */
-    public static boolean canShowVideoThumbnail(String videoUrl) {
-        return ReaderVideoUtils.isVimeoLink(videoUrl)
-                || ReaderVideoUtils.isYouTubeVideoLink(videoUrl)
-                || MediaUtils.isValidImage(videoUrl);
-    }
-
-    /*
      * retrieves and displays the thumbnail for the passed video
      */
     public void setVideoUrl(final long postId, final String videoUrl) {
@@ -272,10 +262,10 @@ public class WPNetworkImageView extends AppCompatImageView {
             // If the view was bound to an image request, cancel it and clear
             // out the image from the view.
             mImageContainer.cancelRequest();
-            setImageBitmap(null);
             // also clear out the container so we can reload the image if necessary.
             mImageContainer = null;
         }
+        setImageBitmap(null);
     }
 
     public void removeCurrentUrlFromSkiplist() {

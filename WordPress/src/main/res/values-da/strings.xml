@@ -46,7 +46,6 @@ Language: da_DK
 	<string name="tabbar_accessibility_label_my_site">Mit websted</string>
 	<string name="editor_toast_changes_saved">Ændringer gemt</string>
 	<string name="passcodelock_prompt_message">Indtast din PIN</string>
-	<string name="push_auth_expired">Forspørgslen er udløbet. Log ind på WordPress.com for at prøve igen.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% af visninger</string>
 	<string name="ignore">Ignorer</string>
 	<string name="stats_insights_best_ever">Bedste visninger nogensinde</string>
@@ -56,9 +55,7 @@ Language: da_DK
 	<string name="stats_insights_popular">Mest populære dag og time</string>
 	<string name="stats_insights_all_time">Totale indlæg, visninger og besøgende</string>
 	<string name="stats_insights">Indsigt</string>
-	<string name="me_disconnect_from_wordpress_com">Afbryd forbindelse til WordPress.com</string>
 	<string name="me_btn_login_logout">Log ind/ud</string>
-	<string name="me_connect_to_wordpress_com">Forbind til WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" blev ikke skjult, fordi det er det aktuelle websted</string>
 	<string name="me_btn_support">Hjælp &amp; Support</string>
 	<string name="site_picker_create_dotcom">Opret websted på WordPress.com</string>
@@ -74,9 +71,7 @@ Language: da_DK
 	<string name="my_site_btn_site_settings">Indstillinger</string>
 	<string name="my_site_btn_blog_posts">Blogindlæg</string>
 	<string name="my_site_header_configuration">Konfiguration</string>
-	<string name="notifications_account_required">Log ind på WordPress.com for notifikationer</string>
 	<string name="stats_unknown_author">Ukendt forfatter</string>
-	<string name="signout">Afbryd</string>
 	<string name="image_added">Billede tilføjet</string>
 	<string name="select_all">Vælg alle</string>
 	<string name="hide">Skjul</string>
@@ -96,8 +91,6 @@ Language: da_DK
 	<string name="no_media">Ingen medier</string>
 	<string name="loading_images">Loader billeder</string>
 	<string name="loading_videos">Loader videoer</string>
-	<string name="auth_required">Log ind igen for at fortsætte.</string>
-	<string name="sign_in_jetpack">Log ind på din WordPress.com-konto og forbind til Jetpack.</string>
 	<string name="two_step_sms_sent">Gennemse dine SMS\'er for godkendelseskoden.</string>
 	<string name="two_step_footer_button">Send kode i en SMS</string>
 	<string name="verify">Bekræft</string>
@@ -210,7 +203,6 @@ Language: da_DK
 	<string name="delete_sure_page">Slet denne side</string>
 	<string name="delete_sure">Slet denne kladde</string>
 	<string name="delete_sure_post">Slet dette indlæg</string>
-	<string name="signing_out">Logger ud...</string>
 	<string name="posting_post">Sender "%s"</string>
 	<string name="media_empty_list_custom_date">Ingen medier indenfor dette tidsinterval</string>
 	<string name="pages_empty_list">Endnu ingen sider! Hvorfor ikke lave en?</string>
@@ -463,15 +455,12 @@ Language: da_DK
 	<string name="select_date">Vælg dato</string>
 	<string name="reader_likes_you_and_one">Du og en anden synes godt om dette</string>
 	<string name="select_time">Vælg tidspunkt</string>
-	<string name="nux_oops_not_selfhosted_blog">Log ind på WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Tilføj websted fra egen udbyder</string>
-	<string name="signing_in">Logger ind...</string>
 	<string name="nux_welcome_create_account">Opret konto</string>
 	<string name="nux_tap_continue">Fortsæt</string>
 	<string name="password_invalid">Din adgangskode skal være mere sikker. Sørg for at benytte mindst 7 tegn og blande store og små bogstaver, tal eller specielle tegn.</string>
 	<string name="nux_tutorial_get_started_title">Kom i gang!</string>
 	<string name="username_invalid">Ugyldigt brugernavn</string>
-	<string name="connecting_wpcom">Forbinder til WordPress.com</string>
 	<string name="create_account_wpcom">Opret en konto på WordPress.com</string>
 	<string name="reader_empty_followed_tags">Du følger ikke nogen tags</string>
 	<string name="reader_toast_err_url_intent">Kunne ikke åbne %s</string>
@@ -557,7 +546,6 @@ Language: da_DK
 	<string name="follows">Følger</string>
 	<string name="note_reply_successful">Svar sendt</string>
 	<string name="notifications">Meddelelser</string>
-	<string name="sign_in">Log ind</string>
 	<string name="loading">Indlæser...</string>
 	<string name="httppassword">HTTP-adgangskode</string>
 	<string name="httpuser">HTTP-brugernavn</string>

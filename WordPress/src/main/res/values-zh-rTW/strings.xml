@@ -63,7 +63,6 @@ Language: zh_TW
 	<string name="invite_people">邀請他人</string>
 	<string name="my_site_header_external">外部</string>
 	<string name="send_link">傳送連結</string>
-	<string name="signup_succeed_signin_failed">系統已為你建立帳號，但在將你登入時發生錯誤\n。請嘗試使用新建立的使用者名稱與密碼登入。</string>
 	<string name="label_clear_search_history">清除搜尋記錄</string>
 	<string name="dlg_confirm_clear_search_history">清除搜尋記錄？</string>
 	<string name="reader_empty_posts_in_search_description">無法以你的語言找到與「%s」相關的文章</string>
@@ -95,7 +94,6 @@ Language: zh_TW
 	<string name="check_your_email">檢查你的電子郵件</string>
 	<string name="magic_link_unavailable_error_message">目前無法使用。請輸入你的密碼</string>
 	<string name="logging_in">正在登入</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">取得傳送至你電子郵件的連結以立即登入</string>
 	<string name="enter_your_password_instead">改為輸入你的密碼</string>
 	<string name="web_address_dialog_hint">當你留言時公開顯示。</string>
 	<string name="username_email">電子郵件或使用者名稱</string>
@@ -265,7 +263,6 @@ Language: zh_TW
 	<string name="error_post_remote_site_settings">無法儲存網站資訊</string>
 	<string name="error_fetch_remote_site_settings">無法擷取網站資訊</string>
 	<string name="error_media_upload_connection">上傳媒體時發生連線錯誤</string>
-	<string name="site_settings_disconnected_toast">已中斷連線，編輯功能已停用。</string>
 	<string name="site_settings_unsupported_version_error">不支援的 WordPress 版本</string>
 	<string name="site_settings_multiple_links_dialog_description">如果留言包含的連結超過此數量，留言就必須經過審核。</string>
 	<string name="site_settings_close_after_dialog_switch_text">自動關閉</string>
@@ -332,7 +329,6 @@ Language: zh_TW
 	<string name="site_settings_paging_title">分頁</string>
 	<string name="site_settings_threading_title">階層顯示</string>
 	<string name="site_settings_sort_by_title">排序依據</string>
-	<string name="site_settings_account_required_title">使用者必須登入</string>
 	<string name="site_settings_identity_required_title">必須包含名稱和電子郵件</string>
 	<string name="site_settings_receive_pingbacks_title">接收引用通知</string>
 	<string name="site_settings_send_pingbacks_title">傳送引用通知</string>
@@ -496,7 +492,6 @@ Language: zh_TW
 	<string name="tabbar_accessibility_label_my_site">我的網站</string>
 	<string name="editor_toast_changes_saved">變更已儲存</string>
 	<string name="passcodelock_prompt_message">輸入 PIN 碼</string>
-	<string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
 	<string name="stats_insights_most_popular_percent_views">瀏覽次數：%1$d%%</string>
 	<string name="ignore">忽略</string>
 	<string name="stats_insights_best_ever">最佳的瀏覽次數</string>
@@ -506,11 +501,8 @@ Language: zh_TW
 	<string name="stats_insights_popular">最熱門的日子及時段</string>
 	<string name="stats_insights_all_time">有史以來的文章數、瀏覽次數與訪客數</string>
 	<string name="stats_insights">Insights</string>
-	<string name="stats_sign_in_jetpack_different_com_account">若要檢視統計資料，請使用連線 Jetpack 的帳號登入 WordPress.com。</string>
 	<string name="stats_other_recent_stats_moved_label">正在尋找其他近期統計資料嗎？我們已將統計資料移至「Insights」頁面。</string>
-	<string name="me_disconnect_from_wordpress_com">中斷與 WordPress.com 的連線</string>
 	<string name="me_btn_login_logout">登入/登出</string>
-	<string name="me_connect_to_wordpress_com">連線 WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">由於「%s」是目前的網站，因此並未隱藏</string>
 	<string name="me_btn_support">說明與客戶服務</string>
 	<string name="account_settings">帳號設定</string>
@@ -528,11 +520,8 @@ Language: zh_TW
 	<string name="my_site_btn_blog_posts">網誌文章</string>
 	<string name="reader_label_new_posts_subtitle">點選以顯示</string>
 	<string name="my_site_header_configuration">組態</string>
-	<string name="notifications_account_required">登入 WordPress.com 以接收通知</string>
 	<string name="stats_unknown_author">不明作者</string>
-	<string name="signout">中斷連結</string>
 	<string name="image_added">已新增圖片</string>
-	<string name="sign_out_wpcom_confirm">中斷帳號連結將會移除此裝置上 @%s 的所有 WordPress.com 資料，包括本機草稿及變更項目。</string>
 	<string name="select_all">全部選取</string>
 	<string name="hide">隱藏</string>
 	<string name="show">顯示</string>
@@ -553,8 +542,6 @@ Language: zh_TW
 	<string name="no_media">沒有媒體</string>
 	<string name="loading_images">正在載入圖片</string>
 	<string name="loading_videos">正在載入影片</string>
-	<string name="auth_required">再次登入以繼續操作。</string>
-	<string name="sign_in_jetpack">登入 WordPress.com 帳號以連結至 Jetpack。</string>
 	<string name="two_step_sms_sent">請查看簡訊是否收到驗證碼。</string>
 	<string name="two_step_footer_button">透過簡訊傳送驗證碼</string>
 	<string name="two_step_footer_label">輸入驗證器應用程式上的驗證碼。</string>
@@ -670,7 +657,6 @@ Language: zh_TW
 	<string name="delete_sure_page">刪除此頁面</string>
 	<string name="delete_sure">刪除此草稿</string>
 	<string name="delete_sure_post">刪除此文章</string>
-	<string name="signing_out">正在登出…</string>
 	<string name="posting_post">正在發表「%s」</string>
 	<string name="media_empty_list_custom_date">此時間間隔內沒有媒體</string>
 	<string name="pages_empty_list">尚無任何頁面。建立頁面？</string>
@@ -942,16 +928,13 @@ Language: zh_TW
 	<string name="reader_empty_followed_blogs_description">不過別擔心，只要點選右上方的圖示即可開始探索！</string>
 	<string name="reader_likes_you_and_one">你和其他 1 人都說這個讚</string>
 	<string name="select_time">選取時間</string>
-	<string name="nux_oops_not_selfhosted_blog">登入 WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">新增自助託管的網站</string>
-	<string name="signing_in">正在登入…</string>
 	<string name="nux_welcome_create_account">建立帳號</string>
 	<string name="nux_tap_continue">繼續</string>
 	<string name="password_invalid">你需要一組更安全的密碼。請務必使用 7 個或更多字元，並混合使用大小寫字母、數字或特殊字元。</string>
 	<string name="nux_tutorial_get_started_title">開始使用！</string>
 	<string name="limit_reached">已達限制。你可以在 1 分鐘後再試一次。如果在 1 分鐘不到之前重試，只會延長你必須等候繼續進行的時間。如果你覺得這是錯誤，請聯絡支援團隊。</string>
 	<string name="username_invalid">無效的使用者名稱</string>
-	<string name="connecting_wpcom">連結至 WordPress.com</string>
 	<string name="button_next">下一步</string>
 	<string name="create_account_wpcom">在 WordPress.com 上建立帳號</string>
 	<string name="reader_empty_followed_tags">你未關注任何標籤</string>
@@ -1042,7 +1025,6 @@ Language: zh_TW
 	<string name="follows">關注者</string>
 	<string name="note_reply_successful">回覆已發佈</string>
 	<string name="notifications">通知</string>
-	<string name="sign_in">登入</string>
 	<string name="loading">載入中...</string>
 	<string name="httppassword">HTTP 密碼</string>
 	<string name="httpuser">HTTP 使用者帳號</string>

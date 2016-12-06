@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-12 11:30:44+0000
+Translation-Revision-Date: 2016-11-17 18:46:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: it
@@ -97,7 +97,7 @@ Language: it
 	<string name="invite_people">Invita delle persone</string>
 	<string name="my_site_header_external">Esterno</string>
 	<string name="send_link">Invia link</string>
-	<string name="signup_succeed_signin_failed">Il tuo account è stato creato ma si è verificato un errore quando abbiamo provato ad autenticarti.\n       Provata ad entrare col i tuo nome utente e la password appena creati.</string>
+	<string name="signup_succeed_signin_failed">Il tuo account è stato creato ma si è verificato un errore quando abbiamo provato ad autenticarti. Prova ad entrare con il nome utente e la password appena creati.</string>
 	<string name="label_clear_search_history">Pulisci lo storico della ricerca</string>
 	<string name="dlg_confirm_clear_search_history">Pulire lo storico della ricerca?</string>
 	<string name="reader_empty_posts_in_search_description">Nessun articolo trovato riguardo %s per la tua lingua</string>
@@ -303,7 +303,7 @@ Language: it
 	<string name="error_post_remote_site_settings">Impossibile salvare le informazioni del sito</string>
 	<string name="error_fetch_remote_site_settings">Impossibile recuperare le informazioni del sito</string>
 	<string name="error_media_upload_connection">Si è verificato un errore di connessione durante il caricamento dei contenuti multimediali</string>
-	<string name="site_settings_disconnected_toast">Disconnesso. Modifica disabilitata.</string>
+	<string name="site_settings_disconnected_toast">Non sei connesso,  la possibilità di modifica è disabilitata.</string>
 	<string name="site_settings_unsupported_version_error">Versione di WordPress non supportata</string>
 	<string name="site_settings_multiple_links_dialog_description">Richiedi l\'approvazione per i commenti che includono un numero di link superiore a quello specificato.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Chiudi automaticamente</string>
@@ -568,9 +568,8 @@ Language: it
 	<string name="my_site_header_configuration">Configurazione</string>
 	<string name="notifications_account_required">Collegati a WordPress.com per le notifiche</string>
 	<string name="stats_unknown_author">Autore sconosciuto</string>
-	<string name="signout">Disconnettiti</string>
 	<string name="image_added">Immagine aggiunta</string>
-	<string name="sign_out_wpcom_confirm">Disconnettendo il tuo account tutti i dati @%s WordPress.com da questa periferica, comprese le bozze locali e le modifiche locali.</string>
+	<string name="sign_out_wpcom_confirm">Disconnettendo il tuo account rimuoverai tutti i dati @%s WordPress.com da questa periferica, comprese le bozze locali e le modifiche locali.</string>
 	<string name="select_all">Seleziona tutto</string>
 	<string name="hide">Nascondi</string>
 	<string name="show">Mostra</string>
@@ -591,8 +590,8 @@ Language: it
 	<string name="no_media">Nessun elemento media</string>
 	<string name="loading_images">Caricamento immagini</string>
 	<string name="loading_videos">Caricamento video</string>
-	<string name="auth_required">Autentificati nuovamente per continuare.</string>
-	<string name="sign_in_jetpack">Autentificati al tuo account WordPress.com  per connetterti a Jetpack.</string>
+	<string name="auth_required">Accedi di nuovo per continuare.</string>
+	<string name="sign_in_jetpack">Accedi al tuo account WordPress.com  per connetterti a Jetpack.</string>
 	<string name="two_step_sms_sent">Verifica i messaggi di testo per il codice di verifica.</string>
 	<string name="two_step_footer_button">Invia codice come messaggio di testo</string>
 	<string name="two_step_footer_label">Inserisci il codice dalla tua app di autenticazione.</string>
@@ -708,7 +707,7 @@ Language: it
 	<string name="delete_sure_page">Cancella questa pagina</string>
 	<string name="delete_sure">Cancella questa bozza</string>
 	<string name="delete_sure_post">Cancella questo articolo</string>
-	<string name="signing_out">Scollegamento...</string>
+	<string name="signing_out">Disconnessione in corso...</string>
 	<string name="posting_post">Pubblicazione di "%s"</string>
 	<string name="media_empty_list_custom_date">Nessun elemento media in questo intervallo di tempo</string>
 	<string name="pages_empty_list">Ancora nessuna pagina. Perché non crearne una?</string>
@@ -983,7 +982,7 @@ Language: it
 	<string name="select_time">Seleziona orario</string>
 	<string name="nux_oops_not_selfhosted_blog">Accedi a WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Aggiungi sito self-hosted</string>
-	<string name="signing_in">Collegamento...</string>
+	<string name="signing_in">Connessione in corso...</string>
 	<string name="nux_welcome_create_account">Crea account</string>
 	<string name="nux_tap_continue">Continua</string>
 	<string name="password_invalid">Devi impostare una password più sicura. Usa 7 o più caratteri sia minuscoli che maiuscoli, numeri o caratteri speciali.</string>

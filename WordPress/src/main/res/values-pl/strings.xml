@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-07 12:40:01+0000
+Translation-Revision-Date: 2016-11-22 15:56:08+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.3.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Nie masz uprawnień do podglądu tego wpisu. Spróbuj najpierw zalogować się do WordPress.com lub skorzystaj z przycisku akcji aby otworzyć przeglądarkę.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Nie masz uprawnień do podglądu tego wpisu. Spróbuj najpierw zalogować się do WordPress.com.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Nie masz uprawnień do podglądu tego wpisu. Skorzystaj z przycisku akcji aby otworzyć przeglądarkę.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Nie można dodać polubienia kiedy jesteś wylogowany/a z WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Już polubiłeś ten komentarz</string>
+	<string name="reader_toast_err_comment_not_found">Nie odnaleziono komentarza!</string>
+	<string name="reader_toast_err_cannot_like_post">Błąd polubienia wpisu</string>
+	<string name="reader_title_post_detail_wpcom">Wpis WordPress.com</string>
+	<string name="reader_title_deeplink">Czytnik WordPress</string>
+	<string name="error_notif_q_action_reply">Nie można dodać odpowiedzi do komentarza. Proszę spróbować później.</string>
+	<string name="error_notif_q_action_approve">Nie można zatwierdzić komentarza. Proszę spróbować później.</string>
+	<string name="error_notif_q_action_like">Nie można dodać polubienia komentarza. Proszę spróbować później.</string>
+	<string name="notifications_label_new_notifications_subtitle">Stuknij aby je zobaczyć </string>
+	<string name="notifications_label_new_notifications">Nowe powiadomienia</string>
+	<string name="comment_q_action_replying">Dodawanie odpowiedzi...</string>
+	<string name="comment_q_action_approving">Zatwierdzanie...</string>
+	<string name="comment_q_action_liking">Dodawanie polubienia...</string>
+	<string name="comment_q_action_processing">Przetwarzanie...</string>
+	<string name="comment_q_action_done_generic">Akcja wykonana!</string>
+	<string name="comment_liked">Komentarz polubiony</string>
+	<string name="signout">Wyloguj</string>
+	<string name="sign_in_wpcom">Zaloguj do WordPress.com</string>
 	<string name="reader_label_global_related_posts">Więcej na WordPress.com</string>
 	<string name="reader_label_local_related_posts">Więcej w %s</string>
 	<string name="preference_open_device_settings">Przejdź do ustawień urządzenia</string>
 	<string name="comment_moderated_unapproved">Komentarz niezatwierdzony</string>
 	<string name="invite_invalid_email">%s: Nieprawidłowy email</string>
 	<string name="invite_user_blocked_invites">%s: Użytkownik zablokował zaproszenia</string>
-	<string name="invite_already_following">%s: Już śledzi</string>
+	<string name="invite_already_following">%s: Już śledzony</string>
 	<string name="invite_already_a_member">%s: Jest już członkiem</string>
 	<string name="invite_username_not_found">%s: Użytkownik nie odnaleziony</string>
 	<string name="comment_moderated_approved">Komentarz zatwierdzony!</string>
@@ -97,7 +119,7 @@ Language: pl
 	<string name="invite_people">Zaproś ludzi</string>
 	<string name="my_site_header_external">Na zewnątrz</string>
 	<string name="send_link">Wyślij odnośnik</string>
-	<string name="signup_succeed_signin_failed">Twoje konto zostało utworzone, ale wystąpił błąd. Spróbuj zalogować się przy pomocy swojej nowo utworzonej nazwy użytkownika i hasła.</string>
+	<string name="signup_succeed_signin_failed">Twoje konto zostało utworzone, ale wystąpił błąd podczas logowania.\nSpróbuj zalogować się z nowo utworzoną nazwą użytkownika i hasłem.</string>
 	<string name="label_clear_search_history">Usuń historię wyszukiwania</string>
 	<string name="dlg_confirm_clear_search_history">Usunąć historię wyszukiwania?</string>
 	<string name="reader_empty_posts_in_search_description">Nie odnaleziono żadnych wpisów zawierających %s w twoim języku</string>
@@ -132,7 +154,7 @@ Language: pl
 	<string name="check_your_email">Sprawdź swoje konto email</string>
 	<string name="magic_link_unavailable_error_message">Aktualnie niedostępne. Proszę wprowadzić hasło</string>
 	<string name="logging_in">Logowanie</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Uzyskaj odnośnik przesłany na twój adres email aby się szybko zalogować</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Otrzymaj odnośnik przesłany na twój adres email aby się niezwłocznie zalogować</string>
 	<string name="enter_your_password_instead">Wprowadź swoje hasło</string>
 	<string name="web_address_dialog_hint">Pokazywany publicznie kiedy komentujesz</string>
 	<string name="username_email">Email lub użytkownik</string>
@@ -303,7 +325,7 @@ Language: pl
 	<string name="error_post_remote_site_settings">Nie można było zapisać informacji o witrynie</string>
 	<string name="error_fetch_remote_site_settings">Nie można było pobrać informacji o witrynie</string>
 	<string name="error_media_upload_connection">Błąd połączenia podczas przesyłania mediów</string>
-	<string name="site_settings_disconnected_toast">Brak połączenia, możliwość edycji została zablokowana.</string>
+	<string name="site_settings_disconnected_toast">Wylogowano, możliwość edycji wyłączona.</string>
 	<string name="site_settings_unsupported_version_error">Niewspierana wersja WordPressa</string>
 	<string name="site_settings_multiple_links_dialog_description">Wymagaj zatwierdzenia komentarzy, które zawierają więcej niż tą liczbę odnośników</string>
 	<string name="site_settings_close_after_dialog_switch_text">Automatycznie zamknij</string>
@@ -534,7 +556,7 @@ Language: pl
 	<string name="tabbar_accessibility_label_my_site">Moja witryna</string>
 	<string name="editor_toast_changes_saved">Zmiany zapisane</string>
 	<string name="passcodelock_prompt_message">Wprowadź PIN</string>
-	<string name="push_auth_expired">Zapytanie wygasło. Zaloguj się na WordPress.com i spróbuj ponownie.</string>
+	<string name="push_auth_expired">Zapytanie wygasło. Zaloguj się na WordPress.com aby spróbować ponownie.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% wyświetleń</string>
 	<string name="ignore">Ignoruj</string>
 	<string name="stats_insights_best_ever">Najwięcej wyświetleń</string>
@@ -544,11 +566,11 @@ Language: pl
 	<string name="stats_insights_popular">Najbardziej popularny dzień i godzina</string>
 	<string name="stats_insights_all_time">Wszystkie wpisy, odsłony i odwiedzający</string>
 	<string name="stats_insights">Trendy</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Aby zobaczyć swoje statystyki, zaloguj się na konto na WordPress.com, do którego podłączyłeś Jetpacka.</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Aby podejrzeć statystyki, zaloguj się na konto WordPress.com, do którego podłączyłeś Jetpacka.</string>
 	<string name="stats_other_recent_stats_moved_label">Szukasz swoich pozostałych ostatnich statystyk? Przenieśliśmy je do strony "Trendy"</string>
-	<string name="me_disconnect_from_wordpress_com">Rozłącz z WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Wyloguj z WordPress.com</string>
 	<string name="me_btn_login_logout">Zaloguj/Wyloguj</string>
-	<string name="me_connect_to_wordpress_com">Połącz z WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Zaloguj się do WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" została ukryta ponieważ jest to aktualna witryna</string>
 	<string name="me_btn_support">Pomoc i wsparcie</string>
 	<string name="account_settings">Ustawienia konta</string>
@@ -566,11 +588,10 @@ Language: pl
 	<string name="my_site_btn_blog_posts">Wpisy na blogu</string>
 	<string name="reader_label_new_posts_subtitle">Stuknij aby je pokazać</string>
 	<string name="my_site_header_configuration">Konfiguracja</string>
-	<string name="notifications_account_required">Zaloguj do WordPress.com aby uzyskać dostęp do powiadomień</string>
+	<string name="notifications_account_required">Zaloguj się do WordPress.com aby uzyskać dostęp do powiadomień</string>
 	<string name="stats_unknown_author">Nieznany autor</string>
-	<string name="signout">Rozłącz</string>
 	<string name="image_added">Dodano obrazek</string>
-	<string name="sign_out_wpcom_confirm">Odłączenie twojego konta usunie z tego urządzenia wszystkie dane @%s pochodzące z WordPress.com, łącznie z lokalnymi szkicami i lokalnymi zmianami treści.</string>
+	<string name="sign_out_wpcom_confirm">Wylogowanie z konta usunie z tego urządzenia wszystkie dane @%s pochodzące z WordPress.com, łącznie z lokalnymi szkicami i lokalnymi zmianami treści.</string>
 	<string name="select_all">Wybierz wszystko</string>
 	<string name="hide">Ukryj</string>
 	<string name="show">Pokaż</string>
@@ -592,7 +613,7 @@ Language: pl
 	<string name="loading_images">Ładowanie zdjęć</string>
 	<string name="loading_videos">Ładowanie filmów</string>
 	<string name="auth_required">Zaloguj się ponownie, by kontynuować.</string>
-	<string name="sign_in_jetpack">Zaloguj się do swojego konta na WordPress.com, by włączyć Jetpack.</string>
+	<string name="sign_in_jetpack">Zaloguj się do swojego konta WordPress.com aby połączyć Jetpack.</string>
 	<string name="two_step_sms_sent">Sprawdź swoje SMSy w poszukiwaniu kodu weryfikacyjnego.</string>
 	<string name="two_step_footer_button">Wyślij kod przez SMS</string>
 	<string name="two_step_footer_label">Wprowadź kod z aplikacji do uwierzytelniania.</string>
@@ -708,7 +729,7 @@ Language: pl
 	<string name="delete_sure_page">Usuń tę stronę</string>
 	<string name="delete_sure">Usuń ten szkic</string>
 	<string name="delete_sure_post">Usuń ten wpis</string>
-	<string name="signing_out">Wylogowywanie się...</string>
+	<string name="signing_out">Wylogowywanie...</string>
 	<string name="posting_post">Publikowanie "%s"</string>
 	<string name="media_empty_list_custom_date">Brak mediów w tym przedziale czasowym</string>
 	<string name="pages_empty_list">Brak stron. Może jakąś opublikujesz?</string>
@@ -990,7 +1011,7 @@ Language: pl
 	<string name="nux_tutorial_get_started_title">Rozpocznij!</string>
 	<string name="limit_reached">Wykorzystano limit. Spróbuj ponownie za 1 minutę. Podjęcie ponownej próby przed upływem podanego czasu spowoduj jedynie wydłużenie czasu oczekiwania. Jeśli uważasz, że jest to błąd, skontaktuj się z nami.</string>
 	<string name="username_invalid">Nieprawidłowa nazwa użytkownika</string>
-	<string name="connecting_wpcom">Połączono z WordPress.com</string>
+	<string name="connecting_wpcom">Logowanie do WordPress.com</string>
 	<string name="button_next">Następny</string>
 	<string name="create_account_wpcom">Stwórz konto na WordPress.com</string>
 	<string name="reader_empty_followed_tags">Nie śledzisz żadnych tagów</string>
