@@ -460,7 +460,6 @@ public class GCMMessageService extends GcmListenerService {
                 AnalyticsTracker.flush();
             }
 
-
             // Build the new notification, add group to support wearable stacking
             NotificationCompat.Builder builder = getNotificationBuilder(context, title, message);
             Bitmap largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(noteType));
@@ -546,7 +545,6 @@ public class GCMMessageService extends GcmListenerService {
                             .build();
             // now add the action corresponding to direct-reply
             builder.addAction(action);
-
         }
 
         private void addCommentLikeActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
@@ -759,7 +757,6 @@ public class GCMMessageService extends GcmListenerService {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
             if (notifyUser) {
-
                 boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
                 boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", true);
                 String notificationSound = prefs.getString("wp_pref_custom_notification_sound", "content://settings/system/notification_sound"); //"" if None is selected
@@ -774,6 +771,10 @@ public class GCMMessageService extends GcmListenerService {
                 if (shouldBlinkLight) {
                     builder.setLights(0xff0000ff, 1000, 5000);
                 }
+            } else {
+                builder.setVibrate(null);
+                builder.setSound(null);
+                // Do not turn the led off otherwise the previous (single) notification led is not shown. We're re-using the same builder for single and group.
             }
 
             // Call broadcast receiver when notification is dismissed
