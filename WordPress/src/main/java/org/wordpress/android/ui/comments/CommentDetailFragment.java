@@ -787,7 +787,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 AnalyticsTracker.track(Stat.NOTIFICATION_APPROVED);
                 break;
             case UNAPPROVED:
-                AnalyticsTracker.track(Stat.NOTIFICATION_APPROVED);
+                AnalyticsTracker.track(Stat.NOTIFICATION_UNAPPROVED);
                 break;
             case SPAM:
                 AnalyticsTracker.track(Stat.NOTIFICATION_FLAGGED_AS_SPAM);
