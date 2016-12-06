@@ -52,7 +52,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static com.android.volley.Request.Method.HEAD;
 import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
 import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
 import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
@@ -276,16 +275,15 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-            fragment = CommentDetailFragment.newInstance(note.getId(), getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA), idForFragmentContainer);
+            boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
+                    false);
+            fragment = CommentDetailFragment.newInstance(note.getId(),
+                    getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA),
+                    idForFragmentContainer);
 
-            // fragment is never null at this point, and always of CommentDetailFragment type. Just add this check for safety :)
-            if (fragment instanceof  CommentDetailFragment) {
-                if (isInstantReply) {
-                    ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
-                }
+            if (isInstantReply) {
+                ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
             }
-
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
