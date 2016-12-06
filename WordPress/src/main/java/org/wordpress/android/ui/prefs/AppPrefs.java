@@ -255,9 +255,9 @@ public class AppPrefs {
         }
     }
 
-    public static void setCommentsStatusFilter(CommentStatusCriteria commentstatus) {
-        if (commentstatus != null) {
-            setInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX, commentstatus.ordinal());
+    public static void setCommentsStatusFilter(CommentStatusCriteria commentStatus) {
+        if (commentStatus != null) {
+            setInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX, commentStatus.ordinal());
         } else {
             prefs().edit()
                     .remove(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX.name())
