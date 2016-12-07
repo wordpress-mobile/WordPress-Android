@@ -23,6 +23,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
@@ -41,6 +42,8 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID;
 
 public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
@@ -513,6 +516,15 @@ public class PostsListFragment extends Fragment
                 if (!post.isLocalDraft()) {
                     new ApiHelper.DeleteSinglePostTask().execute(WordPress.getCurrentBlog(),
                             fullPost.getRemotePostId(), mIsPage);
+                } else  {
+                    // delete the pending draft notification if available
+                    NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
+
+                    // note that cancelling the notification dismisses not only the case where the notification was
+                    // about this very local draft but will also dismiss it even if there were several outstanding
+                    // pending drafts.
+                    // We don't re-run the service here to notify the user of other  pending drafts, because the
+                    // user is already looking at the blog post list, so it doesn't make sense bothering them
                 }
             }
         });

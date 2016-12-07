@@ -74,10 +74,10 @@ public class NotificationsPendingDraftsService extends Service {
         /*
         1) check all “local” drafts, and check that they have been pending for more than 3 days.
         2) make notification if ONE draft and if more than ONE make another text
-        ONE: “You’ve got this draft pending for publishing for xxx days. Would you like to check it?”
+        ONE: “You drafted 'Post title here' xxxx days ago but never published it.”
         (we also have a generic message if we can't determine for how long a draft has been sitting there or it's been
         more than 30 days)
-        MORE: “You’ve got 2 posts in drafts. Want to check them?”
+        MORE: “You drafted %d posts but never published them. Tap to check.”
         * */
         new Thread(new Runnable() {
             @Override
