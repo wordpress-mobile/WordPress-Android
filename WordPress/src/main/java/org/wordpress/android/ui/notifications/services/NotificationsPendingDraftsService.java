@@ -100,13 +100,14 @@ public class NotificationsPendingDraftsService extends Service {
                     long daysInDraft = 0;
                     if (draftPostsOlderThan3Days.size() == 1) {
                         Post post = draftPostsOlderThan3Days.get(0);
-                        daysInDraft = (now - post.getDateLastUpdated()) / ONE_DAY;
-                        long postId = post.getLocalTablePostId();
-                        boolean isPage = post.isPage();
 
                         //only notify the user if the last time they have been notified about this particular post was at least
                         //MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's not do it constantly each time the app comes to the foreground
                         if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
+                            daysInDraft = (now - post.getDateLastUpdated()) / ONE_DAY;
+                            long postId = post.getLocalTablePostId();
+                            boolean isPage = post.isPage();
+
                             post.setDateLastNotified(now);
                             if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
                                 buildSinglePendingDraftNotification(post.getTitle(), daysInDraft, postId, isPage);
@@ -173,7 +174,6 @@ public class NotificationsPendingDraftsService extends Service {
         resultIntent.addCategory("android.intent.category.LAUNCHER");
         resultIntent.putExtra(POST_ID_EXTRA, postId);
         resultIntent.putExtra(IS_PAGE_EXTRA, isPage);
-
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
