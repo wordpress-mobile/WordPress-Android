@@ -27,9 +27,9 @@ public class NotificationsPendingDraftsService extends Service {
     public static final String POST_ID_EXTRA = "postId";
     public static final String IS_PAGE_EXTRA = "isPage";
     //FIXME change this below line
-    //private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 24 * 60 * 60 * 1000; //a full 24 hours day
-    private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 60 * 1000; //a full 24 hours day
-    private static final long MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE = 30; //30 days
+    //private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 24 * 60 * 60 * 1000; // a full 24 hours day
+    private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 60 * 1000; // a full 24 hours day
+    private static final long MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE = 30; // 30 days
 
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -85,7 +85,7 @@ public class NotificationsPendingDraftsService extends Service {
                 ArrayList<Post> draftPosts =  WordPress.wpDB.getDraftPostList(WordPress.getCurrentBlog().getLocalTableBlogId());
                 ArrayList<Post> draftPostsOlderThan3Days = new ArrayList<>();
                 if (draftPosts != null && draftPosts.size() > 0) {
-                    //now check those that have been sitting there for more than 3 days now.
+                    // now check those that have been sitting there for more than 3 days now.
                     long now = System.currentTimeMillis();
                     //FIXME change this below line
                     //long three_days_ago = now - (ONE_DAY * 3);
@@ -96,13 +96,13 @@ public class NotificationsPendingDraftsService extends Service {
                         }
                     }
 
-                    //check the size and build the notification accordingly
+                    // check the size and build the notification accordingly
                     long daysInDraft = 0;
                     if (draftPostsOlderThan3Days.size() == 1) {
                         Post post = draftPostsOlderThan3Days.get(0);
 
-                        //only notify the user if the last time they have been notified about this particular post was at least
-                        //MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's not do it constantly each time the app comes to the foreground
+                        // only notify the user if the last time they have been notified about this particular post was at least
+                        // MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's not do it constantly each time the app comes to the foreground
                         if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
                             daysInDraft = (now - post.getDateLastUpdated()) / ONE_DAY;
                             long postId = post.getLocalTablePostId();
@@ -112,8 +112,8 @@ public class NotificationsPendingDraftsService extends Service {
                             if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
                                 buildSinglePendingDraftNotification(post.getTitle(), daysInDraft, postId, isPage);
                             } else {
-                                //if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't know (i.e. value for lastUpdated
-                                //is zero) then just show a generic message
+                                // if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't know (i.e. value for lastUpdated
+                                // is zero) then just show a generic message
                                 buildSinglePendingDraftNotification(post.getTitle(), postId, isPage);
                             }
                             WordPress.wpDB.updatePost(post);
@@ -123,7 +123,7 @@ public class NotificationsPendingDraftsService extends Service {
                         long longestLivingDraft = 0;
                         boolean onlyPagesFound = true;
                         for (Post post : draftPostsOlderThan3Days) {
-                            //update each post dateLastNotified field to now
+                            // update each post dateLastNotified field to now
                             if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
                                 if (post.getDateLastNotified() > longestLivingDraft) {
                                     longestLivingDraft = post.getDateLastNotified();
@@ -136,8 +136,8 @@ public class NotificationsPendingDraftsService extends Service {
                             }
                         }
 
-                        //if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
-                        //then show the notification again
+                        // if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
+                        // then show the notification again
                         if (longestLivingDraft > 0) {
                             buildPendingDraftsNotification(draftPostsOlderThan3Days.size(), onlyPagesFound);
                         }
