@@ -298,7 +298,7 @@ public class CommentsListFragment extends Fragment {
 
                 if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
                     FilterCriteria filter = mFilteredCommentsView.getCurrentFilter();
-                    if (filter == null || CommentStatusCriteria.ALL.equals(filter)) {
+                    if (filter == null || filter == CommentStatusCriteria.ALL) {
                         return getString(R.string.comments_empty_list);
                     } else {
                         switch (mCommentStatusFilter) {
@@ -399,11 +399,11 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void confirmDeleteComments() {
-        if (CommentStatus.TRASH.equals(mCommentStatusFilter)){
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    getActivity());
+        if (mCommentStatusFilter == CommentStatusCriteria.TRASH) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
-            int resId = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments : R.string.dlg_sure_to_delete_comment;
+            int resId = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments :
+                    R.string.dlg_sure_to_delete_comment;
             dialogBuilder.setMessage(getResources().getText(resId));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     new DialogInterface.OnClickListener() {
@@ -411,14 +411,10 @@ public class CommentsListFragment extends Fragment {
                             deleteSelectedComments(true);
                         }
                     });
-            dialogBuilder.setNegativeButton(
-                    getResources().getText(R.string.no),
-                    null);
+            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
-
         } else {
-
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(R.string.dlg_confirm_trash_comments);
             builder.setTitle(R.string.trash);
@@ -587,16 +583,14 @@ public class CommentsListFragment extends Fragment {
             boolean hasAnyNonSpam = hasSelection && selectedComments.hasAnyWithoutStatus(CommentStatus.SPAM);
             boolean hasTrash = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.TRASH);
 
-            setItemEnabled(menu, R.id.menu_approve,   hasUnapproved || hasSpam || hasTrash);
+            setItemEnabled(menu, R.id.menu_approve, hasUnapproved || hasSpam || hasTrash);
             setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
-            setItemEnabled(menu, R.id.menu_spam,      hasAnyNonSpam);
+            setItemEnabled(menu, R.id.menu_spam, hasAnyNonSpam);
             setItemEnabled(menu, R.id.menu_trash, hasSelection);
 
             final MenuItem trashItem = menu.findItem(R.id.menu_trash);
-            if (trashItem != null){
-                if (CommentStatus.TRASH.equals(mCommentStatusFilter)){
-                    trashItem.setTitle(R.string.mnu_comment_delete_permanently);
-                }
+            if (trashItem != null && mCommentStatusFilter == CommentStatusCriteria.TRASH) {
+                trashItem.setTitle(R.string.mnu_comment_delete_permanently);
             }
 
             return true;
