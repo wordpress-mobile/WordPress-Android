@@ -497,7 +497,7 @@ public class GCMMessageService extends GcmListenerService {
                 }
 
                 // if the comment is lacking approval, offer moderation actions
-                if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
+                if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
                     if (note.canModerate()) {
                         addCommentApproveActionForCommentNotification(context, builder, noteId);
                     }
