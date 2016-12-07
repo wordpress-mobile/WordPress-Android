@@ -29,7 +29,7 @@ public class NotificationsPendingDraftsService extends Service {
     //FIXME change this below line
     //private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 24 * 60 * 60 * 1000; //a full 24 hours day
     private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 60 * 1000; //a full 24 hours day
-    private static final long MAX_DAYS_TO_COUNT_DAYS = 30; //30 days
+    private static final long MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE = 30; //30 days
 
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
@@ -105,13 +105,13 @@ public class NotificationsPendingDraftsService extends Service {
                         boolean isPage = post.isPage();
 
                         //only notify the user if the last time they have been notified about this particular post was at least
-                        //30 minutes ago, but let's not do it constantly each time the app comes to the foreground
+                        //MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's not do it constantly each time the app comes to the foreground
                         if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
                             post.setDateLastNotified(now);
-                            if (daysInDraft < MAX_DAYS_TO_COUNT_DAYS) {
+                            if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
                                 buildSinglePendingDraftNotification(post.getTitle(), daysInDraft, postId, isPage);
                             } else {
-                                //if it's been more than MAX_DAYS_TO_COUNT_DAYS days, or if we don't know (i.e. value for lastUpdated
+                                //if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't know (i.e. value for lastUpdated
                                 //is zero) then just show a generic message
                                 buildSinglePendingDraftNotification(post.getTitle(), postId, isPage);
                             }
