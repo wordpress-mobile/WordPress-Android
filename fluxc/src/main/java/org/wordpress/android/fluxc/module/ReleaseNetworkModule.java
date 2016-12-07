@@ -7,25 +7,27 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 
-import org.wordpress.android.fluxc.network.MemorizingTrustManager;
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
-import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
+import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.OkHttpStack;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
-import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
+import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
+import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -207,6 +209,23 @@ public class ReleaseNetworkModule {
                                                        AccessToken token,
                                                        UserAgent userAgent, HTTPAuthManager httpAuthManager) {
         return new CommentXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+    }
+
+    @Singleton
+    @Provides
+    public TaxonomyRestClient provideTaxonomyRestClient(Context appContext, Dispatcher dispatcher,
+                                                        @Named("regular") RequestQueue requestQueue,
+                                                        AccessToken token, UserAgent userAgent) {
+        return new TaxonomyRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public TaxonomyXMLRPCClient provideTaxonomyXMLRPCClient(Dispatcher dispatcher,
+                                                            @Named("custom-ssl") RequestQueue requestQueue,
+                                                            AccessToken token,
+                                                            UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+        return new TaxonomyXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
     }
 
     @Singleton
