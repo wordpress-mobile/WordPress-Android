@@ -1,18 +1,9 @@
 package org.xmlrpc.android;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.webkit.URLUtil;
-
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
-import com.android.volley.RedirectError;
-import com.android.volley.TimeoutError;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -20,7 +11,6 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -35,11 +25,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import javax.net.ssl.SSLHandshakeException;
 
 public class ApiHelper {
 
@@ -84,7 +69,7 @@ public class ApiHelper {
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED, UNAUTHORIZED
     }
 
-    public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();
+    public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<>();
 
     static {
         blogOptionsXMLRPCParameters.put("software_version", "software_version");
@@ -300,245 +285,6 @@ public class ApiHelper {
                 }
             }
         }
-    }
-
-    public static class UploadMediaTask extends HelperAsyncTask<Void, Void, Map<?, ?>> {
-        public interface Callback extends GenericErrorCallback {
-            void onSuccess(String remoteId, String remoteUrl, String secondaryId);
-            void onProgressUpdate(float progress);
-        }
-        private Callback mCallback;
-        private Context mContext;
-        private MediaFile mMediaFile;
-        private SiteModel mSite;
-
-        public UploadMediaTask(Context applicationContext, SiteModel site, MediaFile mediaFile, Callback callback) {
-            mContext = applicationContext;
-            mSite = site;
-            mMediaFile = mediaFile;
-            mCallback = callback;
-        }
-
-        @Override
-        protected Map<?, ?> doInBackground(Void... params) {
-            final XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("name", mMediaFile.getFileName());
-            data.put("type", mMediaFile.getMimeType());
-            data.put("bits", mMediaFile);
-            data.put("overwrite", true);
-
-            Object[] apiParams = {
-                    String.valueOf(mSite.getSiteId()),
-                    StringUtils.notNullStr(mSite.getUsername()),
-                    StringUtils.notNullStr(mSite.getPassword()),
-                    data
-            };
-            final File tempFile = getTempFile(mContext);
-
-            if (client instanceof XMLRPCClient) {
-                ((XMLRPCClient) client).setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
-                    @Override
-                    public void onBytesUploaded(long uploadedBytes) {
-                        if (isCancelled()) {
-                            // Stop the upload if the task has been cancelled
-                            ((XMLRPCClient) client).cancel();
-                        }
-
-                        if (tempFile == null || tempFile.length() == 0) {
-                            return;
-                        }
-
-                        float fractionUploaded = uploadedBytes / (float) tempFile.length();
-                        mCallback.onProgressUpdate(fractionUploaded);
-                    }
-                });
-            }
-
-            if (mContext == null) {
-                return null;
-            }
-
-            Map<?, ?> resultMap;
-            try {
-                resultMap = (HashMap<?, ?>) client.call(Method.UPLOAD_FILE, apiParams, tempFile);
-            } catch (ClassCastException cce) {
-                setError(ErrorType.INVALID_RESULT, null, cce);
-                return null;
-            } catch (XMLRPCFault e) {
-                if (e.getFaultCode() == 401) {
-                    setError(ErrorType.NETWORK_XMLRPC,
-                            mContext.getString(R.string.media_error_no_permission_upload), e);
-                } else {
-                    // getFaultString() returns the error message from the server without the "[Code 403]" part.
-                    setError(ErrorType.NETWORK_XMLRPC, e.getFaultString(), e);
-                }
-                return null;
-            } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, null, e);
-                return null;
-            } catch (IOException e) {
-                setError(ErrorType.NETWORK_XMLRPC, null, e);
-                return null;
-            } catch (XmlPullParserException e) {
-                setError(ErrorType.NETWORK_XMLRPC, null, e);
-                return null;
-            }
-
-            if (resultMap != null && resultMap.containsKey("id")) {
-                return resultMap;
-            } else {
-                setError(ErrorType.INVALID_RESULT, null);
-            }
-
-            return null;
-        }
-
-        // Create a temp file for media upload
-        private File getTempFile(Context context) {
-            String tempFileName = "wp-" + System.currentTimeMillis();
-            try {
-                context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
-            } catch (FileNotFoundException e) {
-                return null;
-            }
-            return context.getFileStreamPath(tempFileName);
-        }
-
-        @Override
-        protected void onPostExecute(Map<?, ?> result) {
-            if (mCallback != null) {
-                if (result != null) {
-                    String remoteId = (String) result.get("id");
-                    String remoteUrl = (String) result.get("url");
-                    String videoPressId = (String) result.get("videopress_shortcode");
-                    mCallback.onSuccess(remoteId, remoteUrl, videoPressId);
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
-                }
-            }
-        }
-    }
-
-    public static class DeleteMediaTask extends HelperAsyncTask<List<?>, Void, Void> {
-        private GenericCallback mCallback;
-        private String mMediaId;
-        private SiteModel mSite;
-
-        public DeleteMediaTask(SiteModel site, String mediaId, GenericCallback callback) {
-            mMediaId = mediaId;
-            mCallback = callback;
-            mSite = site;
-        }
-
-        @Override
-        protected Void doInBackground(List<?>... params) {
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
-            Object[] apiParams = {
-                    String.valueOf(mSite.getSiteId()),
-                    StringUtils.notNullStr(mSite.getUsername()),
-                    StringUtils.notNullStr(mSite.getPassword()),
-                    mMediaId,
-            };
-            try {
-                if (client != null) {
-                    Boolean result = (Boolean) client.call(Method.DELETE_POST, apiParams);
-                    if (!result) {
-                        setError(ErrorType.INVALID_RESULT, "wp.deletePost returned false");
-                    }
-                }
-            } catch (ClassCastException cce) {
-                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            } catch (IOException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            } catch (XmlPullParserException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            if (mCallback != null) {
-                if (mErrorType == ErrorType.NO_ERROR) {
-                    mCallback.onSuccess();
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
-                }
-            }
-        }
-    }
-
-    /**
-     * Synchronous method to fetch the String content at the specified HTTP URL.
-     *
-     * @param stringUrl URL to fetch contents for.
-     * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
-     */
-    public static String getResponse(final String stringUrl) throws SSLHandshakeException, TimeoutError, TimeoutException {
-        return getResponse(stringUrl, 0);
-    }
-
-    private static String getRedirectURL(String oldURL, NetworkResponse networkResponse) {
-        if (networkResponse.headers != null && networkResponse.headers.containsKey("Location")) {
-            String newURL = networkResponse.headers.get("Location");
-            // Relative URL
-            if (newURL != null && newURL.startsWith("/")) {
-                Uri oldUri = Uri.parse(oldURL);
-                if (oldUri.getScheme() == null || oldUri.getAuthority() == null) {
-                    return null;
-                }
-                return oldUri.getScheme() + "://" + oldUri.getAuthority() + newURL;
-            }
-            // Absolute URL
-            return newURL;
-        }
-        return null;
-    }
-
-    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException, TimeoutError, TimeoutException {
-        RequestFuture<String> future = RequestFuture.newFuture();
-        StringRequest request = new StringRequest(stringUrl, future, future);
-        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, 0, 1));
-        WordPress.requestQueue.add(request);
-        try {
-            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            AppLog.e(T.API, e);
-        } catch (ExecutionException e) {
-            if (e.getCause() != null && e.getCause() instanceof RedirectError) {
-                // Maximum 5 redirects or die
-                if (numberOfRedirects > 5) {
-                    AppLog.e(T.API, "Maximum of 5 redirects reached, aborting.", e);
-                    return null;
-                }
-                // Follow redirect
-                RedirectError re = (RedirectError) e.getCause();
-                if (re.networkResponse != null) {
-                    String newURL = getRedirectURL(stringUrl, re.networkResponse);
-                    if (newURL == null) {
-                        AppLog.e(T.API, "Invalid server response", e);
-                        return null;
-                    }
-                    // Abort redirect if old URL was HTTPS and not the new one
-                    if (URLUtil.isHttpsUrl(stringUrl) && !URLUtil.isHttpsUrl(newURL)) {
-                        AppLog.e(T.API, "Redirect from HTTPS to HTTP not allowed.", e);
-                        return null;
-                    }
-                    // Retry getResponse
-                    AppLog.i(T.API, "Follow redirect from " + stringUrl + " to " + newURL);
-                    return getResponse(newURL, numberOfRedirects + 1);
-                }
-            } else if (e.getCause() != null && e.getCause() instanceof com.android.volley.TimeoutError) {
-                AppLog.e(T.API, e);
-                throw (com.android.volley.TimeoutError) e.getCause();
-            } else {
-                AppLog.e(T.API, e);
-            }
-        }
-        return null;
     }
 
     public static boolean editComment(SiteModel site, Comment comment, CommentStatus newStatus) {

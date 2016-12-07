@@ -3,6 +3,7 @@ package org.wordpress.android.ui.media.services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.WordPress;
@@ -67,34 +68,67 @@ public class MediaDeleteService extends Service {
     @SuppressWarnings("unused")
     @Subscribe
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        if (mDeleteInProgress != null) {
-            if (event.isError()) {
-                switch (event.error.type) {
-                    case UNAUTHORIZED:
-                        handleUnauthorizedError();
-                        break;
-                    case MEDIA_NOT_FOUND:
-                        handleMediaNotFoundError();
-                        break;
-                    default:
-                        handleUnknownError();
-                        break;
-                }
-            } else if (event.media != null && !event.media.isEmpty() && matchesInProgressMedia(event.media.get(0))) {
-                switch (event.cause) {
-                    case DELETE_MEDIA:
-                    case REMOVE_MEDIA:
-                        AppLog.v(T.MEDIA, "Successfully deleted " + mDeleteInProgress.getTitle());
-                        break;
-                    case UPDATE_MEDIA:
-                        AppLog.v(T.MEDIA, mDeleteInProgress.getTitle() + " marked as deleted.");
-                        break;
-                }
-                mDeleteInProgress = null;
+        if (mDeleteInProgress == null) {
+            deleteNextInQueue();
+            return;
+        }
+
+        // event for unknown media, ignoring
+        if (event.media == null || event.media.isEmpty() || !matchesInProgressMedia(event.media.get(0))) {
+            return;
+        }
+
+        if (event.isError()) {
+            if (!handleOnMediaChangedError(event)) {
+                return;
             }
+        } else {
+            switch (event.cause) {
+                case DELETE_MEDIA:
+                case REMOVE_MEDIA:
+                    AppLog.v(T.MEDIA, "Successfully deleted " + mDeleteInProgress.getTitle());
+                    break;
+                case UPDATE_MEDIA:
+                    AppLog.v(T.MEDIA, mDeleteInProgress.getTitle() + " marked as deleted.");
+                    break;
+            }
+            mDeleteInProgress = null;
         }
 
         deleteNextInQueue();
+    }
+
+    /**
+     * @return true to continue deleting from queue
+     */
+    private boolean handleOnMediaChangedError(MediaStore.OnMediaChanged event) {
+        switch (event.error.type) {
+            case UNAUTHORIZED:
+                // stop delete service until authorized to perform actions on site
+                AppLog.v(T.MEDIA, "Unauthorized site access. Stopping service.");
+                stopSelf();
+                mDeleteInProgress = null;
+                return false;
+            case NULL_MEDIA_ARG:
+                // shouldn't happen, get back to deleting the queue
+                mDeleteInProgress = null;
+                break;
+            case MEDIA_NOT_FOUND:
+                // remove media from local database
+                MediaListPayload removePayload = newPayload(MediaAction.REMOVE_MEDIA);
+                mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(removePayload));
+                break;
+            case PARSE_ERROR:
+                // TODO
+                break;
+            default:
+                // mark media as deleted to prevent continuous delete requests
+                mDeleteInProgress.setDeleted(true);
+                MediaListPayload updatePayload = newPayload(MediaAction.UPDATE_MEDIA);
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(updatePayload));
+                return false;
+        }
+        return true;
     }
 
     /**
@@ -113,44 +147,10 @@ public class MediaDeleteService extends Service {
             return;
         }
 
-        AppLog.v(T.MEDIA, "Deleting " + mDeleteInProgress.getTitle() + " (id=" + mDeleteInProgress.getMediaId() + ")");
-
         // dispatch delete action
-        MediaListPayload payload = new MediaListPayload(MediaAction.DELETE_MEDIA, mSite, mediaList(mDeleteInProgress));
+        AppLog.v(T.MEDIA, "Deleting " + mDeleteInProgress.getTitle() + " (id=" + mDeleteInProgress.getMediaId() + ")");
+        MediaListPayload payload = newPayload(MediaAction.DELETE_MEDIA);
         mDispatcher.dispatch(MediaActionBuilder.newDeleteMediaAction(payload));
-    }
-
-    /**
-     * Stop delete service until authorized to perform actions on site.
-     */
-    private void handleUnauthorizedError() {
-        AppLog.v(T.MEDIA, "Unauthorized site access. Stopping service.");
-        stopSelf();
-    }
-
-    /**
-     * Remove media from local database.
-     */
-    private void handleMediaNotFoundError() {
-        if (mDeleteInProgress == null) {
-            return;
-        }
-
-        MediaListPayload payload = new MediaListPayload(MediaAction.REMOVE_MEDIA, mSite, mediaList(mDeleteInProgress));
-        mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(payload));
-    }
-
-    /**
-     * Mark media as deleted to prevent continuous delete requests.
-     */
-    private void handleUnknownError() {
-        if (mDeleteInProgress == null) {
-            return;
-        }
-
-        mDeleteInProgress.setDeleted(true);
-        MediaListPayload payload = new MediaListPayload(MediaAction.UPDATE_MEDIA, mSite, mediaList(mDeleteInProgress));
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(payload));
     }
 
     /**
@@ -165,12 +165,9 @@ public class MediaDeleteService extends Service {
                media.getMediaId() == mDeleteInProgress.getMediaId();
     }
 
-    /**
-     * Creates a list for single media item.
-     */
-    private ArrayList<MediaModel> mediaList(final MediaModel media) {
+    private MediaListPayload newPayload(@NonNull MediaAction action) {
         ArrayList<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(media);
-        return mediaList;
+        mediaList.add(mDeleteInProgress);
+        return new MediaListPayload(action, mSite, mediaList);
     }
 }
