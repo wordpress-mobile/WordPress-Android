@@ -3,6 +3,9 @@ package org.wordpress.android.fluxc.store;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.yarolegovich.wellsql.SelectQuery;
+import com.yarolegovich.wellsql.SelectQuery.Order;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -188,8 +191,19 @@ public class CommentStore extends Store {
 
     // Getters
 
-    public List<CommentModel> getCommentsForSite(SiteModel site, CommentStatus... statuses) {
-        return CommentSqlUtils.getCommentsForSite(site, statuses);
+    /**
+     * Get a list of comment for a specific site.
+     *
+     * @param site Site model to get comment for.
+     * @param orderByDateAscending If true order the results by ascending published date.
+     *                             If false, order the results by descending published date.
+     * @param statuses Array of status or CommentStatus.ALL to get all of them.
+     * @return
+     */
+    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending,
+                                                 CommentStatus... statuses) {
+        @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;
+        return CommentSqlUtils.getCommentsForSite(site, order, statuses);
     }
 
     public int getNumberOfCommentsForSite(SiteModel site, CommentStatus... statuses) {
