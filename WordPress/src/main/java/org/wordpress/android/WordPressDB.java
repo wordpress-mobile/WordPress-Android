@@ -34,6 +34,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ShortcodeUtils;
@@ -849,7 +850,7 @@ public class WordPressDB {
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden",
-                             "plan_product_id", "plan_product_name_short", "capabilities"};
+                             "plan_product_id", "plan_product_name_short", "capabilities", "last_picked_timestamp"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -908,10 +909,22 @@ public class WordPressDB {
                 blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
                 blog.setPlanShortName(c.getString(c.getColumnIndex("plan_product_name_short")));
                 blog.setCapabilities(c.getString(c.getColumnIndex("capabilities")));
+                blog.setLastPickedTimestamp(c.getLong(c.getColumnIndex("last_picked_timestamp")));
             }
         }
         c.close();
         return blog;
+    }
+
+    /*
+     * sets the "last picked" timestamp for the passed blog to now
+     */
+    public void updateLastPickedTimestampForLocalBlogId(int localBlogId) {
+        long timestamp = DateTimeUtils.nowUTC().getTime();
+        ContentValues values = new ContentValues();
+        values.put("last_picked_timestamp", timestamp);
+        String[] args = {Integer.toString(localBlogId)};
+        db.update(BLOGS_TABLE, values, "id=?", args);
     }
 
     /*

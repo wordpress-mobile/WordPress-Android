@@ -50,6 +50,7 @@ public class Blog {
     private boolean isHidden;
     private long planID;
     private String planShortName;
+    private long lastPickedTimestamp;
 
     public Blog() {
     }
@@ -572,5 +573,13 @@ public class Blog {
             AppLog.e(T.PEOPLE, "Capabilities is not a valid json: " + capabilities);
             return false;
         }
+    }
+
+    public void setLastPickedTimestamp(long timestamp) {
+        this.lastPickedTimestamp = timestamp;
+    }
+
+    public long getLastPickedTimestamp() {
+        return lastPickedTimestamp;
     }
 }

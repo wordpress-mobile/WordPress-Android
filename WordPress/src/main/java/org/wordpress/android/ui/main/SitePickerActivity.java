@@ -348,6 +348,7 @@ public class SitePickerActivity extends AppCompatActivity
             hideSoftKeyboard();
             WordPress.setCurrentBlogAndSetVisible(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
+            WordPress.wpDB.updateLastPickedTimestampForLocalBlogId(site.localId);
             setResult(RESULT_OK);
             mDidUserSelectSite = true;
             new ApiHelper.RefreshBlogContentTask(WordPress.getCurrentBlog(), null).executeOnExecutor(
