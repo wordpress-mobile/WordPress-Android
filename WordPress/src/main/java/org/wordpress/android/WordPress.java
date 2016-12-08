@@ -106,7 +106,7 @@ public class WordPress extends MultiDexApplication {
     private static RestClientUtils mRestClientUtilsVersion0;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
-    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
+    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 15 * 60;
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;

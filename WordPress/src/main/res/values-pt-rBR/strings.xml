@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-05 19:16:56+0000
+Translation-Revision-Date: 2016-11-16 19:58:37+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.3.0-alpha
 Language: pt_BR
 -->
 <resources>
+	<string name="reader_label_global_related_posts">Mais em WordPress.com</string>
+	<string name="reader_label_local_related_posts">Mais em %s</string>
+	<string name="preference_open_device_settings">Abrir configurações do dispositivo</string>
+	<string name="comment_moderated_unapproved">Comentário desaprovado</string>
 	<string name="invite_invalid_email">%s: E-mail inválido</string>
 	<string name="invite_user_blocked_invites">%s: Convites de usuários bloqueados </string>
 	<string name="invite_already_following">%s: Já esta seguindo</string>
@@ -93,7 +97,6 @@ Language: pt_BR
 	<string name="invite_people">Convidar pessoas</string>
 	<string name="my_site_header_external">Externo</string>
 	<string name="send_link">Enviar link</string>
-	<string name="signup_succeed_signin_failed">A sua conta foi criada, mas ocorreu um erro ao autenticar você. Tente entrar novamente com o seu novo nome de usuário e senha.</string>
 	<string name="label_clear_search_history">Limpar histórico de pesquisa</string>
 	<string name="dlg_confirm_clear_search_history">Limpar histórico de pesquisa?</string>
 	<string name="reader_empty_posts_in_search_description">Nenhum post na sua língua foi encontrado para %s</string>
@@ -128,7 +131,6 @@ Language: pt_BR
 	<string name="check_your_email">Verifique seu e-mail</string>
 	<string name="magic_link_unavailable_error_message">Atualmente indisponível. Digite sua senha</string>
 	<string name="logging_in">Fazendo login</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Enviar um link para o seu e-mail para fazer login instantaneamente</string>
 	<string name="enter_your_password_instead">Digite sua senha ao invés disso</string>
 	<string name="web_address_dialog_hint">Exibido ao público quando você comentar.</string>
 	<string name="username_email">E-mail ou nome de usuário</string>
@@ -299,7 +301,6 @@ Language: pt_BR
 	<string name="error_post_remote_site_settings">Não foi possível salvar as informações do site</string>
 	<string name="error_fetch_remote_site_settings">Não foi possível recuperar as informações do site</string>
 	<string name="error_media_upload_connection">Ocorreu um erro de conexão durante o envio de mídia</string>
-	<string name="site_settings_disconnected_toast">Sem conexão, edição desabilitada.</string>
 	<string name="site_settings_unsupported_version_error">Versão do WordPress não suportada</string>
 	<string name="site_settings_multiple_links_dialog_description">Exigir aprovação para comentários que incluem mais do que este número de links.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Fechar automaticamente</string>
@@ -366,7 +367,6 @@ Language: pt_BR
 	<string name="site_settings_paging_title">Paginação</string>
 	<string name="site_settings_threading_title">Threading</string>
 	<string name="site_settings_sort_by_title">Ordenar por</string>
-	<string name="site_settings_account_required_title">Os usuários devem estar conectados</string>
 	<string name="site_settings_identity_required_title">É necessário incluir nome e e-mail</string>
 	<string name="site_settings_receive_pingbacks_title">Receber pingbacks</string>
 	<string name="site_settings_send_pingbacks_title">Enviar pingbacks</string>
@@ -530,7 +530,6 @@ Language: pt_BR
 	<string name="tabbar_accessibility_label_my_site">Meu site</string>
 	<string name="editor_toast_changes_saved">Modificações salvas</string>
 	<string name="passcodelock_prompt_message">Digite seu PIN</string>
-	<string name="push_auth_expired">A solicitação expirou. Faça login no WordPress.com para tentar novamente.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% de visualizações</string>
 	<string name="ignore">Ignorar</string>
 	<string name="stats_insights_best_ever">Melhores visualizações</string>
@@ -540,11 +539,8 @@ Language: pt_BR
 	<string name="stats_insights_popular">Dia e horário com maior número de visitantes</string>
 	<string name="stats_insights_all_time">Todos os posts, visualizações e visitantes</string>
 	<string name="stats_insights">Informações</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Para visualizar suas estatísticas, faça login na conta do WordPress.com que você usou para se conectar ao Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Buscando suas outras estatísticas recentes? Nós as movemos para a página Informações.</string>
-	<string name="me_disconnect_from_wordpress_com">Desconectar do WordPress.com</string>
 	<string name="me_btn_login_logout">Entrar/Sair</string>
-	<string name="me_connect_to_wordpress_com">Conectar ao WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" não está escondido porque é o site atual</string>
 	<string name="me_btn_support">Ajuda e Suporte</string>
 	<string name="account_settings">Configurações da conta</string>
@@ -562,11 +558,8 @@ Language: pt_BR
 	<string name="my_site_btn_blog_posts">Posts do blog</string>
 	<string name="reader_label_new_posts_subtitle">Toque para mostrar</string>
 	<string name="my_site_header_configuration">Configuração</string>
-	<string name="notifications_account_required">Fazer login no WordPress.com para notificações</string>
 	<string name="stats_unknown_author">Autor desconhecido</string>
-	<string name="signout">Desconectar</string>
 	<string name="image_added">Imagem adicionada</string>
-	<string name="sign_out_wpcom_confirm">Ao desconectar sua conta, os dados do @%s WordPress.com neste dispositivo serão removidos, incluindo rascunhos e alterações locais.</string>
 	<string name="select_all">Selecionar todos</string>
 	<string name="hide">Esconder</string>
 	<string name="show">Mostrar</string>
@@ -587,8 +580,6 @@ Language: pt_BR
 	<string name="no_media">Sem mídia</string>
 	<string name="loading_images">Carregando imagens</string>
 	<string name="loading_videos">Carregando vídeos</string>
-	<string name="auth_required">Faça login novamente para continuar.</string>
-	<string name="sign_in_jetpack">Faça login no WordPress.com para se conectar ao Jetpack.</string>
 	<string name="two_step_sms_sent">Verifique suas mensagens de texto para o código de verificação.</string>
 	<string name="two_step_footer_button">Enviar o código por mensagem de texto</string>
 	<string name="two_step_footer_label">Insira o código do seu aplicativo de autenticação</string>
@@ -704,7 +695,6 @@ Language: pt_BR
 	<string name="delete_sure_page">Excluir esta página</string>
 	<string name="delete_sure">Excluir este rascunho</string>
 	<string name="delete_sure_post">Excluir este post</string>
-	<string name="signing_out">Saindo…</string>
 	<string name="posting_post">Publicando "%s"</string>
 	<string name="media_empty_list_custom_date">Nenhuma mídia no intervalo de tempo especificado</string>
 	<string name="pages_empty_list">Nenhuma página. Por que não criar uma?</string>
@@ -977,16 +967,13 @@ Language: pt_BR
 	<string name="reader_empty_followed_blogs_description">Não se preocupe! Toque no ícone na parte superior direita para começar a explorar!</string>
 	<string name="reader_likes_you_and_one">Você e mais um gostaram disso</string>
 	<string name="select_time">Selecione o tempo</string>
-	<string name="nux_oops_not_selfhosted_blog">Entrar no WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Adicionar site hospedado</string>
-	<string name="signing_in">Entrando...</string>
 	<string name="nux_welcome_create_account">Criar conta</string>
 	<string name="nux_tap_continue">Continuar</string>
 	<string name="password_invalid">Você precisa de uma senha mais segura. Use mais de 7 caracteres, misture letras maiúsculas com minúsculas, números ou caracteres especiais.</string>
 	<string name="nux_tutorial_get_started_title">Iniciar Tutorial</string>
 	<string name="limit_reached">Limite atingido. Você pode tentar novamente em 1 minuto. Tentando novamente antes só vai aumentar o tempo de espera antes do impedimento ser levantado. Se você acha que isso é um erro, contate o suporte.</string>
 	<string name="username_invalid">Nome de usuário inválido</string>
-	<string name="connecting_wpcom">Conectando ao WordPress.com</string>
 	<string name="button_next">Próximo </string>
 	<string name="create_account_wpcom">Crie uma conta no WordPress.com</string>
 	<string name="reader_empty_followed_tags">Você não segue nenhuma tag</string>
@@ -1077,7 +1064,6 @@ Language: pt_BR
 	<string name="follows">Segue</string>
 	<string name="note_reply_successful">Resposta publicada</string>
 	<string name="notifications">Notificações</string>
-	<string name="sign_in">Entrar</string>
 	<string name="loading">Carregando...</string>
 	<string name="httppassword">Senha HTTP</string>
 	<string name="httpuser">Usuário HTTP</string>

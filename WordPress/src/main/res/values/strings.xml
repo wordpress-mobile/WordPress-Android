@@ -85,6 +85,7 @@
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
     <string name="send">Send</string>
+    <string name="swipe_for_more">Swipe for more</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -174,6 +175,7 @@
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
+    <string name="confirm_discard_changes">Discard unsaved changes?</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Delete selected item?</string>
@@ -861,7 +863,6 @@
     <string name="follows">Follows</string>
     <string name="notifications_label_new_notifications">New notifications</string>
     <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
-    <string name="notifications_label_swipe_for_more_snackbar">Swipe for more notifications</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
@@ -1025,6 +1026,7 @@
     <string name="blogusername">blogusername</string>
     <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
     <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
+    <string name="wordpress_dot_com_capitalized" translatable="false">WordPress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -1171,6 +1173,8 @@
     <string name="reader_label_view_gallery">View Gallery</string>
     <string name="reader_label_image_count_one">1 image</string>
     <string name="reader_label_image_count_multi">%d images</string>
+    <string name="reader_label_visit">Visit</string>
+    <string name="reader_photo_by">Photo by %s</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>

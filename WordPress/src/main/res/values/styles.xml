@@ -190,6 +190,13 @@
         <item name="android:clickable">true</item>
     </style>
 
+    <style name="WordPress.NUXFlatButtonNoBg">
+        <item name="android:textColor">@color/grey_lighten_10</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:padding">@dimen/margin_large</item>
+        <item name="android:clickable">true</item>
+    </style>
+
     <style name="WordPress.NUXGreyButtonNoBg">
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">14sp</item>

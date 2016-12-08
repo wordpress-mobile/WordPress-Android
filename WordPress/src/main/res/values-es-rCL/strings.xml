@@ -113,7 +113,6 @@ Language: es_CL
 	<string name="tabbar_accessibility_label_me">Yo</string>
 	<string name="passcodelock_prompt_message">Escribe tu PIN</string>
 	<string name="editor_toast_changes_saved">Cambios guardados</string>
-	<string name="push_auth_expired">La solicitud ha expirado. Inicia sesión en WordPress.com para volver a intentarlo.</string>
 	<string name="ignore">Ignorar</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% de vistas</string>
 	<string name="stats_insights_best_ever">Mejores Visualizaciones</string>
@@ -123,11 +122,8 @@ Language: es_CL
 	<string name="stats_insights_today">Estadísticas de hoy</string>
 	<string name="stats_insights_all_time">Entradas, vistas y visitantes de todos los tiempos</string>
 	<string name="stats_insights">Detalles</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Para ver tus estadísticas, inicia sesión con la cuenta de WordPress.com que has usado para efectuar la conexión con Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">¿Buscas tus otras estadísticas recientes? Las hemos trasladado a la página "Detalles".</string>
-	<string name="me_disconnect_from_wordpress_com">Desconectar de WordPress.com</string>
 	<string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
-	<string name="me_connect_to_wordpress_com">Conectar a WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" no se ocultó porque es el sitio actual</string>
 	<string name="me_btn_support">Ayuda y Soporte</string>
 	<string name="account_settings">Preferencias de la Cuenta</string>
@@ -145,15 +141,12 @@ Language: es_CL
 	<string name="my_site_header_publish">Publicar</string>
 	<string name="my_site_header_configuration">Configuración</string>
 	<string name="reader_label_new_posts_subtitle">Toca para mostrarlos</string>
-	<string name="notifications_account_required">Inicia sesión en WordPress.com para recibir notificaciones</string>
 	<string name="stats_unknown_author">Autor Desconocido</string>
 	<string name="image_added">Imagen añadida</string>
-	<string name="signout">Desconectar</string>
 	<string name="deselect_all">Anular todas las selecciones</string>
 	<string name="show">Mostrar</string>
 	<string name="hide">Ocultar</string>
 	<string name="select_all">Seleccionar todo</string>
-	<string name="sign_out_wpcom_confirm">Si desconectas tu cuenta, se eliminarán de este dispositivo todos los datos de WordPress.com de @%s, incluidos los borradores y los cambios locales.</string>
 	<string name="select_from_new_picker">Selección múltiple con el nuevo selector</string>
 	<string name="stats_generic_error">No se pudieron cargar las estadísticas solicitadas.</string>
 	<string name="no_device_videos">No hay vídeos</string>
@@ -185,8 +178,6 @@ Language: es_CL
 	<string name="two_step_footer_label">Introduce el código de tu app de autentificación.</string>
 	<string name="two_step_footer_button">Enviar código vía mensaje de texto</string>
 	<string name="two_step_sms_sent">Revisa tus mensajes de texto para el código de verificación.</string>
-	<string name="sign_in_jetpack">Inicia sesión en tu cuenta de WordPress.com para conectarte con Jetpack.</string>
-	<string name="auth_required">Inicia sesión de nuevo para continuar.</string>
 	<string name="add_to_post">Añadir a la Entrada</string>
 	<string name="tab_title_device_images">Imágenes del Dispositivo</string>
 	<string name="tab_title_device_videos">Vídeos del Dispositivo</string>
@@ -322,7 +313,6 @@ Language: es_CL
 	<string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
 	<string name="media_empty_list_custom_date">Sin multimedia durante este intervalo de tiempo.</string>
 	<string name="posting_post">Publicando "%s"</string>
-	<string name="signing_out">Cerrando sesión…</string>
 	<string name="browse_our_faq_button">Revisa nuestras Preguntas Más Frecuentes.</string>
 	<string name="reader_toast_err_generic">No es posible realizar esta acción</string>
 	<string name="reader_toast_err_block_blog">No es posible bloquear este blog</string>
@@ -558,8 +548,6 @@ Language: es_CL
 	<string name="reader_likes_you_and_one">A ti y a otra persona les gusta esto.</string>
 	<string name="nux_tap_continue">Continuar</string>
 	<string name="nux_welcome_create_account">Crear cuenta</string>
-	<string name="signing_in">Iniciando sesión...</string>
-	<string name="nux_oops_not_selfhosted_blog">Regístrate en WordPress.com</string>
 	<string name="password_invalid">Necesitas una contraseña más segura. Asegúrate de utilizar 7 ó más caracteres, mezclar letras mayúsculas y minúsculas, número y caracteres especiales.</string>
 	<string name="nux_add_selfhosted_blog">Añade un sitio auto hospedado</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
@@ -580,7 +568,6 @@ Language: es_CL
 	<string name="reader_toast_err_tag_exists">Ya estás siguiendo esta etiqueta</string>
 	<string name="reader_empty_followed_tags">No sigues ninguna etiqueta</string>
 	<string name="create_account_wpcom">Crear una cuenta de WordPress.com</string>
-	<string name="connecting_wpcom">Conectando a WordPress.com</string>
 	<string name="username_invalid">Nombre de usuario no válido</string>
 	<string name="limit_reached">Límite alcanzado. Puedes probar en 1 minuto. Probar de nuevo antes solamente incrementará el tiempo de espera hasta que la prohibición sea suprimida. Si crees que es un error, contacta con soporte. </string>
 	<string name="reader_hint_comment_on_comment">Contestar al comentario...</string>
@@ -649,7 +636,6 @@ Language: es_CL
 	<string name="stats_view_visitors_and_views">Visitantes y Visualizaciones</string>
 	<string name="passcode_enter_old_passcode">Introduce tu PIN anterior</string>
 	<string name="upload">Subir</string>
-	<string name="sign_in">Acceder</string>
 	<string name="notifications">Notificaciones</string>
 	<string name="note_reply_successful">Respuesta publicada</string>
 	<string name="new_notifications">%d nuevas notificaciones</string>

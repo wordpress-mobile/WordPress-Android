@@ -79,10 +79,9 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         final ReaderImageList imageList;
         if (TextUtils.isEmpty(mContent)) {
             imageList = new ReaderImageList(mIsPrivate);
-        } else if (mIsGallery) {
-            imageList = new ReaderImageScanner(mContent, mIsPrivate).getGalleryImageList();
         } else {
-            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList();
+            int minImageWidth = mIsGallery ? ReaderConstants.MIN_GALLERY_IMAGE_WIDTH : 0;
+            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(0, minImageWidth);
         }
 
         // make sure initial image is in the list

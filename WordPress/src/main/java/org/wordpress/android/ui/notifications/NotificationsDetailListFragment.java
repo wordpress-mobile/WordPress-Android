@@ -3,7 +3,6 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.app.Activity;
 import android.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -63,7 +62,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private String mRestoredNoteId;
     private int mBackgroundColor;
     private int mCommentListPosition = ListView.INVALID_POSITION;
-    private boolean mIsUnread;
 
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
     private OnNoteChangeListener mOnNoteChangeListener;
@@ -74,7 +72,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     public static NotificationsDetailListFragment newInstance(final String noteId) {
         NotificationsDetailListFragment fragment = new NotificationsDetailListFragment();
-        fragment.setNoteWithNoteId(noteId);
+        fragment.setNote(noteId);
         return fragment;
     }
 
@@ -122,7 +120,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
         // Set the note if we retrieved the noteId from savedInstanceState
         if (!TextUtils.isEmpty(mRestoredNoteId)) {
-            setNoteWithNoteId(mRestoredNoteId);
+            setNote(mRestoredNoteId);
             reloadNoteBlocks();
             mRestoredNoteId = null;
         }
@@ -146,16 +144,18 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     }
 
     @Override
-    public void setNote(Note note) {
-        mNote = note;
-    }
-
-    private void setNoteWithNoteId(String noteId) {
-        Note note = NotificationsTable.getNoteById(noteId);
-        if (note != null) {
-            mIsUnread = note.isUnread();
-            setNote(note);
+    public void setNote(String noteId) {
+        if (noteId == null) {
+            showErrorToastAndFinish();
+            return;
         }
+
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+        mNote = note;
     }
 
     private void showErrorToastAndFinish() {

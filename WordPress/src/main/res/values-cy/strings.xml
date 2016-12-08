@@ -97,7 +97,6 @@ Language: cy_GB
 	<string name="invite_people">Gwahodd Pobl</string>
 	<string name="my_site_header_external">Allanol</string>
 	<string name="send_link">Anfon dolen</string>
-	<string name="signup_succeed_signin_failed">Mae eich cyfrif wedi ei greu ond bu gwall wrth i ni eich mewngofnodi\n      Ceisiwch fewngofnodi gyda\'ch enw defnyddiwr a chyfrinair newydd.</string>
 	<string name="label_clear_search_history">Clirio hanes chwilio</string>
 	<string name="dlg_confirm_clear_search_history">Clirio hanes chwilio?</string>
 	<string name="reader_empty_posts_in_search_description">Dim cofnodion gan %s yn eich iaith</string>
@@ -132,7 +131,6 @@ Language: cy_GB
 	<string name="check_your_email">Gwiriwch eich e-bost</string>
 	<string name="magic_link_unavailable_error_message">Ddim ar gael ar hyn o bryd. Rhowch eich cyfrinair</string>
 	<string name="logging_in">Mewngofnodi</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Derbyn dolen wedi ei anfon at eich e-bost er mwyn mewngofnodi\'n syth</string>
 	<string name="enter_your_password_instead">Rhowch eich cyfrinair yn hytrach</string>
 	<string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
 	<string name="username_email">E-bost neu enw defnyddiwr</string>
@@ -303,7 +301,6 @@ Language: cy_GB
 	<string name="error_post_remote_site_settings">Methu cadw manylion y wefan</string>
 	<string name="error_fetch_remote_site_settings">Methu estyn manylion y wefan</string>
 	<string name="error_media_upload_connection">Digwyddodd gwall cysylltu wrth lwytho\'r cyfrwng</string>
-	<string name="site_settings_disconnected_toast">Datgysylltwyd, analluogwyd y golygu.</string>
 	<string name="site_settings_unsupported_version_error">Fersiwn o WordPress sydd heb ei gynnal</string>
 	<string name="site_settings_multiple_links_dialog_description">Bydd angen cymeradwyaeth ar gyfer sylwadau sy\'n cynnwys mwy na\'r nifer yma o ddolenni.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Cau\'n awtomatig</string>
@@ -370,7 +367,6 @@ Language: cy_GB
 	<string name="site_settings_paging_title">Tudalennu</string>
 	<string name="site_settings_threading_title">Edafu</string>
 	<string name="site_settings_sort_by_title">Trefnu yn ôl</string>
-	<string name="site_settings_account_required_title">Rhaid llofnodi defnyddwyr</string>
 	<string name="site_settings_identity_required_title">Rhaid cynnwys enw ac e-bost</string>
 	<string name="site_settings_receive_pingbacks_title">Derbyn Hysbysiad Cyfeirio</string>
 	<string name="site_settings_send_pingbacks_title">Anfon Hysbysiadau Cyfeirio</string>
@@ -534,7 +530,6 @@ Language: cy_GB
 	<string name="tabbar_accessibility_label_my_site">Fy Ngwefan</string>
 	<string name="editor_toast_changes_saved">Mae\'r newidiadau wedi eu cadw</string>
 	<string name="passcodelock_prompt_message">Rhowch eich PIN</string>
-	<string name="push_auth_expired">Daeth y cais i ben. Mewngofnodwch i WordPress.com a cheisio eto.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% golwg</string>
 	<string name="ignore">Anwybyddu</string>
 	<string name="stats_insights_best_ever">Golygon Gorau Erioed</string>
@@ -544,11 +539,8 @@ Language: cy_GB
 	<string name="stats_insights_popular">Diwrnod ac awr mwyaf poblogaidd</string>
 	<string name="stats_insights_all_time">Cofnodion, golygon ac ymwelwyr erioed</string>
 	<string name="stats_insights">Mewnwelediadau</string>
-	<string name="stats_sign_in_jetpack_different_com_account">I weld eich ystadegau, mewngofnodwch i\'r cyfrif WordPress.com rydych wedi ei ddefnyddio i gysylltu Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Chwilio am eich Ystadegau Diweddar Eraill? Mae nhw wedi eu symud i\'r dudalen Mewnwelediad.</string>
-	<string name="me_disconnect_from_wordpress_com">Datgysylltwch o WordPress.com</string>
 	<string name="me_btn_login_logout">Mewngofnodi/Allgofnodi</string>
-	<string name="me_connect_to_wordpress_com">Cysylltwch i WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">Nid oedd "%s" wedi ei guddio gan taw hi yw\'r wefan gyfredol</string>
 	<string name="me_btn_support">Cymorth a Chefnogaeth</string>
 	<string name="account_settings">Gosodiadau\'r Cyfrif</string>
@@ -566,11 +558,8 @@ Language: cy_GB
 	<string name="my_site_btn_blog_posts">Cofnodion Blog</string>
 	<string name="reader_label_new_posts_subtitle">Tapio i\'w dangos</string>
 	<string name="my_site_header_configuration">Ffurfweddiad</string>
-	<string name="notifications_account_required">Mewngofnodi i WordPress.com am hysbysiadau</string>
 	<string name="stats_unknown_author">Awdur Anhysbys</string>
-	<string name="signout">Datgysylltu</string>
 	<string name="image_added">Ychwanegwyd delwedd</string>
-	<string name="sign_out_wpcom_confirm">Bydd datgysylltu eich cyfrif yn tynnu holl fanylion WordPress.com @%s o\'r ddyfais hon, gan gynnwys drafftiau a newidiadau lleol.</string>
 	<string name="select_all">Dewis y cyfan</string>
 	<string name="hide">Cuddio</string>
 	<string name="show">Dangos</string>
@@ -591,8 +580,6 @@ Language: cy_GB
 	<string name="no_media">Dim cyfrwng</string>
 	<string name="loading_images">Llwytho delweddau</string>
 	<string name="loading_videos">Llwytho fideos</string>
-	<string name="auth_required">Mewngofnodwch eto i barhau.</string>
-	<string name="sign_in_jetpack">Mewngofnodwch i\'ch cyfrif WordPress.com i gysylltu â Jetpack.</string>
 	<string name="two_step_sms_sent">Gwiriwch eich neges testun am god dilysu.</string>
 	<string name="two_step_footer_button">Anfonwch god drwy neges testun</string>
 	<string name="two_step_footer_label">Rhowch y cod o\'ch ap dilysu.</string>
@@ -708,7 +695,6 @@ Language: cy_GB
 	<string name="delete_sure_page">Dileu\'r dudalen</string>
 	<string name="delete_sure">Dileu\'r drafft</string>
 	<string name="delete_sure_post">Dileu\'r cofnod</string>
-	<string name="signing_out">Allgofnodi…</string>
 	<string name="posting_post">Cofnodi "%s"</string>
 	<string name="media_empty_list_custom_date">Dim cyfrwng yn y cyfnod hwn</string>
 	<string name="pages_empty_list">Dim tudalen eto. Beth am greu un?</string>
@@ -981,16 +967,13 @@ Language: cy_GB
 	<string name="reader_empty_followed_blogs_description">Ond peidiwch â phoeni, tapiwch yr eicon tag ar y brig de i ddechrau darganfod!</string>
 	<string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>
 	<string name="select_time">Dewis amser</string>
-	<string name="nux_oops_not_selfhosted_blog">Mewngofnodi i WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Ychwanegu gwefan hunan-letya</string>
-	<string name="signing_in">Mewngofnodi…</string>
 	<string name="nux_welcome_create_account">Creu cyfrif</string>
 	<string name="nux_tap_continue">Parhau</string>
 	<string name="password_invalid">Mae angen cyfrinair mwy diogel arnoch chi. Gwnewch yn siŵr eich bod yn defnyddio 7 nod neu fwy, cymysgedd o briflythyren a llythrennau bach, rhifau neu nodau arbennig.</string>
 	<string name="nux_tutorial_get_started_title">Cychwyn arni!</string>
 	<string name="limit_reached">Wedi cyrraedd y terfyn. Gallwch geisio eto mewn 1 munud. Bydd ceisio eto cyn yn cynyddu amser fydd gennych cyn codi\'r gwaharddiad. Os ydych chi\'n credu bod hwn yn gamgymeriad, cysylltwch â Cymorth.</string>
 	<string name="username_invalid">Enw defnyddiwr annilys</string>
-	<string name="connecting_wpcom">Cysylltu â WordPress.com</string>
 	<string name="button_next">Nesaf</string>
 	<string name="create_account_wpcom">Creu cyfrif ar WordPress.com</string>
 	<string name="reader_empty_followed_tags">Nid ydych yn dlyn unrhyw dagiau</string>
@@ -1081,7 +1064,6 @@ Language: cy_GB
 	<string name="follows">Yn Dilyn</string>
 	<string name="note_reply_successful">Ateb wedi ei gyhoeddi</string>
 	<string name="notifications">Hysbysiadau</string>
-	<string name="sign_in">Mewngofnodi</string>
 	<string name="loading">Llwytho…</string>
 	<string name="httppassword">Cyfrinair HTTP</string>
 	<string name="httpuser">Enw defnyddiwr HTTP</string>

@@ -813,7 +813,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             public void onClick(DialogInterface dialog, int which) {
                 AnalyticsUtils.trackWithCurrentBlogDetails(
                         AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED);
-                WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), WORDPRESS_PURCHASES_URL, AccountHelper.getCurrentUsernameForBlog(currentBlog));
+                WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), WORDPRESS_PURCHASES_URL);
             }
         });
         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

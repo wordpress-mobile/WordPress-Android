@@ -98,7 +98,7 @@ public class PostsListFragment extends Fragment
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
+        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
@@ -225,6 +225,10 @@ public class PostsListFragment extends Fragment
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
+        }
+
+        if (getPostListAdapter().getItemCount() == 0) {
+            updateEmptyView(EmptyViewMessageType.LOADING);
         }
 
         mIsFetchingPosts = true;

@@ -81,7 +81,6 @@ Language: ar
 	<string name="invite_people">دعوة أشخاص</string>
 	<string name="my_site_header_external">خارجي</string>
 	<string name="send_link">إرسال رابط</string>
-	<string name="signup_succeed_signin_failed">لقد تم إنشاء الحساب الخاص بك ولكن خطأ ما قد حدث أثناء قيامنا بتسجيل دخولك \n.\n        حاول تسجيل الدخول باستخدام اسم المستخدم وكلمة المرور التي تم إنشائهم حديثًا.</string>
 	<string name="label_clear_search_history">مسح محفوظات البحث</string>
 	<string name="dlg_confirm_clear_search_history">مسح محفوظات البحث؟</string>
 	<string name="reader_empty_posts_in_search_description">لم يتم العثور على مقالات عن %s للغة الخاصة بك</string>
@@ -116,7 +115,6 @@ Language: ar
 	<string name="check_your_email">تحقق من بريدك الإلكتروني</string>
 	<string name="magic_link_unavailable_error_message">غير متاح حاليًا. يُرجى إدخال كلمة مرورك</string>
 	<string name="logging_in">تسجيل الدخول</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">احصل على الرابط المرسل إلى بريدك الإلكتروني لتتمكن من تسجيل الدخول في الحال</string>
 	<string name="enter_your_password_instead">أدخل كلمة مرورك بدلاً من ذلك</string>
 	<string name="web_address_dialog_hint">تظهر للعامة أثناء تعليقك.</string>
 	<string name="username_email">البريد الإلكتروني أو اسم المستخدم</string>
@@ -286,7 +284,6 @@ Language: ar
 	<string name="error_post_remote_site_settings">تعذر حفظ معلومات الموقع</string>
 	<string name="error_fetch_remote_site_settings">تعذر استرداد معلومات الموقع</string>
 	<string name="error_media_upload_connection">حدث خطأ في الاتصال أثناء رفع ملفات الوسائط</string>
-	<string name="site_settings_disconnected_toast">غير متصل، التحرير مُعطّل.</string>
 	<string name="site_settings_unsupported_version_error">إصدار وردبرس غير مدعوم</string>
 	<string name="site_settings_multiple_links_dialog_description">يلزم موافقة على التعليقات التي تتضمن أكثر من هذا العدد من الروابط.</string>
 	<string name="site_settings_close_after_dialog_switch_text">إغلاق تلقائي</string>
@@ -353,7 +350,6 @@ Language: ar
 	<string name="site_settings_paging_title">ترقيم الصفحات</string>
 	<string name="site_settings_threading_title">مؤشر الترابط</string>
 	<string name="site_settings_sort_by_title">فرز حسب</string>
-	<string name="site_settings_account_required_title">يجب على المستخدمين تسجيل الدخول</string>
 	<string name="site_settings_identity_required_title">لا بد من تضمين الاسم والبريد الإلكتروني</string>
 	<string name="site_settings_receive_pingbacks_title">تلقي تنبيهات</string>
 	<string name="site_settings_send_pingbacks_title">إرسال تنبيهات</string>
@@ -517,7 +513,6 @@ Language: ar
 	<string name="tabbar_accessibility_label_my_site">موقعي</string>
 	<string name="editor_toast_changes_saved">تم حفظ التغييرات</string>
 	<string name="passcodelock_prompt_message">أدخل مفتاح الـ PIN</string>
-	<string name="push_auth_expired">انتهت فترة صلاحية الطلب. قم بتسجيل الدخول إلى وردبرس.كوم للمحاولة مرة أخرى.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% من المشاهدات</string>
 	<string name="ignore">تجاهل</string>
 	<string name="stats_insights_best_ever">المشاهدات الأفضل على الإطلاق</string>
@@ -527,11 +522,8 @@ Language: ar
 	<string name="stats_insights_popular">اليوم والساعة الأكثر شيوعًا</string>
 	<string name="stats_insights_all_time">مقالات ومشاهدات وزوار كل الأوقات</string>
 	<string name="stats_insights">الرؤى</string>
-	<string name="stats_sign_in_jetpack_different_com_account">لعرض إحصاءاتك، قم بتسجيل الدخول إلى حساب وردبرس.كوم الذي تستخدمه للاتصال بـ Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">هل تبحث عن إحصاءاتك الحديثة الأخرى؟ لقد نقلناها إلى صفحة الرؤى.</string>
-	<string name="me_disconnect_from_wordpress_com">قطع الاتصال بموقع وردبرس.كوم</string>
 	<string name="me_btn_login_logout">تسجيل الدخول/تسجيل الخروج</string>
-	<string name="me_connect_to_wordpress_com">الاتصال بموقع وردبرس.كوم</string>
 	<string name="site_picker_cant_hide_current_site">"%s" لم يكن مخفيًا لأنه الموقع الحالي</string>
 	<string name="me_btn_support">المساعدة والدعم</string>
 	<string name="account_settings">إعدادات الحساب</string>
@@ -549,11 +541,8 @@ Language: ar
 	<string name="my_site_btn_blog_posts">مقالات المدونة</string>
 	<string name="reader_label_new_posts_subtitle">انقر لعرضها</string>
 	<string name="my_site_header_configuration">التكوين</string>
-	<string name="notifications_account_required">تسجيل الدخول إلى موقع وردبرس.كوم للحصول على التنبيهات</string>
 	<string name="stats_unknown_author">كاتب غير معروف</string>
-	<string name="signout">قطع الاتصال</string>
 	<string name="image_added">تمت إضافة صورة</string>
-	<string name="sign_out_wpcom_confirm">سيؤدي قطع اتصال حسابك إلى إزالة كل بيانات وردبرس.كوم الخاصة بـ %s@ من هذا الجهاز، بما في ذلك المسودات المحلية والتغييرات المحلية.</string>
 	<string name="select_all">اختيار الكل</string>
 	<string name="hide">إخفاء</string>
 	<string name="show">إظهار</string>
@@ -574,8 +563,6 @@ Language: ar
 	<string name="no_media">لا توجد وسائط</string>
 	<string name="loading_images">جارٍ تحميل الصور</string>
 	<string name="loading_videos">جارٍ تحميل مقاطع الفيديو</string>
-	<string name="auth_required">قم بتسجيل الدخول مرة أخرى للمتابعة.</string>
-	<string name="sign_in_jetpack">قم بتسجيل الدخول إلى حساب وردبرس.كوم للاتصال بـ Jetpack.</string>
 	<string name="two_step_sms_sent">تحقق من رسائلك النصية للاطلاع على رمز التحقق.</string>
 	<string name="two_step_footer_button">إرسال الكود عن طريق رسالة نصية</string>
 	<string name="two_step_footer_label">أدخل الرمز من تطبيق الموثق.</string>
@@ -691,7 +678,6 @@ Language: ar
 	<string name="delete_sure_page">حذف هذه الصفحة</string>
 	<string name="delete_sure">حذف هذه المسودة</string>
 	<string name="delete_sure_post">حذف هذه المقالة</string>
-	<string name="signing_out">جارٍ تسجيل الخروج…</string>
 	<string name="posting_post">نشر "%s"</string>
 	<string name="media_empty_list_custom_date">لا توجد وسائط في هذا الفاصل الزمني</string>
 	<string name="pages_empty_list">لا توجد صفحات حتى الآن. لماذا لا تبادر بإنشاء واحدة؟</string>
@@ -963,16 +949,13 @@ Language: ar
 	<string name="reader_empty_followed_blogs_description">ومع ذلك لا داعي للقلق، فما عليك سوى النقر على الأيقونة في أعلى اليمين لبدء الاستكشاف!</string>
 	<string name="reader_likes_you_and_one">أنت وشخص آخر معجبان بهذا</string>
 	<string name="select_time">تحديد الوقت</string>
-	<string name="nux_oops_not_selfhosted_blog">تسجيل الدخول إلى ووردبريس.كوم</string>
 	<string name="nux_add_selfhosted_blog">أضف موقعك المستضاف ذاتيًا</string>
-	<string name="signing_in">جاري تسجيل الدخول...</string>
 	<string name="nux_welcome_create_account">انشئ حساب</string>
 	<string name="nux_tap_continue">متابعة</string>
 	<string name="password_invalid">تحتاج لكلمة مرور أكثر أمنًا. تأكدمن استخدام 7 رموز أو أكثر، اخلط الأحرف الكبيرة أو الأحرف الصغيرة أو الأرقام أو الرموز الخاصة</string>
 	<string name="nux_tutorial_get_started_title">ابدأ!</string>
 	<string name="limit_reached">وصلت للحد المسموح , يمكنك المحاولة مرة أخرى خلال 1 دقيقة. المحاولة مرة أخرى قبل ذلك ستؤدي لزيادة الوقت الواجب انتظاره قبل أن يتم رفع الحظر. إذا كنت تعتقد أن هذا هو الخطأ، اتصل بالدعم.</string>
 	<string name="username_invalid">اسم المستخدم غير صحيح</string>
-	<string name="connecting_wpcom">الاتصال بـ WordPress.com</string>
 	<string name="button_next">التالي</string>
 	<string name="create_account_wpcom">إنشاء حساب على ووردبريس.كوم</string>
 	<string name="reader_empty_followed_tags">لا تتابع أي وسوم</string>
@@ -1063,7 +1046,6 @@ Language: ar
 	<string name="follows">متابعات</string>
 	<string name="note_reply_successful">تم نشر الرد</string>
 	<string name="notifications">الإشعارات</string>
-	<string name="sign_in">تسجيل الدخول</string>
 	<string name="loading">جاري التحميل...</string>
 	<string name="httppassword">كلمة مرور HTTP</string>
 	<string name="httpuser">اسم مستخدم HTTP</string>

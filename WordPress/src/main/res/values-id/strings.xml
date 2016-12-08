@@ -82,7 +82,6 @@ Language: id
 	<string name="invite_people">Undang Orang-orang</string>
 	<string name="my_site_header_external">Eksternal</string>
 	<string name="send_link">Kirim tautan</string>
-	<string name="signup_succeed_signin_failed">Akun Anda telah dibuat namun terjadi galat saat mencoba masuk.\n        Coba untuk masuk dengan nama pengguna dan password baru Anda.</string>
 	<string name="label_clear_search_history">Bersihkan riwayat pencarian</string>
 	<string name="dlg_confirm_clear_search_history">Bersihkan riwayat pencarian?</string>
 	<string name="reader_empty_posts_in_search_description">Tak ditemukan pos untuk %s dalam bahasa Anda</string>
@@ -117,7 +116,6 @@ Language: id
 	<string name="check_your_email">Periksa surat elektronik Anda</string>
 	<string name="magic_link_unavailable_error_message">Saat ini tidak tersedia. Masukkan kata sandi Anda</string>
 	<string name="logging_in">Proses masuk</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Dapatkan tautan yang dikirimkan ke surat elektronik Anda untuk langsung masuk</string>
 	<string name="enter_your_password_instead">Sebaiknya masukkan kata sandi Anda</string>
 	<string name="web_address_dialog_hint">Ditampilkan secara publik saat Anda berkomentar.</string>
 	<string name="username_email">Surat elektronik atau nama pengguna</string>
@@ -288,7 +286,6 @@ Language: id
 	<string name="error_post_remote_site_settings">Tidak dapat menyimpan info situs</string>
 	<string name="error_fetch_remote_site_settings">Tidak dapat mengambil info situs</string>
 	<string name="error_media_upload_connection">Terjadi kesalahan koneksi saat mengunggah media</string>
-	<string name="site_settings_disconnected_toast">Terputus, penyuntingan dinonaktifkan.</string>
 	<string name="site_settings_unsupported_version_error">Versi WordPress tidak didukung</string>
 	<string name="site_settings_multiple_links_dialog_description">Minta persetujuan untuk komentar yang memiliki lebih dari jumlah tautan ini.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Tutup secara otomatis</string>
@@ -355,7 +352,6 @@ Language: id
 	<string name="site_settings_paging_title">Penomoran halaman</string>
 	<string name="site_settings_threading_title">Rangkaian</string>
 	<string name="site_settings_sort_by_title">Urut berdasar</string>
-	<string name="site_settings_account_required_title">Pengguna harus sudah masuk</string>
 	<string name="site_settings_identity_required_title">Harus menyertakan nama dan email</string>
 	<string name="site_settings_receive_pingbacks_title">Terima Ping Balik</string>
 	<string name="site_settings_send_pingbacks_title">Kirim Ping Balik</string>
@@ -519,7 +515,6 @@ Language: id
 	<string name="tabbar_accessibility_label_my_site">Situs Saya</string>
 	<string name="editor_toast_changes_saved">Perubahan disimpan</string>
 	<string name="passcodelock_prompt_message">Masukkan PIN</string>
-	<string name="push_auth_expired">Permintaan sudah kedaluwarsa. Masuk ke WordPress.com untuk mencoba lagi.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% dilihat</string>
 	<string name="ignore">Abaikan</string>
 	<string name="stats_insights_best_ever">Tampilan Terbaik</string>
@@ -529,11 +524,8 @@ Language: id
 	<string name="stats_insights_popular">Hari dan jam paling populer</string>
 	<string name="stats_insights_all_time">Pos, tampilan, dan pengunjung sepanjang waktu</string>
 	<string name="stats_insights">Wawasan</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Untuk melihat statistik Anda, masuk ke akun WordPress.com yang Anda gunakan untuk terhubung dengan Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Mencari Statistik Terbaru Lainnya? Kami telah memindahkannya ke halaman Wawasan.</string>
-	<string name="me_disconnect_from_wordpress_com">Putuskan koneksi WordPress.com</string>
 	<string name="me_btn_login_logout">Log masuk/keluar</string>
-	<string name="me_connect_to_wordpress_com">Koneksikan ke WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" tidak tersembunyi karena itu adalah situs saat ini</string>
 	<string name="me_btn_support">Bantuan &amp; Dukungan</string>
 	<string name="account_settings">Pengaturan Akun</string>
@@ -551,11 +543,8 @@ Language: id
 	<string name="my_site_btn_blog_posts">Pos Blog</string>
 	<string name="reader_label_new_posts_subtitle">Ketuk untuk menampilkannya</string>
 	<string name="my_site_header_configuration">Konfigurasi</string>
-	<string name="notifications_account_required">Masuk ke WordPress.com untuk notifikasi</string>
 	<string name="stats_unknown_author">Penulis Tak Dikenal</string>
-	<string name="signout">Putuskan koneksi</string>
 	<string name="image_added">Gambar ditambahkan</string>
-	<string name="sign_out_wpcom_confirm">Memutuskan koneksi akun Anda akan menghapus seluruh data WordPress.com untuk @%s dari perangkat ini, termasuk draf lokal dan perubahan lokal.</string>
 	<string name="select_all">Pilih semua</string>
 	<string name="hide">Sembunyikan</string>
 	<string name="show">Tampilkan</string>
@@ -576,8 +565,6 @@ Language: id
 	<string name="no_media">Tak ada media</string>
 	<string name="loading_images">Memuat gambar</string>
 	<string name="loading_videos">Memuat video</string>
-	<string name="auth_required">Masuk lagi untuk melanjutkan.</string>
-	<string name="sign_in_jetpack">Masuk ke akun WordPress.com Anda untuk menyambungkan dengan Jetpack.</string>
 	<string name="two_step_sms_sent">Periksa pesan teks Anda untuk melihat kode verifikasi.</string>
 	<string name="two_step_footer_button">Kirimkan kode via pesan teks</string>
 	<string name="two_step_footer_label">Masukkan kode dari authenticator app.</string>
@@ -693,7 +680,6 @@ Language: id
 	<string name="delete_sure_page">Hapus laman ini</string>
 	<string name="delete_sure">Hapus draf ini</string>
 	<string name="delete_sure_post">Hapus pos ini</string>
-	<string name="signing_out">Keluar…</string>
 	<string name="posting_post">Mengeposkan "%s"</string>
 	<string name="media_empty_list_custom_date">Tidak ada media dalam interval waktu ini</string>
 	<string name="pages_empty_list">Belum ada halaman. Mengapa tidak membuatnya?</string>
@@ -966,16 +952,13 @@ Language: id
 	<string name="reader_empty_followed_blogs_description">Tapi jangan khawatir, cukup ketuk ikon di kanan atas untuk mulai menjelajah!</string>
 	<string name="reader_likes_you_and_one">Anda dan satu orang lainnya menyukai ini</string>
 	<string name="select_time">Pilih waktu</string>
-	<string name="nux_oops_not_selfhosted_blog">Masuk ke WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Tambahkan situs dengan hostiing mandiri</string>
-	<string name="signing_in">Masuk…</string>
 	<string name="nux_welcome_create_account">Buat akun</string>
 	<string name="nux_tap_continue">Lanjutkan</string>
 	<string name="password_invalid">Anda butuh password yang lebih aman. Pastikan menggunakan 7 atau lebih karakter, kombinasikan huruf kapital dan kecil, angka atau tanda baca.</string>
 	<string name="nux_tutorial_get_started_title">Memulai!</string>
 	<string name="limit_reached">Mencapai batasan. Anda dapat mencoba kembali setelah 1 menit. Cobalah kembali, ini akan menambahkan kesempatan kepada anda sebelum benar-benar masuk list banned. Jika menurut anda ini adalah suatu kesalahan, hubungi Support.</string>
 	<string name="username_invalid">Username tidak valid</string>
-	<string name="connecting_wpcom">MEnghubungkan ke Wordpress.com</string>
 	<string name="button_next">Selanjutnya</string>
 	<string name="create_account_wpcom">Buat akun dengan Wordpress.com</string>
 	<string name="reader_empty_followed_tags">Anda belum mengikuti satupun tag</string>
@@ -1066,7 +1049,6 @@ Language: id
 	<string name="follows">Mengikuti</string>
 	<string name="note_reply_successful">Balasan telah terbit</string>
 	<string name="notifications">Notifikasi</string>
-	<string name="sign_in">Log masuk</string>
 	<string name="loading">Memuat...</string>
 	<string name="httppassword">Kata sandi HTTP</string>
 	<string name="httpuser">Nama pengguna HTTP</string>
