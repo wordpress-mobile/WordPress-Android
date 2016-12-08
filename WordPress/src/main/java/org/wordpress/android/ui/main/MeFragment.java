@@ -640,6 +640,10 @@ public class MeFragment extends Fragment {
     }
 
     public void onEventMainThread(GravatarUploadFinished event) {
+        if (!isAdded()) {
+            return;
+        }
+
         if (event.success) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED);
             final String avatarUrl = constructGravatarUrl(AccountHelper.getDefaultAccount());
@@ -659,6 +663,10 @@ public class MeFragment extends Fragment {
     }
 
     public void onEventMainThread(GravatarLoadFinished event) {
+        if (!isAdded()) {
+            return;
+        }
+
         showGravatarProgressBar(false);
 
         if (!event.success) {
