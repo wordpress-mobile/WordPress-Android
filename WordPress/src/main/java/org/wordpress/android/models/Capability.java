@@ -7,7 +7,8 @@ package org.wordpress.android.models;
 public enum Capability {
     LIST_USERS("list_users"), // Check if user can visit People page
     PROMOTE_USERS("promote_users"), // Check if user can change another user's role
-    REMOVE_USERS("remove_users"); // Check if user can remove another user
+    REMOVE_USERS("remove_users"), // Check if user can remove another user
+    EDIT_PAGES("edit_pages"); // Check if user can edit Pages
 
     private final String label;
 
