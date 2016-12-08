@@ -94,7 +94,7 @@ public class MySiteFragment extends Fragment
         // once the user switches to another blog, clean any pending draft notifications for any other blog,
         // and check if they have any drafts pending for this new blog
         NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
-        NotificationsPendingDraftsService.startService(getActivity());
+        NotificationsPendingDraftsService.checkPrefsAndStartService(getActivity());
     }
 
     @Override

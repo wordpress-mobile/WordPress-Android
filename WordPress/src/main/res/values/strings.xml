@@ -48,6 +48,7 @@
     <string name="deselect_all">Deselect all</string>
     <string name="notification_sound">Notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
+    <string name="notification_pending_drafts">Notify me on pending drafts</string>
     <string name="notification_blink">Blink notification light</string>
     <string name="sure_to_remove_account">Remove this site?</string>
     <string name="yes">Yes</string>

@@ -269,7 +269,7 @@ public class WordPress extends MultiDexApplication {
         if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
             NotificationsUpdateService.startService(getContext());
-            NotificationsPendingDraftsService.startService(getContext());
+            NotificationsPendingDraftsService.checkPrefsAndStartService(getContext());
         }
     }
 
@@ -847,7 +847,7 @@ public class WordPress extends MultiDexApplication {
 
                 if (AccountHelper.isSignedInWordPressDotCom()) {
                     NotificationsUpdateService.startService(getContext());
-                    NotificationsPendingDraftsService.startService(getContext());
+                    NotificationsPendingDraftsService.checkPrefsAndStartService(getContext());
                 }
 
                 // Rate limited PN Token Update

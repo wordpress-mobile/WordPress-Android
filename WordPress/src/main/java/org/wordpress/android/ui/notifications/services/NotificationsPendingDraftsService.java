@@ -4,8 +4,10 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.preference.PreferenceManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -33,12 +35,21 @@ public class NotificationsPendingDraftsService extends Service {
 
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
-    public static void startService(Context context) {
+    private static void startService(Context context) {
         if (context == null) {
             return;
         }
         Intent intent = new Intent(context, NotificationsPendingDraftsService.class);
         context.startService(intent);
+    }
+
+    public static void checkPrefsAndStartService(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean shouldNotifyOfPendingDrafts = prefs.getBoolean("wp_pref_notification_pending_drafts", true);
+        if (shouldNotifyOfPendingDrafts) {
+            NotificationsPendingDraftsService.startService(context);
+        }
+
     }
 
     @Override
