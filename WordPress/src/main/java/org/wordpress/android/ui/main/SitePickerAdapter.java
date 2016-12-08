@@ -62,7 +62,10 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
 
-    private static final int MAX_RECENTLY_PICKED = 4;
+    // show recently picked first if there are at least this many blogs
+    private static final int RECENTLY_PICKED_THRESHHOLD = 15;
+    // show this many recently picked
+    private static final int NUM_RECENTLY_PICKED = 4;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
@@ -407,8 +410,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             });
 
             // now sort recently-used to the top if user isn't performing a search
-            // TODO: Calypso only shows a recently-used section if there are 15+ sites
-            if (!mIsInSearchMode) {
+            if (!mIsInSearchMode && sites.size() >= RECENTLY_PICKED_THRESHHOLD) {
                 Collections.sort(sites, new Comparator<SiteRecord>() {
                     public int compare(SiteRecord site1, SiteRecord site2) {
                         if (site1.isRecentlyUsed && site2.isRecentlyUsed) {
@@ -507,7 +509,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             }
 
             // sort by recently picked timestamp, then flag the first four as being recently picked
-            if (this.size() > MAX_RECENTLY_PICKED) {
+            if (this.size() >= RECENTLY_PICKED_THRESHHOLD) {
                 Collections.sort(this, new Comparator<SiteRecord>() {
                     @Override
                     public int compare(SiteRecord site1, SiteRecord site2) {
@@ -526,7 +528,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                     if (site.hasLastPickedTimestamp()) {
                         site.isRecentlyUsed = true;
                         numFlagged++;
-                        if (numFlagged >= MAX_RECENTLY_PICKED) {
+                        if (numFlagged >= NUM_RECENTLY_PICKED) {
                             break;
                         }
                     }
