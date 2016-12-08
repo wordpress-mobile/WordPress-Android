@@ -411,7 +411,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             if (!mIsInSearchMode) {
                 Collections.sort(sites, new Comparator<SiteRecord>() {
                     public int compare(SiteRecord site1, SiteRecord site2) {
-                        if (site1.isRecentlyUsed && !site2.isRecentlyUsed) {
+                        if (site1.isRecentlyUsed && site2.isRecentlyUsed) {
+                            return Long.compare(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
+                        } else if (site1.isRecentlyUsed && !site2.isRecentlyUsed) {
                             return -1;
                         } else if (!site1.isRecentlyUsed && site2.isRecentlyUsed) {
                             return 1;
@@ -512,9 +514,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                         if (site1.hasLastPickedTimestamp() && site2.hasLastPickedTimestamp()) {
                             return Long.compare(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
                         } else if (site1.hasLastPickedTimestamp()) {
-                            return 1;
-                        } else if (site2.hasLastPickedTimestamp()) {
                             return -1;
+                        } else if (site2.hasLastPickedTimestamp()) {
+                            return 1;
                         }
                         return 0;
                     }
