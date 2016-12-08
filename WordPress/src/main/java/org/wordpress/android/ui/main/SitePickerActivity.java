@@ -387,8 +387,7 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     public void showProgress(boolean show) {
-        View progress = findViewById(R.id.progress);
-        progress.setVisibility(show ? View.VISIBLE : View.GONE);
+        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
