@@ -458,7 +458,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("wp_pref_notification_pending_drafts")) {
+        if (key.equals(getString(R.string.pref_key_notification_pending_drafts))) {
             if (getActivity() != null) {
                 SharedPreferences prefs = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
                 boolean shouldNotifyOfPendingDrafts = prefs.getBoolean("wp_pref_notification_pending_drafts", true);

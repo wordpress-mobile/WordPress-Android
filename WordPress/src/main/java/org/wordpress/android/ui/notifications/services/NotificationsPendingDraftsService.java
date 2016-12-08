@@ -45,7 +45,7 @@ public class NotificationsPendingDraftsService extends Service {
 
     public static void checkPrefsAndStartService(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean shouldNotifyOfPendingDrafts = prefs.getBoolean("wp_pref_notification_pending_drafts", true);
+        boolean shouldNotifyOfPendingDrafts = prefs.getBoolean(context.getString(R.string.pref_key_notification_pending_drafts), true);
         if (shouldNotifyOfPendingDrafts) {
             NotificationsPendingDraftsService.startService(context);
         }
