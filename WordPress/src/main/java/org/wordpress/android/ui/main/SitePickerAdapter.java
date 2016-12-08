@@ -62,7 +62,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
 
-    private static final int MAX_RECENTLY_USED = 4;
+    private static final int MAX_RECENTLY_PICKED = 4;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
@@ -135,7 +135,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     public void onBindViewHolder(final SiteViewHolder holder, int position) {
         SiteRecord site = getItem(position);
 
-        holder.txtTitle.setText(site.isRecentlyUsed + " > " + site.getBlogNameOrHomeURL());
+        holder.txtTitle.setText(site.isRecentlyUsed + " " + site.lastPickedTimeStamp + " > " + site.getBlogNameOrHomeURL());
         holder.txtDomain.setText(site.homeURL);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
@@ -395,13 +395,13 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
                     // sort primary blog to the top
-                    if (primaryBlogId > 0) {
+                    /*if (primaryBlogId > 0) {
                         if (site1.blogId == primaryBlogId) {
                             return -1;
                         } else if (site2.blogId == primaryBlogId) {
                             return 1;
                         }
-                    }
+                    }*/
                     return site1.getBlogNameOrHomeURL().compareToIgnoreCase(site2.getBlogNameOrHomeURL());
                 }
             });
@@ -411,12 +411,10 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             if (!mIsInSearchMode) {
                 Collections.sort(sites, new Comparator<SiteRecord>() {
                     public int compare(SiteRecord site1, SiteRecord site2) {
-                        if (site1.isRecentlyUsed != site2.isRecentlyUsed) {
-                            if (site1.isRecentlyUsed) {
-                                return -1;
-                            } else {
-                                return 1;
-                            }
+                        if (site1.isRecentlyUsed && !site2.isRecentlyUsed) {
+                            return -1;
+                        } else if (!site1.isRecentlyUsed && site2.isRecentlyUsed) {
+                            return 1;
                         }
                         return 0;
                     }
@@ -485,6 +483,10 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             isHidden = MapUtils.getMapBool(account, "isHidden");
         }
 
+        boolean hasLastPickedTimestamp() {
+            return lastPickedTimeStamp != 0;
+        }
+
         String getBlogNameOrHomeURL() {
             if (TextUtils.isEmpty(blogName)) {
                 return homeURL;
@@ -502,26 +504,29 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                 }
             }
 
-            // sort by recently picked timestamp, then flag the first four as being recently used
-            if (this.size() > MAX_RECENTLY_USED) {
+            // sort by recently picked timestamp, then flag the first four as being recently picked
+            if (this.size() > MAX_RECENTLY_PICKED) {
                 Collections.sort(this, new Comparator<SiteRecord>() {
                     @Override
                     public int compare(SiteRecord site1, SiteRecord site2) {
-                        if (site1.lastPickedTimeStamp == 0 && site2.lastPickedTimeStamp == 0) {
-                            return 0;
-                        }
-                        if (site1.lastPickedTimeStamp > 0 && site2.lastPickedTimeStamp > 0) {
-                            return Long.compare(site1.lastPickedTimeStamp, site2.lastPickedTimeStamp);
-                        }
-                        if (site1.lastPickedTimeStamp > 0) {
+                        if (site1.hasLastPickedTimestamp() && site2.hasLastPickedTimestamp()) {
+                            return Long.compare(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
+                        } else if (site1.hasLastPickedTimestamp()) {
                             return 1;
+                        } else if (site2.hasLastPickedTimestamp()) {
+                            return -1;
                         }
-                        return -1;
+                        return 0;
                     }
                 });
-                for (int i = 0; i < MAX_RECENTLY_USED; i++) {
-                    if (this.get(i).lastPickedTimeStamp > 0) {
-                        this.get(i).isRecentlyUsed = true;
+                int numFlagged = 0;
+                for (SiteRecord site: this) {
+                    if (site.hasLastPickedTimestamp()) {
+                        site.isRecentlyUsed = true;
+                        numFlagged++;
+                        if (numFlagged >= MAX_RECENTLY_PICKED) {
+                            break;
+                        }
                     }
                 }
             }
