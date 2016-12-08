@@ -160,7 +160,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         boolean showDivider = site.isRecentPick
                 && position < getItemCount() - 1
                 && !getItem(position + 1).isRecentPick;
-        holder.divider.setVisibility(showDivider ?  View.VISIBLE : View.INVISIBLE);
+        holder.divider.setVisibility(showDivider ?  View.VISIBLE : View.GONE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
