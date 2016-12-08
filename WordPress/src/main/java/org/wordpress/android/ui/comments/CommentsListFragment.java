@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
@@ -89,6 +90,7 @@ public class CommentsListFragment extends Fragment {
     private SiteModel mSite;
 
     @Inject Dispatcher mDispatcher;
+    @Inject CommentStore mCommentStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -453,6 +455,8 @@ public class CommentsListFragment extends Fragment {
         for (CommentModel comment: comments) {
             // Preemptive update
             comment.setStatus(status.toString());
+            // Show loading indicator
+            setCommentIsModerating(comment.getRemoteCommentId(), true);
             // Actual update
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
         }
@@ -635,6 +639,14 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.setRefreshing(false);
 
         if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
+            for (int commentId : event.changedCommentsLocalIds) {
+                // See how we can use local ids instead
+                CommentModel comment = mCommentStore.getCommentByLocalId(commentId);
+                if (comment != null) {
+                    setCommentIsModerating(comment.getRemoteCommentId(), false);
+                }
+            }
+
             // Don't refresh the list on push, we already updated comments
             loadComments();
         }

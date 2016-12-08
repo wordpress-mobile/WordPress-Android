@@ -394,8 +394,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public boolean isModeratingCommentId(long commentId) {
-        return mModeratingCommentsIds.size() > 0
-                && mModeratingCommentsIds.contains(commentId);
+        return mModeratingCommentsIds.size() > 0 && mModeratingCommentsIds.contains(commentId);
     }
 
     private int indexOfCommentId(long commentId) {
