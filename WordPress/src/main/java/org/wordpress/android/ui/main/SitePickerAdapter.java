@@ -393,10 +393,20 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             final long primaryBlogId = AccountHelper.getDefaultAccount().getPrimaryBlogId();
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
+                    // sort primary blog to the top
                     if (primaryBlogId > 0) {
                         if (site1.blogId == primaryBlogId) {
                             return -1;
                         } else if (site2.blogId == primaryBlogId) {
+                            return 1;
+                        }
+                    }
+                    // sort recently-used to the top
+                    // TODO: Calypso only shows a recently-used section if there are 15+ sites
+                    if (site1.isRecentlyUsed != site2.isRecentlyUsed) {
+                        if (site1.isRecentlyUsed) {
+                            return -1;
+                        } else {
                             return 1;
                         }
                     }
@@ -450,6 +460,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         final String url;
         final String blavatarUrl;
         final boolean isDotCom;
+        final boolean isRecentlyUsed;
         boolean isHidden;
 
         SiteRecord(Map<String, Object> account) {
@@ -461,6 +472,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
             isDotCom = MapUtils.getMapBool(account, "dotcomFlag");
             isHidden = MapUtils.getMapBool(account, "isHidden");
+            isRecentlyUsed = homeURL.contains("a8c");
         }
 
         String getBlogNameOrHomeURL() {
