@@ -135,7 +135,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     public void onBindViewHolder(final SiteViewHolder holder, int position) {
         SiteRecord site = getItem(position);
 
-        holder.txtTitle.setText(site.isRecentlyUsed + " " + site.lastPickedTimeStamp + " > " + site.getBlogNameOrHomeURL());
+        holder.txtTitle.setText(site.getBlogNameOrHomeURL());
         holder.txtDomain.setText(site.homeURL);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
