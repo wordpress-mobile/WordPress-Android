@@ -8,6 +8,7 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
@@ -268,7 +269,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
 
-        // hide comment like button until we know it can be enabled in showCommentForNote()
+        // hide comment like button until we know it can be enabled in showCommentAsNotification()
         mBtnLikeComment.setVisibility(View.GONE);
 
         // hide moderation buttons until updateModerationButtons() is called
@@ -581,24 +582,26 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             layoutBottom.setVisibility(View.GONE);
 
             if (mNote != null) {
-                // If a remote comment was requested, check if we have the comment for display.
-                // Otherwise request the comment via the REST API
                 SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
-                if (site != null) {
-                    CommentModel comment = mCommentStore.getCommentBySiteAndRemoteId(site, mNote.getParentCommentId());
-                    if (comment != null) {
-                        setComment(comment, site);
-                        return;
-                    }
+                if (site == null) {
+                    ToastUtils.showToast(getActivity(), R.string.error_load_comment);
+                    return;
+                }
 
-                    mCommentIdToFetch = mNote.getParentCommentId() > 0 ? mNote.getParentCommentId() : mNote.getCommentId();
-                    RemoteCommentPayload payload = new RemoteCommentPayload(site, mCommentIdToFetch);
+                // Check if the comment is already in our store
+                CommentModel comment = mCommentStore.getCommentBySiteAndRemoteId(site, mNote.getCommentId());
+                if (comment != null) {
+                    // It exists, then show it as a "Notification"
+                    showCommentAsNotification(mNote, site, comment);
+                } else {
+                    // It's not in our store yet, request it.
+                    RemoteCommentPayload payload = new RemoteCommentPayload(site, mNote.getCommentId());
                     mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
                     setProgressVisible(true);
 
-                    if (mNote != null) {
-                        showCommentForNote(mNote, site);
-                    }
+                    // Show a "temporary" comment built from the note data, the view will be refreshed once the
+                    // comment has been fetched.
+                    showCommentAsNotification(mNote, site, null);
                 }
             }
             return;
@@ -1028,7 +1031,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * display the comment associated with the passed notification
      */
-    private void showCommentForNote(Note note, SiteModel site) {
+    private void showCommentAsNotification(Note note, @NonNull SiteModel site, @Nullable CommentModel comment) {
         if (getView() == null) return;
         View view = getView();
 
@@ -1056,24 +1059,30 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // adjust enabledActions if this is a Jetpack site
-        if (canLike() && site != null && site.isJetpack()) {
+        if (canLike() && site.isJetpack()) {
             // delete LIKE action from enabledActions for Jetpack sites
             mEnabledActions.remove(EnabledActions.ACTION_LIKE);
         }
 
-        if (site != null) {
+        if (comment != null) {
+            setComment(comment, site);
+        } else {
             setComment(note.buildComment(), site);
         }
 
+        addDetailFragment(note.getId());
+
+        getFragmentManager().invalidateOptionsMenu();
+    }
+
+    private void addDetailFragment(String noteId) {
         // Now we'll add a detail fragment list
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note.getId());
+        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(noteId);
         mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
         fragmentTransaction.replace(mCommentContentLayout.getId(), mNotificationsDetailListFragment);
         fragmentTransaction.commitAllowingStateLoss();
-
-        getFragmentManager().invalidateOptionsMenu();
     }
 
     private void setIdForCommentContainer(){
