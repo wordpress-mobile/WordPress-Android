@@ -18,6 +18,7 @@
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
+    <dimen name="card_gutters">12dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
@@ -88,10 +89,14 @@
     <dimen name="reader_detail_header_blavatar">56dp</dimen>
     <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
 
-    <dimen name="reader_thumbnail_strip_image_size">48dp</dimen>
+    <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
+    <dimen name="reader_tag_header_image_height">128dp</dimen>
+    <dimen name="reader_xpost_padding_left">50dp</dimen>
 
-    <!-- height of divider between cards -->
-    <dimen name="reader_card_gutters">12dp</dimen>
+    <dimen name="reader_card_gutters">1px</dimen>
+    <dimen name="reader_card_elevation">0dp</dimen>
+
+    <dimen name="reader_video_overlay_size">56dp</dimen>
 
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
@@ -113,7 +118,8 @@
     <dimen name="blavatar_sz">40dp</dimen>
 
     <dimen name="reader_button_icon">24dp</dimen>
-    <dimen name="reader_more_icon">48dp</dimen>
+    <dimen name="reader_count_icon">20dp</dimen>
+    <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_follow_icon_no_caption">24dp</dimen>
     <dimen name="reader_follow_button_padding">@dimen/margin_small</dimen>
@@ -125,7 +131,12 @@
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
 
+    <dimen name="reader_featured_image_height_cardview">100dp</dimen>
+
     <dimen name="reader_related_post_image_width">72dp</dimen>
+
+    <item name="reader_photo_title_shadow_offset" type="dimen" format="float">3.0</item>
+    <item name="reader_photo_title_shadow_radius" type="dimen" format="float">1.5</item>
 
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
@@ -140,6 +151,8 @@
     <dimen name="empty_list_description_bottom_margin">8dp</dimen>
     <dimen name="empty_list_description_side_margin">48dp</dimen>
 
+    <dimen name="nux_logotype_margin_bottom">24dp</dimen>
+    <dimen name="nux_logotype_font_size">28sp</dimen>
     <dimen name="nux_title_font_size">28sp</dimen>
     <dimen name="nux_edit_field_font_size">16sp</dimen>
     <dimen name="nux_main_button_height">48dp</dimen>

@@ -51,7 +51,6 @@ Language: uz
 	<string name="reader_likes_only_you">Siz yoqtirgansiz</string>
 	<string name="reader_empty_followed_tags">Birorta ham teg kuzatmayapsiz</string>
 	<string name="create_account_wpcom">Wordpress.com da akkaunt oching</string>
-	<string name="connecting_wpcom">Wordpress.com ga bog‘lanmoqda</string>
 	<string name="username_invalid">Yaroqsiz foydalanuvchi nomi</string>
 	<string name="limit_reached">Chegaraga yetib keldik. Bir minutdan keyin harakat qilib ko‘rishingiz mumkin. Bu vaqtdan avval harakatga o‘tishingiz kutish vaqtining yanada uzayishiga olib keladi. Agar bu biror tushunmovchilik natijasi deb o‘ylasangiz, yordam xizmatiga murojaat qiling.</string>
 	<string name="all">Hammasi</string>
@@ -118,7 +117,6 @@ Language: uz
 	<string name="note_reply_successful">Javob chop qilindi</string>
 	<string name="new_notifications">%d ta yangi xabarlar</string>
 	<string name="more_notifications">va yana %d ta.</string>
-	<string name="sign_in">Kirish</string>
 	<string name="loading">Yuklanmoqda...</string>
 	<string name="httppassword">HTTP parol</string>
 	<string name="httpuser">HTTP foydalanuvchi nomi</string>

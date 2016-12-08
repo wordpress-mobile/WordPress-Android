@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-09-13 18:13:53+0000
+Translation-Revision-Date: 2016-12-04 11:51:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: gl_ES
 -->
 <resources>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Non estás autorizado a ver esta publicación. Proba a iniciar sesión en WordPress.com primeiro ou no seu lugar usa o botón de acción arriba para abrir un navegador.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Non estás autorizado a ver esta publicación. Proba a iniciar sesión en WordPress.com primeiro.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Non estás autorizado a ver esta publicación. Usa o botón de acción arriba para tentalo nun navegador.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Non podes dar a gústame mentres non teñas a sesión iniciada en WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Xa deches a gústame para este comentario	</string>
+	<string name="reader_toast_err_comment_not_found">Comentario non atopado!</string>
+	<string name="reader_toast_err_cannot_like_post">Erro ao marcar como me gusta a publicación</string>
+	<string name="reader_title_post_detail_wpcom">Entrada de WordPress.com	</string>
+	<string name="reader_title_deeplink">Lector de WordPress</string>
+	<string name="error_notif_q_action_reply">Non se puido responder o comentario. Por favor téntao de novo máis tarde.</string>
+	<string name="error_notif_q_action_approve">Non se puido aprobar o comentario. Por favor, téntao de novo máis tarde</string>
+	<string name="error_notif_q_action_like">Non se pode marcar como me gusta o comentario. Por favor téntao de novo máis tarde.</string>
+	<string name="notifications_label_new_notifications_subtitle">Pulsa para mostralos</string>
+	<string name="notifications_label_new_notifications">Novas notificacións</string>
+	<string name="comment_q_action_replying">Respondendo...</string>
+	<string name="comment_q_action_approving">Aprobando...</string>
+	<string name="comment_q_action_liking">Enlazando...</string>
+	<string name="comment_q_action_processing">Procesando...</string>
+	<string name="comment_q_action_done_generic">Acción realizada!</string>
+	<string name="comment_liked">Comentario marcado como me gusta</string>
+	<string name="signout">Pechar sesión</string>
+	<string name="sign_in_wpcom">Iniciar sesión en WordPress.com</string>
+	<string name="reader_label_global_related_posts">Máis en WordPress.com</string>
+	<string name="reader_label_local_related_posts">Máis en %s</string>
+	<string name="preference_open_device_settings">Abrir axustes do dispositivo</string>
+	<string name="comment_moderated_unapproved">Comentario desaprobado</string>
+	<string name="invite_invalid_email">%s: Correo electrónico non válido</string>
+	<string name="invite_user_blocked_invites">%s: Invitacións bloqueadas polo usuario</string>
+	<string name="invite_already_following">%s: Seguindo</string>
+	<string name="invite_already_a_member">%s: Xa é membro</string>
+	<string name="invite_username_not_found">%s: Usuario non atopado</string>
+	<string name="comment_moderated_approved">Comentario aprobado!</string>
+	<string name="like">Gústame</string>
 	<string name="reader_label_image_count_one">1 imaxe</string>
 	<string name="timespan_now">agora</string>
 	<string name="role_viewer">Lector</string>
@@ -18,6 +51,7 @@ Language: gl_ES
 	<string name="alignment_right">Dereita</string>
 	<string name="alignment_left">Esquerda</string>
 	<string name="alignment_none">Ningún</string>
+	<string name="site_settings_list_editor_action_mode_title">Seleccionado %1$d</string>
 	<string name="error_fetch_users_list">Non foi posible obter os usuarios do sitio</string>
 	<string name="plans_manage">Xestiona o teu plan en\nWordPress.com/plans</string>
 	<string name="title_email_follower">Seguidor por correo-e</string>
@@ -556,7 +590,6 @@ Language: gl_ES
 	<string name="my_site_header_configuration">Configuración</string>
 	<string name="notifications_account_required">Inicia sesión en WordPress.com para ver as notificacións</string>
 	<string name="stats_unknown_author">Autor descoñecido</string>
-	<string name="signout">Desconectar</string>
 	<string name="image_added">Imaxe engadida</string>
 	<string name="sign_out_wpcom_confirm">Ao desconectar da túa conta borraranse todos os datos de  @%s’s WordPress.com neste dispositivo, incluídos borradores e cambios locais.</string>
 	<string name="select_all">Seleccionar todo</string>
@@ -1132,6 +1165,7 @@ Language: gl_ES
 	<string name="sdcard_title">Tarxeta SD requirida</string>
 	<string name="location">Localización</string>
 	<string name="media">Multimedia</string>
+	<string name="approve">Aprobar</string>
 	<string name="delete">Borrar</string>
 	<string name="none">Ningún</string>
 	<string name="blogs">Blogues</string>

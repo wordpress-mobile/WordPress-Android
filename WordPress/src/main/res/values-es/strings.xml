@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-26 09:02:58+0000
+Translation-Revision-Date: 2016-11-28 09:28:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: es
 -->
 <resources>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">No estás autorizado a ver esta publicación. Prueba a iniciar sesión en WordPress.com primero o en su lugar usa el botón de acción arriba para abrir un navegador.</string>
+	<string name="reader_err_get_post_not_authorized_signin">No estás autorizado a ver esta publicación. Prueba a iniciar sesión en WordPress.com primero.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">No estás autorizado a ver esta publicación. Usa el botón de acción arriba para intentarlo en un navegador.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">No puedes dar a me gusta mientras no tengas la sesión iniciada en WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Ya has dado a me gusta para este comentario</string>
+	<string name="reader_toast_err_comment_not_found">¡Comentario no encontrado!</string>
+	<string name="reader_toast_err_cannot_like_post">Error al marcar como me gusta la publicación</string>
+	<string name="reader_title_post_detail_wpcom">Entrada de WordPress.com</string>
+	<string name="reader_title_deeplink">Lector de WordPress</string>
+	<string name="error_notif_q_action_reply">No se pudo responder al comentario. Por favor inténtalo de nuevo más tarde.</string>
+	<string name="error_notif_q_action_approve">No se pudo aprobar el comentario. Por favor, inténtalo de nuevo más tarde.</string>
+	<string name="error_notif_q_action_like">No se puede marcar como me gusta el comentario. Por favor inténtalo de nuevo más tarde.</string>
+	<string name="notifications_label_new_notifications_subtitle">Pulsa para mostrarlos</string>
+	<string name="notifications_label_new_notifications">Nuevas notificaciones</string>
+	<string name="comment_q_action_replying">Respondiendo...</string>
+	<string name="comment_q_action_approving">Aprobando...</string>
+	<string name="comment_q_action_liking">Enlazando...</string>
+	<string name="comment_q_action_processing">Procesando...</string>
+	<string name="comment_q_action_done_generic">¡Acción realizada!</string>
+	<string name="comment_liked">Comentario marcado como me gusta</string>
+	<string name="signout">Cerrar sesión</string>
+	<string name="sign_in_wpcom">Iniciar sesión en WordPress.com</string>
 	<string name="reader_label_global_related_posts">Más en WordPress.com</string>
 	<string name="reader_label_local_related_posts">Más en %s</string>
 	<string name="preference_open_device_settings">Abrir ajustes del dispositivo</string>
@@ -303,7 +325,7 @@ Language: es
 	<string name="error_post_remote_site_settings">No pudo guardar la información del sitio</string>
 	<string name="error_fetch_remote_site_settings">No pudo recuperar la información del sitio</string>
 	<string name="error_media_upload_connection">Se ha producido un error de conexión mientras subía multimedia</string>
-	<string name="site_settings_disconnected_toast">Desconectado, la edición se ha desactivado</string>
+	<string name="site_settings_disconnected_toast">Desconectado, la edición se ha desactivado.</string>
 	<string name="site_settings_unsupported_version_error">Versión de WordPress no soportada</string>
 	<string name="site_settings_multiple_links_dialog_description">Requiere aprobación para los comentarios que incluyen más de este número de enlaces.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Cierra automáticamente</string>
@@ -370,7 +392,7 @@ Language: es
 	<string name="site_settings_paging_title">Paginación</string>
 	<string name="site_settings_threading_title">Comentarios anidados</string>
 	<string name="site_settings_sort_by_title">Ordenar por</string>
-	<string name="site_settings_account_required_title">Los usuarios deben iniciar sesión</string>
+	<string name="site_settings_account_required_title">Los usuarios deben estar conectados</string>
 	<string name="site_settings_identity_required_title">Deben ser incluidos el nombre y correo electrónico</string>
 	<string name="site_settings_receive_pingbacks_title">Recibe pingbacks</string>
 	<string name="site_settings_send_pingbacks_title">Envía pingbacks</string>
@@ -534,7 +556,7 @@ Language: es
 	<string name="tabbar_accessibility_label_my_site">Mi sitio</string>
 	<string name="editor_toast_changes_saved">Cambios guardados</string>
 	<string name="passcodelock_prompt_message">Escribe tu PIN</string>
-	<string name="push_auth_expired">La solicitud ha expirado. Inicia sesión en WordPress.com para volver a intentarlo.</string>
+	<string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% de vistas</string>
 	<string name="ignore">Ignorar</string>
 	<string name="stats_insights_best_ever">El mejor día</string>
@@ -544,11 +566,11 @@ Language: es
 	<string name="stats_insights_popular">Hora y día más populares</string>
 	<string name="stats_insights_all_time">Entradas, vistas y visitantes de todos los tiempos</string>
 	<string name="stats_insights">Detalles</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Para ver tus estadísticas, inicia sesión en la cuenta de WordPress.com que has usado para efectuar la conexión con Jetpack.</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Para ver tus estadísticas, accede a la cuenta de WordPress.com que has usado para conectar con Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">¿Buscas tus otras estadísticas recientes? Las hemos trasladado a la página "Detalles".</string>
-	<string name="me_disconnect_from_wordpress_com">Desconectar de WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Salir de WordPress.com</string>
 	<string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
-	<string name="me_connect_to_wordpress_com">Conectar a WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Acceder a WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" no se ocultó porque es el sitio actual</string>
 	<string name="me_btn_support">Ayuda y soporte</string>
 	<string name="account_settings">Configuración de la cuenta</string>
@@ -566,11 +588,10 @@ Language: es
 	<string name="my_site_btn_blog_posts">Entradas del blog</string>
 	<string name="reader_label_new_posts_subtitle">Toca para mostrarlos</string>
 	<string name="my_site_header_configuration">Configuración</string>
-	<string name="notifications_account_required">Inicia sesión en WordPress.com para recibir notificaciones</string>
+	<string name="notifications_account_required">Acceder a WordPress.com para recibir notificaciones</string>
 	<string name="stats_unknown_author">Autor desconocido</string>
-	<string name="signout">Desconectar</string>
 	<string name="image_added">Imagen añadida</string>
-	<string name="sign_out_wpcom_confirm">Si desconectas tu cuenta, se eliminarán de este dispositivo todos los datos de WordPress.com de @%s, incluidos los borradores y los cambios locales.</string>
+	<string name="sign_out_wpcom_confirm">Si desconectas tu cuenta se eliminarán todos los datos de los datos en WordPress.com de @%s de este dispositivo, incluidos los borradores y los cambios locales.</string>
 	<string name="select_all">Seleccionar todo</string>
 	<string name="hide">Ocultar</string>
 	<string name="show">Mostrar</string>
@@ -591,8 +612,8 @@ Language: es
 	<string name="no_media">No hay archivos multimedia</string>
 	<string name="loading_images">Cargando imágenes</string>
 	<string name="loading_videos">Cargando vídeos</string>
-	<string name="auth_required">Inicia sesión de nuevo para continuar.</string>
-	<string name="sign_in_jetpack">Inicia sesión en tu cuenta de WordPress.com para conectarte con Jetpack.</string>
+	<string name="auth_required">Accede de nuevo para continuar.</string>
+	<string name="sign_in_jetpack">Accede en tu cuenta de WordPress.com para conectar Jetpack.</string>
 	<string name="two_step_sms_sent">Revisa tus mensajes de texto para el código de verificación.</string>
 	<string name="two_step_footer_button">Enviar código vía mensaje de texto</string>
 	<string name="two_step_footer_label">Introduce el código de tu app de autentificación.</string>
@@ -981,16 +1002,16 @@ Language: es
 	<string name="reader_empty_followed_blogs_description">No te preocupes, ¡solo tienes que pulsar el icono para empezar a explorar!</string>
 	<string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto.</string>
 	<string name="select_time">Elige tiempo</string>
-	<string name="nux_oops_not_selfhosted_blog">Regístrate en WordPress.com</string>
+	<string name="nux_oops_not_selfhosted_blog">Accede a WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Añade un sitio autoalojado</string>
-	<string name="signing_in">Iniciando sesión...</string>
+	<string name="signing_in">Accediendo...</string>
 	<string name="nux_welcome_create_account">Crear cuenta</string>
 	<string name="nux_tap_continue">Continuar</string>
 	<string name="password_invalid">Necesitas una contraseña más segura. Asegúrate de utilizar 7 o más caracteres, mezclar letras mayúsculas y minúsculas, número y caracteres especiales.</string>
 	<string name="nux_tutorial_get_started_title">¡Empezar!</string>
 	<string name="limit_reached">Límite alcanzado. Puedes probar en 1 minuto. Probar de nuevo antes solamente incrementará el tiempo de espera hasta que la prohibición sea suprimida. Si crees que es un error, contacta con soporte. </string>
 	<string name="username_invalid">Nombre de usuario no válido</string>
-	<string name="connecting_wpcom">Conectando a WordPress.com</string>
+	<string name="connecting_wpcom">Accediendo a WordPress.com</string>
 	<string name="button_next">Seguiente</string>
 	<string name="create_account_wpcom">Crear una cuenta de WordPress.com</string>
 	<string name="reader_empty_followed_tags">No sigues ninguna etiqueta</string>

@@ -4,7 +4,7 @@
     and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
 -->
 <resources>
-    <style name="ReaderPhotoViewerTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="ReaderMediaViewerTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorAccent">@color/accent_material_dark</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
@@ -93,6 +93,11 @@
     <style name="ReaderImageView.Featured" parent="ReaderImageView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/reader_featured_image_height</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+    <style name="ReaderImageView.Featured.CardView" parent="ReaderImageView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/reader_featured_image_height_cardview</item>
         <item name="android:scaleType">centerCrop</item>
     </style>
     <style name="ReaderImageView.Avatar" parent="ReaderImageView">

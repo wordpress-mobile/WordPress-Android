@@ -13,7 +13,6 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -202,6 +201,18 @@ public class ReaderActivityLauncher {
     }
 
     /*
+     * play an external video
+     */
+    public static void showReaderVideoViewer(Context context, String videoUrl) {
+        if (context == null || TextUtils.isEmpty(videoUrl)) {
+            return;
+        }
+        Intent intent = new Intent(context, ReaderVideoViewerActivity.class);
+        intent.putExtra(ReaderConstants.ARG_VIDEO_URL, videoUrl);
+        context.startActivity(intent);
+    }
+
+    /*
      * show the passed imageUrl in the fullscreen photo activity - optional content is the
      * content of the post the image is in, used by the activity to show all images in
      * the post
@@ -267,8 +278,7 @@ public class ReaderActivityLauncher {
     private static void openUrlInternal(Context context, @NonNull String url) {
         // That won't work on wpcom sites with custom urls
         if (WPUrlUtils.isWordPressCom(url)) {
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
-                    AccountHelper.getDefaultAccount().getUserName());
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url);
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
         }
