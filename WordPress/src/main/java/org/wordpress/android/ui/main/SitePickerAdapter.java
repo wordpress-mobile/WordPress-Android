@@ -62,6 +62,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
 
+    private static final int MAX_RECENTLY_USED = 4;
+
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
         private final TextView txtTitle;
@@ -379,7 +381,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         @Override
         protected Void doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
-            String[] extraFields = {"isHidden", "dotcomFlag", "homeURL"};
+            String[] extraFields = {"isHidden", "dotcomFlag", "homeURL", "last_picked_timestamp"};
 
             if (mIsInSearchMode) {
                 blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
@@ -455,24 +457,25 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
      static class SiteRecord {
         final int localId;
         final int blogId;
+        final long lastPickedTimeStamp;
         final String blogName;
         final String homeURL;
         final String url;
         final String blavatarUrl;
         final boolean isDotCom;
-        final boolean isRecentlyUsed;
+        boolean isRecentlyUsed;
         boolean isHidden;
 
         SiteRecord(Map<String, Object> account) {
             localId = MapUtils.getMapInt(account, "id");
             blogId = MapUtils.getMapInt(account, "blogId");
+            lastPickedTimeStamp = MapUtils.getMapLong(account, "last_picked_timestamp");
             blogName = BlogUtils.getBlogNameOrHomeURLFromAccountMap(account);
             homeURL = BlogUtils.getHomeURLOrHostNameFromAccountMap(account);
             url = MapUtils.getMapStr(account, "url");
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
             isDotCom = MapUtils.getMapBool(account, "dotcomFlag");
             isHidden = MapUtils.getMapBool(account, "isHidden");
-            isRecentlyUsed = homeURL.contains("a8c");
         }
 
         String getBlogNameOrHomeURL() {
@@ -483,12 +486,25 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-   static class SiteList extends ArrayList<SiteRecord> {
+    static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
         SiteList(List<Map<String, Object>> accounts) {
             if (accounts != null) {
                 for (Map<String, Object> account : accounts) {
                     add(new SiteRecord(account));
+                }
+            }
+
+            // sort by recently picked timestamp, then flag the first four as being recently-picked
+            if (this.size() > MAX_RECENTLY_USED) {
+                Collections.sort(this, new Comparator<SiteRecord>() {
+                    @Override
+                    public int compare(SiteRecord site1, SiteRecord site2) {
+                        return Long.compare(site1.lastPickedTimeStamp, site2.lastPickedTimeStamp);
+                    }
+                });
+                for (int i = 0; i < MAX_RECENTLY_USED; i++) {
+                    this.get(i).isRecentlyUsed = true;
                 }
             }
         }

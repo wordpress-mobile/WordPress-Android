@@ -54,7 +54,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -86,7 +85,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 50;
+    private static final int DATABASE_VERSION = 51;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -229,6 +228,9 @@ public class WordPressDB {
 
     // add capabilities to blog
     private static final String ADD_BLOGS_CAPABILITIES = "alter table accounts add capabilities text default '';";
+
+    // add timestamp of date last chosen in site picker to blog
+    private static final String ADD_BLOGS_LAST_PICKED_TIMESTAMP = "alter table accounts add last_picked_timestamp integer default 0";
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
@@ -434,6 +436,9 @@ public class WordPressDB {
             case 49:
                 // Delete simperium DB since we're removing Simperium from the app.
                 ctx.deleteDatabase("simperium-store");
+                currentVersion++;
+            case 50:
+                db.execSQL(ADD_BLOGS_LAST_PICKED_TIMESTAMP);
                 currentVersion++;
 
         }
