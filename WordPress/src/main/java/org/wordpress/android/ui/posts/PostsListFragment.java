@@ -30,6 +30,7 @@ import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -525,6 +526,9 @@ public class PostsListFragment extends Fragment
                     // pending drafts.
                     // We don't re-run the service here to notify the user of other  pending drafts, because the
                     // user is already looking at the blog post list, so it doesn't make sense bothering them
+
+                    // also in case this postId was in our ignore list, delete it from the list as well
+                    AppPrefs.deleteIdFromPendingDraftsIgnorePostIdList(post.getPostId());
                 }
             }
         });

@@ -479,11 +479,40 @@ public class AppPrefs {
         }
     }
 
+    public static void addToPendingDraftsIgnorePostIdList(ArrayList<Long> postIds) {
+        if (postIds != null) {
+            for (Long postId : postIds) {
+                addToPendingDraftsIgnorePostIdList(postId);
+            }
+        }
+    }
+
+    public static void deleteIdFromPendingDraftsIgnorePostIdList(long postId) {
+        ArrayList<Long> idList = getPendingDraftsIgnorePostIdList();
+        boolean foundSamePostId = false;
+        for (Long oneId : idList) {
+            if (oneId != null && oneId == postId) {
+                // now delete this from the list and rebuild it
+                idList.remove(oneId);
+                foundSamePostId = true;
+                break;
+            }
+        }
+
+        if (foundSamePostId) {
+            // re-build
+            String idListString = TextUtils.join(",", idList);
+            setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, idListString);
+        }
+    }
+
     private static boolean rollPendingDraftsIgnorePostIdListIfNeeded(){
         String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
         boolean rolled = false;
         if (!TextUtils.isEmpty(idListString)) {
-            List<String> items = Arrays.asList(idListString.split("\\s*,\\s*"));
+            // note wrapping the Arrays.asList call with a new object is needed because otherwise
+            // trying to remove an item from a List returned by Arrays.asList throws an UnsupportedOperationException
+            List<String> items = new ArrayList(Arrays.asList(idListString.split("\\s*,\\s*")));
             if (items.size() > MAX_PENDING_DRAFTS_AMOUNT) {
                 // eliminate first one
                 items.remove(0);
