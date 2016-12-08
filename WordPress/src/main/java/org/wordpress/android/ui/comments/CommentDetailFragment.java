@@ -1137,13 +1137,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void onCommentModerated(OnCommentChanged event) {
         if (!isAdded()) return;
 
-        if (!event.isError()) {
-            if (CommentStatus.fromString(mComment.getStatus()) == CommentStatus.APPROVED) {
-                ToastUtils.showToast(getActivity(), R.string.comment_moderated_approved, ToastUtils.Duration.SHORT);
-            } else if (CommentStatus.fromString(mComment.getStatus()) == CommentStatus.UNAPPROVED) {
-                ToastUtils.showToast(getActivity(), R.string.comment_moderated_unapproved, ToastUtils.Duration.SHORT);
-            }
-        } else {
+        if (event.isError()) {
             mComment.setStatus(mPreviousStatus);
             updateStatusViews();
             ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
