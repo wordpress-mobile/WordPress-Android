@@ -737,6 +737,16 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Notifications - Pending Drafts Dismissed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_dismissed");
                 break;
+            case NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Pending Drafts Settings Enabled");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_settings_enabled");
+                break;
+            case NOTIFICATION_PENDING_DRAFTS_SETTINGS_DISABLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Pending Drafts Settings Disabled");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_settings_disabled");
+                break;
             case OPENED_POSTS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Posts");

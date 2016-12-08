@@ -409,6 +409,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_pending_drafts_ignored";
             case NOTIFICATION_PENDING_DRAFTS_DISMISSED:
                 return "notifications_pending_drafts_dismissed";
+            case NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED:
+                return "notifications_pending_drafts_settings_enabled";
+            case NOTIFICATION_PENDING_DRAFTS_SETTINGS_DISABLED:
+                return "notifications_pending_drafts_settings_disabled";
             case NOTIFICATION_LIKED:
             case NOTIFICATION_QUICK_ACTIONS_LIKED:
                 return "notifications_comment_liked";
