@@ -135,7 +135,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     public void onBindViewHolder(final SiteViewHolder holder, int position) {
         SiteRecord site = getItem(position);
 
-        holder.txtTitle.setText(site.getBlogNameOrHomeURL());
+        holder.txtTitle.setText(site.isRecentlyUsed + " > " + site.getBlogNameOrHomeURL());
         holder.txtDomain.setText(site.homeURL);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
@@ -156,7 +156,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         // hide the divider for the last item
         boolean isLastItem = (position == getItemCount() - 1);
         holder.divider.setVisibility(isLastItem ?  View.INVISIBLE : View.VISIBLE);
-
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -403,18 +402,26 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                             return 1;
                         }
                     }
-                    // sort recently-used to the top
-                    // TODO: Calypso only shows a recently-used section if there are 15+ sites
-                    if (site1.isRecentlyUsed != site2.isRecentlyUsed) {
-                        if (site1.isRecentlyUsed) {
-                            return -1;
-                        } else {
-                            return 1;
-                        }
-                    }
                     return site1.getBlogNameOrHomeURL().compareToIgnoreCase(site2.getBlogNameOrHomeURL());
                 }
             });
+
+            // now sort recently-used to the top if user isn't performing a search
+            // TODO: Calypso only shows a recently-used section if there are 15+ sites
+            if (!mIsInSearchMode) {
+                Collections.sort(sites, new Comparator<SiteRecord>() {
+                    public int compare(SiteRecord site1, SiteRecord site2) {
+                        if (site1.isRecentlyUsed != site2.isRecentlyUsed) {
+                            if (site1.isRecentlyUsed) {
+                                return -1;
+                            } else {
+                                return 1;
+                            }
+                        }
+                        return 0;
+                    }
+                });
+            }
 
             if (mSites == null || !mSites.isSameList(sites)) {
                 mAllSites = (SiteList) sites.clone();
@@ -495,16 +502,27 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                 }
             }
 
-            // sort by recently picked timestamp, then flag the first four as being recently-picked
+            // sort by recently picked timestamp, then flag the first four as being recently used
             if (this.size() > MAX_RECENTLY_USED) {
                 Collections.sort(this, new Comparator<SiteRecord>() {
                     @Override
                     public int compare(SiteRecord site1, SiteRecord site2) {
-                        return Long.compare(site1.lastPickedTimeStamp, site2.lastPickedTimeStamp);
+                        if (site1.lastPickedTimeStamp == 0 && site2.lastPickedTimeStamp == 0) {
+                            return 0;
+                        }
+                        if (site1.lastPickedTimeStamp > 0 && site2.lastPickedTimeStamp > 0) {
+                            return Long.compare(site1.lastPickedTimeStamp, site2.lastPickedTimeStamp);
+                        }
+                        if (site1.lastPickedTimeStamp > 0) {
+                            return 1;
+                        }
+                        return -1;
                     }
                 });
                 for (int i = 0; i < MAX_RECENTLY_USED; i++) {
-                    this.get(i).isRecentlyUsed = true;
+                    if (this.get(i).lastPickedTimeStamp > 0) {
+                        this.get(i).isRecentlyUsed = true;
+                    }
                 }
             }
         }
