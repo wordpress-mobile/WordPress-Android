@@ -15,8 +15,13 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
+    private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
 
     public interface PrefKey {
         String name();
@@ -69,6 +74,10 @@ public class AppPrefs {
 
         // local time of the last push notification received
         PUSH_NOTIFICATIONS_LAST_NOTE_TIME,
+
+        // list for local drafts that the user has set to ignore notifications on
+        // (i.e. "please don't remind me I've got this in drafts")
+        PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST,
     }
 
     /**
@@ -433,6 +442,69 @@ public class AppPrefs {
 
     public static void setSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, alreadyShown);
+    }
+
+    public static ArrayList<Long> getPendingDraftsIgnorePostIdList() {
+        // builds the list from csv
+        ArrayList<Long> idList = new ArrayList<>();
+        String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
+        if (!TextUtils.isEmpty(idListString)) {
+            List<String> items = Arrays.asList(idListString.split("\\s*,\\s*"));
+            for (String item : items) {
+                Long oneId = Long.valueOf(item);
+                idList.add(oneId);
+            }
+        }
+        return idList;
+    }
+
+    public static void addToPendingDraftsIgnorePostIdList(long postId) {
+        // appends new id to postIdList, unless it's already in the list
+        // also rolls - eliminates first object (i..e oldest object) when MAX_PENDING_DRAFTS_AMOUNT reached
+        boolean isPostIdAlreadyInIgnoreList = isPostIdInPendingDraftsIgnorePostIdList(postId);
+
+        // if this postId wasn't in our list already, append it
+        if (!isPostIdAlreadyInIgnoreList) {
+
+            // before appending, eliminate first one if we have more than MAX_PENDING_DRAFTS_AMOUNT elements
+            rollPendingDraftsIgnorePostIdListIfNeeded();
+
+            String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
+            if (!TextUtils.isEmpty(idListString)) {
+                idListString += "," + String.valueOf(postId);
+            } else {
+                idListString += String.valueOf(postId);
+            }
+            setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, idListString);
+        }
+    }
+
+    private static boolean rollPendingDraftsIgnorePostIdListIfNeeded(){
+        String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
+        boolean rolled = false;
+        if (!TextUtils.isEmpty(idListString)) {
+            List<String> items = Arrays.asList(idListString.split("\\s*,\\s*"));
+            if (items.size() > MAX_PENDING_DRAFTS_AMOUNT) {
+                // eliminate first one
+                items.remove(0);
+                idListString = TextUtils.join(",", items);
+                setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, idListString);
+                rolled = true;
+            }
+        }
+        return rolled;
+    }
+
+    public static boolean isPostIdInPendingDraftsIgnorePostIdList(long postId) {
+        ArrayList<Long> idList = getPendingDraftsIgnorePostIdList();
+        boolean foundSamePostId = false;
+        for (Long oneId : idList) {
+            if (oneId != null && oneId == postId) {
+                foundSamePostId = true;
+                break;
+            }
+        }
+        return foundSamePostId;
     }
 
 }
