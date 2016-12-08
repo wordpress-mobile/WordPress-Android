@@ -395,28 +395,26 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
             SiteList sites = new SiteList(blogs);
 
-            // sort by blog/host
+            // first pass at sorting - sort primary blog to the top, otherwise sort by blog/host
             final long primaryBlogId = AccountHelper.getDefaultAccount().getPrimaryBlogId();
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
-                    // sort primary blog to the top
-                    /*if (primaryBlogId > 0) {
-                        if (site1.blogId == primaryBlogId) {
-                            return -1;
-                        } else if (site2.blogId == primaryBlogId) {
-                            return 1;
-                        }
-                    }*/
+                    if (primaryBlogId > 0 && site1.blogId == primaryBlogId) {
+                        return -1;
+                    } else if (primaryBlogId > 0 && site2.blogId == primaryBlogId) {
+                        return 1;
+                    }
                     return site1.getBlogNameOrHomeURL().compareToIgnoreCase(site2.getBlogNameOrHomeURL());
                 }
             });
 
-            // now sort recently-used to the top if user isn't performing a search
+            // second pass at sorting - sort recently-used to the top if there are enough sites
+            // and the user isn't performing a search
             if (!mIsInSearchMode && sites.size() >= RECENTLY_PICKED_THRESHHOLD) {
                 Collections.sort(sites, new Comparator<SiteRecord>() {
                     public int compare(SiteRecord site1, SiteRecord site2) {
                         if (site1.isRecentPick && site2.isRecentPick) {
-                            return Long.compare(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
+                            return compareTimestamps(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
                         } else if (site1.isRecentPick && !site2.isRecentPick) {
                             return -1;
                         } else if (!site1.isRecentPick && site2.isRecentPick) {
@@ -516,7 +514,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                     @Override
                     public int compare(SiteRecord site1, SiteRecord site2) {
                         if (site1.hasLastPickedTimestamp() && site2.hasLastPickedTimestamp()) {
-                            return Long.compare(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
+                            return compareTimestamps(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
                         } else if (site1.hasLastPickedTimestamp()) {
                             return -1;
                         } else if (site2.hasLastPickedTimestamp()) {
@@ -545,7 +543,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             int i;
             for (SiteRecord site: sites) {
                 i = indexOfSite(site);
-                if (i == -1 || this.get(i).isHidden != site.isHidden) {
+                if (i == -1
+                        || this.get(i).isHidden != site.isHidden
+                        || this.get(i).lastPickedTimeStamp != site.lastPickedTimeStamp) {
                     return false;
                 }
             }
@@ -562,5 +562,12 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             }
             return -1;
         }
+    }
+
+    /*
+     * same as Long.compare() which wasn't added until API 19
+     */
+    private static int compareTimestamps(long timestamp1, long timestamp2) {
+        return timestamp1 < timestamp2 ? -1 : (timestamp1 == timestamp2 ? 0 : 1);
     }
 }

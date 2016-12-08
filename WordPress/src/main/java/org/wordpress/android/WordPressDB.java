@@ -441,7 +441,6 @@ public class WordPressDB {
             case 50:
                 db.execSQL(ADD_BLOGS_LAST_PICKED_TIMESTAMP);
                 currentVersion++;
-
         }
         db.setVersion(DATABASE_VERSION);
     }
