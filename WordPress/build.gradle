@@ -126,8 +126,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~add-local-ids-to-oncommentchanged' +
-            '-events-SNAPSHOT') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:tmp-max-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 

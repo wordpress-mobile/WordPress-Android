@@ -459,9 +459,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             List<CommentModel> comments;
             if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
                 // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
-                comments = mCommentStore.getCommentsForSite(mSite, CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
+                comments = mCommentStore.getCommentsForSite(mSite, false,
+                        CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
             } else {
-                comments = mCommentStore.getCommentsForSite(mSite, mStatusFilter);
+                comments = mCommentStore.getCommentsForSite(mSite, false, mStatusFilter);
             }
 
             tmpComments = new CommentList();
