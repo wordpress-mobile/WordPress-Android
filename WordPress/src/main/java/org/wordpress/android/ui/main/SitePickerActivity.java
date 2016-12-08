@@ -235,8 +235,10 @@ public class SitePickerActivity extends AppCompatActivity
                 isInSearchMode,
                 new SitePickerAdapter.OnDataLoadedListener() {
             @Override
-            public void onBeforeLoad() {
-                showProgress(true);
+            public void onBeforeLoad(boolean isEmpty) {
+                if (isEmpty) {
+                    showProgress(true);
+                }
             }
             @Override
             public void onAfterLoad() {

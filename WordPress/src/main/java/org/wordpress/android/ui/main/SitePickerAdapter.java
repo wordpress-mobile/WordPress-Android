@@ -40,7 +40,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     }
 
     interface OnDataLoadedListener {
-        void onBeforeLoad();
+        void onBeforeLoad(boolean isEmpty);
         void onAfterLoad();
     }
 
@@ -380,7 +380,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             super.onPreExecute();
             mIsTaskRunning = true;
             if (mDataLoadedListener != null) {
-                mDataLoadedListener.onBeforeLoad();
+                boolean isEmpty = mSites == null || mSites.size() == 0;
+                mDataLoadedListener.onBeforeLoad(isEmpty);
             }
         }
 
