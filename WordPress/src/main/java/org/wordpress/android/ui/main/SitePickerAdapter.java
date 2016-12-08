@@ -156,9 +156,11 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
         }
 
-        // hide the divider for the last item
-        boolean isLastItem = (position == getItemCount() - 1);
-        holder.divider.setVisibility(isLastItem ?  View.INVISIBLE : View.VISIBLE);
+        // only show divider after last recent pick
+        boolean showDivider = site.isRecentPick
+                && position < getItemCount() - 1
+                && !getItem(position + 1).isRecentPick;
+        holder.divider.setVisibility(showDivider ?  View.VISIBLE : View.INVISIBLE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -413,11 +415,11 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             if (!mIsInSearchMode && sites.size() >= RECENTLY_PICKED_THRESHHOLD) {
                 Collections.sort(sites, new Comparator<SiteRecord>() {
                     public int compare(SiteRecord site1, SiteRecord site2) {
-                        if (site1.isRecentlyUsed && site2.isRecentlyUsed) {
+                        if (site1.isRecentPick && site2.isRecentPick) {
                             return Long.compare(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
-                        } else if (site1.isRecentlyUsed && !site2.isRecentlyUsed) {
+                        } else if (site1.isRecentPick && !site2.isRecentPick) {
                             return -1;
-                        } else if (!site1.isRecentlyUsed && site2.isRecentlyUsed) {
+                        } else if (!site1.isRecentPick && site2.isRecentPick) {
                             return 1;
                         }
                         return 0;
@@ -472,7 +474,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         final String url;
         final String blavatarUrl;
         final boolean isDotCom;
-        boolean isRecentlyUsed;
+        boolean isRecentPick;
         boolean isHidden;
 
         SiteRecord(Map<String, Object> account) {
@@ -526,7 +528,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                 int numFlagged = 0;
                 for (SiteRecord site: this) {
                     if (site.hasLastPickedTimestamp()) {
-                        site.isRecentlyUsed = true;
+                        site.isRecentPick = true;
                         numFlagged++;
                         if (numFlagged >= NUM_RECENTLY_PICKED) {
                             break;
