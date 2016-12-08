@@ -660,10 +660,6 @@ public class MeFragment extends Fragment {
 
     public void onEventMainThread(GravatarLoadFinished event) {
         showGravatarProgressBar(false);
-
-        if (!event.success) {
-            Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast.LENGTH_SHORT).show();
-        }
     }
 
     // injects a fabricated cache entry to the request cache

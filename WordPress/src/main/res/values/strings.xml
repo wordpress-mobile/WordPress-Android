@@ -1557,7 +1557,6 @@
     <string name="gravatar_tip">New! Tap your Gravatar to change it!</string>
     <string name="error_cropping_image">Error cropping the image</string>
     <string name="error_locating_image">Error locating the cropped image</string>
-    <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
     <string name="error_updating_gravatar">Error updating your Gravatar</string>
     <string name="gravatar_camera_and_media_permission_required">Permissions required in order to select or capture a photo</string>
 
