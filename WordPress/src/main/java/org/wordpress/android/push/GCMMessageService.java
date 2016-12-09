@@ -309,17 +309,17 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private boolean canAddActionsToNotifications() {
-        if (isWPPinLockEnabled()) {
+        if (isWPPinLockEnabled(this)) {
             return !isDeviceLocked();
         }
         return true;
     }
 
-    private boolean isWPPinLockEnabled() {
+    public static boolean isWPPinLockEnabled(Context context) {
         AppLockManager appLockManager = AppLockManager.getInstance();
         // Make sure PasscodeLock isn't already in place
         if (!appLockManager.isAppLockFeatureEnabled()) {
-            appLockManager.enableDefaultAppLockIfAvailable(this.getApplication());
+            appLockManager.enableDefaultAppLockIfAvailable((WordPress)context.getApplicationContext());
         }
 
         // Make sure the locker was correctly enabled, and it's active
