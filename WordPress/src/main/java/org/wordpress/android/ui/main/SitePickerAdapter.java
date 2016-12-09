@@ -385,7 +385,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         @Override
         protected Void doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
-            String[] extraFields = {"isHidden", "dotcomFlag", "homeURL", "last_picked_timestamp"};
+            String[] extraFields = {"isHidden", "homeURL", "last_picked_timestamp"};
 
             if (mIsInSearchMode) {
                 blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
@@ -473,7 +473,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         final String homeURL;
         final String url;
         final String blavatarUrl;
-        final boolean isDotCom;
         boolean isRecentPick;
         boolean isHidden;
 
@@ -485,7 +484,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             homeURL = BlogUtils.getHomeURLOrHostNameFromAccountMap(account);
             url = MapUtils.getMapStr(account, "url");
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
-            isDotCom = MapUtils.getMapBool(account, "dotcomFlag");
             isHidden = MapUtils.getMapBool(account, "isHidden");
         }
 
