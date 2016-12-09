@@ -418,9 +418,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                     public int compare(SiteRecord site1, SiteRecord site2) {
                         if (site1.isRecentPick && site2.isRecentPick) {
                             return compareTimestamps(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
-                        } else if (site1.isRecentPick && !site2.isRecentPick) {
+                        } else if (site1.isRecentPick) {
                             return -1;
-                        } else if (!site1.isRecentPick && site2.isRecentPick) {
+                        } else if (site2.isRecentPick) {
                             return 1;
                         }
                         return 0;
