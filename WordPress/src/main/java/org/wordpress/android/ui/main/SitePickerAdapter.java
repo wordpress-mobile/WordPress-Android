@@ -63,7 +63,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private OnSelectedCountChangedListener mSelectedCountListener;
 
     // show recently picked first if there are at least this many blogs
-    private static final int RECENTLY_PICKED_THRESHHOLD = 15;
+    private static final int RECENTLY_PICKED_THRESHOLD = 15;
     // show this many recently picked
     private static final int NUM_RECENTLY_PICKED = 4;
 
@@ -413,7 +413,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
             // second pass at sorting - sort recently-used to the top if there are enough sites
             // and the user isn't performing a search
-            if (!mIsInSearchMode && sites.size() >= RECENTLY_PICKED_THRESHHOLD) {
+            if (!mIsInSearchMode && sites.size() >= RECENTLY_PICKED_THRESHOLD) {
                 Collections.sort(sites, new Comparator<SiteRecord>() {
                     public int compare(SiteRecord site1, SiteRecord site2) {
                         if (site1.isRecentPick && site2.isRecentPick) {
@@ -510,7 +510,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             }
 
             // sort by recently picked timestamp, then flag the first four as being recently picked
-            if (this.size() >= RECENTLY_PICKED_THRESHHOLD) {
+            if (this.size() >= RECENTLY_PICKED_THRESHOLD) {
                 Collections.sort(this, new Comparator<SiteRecord>() {
                     @Override
                     public int compare(SiteRecord site1, SiteRecord site2) {
