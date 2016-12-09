@@ -399,10 +399,12 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             final long primaryBlogId = AccountHelper.getDefaultAccount().getPrimaryBlogId();
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
-                    if (primaryBlogId > 0 && site1.blogId == primaryBlogId) {
-                        return -1;
-                    } else if (primaryBlogId > 0 && site2.blogId == primaryBlogId) {
-                        return 1;
+                    if (primaryBlogId > 0 && !mIsInSearchMode) {
+                        if (site1.blogId == primaryBlogId) {
+                            return -1;
+                        } else if (site2.blogId == primaryBlogId) {
+                            return 1;
+                        }
                     }
                     return site1.getBlogNameOrHomeURL().compareToIgnoreCase(site2.getBlogNameOrHomeURL());
                 }
