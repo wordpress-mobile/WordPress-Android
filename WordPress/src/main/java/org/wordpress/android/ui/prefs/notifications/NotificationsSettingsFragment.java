@@ -19,7 +19,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -60,6 +59,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     private NotificationsSettings mNotificationsSettings;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
+    private boolean mSearchMenuItemCollapsed = true;
 
     private String mDeviceId;
     private String mRestoredQuery;
@@ -128,7 +128,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                configureBlogsSettings(mBlogsCategory, true);
+                // we need to perform this check because when the search menu item is collapsed
+                // a new queryTExtChange event is triggered with an empty value "", and we only
+                // would want to take care of it when the user actively opened/cleared the search term
+                configureBlogsSettings(mBlogsCategory, !mSearchMenuItemCollapsed);
                 return true;
             }
         });
@@ -136,12 +139,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                mSearchMenuItemCollapsed = false;
                 configureBlogsSettings(mBlogsCategory, true);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                mSearchMenuItemCollapsed = true;
                 configureBlogsSettings(mBlogsCategory, false);
                 return true;
             }
