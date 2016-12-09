@@ -158,6 +158,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
         // only show divider after last recent pick
         boolean showDivider = site.isRecentPick
+                && !mIsInSearchMode
                 && position < getItemCount() - 1
                 && !getItem(position + 1).isRecentPick;
         holder.divider.setVisibility(showDivider ?  View.VISIBLE : View.GONE);
