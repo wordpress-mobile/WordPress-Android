@@ -39,7 +39,6 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
@@ -49,6 +48,9 @@ import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -841,11 +843,11 @@ public class GCMMessageService extends GcmListenerService {
 
                     builder = getNotificationBuilder(context, title, message);
 
-                    // set timestamp for note: first try notification timestamp, then try google's sent time if not available
-                    // finally just set the system's current time if everything else fails (not likely)
-                    long noteTimeStamp = DateTimeUtils.timestampFromIso8601(remainingNote.getString("note_timestamp"));
-                    noteTimeStamp = noteTimeStamp != 0 ? noteTimeStamp : remainingNote.getLong("google.sent_time", System.currentTimeMillis());
-                    builder.setWhen(noteTimeStamp);
+                    // set timestamp for note: first try with the notification timestamp, then try google's sent time
+                    // if not available; finally just set the system's current time if everything else fails (not likely)
+                    long timeStampToShow = getTimestampInMsFromNoteTimestamp(remainingNote.getString("note_timestamp"));
+                    timeStampToShow = timeStampToShow != 0 ? timeStampToShow : remainingNote.getLong("google.sent_time", System.currentTimeMillis());
+                    builder.setWhen(timeStampToShow);
 
                     noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
@@ -1004,6 +1006,24 @@ public class GCMMessageService extends GcmListenerService {
                 default:
                     return false;
             }
+        }
+
+        private long getTimestampInMsFromNoteTimestamp(String noteTimeStamp){
+            // example note_timestamp:
+            // note_timestamp=2016-11-23T13:10:57+00:00
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+            try {
+                Date date = df.parse(noteTimeStamp);
+                if (date == null) {
+                    return 0;
+                }
+                return (date.getTime());
+
+            } catch (ParseException ex ) {
+               AppLog.e(T.NOTIFS, ex.getMessage());
+            }
+
+            return 0;
         }
 
     }
