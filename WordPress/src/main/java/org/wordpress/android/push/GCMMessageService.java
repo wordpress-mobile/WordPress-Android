@@ -39,6 +39,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
@@ -839,6 +840,12 @@ public class GCMMessageService extends GcmListenerService {
                             shouldCircularizeNoteIcon(remainingNote.getString(PUSH_ARG_TYPE)));
 
                     builder = getNotificationBuilder(context, title, message);
+
+                    // set timestamp for note: first try notification timestamp, then try google's sent time if not available
+                    // finally just set the system's current time if everything else fails (not likely)
+                    long noteTimeStamp = DateTimeUtils.timestampFromIso8601(remainingNote.getString("note_timestamp"));
+                    noteTimeStamp = noteTimeStamp != 0 ? noteTimeStamp : remainingNote.getLong("google.sent_time", System.currentTimeMillis());
+                    builder.setWhen(noteTimeStamp);
 
                     noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
