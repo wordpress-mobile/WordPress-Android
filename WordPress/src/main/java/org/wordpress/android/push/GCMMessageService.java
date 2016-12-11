@@ -59,7 +59,7 @@ import static org.wordpress.android.ui.notifications.NotificationsListFragment.N
 
 public class GCMMessageService extends GcmListenerService {
     private static final ArrayMap<Integer, Bundle> sActiveNotificationsMap = new ArrayMap<>();
-    private static NotificationHelper sNotificationHelpers = new NotificationHelper();
+    private static final NotificationHelper sNotificationHelpers = new NotificationHelper();
 
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
     public static final int PUSH_NOTIFICATION_ID = 10000;
@@ -142,7 +142,7 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     public static synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context, String noteId){
-        if (sNotificationHelpers != null && sActiveNotificationsMap.size() > 0) {
+        if (sActiveNotificationsMap.size() > 0) {
             //get the corresponding bundle for this noteId
             for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry<Integer, Bundle> row = it.next();
@@ -156,7 +156,7 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     public static synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context){
-        if (sNotificationHelpers != null && sActiveNotificationsMap.size() > 0) {
+        if (sActiveNotificationsMap.size() > 0) {
             Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
             sNotificationHelpers.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
         }
