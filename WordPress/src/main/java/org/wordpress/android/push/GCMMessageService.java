@@ -48,6 +48,9 @@ import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -309,17 +312,17 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private boolean canAddActionsToNotifications() {
-        if (isWPPinLockEnabled()) {
+        if (isWPPinLockEnabled(this)) {
             return !isDeviceLocked();
         }
         return true;
     }
 
-    private boolean isWPPinLockEnabled() {
+    public static boolean isWPPinLockEnabled(Context context) {
         AppLockManager appLockManager = AppLockManager.getInstance();
         // Make sure PasscodeLock isn't already in place
         if (!appLockManager.isAppLockFeatureEnabled()) {
-            appLockManager.enableDefaultAppLockIfAvailable(this.getApplication());
+            appLockManager.enableDefaultAppLockIfAvailable((WordPress)context.getApplicationContext());
         }
 
         // Make sure the locker was correctly enabled, and it's active
@@ -840,6 +843,12 @@ public class GCMMessageService extends GcmListenerService {
 
                     builder = getNotificationBuilder(context, title, message);
 
+                    // set timestamp for note: first try with the notification timestamp, then try google's sent time
+                    // if not available; finally just set the system's current time if everything else fails (not likely)
+                    long timeStampToShow = getTimestampInMsFromNoteTimestamp(remainingNote.getString("note_timestamp"));
+                    timeStampToShow = timeStampToShow != 0 ? timeStampToShow : remainingNote.getLong("google.sent_time", System.currentTimeMillis());
+                    builder.setWhen(timeStampToShow);
+
                     noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
                     if (!sActiveNotificationsMap.isEmpty()) {
@@ -997,6 +1006,24 @@ public class GCMMessageService extends GcmListenerService {
                 default:
                     return false;
             }
+        }
+
+        private long getTimestampInMsFromNoteTimestamp(String noteTimeStamp){
+            // example note_timestamp:
+            // note_timestamp=2016-11-23T13:10:57+00:00
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+            try {
+                Date date = df.parse(noteTimeStamp);
+                if (date == null) {
+                    return 0;
+                }
+                return (date.getTime());
+
+            } catch (ParseException ex ) {
+               AppLog.e(T.NOTIFS, ex.getMessage());
+            }
+
+            return 0;
         }
 
     }
