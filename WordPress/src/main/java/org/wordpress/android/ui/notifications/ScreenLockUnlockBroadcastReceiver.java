@@ -14,7 +14,11 @@ public class ScreenLockUnlockBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
         if (Intent.ACTION_SCREEN_OFF.equals(action) || Intent.ACTION_USER_PRESENT.equals(action)) {
-            GCMMessageService.rebuildAndUpdateNotifsOnSystemBarForRemainingNote(context);
+            // only rebuild notifications if WPpin not enabled, notifications don't need be updated
+            // if quick actions are to remain the same
+            if (GCMMessageService.isWPPinLockEnabled(context)) {
+                GCMMessageService.rebuildAndUpdateNotifsOnSystemBarForRemainingNote(context);
+            }
         }
     }
 }

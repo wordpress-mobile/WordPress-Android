@@ -228,7 +228,23 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void setNewAdapter(String lastSearch, boolean isInSearchMode) {
-        mAdapter = new SitePickerAdapter(this, mCurrentLocalId, lastSearch, isInSearchMode);
+        mAdapter = new SitePickerAdapter(
+                this,
+                mCurrentLocalId,
+                lastSearch,
+                isInSearchMode,
+                new SitePickerAdapter.OnDataLoadedListener() {
+            @Override
+            public void onBeforeLoad(boolean isEmpty) {
+                if (isEmpty) {
+                    showProgress(true);
+                }
+            }
+            @Override
+            public void onAfterLoad() {
+                showProgress(false);
+            }
+        });
         mAdapter.setOnSiteClickListener(this);
         mAdapter.setOnSelectedCountChangedListener(this);
     }
@@ -368,6 +384,10 @@ public class SitePickerActivity extends AppCompatActivity
         getAdapter().setLastSearch(s);
         getAdapter().searchSites(s);
         return true;
+    }
+
+    public void showProgress(boolean show) {
+        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
