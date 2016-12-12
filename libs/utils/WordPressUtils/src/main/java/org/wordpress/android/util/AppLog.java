@@ -169,13 +169,16 @@ public class AppLog {
     private static class LogEntry {
         LogLevel mLogLevel;
         String mLogText;
+        java.util.Date mDate;
         T mLogTag;
 
         public LogEntry(LogLevel logLevel, String logText, T logTag) {
             mLogLevel = logLevel;
-            mLogText = logText;
-            if (mLogText == null) {
+            mDate = DateTimeUtils.nowUTC();
+            if (logText == null) {
                 mLogText = "null";
+            } else {
+                mLogText = logText;
             }
             mLogTag = logTag;
         }
