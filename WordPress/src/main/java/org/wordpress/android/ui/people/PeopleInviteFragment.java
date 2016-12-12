@@ -32,6 +32,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.MultiUsernameEditText;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -212,6 +213,13 @@ public class PeopleInviteFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 Uri uri = Uri.parse(getString(R.string.role_info_url));
+                if (!WPActivityUtils.isDefaultViewAppAvailable(v.getContext(), uri)) {
+                    String toastErrorUrlIntent = v.getContext().getString(R.string.no_default_app_available_to_load_uri);
+                    ToastUtils.showToast(v.getContext(), String.format(toastErrorUrlIntent, getString(R.string.role_info_url)), ToastUtils.Duration.LONG);
+
+                    return;
+                }
+
                 AppLockManager.getInstance().setExtendedTimeout();
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
             }

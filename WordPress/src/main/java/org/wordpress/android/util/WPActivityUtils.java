@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
@@ -22,11 +23,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 
 import java.util.List;
@@ -141,6 +140,18 @@ public class WPActivityUtils {
         List<ResolveInfo> emailApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
         return !emailApps.isEmpty();
+    }
+
+    public static boolean isDefaultViewAppAvailable(Context context, Uri uri) {
+        if (context == null) {
+            return false;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> webBrowserApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        return !webBrowserApps.isEmpty();
     }
 
     public static void disableComponent(Context context, Class<?> klass) {

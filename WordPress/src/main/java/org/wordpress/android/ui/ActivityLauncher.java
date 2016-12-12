@@ -43,7 +43,9 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
@@ -132,6 +134,12 @@ public class ActivityLauncher {
 
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
 
+        if (!WPActivityUtils.isDefaultViewAppAvailable(context, uri)) {
+            String toastErrorUrlIntent = context.getString(R.string.no_default_app_available_to_load_uri);
+            ToastUtils.showToast(context, String.format(toastErrorUrlIntent, siteUrl), ToastUtils.Duration.LONG);
+            return;
+        }
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         context.startActivity(intent);
@@ -148,6 +156,11 @@ public class ActivityLauncher {
         Uri uri = Uri.parse(adminUrl);
 
         AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, blog);
+
+        if (!WPActivityUtils.isDefaultViewAppAvailable(context, uri)) {
+            Toast.makeText(context, context.getText(R.string.no_default_app_available_to_load_uri), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);

@@ -292,7 +292,14 @@ public class ReaderActivityLauncher {
             // disable deeplinking activity so to not catch WP URLs
             WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
 
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            Uri uri = Uri.parse(url);
+            if (!WPActivityUtils.isDefaultViewAppAvailable(context, uri)) {
+                String toastErrorUrlIntent = context.getString(R.string.no_default_app_available_to_load_uri);
+                ToastUtils.showToast(context, String.format(toastErrorUrlIntent, url), ToastUtils.Duration.LONG);
+                return;
+            }
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             context.startActivity(intent);
             AppLockManager.getInstance().setExtendedTimeout();
 

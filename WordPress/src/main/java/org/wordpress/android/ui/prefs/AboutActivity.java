@@ -10,6 +10,8 @@ import android.view.View.OnClickListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -57,6 +59,13 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
         } else {
             return;
         }
+
+        if (!WPActivityUtils.isDefaultViewAppAvailable(this, uri)) {
+            String toastErrorUrlIntent = this.getString(R.string.no_default_app_available_to_load_uri);
+            ToastUtils.showToast(this, String.format(toastErrorUrlIntent, uri.toString()), ToastUtils.Duration.LONG);
+            return;
+        }
+
         AppLockManager.getInstance().setExtendedTimeout();
         startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }

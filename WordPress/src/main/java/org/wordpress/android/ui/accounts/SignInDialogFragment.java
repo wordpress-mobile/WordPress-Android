@@ -14,6 +14,8 @@ import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 public class SignInDialogFragment extends DialogFragment {
@@ -144,7 +146,13 @@ public class SignInDialogFragment extends DialogFragment {
         }
         switch (action) {
             case ACTION_OPEN_URL:
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(arguments.getString(ARG_OPEN_URL_PARAM)));
+                Uri addressToLoad = Uri.parse(arguments.getString(ARG_OPEN_URL_PARAM));
+                if (!WPActivityUtils.isDefaultViewAppAvailable(getContext(), addressToLoad)) {
+                    String toastErrorUrlIntent = getContext().getString(R.string.no_default_app_available_to_load_uri);
+                    ToastUtils.showToast(getContext(), String.format(toastErrorUrlIntent, arguments.getString(ARG_OPEN_URL_PARAM)), ToastUtils.Duration.LONG);
+                    return;
+                }
+                Intent intent = new Intent(Intent.ACTION_VIEW, addressToLoad);
                 startActivity(intent);
                 dismissAllowingStateLoss();
                 break;

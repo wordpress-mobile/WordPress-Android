@@ -39,6 +39,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
@@ -437,6 +438,12 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                                                       @Override
                                                       public void onClick(View v) {
                                                           Uri uri = Uri.parse(Constants.URL_TOS);
+                                                          if (!WPActivityUtils.isDefaultViewAppAvailable(getContext(), uri)) {
+                                                              String toastErrorUrlIntent = getContext().getString(R.string.no_default_app_available_to_load_uri);
+                                                              ToastUtils.showToast(getContext(), String.format(toastErrorUrlIntent, Constants.URL_TOS), ToastUtils.Duration.LONG);
+                                                              return;
+                                                          }
+
                                                           startActivity(new Intent(Intent.ACTION_VIEW, uri));
                                                       }
                                                   }

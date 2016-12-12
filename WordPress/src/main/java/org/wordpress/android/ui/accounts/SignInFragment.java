@@ -682,7 +682,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         public void onClick(View v) {
             String forgotPasswordUrl = getForgotPasswordURL();
             AppLog.i(T.NUX, "User tapped forgot password link: " + forgotPasswordUrl);
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(forgotPasswordUrl));
+            Uri addressToLoad = Uri.parse(forgotPasswordUrl);
+            if (!WPActivityUtils.isDefaultViewAppAvailable(getContext(), addressToLoad)) {
+                String toastErrorUrlIntent = getContext().getString(R.string.no_default_app_available_to_load_uri);
+                ToastUtils.showToast(getContext(), String.format(toastErrorUrlIntent, getForgotPasswordURL()), ToastUtils.Duration.LONG);
+                return;
+            }
+            Intent intent = new Intent(Intent.ACTION_VIEW, addressToLoad);
             startActivity(intent);
         }
     };

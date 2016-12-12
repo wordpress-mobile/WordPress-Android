@@ -68,6 +68,7 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.xmlrpc.android.ApiHelper;
@@ -921,8 +922,14 @@ public class EditPostSettingsFragment extends Fragment
 
     private void viewLocation() {
         if (mPostLocation != null && mPostLocation.isValid()) {
-            String uri = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
-            startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+            String locationString = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
+            Uri uri = Uri.parse(locationString);
+            if (!WPActivityUtils.isDefaultViewAppAvailable(getActivity(), uri)) {
+                String toastErrorUrlIntent = getActivity().getString(R.string.no_default_app_available_to_load_uri);
+                ToastUtils.showToast(getActivity(), String.format(toastErrorUrlIntent, uri), ToastUtils.Duration.LONG);
+                return;
+            }
+            startActivity(new Intent(android.content.Intent.ACTION_VIEW, uri));
         } else {
             showLocationNotAvailableError();
             showLocationAdd();
