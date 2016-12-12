@@ -216,7 +216,6 @@ public class PeopleInviteFragment extends Fragment implements
                 if (!WPActivityUtils.isDefaultViewAppAvailable(v.getContext(), uri)) {
                     String toastErrorUrlIntent = v.getContext().getString(R.string.no_default_app_available_to_load_uri);
                     ToastUtils.showToast(v.getContext(), String.format(toastErrorUrlIntent, getString(R.string.role_info_url)), ToastUtils.Duration.LONG);
-
                     return;
                 }
 
