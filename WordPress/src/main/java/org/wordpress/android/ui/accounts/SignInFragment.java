@@ -919,11 +919,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         login.execute(new LoginAbstract.Callback() {
             @Override
             public void onSuccess() {
+                if (!isAdded()) {
+                    return;
+                }
                 configureAccountAfterSuccessfulSignIn();
             }
 
             @Override
             public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
+                if (!isAdded()) {
+                    return;
+                }
                 mFetchBlogListCallback.onError(errorMessageId, twoStepCodeRequired, httpAuthRequired, erroneousSslCertificate, "");
                 mShouldSendTwoStepSMS = false;
                 // Delete credentials only if login failed with an incorrect username/password error
@@ -1029,6 +1035,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         WordPress.getRestClientUtilsV0().isAvailable(mUsername, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
+                if (!isAdded()) {
+                    return;
+                }
                 try {
                     String errorReason = response.getString(REASON_ERROR);
                     if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN) && mListener != null) {
@@ -1044,6 +1053,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 onWPComEmailCheckError(true);
             }
         });
