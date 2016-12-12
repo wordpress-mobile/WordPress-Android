@@ -200,8 +200,8 @@ public class AppLog {
             sb.append(mLogLevel.name());
             sb.append(": ");
             sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
+            sb.append(" (").append(formatLogDate()).append(")");
             sb.append("</font>");
-            sb.append(" <font color=\"gray\">(").append(formatLogDate()).append("</font>)");
             return sb.toString();
         }
     }
