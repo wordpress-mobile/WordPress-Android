@@ -9,7 +9,6 @@ import android.util.Log;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -298,8 +297,10 @@ public class AppLog {
         Iterator<LogEntry> it = mLogEntries.iterator();
         int lineNum = 1;
         while (it.hasNext()) {
+            LogEntry entry = it.next();
             sb.append(String.format("%02d - ", lineNum))
-                    .append(it.next().mLogText)
+                    .append(entry.mLogText)
+                    .append(" (").append(entry.formatLogDate()).append(")")
                     .append("\n");
             lineNum++;
         }
