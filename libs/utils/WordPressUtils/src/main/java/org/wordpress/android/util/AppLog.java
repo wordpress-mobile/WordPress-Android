@@ -9,8 +9,11 @@ import android.util.Log;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 /**
@@ -184,6 +187,7 @@ public class AppLog {
         }
 
         private String toHtml() {
+            DateFormat formatter = new SimpleDateFormat("MM-dd h:mma", Locale.US);
             StringBuilder sb = new StringBuilder();
             sb.append("<font color=\"");
             sb.append(mLogLevel.toHtmlColor());
@@ -194,6 +198,7 @@ public class AppLog {
             sb.append(mLogLevel.name());
             sb.append(": ");
             sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
+            sb.append("<font color=\"gray\">").append(formatter.format(mDate)).append("</font>  ");
             sb.append("</font>");
             return sb.toString();
         }
