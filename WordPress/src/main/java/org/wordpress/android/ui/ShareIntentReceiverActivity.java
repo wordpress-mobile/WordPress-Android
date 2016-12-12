@@ -81,7 +81,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
             // if text/plain and only one blog, then don't show this fragment, share it directly to a new post
             if (blogNames.length == 1) {
-                startActivityAndFinish(new Intent(this, EditPostActivity.class));
+                lauchActivity(new Intent(this, EditPostActivity.class));
             }
         } else {
             String[] actions = new String[]{getString(R.string.share_action_post), getString(
@@ -189,13 +189,11 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         return true;
     }
 
-    private void startActivityAndFinish(Intent intent) {
+    private void lauchActivity(Intent intent) {
         String action = getIntent().getAction();
         if (intent != null) {
             intent.setAction(action);
             intent.setType(getIntent().getType());
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
             intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
@@ -209,7 +207,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             }
             savePreferences();
             startActivity(intent);
-            finish();
         }
     }
 
@@ -237,7 +234,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             // add to media gallery
             intent = new Intent(this, MediaBrowserActivity.class);
         }
-        startActivityAndFinish(intent);
+        lauchActivity(intent);
         return true;
     }
 

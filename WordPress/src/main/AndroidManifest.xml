@@ -359,7 +359,8 @@
 
         <activity
             android:name=".ui.ShareIntentReceiverActivity"
-            android:theme="@style/Calypso.FloatingActivity">
+            android:theme="@style/Calypso.FloatingActivity"
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
