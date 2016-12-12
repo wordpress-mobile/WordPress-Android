@@ -186,8 +186,11 @@ public class AppLog {
             mLogTag = logTag;
         }
 
+        private String formatLogDate() {
+            return new SimpleDateFormat("MM-dd h:mma", Locale.US).format(mDate);
+        }
+
         private String toHtml() {
-            DateFormat formatter = new SimpleDateFormat("MM-dd h:mma", Locale.US);
             StringBuilder sb = new StringBuilder();
             sb.append("<font color=\"");
             sb.append(mLogLevel.toHtmlColor());
@@ -198,7 +201,7 @@ public class AppLog {
             sb.append(mLogLevel.name());
             sb.append(": ");
             sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
-            sb.append("<font color=\"gray\">").append(formatter.format(mDate)).append("</font>  ");
+            sb.append(" <font color=\"gray\">(").append(formatLogDate()).append("</font>)");
             sb.append("</font>");
             return sb.toString();
         }
