@@ -460,7 +460,7 @@ public class AppPrefs {
         ArrayList<Long> idList = new ArrayList<>();
         String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
         if (!TextUtils.isEmpty(idListString)) {
-            List<String> items = Arrays.asList(idListString.split("\\s*,\\s*"));
+            List<String> items = Arrays.asList(idListString.split(","));
             for (String item : items) {
                 Long oneId = Long.valueOf(item);
                 idList.add(oneId);
@@ -523,7 +523,7 @@ public class AppPrefs {
         if (!TextUtils.isEmpty(idListString)) {
             // note wrapping the Arrays.asList call with a new object is needed because otherwise
             // trying to remove an item from a List returned by Arrays.asList throws an UnsupportedOperationException
-            List<String> items = new ArrayList(Arrays.asList(idListString.split("\\s*,\\s*")));
+            List<String> items = new ArrayList(Arrays.asList(idListString.split(",")));
             if (items.size() > MAX_PENDING_DRAFTS_AMOUNT) {
                 // eliminate first one
                 items.remove(0);
