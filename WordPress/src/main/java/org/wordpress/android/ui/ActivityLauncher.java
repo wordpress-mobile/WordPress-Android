@@ -158,7 +158,8 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, blog);
 
         if (!WPActivityUtils.isDefaultViewAppAvailable(context, uri)) {
-            Toast.makeText(context, context.getText(R.string.no_default_app_available_to_load_uri), Toast.LENGTH_SHORT).show();
+            String toastErrorUrlIntent = context.getString(R.string.no_default_app_available_to_load_uri);
+            ToastUtils.showToast(context, String.format(toastErrorUrlIntent, adminUrl), ToastUtils.Duration.LONG);
             return;
         }
 
