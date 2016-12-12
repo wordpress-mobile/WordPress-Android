@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Location;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -51,6 +50,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -68,7 +68,6 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.xmlrpc.android.ApiHelper;
@@ -923,13 +922,7 @@ public class EditPostSettingsFragment extends Fragment
     private void viewLocation() {
         if (mPostLocation != null && mPostLocation.isValid()) {
             String locationString = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
-            Uri uri = Uri.parse(locationString);
-            if (!WPActivityUtils.isDefaultViewAppAvailable(getActivity(), uri)) {
-                String toastErrorUrlIntent = getActivity().getString(R.string.no_default_app_available_to_load_uri);
-                ToastUtils.showToast(getActivity(), String.format(toastErrorUrlIntent, uri), ToastUtils.Duration.LONG);
-                return;
-            }
-            startActivity(new Intent(android.content.Intent.ACTION_VIEW, uri));
+            ActivityLauncher.openUrlExternal(getActivity(), locationString);
         } else {
             showLocationNotAvailableError();
             showLocationAdd();

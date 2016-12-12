@@ -1,9 +1,11 @@
 package org.wordpress.android.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -34,6 +36,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
@@ -129,21 +132,9 @@ public class ActivityLauncher {
             return;
         }
 
-        String siteUrl = blog.getAlternativeHomeUrl();
-        Uri uri = Uri.parse(siteUrl);
-
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
 
-        if (!WPActivityUtils.isDefaultViewAppAvailable(context, uri)) {
-            String toastErrorUrlIntent = context.getString(R.string.no_default_app_available_to_load_uri);
-            ToastUtils.showToast(context, String.format(toastErrorUrlIntent, siteUrl), ToastUtils.Duration.LONG);
-            return;
-        }
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        context.startActivity(intent);
-        AppLockManager.getInstance().setExtendedTimeout();
+        openUrlExternal(context, blog.getAlternativeHomeUrl());
     }
 
     public static void viewBlogAdmin(Context context, Blog blog) {
@@ -152,21 +143,9 @@ public class ActivityLauncher {
             return;
         }
 
-        String adminUrl = blog.getAdminUrl();
-        Uri uri = Uri.parse(adminUrl);
-
         AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, blog);
 
-        if (!WPActivityUtils.isDefaultViewAppAvailable(context, uri)) {
-            String toastErrorUrlIntent = context.getString(R.string.no_default_app_available_to_load_uri);
-            ToastUtils.showToast(context, String.format(toastErrorUrlIntent, adminUrl), ToastUtils.Duration.LONG);
-            return;
-        }
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        context.startActivity(intent);
-        AppLockManager.getInstance().setExtendedTimeout();
+        openUrlExternal(context, blog.getAdminUrl());
     }
 
     public static void viewPostPreviewForResult(Activity activity, Post post, boolean isPage) {
@@ -308,5 +287,27 @@ public class ActivityLauncher {
         signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
         activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);
+    }
+
+    /*
+     * open the passed url in the device's external browser
+     */
+    public static void openUrlExternal(Context context, @NonNull String url) {
+        try {
+            // disable deeplinking activity so to not catch WP URLs
+            WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
+
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            context.startActivity(intent);
+            AppLockManager.getInstance().setExtendedTimeout();
+
+        } catch (ActivityNotFoundException e) {
+            String toastErrorUrlIntent = context.getString(R.string.no_default_app_available_to_load_uri);
+            ToastUtils.showToast(context, String.format(toastErrorUrlIntent, url), ToastUtils.Duration.LONG);
+        } finally {
+            // re-enable deeplinking
+            WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
+        }
     }
 }

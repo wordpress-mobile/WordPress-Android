@@ -1,21 +1,20 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 public class SignInDialogFragment extends DialogFragment {
@@ -146,14 +145,11 @@ public class SignInDialogFragment extends DialogFragment {
         }
         switch (action) {
             case ACTION_OPEN_URL:
-                Uri addressToLoad = Uri.parse(arguments.getString(ARG_OPEN_URL_PARAM));
-                if (!WPActivityUtils.isDefaultViewAppAvailable(getContext(), addressToLoad)) {
-                    String toastErrorUrlIntent = getContext().getString(R.string.no_default_app_available_to_load_uri);
-                    ToastUtils.showToast(getContext(), String.format(toastErrorUrlIntent, arguments.getString(ARG_OPEN_URL_PARAM)), ToastUtils.Duration.LONG);
+                String url = arguments.getString(ARG_OPEN_URL_PARAM);
+                if (TextUtils.isEmpty(url)) {
                     return;
                 }
-                Intent intent = new Intent(Intent.ACTION_VIEW, addressToLoad);
-                startActivity(intent);
+                ActivityLauncher.openUrlExternal(getContext(), url);
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:

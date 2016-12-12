@@ -142,18 +142,6 @@ public class WPActivityUtils {
         return !emailApps.isEmpty();
     }
 
-    public static boolean isDefaultViewAppAvailable(Context context, Uri uri) {
-        if (context == null) {
-            return false;
-        }
-
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        PackageManager packageManager = context.getPackageManager();
-        List<ResolveInfo> webBrowserApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        return !webBrowserApps.isEmpty();
-    }
-
     public static void disableComponent(Context context, Class<?> klass) {
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(new ComponentName(context, klass),

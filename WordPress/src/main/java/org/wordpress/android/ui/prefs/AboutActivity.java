@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -10,10 +8,8 @@ import android.view.View.OnClickListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.Calendar;
 
@@ -48,26 +44,19 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
 
     @Override
     public void onClick(View v) {
-        Uri uri;
+        String url;
         int id = v.getId();
         if (id == R.id.about_url) {
-            uri = Uri.parse(URL_AUTOMATTIC);
+            url = URL_AUTOMATTIC;
         } else if (id == R.id.about_tos) {
-            uri = Uri.parse(URL_TOS);
+            url = URL_TOS;
         } else if (id == R.id.about_privacy) {
-            uri = Uri.parse(URL_AUTOMATTIC + URL_PRIVACY_POLICY);
+            url = URL_AUTOMATTIC + URL_PRIVACY_POLICY;
         } else {
             return;
         }
 
-        if (!WPActivityUtils.isDefaultViewAppAvailable(this, uri)) {
-            String toastErrorUrlIntent = this.getString(R.string.no_default_app_available_to_load_uri);
-            ToastUtils.showToast(this, String.format(toastErrorUrlIntent, uri.toString()), ToastUtils.Duration.LONG);
-            return;
-        }
-
-        AppLockManager.getInstance().setExtendedTimeout();
-        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        ActivityLauncher.openUrlExternal(this, url);
     }
 
 

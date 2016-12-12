@@ -2,8 +2,6 @@ package org.wordpress.android.ui.people;
 
 
 import android.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -26,15 +24,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Role;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.MultiUsernameEditText;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -212,15 +209,7 @@ public class PeopleInviteFragment extends Fragment implements
         imgRoleInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse(getString(R.string.role_info_url));
-                if (!WPActivityUtils.isDefaultViewAppAvailable(v.getContext(), uri)) {
-                    String toastErrorUrlIntent = v.getContext().getString(R.string.no_default_app_available_to_load_uri);
-                    ToastUtils.showToast(v.getContext(), String.format(toastErrorUrlIntent, getString(R.string.role_info_url)), ToastUtils.Duration.LONG);
-                    return;
-                }
-
-                AppLockManager.getInstance().setExtendedTimeout();
-                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                ActivityLauncher.openUrlExternal(v.getContext(), getString(R.string.role_info_url));
             }
         });
 

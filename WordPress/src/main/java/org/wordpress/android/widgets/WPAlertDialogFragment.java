@@ -4,16 +4,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 
 public class WPAlertDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
     private static enum WPAlertDialogType {ALERT,    // simple ok dialog with error message
@@ -126,13 +123,7 @@ public class WPAlertDialogFragment extends DialogFragment implements DialogInter
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (!TextUtils.isEmpty(infoURL)) {
-                                Uri uri = Uri.parse(infoURL);
-                                if (!WPActivityUtils.isDefaultViewAppAvailable(getActivity(), uri)) {
-                                    String toastErrorUrlIntent = getActivity().getString(R.string.no_default_app_available_to_load_uri);
-                                    ToastUtils.showToast(getActivity(), String.format(toastErrorUrlIntent, infoURL), ToastUtils.Duration.LONG);
-                                    return;
-                                }
-                                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                                ActivityLauncher.openUrlExternal(getActivity(), infoURL);
                             }
                         }
                 });

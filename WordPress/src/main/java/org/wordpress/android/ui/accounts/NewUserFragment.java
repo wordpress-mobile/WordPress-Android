@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -23,6 +22,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
@@ -39,7 +39,6 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
@@ -437,14 +436,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         termsOfServiceTextView.setOnClickListener(new OnClickListener() {
                                                       @Override
                                                       public void onClick(View v) {
-                                                          Uri uri = Uri.parse(Constants.URL_TOS);
-                                                          if (!WPActivityUtils.isDefaultViewAppAvailable(getContext(), uri)) {
-                                                              String toastErrorUrlIntent = getContext().getString(R.string.no_default_app_available_to_load_uri);
-                                                              ToastUtils.showToast(getContext(), String.format(toastErrorUrlIntent, Constants.URL_TOS), ToastUtils.Duration.LONG);
-                                                              return;
-                                                          }
-
-                                                          startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                                                          ActivityLauncher.openUrlExternal(getContext(), Constants.URL_TOS);
                                                       }
                                                   }
         );
