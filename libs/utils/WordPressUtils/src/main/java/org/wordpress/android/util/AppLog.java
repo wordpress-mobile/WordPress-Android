@@ -167,10 +167,10 @@ public class AppLog {
     }
 
     private static class LogEntry {
-        LogLevel mLogLevel;
-        String mLogText;
-        java.util.Date mDate;
-        T mLogTag;
+        final LogLevel mLogLevel;
+        final String mLogText;
+        final java.util.Date mDate;
+        final T mLogTag;
 
         public LogEntry(LogLevel logLevel, String logText, T logTag) {
             mLogLevel = logLevel;
