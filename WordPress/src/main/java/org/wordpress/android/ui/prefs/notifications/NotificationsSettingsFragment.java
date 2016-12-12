@@ -53,10 +53,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
     private static final int SITE_SEARCH_VISIBILITY_COUNT = 15;
     // The number of notification types we support (e.g. timeline, email, mobile)
     private static final int TYPE_COUNT = 3;
+    private static final int NO_MAXIMUM = -1;
+    private static final int MAX_SITES_TO_SHOW_ON_FIRST_SCREEN = 3;
 
     private NotificationsSettings mNotificationsSettings;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
+    private boolean mSearchMenuItemCollapsed = true;
 
     private String mDeviceId;
     private String mRestoredQuery;
@@ -64,6 +67,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
     private int mSiteCount;
 
     private final List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
+    private PreferenceCategory mBlogsCategory;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,17 +123,38 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         mSearchMenuItem = menu.findItem(R.id.menu_notifications_settings_search);
         mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
         mSearchView.setQueryHint(getString(R.string.search_sites));
+        mBlogsCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_notification_blogs));
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                configureBlogsSettings();
+                configureBlogsSettings(mBlogsCategory, true);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                configureBlogsSettings();
+                // we need to perform this check because when the search menu item is collapsed
+                // a new queryTExtChange event is triggered with an empty value "", and we only
+                // would want to take care of it when the user actively opened/cleared the search term
+                configureBlogsSettings(mBlogsCategory, !mSearchMenuItemCollapsed);
+                return true;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                mSearchMenuItemCollapsed = false;
+                configureBlogsSettings(mBlogsCategory, true);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                mSearchMenuItemCollapsed = true;
+                configureBlogsSettings(mBlogsCategory, false);
                 return true;
             }
         });
@@ -211,7 +237,12 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         }
 
         if (shouldUpdateUI) {
-            configureBlogsSettings();
+            if (mBlogsCategory == null) {
+                mBlogsCategory = (PreferenceCategory) findPreference(
+                        getString(R.string.pref_notification_blogs));
+            }
+
+            configureBlogsSettings(mBlogsCategory, false);
             configureOtherSettings();
             configureDotcomSettings();
         }
@@ -259,7 +290,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
 
     }
 
-    private void configureBlogsSettings() {
+    private void configureBlogsSettings(PreferenceCategory blogsCategory, boolean showAll) {
         if (!isAdded()) return;
         // Retrieve blogs (including jetpack sites) originally retrieved through FetchBlogListWPCom
         // They will have an empty (but encrypted) password
@@ -277,12 +308,15 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
 
         Context context = getActivity();
 
-        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(
-                getString(R.string.pref_notification_blogs));
         blogsCategory.removeAll();
 
+        int maxSitesToShow = showAll ? NO_MAXIMUM : MAX_SITES_TO_SHOW_ON_FIRST_SCREEN;
+        int count = 0;
         for (Map blog : blogs) {
             if (context == null) return;
+
+            count++;
+            if (maxSitesToShow != NO_MAXIMUM && count > maxSitesToShow) break;
 
             String siteUrl = MapUtils.getMapStr(blog, "url");
             String title = MapUtils.getMapStr(blog, "blogName");
@@ -303,7 +337,24 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
             blogsCategory.addPreference(searchResultsPref);
         }
 
+        if (mSiteCount > maxSitesToShow && !showAll) {
+            //append a "view all" option
+            appendViewAllSitesOption(context);
+        }
+
         updateSearchMenuVisibility();
+    }
+
+    private void appendViewAllSitesOption(Context context) {
+
+        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_notification_blogs));
+
+        PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
+        prefScreen.setTitle(R.string.all_your_sites);
+        addSitesForViewAllSitesScreen(prefScreen);
+        blogsCategory.addPreference(prefScreen);
+
     }
 
     private void updateSearchMenuVisibility() {
@@ -372,6 +423,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         }
 
         mTypePreferenceCategories.add(rootCategory);
+    }
+
+    private void addSitesForViewAllSitesScreen(PreferenceScreen preferenceScreen) {
+        Context context = getActivity();
+        if (context == null) return;
+
+        PreferenceCategory rootCategory = new PreferenceCategory(context);
+        rootCategory.setTitle(R.string.your_sites);
+        preferenceScreen.addPreference(rootCategory);
+
+        configureBlogsSettings(rootCategory, true);
     }
 
     private final NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener mOnSettingsChangedListener =
