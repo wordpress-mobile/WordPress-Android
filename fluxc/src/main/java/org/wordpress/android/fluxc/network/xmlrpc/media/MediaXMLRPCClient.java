@@ -178,23 +178,19 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     if (response == null || !(response instanceof Boolean) || !(Boolean) response) {
                         AppLog.w(T.MEDIA, "could not parse XMLRPC.DELETE_MEDIA response: " + response);
                         MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                        notifyMediaDeleted(MediaAction.FETCH_ALL_MEDIA, site, media, error);
+                        notifyMediaDeleted(MediaAction.DELETE_MEDIA, site, media, error);
                         return;
                     }
 
                     AppLog.v(T.MEDIA, "Successful response from XMLRPC.DELETE_MEDIA");
+                    notifyMediaDeleted(MediaAction.DELETE_MEDIA, site, media, null);
                 }
             }, new BaseRequest.BaseErrorListener() {
                 @Override
                 public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                     AppLog.v(T.MEDIA, "Error response from XMLRPC.DELETE_MEDIA:" + error);
                     MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
-                    if (mediaError == MediaErrorType.MEDIA_NOT_FOUND) {
-                        AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
-                        notifyMediaDeleted(MediaAction.DELETE_MEDIA, site, media, null);
-                    } else {
-                        notifyMediaDeleted(MediaAction.FETCH_MEDIA, site, media, new MediaError(mediaError));
-                    }
+                    notifyMediaDeleted(MediaAction.DELETE_MEDIA, site, media, new MediaError(mediaError));
                 }
             }));
         }
