@@ -1026,7 +1026,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void requestWPComEmailCheck() {
-        WordPress.getRestClientUtilsV0().isAvailable(mUsername, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV0().isAvailable(UrlUtils.urlEncode(mUsername), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
