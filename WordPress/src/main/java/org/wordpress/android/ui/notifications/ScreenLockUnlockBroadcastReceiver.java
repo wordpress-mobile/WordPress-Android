@@ -11,13 +11,18 @@ import org.wordpress.android.push.GCMMessageService;
  */
 public class ScreenLockUnlockBroadcastReceiver extends BroadcastReceiver {
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         final String action = intent.getAction();
         if (Intent.ACTION_SCREEN_OFF.equals(action) || Intent.ACTION_USER_PRESENT.equals(action)) {
-            // only rebuild notifications if WPpin not enabled, notifications don't need be updated
+            // only rebuild notifications if Pin lock is enabled, as notifications don't need be updated
             // if quick actions are to remain the same
             if (GCMMessageService.isWPPinLockEnabled(context)) {
-                GCMMessageService.rebuildAndUpdateNotifsOnSystemBarForRemainingNote(context);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        GCMMessageService.rebuildAndUpdateNotifsOnSystemBarForRemainingNote(context);
+                    }
+                }).start();
             }
         }
     }
