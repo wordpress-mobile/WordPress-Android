@@ -447,6 +447,9 @@ public class PostsListFragment extends Fragment
         post.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
         post.setChangedFromDraftToPublished(true);
 
+        // also in case this postId was in our ignore list, delete it from the list as well
+        AppPrefs.deleteIdFromPendingDraftsIgnorePostIdList(post.getLocalTablePostId());
+
         PostUploadService.addPostToUpload(post);
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
