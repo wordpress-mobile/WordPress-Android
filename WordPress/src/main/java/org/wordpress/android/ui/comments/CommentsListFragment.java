@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -53,15 +54,22 @@ public class CommentsListFragment extends Fragment {
     }
 
     public enum CommentStatusCriteria implements FilterCriteria {
-        ALL,
-        UNAPPROVED,
-        APPROVED,
-        TRASH,
-        SPAM;
+        ALL(R.string.comment_status_all),
+        UNAPPROVED(R.string.comment_status_unapproved),
+        APPROVED(R.string.comment_status_approved),
+        TRASH(R.string.comment_status_trash),
+        SPAM(R.string.comment_status_spam),
+        DELETE(R.string.comment_status_trash);
+
+        private final int mLabelResId;
+
+        CommentStatusCriteria(@StringRes int labelResId) {
+            mLabelResId = labelResId;
+        }
 
         @Override
         public String getLabel() {
-            return name();
+            return WordPress.getContext().getString(mLabelResId);
         }
 
         public static CommentStatusCriteria fromCommentStatus(CommentStatus status) {
