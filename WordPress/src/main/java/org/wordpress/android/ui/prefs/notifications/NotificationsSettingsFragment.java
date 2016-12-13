@@ -47,7 +47,7 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class NotificationsSettingsFragment extends PreferenceFragment {
+public class NotificationsSettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final int SITE_SEARCH_VISIBILITY_COUNT = 15;
@@ -103,10 +103,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     @Override
     public void onResume() {
         super.onResume();
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         mNotificationsEnabled = NotificationsUtils.isNotificationsEnabled(getActivity());
-
         refreshSettings();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -509,5 +516,20 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         }
 
         return false;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_key_notification_pending_drafts))) {
+            if (getActivity() != null) {
+                SharedPreferences prefs = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
+                boolean shouldNotifyOfPendingDrafts = prefs.getBoolean("wp_pref_notification_pending_drafts", true);
+                if (shouldNotifyOfPendingDrafts) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED);
+                } else {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_SETTINGS_DISABLED);
+                }
+            }
+        }
     }
 }
