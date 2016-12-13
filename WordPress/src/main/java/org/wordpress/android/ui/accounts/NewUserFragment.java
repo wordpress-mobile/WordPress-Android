@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -23,6 +22,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
@@ -436,8 +436,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         termsOfServiceTextView.setOnClickListener(new OnClickListener() {
                                                       @Override
                                                       public void onClick(View v) {
-                                                          Uri uri = Uri.parse(Constants.URL_TOS);
-                                                          startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                                                          ActivityLauncher.openUrlExternal(getContext(), Constants.URL_TOS);
                                                       }
                                                   }
         );

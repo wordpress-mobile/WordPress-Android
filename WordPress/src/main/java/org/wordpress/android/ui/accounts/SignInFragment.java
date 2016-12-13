@@ -48,6 +48,7 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
@@ -682,8 +683,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         public void onClick(View v) {
             String forgotPasswordUrl = getForgotPasswordURL();
             AppLog.i(T.NUX, "User tapped forgot password link: " + forgotPasswordUrl);
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(forgotPasswordUrl));
-            startActivity(intent);
+            ActivityLauncher.openUrlExternal(getContext(), forgotPasswordUrl);
         }
     };
 
