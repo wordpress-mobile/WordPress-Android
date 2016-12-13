@@ -646,7 +646,7 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.hideLoadingProgress();
         mFilteredCommentsView.setRefreshing(false);
 
-        if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
+        if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
             for (int commentId : event.changedCommentsLocalIds) {
                 // See how we can use local ids instead
                 CommentModel comment = mCommentStore.getCommentByLocalId(commentId);
