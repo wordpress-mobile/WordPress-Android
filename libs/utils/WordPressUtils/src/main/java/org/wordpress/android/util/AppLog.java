@@ -198,10 +198,9 @@ public class AppLog {
             sb.append("\">");
             sb.append("[");
             sb.append(formatLogDate()).append(" ");
-            sb.append(mLogTag.name());
-            sb.append("] ");
+            sb.append(mLogTag.name()).append(" ");
             sb.append(mLogLevel.name());
-            sb.append(": ");
+            sb.append("] ");
             sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
             sb.append("</font>");
             return sb.toString();
