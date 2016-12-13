@@ -1150,6 +1150,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mComment.setStatus(mPreviousStatus);
             updateStatusViews();
             ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
+        } else {
+            reloadComment();
         }
     }
 

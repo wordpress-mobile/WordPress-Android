@@ -62,7 +62,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final CommentList mComments = new CommentList();
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
-    private final List<Long> mModeratingCommentsIds = new ArrayList<>();
 
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
@@ -84,15 +83,13 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Inject CommentStore mCommentStore;
 
-    class CommentHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener, View.OnLongClickListener {
+    class CommentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private final TextView txtTitle;
         private final TextView txtComment;
         private final TextView txtStatus;
         private final TextView txtDate;
         private final WPNetworkImageView imgAvatar;
         private final ImageView imgCheckmark;
-        private final View progressBar;
         private final ViewGroup containerView;
 
         public CommentHolder(View view) {
@@ -103,7 +100,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             txtDate = (TextView) view.findViewById(R.id.text_date);
             imgCheckmark = (ImageView) view.findViewById(R.id.image_checkmark);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.avatar);
-            progressBar = view.findViewById(R.id.moderate_progress);
             containerView = (ViewGroup) view.findViewById(R.id.layout_container);
 
             itemView.setOnClickListener(this);
@@ -219,12 +215,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         CommentModel comment = mComments.get(position);
         CommentHolder holder = (CommentHolder) viewHolder;
-
-        if (isModeratingCommentId(comment.getRemoteCommentId())) {
-            holder.progressBar.setVisibility(View.VISIBLE);
-        } else {
-            holder.progressBar.setVisibility(View.GONE);
-        }
 
         // Note: following operation can take some time, we could maybe cache the calculated objects (title, spanned
         // content) to make the list scroll smoother.
@@ -375,26 +365,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     void toggleItemSelected(int position, View view) {
         setItemSelected(position, !isItemSelected(position), view);
-    }
-
-    public void addModeratingCommentId(long commentId) {
-        mModeratingCommentsIds.add(commentId);
-        int position = indexOfCommentId(commentId);
-        if (position >= 0) {
-            notifyItemChanged(position);
-        }
-    }
-
-    public void removeModeratingCommentId(long commentId) {
-        mModeratingCommentsIds.remove(commentId);
-        int position = indexOfCommentId(commentId);
-        if (position >= 0) {
-            notifyItemChanged(position);
-        }
-    }
-
-    public boolean isModeratingCommentId(long commentId) {
-        return mModeratingCommentsIds.size() > 0 && mModeratingCommentsIds.contains(commentId);
     }
 
     private int indexOfCommentId(long commentId) {

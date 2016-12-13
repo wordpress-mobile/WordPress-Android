@@ -267,7 +267,6 @@ public class CommentsActivity extends AppCompatActivity
         }
 
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
-            getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), true);
             getListFragment().updateEmptyView();
             comment.setStatus(newStatus.toString());
             mDispatcher.dispatch(CommentActionBuilder.newUpdateCommentAction(comment));
@@ -276,7 +275,6 @@ public class CommentsActivity extends AppCompatActivity
                 || newStatus == CommentStatus.DELETED) {
             mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
-            getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), true);
             getListFragment().updateEmptyView();
 
             String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) :
@@ -286,7 +284,6 @@ public class CommentsActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     mTrashedComments.remove(comment);
-                    getListFragment().setCommentIsModerating(comment.getRemoteCommentId(), false);
                     getListFragment().loadComments();
                 }
             };

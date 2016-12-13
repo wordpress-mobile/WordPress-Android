@@ -46,6 +46,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.R.id.view;
+
 public class CommentsListFragment extends Fragment {
     public static final int COMMENTS_PER_PAGE = 30;
 
@@ -188,12 +190,9 @@ public class CommentsListFragment extends Fragment {
                         return;
                     }
                     if (mActionMode == null) {
-                        if (!getAdapter().isModeratingCommentId(comment.getRemoteCommentId())) {
-                            mFilteredCommentsView.invalidate();
-                            if (getActivity() instanceof OnCommentSelectedListener) {
-                                ((OnCommentSelectedListener) getActivity())
-                                        .onCommentSelected(comment.getRemoteCommentId());
-                            }
+                        mFilteredCommentsView.invalidate();
+                        if (getActivity() instanceof OnCommentSelectedListener) {
+                            ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.getRemoteCommentId());
                         }
                     } else {
                         getAdapter().toggleItemSelected(position, view);
@@ -463,8 +462,6 @@ public class CommentsListFragment extends Fragment {
         for (CommentModel comment: comments) {
             // Preemptive update
             comment.setStatus(status.toString());
-            // Show loading indicator
-            setCommentIsModerating(comment.getRemoteCommentId(), true);
             // Actual update
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
         }
@@ -521,15 +518,6 @@ public class CommentsListFragment extends Fragment {
                 mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE, offset)));
     }
 
-    public void setCommentIsModerating(long commentId, boolean isModerating) {
-        if (!hasAdapter()) return;
-
-        if (isModerating) {
-            getAdapter().addModeratingCommentId(commentId);
-        } else {
-            getAdapter().removeModeratingCommentId(commentId);
-        }
-    }
 
     public String getEmptyViewMessage() {
         return mEmptyViewMessageType.name();
@@ -624,7 +612,8 @@ public class CommentsListFragment extends Fragment {
             } else if (i == R.id.menu_spam) {
                 moderateSelectedComments(CommentStatus.SPAM);
                 return true;
-            } else if (i == R.id.menu_trash) {// unlike the other status changes, we ask the user to confirm trashing
+            } else if (i == R.id.menu_trash) {
+                // unlike the other status changes, we ask the user to confirm trashing
                 confirmDeleteComments();
                 return true;
             } else {
@@ -646,16 +635,8 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.hideLoadingProgress();
         mFilteredCommentsView.setRefreshing(false);
 
-        if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
-            for (int commentId : event.changedCommentsLocalIds) {
-                // See how we can use local ids instead
-                CommentModel comment = mCommentStore.getCommentByLocalId(commentId);
-                if (comment != null) {
-                    setCommentIsModerating(comment.getRemoteCommentId(), false);
-                }
-            }
-
-            // Don't refresh the list on push, we already updated comments
+        // Don't refresh the list on push, we already updated comments
+        if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
             loadComments();
         }
         if (event.isError()) {
