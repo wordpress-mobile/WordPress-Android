@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
+import static java.lang.String.format;
+
 /**
  * simple wrapper for Android log calls, enables recording and displaying log
  */
@@ -186,7 +188,6 @@ public class AppLog {
         }
 
         private String formatLogDate() {
-            // dec-13 08:00 UTILS i
             return new SimpleDateFormat("MMM-dd kk:mm", Locale.US).format(mDate);
         }
 
@@ -299,7 +300,7 @@ public class AppLog {
         int lineNum = 1;
         while (it.hasNext()) {
             LogEntry entry = it.next();
-            sb.append(String.format("%02d - ", lineNum))
+            sb.append(format(Locale.US, "%02d - ", lineNum))
                 .append("[")
                 .append(entry.formatLogDate()).append(" ")
                 .append(entry.mLogTag.name())
