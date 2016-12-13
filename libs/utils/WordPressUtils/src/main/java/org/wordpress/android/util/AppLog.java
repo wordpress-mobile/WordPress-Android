@@ -186,7 +186,8 @@ public class AppLog {
         }
 
         private String formatLogDate() {
-            return new SimpleDateFormat("MM-dd h:mma", Locale.US).format(mDate).toLowerCase(Locale.US);
+            // dec-13 08:00 UTILS i
+            return new SimpleDateFormat("MMM-dd kk:mm", Locale.US).format(mDate);
         }
 
         private String toHtml() {
@@ -195,12 +196,12 @@ public class AppLog {
             sb.append(mLogLevel.toHtmlColor());
             sb.append("\">");
             sb.append("[");
+            sb.append(formatLogDate()).append(" ");
             sb.append(mLogTag.name());
             sb.append("] ");
             sb.append(mLogLevel.name());
             sb.append(": ");
             sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
-            sb.append(" (").append(formatLogDate()).append(")");
             sb.append("</font>");
             return sb.toString();
         }
@@ -299,9 +300,12 @@ public class AppLog {
         while (it.hasNext()) {
             LogEntry entry = it.next();
             sb.append(String.format("%02d - ", lineNum))
-                    .append(entry.mLogText)
-                    .append(" (").append(entry.formatLogDate()).append(")")
-                    .append("\n");
+                .append("[")
+                .append(entry.formatLogDate()).append(" ")
+                .append(entry.mLogTag.name())
+                .append("] ")
+                .append(entry.mLogText)
+                .append("\n");
             lineNum++;
         }
         return sb.toString();
