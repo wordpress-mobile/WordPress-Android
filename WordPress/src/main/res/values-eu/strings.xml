@@ -336,18 +336,6 @@ Language: eu_ES
 	<string name="select_all">Aukeratu denak</string>
 	<string name="hide">Ezkutatu</string>
 	<string name="show">Ikusi</string>
-	<string name="no_media_sources">Ezin izan da media eskuratu</string>
-	<string name="loading_blog_videos">Bideoak eskuratzen</string>
-	<string name="loading_blog_images">Irudiak eskuratzen</string>
-	<string name="error_loading_videos">Errorea bideoak kargatzean</string>
-	<string name="error_loading_images">Errorea irudiak kargatzean</string>
-	<string name="error_loading_blog_videos">Ezin dira bideoak eskuratu</string>
-	<string name="error_loading_blog_images">Ezin dira irudiak eskuratu</string>
-	<string name="no_device_images">Irudirik ez</string>
-	<string name="no_blog_videos">Bideorik ez</string>
-	<string name="no_blog_images">Irudirik ez</string>
-	<string name="no_device_videos">Bideorik ez</string>
-	<string name="no_media">Mediarik ez</string>
 	<string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
 	<string name="sign_in_jetpack">Hasi saioa WordPress.com-eko zure kontuan Jetpack-era konektatzeko.</string>
 	<string name="verify">Egiaztatu</string>
@@ -356,8 +344,6 @@ Language: eu_ES
 	<string name="editor_toast_invalid_path">Fitxategiaren bide okerra</string>
 	<string name="media_details_label_file_type">Fitxategi mota</string>
 	<string name="media_details_label_file_name">Fitxategi izena</string>
-	<string name="take_photo">Atera argazkia</string>
-	<string name="media_picker_title">Aukeratu media</string>
 	<string name="language">Hizkuntza</string>
 	<string name="device">Gailua</string>
 	<string name="media_fetching">Media eskuratzen...</string>
