@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -166,12 +167,20 @@ public class NotificationsPendingDraftsService extends Service {
         }).start();
     }
 
+    private String getPostTitle(String postTitle) {
+        String title = postTitle;
+        if (TextUtils.isEmpty(postTitle)) {
+            title = "(" + getResources().getText(R.string.untitled) + ")";
+        }
+        return title;
+    }
+
     private void buildSinglePendingDraftNotification(String postTitle, long daysInDraft, long postId, boolean isPage){
-        buildNotificationWithIntent(getResultIntentForOnePost(postId, isPage), String.format(getString(R.string.pending_draft_one), postTitle, daysInDraft), postId, isPage);
+        buildNotificationWithIntent(getResultIntentForOnePost(postId, isPage), String.format(getString(R.string.pending_draft_one), getPostTitle(postTitle), daysInDraft), postId, isPage);
     }
 
     private void buildSinglePendingDraftNotificationGeneric(String postTitle, long postId, boolean isPage){
-        buildNotificationWithIntent(getResultIntentForOnePost(postId, isPage), String.format(getString(R.string.pending_draft_one_generic), postTitle), postId, isPage);
+        buildNotificationWithIntent(getResultIntentForOnePost(postId, isPage), String.format(getString(R.string.pending_draft_one_generic), getPostTitle(postTitle)), postId, isPage);
     }
 
     private void buildPendingDraftsNotification(ArrayList<Post> posts, boolean showPages) {
