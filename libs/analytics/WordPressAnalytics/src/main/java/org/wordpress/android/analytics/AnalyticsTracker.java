@@ -143,6 +143,7 @@ public final class AnalyticsTracker {
         OPENED_PEOPLE_MANAGEMENT,
         OPENED_PERSON,
         CREATE_ACCOUNT_INITIATED,
+        CREATE_ACCOUNT_USERNAME_EXISTS,
         CREATED_ACCOUNT,
         CREATED_SITE,
         ACCOUNT_LOGOUT,

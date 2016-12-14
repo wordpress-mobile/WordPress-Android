@@ -202,6 +202,11 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         switch (getErrorType(messageId)) {
             case USERNAME:
                 showUsernameError(messageId);
+
+                if (messageId == R.string.username_exists) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_USERNAME_EXISTS);
+                }
+
                 return true;
             case PASSWORD:
                 showPasswordError(messageId);
