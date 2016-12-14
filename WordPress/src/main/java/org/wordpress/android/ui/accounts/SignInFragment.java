@@ -394,11 +394,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         // move on the the main activity
                         Intent intent = new Intent(getActivity(), WPMainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
+                        intent.putExtra(SignInActivity.MAGIC_LOGIN, isCurrentlyInMagicLinkMode());
 
                         getActivity().startActivity(intent);
                     }
-
                 }
             }
         });
@@ -410,6 +409,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     public void setShouldShowPassword(boolean shouldShowPassword) {
         mShouldShowPassword = shouldShowPassword;
+    }
+
+    private boolean isCurrentlyInMagicLinkMode() {
+        if (mPasswordLayout != null && mPasswordLayout.getVisibility() == View.GONE) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void initInfoButtons(View rootView) {
