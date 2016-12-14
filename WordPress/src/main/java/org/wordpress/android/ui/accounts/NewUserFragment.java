@@ -213,6 +213,11 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                 return true;
             case EMAIL:
                 showEmailError(messageId);
+
+                if (messageId == R.string.email_exists) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_EMAIL_EXISTS);
+                }
+
                 return true;
             case SITE_URL:
                 showSiteUrlError(messageId);
