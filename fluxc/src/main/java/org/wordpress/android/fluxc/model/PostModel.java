@@ -342,7 +342,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
+        if (other == null || !(other instanceof PostModel)) return false;
 
         PostModel otherPost = (PostModel) other;
 
@@ -358,25 +358,19 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
                && getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost()
                && getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost()
                && getParentId() == otherPost.getParentId()
-               && (getTitle() != null ? getTitle().equals(otherPost.getTitle()) : otherPost.getTitle() == null)
-               && (getContent() != null ? getContent().equals(otherPost.getContent()) : otherPost.getContent() == null)
-               && (getDateCreated() != null
-                ? getDateCreated().equals(otherPost.getDateCreated()) : otherPost.getDateCreated() == null)
-               && (getCategoryIds() != null
-                ? getCategoryIds().equals(otherPost.getCategoryIds()) : otherPost.getCategoryIds() == null)
-               && (getCustomFields() != null
-                ? getCustomFields().equals(otherPost.getCustomFields()) : otherPost.getCustomFields() == null)
-               && (getLink() != null ? getLink().equals(otherPost.getLink()) : otherPost.getLink() == null)
-               && (getExcerpt() != null ? getExcerpt().equals(otherPost.getExcerpt()) : otherPost.getExcerpt() == null)
-               && (getTagIds() != null ? getTagIds().equals(otherPost.getTagIds()) : otherPost.getTagIds() == null)
-               && (getStatus() != null ? getStatus().equals(otherPost.getStatus()) : otherPost.getStatus() == null)
-               && (getPassword() != null
-                ? getPassword().equals(otherPost.getPassword()) : otherPost.getPassword() == null)
-               && (getPostFormat() != null
-                ? getPostFormat().equals(otherPost.getPostFormat()) : otherPost.getPostFormat() == null)
-               && (getSlug() != null ? getSlug().equals(otherPost.getSlug()) : otherPost.getSlug() == null)
-               && (getParentTitle() != null
-                ? getParentTitle().equals(otherPost.getParentTitle()) : otherPost.getParentTitle() == null);
+               && StringUtils.equals(getTitle(), otherPost.getTitle())
+               && StringUtils.equals(getContent(), otherPost.getContent())
+               && StringUtils.equals(getDateCreated(), otherPost.getDateCreated())
+               && StringUtils.equals(getCategoryIds(), otherPost.getCategoryIds())
+               && StringUtils.equals(getCustomFields(), otherPost.getCustomFields())
+               && StringUtils.equals(getLink(), otherPost.getLink())
+               && StringUtils.equals(getExcerpt(), otherPost.getExcerpt())
+               && StringUtils.equals(getTagIds(), otherPost.getTagIds())
+               && StringUtils.equals(getStatus(), otherPost.getStatus())
+               && StringUtils.equals(getPassword(), otherPost.getPassword())
+               && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
+               && StringUtils.equals(getSlug(), otherPost.getSlug())
+               && StringUtils.equals(getParentTitle(), otherPost.getParentTitle());
     }
 
     public JSONArray getJSONCustomFields() {

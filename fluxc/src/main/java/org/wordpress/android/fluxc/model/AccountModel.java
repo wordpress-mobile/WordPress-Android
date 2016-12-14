@@ -50,8 +50,11 @@ public class AccountModel extends Payload implements Identifiable {
 
     @Override
     public boolean equals(Object other) {
+        if (this == other) return true;
         if (other == null || !(other instanceof AccountModel)) return false;
+
         AccountModel otherAccount = (AccountModel) other;
+
         return getId() == otherAccount.getId()
                && StringUtils.equals(getUserName(), otherAccount.getUserName())
                && getUserId() == otherAccount.getUserId()

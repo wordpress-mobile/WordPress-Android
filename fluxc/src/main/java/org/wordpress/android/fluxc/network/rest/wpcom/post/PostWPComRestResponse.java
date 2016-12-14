@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.post;
 
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.network.Response;
+import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -18,26 +19,6 @@ public class PostWPComRestResponse extends Payload implements Response {
         public String mime_type;
         public int width;
         public int height;
-    }
-
-    public class Taxonomy {
-        public long ID;
-        public String name;
-        public String slug;
-        public String description;
-        public long post_count;
-        public long parent;
-        public Meta meta;
-
-        public class Meta {
-            public Links links;
-
-            public class Links {
-                public String self;
-                public String help;
-                public String site;
-            }
-        }
     }
 
     public class Capabilities {
@@ -69,7 +50,7 @@ public class PostWPComRestResponse extends Payload implements Response {
     public PostThumbnail post_thumbnail;
     public String format;
     public GeoLocation geo;
-    public Map<String, Taxonomy> tags;
-    public Map<String, Taxonomy> categories;
+    public Map<String, TermWPComRestResponse> tags;
+    public Map<String, TermWPComRestResponse> categories;
     public Capabilities capabilities;
 }
