@@ -46,8 +46,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.R.id.view;
-
 public class CommentsListFragment extends Fragment {
     public static final int COMMENTS_PER_PAGE = 30;
 
