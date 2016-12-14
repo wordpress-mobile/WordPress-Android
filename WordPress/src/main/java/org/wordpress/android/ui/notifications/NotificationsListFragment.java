@@ -48,7 +48,6 @@ public class NotificationsListFragment extends Fragment
     public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
-    public static final String NOTE_ALLOW_NAVIGATE_LIST_EXTRA = "allowNavigateList";
     public static final String NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter";
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
