@@ -504,6 +504,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_user_reviewed_the_app";
             case SUPPORT_USER_REPLIED_TO_HELPSHIFT:
                 return "support_user_replied_to_helpshift";
+            case LOGIN_ACCESSED:
+                return "login_accessed";
             case LOGIN_MAGIC_LINK_EXITED:
                 return "login_magic_link_exited";
             case LOGIN_MAGIC_LINK_FAILED:

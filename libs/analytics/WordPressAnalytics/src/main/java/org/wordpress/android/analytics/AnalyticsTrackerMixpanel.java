@@ -950,6 +950,12 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Support - User Replied to Helpshift");
                 instructions.addSuperPropertyToFlag("support_user_replied_to_helpshift");
                 break;
+            case LOGIN_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_login_accessed");
+                instructions.setCurrentDateForPeopleProperty("last_time_login_accessed");
+                break;
             case LOGIN_MAGIC_LINK_EXITED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Magic Link exited");
