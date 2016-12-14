@@ -795,6 +795,12 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("People Management - Accessed Details");
                 break;
+            case CREATE_ACCOUNT_INITIATED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Create Account Initiated");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_create_account_initiated");
+                instructions.setCurrentDateForPeopleProperty("last_time_create_account_initiated");
+                break;
             case CREATED_ACCOUNT:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Created Account");

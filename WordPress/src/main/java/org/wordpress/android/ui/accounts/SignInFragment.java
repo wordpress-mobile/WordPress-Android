@@ -665,6 +665,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         transaction.replace(R.id.fragment_container, newUserFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+
+        track(Stat.CREATE_ACCOUNT_INITIATED, null);
     }
 
     private String getForgotPasswordURL() {

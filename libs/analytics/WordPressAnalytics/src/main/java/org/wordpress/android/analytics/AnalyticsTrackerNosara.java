@@ -442,6 +442,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "people_management_list_opened";
             case OPENED_PERSON:
                 return "people_management_details_opened";
+            case CREATE_ACCOUNT_INITIATED:
+                return "account_create_initiated";
             case CREATED_ACCOUNT:
                 return "account_created";
             case CREATED_SITE:
