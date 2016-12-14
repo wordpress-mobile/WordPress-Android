@@ -396,6 +396,14 @@ public class MediaStore extends Store {
             // null or empty media list -or- list contains a null value
             notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.PUSH_MEDIA, payload.media);
             return;
+        } else {
+            for (MediaModel media : payload.media) {
+                if (media == null || media.getMediaId() < 0) {
+                    // list contained media items with insufficient data
+                    notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, MediaAction.PUSH_MEDIA, payload.media);
+                    return;
+                }
+            }
         }
 
         if (payload.site.isWPCom()) {
@@ -413,7 +421,6 @@ public class MediaStore extends Store {
         } else {
             String errorMessage = isWellFormedForUpload(payload.media);
             if (errorMessage != null) {
-                // list contained media items with insufficient data
                 notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, MediaAction.UPLOAD_MEDIA,
                         payload.media);
                 return;
