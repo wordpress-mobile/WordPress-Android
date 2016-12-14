@@ -59,38 +59,23 @@
                     android:inAnimation="@anim/fade_in"
                     android:outAnimation="@anim/fade_out" >
 
-                    <RelativeLayout
+                    <ImageView
+                        android:id="@+id/nux_wordpress_logotype"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_height="72dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal">
-
-                        <ImageView
-                            android:id="@+id/wpcom_logo"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_centerHorizontal="true"
-                            android:scaleType="fitCenter"
-                            app:srcCompat="@drawable/ic_my_sites_white_50dp" />
-
-                        <ImageView
-                            android:id="@+id/nux_wordpress_logotype"
-                            android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_below="@+id/wpcom_logo"
-                            android:layout_marginTop="10dp"
-                            android:layout_centerHorizontal="true"
-                            android:scaleType="fitCenter"
-                            app:srcCompat="@drawable/nux_wpcom_logotype"
-                            android:tint="@color/white"/>
-                    </RelativeLayout>
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/img_wordpress_com_white_144dp" >
+                    </ImageView>
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:scaleType="fitCenter"
                         android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/nux_icon_wordpressorg"
-                        android:tint="@color/blue_wordpress"/>
+                        android:layout_height="50dp"
+                        android:layout_width="50dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/img_wordpress_org_blue_wordpress_50dp" >
+                    </ImageView>
+
                 </ViewSwitcher>
 
                 <ImageView
