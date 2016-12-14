@@ -25,7 +25,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:visibility="gone"
-            app:srcCompat="@drawable/ic_external_blue_wordpress_12dp" />
+            app:srcCompat="@drawable/ic_external_blue_wordpress_18dp" />
 
         <ImageView
             android:id="@+id/stats_list_cell_chevron"

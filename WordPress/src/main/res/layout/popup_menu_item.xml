@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/margin_large"
         android:tint="@color/grey_dark"
-        tools:src="@drawable/ic_trash_blue_wordpress_16dp" />
+        tools:src="@drawable/ic_trash_blue_wordpress_18dp" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text"
