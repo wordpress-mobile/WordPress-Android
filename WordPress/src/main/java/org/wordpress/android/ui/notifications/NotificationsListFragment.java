@@ -243,7 +243,7 @@ public class NotificationsListFragment extends Fragment
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNoteForReply(getActivity(), noteId, false, null, true, mNotesAdapter.getCurrentFilter());
+            openNoteForReply(getActivity(), noteId, false, null, mNotesAdapter.getCurrentFilter());
         }
     };
 
@@ -261,7 +261,6 @@ public class NotificationsListFragment extends Fragment
                                         String noteId,
                                         boolean shouldShowKeyboard,
                                         String replyText,
-                                        boolean allowNavigateList,
                                         NotesAdapter.FILTERS filter) {
         if (noteId == null || activity == null) {
             return;
@@ -276,10 +275,7 @@ public class NotificationsListFragment extends Fragment
         if (!TextUtils.isEmpty(replyText)) {
             detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText);
         }
-        if (allowNavigateList) {
-            detailIntent.putExtra(NOTE_ALLOW_NAVIGATE_LIST_EXTRA, true);
-            detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter);
-        }
+        detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter);
 
         openNoteForReplyWithParams(detailIntent, activity);
     }

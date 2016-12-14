@@ -58,7 +58,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private static final String DOMAIN_WPCOM = "wordpress.com";
 
     private String mNoteId;
-    private boolean mAllowHorizontalNavigation;
 
     private WPViewPager mViewPager;
     private NotificationDetailFragmentAdapter mAdapter;
@@ -76,14 +75,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         if (savedInstanceState == null) {
-            mAllowHorizontalNavigation = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA, false);
             mNoteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
         } else {
             if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
                 getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
             }
             mNoteId = savedInstanceState.getString(NotificationsListFragment.NOTE_ID_EXTRA);
-            mAllowHorizontalNavigation = savedInstanceState.getBoolean(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA);
         }
 
         if (mNoteId == null) {
@@ -113,7 +110,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
             filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
         }
-        mAdapter = buildNoteListAdapterAndSetPosition(mAllowHorizontalNavigation, note, filter);
+        mAdapter = buildNoteListAdapterAndSetPosition(note, filter);
 
         //set title
         setActionBarTitleForNote(note);
@@ -155,7 +152,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (getSupportActionBar() != null && getSupportActionBar().getTitle() != null) {
             outState.putString(ARG_TITLE, getSupportActionBar().getTitle().toString());
         }
-        outState.putBoolean(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA, mAllowHorizontalNavigation);
         outState.putString(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
         super.onSaveInstanceState(outState);
     }
@@ -165,7 +161,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         super.onStart();
         //if the user hasn't used swipe yet, hint the user they can navigate through notifications detail
         //using swipe on the ViewPager
-        if (!AppPrefs.isNotificationsSwipeToNavigateShown() && mAllowHorizontalNavigation && (mAdapter.getCount() > 1)) {
+        if (!AppPrefs.isNotificationsSwipeToNavigateShown() && (mAdapter.getCount() > 1)) {
             WPSwipeSnackbar.show(mViewPager);
         }
     }
@@ -217,28 +213,18 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
     }
 
-    private NotificationDetailFragmentAdapter buildNoteListAdapterAndSetPosition(boolean allowNavigateList,
-                                                                                 Note note,
+    private NotificationDetailFragmentAdapter buildNoteListAdapterAndSetPosition(Note note,
                                                                                  NotesAdapter.FILTERS filter) {
         NotificationDetailFragmentAdapter adapter;
         ArrayList<Note> notes = NotificationsTable.getLatestNotes();
         ArrayList<Note> filteredNotes = new ArrayList<>();
-        if (allowNavigateList) {
-            //apply filter to the list so we show the same items that the list show vertically, but horizontally
-            NotesAdapter.buildFilteredNotesList(filteredNotes, notes, filter);
-            adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), filteredNotes);
-        } else {
-            ArrayList<Note> oneNoteList = new ArrayList<>();
-            oneNoteList.add(note);
-            adapter = new NotificationDetailFragmentAdapter(getFragmentManager(),
-                    oneNoteList);
-        }
+
+        //apply filter to the list so we show the same items that the list show vertically, but horizontally
+        NotesAdapter.buildFilteredNotesList(filteredNotes, notes, filter);
+        adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), filteredNotes);
 
         mViewPager.setAdapter(adapter);
-
-        if (allowNavigateList) {
-            mViewPager.setCurrentItem(findNoteInNoteArray(filteredNotes, note));
-        }
+        mViewPager.setCurrentItem(findNoteInNoteArray(filteredNotes, note));
 
         return adapter;
     }
