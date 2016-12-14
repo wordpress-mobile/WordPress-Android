@@ -370,14 +370,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         showPasswordField();
     }
 
-    protected void track(Stat stat, Map<String, Boolean> properties) {
-        if (properties == null) {
-            properties = new HashMap<>();
-        }
-        properties.put(MAGIC_LINK_PROPERTY, true);
-        AnalyticsTracker.track(stat, properties);
-    }
-
     protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
         if (!isAdded()) {
             return;
@@ -466,7 +458,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onCredentialRetrieved(Credential credential) {
         AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
         if (isAdded() && canAutofillUsernameAndPassword()) {
-            track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED, null);
+            AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
             mUsernameEditText.setText(credential.getId());
             mPasswordEditText.setText(credential.getPassword());
         }
@@ -656,11 +648,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private void trackAnalyticsSignIn() {
         AnalyticsUtils.refreshMetadata();
-        Map<String, Boolean> properties = new HashMap<String, Boolean>();
+        Map<String, Boolean> properties = new HashMap<>();
         properties.put("dotcom_user", isWPComLogin());
-        track(Stat.SIGNED_IN, properties);
+        AnalyticsTracker.track(Stat.SIGNED_IN, properties);
         if (!isWPComLogin()) {
-            track(Stat.ADDED_SELF_HOSTED_SITE, null);
+            AnalyticsTracker.track(Stat.ADDED_SELF_HOSTED_SITE);
         }
     }
 
@@ -774,7 +766,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 }
             });
 
-            track(Stat.LOGIN_FAILED, null);
+            AnalyticsTracker.track(Stat.LOGIN_FAILED);
         }
     };
 
