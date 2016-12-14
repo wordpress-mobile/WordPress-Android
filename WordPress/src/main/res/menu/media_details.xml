@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_edit_media"
-        android:icon="@drawable/ic_edit_white_24dp"
+        android:icon="@drawable/ic_pencil_white_24dp"
         android:title="@string/edit_media"
         app:showAsAction="ifRoom" />
 

@@ -9,7 +9,7 @@
         android:title="@string/media_add_new_media_gallery"/>
     <item
         android:id="@+id/media_multiselect_actionbar_post"
-        android:icon="@drawable/ic_edit_white_24dp"
+        android:icon="@drawable/ic_pencil_white_24dp"
         app:showAsAction="always"
         android:title="@string/new_post"/>
     <item
