@@ -15,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -268,7 +269,7 @@ public class ReaderActivityLauncher {
         if (openUrlType == OpenUrlType.INTERNAL) {
             openUrlInternal(context, url);
         } else {
-            openUrlExternal(context, url);
+            ActivityLauncher.openUrlExternal(context, url);
         }
     }
 
@@ -281,27 +282,6 @@ public class ReaderActivityLauncher {
             WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url);
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
-        }
-    }
-
-    /*
-     * open the passed url in the device's external browser
-     */
-    private static void openUrlExternal(Context context, @NonNull String url) {
-        try {
-            // disable deeplinking activity so to not catch WP URLs
-            WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            context.startActivity(intent);
-            AppLockManager.getInstance().setExtendedTimeout();
-
-        } catch (ActivityNotFoundException e) {
-            String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
-            ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
-        } finally {
-            // re-enable deeplinking
-            WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
         }
     }
 }

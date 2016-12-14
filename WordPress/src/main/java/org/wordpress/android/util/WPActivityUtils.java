@@ -22,11 +22,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 
 import java.util.List;
