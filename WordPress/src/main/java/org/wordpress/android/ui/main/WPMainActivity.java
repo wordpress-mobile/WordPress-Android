@@ -45,6 +45,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -340,7 +341,7 @@ public class WPMainActivity extends AppCompatActivity {
                     // we processed the voice reply, so we exit this function immediately
                 } else {
                     boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply, false, null);
+                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply, NotesAdapter.FILTERS.FILTER_ALL);
                 }
 
             } else {
