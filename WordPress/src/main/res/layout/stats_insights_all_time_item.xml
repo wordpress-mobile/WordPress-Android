@@ -34,7 +34,7 @@
                     android:layout_height="12dp"
                     android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
-                    app:srcCompat="@drawable/ic_posts_grey_24dp" />
+                    app:srcCompat="@drawable/ic_posts_grey_dark_24dp" />
 
                 <org.wordpress.android.widgets.WPAutoResizeTextView
                     style="@style/StatsInsightsLabel"
