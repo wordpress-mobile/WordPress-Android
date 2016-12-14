@@ -813,6 +813,12 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_create_account_username_exists");
                 instructions.setCurrentDateForPeopleProperty("last_time_create_account_username_exists");
                 break;
+            case CREATE_ACCOUNT_FAILED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Create Account Failed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_create_account_failed");
+                instructions.setCurrentDateForPeopleProperty("last_time_create_account_failed");
+                break;
             case CREATED_ACCOUNT:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Created Account");

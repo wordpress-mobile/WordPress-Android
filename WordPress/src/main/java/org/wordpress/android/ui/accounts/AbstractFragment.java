@@ -21,7 +21,9 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog.Step;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPActivityUtils;
@@ -265,6 +267,12 @@ public abstract class AbstractFragment extends Fragment {
     protected enum ErrorType {USERNAME, PASSWORD, SITE_URL, EMAIL, TITLE, UNDEFINED}
 
     public class ErrorListener implements RestRequest.ErrorListener {
+        private Step mStep;
+
+        public void setStep(Step step) {
+            mStep = step;
+        }
+
         @Override
         public void onErrorResponse(VolleyError error) {
             String message = null;
@@ -300,6 +308,10 @@ public abstract class AbstractFragment extends Fragment {
                 showError(message);
             } else {
                 showError(messageId);
+            }
+
+            if (mStep == Step.CREATE_USER) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_FAILED);
             }
         }
     }

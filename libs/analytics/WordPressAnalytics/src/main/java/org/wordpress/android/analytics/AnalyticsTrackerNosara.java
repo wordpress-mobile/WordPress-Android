@@ -448,6 +448,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "account_create_email_exists";
             case CREATE_ACCOUNT_USERNAME_EXISTS:
                 return "account_create_username_exists";
+            case CREATE_ACCOUNT_FAILED:
+                return "account_create_failed";
             case CREATED_ACCOUNT:
                 return "account_created";
             case CREATED_SITE:
