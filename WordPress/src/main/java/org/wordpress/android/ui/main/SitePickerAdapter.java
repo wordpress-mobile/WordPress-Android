@@ -425,16 +425,17 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                 }
             });
 
-            // move recently-picked to the top if there are enough sites and the user isn't searching
+            // flag recently-picked sites and move them to the top if there are enough sites and
+            // the user isn't searching
             if (!mIsInSearchMode && sites.size() >= RECENTLY_PICKED_THRESHOLD) {
                 ArrayList<Integer> pickedIds = AppPrefs.getRecentlyPickedSiteIds();
-                for (Integer thisId : pickedIds) {
-                    int index = sites.indexOfSiteId(thisId);
-                    if (index > -1) {
-                        SiteRecord site = sites.get(index);
-                        sites.remove(index);
+                for (int i = pickedIds.size() - 1; i > -1; i--) {
+                    int thisId = pickedIds.get(i);
+                    int indexOfSite = sites.indexOfSiteId(thisId);
+                    if (indexOfSite > -1) {
+                        SiteRecord site = sites.remove(indexOfSite);
                         site.isRecentPick = true;
-                        sites.add(index, site);
+                        sites.add(0, site);
                     }
                 }
             }
@@ -526,7 +527,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             for (SiteRecord site: sites) {
                 i = indexOfSite(site);
                 if (i == -1
-                        || this.get(i).isHidden != site.isHidden) {
+                        || this.get(i).isHidden != site.isHidden
+                        || this.get(i).isRecentPick != site.isRecentPick) {
                     return false;
                 }
             }

@@ -571,6 +571,8 @@ public class AppPrefs {
      * adds a local ID to the list of recently chosen sites
      */
     public static void addRecentlyPickedSiteId(Integer localId) {
+        if (localId == 0) return;
+
         ArrayList<Integer> currentIds = getRecentlyPickedSiteIds();
 
         // remove this ID if it already exists in the list
