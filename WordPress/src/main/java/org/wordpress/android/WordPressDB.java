@@ -34,6 +34,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ShortcodeUtils;
@@ -54,7 +55,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -86,7 +86,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 51;
+    private static final int DATABASE_VERSION = 52;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -229,6 +229,9 @@ public class WordPressDB {
 
     // add capabilities to blog
     private static final String ADD_BLOGS_CAPABILITIES = "alter table accounts add capabilities text default '';";
+
+    // add timestamp of date last chosen in site picker to blog
+    private static final String ADD_BLOGS_LAST_PICKED_TIMESTAMP = "alter table accounts add last_picked_timestamp integer default 0;";
 
     // add field to store time of last udpated draft
     private static final String ADD_DRAFT_POST_LAST_UPDATED_DATE = "alter table posts add dateLastUpdated date;";
@@ -445,7 +448,9 @@ public class WordPressDB {
                 db.execSQL(ADD_DRAFT_POST_LAST_UPDATED_DATE);
                 db.execSQL(ADD_DRAFT_POST_LAST_NOTIFIED_DATE);
                 currentVersion++;
-
+            case 51:
+                db.execSQL(ADD_BLOGS_LAST_PICKED_TIMESTAMP);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -854,7 +859,7 @@ public class WordPressDB {
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden",
-                             "plan_product_id", "plan_product_name_short", "capabilities"};
+                             "plan_product_id", "plan_product_name_short", "capabilities", "last_picked_timestamp"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -913,10 +918,22 @@ public class WordPressDB {
                 blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
                 blog.setPlanShortName(c.getString(c.getColumnIndex("plan_product_name_short")));
                 blog.setCapabilities(c.getString(c.getColumnIndex("capabilities")));
+                blog.setLastPickedTimestamp(c.getLong(c.getColumnIndex("last_picked_timestamp")));
             }
         }
         c.close();
         return blog;
+    }
+
+    /*
+     * sets the "last picked" timestamp for the passed blog to the current UTC time
+     */
+    public void updateLastPickedTimestampForLocalBlogId(int localBlogId) {
+        long timestamp = DateTimeUtils.nowUTC().getTime();
+        ContentValues values = new ContentValues();
+        values.put("last_picked_timestamp", timestamp);
+        String[] args = {Integer.toString(localBlogId)};
+        db.update(BLOGS_TABLE, values, "id=?", args);
     }
 
     /*
