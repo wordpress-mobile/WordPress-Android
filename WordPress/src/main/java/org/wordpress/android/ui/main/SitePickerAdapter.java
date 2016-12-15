@@ -39,6 +39,11 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         void onSelectedCountChanged(int numSelected);
     }
 
+    interface OnDataLoadedListener {
+        void onBeforeLoad(boolean isEmpty);
+        void onAfterLoad();
+    }
+
     private final int mTextColorNormal;
     private final int mTextColorHidden;
 
@@ -61,6 +66,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
+    private OnDataLoadedListener mDataLoadedListener;
 
     // show recently picked first if there are at least this many blogs
     private static final int RECENTLY_PICKED_THRESHOLD = 15;
@@ -86,7 +92,11 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-    public  SitePickerAdapter(Context context, int currentLocalBlogId, String lastSearch, boolean isInSearchMode) {
+    public  SitePickerAdapter(Context context,
+                              int currentLocalBlogId,
+                              String lastSearch,
+                              boolean isInSearchMode,
+                              OnDataLoadedListener dataLoadedListener) {
         super();
 
         setHasStableIds(true);
@@ -96,6 +106,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         mIsInSearchMode = isInSearchMode;
         mCurrentLocalId = currentLocalBlogId;
         mInflater = LayoutInflater.from(context);
+        mDataLoadedListener = dataLoadedListener;
 
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
         mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
@@ -375,6 +386,10 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         protected void onPreExecute() {
             super.onPreExecute();
             mIsTaskRunning = true;
+            if (mDataLoadedListener != null) {
+                boolean isEmpty = mSites == null || mSites.size() == 0;
+                mDataLoadedListener.onBeforeLoad(isEmpty);
+            }
         }
 
         @Override
@@ -440,6 +455,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         protected void onPostExecute(Void results) {
             notifyDataSetChanged();
             mIsTaskRunning = false;
+            if (mDataLoadedListener != null) {
+                mDataLoadedListener.onAfterLoad();
+            }
         }
 
         private List<Map<String, Object>> getBlogsForCurrentView(String[] extraFields) {
