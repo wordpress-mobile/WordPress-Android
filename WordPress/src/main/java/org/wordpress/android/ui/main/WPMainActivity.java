@@ -35,6 +35,8 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.push.NotificationsScreenLockWatchService;

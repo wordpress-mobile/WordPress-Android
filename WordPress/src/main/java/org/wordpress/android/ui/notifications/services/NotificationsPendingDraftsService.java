@@ -280,7 +280,7 @@ public class NotificationsPendingDraftsService extends Service {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, openDraftIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.gridicons_pencil, getText(R.string.edit),
+        builder.addAction(R.drawable.ic_pencil_black_24dp, getText(R.string.edit),
                 pendingIntent);
     }
 
