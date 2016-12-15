@@ -1202,7 +1202,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         } else {
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey));
-            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_grey_32dp));
+            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_outline_grey_32dp));
             mBtnLikeComment.setActivated(false);
         }
     }

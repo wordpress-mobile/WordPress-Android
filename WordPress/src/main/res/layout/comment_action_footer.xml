@@ -34,7 +34,7 @@
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
-                app:srcCompat="@drawable/ic_star_grey_32dp"
+                app:srcCompat="@drawable/ic_star_outline_grey_32dp"
                 android:contentDescription="@string/reader_label_like" />
 
             <org.wordpress.android.widgets.WPTextView
