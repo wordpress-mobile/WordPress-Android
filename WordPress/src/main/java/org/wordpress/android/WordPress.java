@@ -49,6 +49,7 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
+import org.wordpress.android.ui.accounts.helpers.UpdateJetpackStatusTask;
 import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -107,6 +108,7 @@ public class WordPress extends MultiDexApplication {
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 15 * 60;
+    private static final int SECONDS_BETWEEN_JETPACKSTATUS_UPDATE = 2 * 60; // 2 minutes
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
@@ -121,6 +123,21 @@ public class WordPress extends MultiDexApplication {
             if (currentBlog != null) {
                 new ApiHelper.RefreshBlogContentTask(currentBlog, null).executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR, false);
+                return true;
+            }
+            return false;
+        }
+    };
+
+    /**
+     * Updates Jetpack Status for the current blog in background.
+     */
+    public static RateLimitedTask sUpdateCurrentBlogJetpackInfo = new RateLimitedTask(SECONDS_BETWEEN_JETPACKSTATUS_UPDATE) {
+        protected boolean run() {
+            Blog currentBlog = WordPress.getCurrentBlog();
+            if (currentBlog != null && currentBlog.isJetpackPowered()) {
+                new UpdateJetpackStatusTask(mContext, currentBlog).executeOnExecutor(
+                        AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
             }
             return false;
@@ -858,6 +875,9 @@ public class WordPress extends MultiDexApplication {
 
                 // Rate limited blog options Update
                 sUpdateCurrentBlogOption.runIfNotLimited();
+
+                // Update Jetpack Info if necessary
+                sUpdateCurrentBlogJetpackInfo.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
         }

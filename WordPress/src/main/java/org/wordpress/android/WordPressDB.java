@@ -54,7 +54,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -86,7 +85,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 51;
+    private static final int DATABASE_VERSION = 52;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -235,6 +234,9 @@ public class WordPressDB {
 
     // add field to store time of last time we notified the user there was a draft post pending publishing
     private static final String ADD_DRAFT_POST_LAST_NOTIFIED_DATE = "alter table posts add dateLastNotified date;";
+
+    // add Jetpack modules info to blog
+    private static final String ADD_BLOG_JETPACK_MODULES_INFO = "alter table accounts add jetpack_modules_info text default '';";
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
@@ -445,7 +447,9 @@ public class WordPressDB {
                 db.execSQL(ADD_DRAFT_POST_LAST_UPDATED_DATE);
                 db.execSQL(ADD_DRAFT_POST_LAST_NOTIFIED_DATE);
                 currentVersion++;
-
+            case 51:
+                db.execSQL(ADD_BLOG_JETPACK_MODULES_INFO);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -557,6 +561,7 @@ public class WordPressDB {
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
         values.put("capabilities", blog.getCapabilities());
+        values.put("jetpack_modules_info", blog.getJetpackModulesInfo());
         return db.insert(BLOGS_TABLE, null, values) > -1;
     }
 
@@ -758,6 +763,7 @@ public class WordPressDB {
         values.put("plan_product_id", blog.getPlanID());
         values.put("plan_product_name_short", blog.getPlanShortName());
         values.put("capabilities", blog.getCapabilities());
+        values.put("jetpack_modules_info", blog.getJetpackModulesInfo());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -854,7 +860,7 @@ public class WordPressDB {
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden",
-                             "plan_product_id", "plan_product_name_short", "capabilities"};
+                             "plan_product_id", "plan_product_name_short", "capabilities", "jetpack_modules_info"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -913,6 +919,7 @@ public class WordPressDB {
                 blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
                 blog.setPlanShortName(c.getString(c.getColumnIndex("plan_product_name_short")));
                 blog.setCapabilities(c.getString(c.getColumnIndex("capabilities")));
+                blog.setJetpackModulesInfo(c.getString(c.getColumnIndex("jetpack_modules_info")));
             }
         }
         c.close();
