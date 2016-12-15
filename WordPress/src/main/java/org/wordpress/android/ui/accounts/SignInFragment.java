@@ -48,6 +48,7 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
@@ -682,8 +683,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         public void onClick(View v) {
             String forgotPasswordUrl = getForgotPasswordURL();
             AppLog.i(T.NUX, "User tapped forgot password link: " + forgotPasswordUrl);
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(forgotPasswordUrl));
-            startActivity(intent);
+            ActivityLauncher.openUrlExternal(getContext(), forgotPasswordUrl);
         }
     };
 
@@ -919,11 +919,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         login.execute(new LoginAbstract.Callback() {
             @Override
             public void onSuccess() {
+                if (!isAdded()) {
+                    return;
+                }
                 configureAccountAfterSuccessfulSignIn();
             }
 
             @Override
             public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
+                if (!isAdded()) {
+                    return;
+                }
                 mFetchBlogListCallback.onError(errorMessageId, twoStepCodeRequired, httpAuthRequired, erroneousSslCertificate, "");
                 mShouldSendTwoStepSMS = false;
                 // Delete credentials only if login failed with an incorrect username/password error
@@ -1026,9 +1032,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void requestWPComEmailCheck() {
-        WordPress.getRestClientUtilsV0().isAvailable(mUsername, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV0().isAvailable(UrlUtils.urlEncode(mUsername), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
+                if (!isAdded()) {
+                    return;
+                }
                 try {
                     String errorReason = response.getString(REASON_ERROR);
                     if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN) && mListener != null) {
@@ -1044,6 +1053,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 onWPComEmailCheckError(true);
             }
         });
