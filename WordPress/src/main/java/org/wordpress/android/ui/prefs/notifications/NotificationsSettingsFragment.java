@@ -386,7 +386,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference timelinePreference = new NotificationsSettingsDialogPreference(
                 context, null, channel, NotificationsSettings.Type.TIMELINE, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
-        timelinePreference.setIcon(R.drawable.ic_bell_grey_48dp);
+        timelinePreference.setIcon(R.drawable.ic_bell_grey_24dp);
         timelinePreference.setTitle(R.string.notifications_tab);
         timelinePreference.setDialogTitle(R.string.notifications_tab);
         timelinePreference.setSummary(R.string.notifications_tab_summary);
@@ -395,7 +395,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference emailPreference = new NotificationsSettingsDialogPreference(
                 context, null, channel, NotificationsSettings.Type.EMAIL, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
-        emailPreference.setIcon(R.drawable.ic_mail_grey_48dp);
+        emailPreference.setIcon(R.drawable.ic_mail_grey_24dp);
         emailPreference.setTitle(R.string.email);
         emailPreference.setDialogTitle(R.string.email);
         emailPreference.setSummary(R.string.notifications_email_summary);
@@ -407,7 +407,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
                     context, null, channel, NotificationsSettings.Type.DEVICE, blogId, mNotificationsSettings, mOnSettingsChangedListener
             );
-            devicePreference.setIcon(R.drawable.ic_phone_grey_48dp);
+            devicePreference.setIcon(R.drawable.ic_phone_grey_24dp);
             devicePreference.setTitle(R.string.app_notifications);
             devicePreference.setDialogTitle(R.string.app_notifications);
             devicePreference.setSummary(R.string.notifications_push_summary);
