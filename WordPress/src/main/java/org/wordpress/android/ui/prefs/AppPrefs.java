@@ -568,7 +568,7 @@ public class AppPrefs {
     }
 
     /*
-     * adds a local ID to the list of recently chosen sites
+     * adds a local site ID to the top of list of recently chosen sites
      */
     public static void addRecentlyPickedSiteId(Integer localId) {
         if (localId == 0) return;
@@ -590,16 +590,7 @@ public class AppPrefs {
         }
 
         // store in prefs
-        String idsAsString = "";
-        boolean isFirst = true;
-        for (Integer thisId: currentIds) {
-            if (isFirst) {
-                idsAsString = thisId.toString();
-                isFirst = false;
-            } else {
-                idsAsString += "," + thisId.toString();
-            }
-        }
+        String idsAsString = TextUtils.join(",", currentIds);
         setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
     }
 }
