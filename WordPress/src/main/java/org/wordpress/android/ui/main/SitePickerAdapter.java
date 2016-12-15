@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -70,8 +71,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
     // show recently picked first if there are at least this many blogs
     private static final int RECENTLY_PICKED_THRESHOLD = 15;
-    // show this many recently picked
-    private static final int NUM_RECENTLY_PICKED = 4;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
@@ -411,7 +410,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
             SiteList sites = new SiteList(blogs);
 
-            // first pass at sorting - sort primary blog to the top, otherwise sort by blog/host
+            // sort primary blog to the top, otherwise sort by blog/host
             final long primaryBlogId = AccountHelper.getDefaultAccount().getPrimaryBlogId();
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
@@ -426,21 +425,18 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                 }
             });
 
-            // second pass at sorting - sort recently-used to the top if there are enough sites
-            // and the user isn't performing a search
+            // move recently-picked to the top if there are enough sites and the user isn't searching
             if (!mIsInSearchMode && sites.size() >= RECENTLY_PICKED_THRESHOLD) {
-                Collections.sort(sites, new Comparator<SiteRecord>() {
-                    public int compare(SiteRecord site1, SiteRecord site2) {
-                        if (site1.isRecentPick && site2.isRecentPick) {
-                            return compareTimestamps(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
-                        } else if (site1.isRecentPick) {
-                            return -1;
-                        } else if (site2.isRecentPick) {
-                            return 1;
-                        }
-                        return 0;
+                ArrayList<Integer> pickedIds = AppPrefs.getRecentlyPickedSiteIds();
+                for (Integer thisId : pickedIds) {
+                    int index = sites.indexOfSiteId(thisId);
+                    if (index > -1) {
+                        SiteRecord site = sites.get(index);
+                        sites.remove(index);
+                        site.isRecentPick = true;
+                        sites.add(index, site);
                     }
-                });
+                }
             }
 
             if (mSites == null || !mSites.isSameList(sites)) {
@@ -487,27 +483,21 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
      static class SiteRecord {
         final int localId;
         final int blogId;
-        final long lastPickedTimeStamp;
         final String blogName;
         final String homeURL;
         final String url;
         final String blavatarUrl;
-        boolean isRecentPick;
         boolean isHidden;
+        boolean isRecentPick;
 
         SiteRecord(Map<String, Object> account) {
             localId = MapUtils.getMapInt(account, "id");
             blogId = MapUtils.getMapInt(account, "blogId");
-            lastPickedTimeStamp = MapUtils.getMapLong(account, "last_picked_timestamp");
             blogName = BlogUtils.getBlogNameOrHomeURLFromAccountMap(account);
             homeURL = BlogUtils.getHomeURLOrHostNameFromAccountMap(account);
             url = MapUtils.getMapStr(account, "url");
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
             isHidden = MapUtils.getMapBool(account, "isHidden");
-        }
-
-        boolean hasLastPickedTimestamp() {
-            return lastPickedTimeStamp != 0;
         }
 
         String getBlogNameOrHomeURL() {
@@ -526,33 +516,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                     add(new SiteRecord(account));
                 }
             }
-
-            // sort by recently picked timestamp, then flag the first four as being recently picked
-            if (this.size() >= RECENTLY_PICKED_THRESHOLD) {
-                Collections.sort(this, new Comparator<SiteRecord>() {
-                    @Override
-                    public int compare(SiteRecord site1, SiteRecord site2) {
-                        if (site1.hasLastPickedTimestamp() && site2.hasLastPickedTimestamp()) {
-                            return compareTimestamps(site2.lastPickedTimeStamp, site1.lastPickedTimeStamp);
-                        } else if (site1.hasLastPickedTimestamp()) {
-                            return -1;
-                        } else if (site2.hasLastPickedTimestamp()) {
-                            return 1;
-                        }
-                        return 0;
-                    }
-                });
-                int numFlagged = 0;
-                for (SiteRecord site: this) {
-                    if (site.hasLastPickedTimestamp()) {
-                        site.isRecentPick = true;
-                        numFlagged++;
-                        if (numFlagged >= NUM_RECENTLY_PICKED) {
-                            break;
-                        }
-                    }
-                }
-            }
         }
 
         boolean isSameList(SiteList sites) {
@@ -563,8 +526,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             for (SiteRecord site: sites) {
                 i = indexOfSite(site);
                 if (i == -1
-                        || this.get(i).isHidden != site.isHidden
-                        || this.get(i).lastPickedTimeStamp != site.lastPickedTimeStamp) {
+                        || this.get(i).isHidden != site.isHidden) {
                     return false;
                 }
             }
@@ -577,6 +539,15 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                     if (site.blogId == this.get(i).blogId) {
                         return i;
                     }
+                }
+            }
+            return -1;
+        }
+
+        int indexOfSiteId(int localId) {
+            for (int i = 0; i < size(); i++) {
+                if (localId == this.get(i).localId) {
+                    return i;
                 }
             }
             return -1;
