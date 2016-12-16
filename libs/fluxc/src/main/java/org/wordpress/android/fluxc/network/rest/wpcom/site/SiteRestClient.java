@@ -233,6 +233,10 @@ public class SiteRestClient extends BaseWPComRestClient {
             }
         }
         site.setIsWPCom(true);
+
+        // On WordPress.com sites only admins have `manage_options` capability
+        // a list of all the roles and its capabilities can be found in: `/v1.1/sites/$site/roles`
+        site.setIsAdmin(site.getHasCapabilityManageOptions());
         return site;
     }
 
