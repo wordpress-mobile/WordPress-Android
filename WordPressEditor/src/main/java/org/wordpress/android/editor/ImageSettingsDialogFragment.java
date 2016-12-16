@@ -214,10 +214,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     }
 
     private ActionBar getActionBar() {
-        if (!isAdded()) {
-            return null;
-        }
-
         if (getActivity() instanceof AppCompatActivity) {
             return ((AppCompatActivity) getActivity()).getSupportActionBar();
         } else {
