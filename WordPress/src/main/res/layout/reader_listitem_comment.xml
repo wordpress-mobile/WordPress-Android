@@ -115,9 +115,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:paddingBottom="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_small"
                 android:paddingLeft="@dimen/margin_large"
-                android:paddingTop="@dimen/margin_medium" />
+                android:paddingTop="@dimen/margin_small" />
 
         </RelativeLayout>
 
