@@ -26,7 +26,8 @@ class JetpackUtils {
             JSONArray modules = jetpackModulesInfo.getJSONArray("modules");
             for (int i = 0; i < modules.length(); i++) {
                 JSONObject module = modules.getJSONObject(i);
-                if (module.optString("id", "").equals("shortlinks") && module.optBoolean("active", false) ) {
+                if (module.optString("id", "").equals("shortlinks") &&
+                        module.has("active") && JSONUtils.getBool(module,"active")) {
                     return true;
                 }
             }
