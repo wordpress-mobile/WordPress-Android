@@ -19,7 +19,7 @@ public class UpdateJetpackStatusTask extends AsyncTask<Void, Void, Void> {
     private Blog mBlog;
 
     public UpdateJetpackStatusTask(Context context, Blog blog) {
-        if (blog == null || !mBlog.isJetpackPowered()) {
+        if (blog == null || !blog.isJetpackPowered()) {
             cancel(true);
             return;
         }
