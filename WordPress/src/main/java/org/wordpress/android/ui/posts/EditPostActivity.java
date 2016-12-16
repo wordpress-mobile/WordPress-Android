@@ -1624,11 +1624,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         } catch (OutOfMemoryError e) {
                             AppLog.e(T.POSTS, e);
                         }
-                    } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
-                        // TODO: check if it was mQuickMediaType > -1
-                        // Quick Photo was cancelled, delete post and finish activity
-                        WordPress.wpDB.deletePost(getPost());
-                        finish();
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
@@ -1641,11 +1636,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         if (!addMedia(capturedVideoUri)) {
                             ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                         }
-                    } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
-                        // TODO: check if it was mQuickMediaType > -1
-                        // Quick Photo was cancelled, delete post and finish activity
-                        WordPress.wpDB.deletePost(getPost());
-                        finish();
                     }
                     break;
             }
