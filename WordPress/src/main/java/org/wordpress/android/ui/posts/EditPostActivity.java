@@ -56,6 +56,7 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragment;
+import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
@@ -360,7 +361,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    updatePostObject(true);
+                    try {
+                        updatePostObject(true);
+                    } catch (IllegalEditorStateException e) {
+                        AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+                        return;
+                    }
                     savePostToDb();
                     if (mHandler != null) {
                         mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
@@ -636,7 +642,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         new Thread(new Runnable() {
             @Override
             public void run() {
-                updatePostObject(false);
+                try {
+                    updatePostObject(false);
+                } catch (IllegalEditorStateException e) {
+                    AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
+                    return;
+                }
                 savePostToDb();
 
                 // If the post is empty, don't publish
@@ -769,7 +780,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         );
     }
 
-    private synchronized void updatePostObject(boolean isAutosave) {
+    private synchronized void updatePostObject(boolean isAutosave) throws IllegalEditorStateException {
         if (mPost == null) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
             return;
@@ -797,7 +808,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         new Thread(new Runnable() {
             @Override
             public void run() {
-                updatePostObject(false);
+                try {
+                    updatePostObject(false);
+                } catch (IllegalEditorStateException e) {
+                    AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+                    return;
+                }
                 savePostToDb();
                 if (listener != null) {
                     listener.onPostSave();
@@ -846,7 +862,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         @Override
         protected Boolean doInBackground(Void... params) {
             // Fetch post title and content from editor fields and update the Post object
-            updatePostObject(false);
+            try {
+                updatePostObject(false);
+            } catch (IllegalEditorStateException e) {
+                AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+                return false;
+            }
 
             if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
                 // new and empty post? delete it
@@ -867,7 +888,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
                     savePostToDb();
                 } else {
-                    updatePostObject(false);
+                    try {
+                        updatePostObject(false);
+                    } catch (IllegalEditorStateException e) {
+                        AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+                        return false;
+                    }
                     savePostToDb();
                 }
             }
@@ -1309,7 +1335,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     /**
      * Updates post object with content of this fragment
      */
-    public void updatePostContent(boolean isAutoSave) {
+    public void updatePostContent(boolean isAutoSave) throws IllegalEditorStateException {
         Post post = getPost();
 
         if (post == null) {
@@ -1628,11 +1654,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         } catch (OutOfMemoryError e) {
                             AppLog.e(T.POSTS, e);
                         }
-                    } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
-                        // TODO: check if it was mQuickMediaType > -1
-                        // Quick Photo was cancelled, delete post and finish activity
-                        WordPress.wpDB.deletePost(getPost());
-                        finish();
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
@@ -1645,11 +1666,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         if (!addMedia(capturedVideoUri)) {
                             ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                         }
-                    } else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
-                        // TODO: check if it was mQuickMediaType > -1
-                        // Quick Photo was cancelled, delete post and finish activity
-                        WordPress.wpDB.deletePost(getPost());
-                        finish();
                     }
                     break;
             }
@@ -1880,8 +1896,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // needed by the legacy editor to save local drafts
             postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
         } else {
-            postContent = new SpannableStringBuilder(StringUtils.notNullStr((String)
-                    mEditorFragment.getContent()));
+            try {
+                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+            } catch (IllegalEditorStateException e) {
+                AppLog.e(T.EDITOR, "Impossible to handle gallery upload, we weren't able to get content from the post");
+                return;
+            }
         }
         int selectionStart = 0;
         int selectionEnd = postContent.length();
