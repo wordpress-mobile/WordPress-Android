@@ -27,8 +27,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  */
 public class ReaderSimplePostView extends LinearLayout {
 
-    public interface OnRelatedPostClickListener {
-        void onRelatedPostClick(View v, long siteId, long postId);
+    public interface OnSimplePostClickListener {
+        void onSimplePostClick(View v, long siteId, long postId);
     }
 
     private ReaderSimplePost mSimplePost;
@@ -61,7 +61,7 @@ public class ReaderSimplePostView extends LinearLayout {
     public void showRelatedPost(ReaderSimplePost simplePost,
                                 ViewGroup parent,
                                 boolean isGlobal,
-                                final OnRelatedPostClickListener listener) {
+                                final OnSimplePostClickListener listener) {
         mSimplePost = simplePost;
         int avatarSize = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
 
@@ -116,7 +116,7 @@ public class ReaderSimplePostView extends LinearLayout {
             @Override
             public void onClick(View view) {
                 if (listener != null) {
-                    listener.onRelatedPostClick(view,
+                    listener.onSimplePostClick(view,
                             mSimplePost.getSiteId(),
                             mSimplePost.getPostId());
                 }

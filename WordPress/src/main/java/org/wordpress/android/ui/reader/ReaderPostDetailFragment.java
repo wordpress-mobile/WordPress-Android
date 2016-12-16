@@ -45,6 +45,7 @@ import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
+import org.wordpress.android.ui.reader.views.ReaderSimplePostView;
 import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
@@ -541,17 +542,17 @@ public class ReaderPostDetailFragment extends Fragment
      * across wp.com) or local (related posts from the same site as the current post)
      */
     private void showRelatedPosts(@NonNull ReaderSimplePostList relatedPosts, final boolean isGlobal) {
-        // different container views for global/local related posts
-        ReaderSimplePostContainerView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
-        relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
-
         // tapping a related posts should open the related post detail
-        relatedPostsView.setOnRelatedPostClickListener(new ReaderSimplePostContainerView.OnRelatedPostClickListener() {
+        ReaderSimplePostView.OnSimplePostClickListener listener = new ReaderSimplePostView.OnSimplePostClickListener() {
             @Override
-            public void onRelatedPostClick(View v, long siteId, long postId) {
+            public void onSimplePostClick(View v, long siteId, long postId) {
                 showRelatedPostDetail(siteId, postId, isGlobal);
             }
-        });
+        };
+
+        // different container views for global/local related posts
+        ReaderSimplePostContainerView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
+        relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal, listener);
 
         // fade in this related posts view
         if (relatedPostsView.getVisibility() != View.VISIBLE) {
