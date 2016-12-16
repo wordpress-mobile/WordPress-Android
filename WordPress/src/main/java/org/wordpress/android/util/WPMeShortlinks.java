@@ -68,6 +68,11 @@ public class WPMeShortlinks {
             return null;
         }
 
+        // Make sure the Jetpack blog has the shortlinks module enabled
+        if (blog.isJetpackPowered() && !JetpackUtils.isShortlinksModuleEnabled(blog)) {
+            return null;
+        }
+
         String postID = post.getRemotePostId();
         if (postID == null) {
             return null;
