@@ -396,6 +396,7 @@
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
             android:theme="@style/CalypsoTheme"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
