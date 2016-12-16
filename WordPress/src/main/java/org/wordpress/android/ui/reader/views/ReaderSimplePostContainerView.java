@@ -61,7 +61,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
     }
 
     private void initView(Context context) {
-        inflate(context, R.layout.reader_related_posts_view, this);
+        inflate(context, R.layout.reader_simple_posts_container_view, this);
         mFeaturedImageWidth = DisplayUtils.dpToPx(context, context.getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_width));
     }
 
@@ -87,7 +87,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
             final int position = index;
             ReaderSimplePost relatedPost = mRelatedPostList.get(position);
 
-            View postView = inflater.inflate(R.layout.reader_related_post, container, false);
+            View postView = inflater.inflate(R.layout.reader_simple_post_view, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             TextView txtExcerpt = (TextView) postView.findViewById(R.id.text_related_post_excerpt);
             View siteHeader = postView.findViewById(R.id.layout_related_post_site_header);
