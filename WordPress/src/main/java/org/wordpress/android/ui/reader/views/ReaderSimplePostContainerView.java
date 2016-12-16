@@ -37,7 +37,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
 
     private OnRelatedPostClickListener mClickListener;
     private int mFeaturedImageWidth;
-    private final ReaderSimplePostList mRelatedPostList = new ReaderSimplePostList();
+    private final ReaderSimplePostList mSimplePostList = new ReaderSimplePostList();
 
     public ReaderSimplePostContainerView(Context context) {
         super(context);
@@ -70,22 +70,22 @@ public class ReaderSimplePostContainerView extends LinearLayout {
     }
 
     public void showRelatedPosts(@NonNull ReaderSimplePostList posts, String siteName, boolean isGlobal) {
-        mRelatedPostList.clear();
-        mRelatedPostList.addAll(posts);
+        mSimplePostList.clear();
+        mSimplePostList.addAll(posts);
 
         ViewGroup container = (ViewGroup) findViewById(R.id.container_related_posts);
         container.removeAllViews();
 
         // nothing more to do if passed list is empty
-        if (mRelatedPostList.size() == 0) return;
+        if (mSimplePostList.size() == 0) return;
 
         int avatarSize = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
 
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        for (int index = 0; index < mRelatedPostList.size(); index++) {
+        for (int index = 0; index < mSimplePostList.size(); index++) {
             final int position = index;
-            ReaderSimplePost relatedPost = mRelatedPostList.get(position);
+            ReaderSimplePost relatedPost = mSimplePostList.get(position);
 
             View postView = inflater.inflate(R.layout.reader_simple_post_view, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
@@ -137,8 +137,8 @@ public class ReaderSimplePostContainerView extends LinearLayout {
                 public void onClick(View view) {
                     if (mClickListener != null) {
                         mClickListener.onRelatedPostClick(view,
-                                mRelatedPostList.get(position).getSiteId(),
-                                mRelatedPostList.get(position).getPostId());
+                                mSimplePostList.get(position).getSiteId(),
+                                mSimplePostList.get(position).getPostId());
                     }
                 }
             });
@@ -163,7 +163,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
     private void toggleFollowStatus(final ReaderFollowButton btnFollow, final int position) {
         if (!NetworkUtils.checkConnection(getContext())) return;
 
-        final boolean isAskingToFollow = !mRelatedPostList.get(position).isFollowing();
+        final boolean isAskingToFollow = !mSimplePostList.get(position).isFollowing();
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
@@ -172,7 +172,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
 
                 btnFollow.setEnabled(true);
                 if (succeeded) {
-                    mRelatedPostList.get(position).setIsFollowing(isAskingToFollow);
+                    mSimplePostList.get(position).setIsFollowing(isAskingToFollow);
                 } else {
                     int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
@@ -184,7 +184,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
         // disable follow button until call completes
         btnFollow.setEnabled(false);
 
-        ReaderBlogActions.followBlogById(mRelatedPostList.get(position).getSiteId(), isAskingToFollow, listener);
+        ReaderBlogActions.followBlogById(mSimplePostList.get(position).getSiteId(), isAskingToFollow, listener);
         btnFollow.setIsFollowedAnimated(isAskingToFollow);
     }
 
@@ -230,7 +230,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
      * railcar events for each related post
      */
     public void trackRailcarRender() {
-        for (ReaderSimplePost post: mRelatedPostList) {
+        for (ReaderSimplePost post: mSimplePostList) {
             AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
         }
     }
