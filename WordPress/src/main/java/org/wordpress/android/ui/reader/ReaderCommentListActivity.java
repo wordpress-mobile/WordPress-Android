@@ -163,8 +163,6 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID), false);
         }
 
-        refreshComments();
-
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, (int) mBlogId);
         mSuggestionAdapter = SuggestionUtils.setupSuggestions((int) mBlogId, this, mSuggestionServiceConnectionManager,
                 mPost.isWP());
@@ -220,6 +218,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             // clear up the back-from-login flag anyway
             mBackFromLogin = false;
         }
+
+        refreshComments();
     }
 
     @SuppressWarnings("unused")
