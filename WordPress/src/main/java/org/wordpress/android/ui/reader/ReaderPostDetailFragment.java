@@ -542,7 +542,7 @@ public class ReaderPostDetailFragment extends Fragment
      * across wp.com) or local (related posts from the same site as the current post)
      */
     private void showRelatedPosts(@NonNull ReaderSimplePostList relatedPosts, final boolean isGlobal) {
-        // tapping a related posts should open the related post detail
+        // tapping a related post should open the related post detail
         ReaderSimplePostView.OnSimplePostClickListener listener = new ReaderSimplePostView.OnSimplePostClickListener() {
             @Override
             public void onSimplePostClick(View v, long siteId, long postId) {
@@ -552,7 +552,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         // different container views for global/local related posts
         ReaderSimplePostContainerView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
-        relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal, listener);
+        relatedPostsView.showPosts(relatedPosts, mPost.getBlogName(), isGlobal, listener);
 
         // fade in this related posts view
         if (relatedPostsView.getVisibility() != View.VISIBLE) {

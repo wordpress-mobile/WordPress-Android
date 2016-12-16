@@ -46,10 +46,10 @@ public class ReaderSimplePostContainerView extends LinearLayout {
         inflate(context, R.layout.reader_simple_posts_container_view, this);
     }
 
-    public void showRelatedPosts(ReaderSimplePostList posts,
-                                 String siteName,
-                                 boolean isGlobal,
-                                 ReaderSimplePostView.OnSimplePostClickListener listener) {
+    public void showPosts(ReaderSimplePostList posts,
+                          String siteName,
+                          boolean isGlobal,
+                          ReaderSimplePostView.OnSimplePostClickListener listener) {
         mSimplePostList.clear();
         mSimplePostList.addAll(posts);
 
@@ -59,13 +59,14 @@ public class ReaderSimplePostContainerView extends LinearLayout {
         // nothing more to do if passed list is empty
         if (mSimplePostList.size() == 0) return;
 
+        // add a view for each post
         for (int index = 0; index < mSimplePostList.size(); index++) {
             ReaderSimplePost relatedPost = mSimplePostList.get(index);
             ReaderSimplePostView postView = new ReaderSimplePostView(getContext());
             postView.showRelatedPost(relatedPost, container, isGlobal, listener);
         }
 
-        // make sure the label for these related posts has the correct caption
+        // make sure the label for these posts has the correct caption
         TextView label = (TextView) findViewById(R.id.text_related_posts_label);
         if (isGlobal) {
             label.setText(getContext().getString(R.string.reader_label_global_related_posts));
@@ -75,8 +76,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
     }
 
     /*
-     * called by reader detail when this related posts view is scrolled into view, tracks
-     * railcar events for each related post
+     * called by reader detail when scrolled into view, tracks railcar events for each post
      */
     public void trackRailcarRender() {
         for (ReaderSimplePost post: mSimplePostList) {
