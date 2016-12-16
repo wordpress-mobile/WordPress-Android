@@ -133,7 +133,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
-    private boolean mShouldReturnToPreviousActivity;
+    private boolean mInhibitMagicLogin;
     private boolean mSmartLockEnabled = true;
     private boolean mShouldShowPassword;
 
@@ -148,7 +148,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mSelfHosted = savedInstanceState.getBoolean(KEY_IS_SELF_HOSTED);
         }
 
-        mShouldReturnToPreviousActivity = getActivity() != null
+        mInhibitMagicLogin = getActivity() != null
                 && (getActivity().getIntent().getBooleanExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, false)
                 || !WPActivityUtils.isEmailClientAvailable(getActivity()));
     }
@@ -283,7 +283,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             setTwoStepAuthVisibility(true);
         }
 
-        if (!mToken.isEmpty() && !mShouldReturnToPreviousActivity) {
+        if (!mToken.isEmpty() && !mInhibitMagicLogin) {
             attemptLoginWithMagicLink();
             mSmartLockEnabled = false;
         } else {
@@ -291,7 +291,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
         if (mShouldShowPassword) {
             showPasswordFieldAndFocus();
-        } else if (mShouldReturnToPreviousActivity) {
+        } else if (mInhibitMagicLogin) {
             showPasswordField(false);
         }
     }
@@ -341,7 +341,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     protected void toggleSignInMode(){
         if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
-            if (mShouldReturnToPreviousActivity) {
+            if (mInhibitMagicLogin) {
                 showDotComSignInForm();
             } else {
                 configureMagicLinkUI();
@@ -378,7 +378,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             @Override
             public void run() {
                 if (userBlogList != null) {
-                    if (mShouldReturnToPreviousActivity) {
+                    if (mInhibitMagicLogin) {
                         // just finish the login activity and return to the its "caller"
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
