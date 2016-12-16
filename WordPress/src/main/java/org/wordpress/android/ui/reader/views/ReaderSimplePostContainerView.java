@@ -15,8 +15,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
+import org.wordpress.android.ui.reader.models.ReaderSimplePost;
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -29,7 +29,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * used by the detail view to display related posts, which can be either local (related posts
  * from the same site as the source post) or global (related posts from across wp.com)
  */
-public class ReaderRelatedPostsView extends LinearLayout {
+public class ReaderSimplePostContainerView extends LinearLayout {
 
     public interface OnRelatedPostClickListener {
         void onRelatedPostClick(View v, long siteId, long postId);
@@ -37,25 +37,25 @@ public class ReaderRelatedPostsView extends LinearLayout {
 
     private OnRelatedPostClickListener mClickListener;
     private int mFeaturedImageWidth;
-    private final ReaderRelatedPostList mRelatedPostList = new ReaderRelatedPostList();
+    private final ReaderSimplePostList mRelatedPostList = new ReaderSimplePostList();
 
-    public ReaderRelatedPostsView(Context context) {
+    public ReaderSimplePostContainerView(Context context) {
         super(context);
         initView(context);
     }
 
-    public ReaderRelatedPostsView(Context context, AttributeSet attrs) {
+    public ReaderSimplePostContainerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context);
     }
 
-    public ReaderRelatedPostsView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ReaderSimplePostContainerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ReaderRelatedPostsView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ReaderSimplePostContainerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initView(context);
     }
@@ -69,7 +69,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
         mClickListener = listener;
     }
 
-    public void showRelatedPosts(@NonNull ReaderRelatedPostList posts, String siteName, boolean isGlobal) {
+    public void showRelatedPosts(@NonNull ReaderSimplePostList posts, String siteName, boolean isGlobal) {
         mRelatedPostList.clear();
         mRelatedPostList.addAll(posts);
 
@@ -85,7 +85,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         for (int index = 0; index < mRelatedPostList.size(); index++) {
             final int position = index;
-            ReaderRelatedPost relatedPost = mRelatedPostList.get(position);
+            ReaderSimplePost relatedPost = mRelatedPostList.get(position);
 
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
@@ -193,7 +193,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
      * @param postView parent view which contains the featured image and other related post views
      * @param relatedPost related post to operate on
      */
-    private void showFeaturedImage(final View postView, final ReaderRelatedPost relatedPost) {
+    private void showFeaturedImage(final View postView, final ReaderSimplePost relatedPost) {
         final WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_featured);
 
         // post must have an excerpt in order to show featured image (not enough space otherwise)
@@ -230,7 +230,7 @@ public class ReaderRelatedPostsView extends LinearLayout {
      * railcar events for each related post
      */
     public void trackRailcarRender() {
-        for (ReaderRelatedPost post: mRelatedPostList) {
+        for (ReaderSimplePost post: mRelatedPostList) {
             AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
         }
     }

@@ -38,13 +38,13 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderRelatedPostsView;
+import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
 import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
@@ -97,8 +97,8 @@ public class ReaderPostDetailFragment extends Fragment
     private View mLikingUsersLabel;
     private WPTextView mSignInButton;
 
-    private ReaderRelatedPostsView mGlobalRelatedPostsView;
-    private ReaderRelatedPostsView mLocalRelatedPostsView;
+    private ReaderSimplePostContainerView mGlobalRelatedPostsView;
+    private ReaderSimplePostContainerView mLocalRelatedPostsView;
 
     private boolean mPostSlugsResolutionUnderway;
     private boolean mHasAlreadyUpdatedPost;
@@ -229,8 +229,8 @@ public class ReaderPostDetailFragment extends Fragment
         mScrollView.setVisibility(View.INVISIBLE);
 
         View relatedPostsContainer = view.findViewById(R.id.container_related_posts);
-        mGlobalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainer.findViewById(R.id.related_posts_view_global);
-        mLocalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainer.findViewById(R.id.related_posts_view_local);
+        mGlobalRelatedPostsView = (ReaderSimplePostContainerView) relatedPostsContainer.findViewById(R.id.related_posts_view_global);
+        mLocalRelatedPostsView = (ReaderSimplePostContainerView) relatedPostsContainer.findViewById(R.id.related_posts_view_local);
 
         mSignInButton = (WPTextView) view.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
@@ -540,13 +540,13 @@ public class ReaderPostDetailFragment extends Fragment
      * show the passed list of related posts - can be either global (related posts from
      * across wp.com) or local (related posts from the same site as the current post)
      */
-    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, final boolean isGlobal) {
+    private void showRelatedPosts(@NonNull ReaderSimplePostList relatedPosts, final boolean isGlobal) {
         // different container views for global/local related posts
-        ReaderRelatedPostsView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
+        ReaderSimplePostContainerView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
         relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
 
         // tapping a related posts should open the related post detail
-        relatedPostsView.setOnRelatedPostClickListener(new ReaderRelatedPostsView.OnRelatedPostClickListener() {
+        relatedPostsView.setOnRelatedPostClickListener(new ReaderSimplePostContainerView.OnRelatedPostClickListener() {
             @Override
             public void onRelatedPostClick(View v, long siteId, long postId) {
                 showRelatedPostDetail(siteId, postId, isGlobal);
