@@ -63,7 +63,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
         for (int index = 0; index < mSimplePostList.size(); index++) {
             ReaderSimplePost relatedPost = mSimplePostList.get(index);
             ReaderSimplePostView postView = new ReaderSimplePostView(getContext());
-            postView.showRelatedPost(relatedPost, container, isGlobal, listener);
+            postView.showPost(relatedPost, container, isGlobal, listener);
         }
 
         // make sure the label for these posts has the correct caption

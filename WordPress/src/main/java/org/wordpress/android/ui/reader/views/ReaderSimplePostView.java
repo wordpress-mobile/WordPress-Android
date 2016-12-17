@@ -58,19 +58,19 @@ public class ReaderSimplePostView extends LinearLayout {
         inflate(context, R.layout.reader_simple_post_view, this);
     }
 
-    public void showRelatedPost(ReaderSimplePost simplePost,
-                                ViewGroup parent,
-                                boolean isGlobal,
-                                final OnSimplePostClickListener listener) {
+    public void showPost(ReaderSimplePost simplePost,
+                         ViewGroup parent,
+                         boolean isGlobal,
+                         final OnSimplePostClickListener listener) {
         mSimplePost = simplePost;
         int avatarSize = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         View postView = inflater.inflate(R.layout.reader_simple_post_view, parent, false);
-        TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
-        TextView txtExcerpt = (TextView) postView.findViewById(R.id.text_related_post_excerpt);
-        View siteHeader = postView.findViewById(R.id.layout_related_post_site_header);
+        TextView txtTitle = (TextView) postView.findViewById(R.id.text_simple_post_title);
+        TextView txtExcerpt = (TextView) postView.findViewById(R.id.text_simple_post_excerpt);
+        View siteHeader = postView.findViewById(R.id.layout_simple_post_site_header);
 
         txtTitle.setText(mSimplePost.getTitle());
 
@@ -96,7 +96,7 @@ public class ReaderSimplePostView extends LinearLayout {
                 imgAvatar.setVisibility(View.GONE);
             }
 
-            ReaderFollowButton btnFollow = (ReaderFollowButton) siteHeader.findViewById(R.id.related_post_follow_button);
+            ReaderFollowButton btnFollow = (ReaderFollowButton) siteHeader.findViewById(R.id.simple_post_follow_button);
             btnFollow.setIsFollowed(mSimplePost.isFollowing());
             btnFollow.setOnClickListener(new OnClickListener() {
                 @Override
@@ -172,7 +172,7 @@ public class ReaderSimplePostView extends LinearLayout {
                 postView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 int featuredImageWidth = DisplayUtils.dpToPx(
                         getContext(),
-                        getContext().getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_width));
+                        getContext().getResources().getDimensionPixelSize(R.dimen.reader_simple_post_image_width));
                 int cropWidth = featuredImageWidth;
                 int cropHeight = postView.getHeight();
                 String photonUrl = PhotonUtils.getPhotonImageUrl(
