@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.text.TextUtils;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
@@ -16,7 +17,9 @@ import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.NotificationEvents;
+import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
@@ -30,12 +33,22 @@ import de.greenrobot.event.EventBus;
 public class NotificationsUpdateService extends Service {
 
     private boolean running = false;
+    private String mNoteId;
 
     public static void startService(Context context) {
         if (context == null) {
             return;
         }
         Intent intent = new Intent(context, NotificationsUpdateService.class);
+        context.startService(intent);
+    }
+
+    public static void startService(Context context, String noteId) {
+        if (context == null) {
+            return;
+        }
+        Intent intent = new Intent(context, NotificationsUpdateService.class);
+        intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
         context.startService(intent);
     }
 
@@ -59,6 +72,7 @@ public class NotificationsUpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
+            mNoteId = intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             performRefresh();
         }
         return START_NOT_STICKY;
@@ -92,6 +106,11 @@ public class NotificationsUpdateService extends Service {
             } else {
                 try {
                     notes = NotificationsActions.parseNotes(response);
+                    // if we have a note id, we were started from NotificationsDetailActivity.
+                    // That means we need to re-set the *read* flag on this note.
+                    if (mNoteId != null) {
+                        setNoteRead(mNoteId, notes);
+                    }
                     NotificationsTable.saveNotes(notes, true);
                     EventBus.getDefault().post(
                             new NotificationEvents.NotificationsRefreshCompleted(notes)
@@ -113,6 +132,13 @@ public class NotificationsUpdateService extends Service {
                     new NotificationEvents.NotificationsRefreshError(volleyError)
             );
             completed();
+        }
+    }
+
+    private void setNoteRead(String noteId, List<Note> notes) {
+        int notePos = NotificationsUtils.findNoteInNoteArray(notes, noteId);
+        if (notePos != -1) {
+            notes.get(notePos).setRead();
         }
     }
 
