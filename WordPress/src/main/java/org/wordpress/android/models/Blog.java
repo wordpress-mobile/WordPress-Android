@@ -45,6 +45,7 @@ public class Blog {
     private String httppassword = "";
     private String postFormats;
     private String blogOptions = "{}";
+    private String jetpackModulesInfo = "{}";
     private String capabilities;
     private boolean isAdmin;
     private boolean isHidden;
@@ -408,6 +409,39 @@ public class Blog {
         }
         setBlogOptions(blogOptions);
         return true;
+    }
+
+    public boolean bsetJetpackModulesInfo(String modulesInfo) {
+        if (StringUtils.equals(this.jetpackModulesInfo, modulesInfo)) {
+            return false;
+        }
+        setJetpackModulesInfo(modulesInfo);
+        return true;
+    }
+
+    public void setJetpackModulesInfo(String modulesInfo) {
+        this.jetpackModulesInfo = modulesInfo;
+        JSONObject options = getJetpackModulesInfoJSONObject();
+        if (options == null) {
+            this.jetpackModulesInfo = "{}";
+        }
+    }
+
+    public String getJetpackModulesInfo() {
+        return jetpackModulesInfo;
+    }
+
+    public JSONObject getJetpackModulesInfoJSONObject() {
+        String modulesInfoString = getJetpackModulesInfo();
+        if (TextUtils.isEmpty(modulesInfoString)) {
+            return null;
+        }
+        try {
+            return new JSONObject(modulesInfoString);
+        } catch (JSONException e) {
+            AppLog.e(T.UTILS, "invalid Jetpack Modules Info json", e);
+        }
+        return null;
     }
 
     public boolean isAdmin() {
