@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-18 15:57:48+0000
+Translation-Revision-Date: 2016-12-06 10:36:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="invalid_verification_code_format">Duhet të jetë një numër me gjashtë shifra</string>
+	<string name="confirm_discard_changes">Të hidhen tej ndryshimet e paruajtura?</string>
+	<string name="swipe_for_more">Për më tepër, fërkojeni</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">S&amp;#8217;jeni i autorizuar ta shihni këtë postim. Provoni së pari të hyni në WordPress.com, ose përdorni butonin e sipërm të veprimeve që të hapni një shfletues.</string>
 	<string name="reader_err_get_post_not_authorized_signin">S&amp;#8217;jeni i autorizuar ta shihni këtë postim. Provoni së pari të hyni në WordPress.com.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">S&amp;#8217;jeni i autorizuar ta shihni këtë postim. Përdorni butonin e sipërm të veprimeve që të hapni një shfletues.</string>
