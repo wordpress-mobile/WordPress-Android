@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-09-28 10:06:33+0000
+Translation-Revision-Date: 2016-12-06 08:01:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="invalid_verification_code_format">Måste vara et sexsiffrigt nummer</string>
+	<string name="confirm_discard_changes">Kasta bort osparade ändringar?</string>
+	<string name="swipe_for_more">Dra för att se mer</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Du har inte behörighet att visa detta inlägg. Testa att logga in på WordPress.com först och sedan använda knappen högst upp för att öppna ett webbläsarfönster istället.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Du har inte behörighet att visa detta inlägg. Testa att logga in på WordPress.com först.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Du har inte behörighet att visa detta inlägg. Använd knappen högst upp för att öppna ett webbläsarfönster istället.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Du måste vara inloggad på WordPress.com för att kunna gilla</string>
+	<string name="reader_toast_err_already_liked">Du har redan gillat den kommentaren</string>
+	<string name="reader_toast_err_comment_not_found">Kommentaren hittades inte!</string>
+	<string name="reader_toast_err_cannot_like_post">Kunde inte gilla det inlägget</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com-inlägg</string>
+	<string name="error_notif_q_action_reply">Kunde inte svara på kommentaren. Försök igen senare.</string>
+	<string name="reader_title_deeplink">WordPress-läsaren</string>
+	<string name="error_notif_q_action_approve">Kunde inte godkänna kommentaren. Försök igen senare.</string>
+	<string name="error_notif_q_action_like">Kunde inte gilla kommentaren. Försök igen senare.</string>
+	<string name="notifications_label_new_notifications_subtitle">Tryck för att visa dem</string>
+	<string name="notifications_label_new_notifications">Nya notiser</string>
+	<string name="comment_q_action_replying">Svarar...</string>
+	<string name="comment_q_action_approving">Godkänner...</string>
+	<string name="comment_q_action_liking">Gillar...</string>
+	<string name="comment_q_action_processing">Arbetar...</string>
+	<string name="comment_q_action_done_generic">Klart!</string>
+	<string name="sign_in_wpcom">Logga in på WordPress.com</string>
+	<string name="signout">Logga ut</string>
+	<string name="comment_liked">Kommentaren gillad</string>
+	<string name="reader_label_global_related_posts">Mer på WordPress.com</string>
+	<string name="reader_label_local_related_posts">Mer från %s</string>
+	<string name="preference_open_device_settings">Öppna enhetens inställningar</string>
+	<string name="comment_moderated_unapproved">Kommentar ej godkänd.</string>
+	<string name="invite_invalid_email">%s: Ogiltig e-postadress</string>
+	<string name="invite_user_blocked_invites">%s: Användaren har blockerat inbjudningar</string>
+	<string name="invite_already_following">%s: Följer redan</string>
+	<string name="invite_username_not_found">%s: Användaren hittades inte</string>
+	<string name="invite_already_a_member">%s: Redan medlem</string>
+	<string name="comment_moderated_approved">Kommentar godkänd!</string>
+	<string name="like">Gilla</string>
 	<string name="reader_label_image_count_one">1 bild</string>
 	<string name="timespan_now">nu</string>
 	<string name="role_admin">Administratör</string>
@@ -18,6 +54,7 @@ Language: sv_SE
 	<string name="alignment_none">Ingen</string>
 	<string name="alignment_left">Vänster</string>
 	<string name="alignment_right">Höger</string>
+	<string name="site_settings_list_editor_action_mode_title">Vald %1$d</string>
 	<string name="error_fetch_users_list">Kunde inte hämta webbplatsens användare</string>
 	<string name="plans_manage">Uppgradera ditt paket på\nWordPress.com/plans</string>
 	<string name="people_fetching">Hämtar användare...</string>
@@ -85,6 +122,7 @@ Language: sv_SE
 	<string name="send_link">Skicka länk</string>
 	<string name="my_site_header_external">Externt</string>
 	<string name="invite_people">Bjud in personer</string>
+	<string name="signup_succeed_signin_failed">Ditt konto har skapats men ett fel uppstod medan du loggades in.\nFörsök att logga in med ditt nya användarnamn och lösenord.</string>
 	<string name="label_clear_search_history">Rensa sökhistoriken</string>
 	<string name="dlg_confirm_clear_search_history">Rensa sökhistoriken?</string>
 	<string name="reader_empty_posts_in_search_description">Inga inlägg hittade för %s på ditt språk</string>
@@ -119,6 +157,7 @@ Language: sv_SE
 	<string name="magic_link_unavailable_error_message">Inte tillgänglig för närvarande. Ange ditt lösenord</string>
 	<string name="check_your_email">Kolla din e-post</string>
 	<string name="logging_in">Loggar in</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Få en länk skickad till din e-post för att logga in direkt</string>
 	<string name="enter_your_password_instead">Ange ditt lösenord istället</string>
 	<string name="web_address_dialog_hint">Visas offentligt när du kommenterar.</string>
 	<string name="jetpack_not_connected_message">Jetpack-tillägget är installerat men inte anslutet till WordPress.com. Vill du ansluta Jetpack?</string>
@@ -289,6 +328,7 @@ Language: sv_SE
 	<string name="error_post_remote_site_settings">Kunde inte spara webbplatsinfo</string>
 	<string name="error_fetch_remote_site_settings">Kunde inte hämta webbplatsinfo</string>
 	<string name="error_media_upload_connection">Ett anslutningsfel uppstod vid uppladdning av media</string>
+	<string name="site_settings_disconnected_toast">Utloggad, redigering inaktiverad.</string>
 	<string name="site_settings_unsupported_version_error">WordPress-versionen stöds ej</string>
 	<string name="site_settings_multiple_links_dialog_description">Kräv godkännande för kommentarer som innehåller fler än detta antal länkar.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Stäng automatiskt</string>
@@ -355,6 +395,7 @@ Language: sv_SE
 	<string name="site_settings_threading_title">Trådning</string>
 	<string name="site_settings_paging_title">Paginering</string>
 	<string name="site_settings_sort_by_title">Sortera efter</string>
+	<string name="site_settings_account_required_title">Användare måste vara inloggade</string>
 	<string name="site_settings_identity_required_title">Måste inkludera namn och e-postadress</string>
 	<string name="site_settings_receive_pingbacks_title">Ta emot pingbacks</string>
 	<string name="site_settings_send_pingbacks_title">Skicka pingbacks</string>
@@ -518,6 +559,7 @@ Language: sv_SE
 	<string name="tabbar_accessibility_label_me">Jag</string>
 	<string name="passcodelock_prompt_message">Ange din PIN</string>
 	<string name="editor_toast_changes_saved">Ändringar sparades</string>
+	<string name="push_auth_expired">Begäran har löpt ut. Logga in på WordPress.com för att försöka igen.</string>
 	<string name="stats_insights_best_ever">Flest visningar någonsin</string>
 	<string name="ignore">Ignorera </string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% av visningar</string>
@@ -527,8 +569,11 @@ Language: sv_SE
 	<string name="stats_insights_popular">Mest populära dag och timme</string>
 	<string name="stats_insights_all_time">Alla inlägg, visningar och besökare</string>
 	<string name="stats_insights">Insikter</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Om du vill visa din statistik, logga in på det WordPress.com-användarkonto som du använde för att ansluta till Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Letar du efter din övriga senaste statistik? Vi har flyttat den till Insikter-sidan.</string>
+	<string name="me_disconnect_from_wordpress_com">Logga ut från WordPress.com </string>
 	<string name="me_btn_login_logout">Logga in/Logga ut</string>
+	<string name="me_connect_to_wordpress_com">Logga in på WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
 	<string name="me_btn_support">Hjälp &amp; support</string>
 	<string name="account_settings">Kontoinställningar</string>
@@ -546,12 +591,14 @@ Language: sv_SE
 	<string name="my_site_header_look_and_feel">Utseende och känsla</string>
 	<string name="reader_label_new_posts_subtitle">Knacka för att visa dem</string>
 	<string name="my_site_header_configuration">Konfiguration</string>
+	<string name="notifications_account_required">Logga in på WordPress.com för att få notiser </string>
 	<string name="stats_unknown_author">Okänd författare</string>
 	<string name="image_added">Bild tillagd</string>
 	<string name="show">Visa</string>
 	<string name="select_all">Välj alla</string>
 	<string name="hide">Dölj</string>
 	<string name="deselect_all">Avmarkera alla </string>
+	<string name="sign_out_wpcom_confirm">Att logga ut från ditt konto kommer ta bort all @%ss WordPress.com-data från denna enhet, inklusive lokala utkast och lokala förändringar.</string>
 	<string name="select_from_new_picker">Flerval med den nya väljaren</string>
 	<string name="stats_generic_error">Nödvändig statistik kunde inte laddas in. </string>
 	<string name="error_loading_blog_images">Kunde inte hämta bilder </string>
@@ -568,6 +615,8 @@ Language: sv_SE
 	<string name="no_media">Ingen media</string>
 	<string name="loading_images">Laddar bilder</string>
 	<string name="loading_videos">Laddar videos </string>
+	<string name="auth_required">Logga in igen för att fortsätta.</string>
+	<string name="sign_in_jetpack">Logga in på ditt WordPress.com-konto för att ansluta till Jetpack.</string>
 	<string name="two_step_sms_sent">Kolla dina SMS för att se verifieringskoden.</string>
 	<string name="two_step_footer_button">Skicka kod via SMS</string>
 	<string name="two_step_footer_label">Skriv koden från din Authenticator-app.</string>
@@ -718,6 +767,7 @@ Language: sv_SE
 	<string name="pages_empty_list">Inga sidor än. Varför inte skapa en?</string>
 	<string name="media_empty_list_custom_date">Ingen media för detta tidsintervall</string>
 	<string name="posting_post">Postar "%s"</string>
+	<string name="signing_out">Loggar ut...</string>
 	<string name="sending_content">Laddar upp %s innehåll</string>
 	<string name="uploading_total">Laddar upp %1$d av %2$d</string>
 	<string name="reader_empty_followed_blogs_title">Du följer inga webbplatser än</string>
@@ -959,6 +1009,8 @@ Language: sv_SE
 	<string name="nux_welcome_create_account">Skapa konto</string>
 	<string name="nux_add_selfhosted_blog">Lägg till egen installation</string>
 	<string name="password_invalid">Du måste använda ett säkrare lösenord. Se till att det består av minst 7 tecken och blanda versaler, gemener, siffror, och specialtecken.</string>
+	<string name="nux_oops_not_selfhosted_blog">Logga in på WordPress.com</string>
+	<string name="signing_in">Loggar in...</string>
 	<string name="media_add_popup_title">Lägg till i mediebiblioteket</string>
 	<string name="media_add_new_media_gallery">Skapa galleri</string>
 	<string name="empty_list_default">Listan är tom</string>
@@ -987,6 +1039,7 @@ Language: sv_SE
 	<string name="limit_reached">Gräns nådd. Du kan försöka igen om 1 minut. Att försöka igen innan kommer bara öka tiden du måste vänta innan förbudet är upphävt. Vänligen kontakta support om du tror detta är ett fel.</string>
 	<string name="nux_tutorial_get_started_title">Kom igång!</string>
 	<string name="reader_hint_comment_on_comment">Svara kommentaren...</string>
+	<string name="connecting_wpcom">Loggar in på WordPress.com</string>
 	<string name="themes">Teman</string>
 	<string name="all">Alla</string>
 	<string name="images">Bilder</string>
@@ -1047,6 +1100,7 @@ Language: sv_SE
 	<string name="passcode_turn_on">Slå på PIN-kodlås</string>
 	<string name="upload">Ladda upp</string>
 	<string name="discard">Kasta bort</string>
+	<string name="sign_in">Logga in</string>
 	<string name="note_reply_successful">Svar publicerat</string>
 	<string name="more_notifications">och %d mer.</string>
 	<string name="notifications">Notifieringar</string>
