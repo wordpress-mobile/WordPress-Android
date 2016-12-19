@@ -445,11 +445,14 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void deleteSelectedComments(boolean deletePermanently) {
-        if (!NetworkUtils.checkConnection(getActivity())) return;
-        final int dlgId = deletePermanently ?  CommentDialogs.ID_COMMENT_DLG_DELETING : CommentDialogs.ID_COMMENT_DLG_TRASHING;
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
+        final int dlgId = deletePermanently ? CommentDialogs.ID_COMMENT_DLG_DELETING
+                : CommentDialogs.ID_COMMENT_DLG_TRASHING;
         final CommentList selectedComments = getAdapter().getSelectedComments();
         CommentStatus newStatus = CommentStatus.TRASH;
-        if (deletePermanently){
+        if (deletePermanently) {
             newStatus = CommentStatus.DELETED;
         }
         dismissDialog(dlgId);
@@ -483,8 +486,15 @@ public class CommentsListFragment extends Fragment {
             if (shouldRemoveCommentFromList(comment)) {
                 removeComment(comment);
             }
-            // Actual update
-            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
+            if (status == CommentStatus.DELETED) {
+                // For deletion, we need to dispatch a specific action.
+                mDispatcher.dispatch(CommentActionBuilder.newDeleteCommentAction(
+                        new RemoteCommentPayload(mSite, comment)));
+            } else {
+                // Dispatch the update
+                mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(
+                        new RemoteCommentPayload(mSite, comment)));
+            }
         }
     }
 
