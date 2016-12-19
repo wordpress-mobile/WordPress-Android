@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.persistence;
 import com.wellsql.generated.CommentModelTable;
 import com.yarolegovich.wellsql.ConditionClauseBuilder;
 import com.yarolegovich.wellsql.SelectQuery;
+import com.yarolegovich.wellsql.SelectQuery.Order;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -106,13 +107,13 @@ public class CommentSqlUtils {
         return selectQueryBuilder.endGroup().endWhere();
     }
 
-    public static List<CommentModel> getCommentsForSite(SiteModel site, CommentStatus... statuses) {
+    public static List<CommentModel> getCommentsForSite(SiteModel site, @Order int order, CommentStatus... statuses) {
         if (site == null) {
             return Collections.emptyList();
         }
 
         return getCommentsQueryForSite(site, statuses)
-                .orderBy(CommentModelTable.DATE_PUBLISHED, SelectQuery.ORDER_ASCENDING)
+                .orderBy(CommentModelTable.DATE_PUBLISHED, order)
                 .getAsModel();
     }
 
