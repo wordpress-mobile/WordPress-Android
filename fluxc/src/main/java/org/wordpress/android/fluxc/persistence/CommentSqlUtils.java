@@ -123,4 +123,8 @@ public class CommentSqlUtils {
 
         return getCommentsQueryForSite(site, statuses).getAsCursor().getCount();
     }
+
+    public static int deleteAllComments() {
+        return WellSql.delete(CommentModel.class).execute();
+    }
 }
