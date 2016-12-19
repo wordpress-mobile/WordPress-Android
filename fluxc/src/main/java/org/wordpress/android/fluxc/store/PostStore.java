@@ -289,6 +289,10 @@ public class PostStore extends Store {
         }
     }
 
+    public int deleteAllPosts() {
+        return PostSqlUtils.deleteAllPosts();
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
