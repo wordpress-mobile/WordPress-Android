@@ -400,7 +400,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         @Override
         protected Void doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
-            String[] extraFields = {"isHidden", "homeURL", "last_picked_timestamp"};
+            String[] extraFields = {"isHidden", "homeURL"};
 
             if (mIsInSearchMode) {
                 blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
