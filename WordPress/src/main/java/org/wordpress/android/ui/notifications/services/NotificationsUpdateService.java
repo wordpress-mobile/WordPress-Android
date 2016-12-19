@@ -32,8 +32,11 @@ import de.greenrobot.event.EventBus;
 
 public class NotificationsUpdateService extends Service {
 
+    public static final String IS_TAPPED_ON_NOTIFICATION = "is-tapped-on-notification";
+
     private boolean running = false;
     private String mNoteId;
+    private boolean isStartedByTappingOnNotification = false;
 
     public static void startService(Context context) {
         if (context == null) {
@@ -49,6 +52,7 @@ public class NotificationsUpdateService extends Service {
         }
         Intent intent = new Intent(context, NotificationsUpdateService.class);
         intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
+        intent.putExtra(IS_TAPPED_ON_NOTIFICATION, true);
         context.startService(intent);
     }
 
@@ -73,6 +77,7 @@ public class NotificationsUpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             mNoteId = intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+            isStartedByTappingOnNotification = intent.getBooleanExtra(IS_TAPPED_ON_NOTIFICATION, false);
             performRefresh();
         }
         return START_NOT_STICKY;
@@ -108,7 +113,7 @@ public class NotificationsUpdateService extends Service {
                     notes = NotificationsActions.parseNotes(response);
                     // if we have a note id, we were started from NotificationsDetailActivity.
                     // That means we need to re-set the *read* flag on this note.
-                    if (mNoteId != null) {
+                    if (isStartedByTappingOnNotification && mNoteId != null) {
                         setNoteRead(mNoteId, notes);
                     }
                     NotificationsTable.saveNotes(notes, true);
