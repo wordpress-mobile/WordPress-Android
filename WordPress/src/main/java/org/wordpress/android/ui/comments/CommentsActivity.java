@@ -275,7 +275,6 @@ public class CommentsActivity extends AppCompatActivity
                 || newStatus == CommentStatus.DELETED) {
             mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
-            getListFragment().updateEmptyView();
 
             String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) :
                     newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) :

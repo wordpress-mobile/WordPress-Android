@@ -233,6 +233,8 @@ public class CommentsListFragment extends Fragment {
         if (hasAdapter() && comment != null) {
             getAdapter().removeComment(comment);
         }
+        // Show the empty view if the comment count drop to zero
+        updateEmptyView();
     }
 
     @Override
@@ -302,7 +304,6 @@ public class CommentsListFragment extends Fragment {
 
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
-
                 if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
                     FilterCriteria filter = mFilteredCommentsView.getCurrentFilter();
                     if (filter == null || filter == CommentStatusCriteria.ALL) {
@@ -456,10 +457,32 @@ public class CommentsListFragment extends Fragment {
         moderateComments(selectedComments, newStatus);
     }
 
+    private boolean shouldRemoveCommentFromList(CommentModel comment) {
+        CommentStatus status = CommentStatus.fromString(comment.getStatus());
+        switch (mCommentStatusFilter) {
+            case ALL:
+                return status != CommentStatus.APPROVED && status != CommentStatus.UNAPPROVED;
+            case UNAPPROVED:
+                return status != CommentStatus.UNAPPROVED;
+            case APPROVED:
+                return status != CommentStatus.APPROVED;
+            case TRASH:
+                return status != CommentStatus.TRASH;
+            case SPAM:
+                return status != CommentStatus.SPAM;
+            case DELETE:
+            default:
+                return true;
+        }
+    }
+
     private void moderateComments(CommentList comments, CommentStatus status) {
         for (CommentModel comment: comments) {
             // Preemptive update
             comment.setStatus(status.toString());
+            if (shouldRemoveCommentFromList(comment)) {
+                removeComment(comment);
+            }
             // Actual update
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
         }
