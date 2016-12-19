@@ -92,10 +92,18 @@ public class CommentStore extends Store {
     }
 
     public static class FetchCommentsResponsePayload extends Payload {
-        public final List<CommentModel> comments;
+        @NonNull public final List<CommentModel> comments;
+        @NonNull public final SiteModel site;
+        public final int number;
+        public final int offset;
         public CommentError error;
-        public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments) {
+
+        public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments, @NonNull SiteModel site, int number,
+                                            int offset) {
             this.comments = comments;
+            this.site = site;
+            this.number = number;
+            this.offset = offset;
         }
     }
 
@@ -385,6 +393,12 @@ public class CommentStore extends Store {
     private void handleFetchCommentsResponse(FetchCommentsResponsePayload payload) {
         int rowsAffected = 0;
         if (!payload.isError()) {
+            // Clear existing comments in case some were deleted on the server. Only remove them if we request the
+            // first comments (offset == 0).
+            if (payload.offset == 0) {
+                CommentSqlUtils.removeComments(payload.site);
+            }
+
             for (CommentModel comment : payload.comments) {
                 rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
             }
