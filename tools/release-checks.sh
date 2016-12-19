@@ -86,7 +86,7 @@ function checkGradleProperties() {
 }
 
 checkNewLanguages
-# checkENStrings
+checkENStrings
 checkGradleProperties
 printVersion
 # checkDeviceToTest
