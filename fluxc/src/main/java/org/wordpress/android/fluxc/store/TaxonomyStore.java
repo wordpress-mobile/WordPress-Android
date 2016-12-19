@@ -232,6 +232,10 @@ public class TaxonomyStore extends Store {
         return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getTagIdList(), DEFAULT_TAXONOMY_TAG);
     }
 
+    public int deleteAllTerms() {
+        return TaxonomySqlUtils.deleteAllTerms();
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
