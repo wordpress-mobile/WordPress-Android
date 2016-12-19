@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.Note;
@@ -43,6 +44,8 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+
+import static android.app.Activity.RESULT_OK;
 
 public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
         RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener {
@@ -173,6 +176,25 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         if (savedInstanceState != null) {
             setRestoredFirstVisibleItemID(savedInstanceState.getLong(KEY_LIST_SCROLL_POSITION, 0));
+        }
+    }
+
+    private void updateNote(String noteId, CommentStatus status) {
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note == null) return;
+        note.setLocalStatus(status.toString());
+        NotificationsTable.saveNote(note);
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            String noteId = data.getStringExtra(NOTE_MODERATE_ID_EXTRA);
+            String newStatus = data.getStringExtra(NOTE_MODERATE_STATUS_EXTRA);
+            if (!TextUtils.isEmpty(noteId) && !TextUtils.isEmpty(newStatus)) {
+                updateNote(noteId, CommentStatus.fromString(newStatus));
+            }
         }
     }
 

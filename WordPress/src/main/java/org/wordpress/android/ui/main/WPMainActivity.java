@@ -338,8 +338,9 @@ public class WPMainActivity extends AppCompatActivity {
                 if (voiceReply != null) {
                     NotificationsProcessingService.startServiceForReply(this, noteId, voiceReply);
                     finish();
-                    return; //we don't want this notification to be dismissed as we still have to make sure
+                    // we don't want this notification to be dismissed as we still have to make sure
                     // we processed the voice reply, so we exit this function immediately
+                    return;
                 } else {
                     boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
                     NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply, false, null);
@@ -549,6 +550,10 @@ public class WPMainActivity extends AppCompatActivity {
                     resetFragments();
                 }
                 break;
+            case RequestCodes.NOTE_DETAIL:
+                if (getNotificationsListFragment() != null) {
+                    getNotificationsListFragment().onActivityResult(requestCode, resultCode, data);
+                }
         }
     }
 
@@ -564,6 +569,17 @@ public class WPMainActivity extends AppCompatActivity {
         Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_MY_SITE);
         if (fragment instanceof MySiteFragment) {
             return (MySiteFragment) fragment;
+        }
+        return null;
+    }
+
+    /*
+     * returns the my site fragment from the sites tab
+     */
+    private NotificationsListFragment getNotificationsListFragment() {
+        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_NOTIFS);
+        if (fragment instanceof NotificationsListFragment) {
+            return (NotificationsListFragment) fragment;
         }
         return null;
     }
