@@ -130,22 +130,6 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void configureViews() {
-        final EditText editAuthorName = (EditText) this.findViewById(R.id.author_name);
-        editAuthorName.setText(mComment.getAuthorName());
-
-        final EditText editAuthorEmail = (EditText) this.findViewById(R.id.author_email);
-        editAuthorEmail.setText(mComment.getAuthorEmail());
-
-        final EditText editAuthorUrl = (EditText) this.findViewById(R.id.author_url);
-        editAuthorUrl.setText(mComment.getAuthorUrl());
-
-        // REST API can currently only edit comment content
-        if (mNote != null) {
-            editAuthorName.setVisibility(View.GONE);
-            editAuthorEmail.setVisibility(View.GONE);
-            editAuthorUrl.setVisibility(View.GONE);
-        }
-
         final EditText editContent = (EditText) this.findViewById(R.id.edit_comment_content);
         editContent.setText(mComment.getContent());
 
@@ -217,9 +201,6 @@ public class EditCommentActivity extends AppCompatActivity {
         }
 
         showSaveDialog();
-        mComment.setAuthorEmail(getEditTextStr(R.id.author_email));
-        mComment.setAuthorUrl(getEditTextStr(R.id.author_url));
-        mComment.setAuthorName(getEditTextStr(R.id.author_name));
         mComment.setContent(getEditTextStr(R.id.edit_comment_content));
         mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
     }
@@ -228,18 +209,11 @@ public class EditCommentActivity extends AppCompatActivity {
      * returns true if user made any changes to the comment
      */
     private boolean isCommentEdited() {
-        if (mComment == null)
+        if (mComment == null) {
             return false;
-
-        final String authorName = getEditTextStr(R.id.author_name);
-        final String authorEmail = getEditTextStr(R.id.author_email);
-        final String authorUrl = getEditTextStr(R.id.author_url);
+        }
         final String content = getEditTextStr(R.id.edit_comment_content);
-
-        return !(authorName.equals(mComment.getAuthorName())
-                && authorEmail.equals(mComment.getAuthorEmail())
-                && authorUrl.equals(mComment.getAuthorUrl())
-                && content.equals(mComment.getContent()));
+        return !content.equals(mComment.getContent());
     }
 
     @Override
