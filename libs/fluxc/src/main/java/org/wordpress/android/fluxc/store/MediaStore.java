@@ -359,6 +359,10 @@ public class MediaStore extends Store {
         return getNextSiteMediaToDelete(siteModel) != null;
     }
 
+    public int deleteAllMedia() {
+        return MediaSqlUtils.deleteAllMedia();
+    }
+
     //
     // Action implementations
     //
