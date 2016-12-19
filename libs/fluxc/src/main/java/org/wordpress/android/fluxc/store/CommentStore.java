@@ -204,6 +204,10 @@ public class CommentStore extends Store {
         return CommentSqlUtils.getCommentByLocalCommentId(localId);
     }
 
+    public int deleteAllComments() {
+        return CommentSqlUtils.deleteAllComments();
+    }
+
     // Store Methods
 
     @Override
