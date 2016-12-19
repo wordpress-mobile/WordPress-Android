@@ -848,7 +848,8 @@ public class WordPress extends MultiDexApplication {
                 // Refresh account informations and Notifications
 
                 if (AccountHelper.isSignedInWordPressDotCom()) {
-                    if (activity.getIntent().hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
+                    Intent intent = activity.getIntent();
+                    if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
                         NotificationsUpdateService.startService(getContext(),
                                 getNoteIdFromNoteDetailActivityIntent(activity.getIntent()));
                     } else {
