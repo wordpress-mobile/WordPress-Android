@@ -508,6 +508,10 @@ public class SiteStore extends Store {
         return SiteSqlUtils.getPostFormats(site);
     }
 
+    public void deleteAllSites() {
+        SiteSqlUtils.deleteAllSites();
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
