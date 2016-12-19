@@ -86,6 +86,7 @@
     <string name="could_not_load_page">Could not load page</string>
     <string name="send">Send</string>
     <string name="swipe_for_more">Swipe for more</string>
+    <string name="no_default_app_available_to_open_link">Unable to open the link</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -1201,7 +1202,6 @@
     <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
-    <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
     <string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
     <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
@@ -1215,6 +1215,7 @@
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
     <string name="reader_toast_err_already_liked">You have already liked that comment</string>
+    <string name="reader_toast_err_url_intent">Unable to open %s</string>
 
     <!-- snackbar messages -->
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
