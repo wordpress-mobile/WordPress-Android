@@ -25,9 +25,11 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
+import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -48,6 +50,8 @@ import java.util.TimeZone;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID;
+
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
 
@@ -64,6 +68,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private RelativeLayout mPeopleView;
+    private RelativeLayout mPageView;
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
@@ -85,8 +90,12 @@ public class MySiteFragment extends Fragment
 
     public void setBlog(@Nullable final Blog blog) {
         mBlogLocalId = BlogUtils.getBlogLocalId(blog);
-
         refreshBlogDetails(blog);
+
+        // once the user switches to another blog, clean any pending draft notifications for any other blog,
+        // and check if they have any drafts pending for this new blog
+        NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
+        NotificationsPendingDraftsService.checkPrefsAndStartService(getActivity());
     }
 
     @Override
@@ -147,6 +156,7 @@ public class MySiteFragment extends Fragment
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
+        mPageView = (RelativeLayout) rootView.findViewById(R.id.row_pages);
 
         // hide the FAB the first time the fragment is created in order to animate it in onResume()
         if (savedInstanceState == null) {
@@ -375,12 +385,16 @@ public class MySiteFragment extends Fragment
 
         // Hide the Plan item if the Plans feature is not available for this blog
         String planShortName = blog.getPlanShortName();
-        if (!TextUtils.isEmpty(planShortName)) {
+        if (!TextUtils.isEmpty(planShortName) && blog.isAdmin()) {
             mCurrentPlanNameTextView.setText(planShortName);
             mPlanContainer.setVisibility(View.VISIBLE);
         } else {
             mPlanContainer.setVisibility(View.GONE);
         }
+
+        // Do not show pages menu item to Collaborators.
+        int pageVisibility = (isAdminOrSelfHosted || blog.hasCapability(Capability.EDIT_PAGES)) ? View.VISIBLE : View.GONE;
+        mPageView.setVisibility(pageVisibility);
     }
 
     private void toggleAdminVisibility(@Nullable final Blog blog) {

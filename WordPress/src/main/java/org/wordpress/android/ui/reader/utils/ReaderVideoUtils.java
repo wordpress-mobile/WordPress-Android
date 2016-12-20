@@ -13,11 +13,23 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.MediaUtils;
 
 public class ReaderVideoUtils {
+
 	private ReaderVideoUtils() {
 		throw new AssertionError();
 	}
+
+    /*
+     * determine whether we can show a thumbnail image for the passed video - currently
+     * we support YouTube, Vimeo & standard images
+     */
+    public static boolean canShowVideoThumbnail(String videoUrl) {
+        return isVimeoLink(videoUrl)
+                || isYouTubeVideoLink(videoUrl)
+                || MediaUtils.isValidImage(videoUrl);
+    }
 
     /*
      * returns the url to get the full-size (480x360) thumbnail url for the passed video

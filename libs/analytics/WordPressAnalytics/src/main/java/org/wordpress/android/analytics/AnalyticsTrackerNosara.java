@@ -403,6 +403,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_flagged_as_spam";
             case NOTIFICATION_SWIPE_PAGE_CHANGED:
                 return "notifications_swipe_page_changed";
+            case NOTIFICATION_PENDING_DRAFTS_TAPPED:
+                return "notifications_pending_drafts_tapped";
+            case NOTIFICATION_PENDING_DRAFTS_IGNORED:
+                return "notifications_pending_drafts_ignored";
+            case NOTIFICATION_PENDING_DRAFTS_DISMISSED:
+                return "notifications_pending_drafts_dismissed";
+            case NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED:
+                return "notifications_pending_drafts_settings_enabled";
+            case NOTIFICATION_PENDING_DRAFTS_SETTINGS_DISABLED:
+                return "notifications_pending_drafts_settings_disabled";
             case NOTIFICATION_LIKED:
             case NOTIFICATION_QUICK_ACTIONS_LIKED:
                 return "notifications_comment_liked";
@@ -432,6 +442,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "people_management_list_opened";
             case OPENED_PERSON:
                 return "people_management_details_opened";
+            case CREATE_ACCOUNT_INITIATED:
+                return "account_create_initiated";
+            case CREATE_ACCOUNT_EMAIL_EXISTS:
+                return "account_create_email_exists";
+            case CREATE_ACCOUNT_USERNAME_EXISTS:
+                return "account_create_username_exists";
+            case CREATE_ACCOUNT_FAILED:
+                return "account_create_failed";
             case CREATED_ACCOUNT:
                 return "account_created";
             case CREATED_SITE:
@@ -494,6 +512,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_user_reviewed_the_app";
             case SUPPORT_USER_REPLIED_TO_HELPSHIFT:
                 return "support_user_replied_to_helpshift";
+            case LOGIN_ACCESSED:
+                return "login_accessed";
             case LOGIN_MAGIC_LINK_EXITED:
                 return "login_magic_link_exited";
             case LOGIN_MAGIC_LINK_FAILED:

@@ -116,6 +116,7 @@ public class CreateUserAndBlog {
         params.put("client_id", BuildConfig.OAUTH_APP_ID);
         params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.VALIDATE_USER);
+        mErrorListener.setStep(Step.VALIDATE_USER);
         mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
 
@@ -130,6 +131,7 @@ public class CreateUserAndBlog {
         params.put("client_id", BuildConfig.OAUTH_APP_ID);
         params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.VALIDATE_SITE);
+        mErrorListener.setStep(Step.VALIDATE_SITE);
         mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
 
@@ -143,6 +145,7 @@ public class CreateUserAndBlog {
         params.put("client_id", BuildConfig.OAUTH_APP_ID);
         params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.CREATE_USER);
+        mErrorListener.setStep(Step.CREATE_USER);
         mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
 
@@ -165,6 +168,7 @@ public class CreateUserAndBlog {
         });
 
         mResponseHandler.setStep(Step.AUTHENTICATE_USER);
+        mErrorListener.setStep(Step.AUTHENTICATE_USER);
     }
 
     private void createBlog() {
@@ -178,6 +182,7 @@ public class CreateUserAndBlog {
         params.put("client_id", BuildConfig.OAUTH_APP_ID);
         params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.CREATE_SITE);
+        mErrorListener.setStep(Step.CREATE_SITE);
         WordPress.getRestClientUtils().post(path, params, null, mResponseHandler, mErrorListener);
     }
 
@@ -185,7 +190,7 @@ public class CreateUserAndBlog {
         VALIDATE_USER, VALIDATE_SITE, CREATE_USER, AUTHENTICATE_USER, CREATE_SITE
     }
 
-    private enum Mode {CREATE_USER_AND_BLOG, CREATE_BLOG_ONLY}
+    public enum Mode {CREATE_USER_AND_BLOG, CREATE_BLOG_ONLY}
 
     public interface Callback {
         void onStepFinished(Step step);

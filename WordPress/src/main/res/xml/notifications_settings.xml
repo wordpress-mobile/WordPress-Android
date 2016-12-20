@@ -11,6 +11,10 @@
         <PreferenceScreen
             android:key="@string/pref_notification_other_blogs"
             android:title="@string/notifications_comments_other_blogs"/>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_notification_pending_drafts"
+            android:title="@string/notification_pending_drafts"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="@string/pref_notification_sights_sounds"

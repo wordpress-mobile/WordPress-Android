@@ -9,9 +9,13 @@ import android.util.Log;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.NoSuchElementException;
+
+import static java.lang.String.format;
 
 /**
  * simple wrapper for Android log calls, enables recording and displaying log
@@ -167,17 +171,24 @@ public class AppLog {
     }
 
     private static class LogEntry {
-        LogLevel mLogLevel;
-        String mLogText;
-        T mLogTag;
+        final LogLevel mLogLevel;
+        final String mLogText;
+        final java.util.Date mDate;
+        final T mLogTag;
 
         public LogEntry(LogLevel logLevel, String logText, T logTag) {
             mLogLevel = logLevel;
-            mLogText = logText;
-            if (mLogText == null) {
+            mDate = DateTimeUtils.nowUTC();
+            if (logText == null) {
                 mLogText = "null";
+            } else {
+                mLogText = logText;
             }
             mLogTag = logTag;
+        }
+
+        private String formatLogDate() {
+            return new SimpleDateFormat("MMM-dd kk:mm", Locale.US).format(mDate);
         }
 
         private String toHtml() {
@@ -186,10 +197,10 @@ public class AppLog {
             sb.append(mLogLevel.toHtmlColor());
             sb.append("\">");
             sb.append("[");
-            sb.append(mLogTag.name());
-            sb.append("] ");
+            sb.append(formatLogDate()).append(" ");
+            sb.append(mLogTag.name()).append(" ");
             sb.append(mLogLevel.name());
-            sb.append(": ");
+            sb.append("] ");
             sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
             sb.append("</font>");
             return sb.toString();
@@ -287,9 +298,14 @@ public class AppLog {
         Iterator<LogEntry> it = mLogEntries.iterator();
         int lineNum = 1;
         while (it.hasNext()) {
-            sb.append(String.format("%02d - ", lineNum))
-                    .append(it.next().mLogText)
-                    .append("\n");
+            LogEntry entry = it.next();
+            sb.append(format(Locale.US, "%02d - ", lineNum))
+                .append("[")
+                .append(entry.formatLogDate()).append(" ")
+                .append(entry.mLogTag.name())
+                .append("] ")
+                .append(entry.mLogText)
+                .append("\n");
             lineNum++;
         }
         return sb.toString();

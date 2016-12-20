@@ -36,6 +36,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.push.NotificationsScreenLockWatchService;
 import org.wordpress.android.ui.ActivityId;
@@ -44,6 +45,8 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
+import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
@@ -71,6 +74,7 @@ import org.wordpress.android.widgets.WPViewPager;
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
+import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -208,7 +212,12 @@ public class WPMainActivity extends AppCompatActivity {
                         false));
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
-                    launchWithNoteId();
+                    if (getIntent().hasExtra(NotificationsPendingDraftsService.POST_ID_EXTRA)) {
+                        launchWithPostId(getIntent().getLongExtra(NotificationsPendingDraftsService.POST_ID_EXTRA, 0),
+                                getIntent().getBooleanExtra(NotificationsPendingDraftsService.IS_PAGE_EXTRA, false));
+                    } else {
+                        launchWithNoteId();
+                    }
                 } else {
                     int position = AppPrefs.getMainTabIndex();
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
@@ -332,7 +341,7 @@ public class WPMainActivity extends AppCompatActivity {
                     // we processed the voice reply, so we exit this function immediately
                 } else {
                     boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply, false, null);
+                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply, NotesAdapter.FILTERS.FILTER_ALL);
                 }
 
             } else {
@@ -345,6 +354,28 @@ public class WPMainActivity extends AppCompatActivity {
         }
 
         GCMMessageService.removeAllNotifications(this);
+    }
+
+    /*
+    * called from an internal pending draft notification, so the user can land in the local draft and take action
+    * such as finish editing and publish, or delete the post, etc. */
+    private void launchWithPostId(long postId, boolean isPage) {
+        if (isFinishing() || getIntent() == null) return;
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
+        NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, this);
+
+        //if no specific post id passed, show the list
+        if (postId == 0 ) {
+            //show list
+            if (isPage) {
+                ActivityLauncher.viewCurrentBlogPages(this);
+            } else {
+                ActivityLauncher.viewCurrentBlogPosts(this);
+            }
+        } else {
+            ActivityLauncher.editBlogPostOrPageForResult(this, postId, isPage);
+        }
     }
 
     @Override
@@ -485,10 +516,20 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void moderateCommentOnActivityResult(Intent data) {
+
         Note note = NotificationsTable.getNoteById(StringUtils.notNullStr(data.getStringExtra
                 (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+
+        if (note == null) {
+            // sometimes it could be that a note is set to be moderated but a refresh in the DB will
+            // make the note disappear, meaning it doesn't exist on the server anymore. So, it' ok
+            // to fail silently here.
+            return;
+        }
+
         CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                 NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
+
         NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
     }
 

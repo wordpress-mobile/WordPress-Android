@@ -14,10 +14,6 @@ public class ReaderInterfaces {
         void onPostSelected(ReaderPost post);
     }
 
-    public interface OnTagSelectedListener {
-        void onTagSelected(String tagName);
-    }
-
     /*
      * called from post detail fragment so toolbar can animate in/out when scrolling
      */

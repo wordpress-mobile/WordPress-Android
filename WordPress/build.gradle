@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -34,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "6.3-rc-1"
-        versionCode 328
+        versionName "6.4-rc-1"
+        versionCode 334
         minSdkVersion 16
         targetSdkVersion 25
 
