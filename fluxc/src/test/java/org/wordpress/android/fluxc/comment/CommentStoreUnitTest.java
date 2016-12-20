@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.comment;
 
 import android.content.Context;
 
+import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.junit.Before;
@@ -14,10 +15,14 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.CommentSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
+import org.wordpress.android.util.DateTimeUtils;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class CommentStoreUnitTest {
@@ -72,6 +77,41 @@ public class CommentStoreUnitTest {
         assertEquals(null, CommentSqlUtils.getCommentBySiteAndRemoteId(new SiteModel(), 42));
     }
 
+
+    @Test
+    public void testGetCommentBySiteAscendingOrder() {
+        SiteModel siteModel = new SiteModel();
+        siteModel.setId(21);
+        insertTestComments(siteModel);
+
+        List<CommentModel> ascComments = CommentSqlUtils.getCommentsForSite(siteModel, SelectQuery.ORDER_ASCENDING,
+                CommentStatus.ALL);
+        CommentModel previousComment = ascComments.get(0);
+        for (CommentModel comment : ascComments.subList(1, ascComments.size())) {
+            Date d0 = DateTimeUtils.dateFromIso8601(previousComment.getDatePublished());
+            Date d1 = DateTimeUtils.dateFromIso8601(comment.getDatePublished());
+            assertTrue("ascending comment list seems incorrectly ordered", d0.before(d1));
+            previousComment = comment;
+        }
+    }
+
+    @Test
+    public void testGetCommentBySiteDescendingOrder() {
+        SiteModel siteModel = new SiteModel();
+        siteModel.setId(21);
+        insertTestComments(siteModel);
+
+        List<CommentModel> ascComments = CommentSqlUtils.getCommentsForSite(siteModel, SelectQuery.ORDER_DESCENDING,
+                CommentStatus.ALL);
+        CommentModel previousComment = ascComments.get(0);
+        for (CommentModel comment : ascComments.subList(1, ascComments.size())) {
+            Date d0 = DateTimeUtils.dateFromIso8601(previousComment.getDatePublished());
+            Date d1 = DateTimeUtils.dateFromIso8601(comment.getDatePublished());
+            assertTrue("descending comment list seems incorrectly ordered", d1.before(d0));
+            previousComment = comment;
+        }
+    }
+
     @Test
     public void testGetCommentsBySingleStatus() {
         SiteModel siteModel = new SiteModel();
@@ -80,15 +120,17 @@ public class CommentStoreUnitTest {
         insertTestComments(siteModel);
 
         // Get APPROVED comments
-        List<CommentModel> queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, CommentStatus.APPROVED);
+        List<CommentModel> queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, SelectQuery.ORDER_ASCENDING,
+                CommentStatus.APPROVED);
         assertEquals(8, queriedComments.size());
 
         // Get TRASH comments
-        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, CommentStatus.TRASH);
+        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, SelectQuery.ORDER_ASCENDING,
+                CommentStatus.TRASH);
         assertEquals(1, queriedComments.size());
 
         // Get ALL comments
-        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, CommentStatus.ALL);
+        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, SelectQuery.ORDER_ASCENDING, CommentStatus.ALL);
         assertEquals(15, queriedComments.size());
     }
 
@@ -100,12 +142,13 @@ public class CommentStoreUnitTest {
         insertTestComments(siteModel);
 
         // Get APPROVED, UNAPPROVED and SPAM comments
-        List<CommentModel> queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, CommentStatus.APPROVED,
-                CommentStatus.SPAM, CommentStatus.UNAPPROVED);
+        List<CommentModel> queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, SelectQuery.ORDER_ASCENDING,
+                CommentStatus.APPROVED, CommentStatus.SPAM, CommentStatus.UNAPPROVED);
         assertEquals(14, queriedComments.size());
 
         // Get SPAM and UNAPPROVED comments
-        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, CommentStatus.SPAM, CommentStatus.UNAPPROVED);
+        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel,  SelectQuery.ORDER_ASCENDING,
+                CommentStatus.SPAM, CommentStatus.UNAPPROVED);
         assertEquals(6, queriedComments.size());
     }
 
@@ -170,6 +213,7 @@ public class CommentStoreUnitTest {
         commentModel.setContent(content);
         commentModel.setRemoteCommentId(remoteId);
         commentModel.setStatus(status.toString());
+        commentModel.setDatePublished(DateTimeUtils.iso8601FromTimestamp(new Random().nextInt()));
         CommentSqlUtils.insertOrUpdateComment(commentModel);
     }
 }
