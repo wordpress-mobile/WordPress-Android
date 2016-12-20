@@ -242,8 +242,6 @@
     <!--site picker-->
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
     <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
-    <dimen name="site_picker_container_padding_bottom">11dp</dimen>
-    <dimen name="site_picker_container_padding_top">10dp</dimen>
 
     <dimen name="menu_item_height">48dp</dimen>
     <dimen name="menu_item_width">168dp</dimen>
