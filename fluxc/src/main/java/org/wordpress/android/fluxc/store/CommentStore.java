@@ -24,6 +24,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,8 +36,8 @@ public class CommentStore extends Store {
     // Payloads
 
     public static class FetchCommentsPayload extends Payload {
-        public final SiteModel site;
-        public final CommentStatus status;
+        @NonNull public final SiteModel site;
+        @NonNull public final CommentStatus status;
         public final int number;
         public final int offset;
 
@@ -47,7 +48,7 @@ public class CommentStore extends Store {
             this.offset = offset;
         }
 
-        public FetchCommentsPayload(@NonNull SiteModel site, CommentStatus status, int number, int offset) {
+        public FetchCommentsPayload(@NonNull SiteModel site, @NonNull CommentStatus status, int number, int offset) {
             this.site = site;
             this.status = status;
             this.number = number;
@@ -56,8 +57,8 @@ public class CommentStore extends Store {
     }
 
     public static class RemoteCommentPayload extends Payload {
-        public final SiteModel site;
-        public final CommentModel comment;
+        @NonNull public final SiteModel site;
+        @Nullable public final CommentModel comment;
         public final long remoteCommentId;
 
         public RemoteCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment) {
@@ -87,7 +88,7 @@ public class CommentStore extends Store {
     }
 
     public static class InstantiateCommentPayload extends Payload {
-        public final SiteModel site;
+        @NonNull public final SiteModel site;
 
         public InstantiateCommentPayload(@NonNull SiteModel site) {
             this.site = site;
@@ -95,7 +96,7 @@ public class CommentStore extends Store {
     }
 
     public static class FetchCommentsResponsePayload extends Payload {
-        public final List<CommentModel> comments;
+        @NonNull public final List<CommentModel> comments;
         public CommentError error;
         public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments) {
             this.comments = comments;
@@ -103,17 +104,10 @@ public class CommentStore extends Store {
     }
 
     public static class RemoteCommentResponsePayload extends Payload {
-        public final CommentModel comment;
+        @Nullable public final CommentModel comment;
         public CommentError error;
         public RemoteCommentResponsePayload(@Nullable CommentModel comment) {
             this.comment = comment;
-        }
-    }
-
-    public static class RemoveCommentsPayload extends Payload {
-        public final SiteModel site;
-        public RemoveCommentsPayload(@NonNull SiteModel site) {
-            this.site = site;
         }
     }
 
@@ -167,6 +161,7 @@ public class CommentStore extends Store {
     public class OnCommentChanged extends OnChanged<CommentError> {
         public int rowsAffected;
         public CommentAction causeOfChange;
+        public List<Integer> changedCommentsLocalIds = new ArrayList<>();
         public OnCommentChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
         }
@@ -313,6 +308,9 @@ public class CommentStore extends Store {
         if (!payload.isError()) {
             CommentSqlUtils.insertOrUpdateComment(payload.comment);
         }
+        if (payload.comment != null) {
+            event.changedCommentsLocalIds.add(payload.comment.getId());
+        }
         event.error = payload.error;
         emitChange(event);
     }
@@ -323,6 +321,7 @@ public class CommentStore extends Store {
             rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload);
         }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.changedCommentsLocalIds.add(payload.getId());
         event.causeOfChange = CommentAction.UPDATE_COMMENT;
         emitChange(event);
     }
@@ -331,12 +330,14 @@ public class CommentStore extends Store {
         int rowsAffected = CommentSqlUtils.removeComment(payload);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.REMOVE_COMMENT;
+        event.changedCommentsLocalIds.add(payload.getId());
         emitChange(event);
     }
 
     private void removeComments(SiteModel payload) {
         int rowsAffected = CommentSqlUtils.removeComments(payload);
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        // Doesn't make sense to update here event.changedCommentsLocalIds
         event.causeOfChange = CommentAction.REMOVE_COMMENTS;
         emitChange(event);
     }
@@ -372,13 +373,16 @@ public class CommentStore extends Store {
 
     private void handleDeletedCommentResponse(RemoteCommentResponsePayload payload) {
         OnCommentChanged event = new OnCommentChanged(0);
+        if (payload.comment != null) {
+            event.changedCommentsLocalIds.add(payload.comment.getId());
+        }
         event.causeOfChange = CommentAction.DELETE_COMMENT;
         event.error = payload.error;
         if (!payload.isError()) {
             // Delete once means "send to trash", so we don't want to remove it from the DB, just update it's
             // status. Delete twice means "farewell comment, we won't see you ever again". Only delete from the DB if
             // the status is "deleted".
-            if (payload.comment.getStatus().equals(CommentStatus.DELETED.toString())) {
+            if (payload.comment != null && payload.comment.getStatus().equals(CommentStatus.DELETED.toString())) {
                 CommentSqlUtils.removeComment(payload.comment);
             } else {
                 // Update the local copy, only the status should have changed ("trash")
@@ -398,12 +402,13 @@ public class CommentStore extends Store {
 
     private void handleFetchCommentsResponse(FetchCommentsResponsePayload payload) {
         int rowsAffected = 0;
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
         if (!payload.isError()) {
             for (CommentModel comment : payload.comments) {
                 rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
+                event.changedCommentsLocalIds.add(comment.getId());
             }
         }
-        OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.FETCH_COMMENTS;
         event.error = payload.error;
         emitChange(event);
@@ -430,6 +435,9 @@ public class CommentStore extends Store {
             rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        if (payload.comment != null) {
+            event.changedCommentsLocalIds.add(payload.comment.getId());
+        }
         event.causeOfChange = CommentAction.PUSH_COMMENT;
         event.error = payload.error;
         emitChange(event);
@@ -449,6 +457,9 @@ public class CommentStore extends Store {
             rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        if (payload.comment != null) {
+            event.changedCommentsLocalIds.add(payload.comment.getId());
+        }
         event.causeOfChange = CommentAction.FETCH_COMMENT;
         event.error = payload.error;
         emitChange(event);
@@ -466,6 +477,9 @@ public class CommentStore extends Store {
         } else {
             OnCommentChanged event = new OnCommentChanged(0);
             event.causeOfChange = CommentAction.LIKE_COMMENT;
+            if (payload.comment != null) {
+                event.changedCommentsLocalIds.add(payload.comment.getId());
+            }
             event.error = new CommentError(CommentErrorType.INVALID_INPUT, "Can't like a comment on XMLRPC API");
             emitChange(event);
         }
@@ -477,6 +491,9 @@ public class CommentStore extends Store {
             rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         }
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        if (payload.comment != null) {
+            event.changedCommentsLocalIds.add(payload.comment.getId());
+        }
         event.causeOfChange = CommentAction.LIKE_COMMENT;
         event.error = payload.error;
         emitChange(event);
