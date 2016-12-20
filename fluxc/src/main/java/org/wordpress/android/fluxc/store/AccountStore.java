@@ -470,7 +470,7 @@ public class AccountStore extends Store {
 
     private void emitAccountChangeError(AccountErrorType errorType) {
         OnAccountChanged event = new OnAccountChanged();
-        event.error = new AccountError(errorType, null);
+        event.error = new AccountError(errorType, "");
         emitChange(event);
     }
 
