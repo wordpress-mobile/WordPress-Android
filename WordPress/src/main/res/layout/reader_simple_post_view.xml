@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--
-    individual related post shown in ReaderRelatedPostsView
- -->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,7 +10,7 @@
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_featured"
-        android:layout_width="@dimen/reader_related_post_image_width"
+        android:layout_width="@dimen/reader_simple_post_image_width"
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/margin_large"
         android:scaleType="centerCrop"
@@ -23,7 +19,7 @@
         tools:visibility="visible" />
 
     <RelativeLayout
-        android:id="@+id/layout_related_post_site_header"
+        android:id="@+id/layout_simple_post_site_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
@@ -32,7 +28,7 @@
         tools:visibility="visible">
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
-            android:id="@+id/related_post_follow_button"
+            android:id="@+id/simple_post_follow_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -52,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/related_post_follow_button"
+            android:layout_toLeftOf="@+id/simple_post_follow_button"
             android:layout_toRightOf="@+id/image_avatar"
             android:orientation="vertical">
 
@@ -80,10 +76,10 @@
     </RelativeLayout>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_related_post_title"
+        android:id="@+id/text_simple_post_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_related_post_site_header"
+        android:layout_below="@+id/layout_simple_post_site_header"
         android:layout_toRightOf="@+id/image_featured"
         android:ellipsize="end"
         android:maxLines="2"
@@ -91,13 +87,13 @@
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
         app:wpFontFamily="merriweather"
-        tools:text="text_related_post_title" />
+        tools:text="text_simple_post_title" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_related_post_excerpt"
+        android:id="@+id/text_simple_post_excerpt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_related_post_title"
+        android:layout_below="@+id/text_simple_post_title"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_toRightOf="@+id/image_featured"
         android:ellipsize="end"
@@ -105,6 +101,6 @@
         android:textColor="@color/grey_darken_20"
         android:textSize="@dimen/text_sz_medium"
         app:wpFontFamily="merriweather"
-        tools:text="text_related_post_excerpt\ntext_related_post_excerpt\ntext_related_post_excerpt" />
+        tools:text="text_simple_post_excerpt\ntext_simple_post_excerpt\ntext_simple_post_excerpt" />
 
 </RelativeLayout>

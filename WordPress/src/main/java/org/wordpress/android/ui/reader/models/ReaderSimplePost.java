@@ -9,9 +9,9 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
 
 /**
- * simplified version of a reader post that contains only the fields necessary for a related post
+ * simplified version of a reader post
  */
-public class ReaderRelatedPost {
+public class ReaderSimplePost {
     private long mPostId;
     private long mSiteId;
     private boolean mIsFollowing;
@@ -25,17 +25,19 @@ public class ReaderRelatedPost {
 
     private String mRailcarJson;
 
-    // these are the specific fields we should ask for when requesting related posts from
-    // the endpoint - note that we want to avoid ever requesting the post content, since
-    // that makes the call much heavier
-    public static final String RELATED_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,is_following,author,featured_image,featured_media,railcar";
+    /*
+       these are the specific fields we should ask for when requesting simple posts from
+       the endpoint - note that we want to avoid ever requesting the post content, since
+       that makes the call much heavier
+    */
+    public static final String SIMPLE_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,is_following,author,featured_image,featured_media,railcar";
 
-    public static ReaderRelatedPost fromJson(JSONObject json) {
+    public static ReaderSimplePost fromJson(JSONObject json) {
         if (json == null) {
-            throw new IllegalArgumentException("ReaderRelatedPost requires a non-null JSONObject");
+            throw new IllegalArgumentException("ReaderSimplePost requires a non-null JSONObject");
         }
 
-        ReaderRelatedPost post = new ReaderRelatedPost();
+        ReaderSimplePost post = new ReaderSimplePost();
 
         // ID and site_ID are required, so make sure we have them
         try {

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-22 15:56:08+0000
+Translation-Revision-Date: 2016-12-06 12:04:24+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.3.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="invalid_verification_code_format">Musi zawierać 6 cyfr</string>
+	<string name="confirm_discard_changes">Odrzucić niezapisane zmiany?</string>
+	<string name="swipe_for_more">Przeciągnij aby wczytać więcej</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Nie masz uprawnień do podglądu tego wpisu. Spróbuj najpierw zalogować się do WordPress.com lub skorzystaj z przycisku akcji aby otworzyć przeglądarkę.</string>
 	<string name="reader_err_get_post_not_authorized_signin">Nie masz uprawnień do podglądu tego wpisu. Spróbuj najpierw zalogować się do WordPress.com.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">Nie masz uprawnień do podglądu tego wpisu. Skorzystaj z przycisku akcji aby otworzyć przeglądarkę.</string>

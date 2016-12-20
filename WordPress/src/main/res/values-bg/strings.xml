@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-17 15:47:24+0000
+Translation-Revision-Date: 2016-12-05 17:45:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: bg
 -->
 <resources>
+	<string name="invalid_verification_code_format">Трябва да бъде шестцифрено число</string>
+	<string name="confirm_discard_changes">Отмяна на незапазените промени?</string>
+	<string name="swipe_for_more">Плъзнете за повече</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Не сте оторизирани да разглеждате тази публикация. Опитайте да влезете в WordPress.com или използвайте горния бутон, за да я отворите в браузъра.</string>
 	<string name="reader_err_get_post_not_authorized_signin">Не сте оторизирани да разглеждате тази публикация. Опитайте да влезете в WordPress.com.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">Не сте оторизирани да разглеждате тази публикация. Използвайте горния бутон, за да я отворите в браузъра.</string>

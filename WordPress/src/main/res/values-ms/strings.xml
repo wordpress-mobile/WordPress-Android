@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-28 09:17:06+0000
+Translation-Revision-Date: 2016-12-09 14:27:31+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.3.0-alpha
 Language: ms
 -->
 <resources>
+	<string name="invalid_verification_code_format">Mestilah nombor enam angka</string>
+	<string name="confirm_discard_changes">Buang perubahan yang belum disimpan?</string>
+	<string name="swipe_for_more">Sapu untuk seterusnya</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Anda tidak dibenarkan melihat kiriman ini. Cuba daftar masuk ke WordPress.com dahulu atau sebaliknya gunakan butang aksi di atas untuk membuka di pelayar.</string>
 	<string name="reader_err_get_post_not_authorized_signin">Anda tidak dibenarkan melihat kiriman ini. Cuba daftar masuk ke WordPress.com dahulu.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">Anda tidak dibenarkan melihat kiriman ini. Sebaliknya gunakan butang aksi di atas untuk mencuba di pelayar.</string>
