@@ -43,7 +43,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
     }
 
-    public void fetchComments(final SiteModel site, int number, int offset, CommentStatus status) {
+    public void fetchComments(final SiteModel site, final int number, final int offset, CommentStatus status) {
         List<Object> params = new ArrayList<>(4);
         Map<String, Object> commentParams = new HashMap<>();
         commentParams.put("number", number);
@@ -62,7 +62,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         List<CommentModel> comments = commentsResponseToCommentList(response, site);
-                        FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(comments);
+                        FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(comments, site, number,
+                                offset);
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(payload));
                     }
                 },
@@ -70,7 +71,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
-                                CommentErrorUtils.commentErrorToFetchCommentsPayload(error)));
+                                CommentErrorUtils.commentErrorToFetchCommentsPayload(error, site)));
                     }
                 }
         );
