@@ -6,7 +6,11 @@
     <!-- account setup -->
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
-    <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs that in order to communicate with your site. Contact your host to solve this problem. </string>
+    <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
+        that in order to communicate with your site. Contact your host to solve this problem.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
+        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        this problem.</string>
     <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
     <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
     <string name="no_network_title">No network available</string>

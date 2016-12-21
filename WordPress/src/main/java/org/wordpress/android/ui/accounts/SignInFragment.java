@@ -1343,7 +1343,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION);
                 break;
             case XMLRPC_FORBIDDEN:
-                // TODO: show a better error message
+                showGenericErrorDialog(getResources().getString(R.string.xmlrpc_endpoint_forbidden_error),
+                        XMLRPC_BLOCKED_HELPSHIFT_FAQ_ID,
+                        XMLRPC_BLOCKED_HELPSHIFT_FAQ_SECTION);
+                break;
             case GENERIC_ERROR:
             default:
                 showGenericErrorDialog(getResources().getString(R.string.nux_cannot_log_in));
