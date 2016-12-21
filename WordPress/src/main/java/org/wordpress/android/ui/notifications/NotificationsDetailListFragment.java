@@ -22,7 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.BlockType;
@@ -50,10 +50,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     private int mRestoredListPosition;
 
-    public interface OnNoteChangeListener {
-        void onNoteChanged(Note note);
-    }
-
     private Note mNote;
     private LinearLayout mRootLayout;
     private ViewGroup mFooterView;
@@ -63,7 +59,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private int mCommentListPosition = ListView.INVALID_POSITION;
 
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
-    private OnNoteChangeListener mOnNoteChangeListener;
     private NoteBlockAdapter mNoteBlockAdapter;
 
     public NotificationsDetailListFragment() {
@@ -173,10 +168,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
 
         super.onSaveInstanceState(outState);
-    }
-
-    public void setOnNoteChangeListener(OnNoteChangeListener listener) {
-        mOnNoteChangeListener = listener;
     }
 
     private void reloadNoteBlocks() {

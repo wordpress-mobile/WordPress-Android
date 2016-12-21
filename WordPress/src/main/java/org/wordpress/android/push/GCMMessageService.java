@@ -25,11 +25,11 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.datasets.NotificationsTable;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.datasets.NotificationsTable;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
@@ -497,7 +497,7 @@ public class GCMMessageService extends GcmListenerService {
                 }
 
                 // if the comment is lacking approval, offer moderation actions
-                if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
+                if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
                     if (note.canModerate()) {
                         addCommentApproveActionForCommentNotification(context, builder, noteId);
                     }
@@ -568,7 +568,7 @@ public class GCMMessageService extends GcmListenerService {
             }
             commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
-            PendingIntent commentLikePendingIntent =  getCommentActionPendingIntenForService(context, commentLikeIntent);
+            PendingIntent commentLikePendingIntent =  getCommentActionPendingIntentForService(context, commentLikeIntent);
             builder.addAction(R.drawable.ic_action_like, getText(R.string.like),
                     commentLikePendingIntent);
         }
@@ -587,24 +587,24 @@ public class GCMMessageService extends GcmListenerService {
             }
             commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
-            PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntenForService(context, commentApproveIntent);
+            PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntentForService(context, commentApproveIntent);
             builder.addAction(R.drawable.ic_action_approve, getText(R.string.approve),
                     commentApprovePendingIntent);
         }
 
         private PendingIntent getCommentActionPendingIntent(Context context, Intent intent){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return getCommentActionPendingIntenForService(context, intent);
+                return getCommentActionPendingIntentForService(context, intent);
             } else {
-                return getCommentActionPendingIntenForActivity(context, intent);
+                return getCommentActionPendingIntentForActivity(context, intent);
             }
         }
 
-        private PendingIntent getCommentActionPendingIntenForService(Context context, Intent intent){
+        private PendingIntent getCommentActionPendingIntentForService(Context context, Intent intent){
             return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
-        private PendingIntent getCommentActionPendingIntenForActivity(Context context, Intent intent){
+        private PendingIntent getCommentActionPendingIntentForActivity(Context context, Intent intent){
             return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 

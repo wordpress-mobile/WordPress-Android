@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,17 +19,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -41,8 +34,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
-import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
@@ -70,7 +61,6 @@ import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPStoreUtils;
@@ -82,7 +72,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static com.android.volley.Request.Method.HEAD;
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
 
 /**
@@ -349,8 +338,9 @@ public class WPMainActivity extends AppCompatActivity {
                 if (voiceReply != null) {
                     NotificationsProcessingService.startServiceForReply(this, noteId, voiceReply);
                     finish();
-                    return; //we don't want this notification to be dismissed as we still have to make sure
+                    // we don't want this notification to be dismissed as we still have to make sure
                     // we processed the voice reply, so we exit this function immediately
+                    return;
                 } else {
                     boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
                     NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply, false, null);
@@ -515,14 +505,6 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
-    private void moderateCommentOnActivityResult(Intent data) {
-        Note note = NotificationsTable.getNoteById(StringUtils.notNullStr(data.getStringExtra
-                (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
-        CommentStatus status = CommentStatus.fromString(data.getStringExtra(
-                NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
-        NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -553,11 +535,6 @@ public class WPMainActivity extends AppCompatActivity {
                     startService(new Intent(this, GCMRegistrationIntentService.class));
                 }
                 break;
-            case RequestCodes.NOTE_DETAIL:
-                if (resultCode == RESULT_OK && data != null) {
-                    moderateCommentOnActivityResult(data);
-                }
-                break;
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
@@ -575,6 +552,10 @@ public class WPMainActivity extends AppCompatActivity {
                     resetFragments();
                 }
                 break;
+            case RequestCodes.NOTE_DETAIL:
+                if (getNotificationsListFragment() != null) {
+                    getNotificationsListFragment().onActivityResult(requestCode, resultCode, data);
+                }
         }
     }
 
@@ -590,6 +571,17 @@ public class WPMainActivity extends AppCompatActivity {
         Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_MY_SITE);
         if (fragment instanceof MySiteFragment) {
             return (MySiteFragment) fragment;
+        }
+        return null;
+    }
+
+    /*
+     * returns the my site fragment from the sites tab
+     */
+    private NotificationsListFragment getNotificationsListFragment() {
+        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_NOTIFS);
+        if (fragment instanceof NotificationsListFragment) {
+            return (NotificationsListFragment) fragment;
         }
         return null;
     }
