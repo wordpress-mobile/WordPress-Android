@@ -1,12 +1,7 @@
 package org.xmlrpc.android;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
@@ -15,11 +10,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
@@ -34,30 +26,19 @@ public class ApiHelper {
         public static final String GET_MEDIA_ITEM     = "wp.getMediaItem";
         public static final String GET_COMMENT        = "wp.getComment";
         public static final String GET_COMMENTS       = "wp.getComments";
-        public static final String GET_BLOGS          = "wp.getUsersBlogs";
         public static final String GET_OPTIONS        = "wp.getOptions";
-        public static final String GET_PROFILE        = "wp.getProfile";
-        public static final String GET_PAGES          = "wp.getPages";
         public static final String GET_TERM           = "wp.getTerm";
-        public static final String GET_PAGE           = "wp.getPage";
 
         public static final String DELETE_COMMENT     = "wp.deleteComment";
-        public static final String DELETE_PAGE        = "wp.deletePage";
-        public static final String DELETE_POST        = "wp.deletePost";
 
         public static final String NEW_CATEGORY       = "wp.newCategory";
         public static final String NEW_COMMENT        = "wp.newComment";
 
-        public static final String EDIT_POST          = "wp.editPost";
         public static final String EDIT_COMMENT       = "wp.editComment";
 
         public static final String SET_OPTIONS        = "wp.setOptions";
 
         public static final String UPLOAD_FILE        = "wp.uploadFile";
-
-        public static final String WPCOM_GET_FEATURES = "wpcom.getFeatures";
-
-        public static final String LIST_METHODS       = "system.listMethods";
     }
 
     public static final class Param {
@@ -69,45 +50,12 @@ public class ApiHelper {
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED, UNAUTHORIZED
     }
 
-    public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<>();
-
-    static {
-        blogOptionsXMLRPCParameters.put("software_version", "software_version");
-        blogOptionsXMLRPCParameters.put("post_thumbnail", "post_thumbnail");
-        blogOptionsXMLRPCParameters.put("jetpack_client_id", "jetpack_client_id");
-        blogOptionsXMLRPCParameters.put("blog_public", "blog_public");
-        blogOptionsXMLRPCParameters.put("home_url", "home_url");
-        blogOptionsXMLRPCParameters.put("admin_url", "admin_url");
-        blogOptionsXMLRPCParameters.put("login_url", "login_url");
-        blogOptionsXMLRPCParameters.put("blog_title", "blog_title");
-        blogOptionsXMLRPCParameters.put("time_zone", "time_zone");
-    }
-
-    public static abstract class HelperAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
-        protected String mErrorMessage;
-        protected ErrorType mErrorType = ErrorType.NO_ERROR;
-        protected Throwable mThrowable;
-
-        protected void setError(@NonNull ErrorType errorType, String errorMessage) {
-            mErrorMessage = errorMessage;
-            mErrorType = errorType;
-            AppLog.e(T.API, mErrorType.name() + " - " + mErrorMessage);
-        }
-
-        protected void setError(@NonNull ErrorType errorType, String errorMessage, Throwable throwable) {
-            mErrorMessage = errorMessage;
-            mErrorType = errorType;
-            mThrowable = throwable;
-            AppLog.e(T.API, mErrorType.name() + " - " + mErrorMessage, throwable);
-        }
-    }
-
     public interface GenericErrorCallback {
-        public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable);
+        void onFailure(ErrorType errorType, String errorMessage, Throwable throwable);
     }
 
     public interface GenericCallback extends GenericErrorCallback {
-        public void onSuccess();
+        void onSuccess();
     }
 
     public interface DatabasePersistCallback {
@@ -164,127 +112,6 @@ public class ApiHelper {
         }
 
         return comments;
-    }
-
-    public static class EditMediaItemTask extends HelperAsyncTask<Void, Void, Boolean> {
-        private GenericCallback mCallback;
-        private String mMediaId;
-        private String mTitle;
-        private String mDescription;
-        private String mCaption;
-        private SiteModel mSite;
-
-        public EditMediaItemTask(SiteModel site, String mediaId, String title, String description, String caption,
-                                 GenericCallback callback) {
-            mSite = site;
-            mMediaId = mediaId;
-            mCallback = callback;
-            mTitle = title;
-            mCaption = caption;
-            mDescription = description;
-        }
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: STORES: this will be replaced in MediaStore
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
-            Map<String, Object> contentStruct = new HashMap<String, Object>();
-            contentStruct.put("post_title", mTitle);
-            contentStruct.put("post_content", mDescription);
-            contentStruct.put("post_excerpt", mCaption);
-
-            Object[] apiParams = {
-                    String.valueOf(mSite.getSiteId()),
-                    StringUtils.notNullStr(mSite.getUsername()),
-                    StringUtils.notNullStr(mSite.getPassword()),
-                    mMediaId,
-                    contentStruct
-            };
-
-            Boolean result = null;
-            try {
-                result = (Boolean) client.call(Method.EDIT_POST, apiParams);
-            } catch (ClassCastException cce) {
-                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            } catch (IOException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            } catch (XmlPullParserException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            }
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (mCallback != null) {
-                if (mErrorType == ErrorType.NO_ERROR) {
-                    mCallback.onSuccess();
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
-                }
-            }
-        }
-    }
-
-    public static class GetMediaItemTask extends HelperAsyncTask<Void, Void, MediaFile> {
-        public interface Callback extends GenericErrorCallback {
-            public void onSuccess(MediaFile results);
-        }
-        private Callback mCallback;
-        private int mMediaId;
-        private SiteModel mSite;
-
-        public GetMediaItemTask(SiteModel site, int mediaId, Callback callback) {
-            mSite = site;
-            mMediaId = mediaId;
-            mCallback = callback;
-        }
-
-        @Override
-        protected MediaFile doInBackground(Void... params) {
-            String blogId = String.valueOf(mSite.getId());
-
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
-            Object[] apiParams = {
-                    String.valueOf(mSite.getSiteId()),
-                    StringUtils.notNullStr(mSite.getUsername()),
-                    StringUtils.notNullStr(mSite.getPassword()),
-                    mMediaId
-            };
-            Map<?, ?> results = null;
-            try {
-                results = (Map<?, ?>) client.call(Method.GET_MEDIA_ITEM, apiParams);
-            } catch (ClassCastException cce) {
-                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            } catch (IOException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            } catch (XmlPullParserException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            }
-
-            if (results != null && blogId != null) {
-                MediaFile mediaFile = new MediaFile(blogId, results, mSite.isWPCom());
-                WordPress.wpDB.saveMediaFile(mediaFile);
-                return mediaFile;
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(MediaFile result) {
-            if (mCallback != null) {
-                if (result != null) {
-                    mCallback.onSuccess(result);
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
-                }
-            }
-        }
     }
 
     public static boolean editComment(SiteModel site, Comment comment, CommentStatus newStatus) {
