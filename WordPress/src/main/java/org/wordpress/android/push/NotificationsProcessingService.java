@@ -441,6 +441,7 @@ public class NotificationsProcessingService extends Service {
         // Like or unlike a comment via the REST API
         private void likeComment() {
             if (mNote == null) {
+                requestFailed(ARG_ACTION_LIKE);
                 return;
             }
 
@@ -452,12 +453,14 @@ public class NotificationsProcessingService extends Service {
                 mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
                         new RemoteLikeCommentPayload(site, mNote.getCommentId(), true)));
             } else {
+                requestFailed(ARG_ACTION_LIKE);
                 AppLog.e(T.NOTIFS, "Site with id: " + mNote.getSiteId() + " doesn't exist in the Site store");
             }
         }
 
         private void approveComment() {
             if (mNote == null) {
+                requestFailed(ARG_ACTION_APPROVE);
                 return;
             }
 
@@ -481,6 +484,7 @@ public class NotificationsProcessingService extends Service {
 
         private void replyToComment() {
             if (mNote == null) {
+                requestFailed(ARG_ACTION_APPROVE);
                 return;
             }
 
