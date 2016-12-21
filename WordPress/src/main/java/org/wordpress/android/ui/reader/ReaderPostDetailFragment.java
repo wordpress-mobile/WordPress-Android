@@ -64,6 +64,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPTextView;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.EnumSet;
 
@@ -988,6 +989,12 @@ public class ReaderPostDetailFragment extends Fragment
                     case COMMENT_JUMP:
                     case COMMENT_REPLY:
                     case COMMENT_LIKE:
+                        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+                            // passcode screen was launched already (when ReaderPostPagerActivity got resumed) so reset
+                            // the timeout to let the passcode screen come up for the ReaderCommentListActivity.
+                            // See https://github.com/wordpress-mobile/WordPress-Android/issues/4887
+                            AppLockManager.getInstance().getAppLock().forcePasswordLock();
+                        }
                         ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId,
                                 mDirectOperation, mCommentId, mInterceptedUri);
                         getActivity().finish();
@@ -1139,16 +1146,30 @@ public class ReaderPostDetailFragment extends Fragment
             return true;
         }
 
-        // open YouTube videos in external app so they launch the YouTube player, open all other
-        // urls using an AuthenticatedWebViewActivity
-        final OpenUrlType openUrlType;
-        if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
-            openUrlType = OpenUrlType.EXTERNAL;
-        } else {
-            openUrlType = OpenUrlType.INTERNAL;
-        }
+        OpenUrlType openUrlType = shouldOpenExternal(url) ? OpenUrlType.EXTERNAL : OpenUrlType.INTERNAL;
         ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType);
         return true;
+    }
+
+    /*
+     * returns True if the passed URL should be opened in the external browser app
+     */
+    private boolean shouldOpenExternal(String url) {
+        // open YouTube videos in external app so they launch the YouTube player
+        if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
+            return true;
+        }
+
+        // if the mime type starts with "application" open it externally - this will either
+        // open it in the associated app or the default browser (which will enable the user
+        // to download it)
+        String mimeType = UrlUtils.getUrlMimeType(url);
+        if (mimeType != null && mimeType.startsWith("application")) {
+            return true;
+        }
+
+        // open all other urls using an AuthenticatedWebViewActivity
+        return false;
     }
 
     @Override

@@ -21,33 +21,12 @@
             android:text="@string/media_edit_title_text"
             android:textSize="@dimen/text_sz_large" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/media_edit_save_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/media_blue_button_selector"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:text="@string/save"
-                android:textColor="@color/white"
-                android:visibility="@integer/media_editor_save_button_visibility"
-                tools:visibility="visible"/>
-
-            <org.wordpress.android.widgets.WPEditText
-                android:id="@+id/media_edit_fragment_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/media_edit_save_button"
-                android:layout_toLeftOf="@id/media_edit_save_button"
-                android:hint="@string/media_edit_title_hint"
-                android:inputType="textCapSentences|textAutoCorrect" />
-        </RelativeLayout>
+        <org.wordpress.android.widgets.WPEditText
+            android:id="@+id/media_edit_fragment_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/media_edit_title_hint"
+            android:inputType="textCapSentences|textAutoCorrect" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_edit_caption_text"

@@ -49,6 +49,7 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
+import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -105,7 +106,7 @@ public class WordPress extends MultiDexApplication {
     private static RestClientUtils mRestClientUtilsVersion0;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
-    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
+    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 15 * 60;
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
@@ -268,6 +269,7 @@ public class WordPress extends MultiDexApplication {
         if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
             NotificationsUpdateService.startService(getContext());
+            NotificationsPendingDraftsService.checkPrefsAndStartService(getContext());
         }
     }
 
@@ -845,6 +847,7 @@ public class WordPress extends MultiDexApplication {
 
                 if (AccountHelper.isSignedInWordPressDotCom()) {
                     NotificationsUpdateService.startService(getContext());
+                    NotificationsPendingDraftsService.checkPrefsAndStartService(getContext());
                 }
 
                 // Rate limited PN Token Update

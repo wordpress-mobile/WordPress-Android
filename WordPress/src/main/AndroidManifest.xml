@@ -71,6 +71,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -347,7 +349,11 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
-            android:theme="@style/ReaderPhotoViewerTheme" />
+            android:theme="@style/ReaderMediaViewerTheme" />
+        <activity
+            android:name=".ui.reader.ReaderVideoViewerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/ReaderMediaViewerTheme" />
 
         <!-- Other activities -->
 
@@ -390,6 +396,7 @@
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
             android:theme="@style/CalypsoTheme"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
@@ -484,12 +491,16 @@
             android:name=".push.NotificationsScreenLockWatchService"
             android:exported="false"
             android:label="Notifications Screen Lock watch Service" />
+        <service
+            android:name=".ui.notifications.services.NotificationsPendingDraftsService"
+            android:exported="false"
+            android:label="Notifications Pending Drafts Service" />
 
-
+        <!-- Samsung multiwindow support -->
         <uses-library
             android:name="com.sec.android.app.multiwindow"
             android:required="false" />
-
+        <!-- Samsung multiwindow support -->
         <meta-data
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />

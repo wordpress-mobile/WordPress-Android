@@ -39,6 +39,7 @@ import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import java.util.ArrayList;
@@ -61,7 +62,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private String mRestoredNoteId;
     private int mBackgroundColor;
     private int mCommentListPosition = ListView.INVALID_POSITION;
-    private boolean mIsUnread;
 
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
     private OnNoteChangeListener mOnNoteChangeListener;
@@ -72,7 +72,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     public static NotificationsDetailListFragment newInstance(final String noteId) {
         NotificationsDetailListFragment fragment = new NotificationsDetailListFragment();
-        fragment.setNoteWithNoteId(noteId);
+        fragment.setNote(noteId);
         return fragment;
     }
 
@@ -120,9 +120,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
         // Set the note if we retrieved the noteId from savedInstanceState
         if (!TextUtils.isEmpty(mRestoredNoteId)) {
-            setNoteWithNoteId(mRestoredNoteId);
+            setNote(mRestoredNoteId);
             reloadNoteBlocks();
             mRestoredNoteId = null;
+        }
+
+        if (getNote() == null) {
+            showErrorToastAndFinish();
         }
     }
 
@@ -140,18 +144,26 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     }
 
     @Override
-    public void setNote(Note note) {
+    public void setNote(String noteId) {
+        if (noteId == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note == null) {
+            showErrorToastAndFinish();
+            return;
+        }
         mNote = note;
     }
 
-    private boolean setNoteWithNoteId(String noteId) {
-        Note note = NotificationsTable.getNoteById(noteId);
-        if (note != null) {
-            mIsUnread = note.isUnread();
-            setNote(note);
-            return true;
+    private void showErrorToastAndFinish() {
+        AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
+        if (getActivity() != null) {
+            ToastUtils.showToast(getActivity(), R.string.error_notification_open);
+            getActivity().finish();
         }
-        return false;
     }
 
     @Override

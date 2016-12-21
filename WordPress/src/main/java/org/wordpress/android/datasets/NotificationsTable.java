@@ -23,6 +23,8 @@ public class NotificationsTable {
         return WordPress.wpDB.getDatabase();
     }
 
+    public static int NOTES_TO_RETRIEVE = 200;
+
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + NOTIFICATIONS_TABLE + " ("
                 + "id                       INTEGER PRIMARY KEY DEFAULT 0,"
@@ -39,7 +41,7 @@ public class NotificationsTable {
     }
 
     public static ArrayList<Note> getLatestNotes() {
-        return getLatestNotes(200);
+        return getLatestNotes(NOTES_TO_RETRIEVE);
     }
 
     public static ArrayList<Note> getLatestNotes(int limit) {

@@ -2,13 +2,16 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -28,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -44,6 +48,7 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
@@ -68,6 +73,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.widgets.ContextMenuEditText;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
@@ -79,6 +85,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String TAG = "sign_in_fragment_tag";
@@ -92,6 +100,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
     private static final Pattern DOT_COM_RESERVED_NAMES =
             Pattern.compile("^(?:admin|administrator|invite|main|root|web|www|[^@]*wordpress[^@]*)$");
+    private static final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -99,8 +108,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected EditText mUsernameEditText;
     protected EditText mPasswordEditText;
     protected EditText mUrlEditText;
-    protected EditText mTwoStepEditText;
+    protected ContextMenuEditText mTwoStepEditText;
 
+    protected ViewSwitcher mIconSwitcher;
+    protected View mWpcomLogotype;
     protected LinearLayout mBottomButtonsLayout;
     protected RelativeLayout mUsernameLayout;
     protected RelativeLayout mPasswordLayout;
@@ -130,6 +141,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected ImageView mInfoButtonSecondary;
 
     private final Matcher mReservedNameMatcher = DOT_COM_RESERVED_NAMES.matcher("");
+    private final Matcher mTwoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
 
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
@@ -151,11 +163,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mInhibitMagicLogin = getActivity() != null
                 && (getActivity().getIntent().getBooleanExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, false)
                 || !WPActivityUtils.isEmailClientAvailable(getActivity()));
+
+        track(Stat.LOGIN_ACCESSED, null);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
+        mIconSwitcher = (ViewSwitcher) rootView.findViewById(R.id.icon_switcher);
+        mWpcomLogotype = rootView.findViewById(R.id.nux_wordpress_logotype);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mTwoStepLayout = (RelativeLayout) rootView.findViewById(R.id.two_factor_layout);
         mTwoStepFooter = (LinearLayout) rootView.findViewById(R.id.two_step_footer);
@@ -208,20 +224,42 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPasswordEditText.setOnEditorActionListener(mEditorAction);
         mUrlEditText.setOnEditorActionListener(mEditorAction);
 
-        mTwoStepEditText = (EditText) rootView.findViewById(R.id.nux_two_step);
+        mTwoStepEditText = (ContextMenuEditText) rootView.findViewById(R.id.nux_two_step);
         mTwoStepEditText.addTextChangedListener(this);
-        mTwoStepEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (keyCode == EditorInfo.IME_ACTION_DONE)) {
-                    if (fieldsFilled()) {
-                        signIn();
+        mTwoStepEditText.setOnKeyListener(
+            new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (keyCode == EditorInfo.IME_ACTION_DONE)) {
+                        if (fieldsFilled()) {
+                            signIn();
+                        }
                     }
+
+                    return false;
+                }
+            }
+        );
+        mTwoStepEditText.setOnContextMenuListener(
+            new ContextMenuEditText.OnContextMenuListener() {
+                @Override
+                public void onCut() {
                 }
 
-                return false;
+                @Override
+                public void onCopy() {
+                }
+
+                @Override
+                public void onPaste() {
+                    mTwoStepEditText.setText(getAuthCodeFromClipboard());
+
+                    if (TextUtils.isEmpty(mTwoStepEditText.getText().toString())) {
+                        showTwoStepCodeError(R.string.invalid_verification_code_format);
+                    }
+                }
             }
-        });
+        );
 
         WPTextView twoStepFooterButton = (WPTextView) rootView.findViewById(R.id.two_step_footer_button);
         twoStepFooterButton.setText(Html.fromHtml("<u>" + getString(R.string.two_step_footer_button) + "</u>"));
@@ -281,6 +319,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Ensure two-step form is shown if needed
         if (!TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.GONE) {
             setTwoStepAuthVisibility(true);
+        // Insert authentication code if copied to clipboard
+        } else if (TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.VISIBLE) {
+            mTwoStepEditText.setText(getAuthCodeFromClipboard());
         }
 
         if (!mToken.isEmpty() && !mInhibitMagicLogin) {
@@ -360,6 +401,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected void showDotComSignInForm(){
         mUrlButtonLayout.setVisibility(View.GONE);
         mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
+        switchToDotOrgIcon(false);
+        switchBackgroundToDotOrg(false);
     }
 
     protected void showSelfHostedSignInForm(){
@@ -368,6 +411,45 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
         showPasswordField();
+        switchToDotOrgIcon(true);
+        switchBackgroundToDotOrg(true);
+    }
+
+    private void switchToDotOrgIcon(boolean showDotOrg) {
+        if (mIconSwitcher.getDisplayedChild() == 0) {
+            if (showDotOrg) {
+                mIconSwitcher.showNext();
+                mWpcomLogotype.setVisibility(View.GONE);
+            }
+        } else {
+            if (!showDotOrg) {
+                mIconSwitcher.showPrevious();
+
+                // reinstate the logotype into the layout so the switcher can compute sizes
+                mWpcomLogotype.setVisibility(View.INVISIBLE);
+
+                // delay the actual appearance of the logotype for smoother coordination with the rest of animations
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWpcomLogotype.setVisibility(View.VISIBLE);
+                    }
+                }, 300);
+            }
+        }
+    }
+
+    private void switchBackgroundToDotOrg(boolean useDotOrg) {
+        if (getView() == null) {
+            return;
+        }
+
+        TransitionDrawable transition = (TransitionDrawable) getView().getBackground();
+        if (useDotOrg) {
+            transition.startTransition(500);
+        } else {
+            transition.reverseTransition(500);
+        }
     }
 
     protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
@@ -484,9 +566,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             } else {
                 setSecondaryButtonVisible(false);
             }
+
+            // make the top padding match the bottom padding of the logo so the logo doesn't touch the screen top
+            mIconSwitcher.setPadding(mIconSwitcher.getPaddingLeft(), mIconSwitcher.getPaddingBottom(), mIconSwitcher
+                    .getPaddingRight(), mIconSwitcher.getPaddingBottom());
         } else {
             mBottomButtonsLayout.setOrientation(LinearLayout.VERTICAL);
             setSecondaryButtonVisible(false);
+
+            // revert the top padding to zero when in portrait
+            mIconSwitcher.setPadding(mIconSwitcher.getPaddingLeft(), 0, mIconSwitcher.getPaddingRight(), mIconSwitcher
+                    .getPaddingBottom());
         }
     }
 
@@ -575,6 +665,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         transaction.replace(R.id.fragment_container, newUserFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+
+        track(Stat.CREATE_ACCOUNT_INITIATED, null);
     }
 
     private String getForgotPasswordURL() {
@@ -594,8 +686,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         public void onClick(View v) {
             String forgotPasswordUrl = getForgotPasswordURL();
             AppLog.i(T.NUX, "User tapped forgot password link: " + forgotPasswordUrl);
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(forgotPasswordUrl));
-            startActivity(intent);
+            ActivityLauncher.openUrlExternal(getContext(), forgotPasswordUrl);
         }
     };
 
@@ -745,6 +836,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 public void run() {
                     if (twoStepCodeRequired) {
                         setTwoStepAuthVisibility(true);
+                        mTwoStepEditText.setText(getAuthCodeFromClipboard());
                         endProgress();
                         return;
                     }
@@ -775,6 +867,22 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mJetpackAuthLabel.setVisibility(View.VISIBLE);
             mJetpackAuthLabel.setText(getResources().getString(R.string.auth_required));
         }
+    }
+
+    private String getAuthCodeFromClipboard() {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
+
+        if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null) {
+            String code = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+
+            mTwoStepAuthCodeMatcher.reset(code);
+
+            if (!code.isEmpty() && mTwoStepAuthCodeMatcher.matches()) {
+                return code;
+            }
+        }
+
+        return "";
     }
 
     private void setTwoStepAuthVisibility(boolean isVisible) {
@@ -927,7 +1035,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void requestWPComEmailCheck() {
-        WordPress.getRestClientUtilsV0().isAvailable(mUsername, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV0().isAvailable(UrlUtils.urlEncode(mUsername), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (!isAdded()) {

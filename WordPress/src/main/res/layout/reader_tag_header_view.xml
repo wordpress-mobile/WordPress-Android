@@ -1,47 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_tag_info"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:layout_height="@dimen/reader_tag_header_image_height"
+    android:layout_marginBottom="@dimen/margin_extra_small">
 
-    <RelativeLayout
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_tag_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/reader_card_content_padding"
-        android:layout_marginRight="@dimen/reader_card_content_padding"
-        android:minHeight="@dimen/toolbar_height"
-        android:paddingLeft="@dimen/reader_card_margin"
-        android:paddingRight="@dimen/reader_card_margin">
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_tag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/follow_button"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="text_tag" />
-
-        <org.wordpress.android.ui.reader.views.ReaderFollowButton
-            android:id="@+id/follow_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/reader_follow_button_padding" />
-
-    </RelativeLayout>
+        android:layout_height="@dimen/reader_tag_header_image_height"
+        android:scaleType="centerCrop" />
 
     <View
+        android:id="@+id/view_overlay"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey_lighten_20" />
+        android:layout_height="@dimen/reader_tag_header_image_height"
+        android:background="@color/translucent_grey_dark" />
 
-</LinearLayout>
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawableLeft="@drawable/ic_genericon_tag_white_24dp"
+        android:drawablePadding="@dimen/margin_small"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:shadowColor="@color/grey_dark"
+        android:shadowDx="@dimen/reader_photo_title_shadow_offset"
+        android:shadowDy="@dimen/reader_photo_title_shadow_offset"
+        android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_double_extra_large"
+        tools:text="text_tag" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_attribution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:background="?android:selectableItemBackground"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:shadowColor="@color/grey_dark"
+        android:shadowDx="@dimen/reader_photo_title_shadow_offset"
+        android:shadowDy="@dimen/reader_photo_title_shadow_offset"
+        android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="text_attribution" />
+
+</RelativeLayout>

@@ -74,23 +74,101 @@
                 android:textSize="@dimen/text_sz_small" />
         </LinearLayout>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/image_trash_comment"
-            style="@style/WordPress.ModerateButton"
+        <LinearLayout
+            android:id="@+id/btn_edit"
+            android:visibility="gone"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_medium"
+            android:gravity="center"
+            android:clickable="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_action_trash"
-            android:text="@string/mnu_comment_trash" />
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/btn_edit_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:paddingBottom="0dp"
+                app:srcCompat="@drawable/gridicons_pencil"
+                android:contentDescription="@string/edit_comment" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_btn_spam"
-            style="@style/WordPress.ModerateButton"
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_sz_small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_trash"
+            android:visibility="gone"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_medium"
+            android:gravity="center"
+            android:clickable="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_action_spam"
-            android:text="@string/mnu_comment_spam" />
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/btn_trash_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:paddingBottom="0dp"
+                app:srcCompat="@drawable/gridicons_trash"
+                android:contentDescription="@string/edit_comment" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_trash_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mnu_comment_trash"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_sz_small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_spam"
+            android:visibility="gone"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_medium"
+            android:gravity="center"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/btn_spam_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:paddingBottom="0dp"
+                app:srcCompat="@drawable/gridicons_spam"
+                android:contentDescription="@string/mnu_comment_spam" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_spam_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mnu_comment_spam"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_sz_small" />
+        </LinearLayout>
     </LinearLayout>
 
     <View
