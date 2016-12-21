@@ -93,7 +93,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String REASON_ERROR = "error";
     public static final String REASON_ERROR_TAKEN = "taken";
     public static final int MAX_EMAIL_LENGTH = 100;
-    public static final String MAGIC_LINK_PROPERTY = "magic_link";
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
