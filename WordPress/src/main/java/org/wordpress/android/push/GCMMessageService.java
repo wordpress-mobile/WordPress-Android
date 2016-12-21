@@ -893,7 +893,6 @@ public class GCMMessageService extends GcmListenerService {
                 Note note = NotificationsTable.getNoteById(noteID);
                 // mark the note as read if it's unread and update the DB silently
                 if (note != null && note.isUnread()) {
-                    NotificationsActions.markNoteAsRead(note);
                     note.setRead();
                     NotificationsTable.saveNote(note);
                 }
