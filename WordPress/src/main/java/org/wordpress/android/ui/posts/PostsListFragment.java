@@ -536,6 +536,8 @@ public class PostsListFragment extends Fragment
                     new ApiHelper.DeleteSinglePostTask().execute(WordPress.getCurrentBlog(),
                             fullPost.getRemotePostId(), mIsPage);
                 } else  {
+                    mShouldCancelPendingDraftNotification = false;
+
                     // delete the pending draft notification if available
                     NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
 
