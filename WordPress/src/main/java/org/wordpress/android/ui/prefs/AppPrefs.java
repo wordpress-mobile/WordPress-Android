@@ -14,6 +14,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ import java.util.List;
 public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
     private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
+    public static final int MAX_RECENTLY_PICKED_SITES = 4;
 
     public interface PrefKey {
         String name();
@@ -78,6 +80,9 @@ public class AppPrefs {
         // list for local drafts that the user has set to ignore notifications on
         // (i.e. "please don't remind me I've got this in drafts")
         PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST,
+
+        // local IDs of sites recently chosen in the site picker
+        RECENTLY_PICKED_SITE_IDS,
     }
 
     /**
@@ -545,5 +550,47 @@ public class AppPrefs {
             }
         }
         return foundSamePostId;
+    }
+
+    /*
+     * returns a list of local IDs of sites recently chosen in the site picker
+     */
+    public static ArrayList<Integer> getRecentlyPickedSiteIds() {
+        String idsAsString = getString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, "");
+        List<String> items = Arrays.asList(idsAsString.split(","));
+
+        ArrayList<Integer> siteIds = new ArrayList<>();
+        for (String item : items) {
+            siteIds.add(StringUtils.stringToInt(item));
+        }
+
+        return siteIds;
+    }
+
+    /*
+     * adds a local site ID to the top of list of recently chosen sites
+     */
+    public static void addRecentlyPickedSiteId(Integer localId) {
+        if (localId == 0) return;
+
+        ArrayList<Integer> currentIds = getRecentlyPickedSiteIds();
+
+        // remove this ID if it already exists in the list
+        int index = currentIds.indexOf(localId);
+        if (index > -1) {
+            currentIds.remove(index);
+        }
+
+        // add this ID to the front of the list
+        currentIds.add(0, localId);
+
+        // remove at max
+        if (currentIds.size() > MAX_RECENTLY_PICKED_SITES) {
+            currentIds.remove(MAX_RECENTLY_PICKED_SITES);
+        }
+
+        // store in prefs
+        String idsAsString = TextUtils.join(",", currentIds);
+        setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
     }
 }

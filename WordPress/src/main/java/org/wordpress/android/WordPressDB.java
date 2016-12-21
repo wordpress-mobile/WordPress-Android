@@ -54,7 +54,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -445,7 +444,6 @@ public class WordPressDB {
                 db.execSQL(ADD_DRAFT_POST_LAST_UPDATED_DATE);
                 db.execSQL(ADD_DRAFT_POST_LAST_NOTIFIED_DATE);
                 currentVersion++;
-
         }
         db.setVersion(DATABASE_VERSION);
     }
