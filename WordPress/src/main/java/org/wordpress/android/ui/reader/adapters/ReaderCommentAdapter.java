@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -86,9 +85,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         private final View spacerIndent;
         private final ProgressBar progress;
 
-        private final TextView txtReply;
-        private final ImageView imgReply;
-
+        private final ViewGroup replyView;
         private final ReaderIconCountView countLikes;
 
         public CommentHolder(View view) {
@@ -100,13 +97,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             txtText = (TextView) view.findViewById(R.id.text_comment_text);
             txtDate = (TextView) view.findViewById(R.id.text_comment_date);
 
-            txtReply = (TextView) view.findViewById(R.id.text_comment_reply);
-            imgReply = (ImageView) view.findViewById(R.id.image_comment_reply);
-
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
             spacerIndent = view.findViewById(R.id.spacer_comment_indent);
             progress = (ProgressBar) view.findViewById(R.id.progress_comment);
 
+            replyView = (ViewGroup) view.findViewById(R.id.reply_container);
             countLikes = (ReaderIconCountView) view.findViewById(R.id.count_likes);
 
             txtText.setLinksClickable(true);
@@ -278,20 +273,17 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         if (ReaderUtils.isLoggedOutReader()) {
-            commentHolder.txtReply.setVisibility(View.GONE);
-            commentHolder.imgReply.setVisibility(View.GONE);
+            commentHolder.replyView.setVisibility(View.GONE);
         } else {
-            if (mReplyListener != null) {
-                // tapping reply icon tells activity to show reply box
-                View.OnClickListener replyClickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            // tapping reply tells activity to show reply box
+            commentHolder.replyView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mReplyListener != null) {
                         mReplyListener.onRequestReply(comment.commentId);
                     }
-                };
-                commentHolder.txtReply.setOnClickListener(replyClickListener);
-                commentHolder.imgReply.setOnClickListener(replyClickListener);
-            }
+                }
+            });
 
             if (mAnimateLikeCommentId != 0 && mAnimateLikeCommentId == comment.commentId) {
                 // simulate tapping on the "Like" button. Add a delay to help the user notice it.
