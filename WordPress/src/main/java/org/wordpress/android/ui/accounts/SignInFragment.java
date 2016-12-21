@@ -1320,9 +1320,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         NO_SITE_HELPSHIFT_FAQ_SECTION);
                 break;
             case INVALID_URL:
-                showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message),
-                        INVALID_URL_HELPSHIFT_FAQ_ID,
-                        INVALID_URL_HELPSHIFT_FAQ_SECTION);
+                showUrlError(R.string.invalid_site_url_message);
                 break;
             case MISSING_XMLRPC_METHOD:
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error),

@@ -386,8 +386,8 @@
 
     <!-- new account view -->
     <string name="signing_in">Logging in…</string>
-    <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
-
+    <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
+        address. Check the site address (URL) you entered.</string>
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
