@@ -888,7 +888,18 @@ public class GCMMessageService extends GcmListenerService {
                 return;
             }
 
-            removeNotificationWithNoteIdFromSystemBar(context, data.getString(PUSH_ARG_NOTE_ID, ""));
+            String noteID = data.getString(PUSH_ARG_NOTE_ID, "");
+            if (!TextUtils.isEmpty(noteID)) {
+                Note note = NotificationsTable.getNoteById(noteID);
+                // mark the note as read if it's unread and update the DB silently
+                if (note != null && note.isUnread()) {
+                    NotificationsActions.markNoteAsRead(note);
+                    note.setRead();
+                    NotificationsTable.saveNote(note);
+                }
+            }
+
+            removeNotificationWithNoteIdFromSystemBar(context, noteID);
             //now that we cleared the specific notif, we can check and make any visual updates
             if (sActiveNotificationsMap.size() > 0) {
                 rebuildAndUpdateNotificationsOnSystemBar(context, data);
