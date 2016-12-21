@@ -566,6 +566,12 @@ public class NotificationsProcessingService extends Service {
             } else {
                 mQuickActionProcessor.requestCompleted(ARG_ACTION_LIKE);
             }
+        } else if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
+            if (event.isError()) {
+                mQuickActionProcessor.requestFailed(ARG_ACTION_REPLY);
+            } else {
+                mQuickActionProcessor.requestCompleted(ARG_ACTION_REPLY);
+            }
         }
     }
 }
