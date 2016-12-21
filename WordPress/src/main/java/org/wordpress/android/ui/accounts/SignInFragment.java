@@ -146,7 +146,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private String mToken = "";
     private boolean mInhibitMagicLogin;
     private boolean mSmartLockEnabled = true;
-    private boolean mShouldShowPassword;
+    private boolean mIsMagicLinksEnabled = true;
 
     public interface OnMagicLinkRequestInteraction {
         void onMagicLinkRequestSuccess(String email);
@@ -285,7 +285,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((didPressNextKey(actionId, event) || didPressEnterKey(actionId, event)) && !isEnterPasswordMode()) {
+                if ((didPressNextKey(actionId, event) || didPressEnterKey(actionId, event)) && mIsMagicLinksEnabled) {
                     signIn();
                     return true;
                 } else {
@@ -329,7 +329,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         } else {
             mSmartLockEnabled = true;
         }
-        if (mShouldShowPassword) {
+        if (!mIsMagicLinksEnabled) {
             showPasswordFieldAndFocus();
         } else if (mInhibitMagicLogin) {
             showPasswordField(false);
@@ -370,6 +370,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private void showPasswordField() {
         if (isAdded()) {
+            mIsMagicLinksEnabled = false;
             mPasswordLayout.setVisibility(View.VISIBLE);
             mForgotPassword.setVisibility(View.VISIBLE);
             if (!mSelfHosted) {
@@ -467,7 +468,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         // move on the the main activity
                         Intent intent = new Intent(getActivity(), WPMainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra(SignInActivity.MAGIC_LOGIN, isCurrentlyInMagicLinkMode());
+                        intent.putExtra(SignInActivity.MAGIC_LOGIN, mIsMagicLinksEnabled);
 
                         getActivity().startActivity(intent);
                     }
@@ -480,16 +481,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mToken = token;
     }
 
-    public void setShouldShowPassword(boolean shouldShowPassword) {
-        mShouldShowPassword = shouldShowPassword;
-    }
-
-    private boolean isCurrentlyInMagicLinkMode() {
-        if (mPasswordLayout != null && mPasswordLayout.getVisibility() == View.GONE) {
-            return true;
-        } else {
-            return false;
-        }
+    public void setIsMagicLinkEnabled(boolean isMagicLinksEnabled) {
+        mIsMagicLinksEnabled = isMagicLinksEnabled;
     }
 
     private void initInfoButtons(View rootView) {
@@ -579,10 +572,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private boolean isEnterPasswordMode() {
-        return mPasswordLayout.getVisibility() == View.VISIBLE;
-    }
-
     private final OnClickListener mOnLoginFormClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -623,6 +612,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private void configureMagicLinkUI() {
         showDotComSignInForm();
+        mIsMagicLinksEnabled = true;
         mSelfHosted = false;
         mPasswordLayout.setVisibility(View.GONE);
         mForgotPassword.setVisibility(View.GONE);
@@ -984,7 +974,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void signIn() {
-        if (mSelfHosted || isEnterPasswordMode()) {
+        if (mSelfHosted || !mIsMagicLinksEnabled) {
             if (!isUserDataValid()) {
                 return;
             }
