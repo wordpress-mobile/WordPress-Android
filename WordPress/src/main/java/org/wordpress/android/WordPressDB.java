@@ -2,15 +2,12 @@ package org.wordpress.android;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.text.TextUtils;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
@@ -21,7 +18,6 @@ import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
@@ -34,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,7 +122,6 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_MEDIA);
         db.execSQL(CREATE_TABLE_THEMES);
         SiteSettingsTable.createTable(db);
-        CommentTable.createTables(db);
         SuggestionTable.createTables(db);
         NotificationsTable.createTables(db);
 
@@ -187,7 +181,6 @@ public class WordPressDB {
             case 22:
                 currentVersion++;
             case 23:
-                CommentTable.reset(db);
                 currentVersion++;
             case 24:
                 currentVersion++;
@@ -210,8 +203,6 @@ public class WordPressDB {
             case 29:
                 currentVersion++;
             case 30:
-                // Fix big comments issue #2855
-                CommentTable.deleteBigComments(db);
                 currentVersion++;
             case 31:
                 currentVersion++;
@@ -288,7 +279,6 @@ public class WordPressDB {
     public void dangerouslyDeleteAllContent() {
         db.delete(MEDIA_TABLE, null, null);
         db.delete(CATEGORIES_TABLE, null, null);
-        db.delete(CommentTable.COMMENTS_TABLE, null, null);
     }
 
     // Categories
@@ -398,25 +388,6 @@ public class WordPressDB {
         c.close();
 
         return blogs;
-    }
-
-    public int getUnmoderatedCommentCount(int blogID) {
-        int commentCount = 0;
-
-        Cursor c = db
-                .rawQuery(
-                        "select count(*) from comments where blogID=? AND status='hold'",
-                        new String[]{String.valueOf(blogID)});
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        if (numRows > 0) {
-            commentCount = c.getInt(0);
-        }
-
-        c.close();
-
-        return commentCount;
     }
 
     public void saveMediaFile(MediaFile mf) {

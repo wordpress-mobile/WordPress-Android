@@ -10,13 +10,13 @@ import org.wordpress.android.ui.suggestion.service.SuggestionService;
 
 public class SuggestionServiceConnectionManager implements ServiceConnection {
     private final Context mContext;
-    private final long mRemoteBlogId;
+    private final long mSiteId;
     private boolean mAttemptingToBind = false;
     private boolean mBindCalled = false;
 
-    public SuggestionServiceConnectionManager(Context context, long remoteBlogId) {
+    public SuggestionServiceConnectionManager(Context context, long siteId) {
         mContext = context;
-        mRemoteBlogId = remoteBlogId;
+        mSiteId = siteId;
     }
 
     public void bindToService() {
@@ -41,8 +41,8 @@ public class SuggestionServiceConnectionManager implements ServiceConnection {
         SuggestionService.SuggestionBinder b = (SuggestionService.SuggestionBinder) iBinder;
         SuggestionService suggestionService = b.getService();
 
-        suggestionService.updateSuggestions(mRemoteBlogId);
-        suggestionService.updateTags(mRemoteBlogId);
+        suggestionService.updateSuggestions(mSiteId);
+        suggestionService.updateTags(mSiteId);
 
         mAttemptingToBind = false;
     }

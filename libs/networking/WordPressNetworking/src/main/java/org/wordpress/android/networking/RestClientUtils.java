@@ -31,7 +31,6 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientUtils {
     public static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
-    private static final String COMMENT_REPLY_CONTENT_FIELD = "content";
     private static String sUserAgent = "WordPress Networking Android";
 
     private RestClient mRestClient;
@@ -88,40 +87,6 @@ public class RestClientUtils {
     public void getCategories(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/categories", siteId);
         get(path, null, null, listener, errorListener);
-    }
-
-    /**
-     * get a list of recent comments
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/comments/
-     */
-    public void getComments(String siteId, Map<String, String> params, final Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/comments", siteId);
-        get(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Reply to a comment
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
-     */
-    public void replyToComment(String reply, String path, Listener listener, ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(COMMENT_REPLY_CONTENT_FIELD, reply);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Reply to a comment.
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
-     */
-    public void replyToComment(long siteId, long commentId, String content, Listener listener,
-                               ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(COMMENT_REPLY_CONTENT_FIELD, content);
-        String path = String.format(Locale.US, "sites/%d/comments/%d/replies/new", siteId, commentId);
-        post(path, params, null, listener, errorListener);
     }
 
     /**
@@ -210,47 +175,6 @@ public class RestClientUtils {
         String path = "notifications/read";
         Map<String, String> params = new HashMap<String, String>();
         params.put(String.format("counts[%s]", noteId), decrementAmount);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Moderate a comment.
-     * <p/>
-     * http://developer.wordpress.com/docs/api/1/sites/%24site/comments/%24comment_ID/
-     */
-    public void moderateComment(long siteId, String commentId, String status, Listener listener,
-                                ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("status", status);
-        String path = String.format(Locale.US, "sites/%d/comments/%s/", siteId, commentId);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Edit the content of a comment
-     */
-    public void editCommentContent(long siteId, long commentId, String content, Listener listener,
-                                ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("content", content);
-        String path = String.format(Locale.US, "sites/%d/comments/%d/", siteId, commentId);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Like or unlike a comment.
-     */
-    public void likeComment(long siteId, String commentId, boolean isLiked, Listener listener,
-                                ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        String path = String.format(Locale.US, "sites/%d/comments/%s/likes/", siteId, commentId);
-
-        if (!isLiked) {
-            path += "mine/delete";
-        } else {
-            path += "new";
-        }
-
         post(path, params, null, listener, errorListener);
     }
 
