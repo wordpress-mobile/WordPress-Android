@@ -48,6 +48,9 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         Map<String, Object> commentParams = new HashMap<>();
         commentParams.put("number", number);
         commentParams.put("offset", offset);
+        if (status != CommentStatus.ALL) {
+            commentParams.put("status", getXMLRPCCommentStatus(status));
+        }
 
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
