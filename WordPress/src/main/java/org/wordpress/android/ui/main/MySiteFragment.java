@@ -272,15 +272,11 @@ public class MySiteFragment extends Fragment
 
         switch (requestCode) {
             case RequestCodes.SITE_PICKER:
-                // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
                     //reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatus.UNKNOWN);
-                    int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-                    setSelectedSite(selectedSite);
                 }
                 break;
-
             case RequestCodes.EDIT_POST:
                 // if user returned from adding a post via the FAB and it was saved as a local
                 // draft, briefly animate the background of the "Blog posts" view to give the
@@ -292,7 +288,6 @@ public class MySiteFragment extends Fragment
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
                 break;
-
             case RequestCodes.CREATE_BLOG:
                 // user created a new blog so, use and show that new one
                 // TODO: STORES: create a blog
