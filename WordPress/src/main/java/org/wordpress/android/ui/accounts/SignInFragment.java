@@ -163,7 +163,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 && (getActivity().getIntent().getBooleanExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, false)
                 || !WPActivityUtils.isEmailClientAvailable(getActivity()));
 
-        track(Stat.LOGIN_ACCESSED, null);
+        AnalyticsTracker.track(Stat.LOGIN_ACCESSED);
     }
 
     @Override
@@ -665,7 +665,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         transaction.addToBackStack(null);
         transaction.commit();
 
-        track(Stat.CREATE_ACCOUNT_INITIATED, null);
+        AnalyticsTracker.track(Stat.CREATE_ACCOUNT_INITIATED);
     }
 
     private String getForgotPasswordURL() {
