@@ -890,7 +890,7 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.JetpackMissingError event) {
+    public void onEventMainThread(StatsEvents.JetpackStatsModuleNotConnectedError event) {
         if (isFinishing() || !mIsInFront) {
             return;
         }
