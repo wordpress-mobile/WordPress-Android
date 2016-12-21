@@ -1142,6 +1142,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void showAuthError(AuthenticationErrorType error, String errorMessage) {
         switch (error) {
             case INCORRECT_USERNAME_OR_PASSWORD:
+            case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
                 handleInvalidUsernameOrPassword(R.string.username_or_password_incorrect);
                 break;
             case INVALID_OTP:
@@ -1249,7 +1250,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         trackAnalyticsSignIn();
         mSitesFetched = true;
         // Finish activity if account settings have been fetched or if it's a wporg site
-        if ((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) {
+        if (((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) && !event.isError()) {
             updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
