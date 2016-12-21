@@ -273,4 +273,21 @@ public class StatsEvents {
             mLocalBlogId = blogId;
         }
     }
+
+    public static class JetpackNotConnectedError {
+        public final int mLocalBlogId; // This is the local blogID
+
+        public JetpackNotConnectedError(int blogId) {
+            mLocalBlogId = blogId;
+        }
+    }
+
+    public static class JetpackStatsModuleNotConnectedError {
+        public final int mLocalBlogId; // This is the local blogID
+
+        public JetpackStatsModuleNotConnectedError(int blogId) {
+            mLocalBlogId = blogId;
+        }
+    }
+
 }

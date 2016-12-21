@@ -577,19 +577,19 @@ public class StatsService extends Service {
                                 Integer.parseInt(mRequestBlogId)
                         );
                         Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
-                        if (blog != null && blog.isJetpackPowered()) {
-                            // It's a kind of edge case, but the Jetpack site could have REST Disabled
-                            // In that case (only used in insights for now) shows the error in the module that use the REST API
-                            if (!StatsUtils.isRESTDisabledError(volleyError)) {
+                        if (blog != null && blog.isJetpackPowered() ) {
+                            if (StatsUtils.isRESTDisabledError(volleyError) || mEndpointName == StatsEndpointsEnum.INSIGHTS_LATEST_POST_SUMMARY ) {
+                                // It's a kind of edge case, but the Jetpack site could have REST Disabled
+                                // In that case (only used in insights for now) shows the error in the module that use the REST API
+                            } else {
+                                // Check here if the module is disabled or Jetpack disconnected
                                 EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
                             }
                         }
                     }
 
-
                     EventBus.getDefault().post(new StatsEvents.SectionUpdateError(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, volleyError));
-
                     updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }

@@ -882,6 +882,22 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.JetpackNotConnectedError event) {
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+        showJetpackNonConnectedAlert();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.JetpackMissingError event) {
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+        showJetpackMissingAlert();
+    }
+
+    @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdateError event) {
         // There was an error loading Stats. Don't bump stats for promo widget.
         if (isFinishing() || !mIsInFront) {
