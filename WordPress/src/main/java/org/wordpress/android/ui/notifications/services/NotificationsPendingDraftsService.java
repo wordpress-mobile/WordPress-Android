@@ -167,8 +167,8 @@ public class NotificationsPendingDraftsService extends Service {
                         }
                     }
 
-                    completed();
                 }
+                completed();
             }
         }).start();
     }
