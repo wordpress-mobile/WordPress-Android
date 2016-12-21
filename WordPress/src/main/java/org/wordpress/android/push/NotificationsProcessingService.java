@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
@@ -79,6 +80,7 @@ public class NotificationsProcessingService extends Service {
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject CommentStore mCommentStore;
 
     /*
     * Use this if you want the service to handle a background note Like.
