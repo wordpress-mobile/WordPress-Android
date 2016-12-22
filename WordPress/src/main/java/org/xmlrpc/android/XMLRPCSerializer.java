@@ -71,32 +71,27 @@ class XMLRPCSerializer {
         // check for scalar types:
         if (object instanceof Integer || object instanceof Short || object instanceof Byte) {
             serializer.startTag(null, TYPE_I4).text(object.toString()).endTag(null, TYPE_I4);
-        } else
-        if (object instanceof Long) {
+        } else if (object instanceof Long) {
             // Note Long should be represented by a TYPE_I8 but the WordPress end point doesn't support <i8> tag
             // Long usually represents IDs, so we convert them to string
             serializer.startTag(null, TYPE_STRING).text(object.toString()).endTag(null, TYPE_STRING);
             AppLog.w(T.API, "long type could be misinterpreted when sent to the WordPress XMLRPC end point");
-        } else
-        if (object instanceof Double || object instanceof Float) {
+        } else if (object instanceof Double || object instanceof Float) {
             serializer.startTag(null, TYPE_DOUBLE).text(object.toString()).endTag(null, TYPE_DOUBLE);
         } else
         if (object instanceof Boolean) {
             Boolean bool = (Boolean) object;
             String boolStr = bool.booleanValue() ? "1" : "0";
             serializer.startTag(null, TYPE_BOOLEAN).text(boolStr).endTag(null, TYPE_BOOLEAN);
-        } else
-        if (object instanceof String) {
+        } else if (object instanceof String) {
             serializer.startTag(null, TYPE_STRING).text(makeValidInputString((String) object)).endTag(null, TYPE_STRING);
-        } else
-        if (object instanceof Date || object instanceof Calendar) {
+        } else if (object instanceof Date || object instanceof Calendar) {
             Date date = (Date) object;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss", Locale.US);
             dateFormat.setCalendar(cal);
             String sDate = dateFormat.format(date);
             serializer.startTag(null, TYPE_DATE_TIME_ISO8601).text(sDate).endTag(null, TYPE_DATE_TIME_ISO8601);
-        } else
-        if (object instanceof byte[] ){
+        } else if (object instanceof byte[] ){
             String value;
             try {
                 value = Base64.encodeToString((byte[])object, Base64.DEFAULT);
@@ -104,8 +99,7 @@ class XMLRPCSerializer {
             } catch (OutOfMemoryError e) {
                 throw new IOException("Out of memory");
             }
-        }
-        else if( object instanceof MediaFile ) {
+        } else if(object instanceof MediaFile) {
             //convert media file binary to base64
             serializer.startTag( null, "base64" );
             MediaFile mediaFile = (MediaFile) object;
@@ -119,8 +113,7 @@ class XMLRPCSerializer {
             }
             inStream.close();
             serializer.endTag(null, "base64");
-        }else
-        if (object instanceof List<?>) {
+        } else if (object instanceof List<?>) {
             serializer.startTag(null, TYPE_ARRAY).startTag(null, TAG_DATA);
             List<Object> list = (List<Object>) object;
             Iterator<Object> iter = list.iterator();
@@ -131,8 +124,7 @@ class XMLRPCSerializer {
                 serializer.endTag(null, TAG_VALUE);
             }
             serializer.endTag(null, TAG_DATA).endTag(null, TYPE_ARRAY);
-        } else
-        if (object instanceof Object[]) {
+        } else if (object instanceof Object[]) {
             serializer.startTag(null, TYPE_ARRAY).startTag(null, TAG_DATA);
             Object[] objects = (Object[]) object;
             for (int i=0; i<objects.length; i++) {
@@ -142,8 +134,7 @@ class XMLRPCSerializer {
                 serializer.endTag(null, TAG_VALUE);
             }
             serializer.endTag(null, TAG_DATA).endTag(null, TYPE_ARRAY);
-        } else
-        if (object instanceof Map) {
+        } else if (object instanceof Map) {
             serializer.startTag(null, TYPE_STRUCT);
             Map<String, Object> map = (Map<String, Object>) object;
             Iterator<Entry<String, Object>> iter = map.entrySet().iterator();

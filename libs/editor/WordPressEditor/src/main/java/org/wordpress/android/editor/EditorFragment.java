@@ -1009,8 +1009,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
+                String mediaId = mediaFile.getMediaId();
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
-                    String mediaId = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
                         String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
                         String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
@@ -1024,16 +1024,15 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                     mActionStartedAt = System.currentTimeMillis();
                 } else {
-                    String id = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
                         String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
-                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + id + ", '" + posterUrl +
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + mediaId + ", '" + posterUrl +
                                 "');");
-                        mUploadingMedia.put(id, MediaType.VIDEO);
+                        mUploadingMedia.put(mediaId, MediaType.VIDEO);
                     } else {
-                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + safeMediaUrl +
-                                "');");
-                        mUploadingMedia.put(id, MediaType.IMAGE);
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + mediaId + ", '" +
+                                safeMediaUrl + "');");
+                        mUploadingMedia.put(mediaId, MediaType.IMAGE);
                     }
                 }
             }

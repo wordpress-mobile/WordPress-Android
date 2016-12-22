@@ -202,40 +202,6 @@ public class MediaEditFragment extends Fragment {
         final String description = mDescriptionView.getText().toString();
         final String caption = mCaptionView.getText().toString();
 
-        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mSite, String.valueOf(mediaId), title,
-                description, caption,
-                new ApiHelper.GenericCallback() {
-                    @Override
-                    public void onSuccess() {
-                        String blogId = String.valueOf(mSite.getId());
-                        WordPress.wpDB.updateMediaFile(blogId, String.valueOf(mediaId), title, description, caption);
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
-                        }
-                        mIsMediaUpdating = false;
-                        if (hasCallback()) {
-                            mCallback.onSavedEdit(mediaId, true);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
-                            getActivity().invalidateOptionsMenu();
-                        }
-                        mIsMediaUpdating = false;
-                        if (hasCallback()) {
-                            mCallback.onSavedEdit(mediaId, false);
-                        }
-                    }
-                }
-        );
-
-        if (!mIsMediaUpdating) {
-            mIsMediaUpdating = true;
-            task.execute();
-        }
     }
 
     private void setMediaUpdating(boolean isUpdating) {

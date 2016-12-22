@@ -238,7 +238,7 @@ public class MediaGridFragment extends Fragment
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
-                        fetchAllMedia(0, false);
+                        fetchAllMedia(0);
                     }
                 });
         restoreState(savedInstanceState);
@@ -380,7 +380,7 @@ public class MediaGridFragment extends Fragment
         if (isAdded() && mGridAdapter.getDataCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
-                    fetchAllMedia(0, true);
+                    fetchAllMedia(0);
                 }
             } else {
                 updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
@@ -564,7 +564,7 @@ public class MediaGridFragment extends Fragment
     @Override
     public void fetchMoreData(int offset) {
         if (!mHasRetrievedAllMedia) {
-            fetchAllMedia(offset, true);
+            fetchAllMedia(offset);
         }
     }
 
@@ -748,7 +748,8 @@ public class MediaGridFragment extends Fragment
         }
     }
 
-    private void fetchAllMedia(int offset, final boolean auto) {
+    private void fetchAllMedia(int offset) {
+        // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             setRefreshing(false);

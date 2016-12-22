@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -67,7 +68,7 @@ public class MediaDeleteService extends Service {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+    public void onMediaChanged(OnMediaChanged event) {
         if (mDeleteInProgress == null) {
             deleteNextInQueue();
             return;
@@ -101,7 +102,7 @@ public class MediaDeleteService extends Service {
     /**
      * @return true to continue deleting from queue
      */
-    private boolean handleOnMediaChangedError(MediaStore.OnMediaChanged event) {
+    private boolean handleOnMediaChangedError(OnMediaChanged event) {
         switch (event.error.type) {
             case UNAUTHORIZED:
                 // stop delete service until authorized to perform actions on site
