@@ -18,11 +18,11 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.models.CategoryNode;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -56,7 +56,6 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private HashSet<Long> mSelectedCategories;
-    private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
     private LongSparseArray<Integer> mCategoryRemoteIdsToListPositions = new LongSparseArray<>();
     private SiteModel mSite;
@@ -145,8 +144,8 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     }
 
     private void populateCategoryList() {
-        mCategories = CategoryNode.createCategoryTreeFromList(mTaxonomyStore.getCategoriesForSite(mSite));
-        mCategoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(mCategories);
+        CategoryNode categoryTree = CategoryNode.createCategoryTreeFromList(mTaxonomyStore.getCategoriesForSite(mSite));
+        mCategoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(categoryTree);
         for (int i = 0; i < mCategoryLevels.size(); i++) {
             mCategoryRemoteIdsToListPositions.put(mCategoryLevels.get(i).getCategoryId(), i);
         }
