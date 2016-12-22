@@ -213,7 +213,7 @@ public class WordPressMediaUtils {
 
     public static boolean canDeleteMedia(MediaModel mediaModel) {
         String state = mediaModel.getUploadState();
-        return state == null || !state.equals("uploading");
+        return state == null || (!state.equalsIgnoreCase("uploading") && !state.equalsIgnoreCase("deleted"));
     }
 
     /**
