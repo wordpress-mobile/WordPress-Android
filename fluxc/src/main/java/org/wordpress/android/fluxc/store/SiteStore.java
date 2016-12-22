@@ -380,19 +380,6 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Checks whether the user is an admin of the given (remote) self hosted site id.
-     */
-    public boolean isCurrentUserAdminOfSelfHostedSiteId(long selfHostedSiteId) {
-        return WellSql.select(SiteModel.class)
-                .where().beginGroup().beginGroup()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
-                .endGroup()
-                .equals(SiteModelTable.IS_SELF_HOSTED_ADMIN, true)
-                .endGroup().endWhere()
-                .getAsCursor().getCount() > 0;
-    }
-
-    /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     public int getLocalIdForRemoteSiteId(long siteId) {
