@@ -29,7 +29,6 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private String mName;
     @Column private String mDescription;
     @Column private boolean mIsWPCom;
-    @Column private boolean mIsAdmin;
     @Column private boolean mIsFeaturedImageSupported;
     @Column private String mDefaultCommentStatus = "open";
     @Column private String mTimezone;
@@ -42,6 +41,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private String mPassword;
     @Column(name = "XMLRPC_URL") private String mXmlRpcUrl;
     @Column private String mSoftwareVersion;
+    @Column private boolean mIsSelfHostedAdmin;
 
     // WPCom specifics
     @Column private boolean mIsJetpack;
@@ -170,12 +170,12 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
         mSelfHostedSiteId = selfHostedSiteId;
     }
 
-    public boolean isAdmin() {
-        return mIsAdmin;
+    public boolean isSelfHostedAdmin() {
+        return mIsSelfHostedAdmin;
     }
 
-    public void setIsAdmin(boolean admin) {
-        mIsAdmin = admin;
+    public void setIsSelfHostedAdmin(boolean selfHostedAdmin) {
+        mIsSelfHostedAdmin = selfHostedAdmin;
     }
 
     public boolean isJetpack() {
