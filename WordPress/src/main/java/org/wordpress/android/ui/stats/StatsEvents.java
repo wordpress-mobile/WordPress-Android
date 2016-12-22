@@ -274,10 +274,10 @@ public class StatsEvents {
         }
     }
 
-    public static class JetpackNotConnectedError {
+    public static class JetpackNotConnectedOrDeactivatedError {
         public final int mLocalBlogId; // This is the local blogID
 
-        public JetpackNotConnectedError(int blogId) {
+        public JetpackNotConnectedOrDeactivatedError(int blogId) {
             mLocalBlogId = blogId;
         }
     }
