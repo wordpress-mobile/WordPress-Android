@@ -202,20 +202,20 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testIsCurrentUserAdminOfSiteId() {
-        assertFalse(mSiteStore.isCurrentUserAdminOfSiteId(0));
+    public void testIsCurrentUserAdminOfSelfHostedSiteId() {
+        assertFalse(mSiteStore.isCurrentUserAdminOfSelfHostedSiteId(0));
 
         SiteModel site = generateSelfHostedNonJPSite();
         SiteSqlUtils.insertOrUpdateSite(site);
 
-        assertFalse(mSiteStore.isCurrentUserAdminOfSiteId(site.getSiteId()));
+        assertFalse(mSiteStore.isCurrentUserAdminOfSelfHostedSiteId(site.getSiteId()));
 
         site.setIsSelfHostedAdmin(true);
         assertTrue(site.isSelfHostedAdmin());
         SiteSqlUtils.insertOrUpdateSite(site);
 
         assertTrue(mSiteStore.getSiteByLocalId(site.getId()).isSelfHostedAdmin());
-        assertTrue(mSiteStore.isCurrentUserAdminOfSiteId(site.getSiteId()));
+        assertTrue(mSiteStore.isCurrentUserAdminOfSelfHostedSiteId(site.getSelfHostedSiteId()));
     }
 
     @Test
