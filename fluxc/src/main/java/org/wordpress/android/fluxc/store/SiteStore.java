@@ -389,7 +389,7 @@ public class SiteStore extends Store {
                 .or()
                 .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
                 .endGroup()
-                .equals(SiteModelTable.IS_ADMIN, true)
+                .equals(SiteModelTable.IS_SELF_HOSTED_ADMIN, true)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
     }
