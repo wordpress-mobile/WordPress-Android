@@ -15,13 +15,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -62,11 +67,13 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
     @Inject SiteStore mSiteStore;
     @Inject TaxonomyStore mTaxonomyStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -135,6 +142,12 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        mDispatcher.unregister(this);
+        super.onDestroy();
+    }
+
     private boolean isCategoryListEmpty() {
         if (mListView.getAdapter() != null) {
             return mListView.getAdapter().isEmpty();
@@ -174,61 +187,9 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                 if (!isFinishing()) {
                     ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_failed, Duration.LONG);
                 }
-            } else if (finalResult.equals("gotCategories")) {
-                populateCategoryList();
-            } else if (finalResult.equals("FAIL")) {
-                if (!isFinishing()) {
-                    ToastUtils.showToast(SelectCategoriesActivity.this, R.string.category_refresh_error, Duration.LONG);
-                }
             }
         }
     };
-
-    /**
-     * Gets the categories via a xmlrpc call
-     * @return result message
-     */
-    public String fetchCategories() {
-        String returnMessage;
-        Object result[] = null;
-        Object[] params = {
-                String.valueOf(mSite.getSiteId()),
-                StringUtils.notNullStr(mSite.getUsername()),
-                StringUtils.notNullStr(mSite.getPassword())
-        };
-        XMLRPCClientInterface client  = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
-        boolean success = false;
-        try {
-            result = (Object[]) client.call(Method.GET_CATEGORIES, params);
-            success = true;
-        } catch (XMLRPCException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-        } catch (IOException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-        } catch (XmlPullParserException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-        }
-
-        if (success) {
-            // wipe out the categories table
-            WordPress.wpDB.clearCategories(mSite.getId());
-
-            for (Object aResult : result) {
-                Map<?, ?> curHash = (Map<?, ?>) aResult;
-                String categoryName = curHash.get("categoryName").toString();
-                String categoryID = curHash.get("categoryId").toString();
-                String categoryParentID = curHash.get("parentId").toString();
-                int convertedCategoryID = Integer.parseInt(categoryID);
-                int convertedCategoryParentID = Integer.parseInt(categoryParentID);
-                WordPress.wpDB.insertCategory(mSite.getId(), convertedCategoryID,
-                        convertedCategoryParentID, categoryName);
-            }
-            returnMessage = "gotCategories";
-        } else {
-            returnMessage = "FAIL";
-        }
-        return returnMessage;
-    }
 
     public String addCategory(final String category_name, String category_slug, String category_desc, long parent_id) {
         // Return string
@@ -390,13 +351,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         mSwipeToRefreshHelper.setRefreshing(true);
         mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
-        Thread th = new Thread() {
-            public void run() {
-                finalResult = fetchCategories();
-                mHandler.post(mUpdateResults);
-            }
-        };
-        th.start();
+        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
     }
 
     @Override
@@ -433,5 +388,23 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
     private int getCheckedItemCount(ListView listView) {
         return listView.getCheckedItemCount();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTaxonomyChanged(OnTaxonomyChanged event) {
+        switch (event.causeOfChange) {
+            case FETCH_CATEGORIES:
+                mSwipeToRefreshHelper.setRefreshing(false);
+
+                if (event.isError()) {
+                    if (!isFinishing()) {
+                        ToastUtils.showToast(SelectCategoriesActivity.this, R.string.category_refresh_error, Duration.LONG);
+                    }
+                } else {
+                    populateCategoryList();
+                }
+                break;
+        }
     }
 }
