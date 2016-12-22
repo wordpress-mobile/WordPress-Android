@@ -495,29 +495,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         AnalyticsTracker.track(stat, properties);
     }
 
-    protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
-        mUrlEditText.setText("");
-
-        if (!isAdded()) {
-            return;
-        }
-
-        if (userBlogList != null) {
-            if (mInhibitMagicLogin) {
-                // just finish the login activity and return to the its "caller"
-                getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
-            } else {
-                // move on the the main activity
-                Intent intent = new Intent(getActivity(), WPMainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
-
-                getActivity().startActivity(intent);
-            }
-        }
-    }
-
     public void setToken(String token) {
         mToken = token;
     }
