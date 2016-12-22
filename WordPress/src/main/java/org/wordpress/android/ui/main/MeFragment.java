@@ -57,6 +57,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -201,6 +202,8 @@ public class MeFragment extends Fragment {
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(MeFragment.this,
                         CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE)) {
                     askForCameraOrGallery();
+                } else {
+                    AppLockManager.getInstance().setExtendedTimeout();
                 }
             }
         });

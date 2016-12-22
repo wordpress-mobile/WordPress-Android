@@ -678,6 +678,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
             super.openContextMenu(view);
         } else {
+            AppLockManager.getInstance().setExtendedTimeout();
             mMenuView = view;
         }
     }
@@ -2154,6 +2155,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         refreshBlogMedia();
                     }
                 });
+            } else {
+                AppLockManager.getInstance().setExtendedTimeout();
             }
         }
 
