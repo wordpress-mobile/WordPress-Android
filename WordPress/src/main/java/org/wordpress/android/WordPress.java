@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.support.multidex.MultiDexApplication;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
@@ -223,6 +224,12 @@ public class WordPress extends MultiDexApplication {
 
         // If users uses a custom locale set it on start of application
         WPActivityUtils.applyLocale(getContext());
+
+        // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
+        // with memory usage and the use of Configuration). More informations:
+        // https://developer.android.com/reference/android/support/v7/app/AppCompatDelegate.html#setCompatVectorFromResourcesEnabled(boolean)
+        // Note: if removed, this will cause crashes on Android < 21
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
