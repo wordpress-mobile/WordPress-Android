@@ -746,6 +746,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (mIsActivityFinishing) {
             return;
         }
+
+        // Clear persisted text from in the URL field
+        mUrlEditText.setText("");
+
         mIsActivityFinishing = true;
         saveCredentialsInSmartLock();
         if (getActivity() == null) {
