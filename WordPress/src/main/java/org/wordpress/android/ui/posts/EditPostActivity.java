@@ -24,7 +24,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -43,7 +42,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -75,6 +73,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
@@ -108,6 +107,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -115,7 +115,6 @@ import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -1003,10 +1002,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    public boolean isEditingPostContent() {
-        return (mViewPager.getCurrentItem() == PAGE_CONTENT);
-    }
-
     // Moved from EditPostContentFragment
     public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
     public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
@@ -1023,45 +1018,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void addExistingMediaToEditor(long mediaId) {
-        String blogId = String.valueOf(mSite.getId());
-        MediaFile mediaFile = createMediaFile(blogId, mediaId);
-        if (mediaFile == null) {
-            return;
-        }
-        trackAddMediaEvents(mediaFile.isVideo(), true);
-        mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
-    }
-
-    /**
-     * Get media url from a MediaFile, returns a photon URL if the selected blog is Photon capable.
-     */
-    private String getMediaUrl(MediaFile mediaFile) {
-        if (mediaFile == null) {
-            return null;
-        }
-
-        // Since Photon doesn't support video, skip Photon checking and return the existing file URL
-        // (using a Photon URL for video will result in a 404 error)
-        if (mediaFile.isVideo()) {
-            return mediaFile.getFileURL();
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         if (media != null) {
             trackAddMediaEvents(media.isVideo(), true);
             // TODO: change signature of appendMediaFile to use MediaModel
-            mEditorFragment.appendMediaFile(media, media.getUrl(), WordPress.imageLoader);
         }
-
-        String imageURL;
-        if (mSite.isWPCom()) {
-            String photonUrl = mediaFile.getFileURL();
-            imageURL = StringUtils.getPhotonUrl(photonUrl, getMaximumThumbnailWidthForEditor());
-        } else {
-            // Not a Jetpack or wpcom blog
-            // imageURL = mediaFile.getThumbnailURL(); // do not use fileURL here since downloading picture
-            // of big dimensions can result in OOM Exception
-            imageURL = mediaFile.getFileURL() != null ? mediaFile.getFileURL() : mediaFile.getThumbnailURL();
-        }
-        return imageURL;
     }
 
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
@@ -1398,31 +1359,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void updateMediaFileOnServer(WPImageSpan wpIS) {
-        if (wpIS == null) return;
+    private void updateMediaFileOnServer(MediaFile mediaFile) {
+        if (mediaFile == null) {
+            return;
+        }
 
-        MediaFile mf = wpIS.getMediaFile();
-
-        final String mediaId = mf.getMediaId();
-        final String title = mf.getTitle();
-        final String description = mf.getDescription();
-        final String caption = mf.getCaption();
-
-        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mSite, mf.getMediaId(), mf.getTitle(),
-                mf.getDescription(), mf.getCaption(),
-                new ApiHelper.GenericCallback() {
-                    @Override
-                    public void onSuccess() {
-                        WordPress.wpDB.updateMediaFile(String.valueOf(mSite.getId()), mediaId, title, description,
-                                caption);
-                    }
-
-                    @Override
-                    public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                        Toast.makeText(EditPostActivity.this, R.string.media_edit_failure, Toast.LENGTH_LONG).show();
-                    }
-                });
-        task.execute();
+        List<MediaModel> media = new ArrayList<>();
+        media.add(WPStoreUtils.fromMediaFile(mediaFile));
+        MediaStore.MediaListPayload payload = new MediaStore.MediaListPayload(MediaAction.PUSH_MEDIA, mSite, media);
+        mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(payload));
     }
 
     private void trackAddMediaEvents(boolean isVideo, boolean fromMediaLibrary) {
@@ -1679,7 +1624,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            MediaStore.MediaListPayload payload = new MediaStore.MediaListPayload(MediaAction.FETCH_ALL_MEDIA, mSite, null);
+            MediaListPayload payload = new MediaListPayload(MediaAction.FETCH_ALL_MEDIA, mSite, null);
             mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
         } else {
             ToastUtils.showToast(this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
