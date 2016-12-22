@@ -512,7 +512,11 @@ public class EditPostSettingsFragment extends Fragment
         } else if (id == R.id.selectCategories) {
             Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
             categoriesIntent.putExtra(WordPress.SITE, mSite);
+
+            // Make sure the PostModel is up to date with current category selections
+            updatePostSettings();
             categoriesIntent.putExtra("postModel", mPost);
+
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.categoryButton) {
             onCategoryButtonClick(v);
