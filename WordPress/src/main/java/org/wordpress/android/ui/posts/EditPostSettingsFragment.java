@@ -50,9 +50,11 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
@@ -76,7 +78,6 @@ import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -106,8 +107,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private long mFeaturedImageId;
 
-    // TODO: Should be List<TaxonomyModel>
-    private ArrayList<String> mCategories;
+    private List<TermModel> mCategories;
 
     private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
@@ -122,6 +122,7 @@ public class EditPostSettingsFragment extends Fragment
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Inject SiteStore mSiteStore;
+    @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
 
     public static EditPostSettingsFragment newInstance(SiteModel site, PostModel post) {
@@ -196,8 +197,7 @@ public class EditPostSettingsFragment extends Fragment
         mDay = c.get(Calendar.DAY_OF_MONTH);
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
-        // TODO: TaxonomyStore
-        //mCategories = new ArrayList<String>();
+        mCategories = new ArrayList<>();
 
         mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
@@ -407,13 +407,13 @@ public class EditPostSettingsFragment extends Fragment
                 break;
         }
 
-        // TODO: Re-implement when we can have access to category names from IDs via TaxonomyStore
-//        if (!mPost.isPage()) {
-//            mCategories = mPost.getCategoryIdList();
-//        }
+        if (!mPost.isPage()) {
+            List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(mPost);
 //        String tags = mPost.getKeywords();
 //        if (!tags.equals("")) {
 //            mTagsEditText.setText(tags);
+            mCategories = categories;
+        }
 //        }
 
         if (AppPrefs.isVisualEditorEnabled()) {
@@ -485,7 +485,9 @@ public class EditPostSettingsFragment extends Fragment
                 case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                     extras = data.getExtras();
                     if (extras != null && extras.containsKey("selectedCategories")) {
-                        mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
+                        @SuppressWarnings("unchecked")
+                        List<TermModel> categoryList = (List<TermModel>) extras.getSerializable("selectedCategories");
+                        mCategories = categoryList;
                         populateSelectedCategories();
                     }
                     break;
@@ -676,10 +678,13 @@ public class EditPostSettingsFragment extends Fragment
             }
         }
 
-        // TODO: Implement when we have TaxonomyStore
-//        if (mCategories != null) {
-//            mPost.setJSONCategories(new JSONArray(mCategories));
-//        }
+        if (mCategories != null) {
+            List<Long> categoryIds = new ArrayList<>();
+            for (TermModel category : mCategories) {
+                categoryIds.add(category.getRemoteTermId());
+            }
+            mPost.setCategoryIdList(categoryIds);
+        }
 
         if (AppPrefs.isVisualEditorEnabled()) {
             mPost.setFeaturedImageId(mFeaturedImageId);
@@ -1035,7 +1040,7 @@ public class EditPostSettingsFragment extends Fragment
 
         // Remove clicked category from list
         for (int i = 0; i < mCategories.size(); i++) {
-            if (mCategories.get(i).equals(categoryName)) {
+            if (mCategories.get(i).getName().equals(categoryName)) {
                 mCategories.remove(i);
                 listChanged = true;
                 break;
@@ -1050,7 +1055,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void populateSelectedCategories() {
         // Remove previous category buttons if any + select category button
-        List<View> viewsToRemove = new ArrayList<View>();
+        List<View> viewsToRemove = new ArrayList<>();
         for (int i = 0; i < mSectionCategories.getChildCount(); i++) {
             View v = mSectionCategories.getChildAt(i);
             if (v == null)
@@ -1070,12 +1075,12 @@ public class EditPostSettingsFragment extends Fragment
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 
         if (mCategories != null) {
-            for (String categoryName : mCategories) {
+            for (TermModel category : mCategories) {
                 AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button,
                         null);
-                if (categoryName != null && buttonCategory != null) {
-                    buttonCategory.setText(Html.fromHtml(categoryName));
-                    buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
+                if (category != null && category.getName() != null && buttonCategory != null) {
+                    buttonCategory.setText(Html.fromHtml(category.getName()));
+                    buttonCategory.setTag(CATEGORY_PREFIX_TAG + category.getName());
                     buttonCategory.setOnClickListener(this);
                     mSectionCategories.addView(buttonCategory);
                 }
