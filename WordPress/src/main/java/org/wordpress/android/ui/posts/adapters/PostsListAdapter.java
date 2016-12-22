@@ -24,10 +24,15 @@ import android.widget.TextView;
 import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.MediaAction;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
@@ -89,6 +94,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final LayoutInflater mLayoutInflater;
 
+    @Inject Dispatcher mDispatcher;
     @Inject protected PostStore mPostStore;
     @Inject protected MediaStore mMediaStore;
 
@@ -738,7 +744,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 notifyDataSetChanged();
 
                 if (mediaIdsToUpdate.size() > 0) {
-                    // TODO: MediaStore
+                    for (Long mediaId : mediaIdsToUpdate) {
+                        List<MediaModel> toFetch = new ArrayList<>();
+                        MediaModel mediaToDownload = new MediaModel();
+                        mediaToDownload.setMediaId(mediaId);
+                        mediaToDownload.setSiteId(mSite.getSiteId());
+                        MediaListPayload payload = new MediaListPayload(MediaAction.FETCH_MEDIA, mSite, toFetch);
+                        mDispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload));
+                    }
                 }
             }
 
