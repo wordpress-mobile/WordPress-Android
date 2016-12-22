@@ -210,11 +210,11 @@ public class SiteStoreUnitTest {
 
         assertFalse(mSiteStore.isCurrentUserAdminOfSiteId(site.getSiteId()));
 
-        site.setIsAdmin(true);
-        assertTrue(site.isAdmin());
+        site.setIsSelfHostedAdmin(true);
+        assertTrue(site.isSelfHostedAdmin());
         SiteSqlUtils.insertOrUpdateSite(site);
 
-        assertTrue(mSiteStore.getSiteByLocalId(site.getId()).isAdmin());
+        assertTrue(mSiteStore.getSiteByLocalId(site.getId()).isSelfHostedAdmin());
         assertTrue(mSiteStore.isCurrentUserAdminOfSiteId(site.getSiteId()));
     }
 
