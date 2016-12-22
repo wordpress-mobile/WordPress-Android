@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -40,6 +42,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -51,7 +54,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private TextView mEmptyView;
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private HashSet<String> mSelectedCategories;
+    private HashSet<Long> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
     private Map<String, Integer> mCategoryNames = new HashMap<String, Integer>();
@@ -93,16 +96,18 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         mEmptyView = (TextView) findViewById(R.id.empty_view);
         mListView.setEmptyView(mEmptyView);
 
-        mSelectedCategories = new HashSet<String>();
+        mSelectedCategories = new HashSet<>();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if (extras.containsKey("categories")) {
-                mSelectedCategories = (HashSet<String>) extras.getSerializable("categories");
+            if (extras.containsKey("postModel")) {
+                PostModel post = (PostModel) extras.getSerializable("postModel");
+                if (post != null) {
+                    for (Long categoryId : post.getCategoryIdList()) {
+                        mSelectedCategories.add(mTaxonomyStore.getCategoryByRemoteId(mSite, categoryId).getRemoteTermId());
+                    }
+                }
             }
-        }
-        if (mSelectedCategories == null) {
-            mSelectedCategories = new HashSet<String>();
         }
 
         // swipe to refresh setup
@@ -148,9 +153,10 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         CategoryArrayAdapter categoryAdapter = new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);
         mListView.setAdapter(categoryAdapter);
         if (mSelectedCategories != null) {
-            for (String selectedCategory : mSelectedCategories) {
-                if (mCategoryNames.keySet().contains(selectedCategory)) {
-                    mListView.setItemChecked(mCategoryNames.get(selectedCategory), true);
+            for (Long selectedCategory : mSelectedCategories) {
+                String selectedCategoryName = mTaxonomyStore.getCategoryByRemoteId(mSite, selectedCategory).getName();
+                if (mCategoryNames.keySet().contains(selectedCategoryName)) {
+                    mListView.setItemChecked(mCategoryNames.get(selectedCategoryName), true);
                 }
             }
         }
@@ -225,7 +231,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         return returnMessage;
     }
 
-    public String addCategory(final String category_name, String category_slug, String category_desc, int parent_id) {
+    public String addCategory(final String category_name, String category_slug, String category_desc, long parent_id) {
         // Return string
         String returnString = "addCategory_failed";
 
@@ -280,10 +286,12 @@ public class SelectCategoriesActivity extends AppCompatActivity {
             }
 
             // Insert the new category into database
-            WordPress.wpDB.insertCategory(mSite.getId(), category_id, parent_id, new_category_name);
+            // TODO
+//            WordPress.wpDB.insertCategory(mSite.getId(), category_id, parent_id, new_category_name);
             returnString = "addCategory_success";
             // auto select new category
-            mSelectedCategories.add(new_category_name);
+            // TODO
+//            mSelectedCategories.add(new_category_name);
         }
 
         return returnString;
@@ -404,11 +412,11 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private void updateSelectedCategoryList() {
         SparseBooleanArray selectedItems = mListView.getCheckedItemPositions();
         for (int i = 0; i < selectedItems.size(); i++) {
-            String currentName = StringUtils.unescapeHTML(mCategoryLevels.get(selectedItems.keyAt(i)).getName());
+            long categoryRemoteId = mCategoryLevels.get(selectedItems.keyAt(i)).getCategoryId();
             if (selectedItems.get(selectedItems.keyAt(i))) {
-                mSelectedCategories.add(currentName);
+                mSelectedCategories.add(categoryRemoteId);
             } else {
-                mSelectedCategories.remove(currentName);
+                mSelectedCategories.remove(categoryRemoteId);
             }
         }
     }
@@ -416,7 +424,11 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private void saveAndFinish() {
         Bundle bundle = new Bundle();
         updateSelectedCategoryList();
-        bundle.putSerializable("selectedCategories", new ArrayList<String>(mSelectedCategories));
+        List<TermModel> categories = new ArrayList<>();
+        for (Long categoryRemoteId : mSelectedCategories) {
+            categories.add(mTaxonomyStore.getCategoryByRemoteId(mSite, categoryRemoteId));
+        }
+        bundle.putSerializable("selectedCategories", new ArrayList<>(categories));
         Intent mIntent = new Intent();
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);

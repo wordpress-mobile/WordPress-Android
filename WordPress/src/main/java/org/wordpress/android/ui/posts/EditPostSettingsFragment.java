@@ -508,13 +508,9 @@ public class EditPostSettingsFragment extends Fragment
         if (id == R.id.pubDate) {
             showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
-            Bundle bundle = new Bundle();
-            if (mCategories != null && mCategories.size() > 0) {
-                bundle.putSerializable("categories", new HashSet<>(mCategories));
-            }
             Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
             categoriesIntent.putExtra(WordPress.SITE, mSite);
-            categoriesIntent.putExtras(bundle);
+            categoriesIntent.putExtra("postModel", mPost);
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.categoryButton) {
             onCategoryButtonClick(v);
