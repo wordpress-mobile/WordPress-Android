@@ -83,6 +83,8 @@ import javax.inject.Inject;
 
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
+    private static final String KEY_POST = "KEY_POST";
+
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
@@ -126,7 +128,7 @@ public class EditPostSettingsFragment extends Fragment
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
-        bundle.putSerializable(EditPostActivity.EXTRA_POST, post);
+        bundle.putSerializable(KEY_POST, post);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -145,14 +147,14 @@ public class EditPostSettingsFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mPost = (PostModel) getArguments().getSerializable(EditPostActivity.EXTRA_POST);
+                mPost = (PostModel) getArguments().getSerializable(KEY_POST);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(EditPostActivity.EXTRA_POST);
+                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(KEY_POST);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mPost = (PostModel) savedInstanceState.getSerializable(EditPostActivity.EXTRA_POST);
+            mPost = (PostModel) savedInstanceState.getSerializable(KEY_POST);
         }
 
         if (mSite == null) {
@@ -168,6 +170,7 @@ public class EditPostSettingsFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(KEY_POST, mPost);
     }
 
     @Override
