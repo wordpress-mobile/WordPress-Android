@@ -24,9 +24,10 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.NotificationsTable;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -43,6 +44,8 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+
+import static android.app.Activity.RESULT_OK;
 
 public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
         RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener {
@@ -176,6 +179,25 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         }
     }
 
+    private void updateNote(String noteId, CommentStatus status) {
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note == null) return;
+        note.setLocalStatus(status.toString());
+        NotificationsTable.saveNote(note);
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            String noteId = data.getStringExtra(NOTE_MODERATE_ID_EXTRA);
+            String newStatus = data.getStringExtra(NOTE_MODERATE_STATUS_EXTRA);
+            if (!TextUtils.isEmpty(noteId) && !TextUtils.isEmpty(newStatus)) {
+                updateNote(noteId, CommentStatus.fromString(newStatus));
+            }
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -218,48 +240,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         return mNotesAdapter;
     }
 
-    // TODO: Maybe reintroduce infinite scrolling later.
-    /*
-    private final NotesAdapter.OnLoadMoreListener mOnLoadMoreListener = new NotesAdapter.OnLoadMoreListener() {
-        @Override
-        public void onLoadMore(long noteTimestamp) {
-            Map<String, String> params = new HashMap<>();
-            AppLog.d(AppLog.T.NOTIFS, String.format("Requesting more notes before %s", noteTimestamp));
-            params.put("before", String.valueOf(noteTimestamp));
-            NotesResponseHandler notesHandler = new NotesResponseHandler() {
-                @Override
-                public void onNotes(List<Note> notes) {
-                    // API returns 'on or before' timestamp, so remove first item
-                    if (notes.size() >= 1) {
-                        notes.remove(0);
-                    }
-                    //mNotesAdapter.setAllNotesLoaded(notes.size() == 0);
-                    mNotesAdapter.addAll(notes, false);
-                }
-            };
-            WordPress.getRestClientUtilsV1_1().getNotifications(params, notesHandler, notesHandler);
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-            if (mRecyclerView.getAdapter() == null) {
-                mRecyclerView.setAdapter(mNotesAdapter);
-            }
-        } else {
-            if (!mAccountStore.hasAccessToken()) {
-                // let user know that notifications require a wp.com account and enable sign-in
-                showEmptyView(R.string.notifications_account_required, 0, R.string.sign_in);
-                mFilterRadioGroup.setVisibility(View.GONE);
-            } else {
-                // failed for some other reason
-                showEmptyView(R.string.error_refresh_notifications);
-            }
-=======
->>>>>>> develop
-=======
->>>>>>> develop
-        }
-    };
-*/
     private final OnNoteClickListener mOnNoteClickListener = new OnNoteClickListener() {
         @Override
         public void onClickNote(String noteId) {

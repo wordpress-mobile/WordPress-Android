@@ -15,23 +15,37 @@ import android.text.TextUtils;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.CommentAction;
+import org.wordpress.android.fluxc.generated.CommentActionBuilder;
+import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.CommentStore;
+import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.comments.CommentActionResult;
-import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
+
+import javax.inject.Inject;
 
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
@@ -50,7 +64,6 @@ import static org.wordpress.android.ui.notifications.NotificationsListFragment.N
  */
 
 public class NotificationsProcessingService extends Service {
-
     public static final String ARG_ACTION_TYPE = "action_type";
     public static final String ARG_ACTION_LIKE = "action_like";
     public static final String ARG_ACTION_REPLY = "action_reply";
@@ -60,9 +73,14 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
     public static final String ARG_NOTE_ID = "note_id";
 
-
     //bundle and push ID, as they are held in the system dashboard
     public static final String ARG_NOTE_BUNDLE = "note_bundle";
+
+    private QuickActionProcessor mQuickActionProcessor;
+
+    @Inject Dispatcher mDispatcher;
+    @Inject SiteStore mSiteStore;
+    @Inject CommentStore mCommentStore;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -110,23 +128,25 @@ public class NotificationsProcessingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
         AppLog.i(AppLog.T.NOTIFS, "notifications action processing service > created");
     }
 
     @Override
     public void onDestroy() {
         AppLog.i(AppLog.T.NOTIFS, "notifications action processing service > destroyed");
+        mDispatcher.unregister(this);
         super.onDestroy();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         // Offload to a separate thread.
-        final QuickActionProcessor proc = new QuickActionProcessor(this, intent, startId);
+        mQuickActionProcessor = new QuickActionProcessor(this, intent, startId);
         new Thread(new Runnable() {
             public void run() {
-                proc.process();
+                mQuickActionProcessor.process();
             }
         }).start();
 
@@ -382,27 +402,6 @@ public class NotificationsProcessingService extends Service {
             stopSelf(mTaskId);
         }
 
-        private void requestFailedWithMessage(String errorMessage, boolean autoDismiss) {
-            if (errorMessage == null) {
-                //show generic error here
-                errorMessage = getString(R.string.error_generic);
-            }
-            resetOriginalNotification();
-            showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
-
-            if (autoDismiss) {
-                //after 3 seconds, dismiss the error message notification
-                Handler handler = new Handler(getMainLooper());
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        //remove the error notification from the system bar
-                        dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    }}, 3000); // show the success message for 3 seconds, then dismiss
-            }
-
-            stopSelf(mTaskId);
-        }
-
         private void showIntermediateMessageToUser(String message) {
             showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID);
         }
@@ -442,73 +441,75 @@ public class NotificationsProcessingService extends Service {
         // Like or unlike a comment via the REST API
         private void likeComment() {
             if (mNote == null) {
+                requestFailed(ARG_ACTION_LIKE);
                 return;
             }
 
             // Bump analytics
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED);
 
-            WordPress.getRestClientUtils().likeComment(mNote.getSiteId(),
-                    String.valueOf(mNote.getCommentId()),
-                    true,
-                    new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if (response != null && response.optBoolean("success")) {
-                                requestCompleted(ARG_ACTION_LIKE);
-                            }
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            requestFailed(ARG_ACTION_LIKE);
-                        }
-                    });
+            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+            if (site != null) {
+                mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
+                        new RemoteLikeCommentPayload(site, mNote.getCommentId(), true)));
+            } else {
+                requestFailed(ARG_ACTION_LIKE);
+                AppLog.e(T.NOTIFS, "Site with id: " + mNote.getSiteId() + " doesn't exist in the Site store");
+            }
         }
 
         private void approveComment() {
             if (mNote == null) {
+                requestFailed(ARG_ACTION_APPROVE);
                 return;
             }
 
             // Bump analytics
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED);
 
-            CommentActions.moderateCommentForNote(mNote, CommentStatus.APPROVED, new CommentActions.CommentActionListener() {
-                @Override
-                public void onActionResult(CommentActionResult result) {
-                    if (result != null && result.isSuccess()) {
-                        requestCompleted(ARG_ACTION_APPROVE);
-                    } else {
-                        requestFailed(ARG_ACTION_APPROVE);
-                    }
-                }
-            });
+            // Update pseudo comment (built from the note)
+            CommentModel comment = mNote.buildComment();
+            comment.setStatus(CommentStatus.APPROVED.toString());
+            SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+            if (site == null) {
+                AppLog.e(T.NOTIFS, "Impossible to approve a comment on a site that is not in the App. SiteId: "
+                                   + mNote.getSiteId());
+                requestFailed(ARG_ACTION_APPROVE);
+                return;
+            }
 
+            // Push the comment
+            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(site, comment)));
         }
 
-        private void replyToComment(){
-            if (mNote == null) return;
+        private void replyToComment() {
+            if (mNote == null) {
+                requestFailed(ARG_ACTION_APPROVE);
+                return;
+            }
 
             // Bump analytics
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO);
 
-
             if (!TextUtils.isEmpty(mReplyText)) {
-                CommentActions.submitReplyToCommentNote(mNote, mReplyText, new CommentActions.CommentActionListener() {
-                    @Override
-                    public void onActionResult(CommentActionResult result) {
-                        if (result != null && result.isSuccess()) {
-                            requestCompleted(ARG_ACTION_REPLY);
-                        } else {
-                            if (result != null && !TextUtils.isEmpty(result.getMessage())) {
-                                requestFailedWithMessage(result.getMessage(), true);
-                            } else {
-                                requestFailed(ARG_ACTION_REPLY);
-                            }
-                        }
-                    }
-                });
+                SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+                if (site == null) {
+                    AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App. SiteId: "
+                                       + mNote.getSiteId());
+                    requestFailed(ARG_ACTION_APPROVE);
+                    return;
+                }
+
+                // Pseudo comment (built from the note)
+                CommentModel comment = mNote.buildComment();
+
+                // Pseudo comment reply
+                CommentModel reply = new CommentModel();
+                reply.setContent(mReplyText);
+
+                // Push the reply
+                RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
+                mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
             } else {
                 //cancel the current notification
                 dismissNotification(mPushId);
@@ -542,6 +543,35 @@ public class NotificationsProcessingService extends Service {
 
         private void resetOriginalNotification(){
             GCMMessageService.rebuildAndUpdateNotificationsOnSystemBarForThisNote(mContext, mNoteId);
+        }
+    }
+
+    // OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCommentChanged(OnCommentChanged event) {
+        if (mQuickActionProcessor == null) {
+            return;
+        }
+        if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
+            if (event.isError()) {
+                mQuickActionProcessor.requestFailed(ARG_ACTION_APPROVE);
+            } else {
+                mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
+            }
+        } else if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
+            if (event.isError()) {
+                mQuickActionProcessor.requestFailed(ARG_ACTION_LIKE);
+            } else {
+                mQuickActionProcessor.requestCompleted(ARG_ACTION_LIKE);
+            }
+        } else if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
+            if (event.isError()) {
+                mQuickActionProcessor.requestFailed(ARG_ACTION_REPLY);
+            } else {
+                mQuickActionProcessor.requestCompleted(ARG_ACTION_REPLY);
+            }
         }
     }
 }

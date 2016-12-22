@@ -7,7 +7,6 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
@@ -73,7 +72,6 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         db.execSQL(CREATE_TABLE_THEMES);
         SiteSettingsTable.createTable(db);
-        CommentTable.createTables(db);
         SuggestionTable.createTables(db);
         NotificationsTable.createTables(db);
 
@@ -126,7 +124,6 @@ public class WordPressDB {
             case 22:
                 currentVersion++;
             case 23:
-                CommentTable.reset(db);
                 currentVersion++;
             case 24:
                 currentVersion++;
@@ -149,8 +146,6 @@ public class WordPressDB {
             case 29:
                 currentVersion++;
             case 30:
-                // Fix big comments issue #2855
-                CommentTable.deleteBigComments(db);
                 currentVersion++;
             case 31:
                 currentVersion++;
@@ -226,7 +221,6 @@ public class WordPressDB {
      */
     public void dangerouslyDeleteAllContent() {
         db.delete(CATEGORIES_TABLE, null, null);
-        db.delete(CommentTable.COMMENTS_TABLE, null, null);
     }
 
     // Categories

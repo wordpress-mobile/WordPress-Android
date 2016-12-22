@@ -10,7 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -19,7 +19,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 // A user block with slightly different formatting for display in a comment detail
 public class CommentUserNoteBlock extends UserNoteBlock {
 
-    private CommentStatus mCommentStatus = CommentStatus.UNKNOWN;
+    private CommentStatus mCommentStatus = CommentStatus.APPROVED;
     private int mNormalBackgroundColor;
     private int mNormalTextColor;
     private int mAgoTextColor;

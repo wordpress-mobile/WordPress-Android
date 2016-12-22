@@ -6,6 +6,7 @@ import android.text.style.URLSpan;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;

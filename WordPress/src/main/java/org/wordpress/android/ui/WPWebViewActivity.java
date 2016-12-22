@@ -92,10 +92,6 @@ public class WPWebViewActivity extends WebViewActivity {
         super.onCreate(savedInstanceState);
     }
 
-    public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
-        openWPCOMURL(context, url, user);
-    }
-
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
         openWPCOMURL(context, url);
     }
@@ -184,24 +180,6 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
         context.startActivity(intent);
     }
-
-    private static void openWPCOMURL(Context context, String url, String user) {
-        if (!checkContextAndUrl(context, url)) {
-            return;
-        }
-
-        if (TextUtils.isEmpty(user)) {
-            AppLog.e(AppLog.T.UTILS, "Username empty/null");
-            return;
-        }
-
-        Intent intent = new Intent(context, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, user);
-        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
-        context.startActivity(intent);
-    }
-
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -381,8 +359,7 @@ public class WPWebViewActivity extends WebViewActivity {
             startActivity(Intent.createChooser(share, getText(R.string.share_link)));
             return true;
         } else if (itemID == R.id.menu_browser) {
-            ReaderActivityLauncher.openUrl(this, mWebView.getUrl(), ReaderActivityLauncher.OpenUrlType.EXTERNAL,
-                    mAccountStore.getAccount().getUserName());
+            ReaderActivityLauncher.openUrl(this, mWebView.getUrl(), ReaderActivityLauncher.OpenUrlType.EXTERNAL);
             return true;
         }
 

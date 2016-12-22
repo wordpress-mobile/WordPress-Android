@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseStoreModule;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
+import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
@@ -17,7 +18,10 @@ import org.wordpress.android.ui.accounts.NewUserFragment;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
+import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
@@ -111,6 +115,9 @@ public interface AppComponent {
 
     void inject(CommentDetailFragment object);
     void inject(EditCommentActivity object);
+    void inject(CommentAdapter object);
+    void inject(CommentsListFragment object);
+    void inject(CommentsActivity object);
 
     void inject(MeFragment object);
     void inject(MyProfileActivity object);
@@ -145,6 +152,7 @@ public interface AppComponent {
     void inject(NotificationsListFragment object);
     void inject(NotificationsSettingsFragment object);
     void inject(NotificationsDetailActivity object);
+    void inject(NotificationsProcessingService object);
 
     void inject(ReaderCommentListActivity object);
     void inject(ReaderUpdateService object);

@@ -72,8 +72,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static com.android.volley.Request.Method.HEAD;
-
 public class ReaderPostDetailFragment extends Fragment
         implements WPMainActivity.OnActivityBackPressedListener,
                    ScrollDirectionListener,
@@ -300,16 +298,13 @@ public class ReaderPostDetailFragment extends Fragment
         int i = item.getItemId();
         if (i == R.id.menu_browse) {
             if (hasPost()) {
-                ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL,
-                        mAccountStore.getAccount().getUserName());
+                ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
             } else if (mInterceptedUri != null) {
                 AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mInterceptedUri);
-                ReaderActivityLauncher.openUrl(getActivity(), mInterceptedUri, OpenUrlType.EXTERNAL,
-                        mAccountStore.getAccount().getUserName());
+                ReaderActivityLauncher.openUrl(getActivity(), mInterceptedUri, OpenUrlType.EXTERNAL);
             } else if (mInterceptedUri != null) {
                 AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mInterceptedUri);
-                ReaderActivityLauncher.openUrl(getActivity(), mInterceptedUri, OpenUrlType.EXTERNAL,
-                        mAccountStore.getAccount().getUserName());
+                ReaderActivityLauncher.openUrl(getActivity(), mInterceptedUri, OpenUrlType.EXTERNAL);
                 getActivity().finish();
             }
             return true;
@@ -1156,7 +1151,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         OpenUrlType openUrlType = shouldOpenExternal(url) ? OpenUrlType.EXTERNAL : OpenUrlType.INTERNAL;
-        ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType, mAccountStore.getAccount().getUserName());
+        ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType);
         return true;
     }
 

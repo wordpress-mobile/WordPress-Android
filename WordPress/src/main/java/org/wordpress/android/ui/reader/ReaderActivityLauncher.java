@@ -197,6 +197,18 @@ public class ReaderActivityLauncher {
     }
 
     /*
+     * play an external video
+     */
+    public static void showReaderVideoViewer(Context context, String videoUrl) {
+        if (context == null || TextUtils.isEmpty(videoUrl)) {
+            return;
+        }
+        Intent intent = new Intent(context, ReaderVideoViewerActivity.class);
+        intent.putExtra(ReaderConstants.ARG_VIDEO_URL, videoUrl);
+        context.startActivity(intent);
+    }
+
+    /*
      * show the passed imageUrl in the fullscreen photo activity - optional content is the
      * content of the post the image is in, used by the activity to show all images in
      * the post
@@ -244,15 +256,15 @@ public class ReaderActivityLauncher {
 
     public enum OpenUrlType { INTERNAL, EXTERNAL }
 
-    public static void openUrl(Context context, String url, String wpComUsername) {
-        openUrl(context, url, OpenUrlType.INTERNAL, wpComUsername);
+    public static void openUrl(Context context, String url) {
+        openUrl(context, url, OpenUrlType.INTERNAL);
     }
 
-    public static void openUrl(Context context, String url, OpenUrlType openUrlType, String wpComUsername) {
+    public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
         if (context == null || TextUtils.isEmpty(url)) return;
 
         if (openUrlType == OpenUrlType.INTERNAL) {
-            openUrlInternal(context, url, wpComUsername);
+            openUrlInternal(context, url);
         } else {
             openUrlExternal(context, url);
         }
@@ -261,10 +273,10 @@ public class ReaderActivityLauncher {
     /*
      * open the passed url in the app's internal WebView activity
      */
-    private static void openUrlInternal(Context context, @NonNull String url, String wpComUsername) {
+    private static void openUrlInternal(Context context, @NonNull String url) {
         // That won't work on wpcom sites with custom urls
         if (WPUrlUtils.isWordPressCom(url)) {
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url, wpComUsername);
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
         }

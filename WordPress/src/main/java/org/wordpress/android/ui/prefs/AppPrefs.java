@@ -7,11 +7,11 @@ import android.text.TextUtils;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
@@ -245,18 +245,19 @@ public class AppPrefs {
         }
     }
 
-    public static CommentStatus getCommentsStatusFilter() {
+    public static CommentStatusCriteria getCommentsStatusFilter() {
         int idx = getInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX);
-        CommentStatus[] commentStatusValues = CommentStatus.values();
+        CommentStatusCriteria[] commentStatusValues = CommentStatusCriteria.values();
         if (commentStatusValues.length < idx) {
             return commentStatusValues[0];
         } else {
             return commentStatusValues[idx];
         }
     }
-    public static void setCommentsStatusFilter(CommentStatus commentstatus) {
-        if (commentstatus != null) {
-            setInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX, commentstatus.ordinal());
+
+    public static void setCommentsStatusFilter(CommentStatusCriteria commentStatus) {
+        if (commentStatus != null) {
+            setInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX, commentStatus.ordinal());
         } else {
             prefs().edit()
                     .remove(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX.name())
