@@ -427,10 +427,6 @@
             android:name=".ui.posts.services.PostUploadService"
             android:label="Post Upload Service" />
         <service
-            android:name=".ui.posts.services.PostMediaService"
-            android:exported="false"
-            android:label="Post Media Service" />
-        <service
             android:name=".ui.media.services.MediaUploadService"
             android:label="Media Upload Service" />
         <service

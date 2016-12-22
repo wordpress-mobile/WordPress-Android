@@ -31,7 +31,6 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
-import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -740,7 +739,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 if (mediaIdsToUpdate.size() > 0) {
                     // TODO: MediaStore
-                    PostMediaService.startService(WordPress.getContext(), mSite.getId(), mediaIdsToUpdate);
                 }
             }
 

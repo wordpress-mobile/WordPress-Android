@@ -45,7 +45,6 @@ import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -127,7 +126,6 @@ public interface AppComponent {
     void inject(PersonDetailFragment object);
     void inject(PlansActivity object);
     void inject(MediaBrowserActivity object);
-    void inject(MediaUploadService object);
     void inject(MediaGridFragment object);
     void inject(MediaItemFragment object);
     void inject(MediaEditFragment object);
@@ -166,8 +164,8 @@ public interface AppComponent {
 
     void inject(ThemeWebActivity object);
 
+    void inject(MediaUploadService object);
     void inject(MediaDeleteService object);
-    void inject(PostMediaService object);
 
     void inject(SelectCategoriesActivity object);
 }
