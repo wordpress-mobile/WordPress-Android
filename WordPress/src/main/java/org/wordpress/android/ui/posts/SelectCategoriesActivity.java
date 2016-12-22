@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.LongSparseArray;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,7 +58,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private HashSet<Long> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
-    private Map<String, Integer> mCategoryNames = new HashMap<String, Integer>();
+    private LongSparseArray<Integer> mCategoryRemoteIdsToListPositions = new LongSparseArray<>();
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
@@ -147,16 +148,15 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         mCategories = CategoryNode.createCategoryTreeFromList(mTaxonomyStore.getCategoriesForSite(mSite));
         mCategoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(mCategories);
         for (int i = 0; i < mCategoryLevels.size(); i++) {
-            mCategoryNames.put(StringUtils.unescapeHTML(mCategoryLevels.get(i).getName()), i);
+            mCategoryRemoteIdsToListPositions.put(mCategoryLevels.get(i).getCategoryId(), i);
         }
 
         CategoryArrayAdapter categoryAdapter = new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);
         mListView.setAdapter(categoryAdapter);
         if (mSelectedCategories != null) {
             for (Long selectedCategory : mSelectedCategories) {
-                String selectedCategoryName = mTaxonomyStore.getCategoryByRemoteId(mSite, selectedCategory).getName();
-                if (mCategoryNames.keySet().contains(selectedCategoryName)) {
-                    mListView.setItemChecked(mCategoryNames.get(selectedCategoryName), true);
+                if (mCategoryRemoteIdsToListPositions.get(selectedCategory) != null) {
+                    mListView.setItemChecked(mCategoryRemoteIdsToListPositions.get(selectedCategory), true);
                 }
             }
         }
@@ -313,17 +313,14 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                     final String category_desc = extras.getString("category_desc");
                     final long parent_id = extras.getInt("parent_id");
 
-                    // Check if the category name already exists
-                    if (!mCategoryNames.keySet().contains(category_name)) {
-                        mSwipeToRefreshHelper.setRefreshing(true);
-                        Thread th = new Thread() {
-                            public void run() {
-                                finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
-                                mHandler.post(mUpdateResults);
-                            }
-                        };
-                        th.start();
-                    }
+                    mSwipeToRefreshHelper.setRefreshing(true);
+                    Thread th = new Thread() {
+                        public void run() {
+                            finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
+                            mHandler.post(mUpdateResults);
+                        }
+                    };
+                    th.start();
                     break;
                 }
             }// end null check
