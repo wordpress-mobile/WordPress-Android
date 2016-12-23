@@ -713,7 +713,6 @@ public class StatsActivity extends AppCompatActivity
         dialog.show();
     }
 
-
     private void showJetpackMissingAlert() {
         if (isFinishing()) {
             return;
@@ -958,7 +957,7 @@ public class StatsActivity extends AppCompatActivity
             // Blog has not returned jetpack_version/jetpack_client_id.
             showJetpackMissingAlert();
         }
-    }   
+    }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.JetpackStatsModuleNotConnectedError event) {
