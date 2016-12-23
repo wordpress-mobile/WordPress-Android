@@ -89,7 +89,6 @@ public class AddCategoryActivity extends AppCompatActivity {
 
                     bundle.putSerializable(KEY_CATEGORY, newCategory);
 
-                    bundle.putString("continue", "TRUE");
                     Intent mIntent = new Intent();
                     mIntent.putExtras(bundle);
                     setResult(RESULT_OK, mIntent);
@@ -101,12 +100,8 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         cancelButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-
-                bundle.putString("continue", "FALSE");
                 Intent mIntent = new Intent();
-                mIntent.putExtras(bundle);
-                setResult(RESULT_OK, mIntent);
+                setResult(RESULT_CANCELED, mIntent);
                 finish();
             }
         });

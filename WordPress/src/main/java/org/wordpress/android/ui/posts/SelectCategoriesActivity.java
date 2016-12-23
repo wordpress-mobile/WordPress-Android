@@ -42,6 +42,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class SelectCategoriesActivity extends AppCompatActivity {
+    private static final int ACTIVITY_REQUEST_CODE_ADD_CATEGORY = 0;
+
     private ListView mListView;
     private TextView mEmptyView;
     private ListScrollPositionManager mListScrollPositionManager;
@@ -168,16 +170,15 @@ public class SelectCategoriesActivity extends AppCompatActivity {
             final Bundle extras = data.getExtras();
 
             switch (requestCode) {
-            case 0: // Add category
-                // Does the user want to continue, or did he press "dismiss"?
-                if (extras.getString("continue").equals("TRUE")) {
-                    TermModel newCategory = (TermModel) extras.getSerializable(AddCategoryActivity.KEY_CATEGORY);
+                case ACTIVITY_REQUEST_CODE_ADD_CATEGORY:
+                    if (resultCode == RESULT_OK) {
+                        TermModel newCategory = (TermModel) extras.getSerializable(AddCategoryActivity.KEY_CATEGORY);
 
-                    mSwipeToRefreshHelper.setRefreshing(true);
-                    RemoteTermPayload payload = new RemoteTermPayload(newCategory, mSite);
-                    mDispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(payload));
-                    break;
-                }
+                        mSwipeToRefreshHelper.setRefreshing(true);
+                        RemoteTermPayload payload = new RemoteTermPayload(newCategory, mSite);
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(payload));
+                        break;
+                    }
             }
         }
     }
