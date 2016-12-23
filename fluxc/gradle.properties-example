@@ -1,1 +1,1 @@
-wp.ENABLE_WPAPI = false
+fluxc.ENABLE_WPAPI = false
