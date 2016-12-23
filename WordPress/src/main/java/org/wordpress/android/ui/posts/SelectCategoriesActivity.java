@@ -101,7 +101,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                 PostModel post = (PostModel) extras.getSerializable(KEY_POST);
                 if (post != null) {
                     for (Long categoryId : post.getCategoryIdList()) {
-                        mSelectedCategories.add(mTaxonomyStore.getCategoryByRemoteId(mSite, categoryId).getRemoteTermId());
+                        mSelectedCategories.add(categoryId);
                     }
                 }
             }
