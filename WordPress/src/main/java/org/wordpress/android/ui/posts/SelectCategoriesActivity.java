@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.LongSparseArray;
@@ -13,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -27,35 +24,24 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded;
+import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 import org.wordpress.android.models.CategoryNode;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.helpers.ListScrollPositionManager;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper.Method;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
 
-import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 public class SelectCategoriesActivity extends AppCompatActivity {
-    String finalResult = "";
-    private final Handler mHandler = new Handler();
     private ListView mListView;
     private TextView mEmptyView;
     private ListScrollPositionManager mListScrollPositionManager;
@@ -175,88 +161,6 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         mListScrollPositionManager.restoreScrollOffset();
     }
 
-    final Runnable mUpdateResults = new Runnable() {
-        public void run() {
-            mSwipeToRefreshHelper.setRefreshing(false);
-            if (finalResult.equals("addCategory_success")) {
-                populateCategoryList();
-                if (!isFinishing()) {
-                    ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_success, Duration.SHORT);
-                }
-            } else if (finalResult.equals("addCategory_failed")) {
-                if (!isFinishing()) {
-                    ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_failed, Duration.LONG);
-                }
-            }
-        }
-    };
-
-    public String addCategory(final String category_name, String category_slug, String category_desc, long parent_id) {
-        // Return string
-        String returnString = "addCategory_failed";
-
-        // Save selected categories
-        updateSelectedCategoryList();
-        mListScrollPositionManager.saveScrollOffset();
-
-        // Store the parameters for wp.addCategory
-        Map<String, Object> struct = new HashMap<String, Object>();
-        struct.put("name", category_name);
-        struct.put("slug", category_slug);
-        struct.put("description", category_desc);
-        struct.put("parent_id", parent_id);
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
-        Object[] params = {
-                String.valueOf(mSite.getSiteId()),
-                StringUtils.notNullStr(mSite.getUsername()),
-                StringUtils.notNullStr(mSite.getPassword()),
-                struct};
-        Object result = null;
-        try {
-            result = client.call(Method.NEW_CATEGORY, params);
-        } catch (XMLRPCException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-        } catch (IOException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-        } catch (XmlPullParserException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-        }
-
-        if (result != null) {
-            // Category successfully created. "result" is the ID of the new category
-            // Initialize the category database
-            // Convert "result" (= category_id) from type Object to int
-            int category_id = Integer.parseInt(result.toString());
-
-            // Fetch canonical name, can't to do this asynchronously because the new category_name is needed for
-            // insertCategory
-            final String new_category_name = getCanonicalCategoryName(category_id);
-            if (new_category_name == null) {
-                return returnString;
-            }
-            final Activity that = this;
-            if (!new_category_name.equals(category_name)) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(that, String.format(String.valueOf(getText(R.string.category_automatically_renamed)),
-                                category_name, new_category_name), Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-
-            // Insert the new category into database
-            // TODO
-//            WordPress.wpDB.insertCategory(mSite.getId(), category_id, parent_id, new_category_name);
-            returnString = "addCategory_success";
-            // auto select new category
-            // TODO
-//            mSelectedCategories.add(new_category_name);
-        }
-
-        return returnString;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -267,23 +171,14 @@ public class SelectCategoriesActivity extends AppCompatActivity {
             case 0: // Add category
                 // Does the user want to continue, or did he press "dismiss"?
                 if (extras.getString("continue").equals("TRUE")) {
-                    // Get name, slug and desc from Intent
-                    final String category_name = extras.getString("category_name");
-                    final String category_slug = extras.getString("category_slug");
-                    final String category_desc = extras.getString("category_desc");
-                    final long parent_id = extras.getInt("parent_id");
+                    TermModel newCategory = (TermModel) extras.getSerializable(AddCategoryActivity.KEY_CATEGORY);
 
                     mSwipeToRefreshHelper.setRefreshing(true);
-                    Thread th = new Thread() {
-                        public void run() {
-                            finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
-                            mHandler.post(mUpdateResults);
-                        }
-                    };
-                    th.start();
+                    RemoteTermPayload payload = new RemoteTermPayload(newCategory, mSite);
+                    mDispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(payload));
                     break;
                 }
-            }// end null check
+            }
         }
     }
 
@@ -317,34 +212,6 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private String getCanonicalCategoryName(int category_id) {
-        String new_category_name = null;
-        Map<?, ?> result = null;
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
-        Object[] params = {
-                String.valueOf(mSite.getSiteId()),
-                StringUtils.notNullStr(mSite.getUsername()),
-                StringUtils.notNullStr(mSite.getPassword()),
-                "category", category_id
-        };
-        try {
-            result = (Map<?, ?>) client.call(Method.GET_TERM, params);
-        } catch (XMLRPCException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-        } catch (IOException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-        } catch (XmlPullParserException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-        }
-
-        if (result != null) {
-            if (result.containsKey("name")) {
-                new_category_name = result.get("name").toString();
-            }
-        }
-        return new_category_name;
     }
 
     private void refreshCategories() {
@@ -405,6 +272,23 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                     populateCategoryList();
                 }
                 break;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTermUploaded(OnTermUploaded event) {
+        mSwipeToRefreshHelper.setRefreshing(false);
+
+        if (event.isError()) {
+            if (!isFinishing()) {
+                ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_failed, Duration.LONG);
+            }
+        } else {
+            populateCategoryList();
+            if (!isFinishing()) {
+                ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_success, Duration.SHORT);
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.util.ToastUtils;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 public class AddCategoryActivity extends AppCompatActivity {
+    public static final String KEY_CATEGORY = "KEY_CATEGORY";
+
     private SiteModel mSite;
 
     @Inject TaxonomyStore mTaxonomyStore;
@@ -78,10 +81,16 @@ public class AddCategoryActivity extends AppCompatActivity {
                 } else {
                     Bundle bundle = new Bundle();
 
-                    bundle.putString("category_name", categoryName);
-                    bundle.putString("category_slug", categorySlug);
-                    bundle.putString("category_desc", categoryDesc);
-                    bundle.putLong("parent_id", parentId);
+                    TermModel newCategory = new TermModel();
+                    newCategory.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
+
+                    newCategory.setName(categoryName);
+                    newCategory.setSlug(categorySlug);
+                    newCategory.setDescription(categoryDesc);
+                    newCategory.setParentRemoteId(parentId);
+
+                    bundle.putSerializable(KEY_CATEGORY, newCategory);
+
                     bundle.putString("continue", "TRUE");
                     Intent mIntent = new Intent();
                     mIntent.putExtras(bundle);
