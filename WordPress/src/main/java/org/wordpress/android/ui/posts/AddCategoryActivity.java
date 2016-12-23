@@ -56,7 +56,6 @@ public class AddCategoryActivity extends AppCompatActivity {
         okButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 String categoryName = ((EditText) findViewById(R.id.category_name)).getText().toString();
-                String categorySlug = ((EditText) findViewById(R.id.category_slug)).getText().toString();
                 String categoryDesc = ((EditText) findViewById(R.id.category_desc)).getText().toString();
                 Spinner categorySpinner = (Spinner) findViewById(R.id.parent_category);
 
@@ -85,7 +84,6 @@ public class AddCategoryActivity extends AppCompatActivity {
                     newCategory.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
 
                     newCategory.setName(categoryName);
-                    newCategory.setSlug(categorySlug);
                     newCategory.setDescription(categoryDesc);
                     newCategory.setParentRemoteId(parentId);
 

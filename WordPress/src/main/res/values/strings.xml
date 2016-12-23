@@ -403,7 +403,6 @@
     <string name="add_new_category">Add new category</string>
     <string name="add_category">Add category</string>
     <string name="category_name">Category name</string>
-    <string name="category_slug">Category slug (optional)</string>
     <string name="category_desc">Category description (optional)</string>
     <string name="category_parent">Category parent (optional):</string>
     <string name="adding_cat_failed">Adding category failed</string>
