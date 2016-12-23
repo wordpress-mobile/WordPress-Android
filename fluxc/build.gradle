@@ -47,10 +47,10 @@ android.buildTypes.all { buildType ->
     }
     gradleProperties.any { property ->
         if (property.value.equals("true") || property.value.equals("false")) {
-            buildType.buildConfigField "boolean", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
+            buildType.buildConfigField "boolean", property.key.replace("fluxc.", "").replace(".", "_").toUpperCase(),
                     "Boolean.parseBoolean(\"${property.value}\")"
         } else {
-            buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
+            buildType.buildConfigField "String", property.key.replace("fluxc.", "").replace(".", "_").toUpperCase(),
                     "\"${property.value}\""
         }
     }
