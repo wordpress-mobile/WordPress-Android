@@ -161,7 +161,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             site.setName((String) siteMap.get(SITE_NAME_KEY));
             site.setUrl((String) siteMap.get(SITE_URL_KEY));
             site.setXmlRpcUrl((String) siteMap.get(SITE_XMLRPC_URL_KEY));
-            site.setIsAdmin((Boolean) siteMap.get(SITE_ADMIN_KEY));
+            site.setIsSelfHostedAdmin((Boolean) siteMap.get(SITE_ADMIN_KEY));
             // Self Hosted won't be hidden
             site.setIsVisible(true);
             // From what we know about the host

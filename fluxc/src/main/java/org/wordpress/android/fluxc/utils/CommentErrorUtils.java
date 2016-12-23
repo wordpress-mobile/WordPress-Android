@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.utils;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
@@ -22,8 +23,10 @@ public class CommentErrorUtils {
         return payload;
     }
 
-    public static FetchCommentsResponsePayload commentErrorToFetchCommentsPayload(BaseNetworkError error) {
-        FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(new ArrayList<CommentModel>());
+    public static FetchCommentsResponsePayload commentErrorToFetchCommentsPayload(BaseNetworkError error,
+                                                                                  SiteModel site) {
+        FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(new ArrayList<CommentModel>(), site,
+                0, 0);
         payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
     }
