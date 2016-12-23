@@ -22,6 +22,14 @@ public class SitesModel extends Payload {
         return mSites;
     }
 
+    public List<Long> getSiteIds() {
+        List<Long> siteIds = new ArrayList<>(mSites.size());
+        for (SiteModel siteModel : mSites) {
+            siteIds.add(siteModel.getSiteId());
+        }
+        return siteIds;
+    }
+
     public void setSites(List<SiteModel> sites) {
         this.mSites = sites;
     }
