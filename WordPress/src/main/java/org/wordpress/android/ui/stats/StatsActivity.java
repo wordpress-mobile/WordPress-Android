@@ -519,52 +519,6 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
-    private void showJetpackMissingAlert() {
-        if (isFinishing()) {
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if (mSite.isAdmin()) {
-            builder.setMessage(getString(R.string.jetpack_message))
-                    .setTitle(getString(R.string.jetpack_not_found));
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    String stringToLoad = mSite.getAdminUrl()
-                            + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
-                            + "&plugin-search-input=Search+Plugins";
-                    String authURL = WPWebViewActivity.getSiteLoginUrl(mSite);
-                    Intent jetpackIntent = new Intent(StatsActivity.this, WPWebViewActivity.class);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, mSite.getUsername());
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, mSite.getPassword());
-                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-                    startActivityForResult(jetpackIntent, REQUEST_JETPACK);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
-                }
-            });
-            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog. Hide Stats.
-                    finish();
-                }
-            });
-        } else {
-            builder.setMessage(getString(R.string.jetpack_message_not_admin))
-                    .setTitle(getString(R.string.jetpack_not_found));
-            builder.setPositiveButton(R.string.yes, null);
-        }
-
-        AlertDialog dialog = builder.create();
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                // User pressed the back key Hide Stats.
-                finish();
-            }
-        });
-        dialog.show();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
