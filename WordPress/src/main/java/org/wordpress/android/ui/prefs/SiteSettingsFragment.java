@@ -655,8 +655,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             removeDotComOnlyPreferences();
         }
 
-        // hide all options except for Delete site and Enable Location if user is not admin
-        if (!mSite.isWPCom() && !mSite.isSelfHostedAdmin()) hideAdminRequiredPreferences();
+        // hide Admin options depending of capabilities on this site
+        if ((!mSite.isWPCom() && !mSite.isSelfHostedAdmin())
+            || (mSite.isWPCom() && !mSite.getHasCapabilityManageOptions())) {
+            hideAdminRequiredPreferences();
+        }
     }
 
     public void setEditingEnabled(boolean enabled) {
