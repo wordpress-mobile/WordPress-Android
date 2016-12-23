@@ -44,6 +44,8 @@ import javax.inject.Inject;
 public class SelectCategoriesActivity extends AppCompatActivity {
     private static final int ACTIVITY_REQUEST_CODE_ADD_CATEGORY = 0;
 
+    public static final String KEY_POST = "KEY_POST";
+
     private ListView mListView;
     private TextView mEmptyView;
     private ListScrollPositionManager mListScrollPositionManager;
@@ -95,8 +97,8 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if (extras.containsKey("postModel")) {
-                PostModel post = (PostModel) extras.getSerializable("postModel");
+            if (extras.containsKey(KEY_POST)) {
+                PostModel post = (PostModel) extras.getSerializable(KEY_POST);
                 if (post != null) {
                     for (Long categoryId : post.getCategoryIdList()) {
                         mSelectedCategories.add(mTaxonomyStore.getCategoryByRemoteId(mSite, categoryId).getRemoteTermId());
