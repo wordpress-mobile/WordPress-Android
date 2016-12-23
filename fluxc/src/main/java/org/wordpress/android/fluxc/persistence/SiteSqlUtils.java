@@ -97,10 +97,6 @@ public class SiteSqlUtils {
                  .execute();
     }
 
-    public static int deleteAllSites() {
-        return WellSql.delete(SiteModel.class).execute();
-    }
-
     public static int setSiteVisibility(SiteModel site, boolean visible) {
         if (site == null) {
             return 0;
