@@ -184,7 +184,7 @@ public class TaxonomyStoreUnitTest {
         idList.add(category.getRemoteTermId());
         idList.add(category2.getRemoteTermId());
 
-        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
 
         // Unsynced category ID should be ignored in the final list
         TermModel unsyncedCategory = TaxonomyTestUtils.generateSampleCategory();
@@ -192,17 +192,17 @@ public class TaxonomyStoreUnitTest {
         unsyncedCategory.setName("More");
         idList.add(unsyncedCategory.getRemoteTermId());
 
-        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
 
         // Empty list should return empty category list
         idList.clear();
 
-        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
 
         // List with only unsynced categories should return empty category list
         idList.add(unsyncedCategory.getRemoteTermId());
 
-        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
 
         // An identical category on a different site should be ignored in the match
         TermModel otherSiteIdenticalCategory = TaxonomyTestUtils.generateSampleCategory();
@@ -213,6 +213,6 @@ public class TaxonomyStoreUnitTest {
         idList.add(category.getRemoteTermId());
         idList.add(category2.getRemoteTermId());
 
-        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
     }
 }
