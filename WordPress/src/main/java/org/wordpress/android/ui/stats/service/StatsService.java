@@ -584,11 +584,10 @@ public class StatsService extends Service {
 
                     if (!blog.isDotcomFlag()) {
                         if (volleyError instanceof com.android.volley.AuthFailureError) {
-                            if (StatsUtils.isRESTDisabledError(volleyError)) {
+                            if (!StatsUtils.isRESTDisabledError(volleyError)) {
                                 // It's a kind of edge case, but the Jetpack site could have REST Disabled
                                 // In that case (only used in insights for now) shows the error in the module that use the REST API
-                            } else {
-                                //TODO Auth error here
+                                EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
                             }
                         } else if (volleyError instanceof com.android.volley.ServerError && mStatsNetworkRequests.size() == 1) {
                             // only the last connection triggers the error

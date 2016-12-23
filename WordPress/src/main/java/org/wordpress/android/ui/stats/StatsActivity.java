@@ -947,8 +947,8 @@ public class StatsActivity extends AppCompatActivity
             return;
         }
 
-        // Re-launch a blog option synch for safety reason.
-        // Blog options could not be synched if the user has just deactivated/removed or disconnected the plugin
+        // Re-launch a blog option synching here o be sure we will have Jetpack status update next time we will start Stats again.
+        // This is because blog options could not be synched if the user has just deactivated/removed or disconnected the plugin.
         new ApiHelper.RefreshBlogContentTask(currentBlog, null).execute(false);
 
         if (TextUtils.isEmpty(currentBlog.getJetpackVersion())) {
@@ -958,7 +958,7 @@ public class StatsActivity extends AppCompatActivity
             // Blog has not returned jetpack_version/jetpack_client_id.
             showJetpackMissingAlert();
         }
-    }
+    }   
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.JetpackStatsModuleNotConnectedError event) {
