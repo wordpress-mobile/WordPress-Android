@@ -130,6 +130,13 @@ public class TaxonomyStoreUnitTest {
         TaxonomySqlUtils.insertOrUpdateTerm(category);
 
         assertEquals(category, mTaxonomyStore.getCategoryByRemoteId(site, category.getRemoteTermId()));
+
+        // An identical category on a different site should be ignored in the match
+        TermModel otherSiteIdenticalCategory = TaxonomyTestUtils.generateSampleCategory();
+        otherSiteIdenticalCategory.setLocalSiteId(7);
+        TaxonomySqlUtils.insertOrUpdateTerm(otherSiteIdenticalCategory);
+
+        assertEquals(category, mTaxonomyStore.getCategoryByRemoteId(site, category.getRemoteTermId()));
     }
 
     @Test
@@ -196,5 +203,16 @@ public class TaxonomyStoreUnitTest {
         idList.add(unsyncedCategory.getRemoteTermId());
 
         assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+
+        // An identical category on a different site should be ignored in the match
+        TermModel otherSiteIdenticalCategory = TaxonomyTestUtils.generateSampleCategory();
+        otherSiteIdenticalCategory.setLocalSiteId(7);
+        TaxonomySqlUtils.insertOrUpdateTerm(otherSiteIdenticalCategory);
+
+        idList.clear();
+        idList.add(category.getRemoteTermId());
+        idList.add(category2.getRemoteTermId());
+
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
     }
 }
