@@ -656,7 +656,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // hide all options except for Delete site and Enable Location if user is not admin
-        if (!mSite.isAdmin()) hideAdminRequiredPreferences();
+        if (!mSite.isWPCom() && !mSite.isSelfHostedAdmin()) hideAdminRequiredPreferences();
     }
 
     public void setEditingEnabled(boolean enabled) {
