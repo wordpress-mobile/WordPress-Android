@@ -67,6 +67,7 @@ public class PostsListFragment extends Fragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
+    private boolean mShouldCancelPendingDraftNotification = false;
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
@@ -355,6 +356,16 @@ public class PostsListFragment extends Fragment
         super.onStop();
     }
 
+    @Override
+    public void onDetach() {
+        if (mShouldCancelPendingDraftNotification) {
+            // delete the pending draft notification if available
+            NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
+            mShouldCancelPendingDraftNotification = false;
+        }
+        super.onDetach();
+    }
+
     /*
      * called by the adapter after posts have been loaded
      */
@@ -525,6 +536,8 @@ public class PostsListFragment extends Fragment
                     new ApiHelper.DeleteSinglePostTask().execute(WordPress.getCurrentBlog(),
                             fullPost.getRemotePostId(), mIsPage);
                 } else  {
+                    mShouldCancelPendingDraftNotification = false;
+
                     // delete the pending draft notification if available
                     NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
 
@@ -540,6 +553,7 @@ public class PostsListFragment extends Fragment
             }
         });
 
+        mShouldCancelPendingDraftNotification = true;
         snackbar.show();
     }
 }

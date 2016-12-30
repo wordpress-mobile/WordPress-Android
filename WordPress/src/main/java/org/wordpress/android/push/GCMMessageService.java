@@ -90,6 +90,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
     private static final String PUSH_TYPE_BADGE_RESET = "badge-reset";
+    private static final String PUSH_TYPE_NOTE_DELETE = "note-delete";
 
     private static final String KEY_CATEGORY_COMMENT_LIKE = "comment-like";
     private static final String KEY_CATEGORY_COMMENT_REPLY = "comment-reply";
@@ -359,6 +360,11 @@ public class GCMMessageService extends GcmListenerService {
 
             if (noteType.equals(PUSH_TYPE_BADGE_RESET)) {
                 handleBadgeResetPN(context, data);
+                return;
+            }
+
+            if (noteType.equals(PUSH_TYPE_NOTE_DELETE)) {
+                handleNoteDeletePN(context, data);
                 return;
             }
 
@@ -896,6 +902,25 @@ public class GCMMessageService extends GcmListenerService {
                     note.setRead();
                     NotificationsTable.saveNote(note);
                 }
+            }
+
+            removeNotificationWithNoteIdFromSystemBar(context, noteID);
+            //now that we cleared the specific notif, we can check and make any visual updates
+            if (sActiveNotificationsMap.size() > 0) {
+                rebuildAndUpdateNotificationsOnSystemBar(context, data);
+            }
+
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(sActiveNotificationsMap.size() > 0));
+        }
+
+        private void handleNoteDeletePN(Context context, Bundle data) {
+            if (data == null || !data.containsKey(PUSH_ARG_NOTE_ID))  {
+                return;
+            }
+
+            String noteID = data.getString(PUSH_ARG_NOTE_ID, "");
+            if (!TextUtils.isEmpty(noteID)) {
+                NotificationsTable.deleteNoteById(noteID);
             }
 
             removeNotificationWithNoteIdFromSystemBar(context, noteID);

@@ -47,7 +47,7 @@ public class NotificationsPendingDraftsService extends Service {
     public static void checkPrefsAndStartService(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean shouldNotifyOfPendingDrafts = prefs.getBoolean(context.getString(R.string.pref_key_notification_pending_drafts), true);
-        if (shouldNotifyOfPendingDrafts) {
+        if (shouldNotifyOfPendingDrafts && WordPress.getCurrentBlog() != null) {
             NotificationsPendingDraftsService.startService(context);
         }
 
@@ -79,7 +79,7 @@ public class NotificationsPendingDraftsService extends Service {
     }
 
     private void performDraftsCheck() {
-        if (running) {
+        if (running || WordPress.getCurrentBlog() == null) {
             return;
         }
         running = true;
@@ -94,6 +94,12 @@ public class NotificationsPendingDraftsService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                if (WordPress.getCurrentBlog() == null) {
+                    AppLog.w(AppLog.T.NOTIFS, "Current blog is null. No drafts checking.");
+                    completed();
+                    return;
+                }
+
                 ArrayList<Post> draftPosts =  WordPress.wpDB.getDraftPostList(WordPress.getCurrentBlog().getLocalTableBlogId());
                 if (draftPosts != null && draftPosts.size() > 0) {
                     ArrayList<Post> draftPostsNotInIgnoreList;
@@ -161,8 +167,8 @@ public class NotificationsPendingDraftsService extends Service {
                         }
                     }
 
-                    completed();
                 }
+                completed();
             }
         }).start();
     }
