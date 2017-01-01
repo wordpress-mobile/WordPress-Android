@@ -144,8 +144,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
-    private boolean mInhibitMagicLogin;
     private boolean mSmartLockEnabled = true;
+    private boolean mInhibitMagicLogin; // Prevent showing magic links as that is only applicable for initial sign in
     private boolean mIsMagicLinksEnabled = true;
 
     public interface OnMagicLinkRequestInteraction {
