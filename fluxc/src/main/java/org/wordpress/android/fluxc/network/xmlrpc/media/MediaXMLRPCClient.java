@@ -137,6 +137,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     public void fetchMedia(final SiteModel site, List<MediaModel> mediaToFetch) {
+        fetchMedia(site, mediaToFetch, false);
+    }
+
+    private void fetchMedia(final SiteModel site, List<MediaModel> mediaToFetch, final boolean isFreshUpload) {
         if (site == null || mediaToFetch == null || mediaToFetch.isEmpty()) return;
 
         for (final MediaModel media : mediaToFetch) {
@@ -149,7 +153,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     if (responseMedia != null) {
                         AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
                         responseMedia.setSiteId(site.getSelfHostedSiteId());
-                        notifyMediaFetched(MediaAction.FETCH_MEDIA, site, responseMedia, null);
+                        if (isFreshUpload) {
+                            notifyMediaUploaded(responseMedia, null);
+                        } else {
+                            notifyMediaFetched(MediaAction.FETCH_MEDIA, site, responseMedia, null);
+                        }
                     } else {
                         AppLog.w(T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
                         MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
@@ -249,7 +257,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     if (responseMedia != null) {
                         notifyMediaUploaded(responseMedia, null);
                     } else {
-                        fetchMedia(site, Collections.singletonList(media));
+                        fetchMedia(site, Collections.singletonList(media), true);
                     }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
