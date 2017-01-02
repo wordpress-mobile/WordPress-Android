@@ -909,9 +909,11 @@ public class PostUploadService extends Service {
             }
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
             if (largeIcon == null) {
-                notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.mipmap.app_icon));
-            } else {
+                // Try to decode the default app icon. This call can potentially return null.
+                largeIcon = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.app_icon);
+            }
+
+            if (largeIcon != null) {
                 notificationBuilder.setLargeIcon(largeIcon);
             }
             notificationBuilder.setContentTitle(notificationTitle);
