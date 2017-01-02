@@ -482,6 +482,9 @@ public class MediaStore extends Store {
     private void handleMediaUploaded(@NonNull ProgressPayload payload) {
         OnMediaUploaded onMediaUploaded = new OnMediaUploaded(payload.media, payload.progress, payload.completed);
         onMediaUploaded.error = payload.error;
+        if (payload.media != null) {
+            MediaSqlUtils.insertOrUpdateMedia(payload.media);
+        }
         emitChange(onMediaUploaded);
     }
 
