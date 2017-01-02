@@ -43,6 +43,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -196,7 +197,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
     }
 
-    private void performUpload(SiteModel site, final MediaModel media) {
+    private void performUpload(final SiteModel site, final MediaModel media) {
         URL xmlrpcUrl;
         try {
             xmlrpcUrl = new URL(site.getXmlRpcUrl());
@@ -245,7 +246,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     AppLog.d(T.MEDIA, "media upload successful: " + media.getTitle());
                     MediaModel responseMedia = getMediaFromUploadResponse(response);
-                    notifyMediaUploaded(responseMedia, null);
+                    if (responseMedia != null) {
+                        notifyMediaUploaded(responseMedia, null);
+                    } else {
+                        fetchMedia(site, Collections.singletonList(media));
+                    }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
                     MediaStore.MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
