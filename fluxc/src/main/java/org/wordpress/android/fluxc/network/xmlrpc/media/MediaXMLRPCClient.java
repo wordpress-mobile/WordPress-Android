@@ -310,9 +310,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newPushedMediaAction(payload));
     }
 
-    private void notifyMediaUploaded(MediaModel media, MediaError error) {
-        AppLog.v(AppLog.T.MEDIA, "Notify media uploaded: "
-                + (media != null ? media.getFilePath() : "(null)"));
+    private void notifyMediaUploaded(@NonNull MediaModel media, MediaError error) {
+        AppLog.v(AppLog.T.MEDIA, "Notify media uploaded: " + media.getFilePath());
         MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, 1.f, error == null);
         payload.error = error;
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
