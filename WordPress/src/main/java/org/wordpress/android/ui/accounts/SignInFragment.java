@@ -874,7 +874,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         return true;
     }
 
-    private boolean isUserAlreadyLoggedIn() {
+    private boolean checkIfUserIsAlreadyLoggedIn() {
         if (mAccountStore.hasAccessToken()) {
             String currentUsername = mAccountStore.getAccount().getUserName();
             AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername
@@ -905,7 +905,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mPassword = EditTextUtils.getText(mPasswordEditText).trim();
             mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
             if (isWPComLogin()) {
-                if (isUserAlreadyLoggedIn()) {
+                // If the user is already logged in a wordpress.com account, bail out
+                if (checkIfUserIsAlreadyLoggedIn()) {
                     return;
                 }
                 AppLog.i(T.NUX, "User tries to sign in on WordPress.com with username: " + mUsername);
