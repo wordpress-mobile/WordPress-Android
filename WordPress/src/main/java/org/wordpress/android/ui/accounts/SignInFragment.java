@@ -345,6 +345,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPasswordLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
+        switchToDotOrgIcon(true);
+        switchBackgroundToDotOrg(true, true);
         if (!prefillUrl.isEmpty()) {
             mUrlEditText.setText(prefillUrl);
         }
@@ -402,7 +404,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUrlButtonLayout.setVisibility(View.GONE);
         mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
         switchToDotOrgIcon(false);
-        switchBackgroundToDotOrg(false);
+        switchBackgroundToDotOrg(false, false);
     }
 
     protected void showSelfHostedSignInForm(){
@@ -412,7 +414,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
         showPasswordField();
         switchToDotOrgIcon(true);
-        switchBackgroundToDotOrg(true);
+        switchBackgroundToDotOrg(true, false);
     }
 
     private void switchToDotOrgIcon(boolean showDotOrg) {
@@ -439,16 +441,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private void switchBackgroundToDotOrg(boolean useDotOrg) {
+    private void switchBackgroundToDotOrg(boolean useDotOrg, boolean noFading) {
         if (getView() == null) {
             return;
         }
 
         TransitionDrawable transition = (TransitionDrawable) getView().getBackground();
         if (useDotOrg) {
-            transition.startTransition(500);
+            transition.startTransition(noFading ? 0 : 500);
         } else {
-            transition.reverseTransition(500);
+            transition.reverseTransition(noFading ? 0 : 500);
         }
     }
 
@@ -861,7 +863,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private String getAuthCodeFromClipboard() {
         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
 
-        if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null) {
+        if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null
+            && clipboard.getPrimaryClip().getItemAt(0).getText() != null) {
             String code = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
 
             mTwoStepAuthCodeMatcher.reset(code);

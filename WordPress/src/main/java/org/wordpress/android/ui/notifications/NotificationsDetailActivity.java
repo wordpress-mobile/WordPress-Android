@@ -26,6 +26,7 @@ import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -224,22 +225,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), filteredNotes);
 
         mViewPager.setAdapter(adapter);
-        mViewPager.setCurrentItem(findNoteInNoteArray(filteredNotes, note));
+        mViewPager.setCurrentItem(NotificationsUtils.findNoteInNoteArray(filteredNotes, note.getId()));
 
         return adapter;
     }
-
-    private int findNoteInNoteArray(ArrayList<Note> notes, Note noteToSearchFor) {
-        if (notes == null || noteToSearchFor == null || noteToSearchFor.getId() == null) return -1;
-
-        for (int i = 0; i < notes.size(); i++) {
-            Note note = notes.get(i);
-            if (noteToSearchFor.getId().equals(note.getId()))
-                return i;
-        }
-        return -1;
-    }
-
 
     /**
      * Tries to pick the correct fragment detail type for a given note
