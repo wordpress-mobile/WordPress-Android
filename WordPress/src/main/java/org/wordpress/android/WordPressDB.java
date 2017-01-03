@@ -16,6 +16,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -53,7 +54,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -85,7 +85,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 51;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -229,6 +229,12 @@ public class WordPressDB {
     // add capabilities to blog
     private static final String ADD_BLOGS_CAPABILITIES = "alter table accounts add capabilities text default '';";
 
+    // add field to store time of last udpated draft
+    private static final String ADD_DRAFT_POST_LAST_UPDATED_DATE = "alter table posts add dateLastUpdated date;";
+
+    // add field to store time of last time we notified the user there was a draft post pending publishing
+    private static final String ADD_DRAFT_POST_LAST_NOTIFIED_DATE = "alter table posts add dateLastNotified date;";
+
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
@@ -254,6 +260,7 @@ public class WordPressDB {
         SiteSettingsTable.createTable(db);
         CommentTable.createTables(db);
         SuggestionTable.createTables(db);
+        NotificationsTable.createTables(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -428,6 +435,14 @@ public class WordPressDB {
                 currentVersion++;
             case 48:
                 PeopleTable.createViewersTable(db);
+                currentVersion++;
+            case 49:
+                // Delete simperium DB since we're removing Simperium from the app.
+                ctx.deleteDatabase("simperium-store");
+                currentVersion++;
+            case 50:
+                db.execSQL(ADD_DRAFT_POST_LAST_UPDATED_DATE);
+                db.execSQL(ADD_DRAFT_POST_LAST_NOTIFIED_DATE);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -1226,6 +1241,24 @@ public class WordPressDB {
         }
     }
 
+    /*
+     * returns list of posts that are in draft or have local changes
+     */
+    public ArrayList<Post> getDraftPostList(int localBlogId) {
+        ArrayList<Post> postList = new ArrayList<>();
+
+        String[] args = {Integer.toString(localBlogId)};
+        Cursor c = db.query(POSTS_TABLE, null, "blogID=? AND (localDraft=1 OR isLocalChange=1)", args, null, null, "localDraft DESC, date_created_gmt DESC");
+        try {
+            while (c.moveToNext()) {
+                postList.add(getPostFromCursor(c));
+            }
+            return postList;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
     private Post getPostFromCursor(Cursor c) {
         Post post = new Post();
 
@@ -1235,6 +1268,8 @@ public class WordPressDB {
         post.setTitle(StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title"))));
         post.setDateCreated(c.getLong(c.getColumnIndex("dateCreated")));
         post.setDate_created_gmt(c.getLong(c.getColumnIndex("date_created_gmt")));
+        post.setDateLastUpdated(c.getLong(c.getColumnIndex("dateLastUpdated")));
+        post.setDateLastNotified(c.getLong(c.getColumnIndex("dateLastNotified")));
         post.setCategories(c.getString(c.getColumnIndex("categories")));
         post.setCustomFields(c.getString(c.getColumnIndex("custom_fields")));
         post.setDescription(c.getString(c.getColumnIndex("description")));
@@ -1277,6 +1312,8 @@ public class WordPressDB {
             values.put("blogID", post.getLocalTableBlogId());
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
+            values.put("dateLastUpdated", post.getDateLastUpdated());
+            values.put("dateLastNotified", post.getDateLastNotified());
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
 
@@ -1312,6 +1349,8 @@ public class WordPressDB {
             ContentValues values = new ContentValues();
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
+            values.put("dateLastUpdated", post.getDateLastUpdated());
+            values.put("dateLastNotified", post.getDateLastNotified());
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
             values.put("postid", post.getRemotePostId());

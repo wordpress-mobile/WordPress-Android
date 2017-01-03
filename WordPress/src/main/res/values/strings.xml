@@ -48,6 +48,7 @@
     <string name="deselect_all">Deselect all</string>
     <string name="notification_sound">Notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
+    <string name="notification_pending_drafts">Notify me on pending drafts</string>
     <string name="notification_blink">Blink notification light</string>
     <string name="sure_to_remove_account">Remove this site?</string>
     <string name="yes">Yes</string>
@@ -71,6 +72,7 @@
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="sign_in">Log in</string>
     <string name="signing_out">Logging out…</string>
+    <string name="sign_in_wpcom">Log in to WordPress.com</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
@@ -83,6 +85,8 @@
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
     <string name="send">Send</string>
+    <string name="swipe_for_more">Swipe for more</string>
+    <string name="no_default_app_available_to_open_link">Unable to open the link</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -172,6 +176,7 @@
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
+    <string name="confirm_discard_changes">Discard unsaved changes?</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Delete selected item?</string>
@@ -334,6 +339,11 @@
     <string name="comment_q_action_liking">Liking…</string>
     <string name="comment_q_action_approving">Approving…</string>
     <string name="comment_q_action_replying">Replying…</string>
+
+    <!-- pending draft local notifications -->
+    <string name="pending_draft_one_generic">You drafted \'%s\' but never published it.</string>
+    <string name="pending_draft_one">You drafted \'%1$s\' %2$d days ago but never published it.</string>
+    <string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -852,11 +862,14 @@
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
     <string name="unread">Unread</string>
     <string name="follows">Follows</string>
+    <string name="notifications_label_new_notifications">New notifications</string>
+    <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
     <string name="notifications_sights_and_sounds">Sights and Sounds</string>
     <string name="your_sites">Your Sites</string>
+    <string name="all_your_sites">All My Sites</string>
     <string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
     <string name="notifications_account_emails">Email from WordPress.com</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
@@ -1015,6 +1028,7 @@
     <string name="blogusername">blogusername</string>
     <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
     <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
+    <string name="wordpress_dot_com_capitalized" translatable="false">WordPress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -1100,10 +1114,12 @@
     <string name="reader_untitled_post">(Untitled)</string>
 
     <!-- activity titles -->
+    <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_blog_preview">Reader Blog</string>
     <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_post_detail">Reader Post</string>
+    <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
@@ -1159,6 +1175,8 @@
     <string name="reader_label_view_gallery">View Gallery</string>
     <string name="reader_label_image_count_one">1 image</string>
     <string name="reader_label_image_count_multi">%d images</string>
+    <string name="reader_label_visit">Visit</string>
+    <string name="reader_photo_by">Photo by %s</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -1184,7 +1202,6 @@
     <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
-    <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
     <string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
     <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
@@ -1195,10 +1212,20 @@
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
+    <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
+    <string name="reader_toast_err_comment_not_found">Comment not found!</string>
+    <string name="reader_toast_err_already_liked">You have already liked that comment</string>
+    <string name="reader_toast_err_url_intent">Unable to open %s</string>
+
+    <!-- snackbar messages -->
+    <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
     <string name="reader_err_get_post_not_authorized">You\'re not authorized to view this post</string>
+    <string name="reader_err_get_post_not_authorized_fallback">You\'re not authorized to view this post. Use the top action button to try a browser instead.</string>
+    <string name="reader_err_get_post_not_authorized_signin">You\'re not authorized to view this post. Try signing in to WordPress.com first.</string>
+    <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorized to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
     <string name="reader_err_get_post_not_found">This post no longer exists</string>
 
     <!-- empty list/grid text -->
@@ -1293,6 +1320,7 @@
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
     <string name="verification_code">Verification code</string>
     <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="invalid_verification_code_format">Must be six-digit number</string>
     <string name="verify">Verify</string>
     <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
     <string name="two_step_footer_button">Send code via text message</string>

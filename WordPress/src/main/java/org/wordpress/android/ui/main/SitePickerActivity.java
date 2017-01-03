@@ -32,6 +32,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
@@ -228,7 +229,23 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void setNewAdapter(String lastSearch, boolean isInSearchMode) {
-        mAdapter = new SitePickerAdapter(this, mCurrentLocalId, lastSearch, isInSearchMode);
+        mAdapter = new SitePickerAdapter(
+                this,
+                mCurrentLocalId,
+                lastSearch,
+                isInSearchMode,
+                new SitePickerAdapter.OnDataLoadedListener() {
+            @Override
+            public void onBeforeLoad(boolean isEmpty) {
+                if (isEmpty) {
+                    showProgress(true);
+                }
+            }
+            @Override
+            public void onAfterLoad() {
+                showProgress(false);
+            }
+        });
         mAdapter.setOnSiteClickListener(this);
         mAdapter.setOnSelectedCountChangedListener(this);
     }
@@ -348,6 +365,7 @@ public class SitePickerActivity extends AppCompatActivity
             hideSoftKeyboard();
             WordPress.setCurrentBlogAndSetVisible(site.localId);
             WordPress.wpDB.updateLastBlogId(site.localId);
+            AppPrefs.addRecentlyPickedSiteId(site.localId);
             setResult(RESULT_OK);
             mDidUserSelectSite = true;
             new ApiHelper.RefreshBlogContentTask(WordPress.getCurrentBlog(), null).executeOnExecutor(
@@ -368,6 +386,10 @@ public class SitePickerActivity extends AppCompatActivity
         getAdapter().setLastSearch(s);
         getAdapter().searchSites(s);
         return true;
+    }
+
+    public void showProgress(boolean show) {
+        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {

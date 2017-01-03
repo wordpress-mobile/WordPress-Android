@@ -24,6 +24,7 @@
     <color name="light_gray">@color/grey_lighten_30</color>
     <color name="gray">@color/grey_lighten_20</color>
     <color name="white">#FFFFFF</color>
+    <color name="white_dotorg_back">#F1F1F1</color>
     <!-- note that black should NOT be used for text - use grey_dark instead -->
     <color name="black">#000000</color>
     <color name="default_background">@color/grey_lighten_30</color>
@@ -110,8 +111,7 @@
 
     <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
-    <color name="reader_follow">@color/grey_dark</color>
-    <color name="reader_follow_blue">@color/blue_medium</color>
+    <color name="reader_follow">@color/blue_medium</color>
     <color name="reader_following">@color/alert_green</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
     <color name="filtered_list_suggestions">#f8f8f8</color>
@@ -129,6 +129,7 @@
     <color name="nux_grey_button">@color/grey_lighten_20</color>
     <color name="nux_alert_bg">@color/grey_dark</color>
     <color name="nux_background">@color/blue_wordpress</color>
+    <color name="nux_background_org">@color/white_dotorg_back</color>
     <color name="nux_eye_icon_color_closed">@color/grey_lighten_20</color>
     <color name="nux_eye_icon_color_open">@color/grey_lighten_10</color>
 

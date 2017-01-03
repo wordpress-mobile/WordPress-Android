@@ -15,7 +15,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -105,16 +104,6 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     /*
-     * determine whether we can show a thumbnail image for the passed video - currently
-     * we support YouTube, Vimeo & standard images
-     */
-    public static boolean canShowVideoThumbnail(String videoUrl) {
-        return ReaderVideoUtils.isVimeoLink(videoUrl)
-                || ReaderVideoUtils.isYouTubeVideoLink(videoUrl)
-                || MediaUtils.isValidImage(videoUrl);
-    }
-
-    /*
      * retrieves and displays the thumbnail for the passed video
      */
     public void setVideoUrl(final long postId, final String videoUrl) {
@@ -162,26 +151,10 @@ public class WPNetworkImageView extends AppCompatImageView {
      * Loads the image for the view if it isn't already loaded.
      * @param isInLayoutPass True if this was invoked from a layout pass, false otherwise.
      */
-    private void loadImageIfNecessary(final boolean isInLayoutPass, final ImageLoadListener imageLoadListener) {
+    private void loadImageIfNecessary(final boolean isInLayoutPass,
+                                      final ImageLoadListener imageLoadListener) {
         // do nothing if image type hasn't been set yet
         if (mImageType == ImageType.NONE) {
-            return;
-        }
-
-        int width = getWidth();
-        int height = getHeight();
-        ScaleType scaleType = getScaleType();
-
-        boolean wrapWidth = false, wrapHeight = false;
-        if (getLayoutParams() != null) {
-            wrapWidth = getLayoutParams().width == LayoutParams.WRAP_CONTENT;
-            wrapHeight = getLayoutParams().height == LayoutParams.WRAP_CONTENT;
-        }
-
-        // if the view's bounds aren't known yet, and this is not a wrap-content/wrap-content
-        // view, hold off on loading the image.
-        boolean isFullyWrapContent = wrapWidth && wrapHeight;
-        if (width == 0 && height == 0 && !isFullyWrapContent && mImageType != ImageType.GONE_UNTIL_AVAILABLE) {
             return;
         }
 
@@ -219,10 +192,6 @@ public class WPNetworkImageView extends AppCompatImageView {
             return;
         }
 
-        // Calculate the max image width / height to use while ignoring WRAP_CONTENT dimens.
-        int maxWidth = wrapWidth ? 0 : width;
-        int maxHeight = wrapHeight ? 0 : height;
-
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
         ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
@@ -251,14 +220,14 @@ public class WPNetworkImageView extends AppCompatImageView {
                             post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    handleResponse(response, true, imageLoadListener);
+                                    onResponse(response, false);
                                 }
                             });
-                        } else {
-                            handleResponse(response, isImmediate, imageLoadListener);
+                            return;
                         }
+                        handleResponse(response, isImmediate, imageLoadListener);
                     }
-                }, maxWidth, maxHeight, scaleType);
+                }, 0, 0, getScaleType());
 
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
@@ -266,7 +235,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     private static boolean canFadeInImageType(ImageType imageType) {
         return imageType == ImageType.PHOTO
-            || imageType == ImageType.VIDEO;
+                || imageType == ImageType.VIDEO;
     }
 
     private void handleResponse(ImageLoader.ImageContainer response, boolean isCached, ImageLoadListener
@@ -308,10 +277,10 @@ public class WPNetworkImageView extends AppCompatImageView {
             // If the view was bound to an image request, cancel it and clear
             // out the image from the view.
             mImageContainer.cancelRequest();
-            setImageBitmap(null);
             // also clear out the container so we can reload the image if necessary.
             mImageContainer = null;
         }
+        setImageBitmap(null);
     }
 
     public void removeCurrentUrlFromSkiplist() {
@@ -323,15 +292,19 @@ public class WPNetworkImageView extends AppCompatImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (!isInEditMode()) {
-            loadImageIfNecessary(true, null);
-        }
+        loadImageIfNecessary(true, null);
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        resetImage();
-
+        if (mImageContainer != null) {
+            // If the view was bound to an image request, cancel it and clear
+            // out the image from the view.
+            mImageContainer.cancelRequest();
+            setImageBitmap(null);
+            // also clear out the container so we can reload the image if necessary.
+            mImageContainer = null;
+        }
         super.onDetachedFromWindow();
     }
 

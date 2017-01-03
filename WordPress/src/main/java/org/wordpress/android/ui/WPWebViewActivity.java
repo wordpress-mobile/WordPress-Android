@@ -44,7 +44,7 @@ import java.util.Map;
  * - openURL
  * - openUrlByUsingMainWPCOMCredentials
  * - openUrlByUsingWPCOMCredentials
- * - openUrlByUsingBlogCredentials (for self hosted sites)
+ * - openPostOrPage
  *
  * If you need to start the activity with delay, start activity with result, or none of the methods above are enough for your needs,
  * you can start the activity by passing the required parameters, depending on what you need to do.
@@ -80,15 +80,16 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String SHARABLE_URL = "sharable_url";
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
+    public static final String USE_GLOBAL_WPCOM_USER = "USE_GLOBAL_WPCOM_USER";
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
-    public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
-        openWPCOMURL(context, url, user);
+    public static void openUrlByUsingWPCOMCredentials(Context context, String url) {
+        openWPCOMURL(context, url);
     }
 
     // Note: The webview has links disabled!!
-    public static void openUrlByUsingBlogCredentials(Context context, Blog blog, Post post, String url) {
+    public static void openPostOrPage(Context context, Blog blog, Post post, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -108,14 +109,18 @@ public class WPWebViewActivity extends WebViewActivity {
 
         String authURL = WPWebViewActivity.getBlogLoginUrl(blog);
         Intent intent = new Intent(context, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, blog.getUsername());
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, blog.getPassword());
-        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-        intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
-        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
+        if (blog.isDotcomFlag()) {
+            intent.putExtra(USE_GLOBAL_WPCOM_USER, true);
+        } else {
+            intent.putExtra(AUTHENTICATION_USER, blog.getUsername());
+            intent.putExtra(AUTHENTICATION_PASSWD, blog.getPassword());
+        }
+        intent.putExtra(URL_TO_LOAD, url);
+        intent.putExtra(AUTHENTICATION_URL, authURL);
+        intent.putExtra(LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        intent.putExtra(DISABLE_LINKS_ON_PAGE, true);
         if (post != null) {
-            intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(blog, post));
+            intent.putExtra(SHARABLE_URL, WPMeShortlinks.getPostShortlink(blog, post));
         }
         context.startActivity(intent);
     }
@@ -144,7 +149,7 @@ public class WPWebViewActivity extends WebViewActivity {
         context.startActivity(intent);
     }
 
-    private static void openWPCOMURL(Context context, String url, String user) {
+    private static void openWPCOMURL(Context context, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -157,13 +162,8 @@ public class WPWebViewActivity extends WebViewActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(user)) {
-            AppLog.e(AppLog.T.UTILS, "Username empty/null");
-            return;
-        }
-
         Intent intent = new Intent(context, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, user);
+        intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
         context.startActivity(intent);
@@ -222,6 +222,9 @@ public class WPWebViewActivity extends WebViewActivity {
         String username = extras.getString(AUTHENTICATION_USER, "");
         String password = extras.getString(AUTHENTICATION_PASSWD, "");
         String authURL = extras.getString(AUTHENTICATION_URL);
+        if (extras.getBoolean(USE_GLOBAL_WPCOM_USER, false)) {
+            username = AccountHelper.getDefaultAccount().getUserName();
+        }
 
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");

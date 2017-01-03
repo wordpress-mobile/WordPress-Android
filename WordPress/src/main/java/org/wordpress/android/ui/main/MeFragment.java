@@ -57,6 +57,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -201,6 +202,8 @@ public class MeFragment extends Fragment {
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(MeFragment.this,
                         CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE)) {
                     askForCameraOrGallery();
+                } else {
+                    AppLockManager.getInstance().setExtendedTimeout();
                 }
             }
         });
@@ -313,13 +316,14 @@ public class MeFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void addDropShadowToAvatar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mAvatarImageView.setOutlineProvider(new ViewOutlineProvider() {
+            mAvatarContainer.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                    int padding = (mAvatarContainer.getWidth() - mAvatarImageView.getWidth()) / 2;
+                    outline.setOval(padding, padding, view.getWidth() - padding, view.getHeight() - padding);
                 }
             });
-            mAvatarImageView.setElevation(mAvatarImageView.getResources().getDimensionPixelSize(R.dimen.card_elevation));
+            mAvatarContainer.setElevation(mAvatarContainer.getResources().getDimensionPixelSize(R.dimen.card_elevation));
         }
     }
 
@@ -658,11 +662,10 @@ public class MeFragment extends Fragment {
     }
 
     public void onEventMainThread(GravatarLoadFinished event) {
-        showGravatarProgressBar(false);
-
-        if (!event.success) {
+        if (!event.success && mIsUpdatingGravatar) {
             Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast.LENGTH_SHORT).show();
         }
+        showGravatarProgressBar(false);
     }
 
     // injects a fabricated cache entry to the request cache

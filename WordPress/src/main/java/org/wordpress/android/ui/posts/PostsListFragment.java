@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,12 +24,14 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -41,6 +44,8 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID;
 
 public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
@@ -63,6 +68,7 @@ public class PostsListFragment extends Fragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
+    private boolean mShouldCancelPendingDraftNotification = false;
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
@@ -94,7 +100,7 @@ public class PostsListFragment extends Fragment
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
+        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
@@ -136,8 +142,8 @@ public class PostsListFragment extends Fragment
                 });
     }
 
-    public PostsListAdapter getPostListAdapter() {
-        if (mPostsListAdapter == null) {
+    private @Nullable PostsListAdapter getPostListAdapter() {
+        if (mPostsListAdapter == null && WordPress.getCurrentBlog() != null) {
             mPostsListAdapter = new PostsListAdapter(getActivity(), WordPress.getCurrentBlog(), mIsPage);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
@@ -153,7 +159,9 @@ public class PostsListFragment extends Fragment
     }
 
     private void loadPosts() {
-        getPostListAdapter().loadPosts();
+        if (getPostListAdapter() != null) {
+            getPostListAdapter().loadPosts();
+        }
     }
 
     @Override
@@ -182,7 +190,7 @@ public class PostsListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        if (WordPress.getCurrentBlog() != null && mRecyclerView.getAdapter() == null) {
+        if (getPostListAdapter() != null && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
@@ -223,6 +231,10 @@ public class PostsListFragment extends Fragment
             return;
         }
 
+        if (getPostListAdapter() != null && getPostListAdapter().getItemCount() == 0) {
+            updateEmptyView(EmptyViewMessageType.LOADING);
+        }
+
         mIsFetchingPosts = true;
         if (loadMore) {
             showLoadMoreProgress();
@@ -248,7 +260,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
-        if (isAdded() && WordPress.getCurrentBlog() != null) {
+        if (isAdded() && getPostListAdapter() != null) {
             getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
         }
     }
@@ -347,6 +359,16 @@ public class PostsListFragment extends Fragment
         super.onStop();
     }
 
+    @Override
+    public void onDetach() {
+        if (mShouldCancelPendingDraftNotification) {
+            // delete the pending draft notification if available
+            NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
+            mShouldCancelPendingDraftNotification = false;
+        }
+        super.onDetach();
+    }
+
     /*
      * called by the adapter after posts have been loaded
      */
@@ -439,6 +461,9 @@ public class PostsListFragment extends Fragment
         post.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
         post.setChangedFromDraftToPublished(true);
 
+        // also in case this postId was in our ignore list, delete it from the list as well
+        AppPrefs.deleteIdFromPendingDraftsIgnorePostIdList(post.getLocalTablePostId());
+
         PostUploadService.addPostToUpload(post);
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
@@ -451,7 +476,8 @@ public class PostsListFragment extends Fragment
     private void trashPost(final PostsListPost post) {
         //only check if network is available in case this is not a local draft - local drafts have not yet
         //been posted to the server so they can be trashed w/o further care
-        if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))) {
+        if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))
+            || getPostListAdapter() == null) {
             return;
         }
 
@@ -513,10 +539,25 @@ public class PostsListFragment extends Fragment
                 if (!post.isLocalDraft()) {
                     new ApiHelper.DeleteSinglePostTask().execute(WordPress.getCurrentBlog(),
                             fullPost.getRemotePostId(), mIsPage);
+                } else  {
+                    mShouldCancelPendingDraftNotification = false;
+
+                    // delete the pending draft notification if available
+                    NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
+
+                    // note that cancelling the notification dismisses not only the case where the notification was
+                    // about this very local draft but will also dismiss it even if there were several outstanding
+                    // pending drafts.
+                    // We don't re-run the service here to notify the user of other  pending drafts, because the
+                    // user is already looking at the blog post list, so it doesn't make sense bothering them
+
+                    // also in case this postId was in our ignore list, delete it from the list as well
+                    AppPrefs.deleteIdFromPendingDraftsIgnorePostIdList(post.getPostId());
                 }
             }
         });
 
+        mShouldCancelPendingDraftNotification = true;
         snackbar.show();
     }
 }

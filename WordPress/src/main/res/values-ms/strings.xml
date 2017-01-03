@@ -1,9 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-12-09 14:27:31+0000
+Plural-Forms: nplurals=1; plural=0;
+Generator: GlotPress/2.3.0-alpha
+Language: ms
+-->
 <resources>
+	<string name="invalid_verification_code_format">Mestilah nombor enam angka</string>
+	<string name="confirm_discard_changes">Buang perubahan yang belum disimpan?</string>
+	<string name="swipe_for_more">Sapu untuk seterusnya</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Anda tidak dibenarkan melihat kiriman ini. Cuba daftar masuk ke WordPress.com dahulu atau sebaliknya gunakan butang aksi di atas untuk membuka di pelayar.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Anda tidak dibenarkan melihat kiriman ini. Cuba daftar masuk ke WordPress.com dahulu.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Anda tidak dibenarkan melihat kiriman ini. Sebaliknya gunakan butang aksi di atas untuk mencuba di pelayar.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Tidak boleh menyuka sambil melog keluar dari WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Anda sudahpun menyukai ulasan itu</string>
+	<string name="reader_toast_err_comment_not_found">Ulasan tidak dijumpai!</string>
+	<string name="reader_toast_err_cannot_like_post">Gagal untuk menyukai kiriman ini</string>
+	<string name="reader_title_post_detail_wpcom">Kiriman WordPress.com</string>
+	<string name="reader_title_deeplink">Pembaca WordPress</string>
+	<string name="error_notif_q_action_reply">Tidak dapat membalas ulasan. Sila cuba sebentar lagi.</string>
+	<string name="error_notif_q_action_approve">Tidak dapat meluluskan ulasan. Sila cuba sebentar lagi.</string>
+	<string name="error_notif_q_action_like">Tidak boleh menyukai ulasan. Sila cuba sebentar lagi.</string>
+	<string name="notifications_label_new_notifications_subtitle">Tap untuk menunjukkannya</string>
+	<string name="notifications_label_new_notifications">Pemberitahuan baharu</string>
+	<string name="comment_q_action_replying">Membalas...</string>
+	<string name="comment_q_action_approving">Melulus...</string>
+	<string name="comment_q_action_liking">Menyukai...</string>
+	<string name="comment_q_action_processing">Memproses...</string>
+	<string name="comment_q_action_done_generic">Tindakan selesai!</string>
+	<string name="comment_liked">Ulasan disukai</string>
+	<string name="signout">Log keluar</string>
+	<string name="sign_in_wpcom">Log masuk ke WordPress.com</string>
+	<string name="reader_label_global_related_posts">Selanjutnya tentang WordPress.com</string>
+	<string name="reader_label_local_related_posts">Selanjutnya dalam %s</string>
+	<string name="preference_open_device_settings">Buka tetapan peranti</string>
+	<string name="comment_moderated_unapproved">Ulasan tidak diluluskan</string>
+	<string name="invite_invalid_email">%s: Emel tidak sah</string>
+	<string name="invite_user_blocked_invites">%s: Pengguna menghalang jemputan</string>
+	<string name="invite_already_following">%s: Telahpun mengikuti</string>
+	<string name="invite_already_a_member">%s: Telahpun menjadi ahli</string>
+	<string name="invite_username_not_found">%s: Pengguna tidak dijumpai</string>
+	<string name="comment_moderated_approved">Ulasan diluluskan!</string>
+	<string name="like">Suka</string>
+	<string name="reader_label_image_count_one">1 imej</string>
+	<string name="timespan_now">sekarang</string>
+	<string name="role_viewer">Penonton</string>
+	<string name="role_follower">Pengikut</string>
+	<string name="role_contributor">Penyumbang</string>
+	<string name="role_author">Pengarang</string>
+	<string name="role_editor">Penyunting</string>
+	<string name="role_admin">Pentadbir</string>
+	<string name="error_post_my_profile_no_connection">Tiada sambungan, tidak dapat menyimpan profail anda</string>
+	<string name="alignment_right">Kanan</string>
+	<string name="alignment_left">Kiri</string>
+	<string name="alignment_none">Tiada</string>
+	<string name="site_settings_list_editor_action_mode_title">%1$d dipilih</string>
 	<string name="error_fetch_users_list">Tidak boleh mendapatkan pengguna laman</string>
 	<string name="plans_manage">Urus pelan anda di\nWordPress.com/plans</string>
 	<string name="title_email_follower">Pengikut Emel</string>
 	<string name="title_follower">Pengikut</string>
+	<string name="people_fetching">Mengambil pengguna…</string>
 	<string name="people_empty_list_filtered_viewers">Anda belum mempunyai penonton.</string>
 	<string name="people_empty_list_filtered_email_followers">Anda belum mempunyai pengikut emel.</string>
 	<string name="people_empty_list_filtered_followers">Anda belum mempunyai pengikut.</string>
@@ -16,6 +72,7 @@
 	<string name="viewer_remove_confirmation_message">Jika anda membuang penonton ini, beliau tidak akan dapat melawat laman ini.\n\nAnda masih ingin membuang penonton ini?</string>
 	<string name="follower_remove_confirmation_message">Jika dibuang, pengikut ini akan berhenti menerima pemberitahuan tentang laman ini, kecuali jika mereka mengikut kembali.\n\nAnda masih ingin membuang pengikut ini?</string>
 	<string name="follower_subscribed_since">Sejak %1$s</string>
+	<string name="reader_label_image_count_multi">%d imej</string>
 	<string name="reader_label_view_gallery">Lihat Galeri</string>
 	<string name="error_remove_viewer">Tidak dapat membuang penonton</string>
 	<string name="error_remove_follower">Tidak dapat membuang pengikut</string>
@@ -70,7 +127,6 @@
 	<string name="dlg_confirm_clear_search_history">Kosongkan sejarah carian?</string>
 	<string name="reader_empty_posts_in_search_description">Tiada kiriman dijumpai untuk %s bagi bahasa anda</string>
 	<string name="reader_empty_posts_in_search_title">Tiada kiriman ditemui</string>
-	<string name="reader_label_related_posts">Bacaan Berkaitan</string>
 	<string name="reader_label_post_search_running">Mencari...</string>
 	<string name="reader_label_post_search_explainer">Cari semua blog umum WordPress.com</string>
 	<string name="reader_hint_post_search">Cari WordPress.com</string>
@@ -169,6 +225,7 @@
 	<string name="theme_premium">Premium</string>
 	<string name="theme_all">Semua</string>
 	<string name="theme_free">Percuma</string>
+	<string name="alignment_center">Tengah</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Status</string>
 	<string name="post_format_standard">Piawai</string>
@@ -271,7 +328,7 @@
 	<string name="error_post_remote_site_settings">Tidak boleh menyimpan maklumat laman</string>
 	<string name="error_fetch_remote_site_settings">Tidak boleh mendapatkan maklumat laman</string>
 	<string name="error_media_upload_connection">Ralat sambungan terjadi semasa memuat naik media</string>
-	<string name="site_settings_disconnected_toast">Terputus, penyuntingan dinyahboleh.</string>
+	<string name="site_settings_disconnected_toast">Dilog keluar, suntingan dilumpuhkan.</string>
 	<string name="site_settings_unsupported_version_error">Versi WordPress tidak disokong</string>
 	<string name="site_settings_multiple_links_dialog_description">Memerlukan kelulusan untuk ulasan yang mengandungi lebih daripada jumlah pautan ini.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Tutup secara automatik</string>
@@ -502,7 +559,7 @@
 	<string name="tabbar_accessibility_label_my_site">Laman Saya</string>
 	<string name="editor_toast_changes_saved">Perubahan disimpan</string>
 	<string name="passcodelock_prompt_message">Masukkan PIN anda</string>
-	<string name="push_auth_expired">Permintaan telah tamat tempoh. Log masuk ke WordPress.com dan cuba semula.</string>
+	<string name="push_auth_expired">Permintaan telah tamat tempoh. Log masuk ke WordPress.com dan cuba lagi.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% yang dilihat</string>
 	<string name="ignore">Abaikan</string>
 	<string name="stats_insights_best_ever">Pandangan Terbaik Sampai Bila-Bila</string>
@@ -514,9 +571,9 @@
 	<string name="stats_insights">Wawasan</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Untuk melihat statistik anda, log masuk ke akaun WordPress.com anda untuk menyambungkan JetPack.</string>
 	<string name="stats_other_recent_stats_moved_label">Mencari statistik Terkini Yang Lain anda? Kami telah memindahnya ke halaman Wawasan.</string>
-	<string name="me_disconnect_from_wordpress_com">Putuskan dari WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Log keluar dari WordPress.com</string>
 	<string name="me_btn_login_logout">Log Masuk/Log Keluar</string>
-	<string name="me_connect_to_wordpress_com">Sambung ke WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Log masuk ke WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" tidak disembunyikan kerana ianya laman semasa</string>
 	<string name="me_btn_support">Bantuan &amp; Sokongan</string>
 	<string name="account_settings">Tetapan Akaun</string>
@@ -536,7 +593,6 @@
 	<string name="my_site_header_configuration">Konfigurasi</string>
 	<string name="notifications_account_required">Log masuk ke WordPress.com untuk pemberitahuan</string>
 	<string name="stats_unknown_author">Pengarang Tidak Diketahui</string>
-	<string name="signout">Putuskan</string>
 	<string name="image_added">Imej ditambah</string>
 	<string name="sign_out_wpcom_confirm">Memutuskan akaun anda akan membuang semua data WordPress.com bagi @%s dari peranti ini, termasuklah draf setempat dan perubahan setempat.</string>
 	<string name="select_all">Pilih semua</string>
@@ -560,7 +616,7 @@
 	<string name="loading_images">Memuat imej</string>
 	<string name="loading_videos">Memuat video</string>
 	<string name="auth_required">Log masuk semula untuk meneruskan.</string>
-	<string name="sign_in_jetpack">Log masuk ke akaun WordPress.com anda dan berhubung dengan Jetpack.</string>
+	<string name="sign_in_jetpack">Log masuk ke akaun WordPress.com anda dan untuk menyambung ke Jetpack.</string>
 	<string name="two_step_sms_sent">Periksa mesej teks anda untuk kod pengesahan.</string>
 	<string name="two_step_footer_button">Hantar kod melalui mesej teks</string>
 	<string name="two_step_footer_label">Masukkan kod dari aplikasi pengesah anda.</string>
@@ -701,6 +757,7 @@
 	<string name="reader_label_comments_on">Ulasan dihidupkan</string>
 	<string name="reader_label_comments_closed">Ulasan ditutup</string>
 	<string name="reader_label_comment_count_single">Satu ulasan</string>
+	<string name="reader_label_liked_by">Disukai oleh</string>
 	<string name="reader_label_like">Suka</string>
 	<string name="reader_label_view_original">Lihat artikel asal</string>
 	<string name="reader_label_comment_count_multi">%,d ulasan</string>
@@ -948,7 +1005,7 @@
 	<string name="reader_empty_followed_blogs_description">Tapi jangan khuatir, hanya ketik ikon di atas sebelah kanan untuk memulakan pengembaraan!</string>
 	<string name="reader_likes_you_and_one">Anda dan seorang lagi sukakannya</string>
 	<string name="select_time">Pilih masa</string>
-	<string name="nux_oops_not_selfhosted_blog">Daftar masuk ke WordPress.com</string>
+	<string name="nux_oops_not_selfhosted_blog">Log masuk ke WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Tambah laman yang dihos sendiri</string>
 	<string name="signing_in">Melog masuk...</string>
 	<string name="nux_welcome_create_account">Cipta akaun</string>
@@ -957,7 +1014,7 @@
 	<string name="nux_tutorial_get_started_title">Mulakan!</string>
 	<string name="limit_reached">Had telah dicapai. Anda boleh mencuba lagi dalam masa seminit. Cubaan sebelum tempoh tersebut hanya akan meningkatkan masa menunggu anda sebelum larangan dibatalkan. Jika anda  fikirkan ianya suatu kesilapan, hubungi sokongan.</string>
 	<string name="username_invalid">Nama pengguna tidak sah</string>
-	<string name="connecting_wpcom">Berhubung ke WordPress.com</string>
+	<string name="connecting_wpcom">Log masuk ke WordPress.com</string>
 	<string name="button_next">Seterusnya</string>
 	<string name="create_account_wpcom">Cipta akaun di WordPress.com</string>
 	<string name="reader_empty_followed_tags">Anda tidak mengikut apa-apa tag</string>
@@ -1048,7 +1105,7 @@
 	<string name="follows">Ikutan</string>
 	<string name="note_reply_successful">Balasan diterbitkan</string>
 	<string name="notifications">Pemberitahuan</string>
-	<string name="sign_in">Daftar masuk</string>
+	<string name="sign_in">Log masuk</string>
 	<string name="loading">Sedang memuat...</string>
 	<string name="httppassword">Kata laluan HTTP</string>
 	<string name="httpuser">Nama pengguna HTTP</string>
@@ -1111,6 +1168,7 @@
 	<string name="sdcard_title">Kad SD Diperlukan</string>
 	<string name="location">Lokasi</string>
 	<string name="media">Media</string>
+	<string name="approve">Lulus</string>
 	<string name="delete">Hapus</string>
 	<string name="none">Tiada</string>
 	<string name="blogs">Blog</string>

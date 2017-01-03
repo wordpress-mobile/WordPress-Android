@@ -62,6 +62,7 @@
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon">
         <activity
@@ -71,6 +72,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -91,6 +94,10 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:host="signin"
+                    android:scheme="wordpress" />
+
+                <data
+                    android:host="magic-login"
                     android:scheme="wordpress" />
             </intent-filter>
         </activity>
@@ -243,7 +250,8 @@
         <!-- Deep Linking Activity -->
         <activity
             android:name=".ui.DeepLinkingIntentReceiverActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/Calypso.NoActionBar"
+            android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -253,37 +261,6 @@
                 <data
                     android:host="viewpost"
                     android:scheme="wordpress" />
-            </intent-filter>
-
-            <intent-filter>
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/feeds/.*/posts/.*"
-                    android:scheme="https" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/feeds/.*/posts/.*"
-                    android:scheme="http" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/blogs/.*/posts/.*"
-                    android:scheme="https" >
-                </data>
-
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/read/blogs/.*/posts/.*"
-                    android:scheme="http" >
-                </data>
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
 
@@ -295,9 +272,65 @@
         </activity>
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
-            android:label="@string/reader_title_post_detail"
+            android:excludeFromRecents="true"
+            android:label="@string/reader_title_deeplink"
             android:theme="@style/Calypso.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" >
+            <intent-filter>
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/feeds/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/read/blogs/.*/posts/.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/2.../../../.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/2.../../../.*"
+                    android:scheme="http" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/19../../../.*"
+                    android:scheme="https" >
+                </data>
+
+                <data
+                    android:host="*.wordpress.com"
+                    android:pathPattern="/19../../../.*"
+                    android:scheme="http" >
+                </data>
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
@@ -317,7 +350,11 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
-            android:theme="@style/ReaderPhotoViewerTheme" />
+            android:theme="@style/ReaderMediaViewerTheme" />
+        <activity
+            android:name=".ui.reader.ReaderVideoViewerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/ReaderMediaViewerTheme" />
 
         <!-- Other activities -->
 
@@ -360,6 +397,7 @@
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
             android:theme="@style/CalypsoTheme"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
@@ -446,11 +484,24 @@
             android:name=".push.NotificationsProcessingService"
             android:exported="false"
             android:label="Notifications Quick Actions processing Service" />
+        <service
+            android:name=".ui.notifications.services.NotificationsUpdateService"
+            android:exported="false"
+            android:label="Notifications Update Service" />
+        <service
+            android:name=".push.NotificationsScreenLockWatchService"
+            android:exported="false"
+            android:label="Notifications Screen Lock watch Service" />
+        <service
+            android:name=".ui.notifications.services.NotificationsPendingDraftsService"
+            android:exported="false"
+            android:label="Notifications Pending Drafts Service" />
 
+        <!-- Samsung multiwindow support -->
         <uses-library
             android:name="com.sec.android.app.multiwindow"
             android:required="false" />
-
+        <!-- Samsung multiwindow support -->
         <meta-data
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
@@ -474,6 +525,11 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
+        </receiver>
+        <receiver android:name=".ui.notifications.ScreenLockUnlockBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
         </receiver>
 
         <!-- Google Cloud Messaging receiver and services -->
@@ -511,23 +567,6 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-
-        <activity
-            android:theme="@style/Calypso.NoActionBar"
-            android:name=".ui.accounts.login.MagicLinkSignInActivity"
-            android:label="@string/sign_in"
-            android:windowSoftInputMode="stateAlwaysHidden">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="magic-login"
-                    android:scheme="wordpress" >
-                </data>
-            </intent-filter>
-        </activity>
 
         <activity
             android:name=".ui.HelpshiftDeepLinkReceiver">

@@ -68,20 +68,20 @@ public class NoteBlock {
         return mNoteData;
     }
 
-    public Spannable getNoteText() {
+    Spannable getNoteText() {
         return NotificationsUtils.getSpannableContentForRanges(mNoteData, null,
                 mOnNoteBlockTextClickListener, false);
     }
 
-    public String getMetaHomeTitle() {
+    String getMetaHomeTitle() {
         return JSONUtils.queryJSON(mNoteData, "meta.titles.home", "");
     }
 
-    public long getMetaSiteId() {
+    long getMetaSiteId() {
         return JSONUtils.queryJSON(mNoteData, "meta.ids.site", -1);
     }
 
-    public String getMetaSiteUrl() {
+    String getMetaSiteUrl() {
         return JSONUtils.queryJSON(mNoteData, "meta.links.home", "");
     }
 
@@ -116,7 +116,7 @@ public class NoteBlock {
                 getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
-    boolean hasVideoMediaItem() {
+    private boolean hasVideoMediaItem() {
         return hasMediaArray() &&
                 getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video") &&
                 getNoteMediaItem().has(PROPERTY_MEDIA_URL);

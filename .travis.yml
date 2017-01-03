@@ -17,8 +17,8 @@ android:
     - extra-android-support
     - platform-tools
     - tools
-    - build-tools-24.0.2
-    - android-24
+    - build-tools-25.0.1
+    - android-25
 
 env:
   global:
@@ -28,7 +28,7 @@ env:
     - ANDROID_TARGET=android-14
 
 before_install:
-  # TODO: Remove the following line when Travis' platform-tools are updated to v24+
+  # TODO: Remove the following line when Travis' platform-tools are updated to v25+
   - echo yes | android update sdk -a --filter platform-tools --no-ui --force
 
 install:

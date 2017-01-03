@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-12-05 20:12:57+0000
+Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
+Generator: GlotPress/2.3.0-alpha
+Language: ro
+-->
 <resources>
+	<string name="invalid_verification_code_format">Trebuie să fie un număr de șase cifre</string>
+	<string name="confirm_discard_changes">Renunți la modificările nesalvate?</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Nu ești autorizat să vezi acest articol. Încearcă mai întâi să te autentifici în WordPress.com sau folosește butonul de acțiune de sus pentru a deschide un navigator ca o alternativă.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Nu ești autorizat să vezi acest articol. Încearcă mai întâi să te autentifici în WordPress.com.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Nu ești autorizat să vezi acest articol. Folosește butonul de acțiune de sus pentru a încerca un navigator în schimb.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Nu poți aprecia în timp ce ești dezautentificat din WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Ai apreciat deja acest comentariu</string>
+	<string name="reader_toast_err_comment_not_found">Comentariu negăsit!</string>
+	<string name="reader_toast_err_cannot_like_post">Aprecierea acestui articol a eșuat</string>
+	<string name="reader_title_post_detail_wpcom">Articol WordPress.com</string>
+	<string name="reader_title_deeplink">Cititor WordPress</string>
+	<string name="error_notif_q_action_reply">Nu am putut răspunde la comentariu. Te rog încearcă din nou mai târziu.</string>
+	<string name="error_notif_q_action_approve">Nu am putut aproba comentariul. Te rog încearcă din nou mai târziu.</string>
+	<string name="error_notif_q_action_like">Nu am putut aprecia comentariul. Te rog încearcă din nou mai târziu.</string>
+	<string name="notifications_label_new_notifications_subtitle">Atinge pentru a le arăta</string>
+	<string name="notifications_label_new_notifications">Notificări noi</string>
+	<string name="comment_q_action_replying">Răspund...</string>
+	<string name="comment_q_action_approving">Aprob...</string>
+	<string name="comment_q_action_liking">Apreciez...</string>
+	<string name="comment_q_action_processing">Procesez...</string>
+	<string name="comment_q_action_done_generic">Acțiune terminată!</string>
+	<string name="comment_liked">Comentariu apreciat</string>
+	<string name="signout">Dezautentificare</string>
+	<string name="sign_in_wpcom">Autentificare la WordPress.com</string>
+	<string name="reader_label_global_related_posts">Mai multe pe WordPress.com</string>
+	<string name="reader_label_local_related_posts">Mai multe în %s</string>
+	<string name="preference_open_device_settings">Deschide setări dispozitiv</string>
+	<string name="comment_moderated_unapproved">Comentariu neaprobat</string>
 	<string name="invite_invalid_email">%s: email invalid</string>
 	<string name="invite_user_blocked_invites">%s: invitați blocați de utilizator</string>
 	<string name="invite_already_following">%s: deja urmăresc</string>
@@ -92,7 +126,6 @@
 	<string name="dlg_confirm_clear_search_history">Ștergi istoricul căutărilor?</string>
 	<string name="reader_empty_posts_in_search_description">Nu s-a găsit niciun articol a lui %s în limba ta</string>
 	<string name="reader_empty_posts_in_search_title">Niciun articol găsit</string>
-	<string name="reader_label_related_posts">Lectură similară</string>
 	<string name="reader_label_post_search_running">Se caută...</string>
 	<string name="reader_label_post_search_explainer">Caută în toate blogurile publice WordPress.com</string>
 	<string name="reader_hint_post_search">Caută în WordPress.com</string>
@@ -123,7 +156,7 @@
 	<string name="check_your_email">Verifică-ți emailul</string>
 	<string name="magic_link_unavailable_error_message">În prezent indisponibilă. Te rog să-ți introduci parola</string>
 	<string name="logging_in">Autentificat</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Obține o legătură trimisă pe emailul tău pentru conectare instantanee.</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Obții o legătură trimisă pe emailul tău pentru autentificare instantanee</string>
 	<string name="enter_your_password_instead">Introdu-ți parola în schimb</string>
 	<string name="web_address_dialog_hint">Făcută publică atunci când comentezi.</string>
 	<string name="username_email">Email sau nume utilizator</string>
@@ -294,7 +327,7 @@
 	<string name="error_post_remote_site_settings">N-am putut salva informațiile despre sit</string>
 	<string name="error_fetch_remote_site_settings">N-am putut primi informațiile despre sit</string>
 	<string name="error_media_upload_connection">A apărut o eroare în timp ce se încărca media</string>
-	<string name="site_settings_disconnected_toast">Deconectat, editare dezactivată.</string>
+	<string name="site_settings_disconnected_toast">Dezautentificat, editare dezactivată.</string>
 	<string name="site_settings_unsupported_version_error">Versiune de WordPress nesuportată</string>
 	<string name="site_settings_multiple_links_dialog_description">Necesită aprobarea pentru comentarii ce includ mai mult decât acest număr de legături.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Închidere automată</string>
@@ -361,7 +394,7 @@
 	<string name="site_settings_paging_title">Paginare</string>
 	<string name="site_settings_threading_title">Fire de discuție</string>
 	<string name="site_settings_sort_by_title">Sortează după</string>
-	<string name="site_settings_account_required_title">Utilizatorul trebuie să fie autentificat</string>
+	<string name="site_settings_account_required_title">Utilizatorii trebuie să fie autentificați</string>
 	<string name="site_settings_identity_required_title">Trebuie să includă nume și email</string>
 	<string name="site_settings_receive_pingbacks_title">Primire pingback-uri</string>
 	<string name="site_settings_send_pingbacks_title">trimite pingback-uri</string>
@@ -559,7 +592,6 @@
 	<string name="my_site_header_configuration">Configurare</string>
 	<string name="notifications_account_required">Autentifică-te în WordPress.com pentru notificări</string>
 	<string name="stats_unknown_author">Autor necunoscut</string>
-	<string name="signout">Deconectare</string>
 	<string name="image_added">Imagine adăugată</string>
 	<string name="sign_out_wpcom_confirm">Deconectarea contului tău va înlătura toate datele WordPress.com despre @%s de pe acest dispozitiv, inclusiv schițele și modificările locale.</string>
 	<string name="select_all">Selectează tot</string>
@@ -972,7 +1004,7 @@
 	<string name="reader_empty_followed_blogs_description">Dar nu-ți fă griji, trebuie doar să atingi iconul din dreapta sus pentru a începe explorarea!</string>
 	<string name="reader_likes_you_and_one">Tu și încă unul apreciați asta</string>
 	<string name="select_time">Selectează timpul</string>
-	<string name="nux_oops_not_selfhosted_blog">Autentifică-te la WordPress.com</string>
+	<string name="nux_oops_not_selfhosted_blog">Autentifică-te pe WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Adaugă un sit auto-găzduit</string>
 	<string name="signing_in">Se conectează...</string>
 	<string name="nux_welcome_create_account">Creează cont</string>
@@ -981,7 +1013,7 @@
 	<string name="nux_tutorial_get_started_title">Poți începe!</string>
 	<string name="limit_reached">S-a atins limita. Poți încerca din nou peste un minut. A încerca înainte de acesta nu va face decât să mărească timpul pe care trebuie să-l aștepți ca blocajul să fie ridicat. Dacă crezi că aceasta este o eroare, contactează suportul.</string>
 	<string name="username_invalid">Nume de utilizator invalid</string>
-	<string name="connecting_wpcom">Se conectează la WordPress.com</string>
+	<string name="connecting_wpcom">Autentificare pe WordPress.com</string>
 	<string name="button_next">Următor</string>
 	<string name="create_account_wpcom">Crează un cont la WordPress.com</string>
 	<string name="reader_empty_followed_tags">Nu urmărești nicio etichetă</string>

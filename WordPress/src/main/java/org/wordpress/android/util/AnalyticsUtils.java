@@ -26,7 +26,8 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_OPENED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_RELATED_POST_CLICKED;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS_RENDER;
@@ -34,11 +35,14 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.TRAIN_TRACKS
 public class AnalyticsUtils {
     private static String BLOG_ID_KEY = "blog_id";
     private static String POST_ID_KEY = "post_id";
+    private static String COMMENT_ID_KEY = "comment_id";
     private static String FEED_ID_KEY = "feed_id";
     private static String FEED_ITEM_ID_KEY = "feed_item_id";
     private static String IS_JETPACK_KEY = "is_jetpack";
     private static String INTENT_ACTION = "intent_action";
     private static String INTENT_DATA = "intent_data";
+    private static String INTERCEPTED_URI = "intercepted_uri";
+    private static String INTERCEPTOR_CLASSNAME = "interceptor_classname";
 
     /**
      * Utility method to refresh mixpanel metadata.
@@ -226,6 +230,16 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
+    public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, String blogId, String postId, int
+            commentId) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(BLOG_ID_KEY, blogId);
+        properties.put(POST_ID_KEY, postId);
+        properties.put(COMMENT_ID_KEY, commentId);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
     public static void trackWithFeedPostDetails(AnalyticsTracker.Stat stat, long feedId, long feedItemId) {
         Map<String, Object> properties =  new HashMap<>();
         properties.put(FEED_ID_KEY, feedId);
@@ -250,7 +264,35 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(stat, properties);
     }
 
-  /**
+    /**
+     * Track when app launched via deep-linking but then fell back to external browser
+     *
+     * @param stat The Stat to bump
+     * @param interceptedUri The fallback URI the app was started with
+     *
+     */
+    public static void trackWithInterceptedUri(AnalyticsTracker.Stat stat, String interceptedUri) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(INTERCEPTED_URI, interceptedUri);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
+     * Track when app launched via deep-linking but then fell back to external browser
+     *
+     * @param stat The Stat to bump
+     * @param interceptorClassname The name of the class that handles the intercept by default
+     *
+     */
+    public static void trackWithDefaultInterceptor(AnalyticsTracker.Stat stat, String interceptorClassname) {
+        Map<String, Object> properties =  new HashMap<>();
+        properties.put(INTERCEPTOR_CLASSNAME, interceptorClassname);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    /**
    * Track when a railcar item has been rendered
    *
    * @param post The JSON string of the railcar
@@ -286,7 +328,8 @@ public class AnalyticsUtils {
                 || stat == READER_ARTICLE_OPENED
                 || stat == READER_SEARCH_RESULT_TAPPED
                 || stat == READER_ARTICLE_COMMENTED_ON
-                || stat == READER_RELATED_POST_CLICKED;
+                || stat == READER_GLOBAL_RELATED_POST_CLICKED
+                || stat == READER_LOCAL_RELATED_POST_CLICKED;
     }
 
     /*
