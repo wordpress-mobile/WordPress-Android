@@ -1336,6 +1336,8 @@
     <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
     <string name="access_token_migration_message">Updating…</string>
+    <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
+    <string name="already_logged_in_wpcom_same_username">You\'re already logged in your WordPress.com account. Your site should appear in the site picker, make sure it\'s not hidden.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>

@@ -76,6 +76,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -84,7 +85,6 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -874,6 +874,23 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         return true;
     }
 
+    private boolean checkIfUserIsAlreadyLoggedIn() {
+        if (mAccountStore.hasAccessToken()) {
+            String currentUsername = mAccountStore.getAccount().getUserName();
+            AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername
+                            + " - but tries to sign in again: " + mUsername);
+            if (getActivity() != null) {
+                if (currentUsername.equals(mUsername)) {
+                    ToastUtils.showToast(getActivity(), R.string.already_logged_in_wpcom_same_username, Duration.LONG);
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.already_logged_in_wpcom, Duration.LONG);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     protected void signIn() {
         if (mSelfHosted || isEnterPasswordMode()) {
             if (!isUserDataValid()) {
@@ -888,6 +905,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mPassword = EditTextUtils.getText(mPasswordEditText).trim();
             mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
             if (isWPComLogin()) {
+                // If the user is already logged in a wordpress.com account, bail out
+                if (checkIfUserIsAlreadyLoggedIn()) {
+                    return;
+                }
                 AppLog.i(T.NUX, "User tries to sign in on WordPress.com with username: " + mUsername);
                 signInAndFetchBlogListWPCom();
             } else {
