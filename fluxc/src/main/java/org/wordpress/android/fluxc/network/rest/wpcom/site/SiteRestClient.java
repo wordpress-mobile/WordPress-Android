@@ -186,6 +186,9 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void deleteSite(SiteModel site) {
+    }
+
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
         SiteModel site = new SiteModel();
         site.setSiteId(from.ID);
