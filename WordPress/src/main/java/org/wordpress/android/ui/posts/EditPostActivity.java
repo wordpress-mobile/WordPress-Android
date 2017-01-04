@@ -838,7 +838,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updatePostSettings();
+            mEditPostSettingsFragment.updatePostSettings(mPost);
         }
     }
 

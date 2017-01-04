@@ -514,7 +514,7 @@ public class EditPostSettingsFragment extends Fragment
             categoriesIntent.putExtra(WordPress.SITE, mSite);
 
             // Make sure the PostModel is up to date with current category selections
-            updatePostSettings();
+            updatePostSettings(mPost);
             categoriesIntent.putExtra(SelectCategoriesActivity.KEY_POST, mPost);
 
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
@@ -632,10 +632,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     /**
-     * Updates post object with content of this fragment
+     * Updates given post object with current status of settings fields
      */
-    public void updatePostSettings() {
-        if (!isAdded() || mPost == null) {
+    public void updatePostSettings(PostModel post) {
+        if (!isAdded() || post == null) {
             return;
         }
 
@@ -644,20 +644,20 @@ public class EditPostSettingsFragment extends Fragment
         boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
-        if (mIsCustomPubDate && publishImmediately && !mPost.isLocalDraft()) {
+        if (mIsCustomPubDate && publishImmediately && !post.isLocalDraft()) {
             publicationDateIso8601 = DateTimeUtils.iso8601FromDate(new Date());
         } else if (!publishImmediately) {
             if (mIsCustomPubDate) {
                 publicationDateIso8601 = mCustomPubDate;
-            } else if (StringUtils.isNotEmpty(mPost.getDateCreated())) {
-                publicationDateIso8601 = mPost.getDateCreated();
+            } else if (StringUtils.isNotEmpty(post.getDateCreated())) {
+                publicationDateIso8601 = post.getDateCreated();
             }
         }
 
-        mPost.setDateCreated(publicationDateIso8601);
+        post.setDateCreated(publicationDateIso8601);
 
         String tags = "", postFormat = "";
-        if (!mPost.isPage()) {
+        if (!post.isPage()) {
             tags = EditTextUtils.getText(mTagsEditText);
 
             // post format
@@ -671,14 +671,14 @@ public class EditPostSettingsFragment extends Fragment
         if (mStatusSpinner != null) {
             status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition()).toString();
         } else {
-            status = mPost.getStatus();
+            status = post.getStatus();
         }
 
-        if (mPost.supportsLocation()) {
+        if (post.supportsLocation()) {
             if (mPostLocation == null) {
-                mPost.clearLocation();
+                post.clearLocation();
             } else {
-                mPost.setLocation(mPostLocation);
+                post.setLocation(mPostLocation);
             }
         }
 
@@ -687,19 +687,19 @@ public class EditPostSettingsFragment extends Fragment
             for (TermModel category : mCategories) {
                 categoryIds.add(category.getRemoteTermId());
             }
-            mPost.setCategoryIdList(categoryIds);
+            post.setCategoryIdList(categoryIds);
         }
 
         if (AppPrefs.isVisualEditorEnabled()) {
-            mPost.setFeaturedImageId(mFeaturedImageId);
+            post.setFeaturedImageId(mFeaturedImageId);
         }
 
-        mPost.setExcerpt(excerpt);
+        post.setExcerpt(excerpt);
         // TODO: Implement when we have TaxonomyStore
-        //mPost.setKeywords(tags);
-        mPost.setStatus(status);
-        mPost.setPassword(password);
-        mPost.setPostFormat(postFormat);
+        //post.setKeywords(tags);
+        post.setStatus(status);
+        post.setPassword(password);
+        post.setPostFormat(postFormat);
     }
 
     /*
@@ -707,10 +707,11 @@ public class EditPostSettingsFragment extends Fragment
      */
     private void updatePostSettingsAndSaveButton() {
         if (isAdded()) {
-            updatePostSettings();
+            updatePostSettings(mPost);
             getActivity().invalidateOptionsMenu();
         }
     }
+
 
     /**
      * Location methods
