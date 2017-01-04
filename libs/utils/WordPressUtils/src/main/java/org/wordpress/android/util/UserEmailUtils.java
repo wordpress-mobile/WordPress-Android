@@ -3,10 +3,14 @@ package org.wordpress.android.util;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Patterns;
 
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class UserEmailUtils {
@@ -18,12 +22,13 @@ public class UserEmailUtils {
     public static String getPrimaryEmail(Context context) {
         try {
             AccountManager accountManager = AccountManager.get(context);
-            if (accountManager == null)
+            if (accountManager == null) {
                 return "";
+            }
             Account[] accounts = accountManager.getAccounts();
             Pattern emailPattern = Patterns.EMAIL_ADDRESS;
             for (Account account : accounts) {
-                // make sure account.name is an email address before adding to the list
+                // make sure account.name is an email address before returning it.
                 if (emailPattern.matcher(account.name).matches()) {
                     return account.name;
                 }
@@ -34,5 +39,35 @@ public class UserEmailUtils {
             AppLog.e(T.UTILS, "SecurityException - missing GET_ACCOUNTS permission");
             return "";
         }
+    }
+
+    /**
+     * Get list of account names matching an email address pattern.
+     *
+     * @return a list of emails or the empty list if none is found.
+     */
+    public static @NonNull List<String> getAccountEmails(@Nullable Context context) {
+        ArrayList<String> emails = new ArrayList<>();
+        if (context == null) {
+            return emails;
+        }
+        try {
+            AccountManager accountManager = AccountManager.get(context);
+            if (accountManager == null) {
+                return emails;
+            }
+            Account[] accounts = accountManager.getAccounts();
+            Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+            for (Account account : accounts) {
+                // make sure account.name is an email address before adding to the list
+                if (emailPattern.matcher(account.name).matches()) {
+                    emails.add(account.name);
+                }
+            }
+        } catch (SecurityException e) {
+            // exception will occur if app doesn't have GET_ACCOUNTS permission
+            AppLog.e(T.UTILS, "SecurityException - missing GET_ACCOUNTS permission");
+        }
+        return emails;
     }
 }
