@@ -126,7 +126,7 @@
                 android:background="@color/white"
                 android:clickable="true">
 
-                <org.wordpress.android.widgets.WPEditText
+                <AutoCompleteTextView
                     android:id="@+id/nux_username"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
