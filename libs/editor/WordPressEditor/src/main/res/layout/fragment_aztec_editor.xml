@@ -65,7 +65,7 @@
                     aztec:bulletWidth="@dimen/bullet_width"
                     aztec:historyEnable="true"
                     aztec:historySize="10"
-                    aztec:lineSpacingExtra="0.6dp"
+                    aztec:lineSpacingExtra="0.8dp"
                     aztec:lineSpacingMultiplier="@dimen/spacing_multiplier"
                     aztec:linkColor="@color/blue_wordpress"
                     aztec:linkUnderline="false"
