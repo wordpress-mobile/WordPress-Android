@@ -23,6 +23,8 @@ public enum SiteAction implements IAction {
     CREATE_NEW_SITE,
     @Action(payloadType = SiteModel.class)
     FETCH_POST_FORMATS,
+    @Action(payloadType = SiteModel.class)
+    DELETE_SITE,
 
     // Remote responses
     @Action(payloadType = NewSiteResponsePayload.class)

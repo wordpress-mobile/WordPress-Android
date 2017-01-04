@@ -517,6 +517,8 @@ public class SiteStore extends Store {
             case UPDATE_SITES:
                 updateSites((SitesModel) action.getPayload());
                 break;
+            case DELETE_SITE:
+                deleteSite((SiteModel) action.getPayload());
             case REMOVE_SITE:
                 removeSite((SiteModel) action.getPayload());
                 break;
@@ -591,6 +593,13 @@ public class SiteStore extends Store {
         } else {
             mSiteXMLRPCClient.fetchPostFormats(site);
         }
+    }
+
+    private void deleteSite(SiteModel site) {
+        if (!site.isWPCom()) {
+            return;
+        }
+        mSiteRestClient.deleteSite(site);
     }
 
     private void updateSite(SiteModel siteModel) {
