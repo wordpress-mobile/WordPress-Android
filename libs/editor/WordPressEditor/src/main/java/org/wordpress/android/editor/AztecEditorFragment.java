@@ -191,7 +191,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             return "";
         }
 
-        return content.toHtml();
+        return content.toHtml(false);
     }
 
     @Override

@@ -31,7 +31,8 @@
                 android:padding="16dp"
                 android:background="@null"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                android:inputType="textNoSuggestions|textMultiLine" />
+                android:inputType="textNoSuggestions|textMultiLine"
+                aztec:textColor="@color/grey_dark" />
 
             <View
                 android:id="@+id/sourceview_horizontal_divider"
@@ -57,14 +58,14 @@
                     android:paddingTop="16dp"
                     android:scrollbars="vertical"
                     android:textCursorDrawable="?attr/textColor"
-                    aztec:backgroundColor="@android:color/transparent"
+                    aztec:textColor="@color/grey_dark"
                     aztec:bulletColor="@color/blue_medium"
                     aztec:bulletMargin="@dimen/bullet_margin"
                     aztec:bulletPadding="@dimen/bullet_padding"
                     aztec:bulletWidth="@dimen/bullet_width"
                     aztec:historyEnable="true"
                     aztec:historySize="10"
-                    aztec:lineSpacingExtra="@dimen/spacing_extra"
+                    aztec:lineSpacingExtra="0.6dp"
                     aztec:lineSpacingMultiplier="@dimen/spacing_multiplier"
                     aztec:linkColor="@color/blue_wordpress"
                     aztec:linkUnderline="false"
