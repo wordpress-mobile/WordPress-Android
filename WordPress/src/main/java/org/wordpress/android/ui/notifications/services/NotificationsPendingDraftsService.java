@@ -144,11 +144,14 @@ public class NotificationsPendingDraftsService extends Service {
                         } else if (draftPostsOlderThan3Days.size() > 1) {
                             long longestLivingDraft = 0;
                             boolean onlyPagesFound = true;
+                            boolean doShowNotification = false;
                             for (Post post : draftPostsOlderThan3Days) {
 
                                 // update each post dateLastNotified field to now
                                 if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
-                                    if (post.getDateLastNotified() > longestLivingDraft) {
+
+                                    if (post.getDateLastNotified() >= longestLivingDraft) {
+                                        doShowNotification = true;
                                         longestLivingDraft = post.getDateLastNotified();
                                         if (!post.isPage()) {
                                             onlyPagesFound = false;
@@ -161,7 +164,7 @@ public class NotificationsPendingDraftsService extends Service {
 
                             // if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
                             // then show the notification again
-                            if (longestLivingDraft > 0) {
+                            if (doShowNotification) {
                                 buildPendingDraftsNotification(draftPostsOlderThan3Days, onlyPagesFound);
                             }
                         }
