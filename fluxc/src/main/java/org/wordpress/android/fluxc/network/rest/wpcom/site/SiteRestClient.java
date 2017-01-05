@@ -188,11 +188,11 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void deleteSite(SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).delete.getUrlV1_1();
-        WPComGsonRequest<DeleteSiteResponse> request = WPComGsonRequest.buildPostRequest(url, null,
-                DeleteSiteResponse.class,
-                new Listener<DeleteSiteResponse>() {
+        WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                SiteWPComRestResponse.class,
+                new Listener<SiteWPComRestResponse>() {
                     @Override
-                    public void onResponse(DeleteSiteResponse response) {
+                    public void onResponse(SiteWPComRestResponse response) {
                     }
                 },
                 new BaseErrorListener() {
