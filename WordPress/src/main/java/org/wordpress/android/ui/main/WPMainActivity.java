@@ -74,6 +74,7 @@ import org.wordpress.android.widgets.WPViewPager;
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
+import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.GROUPED_POST_ID_LIST_EXTRA;
 import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID;
 
 /**
@@ -212,7 +213,8 @@ public class WPMainActivity extends AppCompatActivity {
                         false));
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
-                    if (getIntent().hasExtra(NotificationsPendingDraftsService.POST_ID_EXTRA)) {
+                    if (getIntent().hasExtra(NotificationsPendingDraftsService.POST_ID_EXTRA) ||
+                            getIntent().hasExtra(GROUPED_POST_ID_LIST_EXTRA)) {
                         launchWithPostId(getIntent().getLongExtra(NotificationsPendingDraftsService.POST_ID_EXTRA, 0),
                                 getIntent().getBooleanExtra(NotificationsPendingDraftsService.IS_PAGE_EXTRA, false));
                     } else {
