@@ -385,6 +385,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             if (mInhibitMagicLogin) {
                 showDotComSignInForm();
             } else {
+                mIsMagicLinksEnabled = true;
                 configureMagicLinkUI();
             }
         } else {
@@ -612,7 +613,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private void configureMagicLinkUI() {
         showDotComSignInForm();
-        mIsMagicLinksEnabled = true;
         mSelfHosted = false;
         mPasswordLayout.setVisibility(View.GONE);
         mForgotPassword.setVisibility(View.GONE);
