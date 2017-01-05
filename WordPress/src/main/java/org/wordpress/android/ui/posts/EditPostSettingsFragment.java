@@ -1096,9 +1096,9 @@ public class EditPostSettingsFragment extends Fragment
             }
         }
 
-        // Add select category button
+        // Add select category button once the category list has been initialized
         Button selectCategory = (Button) layoutInflater.inflate(R.layout.category_select_button, null);
-        if (selectCategory != null) {
+        if (selectCategory != null && mCategories != null) {
             selectCategory.setOnClickListener(this);
             mSectionCategories.addView(selectCategory);
         }
