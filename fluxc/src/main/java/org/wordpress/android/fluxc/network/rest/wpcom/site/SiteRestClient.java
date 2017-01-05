@@ -60,6 +60,12 @@ public class SiteRestClient extends BaseWPComRestClient {
         public boolean dryRun;
     }
 
+    public static class DeleteSiteResponsePayload extends Payload {
+        public DeleteSiteResponsePayload() {
+        }
+        public String status;
+    }
+
     @Inject
     public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
                           AccessToken accessToken, UserAgent userAgent) {
@@ -193,11 +199,17 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<SiteWPComRestResponse>() {
                     @Override
                     public void onResponse(SiteWPComRestResponse response) {
+                        DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
+                        payload.status = response.status;
+                        mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
+                        payload.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
                 }
         );
