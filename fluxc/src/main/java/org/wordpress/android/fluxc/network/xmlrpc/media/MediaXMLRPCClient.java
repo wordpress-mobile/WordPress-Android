@@ -221,7 +221,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
         if (!MediaUtils.canReadFile(media.getFilePath())) {
             MediaStore.MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
-            notifyMediaUploaded(media, error);
+            notifyMediaUploaded(media, 0.f, error);
             return;
         }
 
@@ -279,6 +279,40 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         });
     }
 
+    @NonNull
+    private List<Object> getBasicParams(final SiteModel site, final MediaModel media) {
+        List<Object> params = new ArrayList<>();
+        if (site != null) {
+            params.add(site.getSelfHostedSiteId());
+            params.add(site.getUsername());
+            params.add(site.getPassword());
+            if (media != null) {
+                params.add(media.getMediaId());
+            }
+        }
+        return params;
+    }
+
+    private Map<String, Object> getQueryParams(final MediaFilter filter) {
+        Map<String, Object> queryParams = null;
+        if (filter != null) {
+            queryParams = new HashMap<>();
+            if (filter.number > 0) {
+                queryParams.put("number", Math.min(filter.number, MediaFilter.MAX_NUMBER));
+            }
+            if (filter.offset > 0) {
+                queryParams.put("offset", filter.offset);
+            }
+            if (filter.postId > 0) {
+                queryParams.put("parent_id", filter.postId);
+            }
+            if (!TextUtils.isEmpty(filter.mimeType)) {
+                queryParams.put("mime_type", filter.mimeType);
+            }
+        }
+        return queryParams;
+    }
+
     //
     // Helper methods to dispatch media actions
     //
@@ -314,9 +348,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newPushedMediaAction(payload));
     }
 
-    private void notifyMediaUploaded(MediaModel media, MediaError error) {
+    private void notifyMediaUploaded(MediaModel media, float progress, MediaError error) {
         AppLog.v(AppLog.T.MEDIA, "Notify media uploaded: " + media.getFilePath());
-        MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, 1.f, error == null);
+        MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, progress, error == null);
         payload.error = error;
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
@@ -337,31 +371,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     //
     // Utility methods
     //
-
-    // WordPress XML-RPC response keys
-    private static final String MEDIA_ID_KEY         = "attachment_id";
-    private static final String POST_ID_KEY          = "parent";
-    private static final String TITLE_KEY            = "title";
-    private static final String CAPTION_KEY          = "caption";
-    private static final String DESCRIPTION_KEY      = "description";
-    private static final String VIDEOPRESS_GUID_KEY  = "videopress_shortcode";
-    private static final String THUMBNAIL_URL_KEY    = "thumbnail";
-    private static final String DATE_UPLOADED_KEY    = "date_created_gmt";
-    private static final String LINK_KEY             = "link";
-    private static final String METADATA_KEY         = "metadata";
-    private static final String WIDTH_KEY            = "width";
-    private static final String HEIGHT_KEY           = "height";
-
-    // filter query parameter keys for XMLRPC.GET_MEDIA_LIBRARY
-    private static final String NUMBER_FILTER_KEY    = "number";
-    private static final String OFFSET_FILTER_KEY    = "offset";
-    private static final String PARENT_FILTER_KEY    = "parent_id";
-    private static final String MIME_TYPE_FILTER_KEY = "mime_type";
-
-    // keys for pushing changes to existing remote media
-    public static final String TITLE_EDIT_KEY       = "post_title";
-    public static final String DESCRIPTION_EDIT_KEY = "post_content";
-    public static final String CAPTION_EDIT_KEY     = "post_excerpt";
 
     // media list responses should be of type Object[] with each media item in the array represented by a HashMap
     private List<MediaModel> getMediaListFromXmlrpcResponse(Object response, long selfHostedSiteId) {
@@ -385,27 +394,27 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         if (response == null || response.isEmpty()) return null;
 
         MediaModel media = new MediaModel();
-        media.setMediaId(MapUtils.getMapLong(response, MEDIA_ID_KEY));
-        media.setPostId(MapUtils.getMapLong(response, POST_ID_KEY));
-        media.setTitle(MapUtils.getMapStr(response, TITLE_KEY));
-        media.setCaption(MapUtils.getMapStr(response, CAPTION_KEY));
-        media.setDescription(MapUtils.getMapStr(response, DESCRIPTION_KEY));
-        media.setVideoPressGuid(MapUtils.getMapStr(response, VIDEOPRESS_GUID_KEY));
-        media.setThumbnailUrl(MapUtils.getMapStr(response, THUMBNAIL_URL_KEY));
-        media.setUploadDate(MapUtils.getMapDate(response, DATE_UPLOADED_KEY).toString());
+        media.setMediaId(MapUtils.getMapLong(response, "attachment_id"));
+        media.setPostId(MapUtils.getMapLong(response, "parent"));
+        media.setTitle(MapUtils.getMapStr(response, "title"));
+        media.setCaption(MapUtils.getMapStr(response, "caption"));
+        media.setDescription(MapUtils.getMapStr(response, "description"));
+        media.setVideoPressGuid(MapUtils.getMapStr(response, "videopress_shortcode"));
+        media.setThumbnailUrl(MapUtils.getMapStr(response, "thumbnail"));
+        media.setUploadDate(MapUtils.getMapDate(response, "date_created_gmt").toString());
 
-        String link = MapUtils.getMapStr(response, LINK_KEY);
+        String link = MapUtils.getMapStr(response, "link");
         String fileExtension = MediaUtils.getExtension(link);
         media.setUrl(link);
         media.setFileName(MediaUtils.getFileName(link));
         media.setFileExtension(fileExtension);
         media.setMimeType(MediaUtils.getMimeTypeForExtension(fileExtension));
 
-        Object metadataObject = response.get(METADATA_KEY);
+        Object metadataObject = response.get("metadata");
         if (metadataObject instanceof Map) {
             Map metadataMap = (Map) metadataObject;
-            media.setWidth(MapUtils.getMapInt(metadataMap, WIDTH_KEY));
-            media.setHeight(MapUtils.getMapInt(metadataMap, HEIGHT_KEY));
+            media.setWidth(MapUtils.getMapInt(metadataMap, "width"));
+            media.setHeight(MapUtils.getMapInt(metadataMap, "height"));
         }
 
         return media;
@@ -418,55 +427,22 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
             Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             if (obj instanceof Map) {
-                media.setMediaId(MapUtils.getMapLong((Map) obj, MEDIA_ID_KEY));
+                media.setMediaId(MapUtils.getMapLong((Map) obj, "attachment_id"));
             }
         } catch (IOException | XMLRPCException | XmlPullParserException e) {
-            AppLog.w(AppLog.T.MEDIA, "failed to parse XMLRPC.wpUploadFile response: " + response);
+            AppLog.w(AppLog.T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
             return null;
         }
         return media;
     }
 
-    @NonNull
-    private List<Object> getBasicParams(final SiteModel site, final MediaModel media) {
-        List<Object> params = new ArrayList<>();
-        if (site != null) {
-            params.add(site.getSelfHostedSiteId());
-            params.add(site.getUsername());
-            params.add(site.getPassword());
-            if (media != null) {
-                params.add(media.getMediaId());
-            }
-        }
-        return params;
-    }
-
     private Map<String, Object> getEditMediaFields(final MediaModel media) {
         if (media == null) return null;
         Map<String, Object> mediaFields = new HashMap<>();
-        mediaFields.put(TITLE_EDIT_KEY, media.getTitle());
-        mediaFields.put(DESCRIPTION_EDIT_KEY, media.getDescription());
-        mediaFields.put(CAPTION_EDIT_KEY, media.getCaption());
+        mediaFields.put("post_title", media.getTitle());
+        mediaFields.put("post_content", media.getDescription());
+        mediaFields.put("post_excerpt", media.getCaption());
         return mediaFields;
-    }
-
-    private Map<String, Object> getQueryParams(final MediaFilter filter) {
-        if (filter == null) return null;
-
-        Map<String, Object> queryParams = new HashMap<>();
-        if (filter.number > 0) {
-            queryParams.put(NUMBER_FILTER_KEY, Math.min(filter.number, MediaFilter.MAX_NUMBER));
-        }
-        if (filter.offset > 0) {
-            queryParams.put(OFFSET_FILTER_KEY, filter.offset);
-        }
-        if (filter.postId > 0) {
-            queryParams.put(PARENT_FILTER_KEY, filter.postId);
-        }
-        if (!TextUtils.isEmpty(filter.mimeType)) {
-            queryParams.put(MIME_TYPE_FILTER_KEY, filter.mimeType);
-        }
-        return queryParams;
     }
 
     private boolean is404Response(BaseRequest.BaseNetworkError error) {
