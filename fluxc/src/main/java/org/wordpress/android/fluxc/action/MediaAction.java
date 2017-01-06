@@ -20,6 +20,8 @@ public enum MediaAction implements IAction {
     FETCH_MEDIA,
     @Action(payloadType = MediaListPayload.class)
     DELETE_MEDIA,
+    @Action(payloadType = MediaListPayload.class)
+    CANCEL_MEDIA_UPLOAD,
 
     // Remote responses
     @Action(payloadType = MediaListPayload.class)
@@ -30,6 +32,8 @@ public enum MediaAction implements IAction {
     FETCHED_MEDIA,
     @Action(payloadType = MediaListPayload.class)
     DELETED_MEDIA,
+    @Action(payloadType = ProgressPayload.class)
+    CANCELED_MEDIA_UPLOAD,
 
     // Local actions
     @Action(payloadType = MediaListPayload.class)

@@ -228,6 +228,9 @@ public class MediaStore extends Store {
             case DELETE_MEDIA:
                 performDeleteMedia((MediaListPayload) action.getPayload());
                 break;
+            case CANCEL_MEDIA_UPLOAD:
+                performCancelUpload((MediaListPayload) action.getPayload());
+                break;
             case PUSHED_MEDIA:
                 handleMediaPushed((MediaListPayload) action.getPayload());
                 break;
@@ -240,6 +243,9 @@ public class MediaStore extends Store {
                 break;
             case DELETED_MEDIA:
                 handleMediaDeleted((MediaListPayload) action.getPayload());
+                break;
+            case CANCELED_MEDIA_UPLOAD:
+                handleMediaUploaded((ProgressPayload) action.getPayload());
                 break;
             case UPDATE_MEDIA:
                 updateMedia(((MediaListPayload) action.getPayload()).media, true);
@@ -466,6 +472,16 @@ public class MediaStore extends Store {
             mMediaRestClient.deleteMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
+        }
+    }
+
+    private void performCancelUpload(@NonNull MediaListPayload payload) {
+        if (payload.media != null && !payload.media.isEmpty()) {
+            if (payload.site.isWPCom()) {
+                mMediaRestClient.cancelUpload(payload.media.get(0));
+            } else {
+                mMediaXmlrpcClient.cancelUpload(payload.media.get(0));
+            }
         }
     }
 

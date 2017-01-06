@@ -57,6 +57,7 @@ import okhttp3.OkHttpClient;
  */
 public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
+    private Call mCurrentUploadCall;
 
     public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                            OkHttpClient okClient, AccessToken accessToken, UserAgent userAgent) {
@@ -214,6 +215,23 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
     }
 
+    public void cancelUpload(final MediaModel media) {
+        if (media == null) {
+            MediaStore.MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            notifyMediaUploaded(null, error);
+            return;
+        }
+
+        // cancel in-progress upload if necessary
+        if (mCurrentUploadCall != null && mCurrentUploadCall.isExecuted() && !mCurrentUploadCall.isCanceled()) {
+            AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
+            mCurrentUploadCall.cancel();
+            mCurrentUploadCall = null;
+        }
+        // always report without error
+        notifyMediaUploadCanceled(media);
+    }
+
     private void performUpload(final MediaModel media, final long siteId) {
         if (!MediaUtils.canReadFile(media.getFilePath())) {
             MediaStore.MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
@@ -232,7 +250,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 .post(body)
                 .build();
 
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
+        mCurrentUploadCall = mOkHttpClient.newCall(request);
+        mCurrentUploadCall.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.isSuccessful()) {
@@ -302,10 +321,17 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
-        AppLog.v(AppLog.T.MEDIA, "Notify media uploaded: " + media.getFilePath());
+        if (media != null) {
+            AppLog.v(AppLog.T.MEDIA, "Notify media uploaded: " + media.getFilePath());
+        }
         MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, 1.f, error == null);
         payload.error = error;
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
+    }
+
+    private void notifyMediaUploadCanceled(MediaModel media) {
+        MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, -1.f, false);
+        mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload));
     }
 
     //
