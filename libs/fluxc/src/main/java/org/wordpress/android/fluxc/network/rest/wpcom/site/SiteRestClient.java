@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.NewAccountResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
@@ -63,7 +64,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     public static class DeleteSiteResponsePayload extends Payload {
         public DeleteSiteResponsePayload() {
         }
-        public String status;
+        public DeleteSiteError error;
     }
 
     @Inject
@@ -200,7 +201,6 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SiteWPComRestResponse response) {
                         DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
-                        payload.status = response.status;
                         mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
                 },
@@ -208,7 +208,6 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
-                        payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
                 }
