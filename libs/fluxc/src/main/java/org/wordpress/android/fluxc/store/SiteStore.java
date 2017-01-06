@@ -97,8 +97,8 @@ public class SiteStore extends Store {
     public static class DeleteSiteError implements OnChangedError {
         public DeleteSiteErrorType type;
         public String message;
-        public DeleteSiteError(DeleteSiteErrorType type, @NonNull String message) {
-            this.type = type;
+        public DeleteSiteError(String errorType, @NonNull String message) {
+            this.type = DeleteSiteErrorType.fromString(errorType);
             this.message = message;
         }
     }
