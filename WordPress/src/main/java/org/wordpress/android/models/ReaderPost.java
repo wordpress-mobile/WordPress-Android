@@ -735,28 +735,6 @@ public class ReaderPost {
     }
 
     /*
-     * determine which tag to display for this post
-     *  - no tag if this is a private blog or there is no primary tag for this post
-     *  - primary tag, unless it's the same as the currently selected tag
-     *  - secondary tag if primary tag is the same as the currently selected tag
-     */
-    private transient String tagForDisplay;
-    public String getTagForDisplay(final String currentTagName) {
-        if (tagForDisplay == null) {
-            if (!isPrivate && hasPrimaryTag()) {
-                if (getPrimaryTag().equalsIgnoreCase(currentTagName)) {
-                    tagForDisplay = getSecondaryTag();
-                } else {
-                    tagForDisplay = getPrimaryTag();
-                }
-            } else {
-                tagForDisplay = "";
-            }
-        }
-        return tagForDisplay;
-    }
-
-    /*
      * used when a unique numeric id is required by an adapter (when hasStableIds() = true)
      */
     private transient long stableId;
