@@ -65,6 +65,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     public static class DeleteSiteResponsePayload extends Payload {
         public DeleteSiteResponsePayload() {
         }
+        public SiteModel site;
         public DeleteSiteError error;
     }
 
@@ -194,7 +195,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void deleteSite(SiteModel site) {
+    public void deleteSite(final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).delete.getUrlV1_1();
         WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 SiteWPComRestResponse.class,
@@ -202,6 +203,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SiteWPComRestResponse response) {
                         DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
+                        payload.site = site;
                         mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
                 },
@@ -211,6 +213,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
                         WPComGsonNetworkError networkError = ((WPComGsonNetworkError) error);
                         payload.error = new DeleteSiteError(networkError.apiError, networkError.message);
+                        payload.site = site;
                         mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
                 }
