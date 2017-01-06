@@ -622,7 +622,7 @@ public class SiteStore extends Store {
     }
 
     private void deleteSite(SiteModel site) {
-        if (!site.isWPCom()) {
+        if (site == null || !site.isWPCom()) {
             return;
         }
         mSiteRestClient.deleteSite(site);
