@@ -370,8 +370,8 @@ public class PostsListFragment extends Fragment
     }
 
     /*
-     * called by the adapter after posts have been loaded
-     */
+         * called by the adapter after posts have been loaded
+         */
     @Override
     public void onPostsLoaded(int postCount) {
         if (!isAdded()) {
