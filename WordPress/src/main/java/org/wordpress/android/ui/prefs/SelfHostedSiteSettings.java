@@ -144,6 +144,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 };
 
                 // Need two interfaces or the first call gets aborted
+                // TODO: Replace with FluxC
                 instantiateInterface().callAsync(mOptionsCallback, Method.GET_OPTIONS, params);
                 instantiateInterface().callAsync(mCategoriesCallback, Method.GET_CATEGORIES, params);
             }
