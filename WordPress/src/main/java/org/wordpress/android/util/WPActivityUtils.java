@@ -43,7 +43,12 @@ public class WPActivityUtils {
             return;
         }
 
-        ViewGroup root = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
+        ViewGroup root;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            root = (ViewGroup) dialog.findViewById(android.R.id.list_container).getParent();
+        } else {
+            root = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
+        }
         toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
                 .inflate(org.wordpress.android.R.layout.toolbar, root, false);
         root.addView(toolbar, 0);
