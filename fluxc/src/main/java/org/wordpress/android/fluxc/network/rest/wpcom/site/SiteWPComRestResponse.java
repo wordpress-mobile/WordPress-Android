@@ -64,5 +64,4 @@ public class SiteWPComRestResponse extends Payload implements Response {
     public Capabilities capabilities;
     public Plan plan;
     public Meta meta;
-    public String status;
 }
