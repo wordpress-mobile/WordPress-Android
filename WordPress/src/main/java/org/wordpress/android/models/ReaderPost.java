@@ -16,6 +16,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
 import java.util.Iterator;
@@ -307,7 +308,7 @@ public class ReaderPost {
 
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
-            String thisTagName = JSONUtils.getStringDecoded(jsonThisTag, "slug");
+            String thisTagName = UrlUtils.urlDecode(JSONUtils.getString(jsonThisTag, "slug"));
 
             // if the number of posts on this blog that use this tag is higher than previous,
             // set this as the most popular tag, and set the second most popular tag to
