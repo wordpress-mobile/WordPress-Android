@@ -94,6 +94,15 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DeleteSiteError implements OnChangedError {
+        public DeleteSiteErrorType type;
+        public String message;
+        public DeleteSiteError(DeleteSiteErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     // OnChanged Events
     public class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
@@ -128,6 +137,23 @@ public class SiteStore extends Store {
     public enum PostFormatsErrorType {
         INVALID_SITE,
         GENERIC_ERROR
+    }
+
+    public enum DeleteSiteErrorType {
+        UNAUTHORIZED, // user don't have permission to delete
+        AUTHORIZATION_REQUIRED, // missing access token
+        GENERIC_ERROR;
+
+        public static DeleteSiteErrorType fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                if (string.equals("unauthorized")) {
+                    return UNAUTHORIZED;
+                } else if (string.equals("authorization_required")) {
+                    return AUTHORIZATION_REQUIRED;
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     // Enums
