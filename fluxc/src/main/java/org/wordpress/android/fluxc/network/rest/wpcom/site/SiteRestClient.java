@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.NewAccountResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
@@ -208,6 +209,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
+                        WPComGsonNetworkError networkError = ((WPComGsonNetworkError) error);
+                        payload.error = new DeleteSiteError(networkError.apiError, networkError.message);
                         mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
                 }
