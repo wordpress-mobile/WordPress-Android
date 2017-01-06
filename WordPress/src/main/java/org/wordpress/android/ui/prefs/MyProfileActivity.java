@@ -6,6 +6,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import org.wordpress.android.R;
+
 public class MyProfileActivity extends AppCompatActivity {
     private static final String KEY_MY_PROFILE_FRAGMENT = "my-profile-fragment";
 
@@ -17,6 +19,7 @@ public class MyProfileActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.my_profile);
         }
 
         FragmentManager fragmentManager = getFragmentManager();
