@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
@@ -120,6 +121,12 @@ public class SiteStore extends Store {
 
     public class OnNewSiteCreated extends OnChanged<NewSiteError> {
         public boolean dryRun;
+    }
+
+    public class OnSiteDeleted extends OnChanged<DeleteSiteError> {
+        public OnSiteDeleted(DeleteSiteError error) {
+            this.error = error;
+        }
     }
 
     public class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
@@ -569,6 +576,9 @@ public class SiteStore extends Store {
             case FETCHED_POST_FORMATS:
                 updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
                 break;
+            case DELETED_SITE:
+                handleDeletedSite((SiteRestClient.DeleteSiteResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -661,6 +671,14 @@ public class SiteStore extends Store {
             event.error = new PostFormatsError(PostFormatsErrorType.GENERIC_ERROR);
         } else {
             SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats);
+        }
+        emitChange(event);
+    }
+
+    private void handleDeletedSite(DeleteSiteResponsePayload payload) {
+        OnSiteDeleted event = new OnSiteDeleted(payload.error);
+        if (!payload.isError()) {
+            SiteSqlUtils.deleteSite(payload.site);
         }
         emitChange(event);
     }
