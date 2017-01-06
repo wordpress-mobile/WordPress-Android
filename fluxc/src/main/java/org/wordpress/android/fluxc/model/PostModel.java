@@ -137,11 +137,11 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
 
     @NonNull
     public List<Long> getCategoryIdList() {
-        return taxonomyIdStringToList(mCategoryIds);
+        return termIdStringToList(mCategoryIds);
     }
 
     public void setCategoryIdList(List<Long> categories) {
-        mCategoryIds = taxonomyIdListToString(categories);
+        mCategoryIds = termIdListToString(categories);
     }
 
     public String getCustomFields() {
@@ -432,7 +432,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         return (mLastKnownRemoteFeaturedImageId != mFeaturedImageId);
     }
 
-    private static List<Long> taxonomyIdStringToList(String ids) {
+    private static List<Long> termIdStringToList(String ids) {
         if (ids == null || ids.isEmpty()) {
             return Collections.emptyList();
         }
@@ -444,7 +444,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         return longList;
     }
 
-    private static String taxonomyIdListToString(List<Long> ids) {
+    private static String termIdListToString(List<Long> ids) {
         if (ids == null || ids.isEmpty()) {
             return "";
         }
