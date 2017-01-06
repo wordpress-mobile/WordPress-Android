@@ -39,14 +39,19 @@ public class WPActivityUtils {
         }
 
         Toolbar toolbar;
-        if (dialog.findViewById(android.R.id.list) == null) {
+        if (dialog.findViewById(android.R.id.list) == null &&
+                dialog.findViewById(android.R.id.list_container) == null) {
             return;
         }
 
-        ViewGroup root;
+        ViewGroup root = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            root = (ViewGroup) dialog.findViewById(android.R.id.list_container).getParent();
-        } else {
+            ViewGroup listContainer = (ViewGroup) dialog.findViewById(android.R.id.list_container);
+            if (listContainer != null) {
+                root = (ViewGroup) listContainer.getParent();
+            }
+        }
+        if (root == null) {
             root = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
         }
         toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
