@@ -53,8 +53,12 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request.Builder;
 
+import static org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.fromHttpStatusCode;
+
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
+    // track the network call to support cancelling
+    private Call mCurrentUploadCall;
 
     public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okClient,
                              AccessToken accessToken, UserAgent userAgent,
@@ -196,6 +200,16 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
     }
 
+    public void cancelUpload(final MediaModel media) {
+        // cancel in-progress upload if necessary
+        if (mCurrentUploadCall != null && mCurrentUploadCall.isExecuted() && !mCurrentUploadCall.isCanceled()) {
+            mCurrentUploadCall.cancel();
+            mCurrentUploadCall = null;
+        }
+        // always report without error
+        notifyMediaUploadCanceled(media);
+    }
+
     private void performUpload(SiteModel site, final MediaModel media) {
         URL xmlrpcUrl;
         try {
@@ -239,25 +253,28 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
         okhttp3.Request request = builder.build();
 
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
+        mCurrentUploadCall = mOkHttpClient.newCall(request);
+        mCurrentUploadCall.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     AppLog.d(T.MEDIA, "media upload successful: " + media.getTitle());
                     MediaModel responseMedia = getMediaFromUploadResponse(response);
-                    notifyMediaUploaded(responseMedia, null);
+                    notifyMediaUploaded(responseMedia, 1.f, null);
                 } else {
-                    AppLog.w(T.MEDIA, "error uploading media: " + response);
-                    MediaStore.MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
-                    notifyMediaUploaded(media, error);
+                    AppLog.w(T.MEDIA, "error uploading media: " + response.message());
+                    MediaError error = new MediaError(fromHttpStatusCode(response.code()));
+                    notifyMediaUploaded(media, 0.f, error);
                 }
+                mCurrentUploadCall = null;
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
-                notifyMediaUploaded(media, error);
+                notifyMediaUploaded(media, 0.f, error);
+                mCurrentUploadCall = null;
             }
         });
     }
@@ -302,6 +319,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, 1.f, error == null);
         payload.error = error;
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
+    }
+
+    private void notifyMediaUploadCanceled(MediaModel media) {
+        MediaStore.ProgressPayload payload = new MediaStore.ProgressPayload(media, -1.f, false);
+        mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload));
     }
 
     private void notifyMediaDeleted(MediaAction cause, SiteModel site, MediaModel media, MediaError error) {
