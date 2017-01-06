@@ -44,6 +44,7 @@ public class AppLogViewerActivity extends AppCompatActivity {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.reader_title_applog);
         }
 
         final ListView listView = (ListView) findViewById(android.R.id.list);
