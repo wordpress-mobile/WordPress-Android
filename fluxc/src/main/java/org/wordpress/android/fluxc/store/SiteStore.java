@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
@@ -94,6 +95,15 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DeleteSiteError implements OnChangedError {
+        public DeleteSiteErrorType type;
+        public String message;
+        public DeleteSiteError(String errorType, @NonNull String message) {
+            this.type = DeleteSiteErrorType.fromString(errorType);
+            this.message = message;
+        }
+    }
+
     // OnChanged Events
     public class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
@@ -113,6 +123,12 @@ public class SiteStore extends Store {
         public boolean dryRun;
     }
 
+    public class OnSiteDeleted extends OnChanged<DeleteSiteError> {
+        public OnSiteDeleted(DeleteSiteError error) {
+            this.error = error;
+        }
+    }
+
     public class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
         public SiteModel site;
         public OnPostFormatsChanged(SiteModel site) {
@@ -128,6 +144,23 @@ public class SiteStore extends Store {
     public enum PostFormatsErrorType {
         INVALID_SITE,
         GENERIC_ERROR
+    }
+
+    public enum DeleteSiteErrorType {
+        UNAUTHORIZED, // user don't have permission to delete
+        AUTHORIZATION_REQUIRED, // missing access token
+        GENERIC_ERROR;
+
+        public static DeleteSiteErrorType fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                if (string.equals("unauthorized")) {
+                    return UNAUTHORIZED;
+                } else if (string.equals("authorization_required")) {
+                    return AUTHORIZATION_REQUIRED;
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     // Enums
@@ -517,6 +550,9 @@ public class SiteStore extends Store {
             case UPDATE_SITES:
                 updateSites((SitesModel) action.getPayload());
                 break;
+            case DELETE_SITE:
+                deleteSite((SiteModel) action.getPayload());
+                break;
             case EXPORT_SITE:
                 exportSite((SiteModel) action.getPayload());
                 break;
@@ -543,6 +579,9 @@ public class SiteStore extends Store {
                 break;
             case FETCHED_POST_FORMATS:
                 updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
+                break;
+            case DELETED_SITE:
+                handleDeletedSite((SiteRestClient.DeleteSiteResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -596,6 +635,20 @@ public class SiteStore extends Store {
         }
     }
 
+    private void deleteSite(SiteModel site) {
+        if (site == null || !site.isWPCom()) {
+            return;
+        }
+        mSiteRestClient.deleteSite(site);
+    }
+
+    private void exportSite(SiteModel site) {
+        if (site == null || !site.isWPCom()) {
+            return;
+        }
+        mSiteRestClient.exportSite(site);
+    }
+
     private void updateSite(SiteModel siteModel) {
         OnSiteChanged event;
         if (siteModel.isError()) {
@@ -622,13 +675,6 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void exportSite(SiteModel site) {
-        if (site == null || !site.isWPCom()) {
-            return;
-        }
-        mSiteRestClient.exportSite(site);
-    }
-
     private void updatePostFormats(FetchedPostFormatsPayload payload) {
         OnPostFormatsChanged event = new OnPostFormatsChanged(payload.site);
         if (payload.isError()) {
@@ -636,6 +682,14 @@ public class SiteStore extends Store {
             event.error = new PostFormatsError(PostFormatsErrorType.GENERIC_ERROR);
         } else {
             SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats);
+        }
+        emitChange(event);
+    }
+
+    private void handleDeletedSite(DeleteSiteResponsePayload payload) {
+        OnSiteDeleted event = new OnSiteDeleted(payload.error);
+        if (!payload.isError()) {
+            SiteSqlUtils.deleteSite(payload.site);
         }
         emitChange(event);
     }

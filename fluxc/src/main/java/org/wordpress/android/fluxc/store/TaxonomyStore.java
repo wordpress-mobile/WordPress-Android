@@ -221,15 +221,15 @@ public class TaxonomyStore extends Store {
     /**
      * Returns all the categories for the given post as a {@link TermModel} list.
      */
-    public List<TermModel> getCategoriesForPost(PostModel post) {
-        return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getCategoryIdList(), DEFAULT_TAXONOMY_CATEGORY);
+    public List<TermModel> getCategoriesForPost(PostModel post, SiteModel site) {
+        return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getCategoryIdList(), site, DEFAULT_TAXONOMY_CATEGORY);
     }
 
     /**
      * Returns all the tags for the given post as a {@link TermModel} list.
      */
-    public List<TermModel> getTagsForPost(PostModel post) {
-        return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getTagIdList(), DEFAULT_TAXONOMY_TAG);
+    public List<TermModel> getTagsForPost(PostModel post, SiteModel site) {
+        return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getTagIdList(), site, DEFAULT_TAXONOMY_TAG);
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
