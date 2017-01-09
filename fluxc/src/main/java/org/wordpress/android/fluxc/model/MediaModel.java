@@ -5,13 +5,14 @@ import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
+import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 
 @Table
-public class MediaModel implements Identifiable, Serializable {
+public class MediaModel extends Payload implements Identifiable, Serializable {
     public enum UploadState {
         QUEUED("queued"),
         UPLOADING("uploading"),
