@@ -552,6 +552,7 @@ public class SiteStore extends Store {
                 break;
             case DELETE_SITE:
                 deleteSite((SiteModel) action.getPayload());
+                break;
             case REMOVE_SITE:
                 removeSite((SiteModel) action.getPayload());
                 break;
