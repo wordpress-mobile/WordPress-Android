@@ -80,6 +80,7 @@ import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -416,10 +417,10 @@ public class EditPostSettingsFragment extends Fragment
                 break;
         }
 
-//        String tags = mPost.getKeywords();
-//        if (!tags.equals("")) {
-//            mTagsEditText.setText(tags);
-//        }
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        if (!tags.equals("")) {
+            mTagsEditText.setText(tags);
+        }
 
         if (AppPrefs.isVisualEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
@@ -700,8 +701,7 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         post.setExcerpt(excerpt);
-        // TODO: Implement when we have TaxonomyStore
-        //post.setKeywords(tags);
+        post.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         post.setStatus(status);
         post.setPassword(password);
         post.setPostFormat(postFormat);
