@@ -186,6 +186,24 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void exportSite(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).exports.getUrlV1_1();
+        final WPComGsonRequest<ExportSiteResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                ExportSiteResponse.class,
+                new Listener<ExportSiteResponse>() {
+                    @Override
+                    public void onResponse(ExportSiteResponse response) {
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    }
+                }
+        );
+        add(request);
+    }
+
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
         SiteModel site = new SiteModel();
         site.setSiteId(from.ID);
