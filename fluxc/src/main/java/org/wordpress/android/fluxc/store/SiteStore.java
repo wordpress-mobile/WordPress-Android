@@ -517,6 +517,9 @@ public class SiteStore extends Store {
             case UPDATE_SITES:
                 updateSites((SitesModel) action.getPayload());
                 break;
+            case EXPORT_SITE:
+                exportSite((SiteModel) action.getPayload());
+                break;
             case REMOVE_SITE:
                 removeSite((SiteModel) action.getPayload());
                 break;
@@ -617,6 +620,13 @@ public class SiteStore extends Store {
             event = new OnSiteChanged(rowsAffected);
         }
         emitChange(event);
+    }
+
+    private void exportSite(SiteModel site) {
+        if (site == null || !site.isWPCom()) {
+            return;
+        }
+        mSiteRestClient.exportSite(site);
     }
 
     private void updatePostFormats(FetchedPostFormatsPayload payload) {
