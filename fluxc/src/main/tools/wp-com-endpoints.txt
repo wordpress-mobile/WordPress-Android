@@ -5,6 +5,7 @@
 /sites/
 /sites/new/
 /sites/$site/post-formats/
+/sites/$site/exports/start
 
 /sites/$site/posts/
 /sites/$site/posts/$post_ID/
