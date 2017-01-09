@@ -247,11 +247,11 @@ public class PostRestClient extends BaseWPComRestClient {
         }
 
         if (from.tags != null) {
-            List<Long> tagIds = new ArrayList<>();
+            List<String> tagNames = new ArrayList<>();
             for (TermWPComRestResponse value : from.tags.values()) {
-                tagIds.add(value.ID);
+                tagNames.add(value.name);
             }
-            post.setTagIdList(tagIds);
+            post.setTagNameList(tagNames);
         }
 
         if (from.capabilities != null) {
@@ -291,7 +291,7 @@ public class PostRestClient extends BaseWPComRestClient {
         params.put("password", StringUtils.notNullStr(post.getPassword()));
 
         params.put("categories", TextUtils.join(",", post.getCategoryIdList()));
-        params.put("tags", TextUtils.join(",", post.getTagIdList()));
+        params.put("tags", TextUtils.join(",", post.getTagNameList()));
 
         // Will remove any existing featured image if the empty string is sent
         if (post.featuredImageHasChanged()) {
