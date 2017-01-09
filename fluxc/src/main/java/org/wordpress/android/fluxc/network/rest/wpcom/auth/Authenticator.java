@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
-import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -65,16 +64,6 @@ public class Authenticator {
     }
 
     public interface ErrorListener extends Response.ErrorListener {
-    }
-
-    public static class AuthenticateErrorPayload extends Payload {
-        public AuthenticationError error;
-        public AuthenticateErrorPayload(@NonNull AuthenticationError error) {
-            this.error = error;
-        }
-        public AuthenticateErrorPayload(@NonNull AuthenticationErrorType errorType) {
-            this.error = new AuthenticationError(errorType, "");
-        }
     }
 
     public static class AuthEmailResponsePayload extends Payload {
