@@ -1108,7 +1108,7 @@ public class EditPostSettingsFragment extends Fragment
     public void onTaxonomyChanged(OnTaxonomyChanged event) {
         switch (event.causeOfChange) {
             case FETCH_CATEGORIES:
-                mCategories = mTaxonomyStore.getCategoriesForPost(mPost);
+                mCategories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
                 populateSelectedCategories();
                 break;
         }
