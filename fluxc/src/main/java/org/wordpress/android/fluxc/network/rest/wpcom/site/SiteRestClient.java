@@ -21,10 +21,12 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.NewAccountResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
@@ -58,6 +60,13 @@ public class SiteRestClient extends BaseWPComRestClient {
         }
         public NewSiteError error;
         public boolean dryRun;
+    }
+
+    public static class DeleteSiteResponsePayload extends Payload {
+        public DeleteSiteResponsePayload() {
+        }
+        public SiteModel site;
+        public DeleteSiteError error;
     }
 
     @Inject
@@ -180,6 +189,32 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 new ArrayList<PostFormatModel>());
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void deleteSite(final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).delete.getUrlV1_1();
+        WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                SiteWPComRestResponse.class,
+                new Listener<SiteWPComRestResponse>() {
+                    @Override
+                    public void onResponse(SiteWPComRestResponse response) {
+                        DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
+                        payload.site = site;
+                        mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
+                        WPComGsonNetworkError networkError = ((WPComGsonNetworkError) error);
+                        payload.error = new DeleteSiteError(networkError.apiError, networkError.message);
+                        payload.site = site;
+                        mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
                     }
                 }
         );
