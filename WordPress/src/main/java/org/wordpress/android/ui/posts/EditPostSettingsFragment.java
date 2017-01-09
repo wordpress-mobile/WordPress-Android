@@ -1104,6 +1104,7 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTaxonomyChanged(OnTaxonomyChanged event) {
         switch (event.causeOfChange) {
