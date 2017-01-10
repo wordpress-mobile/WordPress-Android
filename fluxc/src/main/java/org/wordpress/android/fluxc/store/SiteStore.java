@@ -20,8 +20,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.util.AppLog;
@@ -719,11 +719,8 @@ public class SiteStore extends Store {
     private void handleExportedSite(ExportSiteResponsePayload payload) {
         OnSiteExported event = new OnSiteExported();
         if (payload.isError()) {
-            if (payload.error.type.equals("unknown_blog")) {
-                event.error = new ExportSiteError(ExportSiteErrorType.INVALID_SITE);
-            } else {
-                event.error = new ExportSiteError(ExportSiteErrorType.GENERIC_ERROR);
-            }
+            // TODO: what kind of error could we get here?
+            event.error = new ExportSiteError(ExportSiteErrorType.GENERIC_ERROR);
         }
         emitChange(event);
     }
