@@ -69,6 +69,12 @@ public class SiteRestClient extends BaseWPComRestClient {
         public DeleteSiteError error;
     }
 
+    public static class ExportSiteResponsePayload extends Payload {
+        public ExportSiteResponsePayload() {
+        }
+        public SiteModel site;
+    }
+
     @Inject
     public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
                           AccessToken accessToken, UserAgent userAgent) {
@@ -228,11 +234,16 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<ExportSiteResponse>() {
                     @Override
                     public void onResponse(ExportSiteResponse response) {
+                        ExportSiteResponsePayload payload = new ExportSiteResponsePayload();
+                        mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        ExportSiteResponsePayload payload = new ExportSiteResponsePayload();
+                        payload.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
                     }
                 }
         );
