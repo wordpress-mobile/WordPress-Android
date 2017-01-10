@@ -434,12 +434,19 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             // Add categories by ID to the 'terms' param
             Map<Object, Object> terms = new HashMap<>();
             terms.put("category", post.getCategoryIdList().toArray());
-            contentStruct.put("terms", terms);
 
-            // Add tags by name to the 'terms_names' param
-            Map<Object, Object> termsNames = new HashMap<>();
-            termsNames.put("post_tag", post.getTagNameList().toArray());
-            contentStruct.put("terms_names", termsNames);
+            if (!post.getTagNameList().isEmpty()) {
+                // Add tags by name to the 'terms_names' param
+                Map<Object, Object> termsNames = new HashMap<>();
+                termsNames.put("post_tag", post.getTagNameList().toArray());
+                contentStruct.put("terms_names", termsNames);
+            } else {
+                // To clear any existing tags, we must pass an empty 'post_tag' array in the 'terms' param
+                // (this won't work in the 'terms_names' param)
+                terms.put("post_tag", post.getTagNameList().toArray());
+            }
+
+            contentStruct.put("terms", terms);
         }
 
         contentStruct.put("post_excerpt", post.getExcerpt());
