@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.util.AppLog;
@@ -104,6 +105,14 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class ExportSiteError implements OnChangedError {
+        public ExportSiteErrorType type;
+
+        public ExportSiteError(ExportSiteErrorType type) {
+            this.type = type;
+        }
+    }
+
     // OnChanged Events
     public class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
@@ -126,6 +135,11 @@ public class SiteStore extends Store {
     public class OnSiteDeleted extends OnChanged<DeleteSiteError> {
         public OnSiteDeleted(DeleteSiteError error) {
             this.error = error;
+        }
+    }
+
+    public class OnSiteExported extends OnChanged<ExportSiteError> {
+        public OnSiteExported() {
         }
     }
 
@@ -161,6 +175,11 @@ public class SiteStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum ExportSiteErrorType {
+        INVALID_SITE,
+        GENERIC_ERROR
     }
 
     // Enums
@@ -583,6 +602,9 @@ public class SiteStore extends Store {
             case DELETED_SITE:
                 handleDeletedSite((SiteRestClient.DeleteSiteResponsePayload) action.getPayload());
                 break;
+            case EXPORTED_SITE:
+                handleExportedSite((SiteRestClient.ExportSiteResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -690,6 +712,18 @@ public class SiteStore extends Store {
         OnSiteDeleted event = new OnSiteDeleted(payload.error);
         if (!payload.isError()) {
             SiteSqlUtils.deleteSite(payload.site);
+        }
+        emitChange(event);
+    }
+
+    private void handleExportedSite(ExportSiteResponsePayload payload) {
+        OnSiteExported event = new OnSiteExported();
+        if (payload.isError()) {
+            if (payload.error.type.equals("unknown_blog")) {
+                event.error = new ExportSiteError(ExportSiteErrorType.INVALID_SITE);
+            } else {
+                event.error = new ExportSiteError(ExportSiteErrorType.GENERIC_ERROR);
+            }
         }
         emitChange(event);
     }
