@@ -100,7 +100,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
 
         // The URL has potentially changed. See if we need to load it.
-        loadImageIfNecessary(imageLoadListener);
+        loadImageIfNecessary(false, imageLoadListener);
     }
 
     /*
@@ -149,8 +149,10 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     /**
      * Loads the image for the view if it isn't already loaded.
+     * @param isInLayoutPass True if this was invoked from a layout pass, false otherwise.
      */
-    private void loadImageIfNecessary(final ImageLoadListener imageLoadListener) {
+    private void loadImageIfNecessary(final boolean isInLayoutPass,
+                                      final ImageLoadListener imageLoadListener) {
         // do nothing if image type hasn't been set yet
         if (mImageType == ImageType.NONE) {
             return;
@@ -210,6 +212,19 @@ public class WPNetworkImageView extends AppCompatImageView {
 
                     @Override
                     public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
+                        // If this was an immediate response that was delivered inside of a layout
+                        // pass do not set the image immediately as it will trigger a requestLayout
+                        // inside of a layout. Instead, defer setting the image by posting back to
+                        // the main thread.
+                        if (isImmediate && isInLayoutPass) {
+                            post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onResponse(response, false);
+                                }
+                            });
+                            return;
+                        }
                         handleResponse(response, isImmediate, imageLoadListener);
                     }
                 }, 0, 0, getScaleType());
@@ -275,9 +290,21 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        resetImage();
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        loadImageIfNecessary(true, null);
+    }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        if (mImageContainer != null) {
+            // If the view was bound to an image request, cancel it and clear
+            // out the image from the view.
+            mImageContainer.cancelRequest();
+            setImageBitmap(null);
+            // also clear out the container so we can reload the image if necessary.
+            mImageContainer = null;
+        }
         super.onDetachedFromWindow();
     }
 

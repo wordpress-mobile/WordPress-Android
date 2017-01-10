@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -67,6 +68,7 @@ public class PostsListFragment extends Fragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
+    private boolean mShouldCancelPendingDraftNotification = false;
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
@@ -140,8 +142,8 @@ public class PostsListFragment extends Fragment
                 });
     }
 
-    public PostsListAdapter getPostListAdapter() {
-        if (mPostsListAdapter == null) {
+    private @Nullable PostsListAdapter getPostListAdapter() {
+        if (mPostsListAdapter == null && WordPress.getCurrentBlog() != null) {
             mPostsListAdapter = new PostsListAdapter(getActivity(), WordPress.getCurrentBlog(), mIsPage);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
@@ -157,7 +159,9 @@ public class PostsListFragment extends Fragment
     }
 
     private void loadPosts() {
-        getPostListAdapter().loadPosts();
+        if (getPostListAdapter() != null) {
+            getPostListAdapter().loadPosts();
+        }
     }
 
     @Override
@@ -186,7 +190,7 @@ public class PostsListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        if (WordPress.getCurrentBlog() != null && mRecyclerView.getAdapter() == null) {
+        if (getPostListAdapter() != null && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
@@ -227,7 +231,7 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        if (getPostListAdapter().getItemCount() == 0) {
+        if (getPostListAdapter() != null && getPostListAdapter().getItemCount() == 0) {
             updateEmptyView(EmptyViewMessageType.LOADING);
         }
 
@@ -256,7 +260,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
-        if (isAdded() && WordPress.getCurrentBlog() != null) {
+        if (isAdded() && getPostListAdapter() != null) {
             getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
         }
     }
@@ -353,6 +357,16 @@ public class PostsListFragment extends Fragment
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onDetach() {
+        if (mShouldCancelPendingDraftNotification) {
+            // delete the pending draft notification if available
+            NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
+            mShouldCancelPendingDraftNotification = false;
+        }
+        super.onDetach();
     }
 
     /*
@@ -462,7 +476,8 @@ public class PostsListFragment extends Fragment
     private void trashPost(final PostsListPost post) {
         //only check if network is available in case this is not a local draft - local drafts have not yet
         //been posted to the server so they can be trashed w/o further care
-        if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))) {
+        if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))
+            || getPostListAdapter() == null) {
             return;
         }
 
@@ -525,6 +540,8 @@ public class PostsListFragment extends Fragment
                     new ApiHelper.DeleteSinglePostTask().execute(WordPress.getCurrentBlog(),
                             fullPost.getRemotePostId(), mIsPage);
                 } else  {
+                    mShouldCancelPendingDraftNotification = false;
+
                     // delete the pending draft notification if available
                     NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
 
@@ -540,6 +557,7 @@ public class PostsListFragment extends Fragment
             }
         });
 
+        mShouldCancelPendingDraftNotification = true;
         snackbar.show();
     }
 }

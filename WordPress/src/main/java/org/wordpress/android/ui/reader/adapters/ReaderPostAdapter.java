@@ -590,7 +590,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasTagHeader() {
-        return mCurrentTag != null && mCurrentTag.isTagTopic();
+        return mCurrentTag != null && mCurrentTag.isTagTopic() && !isEmpty();
     }
 
     private boolean isDiscover() {

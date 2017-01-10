@@ -49,6 +49,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 
@@ -347,6 +348,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         } else if (i == R.id.menu_new_media) {
             if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                 showNewMediaMenu();
+            } else {
+                AppLockManager.getInstance().setExtendedTimeout();
             }
             return true;
         } else if (i == R.id.menu_search) {

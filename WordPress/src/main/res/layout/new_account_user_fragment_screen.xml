@@ -43,6 +43,8 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/create_account_label"
                 android:text="@string/create_account_wpcom"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
                 style="@style/WordPress.NUXTitle"
                 android:fontFamily="sans-serif-light"
                 app:fixWidowWords="true"/>

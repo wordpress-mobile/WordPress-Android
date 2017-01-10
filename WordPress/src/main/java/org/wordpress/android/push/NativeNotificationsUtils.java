@@ -44,8 +44,10 @@ public class NativeNotificationsUtils {
     }
 
     public static void dismissNotification(int pushId, Context context) {
-        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.cancel(pushId);
+        if (context != null) {
+            final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            notificationManager.cancel(pushId);
+        }
     }
 
     public static void hideStatusBar(Context context) {

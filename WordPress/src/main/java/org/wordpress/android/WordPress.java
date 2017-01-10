@@ -50,6 +50,8 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
+import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
+import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -843,7 +845,7 @@ public class WordPress extends MultiDexApplication {
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
-        private void onAppComesFromBackground() {
+        private void onAppComesFromBackground(Activity activity) {
             AppLog.i(T.UTILS, "App comes from background");
             ConnectionChangeReceiver.setEnabled(WordPress.this, true);
             AnalyticsUtils.refreshMetadata();
@@ -853,7 +855,13 @@ public class WordPress extends MultiDexApplication {
                 // Refresh account informations and Notifications
 
                 if (AccountHelper.isSignedInWordPressDotCom()) {
-                    NotificationsUpdateService.startService(getContext());
+                    Intent intent = activity.getIntent();
+                    if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
+                        NotificationsUpdateService.startService(getContext(),
+                                getNoteIdFromNoteDetailActivityIntent(activity.getIntent()));
+                    } else {
+                        NotificationsUpdateService.startService(getContext());
+                    }
                     NotificationsPendingDraftsService.checkPrefsAndStartService(getContext());
                 }
 
@@ -869,11 +877,21 @@ public class WordPress extends MultiDexApplication {
             sDeleteExpiredStats.runIfNotLimited();
         }
 
+        // gets the note id from the extras that started this activity, so
+        // we can remember to re-set that to unread once the note fetch update takes place
+        private String getNoteIdFromNoteDetailActivityIntent(Intent intent) {
+            String noteId = "";
+            if (intent != null) {
+                noteId = intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+            }
+            return noteId;
+        }
+
         @Override
         public void onActivityResumed(Activity activity) {
             if (mIsInBackground) {
                 // was in background before
-                onAppComesFromBackground();
+                onAppComesFromBackground(activity);
             }
             stopActivityTransitionTimer();
 

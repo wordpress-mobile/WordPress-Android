@@ -181,7 +181,7 @@ public class NotificationsListFragment extends Fragment
             mFilterRadioGroup.setVisibility(View.GONE);
             mSwipeRefreshLayout.setVisibility(View.GONE);
         } else {
-            mNotesAdapter.reloadNotesFromDBAsync();
+            getNotesAdapter().reloadNotesFromDBAsync();
         }
     }
 

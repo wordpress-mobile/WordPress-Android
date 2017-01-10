@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -67,6 +68,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
     private OnDataLoadedListener mDataLoadedListener;
+
+    // show recently picked first if there are at least this many blogs
+    private static final int RECENTLY_PICKED_THRESHOLD = 15;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
@@ -162,10 +166,12 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
         }
 
-        // hide the divider for the last item
-        boolean isLastItem = (position == getItemCount() - 1);
-        holder.divider.setVisibility(isLastItem ?  View.INVISIBLE : View.VISIBLE);
-
+        // only show divider after last recent pick
+        boolean showDivider = site.isRecentPick
+                && !mIsInSearchMode
+                && position < getItemCount() - 1
+                && !getItem(position + 1).isRecentPick;
+        holder.divider.setVisibility(showDivider ?  View.VISIBLE : View.GONE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -394,7 +400,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         @Override
         protected Void doInBackground(Void... params) {
             List<Map<String, Object>> blogs;
-            String[] extraFields = {"isHidden", "dotcomFlag", "homeURL"};
+            String[] extraFields = {"isHidden", "homeURL"};
 
             if (mIsInSearchMode) {
                 blogs = WordPress.wpDB.getBlogsBy(null, extraFields);
@@ -404,11 +410,11 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
 
             SiteList sites = new SiteList(blogs);
 
-            // sort by blog/host
+            // sort primary blog to the top, otherwise sort by blog/host
             final long primaryBlogId = AccountHelper.getDefaultAccount().getPrimaryBlogId();
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
-                    if (primaryBlogId > 0) {
+                    if (primaryBlogId > 0 && !mIsInSearchMode) {
                         if (site1.blogId == primaryBlogId) {
                             return -1;
                         } else if (site2.blogId == primaryBlogId) {
@@ -418,6 +424,21 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
                     return site1.getBlogNameOrHomeURL().compareToIgnoreCase(site2.getBlogNameOrHomeURL());
                 }
             });
+
+            // flag recently-picked sites and move them to the top if there are enough sites and
+            // the user isn't searching
+            if (!mIsInSearchMode && sites.size() >= RECENTLY_PICKED_THRESHOLD) {
+                ArrayList<Integer> pickedIds = AppPrefs.getRecentlyPickedSiteIds();
+                for (int i = pickedIds.size() - 1; i > -1; i--) {
+                    int thisId = pickedIds.get(i);
+                    int indexOfSite = sites.indexOfSiteId(thisId);
+                    if (indexOfSite > -1) {
+                        SiteRecord site = sites.remove(indexOfSite);
+                        site.isRecentPick = true;
+                        sites.add(0, site);
+                    }
+                }
+            }
 
             if (mSites == null || !mSites.isSameList(sites)) {
                 mAllSites = (SiteList) sites.clone();
@@ -467,8 +488,8 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         final String homeURL;
         final String url;
         final String blavatarUrl;
-        final boolean isDotCom;
         boolean isHidden;
+        boolean isRecentPick;
 
         SiteRecord(Map<String, Object> account) {
             localId = MapUtils.getMapInt(account, "id");
@@ -477,7 +498,6 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             homeURL = BlogUtils.getHomeURLOrHostNameFromAccountMap(account);
             url = MapUtils.getMapStr(account, "url");
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
-            isDotCom = MapUtils.getMapBool(account, "dotcomFlag");
             isHidden = MapUtils.getMapBool(account, "isHidden");
         }
 
@@ -489,7 +509,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
         }
     }
 
-   static class SiteList extends ArrayList<SiteRecord> {
+    static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
         SiteList(List<Map<String, Object>> accounts) {
             if (accounts != null) {
@@ -506,7 +526,9 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             int i;
             for (SiteRecord site: sites) {
                 i = indexOfSite(site);
-                if (i == -1 || this.get(i).isHidden != site.isHidden) {
+                if (i == -1
+                        || this.get(i).isHidden != site.isHidden
+                        || this.get(i).isRecentPick != site.isRecentPick) {
                     return false;
                 }
             }
@@ -523,5 +545,21 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             }
             return -1;
         }
+
+        int indexOfSiteId(int localId) {
+            for (int i = 0; i < size(); i++) {
+                if (localId == this.get(i).localId) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+    }
+
+    /*
+     * same as Long.compare() which wasn't added until API 19
+     */
+    private static int compareTimestamps(long timestamp1, long timestamp2) {
+        return timestamp1 < timestamp2 ? -1 : (timestamp1 == timestamp2 ? 0 : 1);
     }
 }

@@ -62,6 +62,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -603,4 +604,16 @@ public class NotificationsUtils {
 
         return note;
     }
+
+    public static int findNoteInNoteArray(List<Note> notes, String noteIdToSearchFor) {
+        if (notes == null || TextUtils.isEmpty(noteIdToSearchFor)) return -1;
+
+        for (int i = 0; i < notes.size(); i++) {
+            Note note = notes.get(i);
+            if (noteIdToSearchFor.equals(note.getId()))
+                return i;
+        }
+        return -1;
+    }
+
 }
