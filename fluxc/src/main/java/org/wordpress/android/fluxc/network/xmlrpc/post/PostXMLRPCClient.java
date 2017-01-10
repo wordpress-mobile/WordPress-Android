@@ -428,26 +428,17 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         contentStruct.put("post_content", content);
 
-        // Handle taxonomies
-        // Add categories by ID to the 'terms' param
-        Map<Object, Object> terms = new HashMap<>();
+        if (!post.isPage()) {
+            // Handle taxonomies
 
-        if (!post.getCategoryIdList().isEmpty()) {
+            // Add categories by ID to the 'terms' param
+            Map<Object, Object> terms = new HashMap<>();
             terms.put("category", post.getCategoryIdList().toArray());
-        }
-
-        if (!terms.isEmpty()) {
             contentStruct.put("terms", terms);
-        }
 
-        // Add tags by name to the 'terms_names' param
-        Map<Object, Object> termsNames = new HashMap<>();
-
-        if (!post.getTagNameList().isEmpty()) {
+            // Add tags by name to the 'terms_names' param
+            Map<Object, Object> termsNames = new HashMap<>();
             termsNames.put("post_tag", post.getTagNameList().toArray());
-        }
-
-        if (!termsNames.isEmpty()) {
             contentStruct.put("terms_names", termsNames);
         }
 
