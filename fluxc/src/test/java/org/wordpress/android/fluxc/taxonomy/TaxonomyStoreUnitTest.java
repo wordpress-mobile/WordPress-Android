@@ -140,6 +140,17 @@ public class TaxonomyStoreUnitTest {
     }
 
     @Test
+    public void testGetTermByName() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        TermModel category = TaxonomyTestUtils.generateSampleCategory();
+        TaxonomySqlUtils.insertOrUpdateTerm(category);
+
+        assertEquals(category, mTaxonomyStore.getCategoryByName(site, category.getName()));
+    }
+
+    @Test
     public void testClearTaxonomy() {
         SiteModel site = new SiteModel();
         site.setId(6);
