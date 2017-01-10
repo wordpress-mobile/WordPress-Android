@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.ActivityLauncher;
 
 public class AccountSettingsActivity extends AppCompatActivity {
     private static final String KEY_ACCOUNT_SETTINGS_FRAGMENT = "account-settings-fragment";

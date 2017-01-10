@@ -286,7 +286,8 @@ public class NotificationsPendingDraftsService extends Service {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, openDraftIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.ic_pencil_black_24dp, getText(R.string.edit),
+        // Changing ic_pencil_white from PNG to vector crashes pre-Lollipop devices.
+        builder.addAction(R.drawable.ic_pencil_white, getText(R.string.edit),
                 pendingIntent);
     }
 
@@ -298,6 +299,7 @@ public class NotificationsPendingDraftsService extends Service {
         ignoreIntent.putExtra(IS_PAGE_EXTRA, isPage);
         PendingIntent ignorePendingIntent =  PendingIntent.getService(context,
                 2, ignoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        // Changing ic_close_white_24dp from PNG to vector crashes pre-Lollipop devices.
         builder.addAction(R.drawable.ic_close_white_24dp, getText(R.string.ignore),
                 ignorePendingIntent);
 
