@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
@@ -36,6 +37,8 @@ public enum SiteAction implements IAction {
     FETCHED_POST_FORMATS,
     @Action(payloadType = DeleteSiteResponsePayload.class)
     DELETED_SITE,
+    @Action(payloadType = ExportSiteResponsePayload.class)
+    EXPORTED_SITE,
 
     // Local actions
     @Action(payloadType = SiteModel.class)
