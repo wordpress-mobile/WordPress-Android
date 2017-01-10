@@ -39,7 +39,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     @Column private String mCustomFields;
     @Column private String mLink;
     @Column private String mExcerpt;
-    @Column private String mTagIds;
+    @Column private String mTagNames;
     @Column private String mStatus;
     @Column private String mPassword;
     @Column private long mFeaturedImageId = FEATURED_IMAGE_INIT_VALUE;
@@ -137,11 +137,11 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
 
     @NonNull
     public List<Long> getCategoryIdList() {
-        return taxonomyIdStringToList(mCategoryIds);
+        return termIdStringToList(mCategoryIds);
     }
 
     public void setCategoryIdList(List<Long> categories) {
-        mCategoryIds = taxonomyIdListToString(categories);
+        mCategoryIds = termIdListToString(categories);
     }
 
     public String getCustomFields() {
@@ -168,21 +168,21 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mExcerpt = excerpt;
     }
 
-    public String getTagIds() {
-        return StringUtils.notNullStr(mTagIds);
+    public String getTagNames() {
+        return StringUtils.notNullStr(mTagNames);
     }
 
-    public void setTagIds(String tagIds) {
-        mTagIds = tagIds;
+    public void setTagNames(String tags) {
+        mTagNames = tags;
     }
 
     @NonNull
-    public List<Long> getTagIdList() {
-        return taxonomyIdStringToList(mTagIds);
+    public List<String> getTagNameList() {
+        return termNameStringToList(mTagNames);
     }
 
-    public void setTagIdList(List<Long> tags) {
-        mTagIds = taxonomyIdListToString(tags);
+    public void setTagNameList(List<String> tags) {
+        mTagNames = termNameListToString(tags);
     }
 
     public String getStatus() {
@@ -365,7 +365,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
                && StringUtils.equals(getCustomFields(), otherPost.getCustomFields())
                && StringUtils.equals(getLink(), otherPost.getLink())
                && StringUtils.equals(getExcerpt(), otherPost.getExcerpt())
-               && StringUtils.equals(getTagIds(), otherPost.getTagIds())
+               && StringUtils.equals(getTagNames(), otherPost.getTagNames())
                && StringUtils.equals(getStatus(), otherPost.getStatus())
                && StringUtils.equals(getPassword(), otherPost.getPassword())
                && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
@@ -432,7 +432,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         return (mLastKnownRemoteFeaturedImageId != mFeaturedImageId);
     }
 
-    private static List<Long> taxonomyIdStringToList(String ids) {
+    private static List<Long> termIdStringToList(String ids) {
         if (ids == null || ids.isEmpty()) {
             return Collections.emptyList();
         }
@@ -444,11 +444,28 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         return longList;
     }
 
-    private static String taxonomyIdListToString(List<Long> ids) {
+    private static String termIdListToString(List<Long> ids) {
         if (ids == null || ids.isEmpty()) {
             return "";
         }
         return TextUtils.join(",", ids);
+    }
+
+    private static List<String> termNameStringToList(String terms) {
+        if (terms == null || terms.isEmpty()) {
+            return Collections.emptyList();
+        }
+        String[] stringArray = terms.split(",");
+        List<String> stringList = new ArrayList<>();
+        Collections.addAll(stringList, stringArray);
+        return stringList;
+    }
+
+    private static String termNameListToString(List<String> termNames) {
+        if (termNames == null || termNames.isEmpty()) {
+            return "";
+        }
+        return TextUtils.join(",", termNames);
     }
 
     @Override

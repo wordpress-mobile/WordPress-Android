@@ -229,7 +229,7 @@ public class TaxonomyStore extends Store {
      * Returns all the tags for the given post as a {@link TermModel} list.
      */
     public List<TermModel> getTagsForPost(PostModel post, SiteModel site) {
-        return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getTagIdList(), site, DEFAULT_TAXONOMY_TAG);
+        return TaxonomySqlUtils.getTermsFromRemoteNameList(post.getTagNameList(), site, DEFAULT_TAXONOMY_TAG);
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)

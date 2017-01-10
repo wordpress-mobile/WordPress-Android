@@ -89,6 +89,21 @@ public class TaxonomySqlUtils {
                 .getAsModel();
     }
 
+    public static List<TermModel> getTermsFromRemoteNameList(List<String> remoteTermNames, SiteModel site,
+                                                             String taxonomyName) {
+        if (taxonomyName == null || remoteTermNames == null || remoteTermNames.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return WellSql.select(TermModel.class)
+                .where().beginGroup()
+                .equals(TermModelTable.TAXONOMY, taxonomyName)
+                .equals(TermModelTable.LOCAL_SITE_ID, site.getId())
+                .isIn(TermModelTable.NAME, remoteTermNames)
+                .endGroup().endWhere()
+                .getAsModel();
+    }
+
     public static int clearTaxonomyForSite(SiteModel site, String taxonomyName) {
         if (site == null || taxonomyName == null) {
             return 0;
