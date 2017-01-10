@@ -72,7 +72,6 @@ public class SiteRestClient extends BaseWPComRestClient {
     public static class ExportSiteResponsePayload extends Payload {
         public ExportSiteResponsePayload() {
         }
-        public SiteModel site;
     }
 
     @Inject
