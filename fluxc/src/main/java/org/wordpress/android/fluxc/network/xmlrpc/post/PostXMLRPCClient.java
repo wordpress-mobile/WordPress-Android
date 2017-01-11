@@ -326,7 +326,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         Object[] terms = (Object[]) postMap.get("terms");
         List<Long> categoryIds = new ArrayList<>();
-        List<Long> tagIds = new ArrayList<>();
+        List<String> tagNames = new ArrayList<>();
         for (Object term : terms) {
             if (!(term instanceof Map)) {
                 continue;
@@ -336,11 +336,11 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             if (taxonomy.equals("category")) {
                 categoryIds.add(MapUtils.getMapLong(termMap, "term_id"));
             } else if (taxonomy.equals("post_tag")) {
-                tagIds.add(MapUtils.getMapLong(termMap, "term_id"));
+                tagNames.add(MapUtils.getMapStr(termMap, "name"));
             }
         }
         post.setCategoryIdList(categoryIds);
-        post.setTagIdList(tagIds);
+        post.setTagNameList(tagNames);
 
         Object[] customFields = (Object[]) postMap.get("custom_fields");
         JSONArray jsonCustomFieldsArray = new JSONArray();
@@ -428,21 +428,27 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         contentStruct.put("post_content", content);
 
-        // Handle taxonomies (currently supporting categories and tags)
+        // Handle taxonomies
+        // Add categories by ID to the 'terms' param
         Map<Object, Object> terms = new HashMap<>();
 
         if (!post.getCategoryIdList().isEmpty()) {
             terms.put("category", post.getCategoryIdList().toArray());
         }
 
-        if (!post.isPage()) {
-            if (!post.getTagIdList().isEmpty()) {
-                terms.put("post_tag", post.getTagIdList().toArray());
-            }
-        }
-
         if (!terms.isEmpty()) {
             contentStruct.put("terms", terms);
+        }
+
+        // Add tags by name to the 'terms_names' param
+        Map<Object, Object> termsNames = new HashMap<>();
+
+        if (!post.getTagNameList().isEmpty()) {
+            termsNames.put("post_tag", post.getTagNameList().toArray());
+        }
+
+        if (!termsNames.isEmpty()) {
+            contentStruct.put("terms_names", termsNames);
         }
 
         contentStruct.put("post_excerpt", post.getExcerpt());
