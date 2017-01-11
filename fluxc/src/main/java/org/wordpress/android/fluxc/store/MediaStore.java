@@ -73,6 +73,11 @@ public class MediaStore extends Store {
             this.media = media;
             this.error = error;
         }
+
+        @Override
+        public boolean isError() {
+            return error != null;
+        }
     }
 
     /**
@@ -554,10 +559,9 @@ public class MediaStore extends Store {
         List<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(payload.media);
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETE_MEDIA, mediaList);
+        onMediaChanged.error = payload.error;
 
-        if (payload.isError()) {
-            onMediaChanged.error = payload.error;
-        } else if (payload.media != null) {
+        if (payload.media != null) {
             MediaSqlUtils.deleteMedia(payload.media);
         }
 
