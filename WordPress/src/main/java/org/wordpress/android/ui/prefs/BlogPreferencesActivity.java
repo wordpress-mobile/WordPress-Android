@@ -177,9 +177,21 @@ public class BlogPreferencesActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteRemoved(OnSiteRemoved event) {
-        setResult(RESULT_BLOG_REMOVED);
-        finish();
+    public void OnSiteDeleted(SiteStore.OnSiteDeleted event) {
+        FragmentManager fragmentManager = getFragmentManager();
+        SiteSettingsFragment siteSettingsFragment =
+                (SiteSettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
+
+        if (siteSettingsFragment != null) {
+            if (event.isError()) {
+                siteSettingsFragment.handleDeleteSiteError(event.error);
+                return;
+            }
+
+            siteSettingsFragment.handleSiteDeleted();
+            setResult(RESULT_BLOG_REMOVED);
+            finish();
+        }
     }
 
     private void loadSettingsForBlog() {

@@ -1252,14 +1252,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private void handleSiteDeleted() {
+    public void handleSiteDeleted() {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat
                 .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
         dismissProgressDialog(mDeleteSiteProgressDialog);
         mDeleteSiteProgressDialog = null;
     }
 
-    private void handleDeleteSiteError(SiteStore.DeleteSiteError error) {
+    public void handleDeleteSiteError(SiteStore.DeleteSiteError error) {
         AppLog.e(AppLog.T.SETTINGS, "SiteDeleted error: " + error.type);
 
         HashMap<String, Object> errorProperty = new HashMap<>();
@@ -1291,17 +1291,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
         });
         builder.show();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnSiteDeleted(SiteStore.OnSiteDeleted event) {
-        if (event.isError()) {
-            handleDeleteSiteError(event.error);
-            return;
-        }
-
-        handleSiteDeleted();
     }
 
     private MultiSelectRecyclerViewAdapter getAdapter() {
