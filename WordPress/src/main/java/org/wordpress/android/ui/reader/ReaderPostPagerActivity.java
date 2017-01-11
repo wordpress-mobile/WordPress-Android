@@ -216,10 +216,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
     }
 
-    /*
-     * changes the title to the site name of the current post
-     */
     private void updateTitle(int position) {
+        // for related posts, always show "Related Post" as the title
+        if (mIsRelatedPostView) {
+            setTitle(R.string.reader_title_related_post_detail);
+            return;
+        }
+
+        // otherwise set the title to the site name
         ReaderBlogIdPostId ids = getAdapterBlogIdPostIdAtPosition(position);
         if (ids != null) {
             String title = ReaderPostTable.getPostBlogName(ids.getBlogId(), ids.getPostId());
@@ -229,8 +233,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             }
         }
 
-        setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : (isDeepLinking() ? R.string
-                .reader_title_post_detail_wpcom : R.string.reader_title_post_detail));
+        // default when post hasn't been retrieved yet
+        setTitle(isDeepLinking() ? R.string.reader_title_post_detail_wpcom : R.string.reader_title_post_detail);
     }
 
     private boolean isDeepLinking() {
