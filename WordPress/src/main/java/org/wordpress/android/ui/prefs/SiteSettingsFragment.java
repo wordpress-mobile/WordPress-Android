@@ -38,7 +38,6 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker.Formatter;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -1216,26 +1215,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         return WPPrefUtils.getPrefAndSetClickListener(this, id, this);
     }
 
-    private void handleDeleteSiteError() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.error_deleting_site);
-        builder.setMessage(R.string.error_deleting_site_summary);
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
-                        HelpshiftHelper.Tag.ORIGIN_DELETE_SITE, mAccountStore.getAccount().getUserName());
-            }
-        });
-        builder.show();
-    }
-
     private void exportSite() {
         if (mSite.isWPCom()) {
             final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.exporting_content_progress), true, true);
@@ -1273,28 +1252,56 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnSiteDeleted(SiteStore.OnSiteDeleted event) {
-        if (event.isError()) {
-            AppLog.e(AppLog.T.SETTINGS, "SiteDeleted error: " + event.error.type);
-
-            HashMap<String, Object> errorProperty = new HashMap<>();
-            errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, event.error.message);
-            AnalyticsUtils.trackWithSiteDetails(
-                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, mSite,
-                    errorProperty);
-            dismissProgressDialog(mDeleteSiteProgressDialog);
-            mDeleteSiteProgressDialog = null;
-            handleDeleteSiteError();
-            return;
-        }
-
-        // successfully deleted the site
+    private void handleSiteDeleted() {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat
                 .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
         dismissProgressDialog(mDeleteSiteProgressDialog);
         mDeleteSiteProgressDialog = null;
+    }
+
+    private void handleDeleteSiteError(SiteStore.DeleteSiteError error) {
+        AppLog.e(AppLog.T.SETTINGS, "SiteDeleted error: " + error.type);
+
+        HashMap<String, Object> errorProperty = new HashMap<>();
+        errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.message);
+        AnalyticsUtils.trackWithSiteDetails(
+                AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, mSite,
+                errorProperty);
+        dismissProgressDialog(mDeleteSiteProgressDialog);
+        mDeleteSiteProgressDialog = null;
+
+        showDeleteSiteErrorDialog();
+    }
+
+    private void showDeleteSiteErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.error_deleting_site);
+        builder.setMessage(R.string.error_deleting_site_summary);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
+                        HelpshiftHelper.Tag.ORIGIN_DELETE_SITE, mAccountStore.getAccount().getUserName());
+            }
+        });
+        builder.show();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void OnSiteDeleted(SiteStore.OnSiteDeleted event) {
+        if (event.isError()) {
+            handleDeleteSiteError(event.error);
+            return;
+        }
+
+        handleSiteDeleted();
     }
 
     private MultiSelectRecyclerViewAdapter getAdapter() {
