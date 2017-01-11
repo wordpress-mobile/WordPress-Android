@@ -7,13 +7,17 @@ import android.webkit.URLUtil;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
+import com.android.volley.Request.Method;
 import com.android.volley.ServerError;
 
+import org.wordpress.android.fluxc.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.network.BaseRequestFuture;
+import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient;
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.store.Store.OnChangedError;
 import org.wordpress.android.fluxc.utils.WPUrlUtils;
@@ -39,7 +43,8 @@ public class SelfHostedEndpointFinder {
     public static final int TIMEOUT_MS = 60000;
 
     private final Dispatcher mDispatcher;
-    private final BaseXMLRPCClient mClient;
+    private final BaseXMLRPCClient mXMLRPCClient;
+    private final BaseWPAPIRestClient mBaseWPAPIRestClient;
 
     public enum DiscoveryError implements OnChangedError {
         INVALID_URL,
@@ -85,9 +90,11 @@ public class SelfHostedEndpointFinder {
     }
 
     @Inject
-    public SelfHostedEndpointFinder(Dispatcher dispatcher, BaseXMLRPCClient baseXMLRPCClient) {
+    public SelfHostedEndpointFinder(Dispatcher dispatcher, BaseXMLRPCClient baseXMLRPCClient,
+                                    BaseWPAPIRestClient baseWPAPIRestClient) {
         mDispatcher = dispatcher;
-        mClient = baseXMLRPCClient;
+        mXMLRPCClient = baseXMLRPCClient;
+        mBaseWPAPIRestClient = baseWPAPIRestClient;
     }
 
     public void findEndpoint(final String url, final String username, final String password) {
@@ -95,8 +102,12 @@ public class SelfHostedEndpointFinder {
             @Override
             public void run() {
                 try {
+                    String wpRestEndpoint = "";
+                    if (BuildConfig.ENABLE_WPAPI) {
+                        wpRestEndpoint = discoverWPRESTEndpoint(url);
+                    }
+                    // TODO: Eventually make the XML-RPC discovery only run if WP-API discovery fails
                     String xmlRpcEndpoint = verifyOrDiscoverXMLRPCEndpoint(url, username, password);
-                    String wpRestEndpoint = discoverWPRESTEndpoint(url);
                     DiscoveryResultPayload payload = new DiscoveryResultPayload(xmlRpcEndpoint, wpRestEndpoint);
                     mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
                 } catch (DiscoveryException e) {
@@ -278,12 +289,6 @@ public class SelfHostedEndpointFinder {
         throw new DiscoveryException(DiscoveryError.NO_SITE_ERROR, xmlrpcUrl);
     }
 
-
-    private String discoverWPRESTEndpoint(String url) {
-        // TODO: See http://v2.wp-api.org/guide/discovery/
-        return url + "/wp-json/wp/v2/";
-    }
-
     /**
      * Regex pattern for matching the RSD link found in most WordPress sites.
      */
@@ -308,7 +313,7 @@ public class SelfHostedEndpointFinder {
     private String getResponse(String url) throws DiscoveryException {
         BaseRequestFuture<String> future = BaseRequestFuture.newFuture();
         DiscoveryRequest request = new DiscoveryRequest(url, future, future);
-        mClient.add(request);
+        mXMLRPCClient.add(request);
         try {
             return future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | TimeoutException e) {
@@ -415,7 +420,7 @@ public class SelfHostedEndpointFinder {
 
         BaseRequestFuture<Object[]> future = BaseRequestFuture.newFuture();
         DiscoveryXMLRPCRequest request = new DiscoveryXMLRPCRequest(url, XMLRPC.LIST_METHODS, params, future, future);
-        mClient.add(request);
+        mXMLRPCClient.add(request);
         try {
             return future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | TimeoutException e) {
@@ -451,6 +456,79 @@ public class SelfHostedEndpointFinder {
                     throw new DiscoveryException(DiscoveryError.XMLRPC_BLOCKED, url);
                 }
             }
+        }
+        return null;
+    }
+
+    private String discoverWPRESTEndpoint(String url) throws DiscoveryException {
+        if (TextUtils.isEmpty(url)) {
+            throw new DiscoveryException(DiscoveryError.INVALID_URL, url);
+        }
+
+        if (WPUrlUtils.isWordPressCom(sanitizeSiteUrl(url, false))) {
+            throw new DiscoveryException(DiscoveryError.WORDPRESS_COM_SITE, url);
+        }
+
+        // TODO: Implement URL validation in this and its called methods, and http/https neutrality
+
+        final String wpApiBaseUrl = discoverWPAPIBaseURL(url);
+
+        if (wpApiBaseUrl != null && !wpApiBaseUrl.isEmpty()) {
+            AppLog.i(AppLog.T.NUX, "Base WP-API URL found - verifying that the wp/v2 namespace is supported");
+            return verifyWPAPIV2Support(wpApiBaseUrl);
+        }
+        return null;
+    }
+
+    private String discoverWPAPIBaseURL(String url) throws DiscoveryException {
+        BaseRequestFuture<String> future = BaseRequestFuture.newFuture();
+        WPAPIHeadRequest request = new WPAPIHeadRequest(url, future, future);
+        mBaseWPAPIRestClient.add(request);
+        try {
+            return future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | TimeoutException e) {
+            AppLog.e(T.API, "Couldn't get HEAD response from server.");
+        } catch (ExecutionException e) {
+            // TODO: Add support for HTTP AUTH and self-signed SSL WP-API sites
+//            if (e.getCause() instanceof AuthFailureError) {
+//                throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
+//            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
+//                    && e.getCause().getCause() instanceof SSLHandshakeException) {
+//                // In the event of an SSL error we should stop attempting discovery
+//                throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
+//            }
+        }
+        return null;
+    }
+
+    private String verifyWPAPIV2Support(String wpApiBaseUrl) {
+        BaseRequestFuture<RootWPAPIRestResponse> future = BaseRequestFuture.newFuture();
+        WPAPIGsonRequest request = new WPAPIGsonRequest<>(Method.GET, wpApiBaseUrl, null, null,
+                RootWPAPIRestResponse.class, future, future);
+        mBaseWPAPIRestClient.add(request);
+
+        try {
+            RootWPAPIRestResponse response = future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
+            if (!response.namespaces.contains("wp/v2")) {
+                AppLog.i(AppLog.T.NUX, "Site does not have the full WP-API available "
+                        + "(missing wp/v2 namespace)");
+                return null;
+            } else {
+                AppLog.i(AppLog.T.NUX, "Found valid WP-API endpoint! - " + wpApiBaseUrl);
+                // TODO: Extract response.authentication and float it up
+                return wpApiBaseUrl;
+            }
+        } catch (InterruptedException | TimeoutException e) {
+            AppLog.e(T.API, "Couldn't get response from root endpoint.");
+        } catch (ExecutionException e) {
+            // TODO: Add support for HTTP AUTH and self-signed SSL WP-API sites
+//            if (e.getCause() instanceof AuthFailureError) {
+//                throw new DiscoveryException(DiscoveryError.HTTP_AUTH_REQUIRED, url);
+//            } else if (e.getCause() instanceof NoConnectionError && e.getCause().getCause() != null
+//                    && e.getCause().getCause() instanceof SSLHandshakeException) {
+//                // In the event of an SSL error we should stop attempting discovery
+//                throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
+//            }
         }
         return null;
     }
