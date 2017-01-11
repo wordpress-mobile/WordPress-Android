@@ -538,6 +538,10 @@ public class WPMainActivity extends AppCompatActivity {
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
+                    if (data != null) {
+                        int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                        setSelectedSite(selectedSite);
+                    }
                 }
                 break;
             case RequestCodes.BLOG_SETTINGS:

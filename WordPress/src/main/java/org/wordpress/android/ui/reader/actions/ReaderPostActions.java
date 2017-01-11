@@ -311,11 +311,11 @@ public class ReaderPostActions {
             return;
         }
 
-        // don't bump stats for posts in blogs the current user is an admin of, unless
-        // this is a private post since we count views for private posts from admins
+        // don't bump stats for posts in sites the current user is an admin of, unless
+        // this is a private post since we count views for private posts from owner or member
         SiteModel site = siteStore.getSiteBySiteId(post.blogId);
         // site will be null here if the user is not the owner or a member of the site
-        if (site != null && !post.isPrivate && site.isAdmin()) {
+        if (site != null && !post.isPrivate) {
             AppLog.d(T.READER, "skipped bump page view - user is admin");
             return;
         }

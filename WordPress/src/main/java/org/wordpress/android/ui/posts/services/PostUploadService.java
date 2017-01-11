@@ -262,7 +262,7 @@ public class PostUploadService extends Service {
             if (mHasCategory) {
                 properties.put("with_categories", true);
             }
-            if (!mPost.getTagIdList().isEmpty()) {
+            if (!mPost.getTagNameList().isEmpty()) {
                 properties.put("with_tags", true);
             }
             properties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());

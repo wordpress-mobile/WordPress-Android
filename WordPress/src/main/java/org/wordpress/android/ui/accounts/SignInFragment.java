@@ -76,6 +76,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -84,7 +85,6 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -495,34 +495,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         AnalyticsTracker.track(stat, properties);
     }
 
-    protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
-        mUrlEditText.setText("");
-
-        if (!isAdded()) {
-            return;
-        }
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (userBlogList != null) {
-                    if (mInhibitMagicLogin) {
-                        // just finish the login activity and return to the its "caller"
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                    } else {
-                        // move on the the main activity
-                        Intent intent = new Intent(getActivity(), WPMainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
-
-                        getActivity().startActivity(intent);
-                    }
-
-                }
-            }
-        });
-    }
-
     public void setToken(String token) {
         mToken = token;
     }
@@ -771,28 +743,30 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void finishCurrentActivity() {
-        if (mIsActivityFinishing) return;
+        if (mIsActivityFinishing) {
+            return;
+        }
+
+        // Clear persisted text from in the URL field
+        mUrlEditText.setText("");
+
         mIsActivityFinishing = true;
         saveCredentialsInSmartLock();
         if (getActivity() == null) {
             return;
         }
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (mInhibitMagicLogin) {
-                    // just finish the login activity and return to the its "caller"
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
-                } else {
-                    // move on the the main activity
-                    Intent intent = new Intent(getActivity(), WPMainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
-                    getActivity().startActivity(intent);
-                }
-            }
-        });
+
+        if (mInhibitMagicLogin) {
+            // just finish the login activity and return to the its "caller"
+            getActivity().setResult(Activity.RESULT_OK);
+            getActivity().finish();
+        } else {
+            // move on the the main activity
+            Intent intent = new Intent(getActivity(), WPMainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
+            getActivity().startActivity(intent);
+        }
     }
 
     public void attemptLoginWithMagicLink() {
@@ -900,6 +874,23 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         return true;
     }
 
+    private boolean checkIfUserIsAlreadyLoggedIn() {
+        if (mAccountStore.hasAccessToken()) {
+            String currentUsername = mAccountStore.getAccount().getUserName();
+            AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername
+                            + " - but tries to sign in again: " + mUsername);
+            if (getActivity() != null) {
+                if (currentUsername.equals(mUsername)) {
+                    ToastUtils.showToast(getActivity(), R.string.already_logged_in_wpcom_same_username, Duration.LONG);
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.already_logged_in_wpcom, Duration.LONG);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     protected void signIn() {
         if (mSelfHosted || isEnterPasswordMode()) {
             if (!isUserDataValid()) {
@@ -914,6 +905,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mPassword = EditTextUtils.getText(mPasswordEditText).trim();
             mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
             if (isWPComLogin()) {
+                // If the user is already logged in a wordpress.com account, bail out
+                if (checkIfUserIsAlreadyLoggedIn()) {
+                    return;
+                }
                 AppLog.i(T.NUX, "User tries to sign in on WordPress.com with username: " + mUsername);
                 signInAndFetchBlogListWPCom();
             } else {
@@ -1149,6 +1144,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void showAuthError(AuthenticationErrorType error, String errorMessage) {
         switch (error) {
             case INCORRECT_USERNAME_OR_PASSWORD:
+            case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
                 handleInvalidUsernameOrPassword(R.string.username_or_password_incorrect);
                 break;
             case INVALID_OTP:
@@ -1256,7 +1252,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         trackAnalyticsSignIn();
         mSitesFetched = true;
         // Finish activity if account settings have been fetched or if it's a wporg site
-        if ((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) {
+        if (((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) && !event.isError()) {
             updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
@@ -1326,9 +1322,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         NO_SITE_HELPSHIFT_FAQ_SECTION);
                 break;
             case INVALID_URL:
-                showGenericErrorDialog(getResources().getString(R.string.invalid_site_url_message),
-                        INVALID_URL_HELPSHIFT_FAQ_ID,
-                        INVALID_URL_HELPSHIFT_FAQ_SECTION);
+                showUrlError(R.string.invalid_site_url_message);
                 break;
             case MISSING_XMLRPC_METHOD:
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error),
