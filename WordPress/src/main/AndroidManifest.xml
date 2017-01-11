@@ -509,6 +509,7 @@
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
 
+        <receiver android:name=".ui.notifications.receivers.NotificationsPendingDraftsReceiver" />
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver

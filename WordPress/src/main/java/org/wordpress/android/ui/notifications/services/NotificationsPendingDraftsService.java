@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.services;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -16,10 +17,12 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static org.wordpress.android.push.GCMMessageService.GENERIC_LOCAL_NOTIFICATION_ID;
 
@@ -31,10 +34,12 @@ public class NotificationsPendingDraftsService extends Service {
     public static final String GROUPED_POST_ID_LIST_EXTRA = "groupedPostIdList";
     public static final String POST_ID_EXTRA = "postId";
     public static final String IS_PAGE_EXTRA = "isPage";
-    private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 24 * 60 * 60 * 1000; //a full 24 hours day
+    private static final long ONE_DAY = 24 * 60 * 60 * 1000;
+    private static final long ONE_WEEK = ONE_DAY * 7;
+    private static final long ONE_MONTH = ONE_WEEK * 4;
+    private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = ONE_DAY; //a full 24 hours day
     private static final long MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE = 30; // 30 days
 
-    private static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
     private static void startService(Context context) {
         if (context == null) {
@@ -50,6 +55,18 @@ public class NotificationsPendingDraftsService extends Service {
         if (shouldNotifyOfPendingDrafts && WordPress.getCurrentBlog() != null) {
             NotificationsPendingDraftsService.startService(context);
         }
+    }
+
+    // will start the pending drafts check every day and see where we are at.
+    public static void scheduleNextStart(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(context, NotificationsPendingDraftsReceiver.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+        // starting within the next 60 seconds, and then repeat each day
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, System.currentTimeMillis() + 60000,
+                AlarmManager.INTERVAL_DAY, alarmIntent);
 
     }
 
@@ -84,12 +101,24 @@ public class NotificationsPendingDraftsService extends Service {
         }
         running = true;
         /*
-        1) check all “local” drafts, and check that they have been pending for more than 3 days.
+        1) check all “local” drafts, and check that they have been pending for more than ONE_DAY.
         2) make notification if ONE draft and if more than ONE make another text
         ONE: “You drafted 'Post title here' xxxx days ago but never published it.”
         (we also have a generic message if we can't determine for how long a draft has been sitting there or it's been
         more than 30 days)
         MORE: “You drafted %d posts but never published them. Tap to check.”
+
+        UPDATE:
+        Have +1 day, +1 week, +1 month reminders, with different messages randomly chosen, that could even be fun:
+
+        1 day:
+            You drafted “post title” yesterday. Don’t forget to publish it!
+            Did you know that “post title” is still a draft? Publish away!
+        1 week:
+            Your draft, “post title” awaits you — be sure to publish it!
+            “Post title” remains a draft. Remember to publish it!
+        1 month
+            Don’t leave it hanging! “Post title” is waiting to be published.
         * */
         new Thread(new Runnable() {
             @Override
@@ -103,37 +132,67 @@ public class NotificationsPendingDraftsService extends Service {
                 ArrayList<Post> draftPosts =  WordPress.wpDB.getDraftPostList(WordPress.getCurrentBlog().getLocalTableBlogId());
                 if (draftPosts != null && draftPosts.size() > 0) {
                     ArrayList<Post> draftPostsNotInIgnoreList;
-                    // now check those that have been sitting there for more than 3 days now.
+                    // now check those that have been sitting there for more than 1 day now.
                     long now = System.currentTimeMillis();
-                    long three_days_ago = now - (ONE_DAY * 3);
+                    long one_day_ago = now - ONE_DAY;
+                    long one_week_ago = now - ONE_WEEK;
+                    long one_month_ago = now - ONE_MONTH;
 
                     // only process posts that are not in the ignore list
                     draftPostsNotInIgnoreList = getPostsNotInPendingDraftsIgnorePostIdList(draftPosts);
 
                     if (draftPostsNotInIgnoreList.size() > 0) {
-                        ArrayList<Post> draftPostsOlderThan3Days = new ArrayList<>();
-
-                        for (Post post : draftPostsNotInIgnoreList) {
-                            if (post.getDateLastUpdated() < three_days_ago) {
-                                draftPostsOlderThan3Days.add(post);
-                            }
-                        }
+                        // we only want to show this notification for one of the drafts if only one
+                        // exists, and show a group notification in case there are more than one
+                        int totalDrafts = draftPostsNotInIgnoreList.size();
 
                         // check the size and build the notification accordingly
                         long daysInDraft = 0;
-                        if (draftPostsOlderThan3Days.size() == 1) {
-                            Post post = draftPostsOlderThan3Days.get(0);
+                        if (totalDrafts == 1) {
+                            // if there is only one draft, we'e sure to have it in the draftPostsNotInIgnoreList
+                            Post post = draftPostsNotInIgnoreList.get(0);
 
-                            // only notify the user if the last time they have been notified about this particular post was at least
-                            // MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's not do it constantly each time the app comes to the foreground
+                            // only notify the user if the last time they have been notified about this particular post was
+                            // at least MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's
+                            // not do it constantly each time the app comes to the foreground
                             if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
                                 daysInDraft = (now - post.getDateLastUpdated()) / ONE_DAY;
                                 long postId = post.getLocalTablePostId();
                                 boolean isPage = post.isPage();
-
                                 post.setDateLastNotified(now);
+
+                                // TODO: HERE CHECK THE daysInDraft and show the right message
+                                // use the right message for 1 day, 1 week and 1 month old
                                 if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
-                                    buildSinglePendingDraftNotification(post.getTitle(), daysInDraft, postId, isPage);
+                                    String formattedString = getString(R.string.pending_draft_one_generic);
+
+                                    long dateLastUpdated = post.getDateLastUpdated();
+                                    if (dateLastUpdated < one_month_ago) {
+                                        formattedString = getString(R.string.pending_draft_one_month);
+                                    }
+                                    else
+                                    if (dateLastUpdated < one_week_ago) {
+                                        // use any of the available 2 string formats, randomly
+                                        Random randomNum = new Random();
+                                        int result = randomNum.nextInt(2);
+                                        if (result == 0)
+                                            formattedString = getString(R.string.pending_draft_one_week_1);
+                                        else
+                                            formattedString = getString(R.string.pending_draft_one_week_2);
+                                    }
+                                    else
+                                    if (dateLastUpdated < one_day_ago) {
+                                        // use any of the available 2 string formats, randomly
+                                        Random randomNum = new Random();
+                                        int result = randomNum.nextInt(2);
+                                        if (result == 0)
+                                            formattedString = getString(R.string.pending_draft_one_day_1);
+                                        else
+                                            formattedString = getString(R.string.pending_draft_one_day_2);
+                                    }
+
+                                    buildSinglePendingDraftNotification(post.getTitle(), formattedString, postId, isPage);
+
                                 } else {
                                     // if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't know (i.e. value for lastUpdated
                                     // is zero) then just show a generic message
@@ -141,14 +200,17 @@ public class NotificationsPendingDraftsService extends Service {
                                 }
                                 WordPress.wpDB.updatePost(post);
                             }
-                        } else if (draftPostsOlderThan3Days.size() > 1) {
+                        } else if (totalDrafts > 1) {
                             long longestLivingDraft = 0;
                             boolean onlyPagesFound = true;
-                            for (Post post : draftPostsOlderThan3Days) {
+                            boolean doShowNotification = false;
+
+                            for (Post post : draftPostsNotInIgnoreList) {
 
                                 // update each post dateLastNotified field to now
                                 if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
                                     if (post.getDateLastNotified() > longestLivingDraft) {
+                                        doShowNotification = true;
                                         longestLivingDraft = post.getDateLastNotified();
                                         if (!post.isPage()) {
                                             onlyPagesFound = false;
@@ -161,8 +223,8 @@ public class NotificationsPendingDraftsService extends Service {
 
                             // if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
                             // then show the notification again
-                            if (longestLivingDraft > 0) {
-                                buildPendingDraftsNotification(draftPostsOlderThan3Days, onlyPagesFound);
+                            if (doShowNotification) {
+                                buildPendingDraftsNotification(draftPostsNotInIgnoreList, onlyPagesFound);
                             }
                         }
                     }
@@ -181,8 +243,8 @@ public class NotificationsPendingDraftsService extends Service {
         return title;
     }
 
-    private void buildSinglePendingDraftNotification(String postTitle, long daysInDraft, long postId, boolean isPage){
-        buildNotificationWithIntent(getResultIntentForOnePost(postId, isPage), String.format(getString(R.string.pending_draft_one), getPostTitle(postTitle), daysInDraft), postId, isPage);
+    private void buildSinglePendingDraftNotification(String postTitle, String formattedMessage, long postId, boolean isPage){
+        buildNotificationWithIntent(getResultIntentForOnePost(postId, isPage), String.format(formattedMessage, getPostTitle(postTitle)), postId, isPage);
     }
 
     private void buildSinglePendingDraftNotificationGeneric(String postTitle, long postId, boolean isPage){
