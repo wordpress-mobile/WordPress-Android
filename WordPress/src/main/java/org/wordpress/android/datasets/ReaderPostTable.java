@@ -305,6 +305,13 @@ public class ReaderPostTable {
                 args);
     }
 
+    public static String getPostBlogName(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT blog_name FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
+    }
+
     public static String getPostText(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),

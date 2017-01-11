@@ -170,9 +170,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
         }
 
-        setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : (isDeepLinking() ? R.string
-                .reader_title_post_detail_wpcom : R.string.reader_title_post_detail));
-
         // for related posts, show an X in the toolbar which closes the activity - using the
         // back button will navigate through related posts
         if (mIsRelatedPostView) {
@@ -211,11 +208,29 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 }
 
                 mLastSelectedPosition = position;
+                updateTitle(position);
             }
         });
 
         mViewPager.setPageTransformer(false,
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+    }
+
+    /*
+     * changes the title to the site name of the current post
+     */
+    private void updateTitle(int position) {
+        ReaderBlogIdPostId ids = getAdapterBlogIdPostIdAtPosition(position);
+        if (ids != null) {
+            String title = ReaderPostTable.getPostBlogName(ids.getBlogId(), ids.getPostId());
+            if (!title.isEmpty()) {
+                setTitle(title);
+                return;
+            }
+        }
+
+        setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : (isDeepLinking() ? R.string
+                .reader_title_post_detail_wpcom : R.string.reader_title_post_detail));
     }
 
     private boolean isDeepLinking() {
@@ -635,9 +650,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         if (adapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
                             trackPostAtPositionIfNeeded(newPosition);
+                            updateTitle(newPosition);
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                             trackPostAtPositionIfNeeded(currentPosition);
+                            updateTitle(currentPosition);
                         }
 
                         // let the user know they can swipe between posts
