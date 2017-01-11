@@ -216,6 +216,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
     }
 
+    /*
+     * set the activity title based on the post at the passed position
+     */
     private void updateTitle(int position) {
         // for related posts, always show "Related Post" as the title
         if (mIsRelatedPostView) {
@@ -235,6 +238,16 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         // default when post hasn't been retrieved yet
         setTitle(isDeepLinking() ? R.string.reader_title_post_detail_wpcom : R.string.reader_title_post_detail);
+    }
+
+    /*
+     * used by the detail fragment when a post was requested due to not existing locally
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.SinglePostDownloaded event) {
+        if (!isFinishing()) {
+            updateTitle(mViewPager.getCurrentItem());
+        }
     }
 
     private boolean isDeepLinking() {

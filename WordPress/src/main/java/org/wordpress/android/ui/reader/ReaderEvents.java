@@ -34,6 +34,8 @@ public class ReaderEvents {
     public static class FollowedBlogsChanged {}
     public static class RecommendedBlogsChanged {}
 
+    public static class SinglePostDownloaded {};
+
     public static class UpdatePostsStarted {
         private final ReaderPostService.UpdateAction mAction;
         public UpdatePostsStarted(ReaderPostService.UpdateAction action) {

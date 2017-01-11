@@ -443,6 +443,11 @@ public class ReaderPostTable {
         return ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id = ?", args);
     }
 
+    public static void deletePost(long blogId, long postId) {
+        String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
+        ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id=? AND post_id=?", args);
+    }
+
     /*
      * ensure that posts in blogs that are no longer followed don't have their followed status
      * set to true
