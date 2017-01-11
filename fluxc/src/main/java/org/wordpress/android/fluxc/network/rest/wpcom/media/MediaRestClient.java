@@ -173,6 +173,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onResponse(MediaWPComRestResponse response) {
                         MediaModel responseMedia = getMediaFromRestResponse(response);
                         if (responseMedia != null) {
+                            responseMedia.setSiteId(site.getSiteId());
                             AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
                             notifyMediaFetched(site, responseMedia, null);
                         } else {
@@ -210,7 +211,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         MediaModel deletedMedia = getMediaFromRestResponse(response);
                         if (deletedMedia != null) {
                             AppLog.v(T.MEDIA, "deleted media: " + media.getTitle());
-                            notifyMediaDeleted(site, deletedMedia, null);
+                            notifyMediaDeleted(site, media, null);
                         } else {
                             AppLog.w(T.MEDIA, "could not parse delete media response, ID: " + media.getMediaId());
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
