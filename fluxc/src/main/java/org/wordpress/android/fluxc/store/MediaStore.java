@@ -516,6 +516,9 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaUploaded(@NonNull ProgressPayload payload) {
+        if (!payload.isError() && payload.completed) {
+            updateMedia(payload.media, false);
+        }
         OnMediaUploaded onMediaUploaded = new OnMediaUploaded(payload.media, payload.progress, payload.completed);
         onMediaUploaded.error = payload.error;
         emitChange(onMediaUploaded);
@@ -523,6 +526,12 @@ public class MediaStore extends Store {
 
     private void handleAllMediaFetched(@NonNull MediaListPayload payload) {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_ALL_MEDIA, payload.media);
+
+        if (!payload.isError() && !payload.media.isEmpty()) {
+            for (MediaModel media : payload.media) {
+                updateMedia(media, false);
+            }
+        }
 
         emitChange(onMediaChanged);
     }

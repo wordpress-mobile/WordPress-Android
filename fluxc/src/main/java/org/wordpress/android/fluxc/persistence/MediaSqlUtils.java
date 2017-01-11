@@ -154,7 +154,11 @@ public class MediaSqlUtils {
 
     public static int deleteMedia(MediaModel media) {
         if (media == null) return 0;
-        return WellSql.delete(MediaModel.class).whereId(media.getId());
+        return WellSql.delete(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.SITE_ID, media.getSiteId())
+                .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
+                .endGroup().endWhere().execute();
     }
 
     public static int deleteMatchingSiteMedia(SiteModel siteModel, String column, Object value) {
