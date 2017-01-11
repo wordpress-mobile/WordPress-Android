@@ -38,6 +38,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker.Formatter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -198,6 +199,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Dialog mDialog;
     private ActionMode mActionMode;
     private MultiSelectRecyclerViewAdapter mAdapter;
+
+    // Delete site
+    private ProgressDialog mDeleteSiteProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -1263,7 +1267,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void deleteSite() {
         if (mSite.isWPCom()) {
-            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.delete_site_progress), true, false);
+            mDeleteSiteProgressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.delete_site_progress), true, false);
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_REQUESTED, mSite);
             mDispatcher.dispatch(SiteActionBuilder.newDeleteSiteAction(mSite));
         }
@@ -1280,13 +1284,17 @@ public class SiteSettingsFragment extends PreferenceFragment
             AnalyticsUtils.trackWithSiteDetails(
                     AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, mSite,
                     errorProperty);
-//            dismissProgressDialog(progressDialog);
+            dismissProgressDialog(mDeleteSiteProgressDialog);
+            mDeleteSiteProgressDialog = null;
             handleDeleteSiteError();
+            return;
         }
 
+        // successfully deleted the site
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat
                 .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
-//        progressDialog.dismiss();
+        dismissProgressDialog(mDeleteSiteProgressDialog);
+        mDeleteSiteProgressDialog = null;
     }
 
     private MultiSelectRecyclerViewAdapter getAdapter() {
