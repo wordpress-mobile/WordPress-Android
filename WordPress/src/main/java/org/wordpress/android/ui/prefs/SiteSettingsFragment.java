@@ -43,6 +43,8 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1263,27 +1265,28 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSite.isWPCom()) {
             final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.delete_site_progress), true, false);
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_REQUESTED, mSite);
-            WordPress.getRestClientUtils().deleteSite(mSite.getSiteId(), new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat
-                                    .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
-                            progressDialog.dismiss();
-                            mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            HashMap<String, Object> errorProperty = new HashMap<>();
-                            errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
-                            AnalyticsUtils.trackWithSiteDetails(
-                                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, mSite,
-                                    errorProperty);
-                            dismissProgressDialog(progressDialog);
-                            handleDeleteSiteError();
-                        }
-                    });
+            mDispatcher.dispatch(SiteActionBuilder.newDeleteSiteAction(mSite));
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void OnSiteDeleted(SiteStore.OnSiteDeleted event) {
+        if (event.isError()) {
+            AppLog.e(AppLog.T.SETTINGS, "SiteDeleted error: " + event.error.type);
+
+            HashMap<String, Object> errorProperty = new HashMap<>();
+            errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, event.error.message);
+            AnalyticsUtils.trackWithSiteDetails(
+                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, mSite,
+                    errorProperty);
+//            dismissProgressDialog(progressDialog);
+            handleDeleteSiteError();
+        }
+
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat
+                .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
+//        progressDialog.dismiss();
     }
 
     private MultiSelectRecyclerViewAdapter getAdapter() {
