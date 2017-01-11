@@ -431,22 +431,47 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         if (!post.isPage()) {
             // Handle taxonomies
 
-            // Add categories by ID to the 'terms' param
-            Map<Object, Object> terms = new HashMap<>();
-            terms.put("category", post.getCategoryIdList().toArray());
+            if (post.isLocalDraft()) {
+                // When first time publishing, we only want to send the category and tag arrays if they contain info
+                // For tags it doesn't matter if we send an empty array, but for categories we want WordPress to give
+                // the post the site's default category, and that won't happen if we send an empty category array
+                // (we should send nothing instead)
+                if (!post.getCategoryIdList().isEmpty()) {
+                    // Add categories by ID to the 'terms' param
+                    Map<Object, Object> terms = new HashMap<>();
+                    terms.put("category", post.getCategoryIdList().toArray());
+                    contentStruct.put("terms", terms);
+                }
 
-            if (!post.getTagNameList().isEmpty()) {
-                // Add tags by name to the 'terms_names' param
-                Map<Object, Object> termsNames = new HashMap<>();
-                termsNames.put("post_tag", post.getTagNameList().toArray());
-                contentStruct.put("terms_names", termsNames);
+                if (!post.getTagNameList().isEmpty()) {
+                    // Add tags by name to the 'terms_names' param
+                    Map<Object, Object> termsNames = new HashMap<>();
+                    termsNames.put("post_tag", post.getTagNameList().toArray());
+                    contentStruct.put("terms_names", termsNames);
+                }
             } else {
-                // To clear any existing tags, we must pass an empty 'post_tag' array in the 'terms' param
-                // (this won't work in the 'terms_names' param)
-                terms.put("post_tag", post.getTagNameList().toArray());
-            }
+                // When editing existing posts, we want to explicitly tell the server that tags or categories are now
+                // empty, as it might be because the user removed them from the post
 
-            contentStruct.put("terms", terms);
+                // Add categories by ID to the 'terms' param
+                Map<Object, Object> terms = new HashMap<>();
+                if (post.getCategoryIdList().size() > 0 || !post.isLocalDraft()) {
+                    terms.put("category", post.getCategoryIdList().toArray());
+                }
+
+                if (!post.getTagNameList().isEmpty()) {
+                    // Add tags by name to the 'terms_names' param
+                    Map<Object, Object> termsNames = new HashMap<>();
+                    termsNames.put("post_tag", post.getTagNameList().toArray());
+                    contentStruct.put("terms_names", termsNames);
+                } else {
+                    // To clear any existing tags, we must pass an empty 'post_tag' array in the 'terms' param
+                    // (this won't work in the 'terms_names' param)
+                    terms.put("post_tag", post.getTagNameList().toArray());
+                }
+
+                contentStruct.put("terms", terms);
+            }
         }
 
         contentStruct.put("post_excerpt", post.getExcerpt());
