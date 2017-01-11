@@ -134,10 +134,12 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         Resources res = getResources();
         Configuration conf = res.getConfiguration();
-        Locale currentLocale = conf.locale != null ? conf.locale : LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
+        Locale currentLocale = conf.locale != null ?
+                conf.locale : LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
 
-        if (currentLocale.toString().equals(languageCode)) return;
-
+        if (currentLocale.getLanguage().equals(new Locale(languageCode).getLanguage())) {
+            return;
+        }
 
         Locale newLocale = WPPrefUtils.languageLocale(languageCode);
         if (currentLocale.getLanguage().equals(newLocale.getLanguage())) {
