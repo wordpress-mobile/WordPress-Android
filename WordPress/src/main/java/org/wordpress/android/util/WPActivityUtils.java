@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.ComponentName;
@@ -44,16 +45,13 @@ public class WPActivityUtils {
             return;
         }
 
-        ViewGroup root = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            ViewGroup listContainer = (ViewGroup) dialog.findViewById(android.R.id.list_container);
-            if (listContainer != null) {
-                root = (ViewGroup) listContainer.getParent();
-            }
+        @SuppressLint("InlinedApi") View child = dialog.findViewById(android.R.id.list_container);
+        if (child == null) {
+            child = dialog.findViewById(android.R.id.list);
+            if (child == null) return;
         }
-        if (root == null) {
-            root = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
-        }
+
+        ViewGroup root = (ViewGroup) child.getParent();
         toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
                 .inflate(org.wordpress.android.R.layout.toolbar, root, false);
         root.addView(toolbar, 0);
