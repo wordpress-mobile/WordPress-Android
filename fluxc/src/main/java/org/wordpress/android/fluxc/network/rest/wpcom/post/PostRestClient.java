@@ -230,7 +230,7 @@ public class PostRestClient extends BaseWPComRestClient {
         post.setIsPage(from.type.equals("page"));
 
         if (from.post_thumbnail != null) {
-            post.setFeaturedImageId(from.post_thumbnail.id);
+            post.setFeaturedImageId(from.post_thumbnail.ID);
         }
         post.setPostFormat(from.format);
         if (from.geo != null) {
