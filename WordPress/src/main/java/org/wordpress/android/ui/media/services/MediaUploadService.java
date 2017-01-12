@@ -182,7 +182,12 @@ public class MediaUploadService extends Service {
     }
 
     private boolean cancelUpload() {
-        // TODO: not implemented in FluxC
+        if (mCurrentUpload == null) {
+            return true;
+        }
+
+        MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
+        mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
         return false;
     }
 
