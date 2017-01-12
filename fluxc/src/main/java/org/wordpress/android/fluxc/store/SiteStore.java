@@ -665,7 +665,10 @@ public class SiteStore extends Store {
     }
 
     private void exportSite(SiteModel site) {
-        if (site == null || !site.isWPCom()) {
+        if (!site.isWPCom()) {
+            OnSiteExported event = new OnSiteExported();
+            event.error = new ExportSiteError(ExportSiteErrorType.INVALID_SITE);
+            emitChange(event);
             return;
         }
         mSiteRestClient.exportSite(site);
