@@ -61,7 +61,7 @@ import de.greenrobot.event.EventBus;
 
 public class GCMMessageService extends GcmListenerService {
     private static final ArrayMap<Integer, Bundle> sActiveNotificationsMap = new ArrayMap<>();
-    private static NotificationHelper sNotificationHelper;
+    private static NotificationHelper sNotificationHelper = new NotificationHelper();
 
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
     public static final int PUSH_NOTIFICATION_ID = 10000;
@@ -113,15 +113,8 @@ public class GCMMessageService extends GcmListenerService {
     private void synchronizedHandleDefaultPush(@NonNull Bundle data) {
         // sActiveNotificationsMap being static, we can't just synchronize the method
         synchronized (GCMMessageService.class) {
-            getNotificationHelper().handleDefaultPush(this, data);
+            sNotificationHelper.handleDefaultPush(this, data, mAccountStore.getAccount().getUserId());
         }
-    }
-
-    private static NotificationHelper getNotificationHelper() {
-        if (sNotificationHelper == null) {
-            sNotificationHelper = new NotificationHelper();
-        }
-        return sNotificationHelper;
     }
 
     @Override
@@ -160,24 +153,24 @@ public class GCMMessageService extends GcmListenerService {
         synchronizedHandleDefaultPush(data);
     }
 
-    public static synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context, String noteId){
+    public static synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context,
+                                                                                        String noteId) {
         if (sActiveNotificationsMap.size() > 0) {
             //get the corresponding bundle for this noteId
-            for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
-                Map.Entry<Integer, Bundle> row = it.next();
+            for (Map.Entry<Integer, Bundle> row : sActiveNotificationsMap.entrySet()) {
                 Bundle noteBundle = row.getValue();
                 if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
-                    getNotificationHelper().rebuildAndUpdateNotificationsOnSystemBar(context, noteBundle);
+                    sNotificationHelper.rebuildAndUpdateNotificationsOnSystemBar(context, noteBundle);
                     return;
                 }
             }
         }
     }
 
-    public static synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context){
+    public static synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context) {
         if (sActiveNotificationsMap.size() > 0) {
             Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
-            getNotificationHelper().rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
+            sNotificationHelper.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
         }
     }
 
@@ -322,7 +315,7 @@ public class GCMMessageService extends GcmListenerService {
 
     private static boolean canAddActionsToNotifications(Context context) {
         if (isWPPinLockEnabled(context)) {
-            return !isDeviceLocked(context);
+            return !DeviceUtils.getInstance().isDeviceLocked(context);
         }
         return true;
     }
@@ -341,21 +334,16 @@ public class GCMMessageService extends GcmListenerService {
         return Boolean.FALSE;
     }
 
-    private static boolean isDeviceLocked(Context context) {
-        return DeviceUtils.getInstance().isDeviceLocked(context);
-    }
-
     private static void addAuthPushNotificationToNotificationMap(Bundle data) {
         sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
     }
 
-    private class NotificationHelper {
-        private void handleDefaultPush(Context context, @NonNull Bundle data) {
+    private static class NotificationHelper {
+        private void handleDefaultPush(Context context, @NonNull Bundle data, long wpcomUserId) {
             // if a notification is received while the app has not yet been launched after last power on,
             // the screenlockwatchservice won't be running. Let's start it now.
             context.startService(new Intent(context, NotificationsScreenLockWatchService.class));
 
-            long wpcomUserId = mAccountStore.getAccount().getUserId();
             String pushUserId = data.getString(PUSH_ARG_USER);
             // pushUserId is always set server side, but better to double check it here.
             if (!String.valueOf(wpcomUserId).equals(pushUserId)) {
@@ -508,8 +496,7 @@ public class GCMMessageService extends GcmListenerService {
                 } else {
                     // else offer REPLY / LIKE actions
                     // LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
-                    SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
-                    if (note.canLike() && !site.isJetpack()) {
+                    if (note.canLike()) {
                         addCommentLikeActionForCommentNotification(context, builder, noteId);
                     }
                 }
@@ -765,9 +752,6 @@ public class GCMMessageService extends GcmListenerService {
             resultIntent.addCategory("android.intent.category.LAUNCHER");
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
 
-            if (!mAccountStore.hasAccessToken()) {
-                return;
-             }
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
             if (notifyUser) {
@@ -809,7 +793,6 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void rebuildAndUpdateNotificationsOnSystemBar(Context context, Bundle data) {
-
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
             // Check for wpcom auth push, if so we will process this push differently
@@ -856,14 +839,17 @@ public class GCMMessageService extends GcmListenerService {
 
                     // set timestamp for note: first try with the notification timestamp, then try google's sent time
                     // if not available; finally just set the system's current time if everything else fails (not likely)
-                    long timeStampToShow = DateTimeUtils.timestampFromIso8601Millis(remainingNote.getString("note_timestamp"));
-                    timeStampToShow = timeStampToShow != 0 ? timeStampToShow : remainingNote.getLong("google.sent_time", System.currentTimeMillis());
+                    long timeStampToShow =
+                            DateTimeUtils.timestampFromIso8601Millis(remainingNote.getString("note_timestamp"));
+                    timeStampToShow = timeStampToShow != 0 ? timeStampToShow :
+                            remainingNote.getLong("google.sent_time", System.currentTimeMillis());
                     builder.setWhen(timeStampToShow);
 
                     noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
                     if (!sActiveNotificationsMap.isEmpty()) {
-                        showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0), false);
+                        showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID,
+                                sActiveNotificationsMap.keyAt(0), false);
                     }
                 }
             }

@@ -19,6 +19,7 @@ import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
 
@@ -68,105 +69,99 @@ public class NotificationsPendingDraftsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
-            performDraftsCheck();
+            if (running) {
+                return START_NOT_STICKY;
+            }
+            running = true;
+            // TODO: we should use an IntentService and drop that Thread
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    performDraftsCheck();
+                }
+            }).start();
         }
         return START_NOT_STICKY;
     }
 
+    // 1) check all “local” drafts, and check that they have been pending for more than 3 days.
+    // 2) make notification if ONE draft and if more than ONE make another text
+    // ONE: “You drafted 'Post title here' xxxx days ago but never published it.”
+    // (we also have a generic message if we can't determine for how long a draft has been sitting there or it's been
+    // more than 30 days)
+    // MORE: “You drafted %d posts but never published them. Tap to check.”
     private void performDraftsCheck() {
-        if (running || WordPress.getCurrentBlog() == null) {
-            return;
-        }
-        running = true;
-        /*
-        1) check all “local” drafts, and check that they have been pending for more than 3 days.
-        2) make notification if ONE draft and if more than ONE make another text
-        ONE: “You drafted 'Post title here' xxxx days ago but never published it.”
-        (we also have a generic message if we can't determine for how long a draft has been sitting there or it's been
-        more than 30 days)
-        MORE: “You drafted %d posts but never published them. Tap to check.”
-        * */
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (WordPress.getCurrentBlog() == null) {
-                    AppLog.w(AppLog.T.NOTIFS, "Current blog is null. No drafts checking.");
-                    completed();
-                    return;
+        ArrayList<PostModel> draftPosts = WordPress.wpDB.getDraftPostList(WordPress.getCurrentBlog().getLocalTableBlogId());
+        // TODO: Get draft posts for last selected site.
+
+        if (draftPosts != null && draftPosts.size() > 0) {
+            ArrayList<PostModel> draftPostsNotInIgnoreList;
+            // now check those that have been sitting there for more than 3 days now.
+            long now = System.currentTimeMillis();
+            long three_days_ago = now - (ONE_DAY * 3);
+
+            // only process posts that are not in the ignore list
+            draftPostsNotInIgnoreList = getPostsNotInPendingDraftsIgnorePostIdList(draftPosts);
+
+            if (draftPostsNotInIgnoreList.size() > 0) {
+                ArrayList<PostModel> draftPostsOlderThan3Days = new ArrayList<>();
+
+                for (PostModel post : draftPostsNotInIgnoreList) {
+                    if (DateTimeUtils.timestampFromIso8601(post.getDateLocallyChanged()) < three_days_ago) {
+                        draftPostsOlderThan3Days.add(post);
+                    }
                 }
 
-                ArrayList<PostModel> draftPosts =  WordPress.wpDB.getDraftPostList(WordPress.getCurrentBlog().getLocalTableBlogId());
-                if (draftPosts != null && draftPosts.size() > 0) {
-                    ArrayList<PostModel> draftPostsNotInIgnoreList;
-                    // now check those that have been sitting there for more than 3 days now.
-                    long now = System.currentTimeMillis();
-                    long three_days_ago = now - (ONE_DAY * 3);
+                // check the size and build the notification accordingly
+                long daysInDraft = 0;
+                if (draftPostsOlderThan3Days.size() == 1) {
+                    PostModel post = draftPostsOlderThan3Days.get(0);
 
-                    // only process posts that are not in the ignore list
-                    draftPostsNotInIgnoreList = getPostsNotInPendingDraftsIgnorePostIdList(draftPosts);
+                    // only notify the user if the last time they have been notified about this particular
+                    // post was at least MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's
+                    // not do it constantly each time the app comes to the foreground
+                    if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
+                        daysInDraft = (now - post.getDateLastUpdated()) / ONE_DAY;
+                        long postId = post.getLocalTablePostId();
+                        boolean isPage = post.isPage();
 
-                    if (draftPostsNotInIgnoreList.size() > 0) {
-                        ArrayList<PostModel> draftPostsOlderThan3Days = new ArrayList<>();
-
-                        for (PostModel post : draftPostsNotInIgnoreList) {
-                            if (post.getDateLastUpdated() < three_days_ago) {
-                                draftPostsOlderThan3Days.add(post);
-                            }
+                        post.setDateLastNotified(now);
+                        if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
+                            buildSinglePendingDraftNotification(post.getTitle(), daysInDraft, postId, isPage);
+                        } else {
+                            // if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't
+                            // know (i.e. value for lastUpdated is zero) then just show a generic message
+                            buildSinglePendingDraftNotificationGeneric(post.getTitle(), postId, isPage);
                         }
+                        WordPress.wpDB.updatePost(post);
+                    }
+                } else if (draftPostsOlderThan3Days.size() > 1) {
+                    long longestLivingDraft = 0;
+                    boolean onlyPagesFound = true;
+                    for (Post post : draftPostsOlderThan3Days) {
 
-                        // check the size and build the notification accordingly
-                        long daysInDraft = 0;
-                        if (draftPostsOlderThan3Days.size() == 1) {
-                            PostModel post = draftPostsOlderThan3Days.get(0);
-
-                            // only notify the user if the last time they have been notified about this particular
-                            // post was at least MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's
-                            // not do it constantly each time the app comes to the foreground
-                            if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
-                                daysInDraft = (now - post.getDateLastUpdated()) / ONE_DAY;
-                                long postId = post.getLocalTablePostId();
-                                boolean isPage = post.isPage();
-
-                                post.setDateLastNotified(now);
-                                if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
-                                    buildSinglePendingDraftNotification(post.getTitle(), daysInDraft, postId, isPage);
-                                } else {
-                                    // if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't
-                                    // know (i.e. value for lastUpdated is zero) then just show a generic message
-                                    buildSinglePendingDraftNotificationGeneric(post.getTitle(), postId, isPage);
-                                }
-                                WordPress.wpDB.updatePost(post);
-                            }
-                        } else if (draftPostsOlderThan3Days.size() > 1) {
-                            long longestLivingDraft = 0;
-                            boolean onlyPagesFound = true;
-                            for (Post post : draftPostsOlderThan3Days) {
-
-                                // update each post dateLastNotified field to now
-                                if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
-                                    if (post.getDateLastNotified() > longestLivingDraft) {
-                                        longestLivingDraft = post.getDateLastNotified();
-                                        if (!post.isPage()) {
-                                            onlyPagesFound = false;
-                                        }
-                                    }
-                                    post.setDateLastNotified(now);
-                                    WordPress.wpDB.updatePost(post);
+                        // update each post dateLastNotified field to now
+                        if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
+                            if (post.getDateLastNotified() > longestLivingDraft) {
+                                longestLivingDraft = post.getDateLastNotified();
+                                if (!post.isPage()) {
+                                    onlyPagesFound = false;
                                 }
                             }
-
-                            // if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
-                            // then show the notification again
-                            if (longestLivingDraft > 0) {
-                                buildPendingDraftsNotification(draftPostsOlderThan3Days, onlyPagesFound);
-                            }
+                            post.setDateLastNotified(now);
+                            WordPress.wpDB.updatePost(post);
                         }
                     }
 
+                    // if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
+                    // then show the notification again
+                    if (longestLivingDraft > 0) {
+                        buildPendingDraftsNotification(draftPostsOlderThan3Days, onlyPagesFound);
+                    }
                 }
-                completed();
             }
-        }).start();
+        }
+        completed();
     }
 
     private String getPostTitle(String postTitle) {
