@@ -75,6 +75,8 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     private GsonBuilder setupGsonBuilder() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrFalse.class, new JsonObjectOrFalseDeserializer());
+        gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrEmptyArray.class,
+                new JsonObjectOrEmptyArrayDeserializer());
         return gsonBuilder;
     }
 }
