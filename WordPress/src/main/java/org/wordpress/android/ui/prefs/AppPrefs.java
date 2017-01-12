@@ -79,7 +79,11 @@ public class AppPrefs {
 
         // list for local drafts that the user has set to ignore notifications on
         // (i.e. "please don't remind me I've got this in drafts")
-        PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST,
+        PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH,
+
+        PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_WEEK,
+
+        PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_DAY,
 
         // local IDs of sites recently chosen in the site picker
         RECENTLY_PICKED_SITE_IDS,
@@ -460,10 +464,10 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
     }
 
-    public static ArrayList<Long> getPendingDraftsIgnorePostIdList() {
+    public static ArrayList<Long> getPendingDraftsIgnorePostIdList(DeletablePrefKey listToWorkOn) {
         // builds the list from csv
         ArrayList<Long> idList = new ArrayList<>();
-        String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
+        String idListString = getString(listToWorkOn, "");
         if (!TextUtils.isEmpty(idListString)) {
             List<String> items = Arrays.asList(idListString.split(","));
             for (String item : items) {
@@ -474,10 +478,10 @@ public class AppPrefs {
         return idList;
     }
 
-    public static void addToPendingDraftsIgnorePostIdList(long postId) {
+    public static void addToPendingDraftsIgnorePostIdList(long postId, DeletablePrefKey listToWorkOn) {
         // appends new id to postIdList, unless it's already in the list
         // also rolls - eliminates first object (i..e oldest object) when MAX_PENDING_DRAFTS_AMOUNT reached
-        boolean isPostIdAlreadyInIgnoreList = isPostIdInPendingDraftsIgnorePostIdList(postId);
+        boolean isPostIdAlreadyInIgnoreList = isPostIdInPendingDraftsIgnorePostIdList(postId, listToWorkOn);
 
         // if this postId wasn't in our list already, append it
         if (!isPostIdAlreadyInIgnoreList) {
@@ -485,26 +489,26 @@ public class AppPrefs {
             // before appending, eliminate first one if we have more than MAX_PENDING_DRAFTS_AMOUNT elements
             rollPendingDraftsIgnorePostIdListIfNeeded();
 
-            String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
+            String idListString = getString(listToWorkOn, "");
             if (!TextUtils.isEmpty(idListString)) {
                 idListString += "," + String.valueOf(postId);
             } else {
                 idListString += String.valueOf(postId);
             }
-            setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, idListString);
+            setString(listToWorkOn, idListString);
         }
     }
 
-    public static void addToPendingDraftsIgnorePostIdList(ArrayList<Long> postIds) {
+    public static void addToPendingDraftsIgnorePostIdList(ArrayList<Long> postIds, DeletablePrefKey listToWorkOn) {
         if (postIds != null) {
             for (Long postId : postIds) {
-                addToPendingDraftsIgnorePostIdList(postId);
+                addToPendingDraftsIgnorePostIdList(postId, listToWorkOn);
             }
         }
     }
 
-    public static void deleteIdFromPendingDraftsIgnorePostIdList(long postId) {
-        ArrayList<Long> idList = getPendingDraftsIgnorePostIdList();
+    public static void deleteIdFromPendingDraftsIgnorePostIdList(long postId, DeletablePrefKey listToWorkOn) {
+        ArrayList<Long> idList = getPendingDraftsIgnorePostIdList(listToWorkOn);
         boolean foundSamePostId = false;
         for (Long oneId : idList) {
             if (oneId != null && oneId == postId) {
@@ -518,12 +522,12 @@ public class AppPrefs {
         if (foundSamePostId) {
             // re-build
             String idListString = TextUtils.join(",", idList);
-            setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, idListString);
+            setString(listToWorkOn, idListString);
         }
     }
 
     private static boolean rollPendingDraftsIgnorePostIdListIfNeeded(){
-        String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
+        String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH, "");
         boolean rolled = false;
         if (!TextUtils.isEmpty(idListString)) {
             // note wrapping the Arrays.asList call with a new object is needed because otherwise
@@ -533,15 +537,15 @@ public class AppPrefs {
                 // eliminate first one
                 items.remove(0);
                 idListString = TextUtils.join(",", items);
-                setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, idListString);
+                setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH, idListString);
                 rolled = true;
             }
         }
         return rolled;
     }
 
-    public static boolean isPostIdInPendingDraftsIgnorePostIdList(long postId) {
-        ArrayList<Long> idList = getPendingDraftsIgnorePostIdList();
+    public static boolean isPostIdInPendingDraftsIgnorePostIdList(long postId, DeletablePrefKey listToWorkOn) {
+        ArrayList<Long> idList = getPendingDraftsIgnorePostIdList(listToWorkOn);
         boolean foundSamePostId = false;
         for (Long oneId : idList) {
             if (oneId != null && oneId == postId) {
