@@ -21,10 +21,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.comments.CommentActionResult;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -184,10 +186,10 @@ public class NotificationsProcessingService extends Service {
                     // user tapped on ignore, so we need to remember not to notify them again on these drafts
                     if (mIntent.hasExtra(GROUPED_POST_ID_LIST_EXTRA)) {
                         ArrayList<Long> groupedPostIdList = (ArrayList<Long>) mIntent.getSerializableExtra(GROUPED_POST_ID_LIST_EXTRA);
-                        AppPrefs.addToPendingDraftsIgnorePostIdList(groupedPostIdList);
+                        addToPendingDraftsIgnorePostIdList(groupedPostIdList);
                     } else if (mIntent.hasExtra(POST_ID_EXTRA)) {
                         long postId = mIntent.getLongExtra(POST_ID_EXTRA, 0);
-                        AppPrefs.addToPendingDraftsIgnorePostIdList(postId);
+                        addToPendingDraftsIgnorePostIdList(postId);
                     }
                     return;
                 }
@@ -239,6 +241,27 @@ public class NotificationsProcessingService extends Service {
                 requestFailed(null);
             }
 
+        }
+
+        private void addToPendingDraftsIgnorePostIdList(long postId) {
+            ArrayList<Long> list = new ArrayList<>();
+            list.add(postId);
+            addToPendingDraftsIgnorePostIdList(list);
+        }
+
+        private void addToPendingDraftsIgnorePostIdList(ArrayList<Long> postIdList) {
+            long now = System.currentTimeMillis();
+            ArrayList<Post> draftPosts =  WordPress.wpDB.getDraftPostList(WordPress.getCurrentBlog().getLocalTableBlogId());
+            if (draftPosts != null && draftPosts.size() > 0) {
+                for (Post onePost : draftPosts) {
+                    for (Long postId : postIdList) {
+                        if (onePost.getLocalTablePostId() == postId ) {
+                            AppPrefs.addToPendingDraftsIgnorePostIdList(postIdList, NotificationsPendingDraftsService.getDraftCurrentIgnoreTimeframeCandidate(now, onePost));
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         private void getNoteFromBundleIfExists() {

@@ -431,19 +431,19 @@ public class NotificationsPendingDraftsService extends Service {
         return postsNotInIgnorePostList;
     }
 
-    private boolean isCurrentIgnoreTimeFrameDay(AppPrefs.DeletablePrefKey timeFrameKey) {
+    public static boolean isCurrentIgnoreTimeFrameDay(AppPrefs.DeletablePrefKey timeFrameKey) {
         return (timeFrameKey == AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_DAY);
     }
 
-    private boolean isCurrentIgnoreTimeFrameWeek(AppPrefs.DeletablePrefKey timeFrameKey) {
+    public static boolean isCurrentIgnoreTimeFrameWeek(AppPrefs.DeletablePrefKey timeFrameKey) {
         return (timeFrameKey == AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_WEEK);
     }
 
-    private boolean isCurrentIgnoreTimeFrameMonth(AppPrefs.DeletablePrefKey timeFrameKey) {
+    public static boolean isCurrentIgnoreTimeFrameMonth(AppPrefs.DeletablePrefKey timeFrameKey) {
         return (timeFrameKey == AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH);
     }
 
-    private AppPrefs.DeletablePrefKey getDraftCurrentIgnoreTimeframeCandidate(long now, Post post) {
+    public static AppPrefs.DeletablePrefKey getDraftCurrentIgnoreTimeframeCandidate(long now, Post post) {
         long one_day_ago = now - ONE_DAY;
         long one_week_ago = now - ONE_WEEK;
         long one_month_ago = now - ONE_MONTH;
