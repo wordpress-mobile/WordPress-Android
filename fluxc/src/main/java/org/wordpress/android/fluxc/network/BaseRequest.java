@@ -14,7 +14,7 @@ import com.android.volley.Request;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
