@@ -786,6 +786,7 @@ public class MediaGridFragment extends Fragment
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
         if (event.isError()) {

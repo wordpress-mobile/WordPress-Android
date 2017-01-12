@@ -778,7 +778,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void trackEditorCreatedPost(String action, Intent intent) {
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         // Post created from the post list (new post button).
         String normalizedSourceName = "post-list";
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
@@ -1625,7 +1625,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             MediaListPayload payload = new MediaListPayload(mSite, null, null);
             mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
         } else {
-            ToastUtils.showToast(this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(this, R.string.error_media_refresh_no_connection, ToastUtils.Duration.SHORT);
         }
     }
 
@@ -1633,7 +1633,31 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Subscribe
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
         if (event.isError()) {
-            ToastUtils.showToast(EditPostActivity.this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
+            final String errorMessage;
+            switch (event.error.type) {
+                case FS_READ_PERMISSION_DENIED:
+                    errorMessage = getString(R.string.error_media_insufficient_fs_permissions);
+                    break;
+                case MEDIA_NOT_FOUND:
+                    errorMessage = getString(R.string.error_media_not_found);
+                    break;
+                case UNAUTHORIZED:
+                    errorMessage = getString(R.string.error_media_unauthorized);
+                    break;
+                case PARSE_ERROR:
+                    String errorFormat = getString(R.string.error_media_parse_format);
+                    errorMessage = String.format(errorFormat, event.cause.toString());
+                    break;
+                case MALFORMED_MEDIA_ARG:
+                case NULL_MEDIA_ARG:
+                case GENERIC_ERROR:
+                default:
+                    errorMessage = getString(R.string.error_refresh_media);
+                    break;
+            }
+            if (!TextUtils.isEmpty(errorMessage)) {
+                ToastUtils.showToast(EditPostActivity.this, errorMessage, ToastUtils.Duration.SHORT);
+            }
         } else {
             runOnUiThread(new Runnable() {
                 @Override

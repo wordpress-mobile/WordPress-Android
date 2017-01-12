@@ -1028,8 +1028,13 @@
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
+    <string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
+    <string name="error_media_not_found">Media could not be found</string>
+    <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
+    <string name="error_media_parse_format">Could not parse response to %s media</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_upload_connection">A connection error occurred while uploading media</string>
+    <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
