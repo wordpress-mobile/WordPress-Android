@@ -136,13 +136,13 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         Configuration conf = res.getConfiguration();
         // will return conf.locale if conf is non-null, or Locale.getDefault()
         Locale currentLocale = LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
+        Locale newLocale = WPPrefUtils.languageLocale(languageCode);
 
-        if (currentLocale.getLanguage().equals(new Locale(languageCode).getLanguage())) {
+        if (currentLocale.toString().equals(newLocale.getDisplayLanguage())) {
             return;
         }
 
-        Locale newLocale = WPPrefUtils.languageLocale(languageCode);
-        if (currentLocale.getLanguage().equals(newLocale.getLanguage())) {
+        if (Locale.getDefault().toString().equals(newLocale.toString())) {
             // remove custom locale key when original device locale is selected
             mSettings.edit().remove(LANGUAGE_PREF_KEY).apply();
         } else {
