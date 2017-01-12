@@ -13,7 +13,6 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 
@@ -74,6 +73,11 @@ public class ReaderPostListActivity extends AppCompatActivity {
                 }
             }
         }
+
+        // restore the activity title
+        if (savedInstanceState != null && savedInstanceState.containsKey(ReaderConstants.KEY_ACTIVITY_TITLE)) {
+            setTitle(savedInstanceState.getString(ReaderConstants.KEY_ACTIVITY_TITLE));
+        }
     }
 
     @Override
@@ -114,6 +118,12 @@ public class ReaderPostListActivity extends AppCompatActivity {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+
+        // store the title for blog/tag preview so we can restore it upon recreation
+        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW || getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+            outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, getTitle().toString());
+        }
+
         super.onSaveInstanceState(outState);
     }
 
