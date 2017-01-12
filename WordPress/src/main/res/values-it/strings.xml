@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-17 18:46:40+0000
+Translation-Revision-Date: 2016-12-23 09:07:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: it
 -->
 <resources>
+	<string name="reader_photo_by">Foto di %s</string>
+	<string name="reader_label_visit">Visita</string>
+	<string name="all_your_sites">Tutti i miei siti</string>
+	<string name="pending_draft_more">Hai abbozzato %d articoli ma non li hai mai pubblicati. Clicca per verificare.</string>
+	<string name="pending_draft_one">Hai abbozzato \'%1$s\' %2$d giorni fa ma non lo hai mai pubblicato.</string>
+	<string name="pending_draft_one_generic">Hai abbozzato \'%s\' ma non l\'hai mai pubblicato.</string>
+	<string name="no_default_app_available_to_open_link">Impossibile aprire il link</string>
+	<string name="notification_pending_drafts">Avvisami su gli articoli abbozzati</string>
+	<string name="invalid_verification_code_format">Deve essere un numero a sei cifre</string>
+	<string name="confirm_discard_changes">Scartare le modifiche non salvate?</string>
+	<string name="swipe_for_more">Scorri per altre info</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Non sei autorizzato a vedere questo articolo. Prova a registrarti prima su WordPress.com o a fare clic sul pulsante di azione qua sopra per aprire un browser.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Non sei autorizzato a visualizzare questo articolo. Prova a registrarti prima su WordPress.com.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Non sei autorizzato a visualizzare questo articolo. Utilizza il pulsante si azione qua sopra per provare ad utilizzare un browser.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Non puoi mettere un like quando non sei connesso a WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Hai già messo un like su questo commento</string>
+	<string name="reader_toast_err_comment_not_found">Commento non trovato!</string>
+	<string name="reader_toast_err_cannot_like_post">Errore nel mettere like su questo</string>
+	<string name="reader_title_post_detail_wpcom">Articolo WordPress.com </string>
+	<string name="reader_title_deeplink">Reader WordPress</string>
+	<string name="error_notif_q_action_reply">Impossibile replicare al commento. Riprova più tardi.</string>
+	<string name="error_notif_q_action_approve">Impossibile approvare il commento. Riprova più tardi.</string>
+	<string name="error_notif_q_action_like">Impossibile mettere un like al commento. Riprova più tardi.</string>
+	<string name="notifications_label_new_notifications_subtitle">Clicca per mostrarli</string>
+	<string name="notifications_label_new_notifications">Nuove notifiche</string>
+	<string name="comment_q_action_replying">Rispondendo...</string>
+	<string name="comment_q_action_approving">Approvando...</string>
+	<string name="comment_q_action_liking">Effettuando il link...</string>
+	<string name="comment_q_action_processing">Processo in corso...</string>
+	<string name="comment_q_action_done_generic">Azione compiuta!</string>
+	<string name="comment_liked">Like assegnato al commento</string>
+	<string name="signout">Uscire</string>
+	<string name="sign_in_wpcom">Accedere a WordPress.com</string>
 	<string name="reader_label_global_related_posts">saperne di più su WordPress.com</string>
 	<string name="reader_label_local_related_posts">Per saperne di più %s</string>
 	<string name="preference_open_device_settings">Accedere alle impostazioni del device</string>

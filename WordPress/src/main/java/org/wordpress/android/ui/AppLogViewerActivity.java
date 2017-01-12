@@ -23,6 +23,9 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
+import static java.lang.String.format;
 
 /**
  * views the activity log (see utils/AppLog.java)
@@ -41,6 +44,7 @@ public class AppLogViewerActivity extends AppCompatActivity {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.reader_title_applog);
         }
 
         final ListView listView = (ListView) findViewById(android.R.id.list);
@@ -86,7 +90,7 @@ public class AppLogViewerActivity extends AppCompatActivity {
             // line numbers shown here won't match the line numbers when the log is shared
             int lineNum = position - AppLog.HEADER_LINE_COUNT + 1;
             if (lineNum > 0) {
-                holder.txtLineNumber.setText(String.format("%02d", lineNum));
+                holder.txtLineNumber.setText(format(Locale.US, "%02d", lineNum));
                 holder.txtLineNumber.setVisibility(View.VISIBLE);
             } else {
                 holder.txtLineNumber.setVisibility(View.GONE);

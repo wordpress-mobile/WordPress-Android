@@ -60,7 +60,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 50;
+    private static final int DATABASE_VERSION = 51;
 
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
@@ -256,6 +256,7 @@ public class WordPressDB {
             case 49:
                 // Delete simperium DB since we're removing Simperium from the app.
                 ctx.deleteDatabase("simperium-store");
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }

@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
@@ -180,9 +181,11 @@ public class SignInDialogFragment extends DialogFragment {
         }
         switch (action) {
             case ACTION_OPEN_URL:
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(arguments.getString(ARG_OPEN_URL_PARAM)));
-                startActivity(intent);
-                dismissAllowingStateLoss();
+                String url = arguments.getString(ARG_OPEN_URL_PARAM);
+                if (TextUtils.isEmpty(url)) {
+                    return;
+                }
+                ActivityLauncher.openUrlExternal(getContext(), url);
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, arguments.getString(

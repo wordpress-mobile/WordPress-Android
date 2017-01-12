@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-18 01:18:15+0000
+Translation-Revision-Date: 2016-12-20 22:44:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: en_AU
 -->
 <resources>
+	<string name="reader_photo_by">Photo by %s</string>
+	<string name="reader_label_visit">Visit</string>
+	<string name="all_your_sites">All My Sites</string>
+	<string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
+	<string name="pending_draft_one">You drafted \'%1$s\' %2$d days ago but never published it.</string>
+	<string name="pending_draft_one_generic">You drafted \'%s\' but never published it.</string>
+	<string name="no_default_app_available_to_open_link">Unable to open the link</string>
+	<string name="notification_pending_drafts">Notify me on pending drafts</string>
+	<string name="invalid_verification_code_format">Must be six-digit number</string>
+	<string name="confirm_discard_changes">Discard unsaved changes?</string>
+	<string name="swipe_for_more">Swipe for more</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorised to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
 	<string name="reader_err_get_post_not_authorized_signin">You\'re not authorised to view this post. Try signing in to WordPress.com first.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">You\'re not authorised to view this post. Use the top action button to try a browser instead.</string>

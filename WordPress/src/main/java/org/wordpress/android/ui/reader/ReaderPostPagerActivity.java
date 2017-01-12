@@ -354,7 +354,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                                         EventBus.getDefault().post(slugsResolved);
 
                                         // post wasn't available locally earlier so, track it now
-                                        trackPost(post.blogId, post.postId);
+                                        if (post != null) {
+                                            trackPost(post.blogId, post.postId);
+                                        }
                                     }
 
                                     @Override
