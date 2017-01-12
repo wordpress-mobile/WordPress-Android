@@ -102,6 +102,9 @@ public class SiteStore extends Store {
             this.type = DeleteSiteErrorType.fromString(errorType);
             this.message = message;
         }
+        public DeleteSiteError(DeleteSiteErrorType errorType) {
+            this.type = errorType;
+        }
     }
 
     // OnChanged Events
@@ -147,6 +150,7 @@ public class SiteStore extends Store {
     }
 
     public enum DeleteSiteErrorType {
+        INVALID_SITE,
         UNAUTHORIZED, // user don't have permission to delete
         AUTHORIZATION_REQUIRED, // missing access token
         GENERIC_ERROR;
@@ -633,7 +637,9 @@ public class SiteStore extends Store {
     }
 
     private void deleteSite(SiteModel site) {
-        if (site == null || !site.isWPCom()) {
+        if (!site.isWPCom()) {
+            OnSiteDeleted event = new OnSiteDeleted(new DeleteSiteError(DeleteSiteErrorType.INVALID_SITE));
+            emitChange(event);
             return;
         }
         mSiteRestClient.deleteSite(site);
