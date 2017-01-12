@@ -3,22 +3,18 @@ package org.wordpress.android.ui.media.services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -116,8 +112,7 @@ public class MediaDeleteService extends Service {
                 break;
             case MEDIA_NOT_FOUND:
                 // remove media from local database
-                MediaListPayload removePayload = newPayload(MediaAction.REMOVE_MEDIA);
-                mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(removePayload));
+                mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mDeleteInProgress));
                 break;
             case PARSE_ERROR:
                 // TODO
@@ -125,8 +120,7 @@ public class MediaDeleteService extends Service {
             default:
                 // mark media as deleted to prevent continuous delete requests
                 mDeleteInProgress.setDeleted(true);
-                MediaListPayload updatePayload = newPayload(MediaAction.UPDATE_MEDIA);
-                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(updatePayload));
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mDeleteInProgress));
                 return false;
         }
         return true;
@@ -150,7 +144,7 @@ public class MediaDeleteService extends Service {
 
         // dispatch delete action
         AppLog.v(T.MEDIA, "Deleting " + mDeleteInProgress.getTitle() + " (id=" + mDeleteInProgress.getMediaId() + ")");
-        MediaListPayload payload = newPayload(MediaAction.DELETE_MEDIA);
+        MediaPayload payload = new MediaPayload(mSite, mDeleteInProgress);
         mDispatcher.dispatch(MediaActionBuilder.newDeleteMediaAction(payload));
     }
 
@@ -164,11 +158,5 @@ public class MediaDeleteService extends Service {
 
         return media.getSiteId() == mDeleteInProgress.getSiteId() &&
                media.getMediaId() == mDeleteInProgress.getMediaId();
-    }
-
-    private MediaListPayload newPayload(@NonNull MediaAction action) {
-        ArrayList<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(mDeleteInProgress);
-        return new MediaListPayload(action, mSite, mediaList);
     }
 }

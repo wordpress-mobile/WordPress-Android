@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
@@ -167,7 +168,7 @@ public class MediaUploadService extends Service {
         mCurrentUpload = media;
 
         // dispatch upload action
-        MediaStore.UploadMediaPayload payload = new MediaStore.UploadMediaPayload(mSite, mCurrentUpload);
+        MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
         mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
         if (mListener != null) {

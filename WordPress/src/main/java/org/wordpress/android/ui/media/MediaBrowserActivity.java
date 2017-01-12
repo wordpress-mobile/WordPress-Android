@@ -50,12 +50,10 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -492,7 +490,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mUploadService != null) {
             mUploadService.addMediaToQueue(media);
             media.setUploadState(MediaUploadState.QUEUED.toString());
-            saveMedia(media);
+            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         } else {
             mPendingUploads.add(media);
             startMediaUploadService();
@@ -670,7 +668,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         });
 
         int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
-
         mAddMediaPopup = new PopupWindow(menuView, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mAddMediaPopup.setBackgroundDrawable(new ColorDrawable());
     }
@@ -715,20 +712,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void saveMedia(MediaModel media) {
-        List<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(media);
-        MediaStore.MediaListPayload payload = new MediaStore.MediaListPayload(MediaAction.UPDATE_MEDIA, mSite, mediaList);
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(payload));
-    }
-
-    public void updateMediaStore(@NonNull MediaModel media) {
-        List<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(media);
-        MediaListPayload payload = new MediaListPayload(MediaAction.UPDATE_MEDIA, mSite, mediaList);
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(payload));
-    }
-
     public void deleteMedia(final ArrayList<Long> ids) {
         Set<String> sanitizedIds = new HashSet<>(ids.size());
 
@@ -743,7 +726,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
             if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
                 mediaModel.setUploadState(MediaUploadState.DELETE.toString());
-                updateMediaStore(mediaModel);
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
                 sanitizedIds.add(String.valueOf(currentId));
             }
         }

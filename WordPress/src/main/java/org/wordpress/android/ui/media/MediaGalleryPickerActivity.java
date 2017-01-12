@@ -294,7 +294,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             mIsRefreshing = true;
             mGridAdapter.setRefreshing(true);
 
-            MediaListPayload payload = new MediaListPayload(MediaAction.FETCH_ALL_MEDIA, mSite, null);
+            MediaListPayload payload = new MediaListPayload(mSite, null, null);
             mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
         }
     }
