@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 
@@ -158,6 +160,12 @@ public class ReaderPostListActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
+
+        String title = ReaderBlogTable.getBlogName(blogId);
+        if (title.isEmpty()) {
+            title = getString(R.string.reader_title_blog_preview);
+        }
+        setTitle(title);
     }
 
     private void showListFragmentForFeed(long feedId) {
@@ -169,6 +177,12 @@ public class ReaderPostListActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
+
+        String title = ReaderBlogTable.getFeedName(feedId);
+        if (title.isEmpty()) {
+            title = getString(R.string.reader_title_blog_preview);
+        }
+        setTitle(title);
     }
 
     private ReaderPostListFragment getListFragment() {
