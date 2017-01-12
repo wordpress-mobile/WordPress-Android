@@ -487,7 +487,7 @@ public class AppPrefs {
         if (!isPostIdAlreadyInIgnoreList) {
 
             // before appending, eliminate first one if we have more than MAX_PENDING_DRAFTS_AMOUNT elements
-            rollPendingDraftsIgnorePostIdListIfNeeded();
+            rollPendingDraftsIgnorePostIdListIfNeeded(listToWorkOn);
 
             String idListString = getString(listToWorkOn, "");
             if (!TextUtils.isEmpty(idListString)) {
@@ -505,6 +505,12 @@ public class AppPrefs {
                 addToPendingDraftsIgnorePostIdList(postId, listToWorkOn);
             }
         }
+    }
+
+    public static void deleteIdFromAllPendingDraftsIgnorePostIdLists(long postId) {
+        deleteIdFromPendingDraftsIgnorePostIdList(postId, DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_DAY);
+        deleteIdFromPendingDraftsIgnorePostIdList(postId, DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_WEEK);
+        deleteIdFromPendingDraftsIgnorePostIdList(postId, DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH);
     }
 
     public static void deleteIdFromPendingDraftsIgnorePostIdList(long postId, DeletablePrefKey listToWorkOn) {
@@ -526,8 +532,8 @@ public class AppPrefs {
         }
     }
 
-    private static boolean rollPendingDraftsIgnorePostIdListIfNeeded(){
-        String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH, "");
+    private static boolean rollPendingDraftsIgnorePostIdListIfNeeded(DeletablePrefKey listToWorkOn){
+        String idListString = getString(listToWorkOn, "");
         boolean rolled = false;
         if (!TextUtils.isEmpty(idListString)) {
             // note wrapping the Arrays.asList call with a new object is needed because otherwise
@@ -537,7 +543,7 @@ public class AppPrefs {
                 // eliminate first one
                 items.remove(0);
                 idListString = TextUtils.join(",", items);
-                setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH, idListString);
+                setString(listToWorkOn, idListString);
                 rolled = true;
             }
         }

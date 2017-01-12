@@ -462,7 +462,7 @@ public class PostsListFragment extends Fragment
         post.setChangedFromDraftToPublished(true);
 
         // also in case this postId was in our ignore list, delete it from the list as well
-        AppPrefs.deleteIdFromPendingDraftsIgnorePostIdList(post.getLocalTablePostId());
+        AppPrefs.deleteIdFromAllPendingDraftsIgnorePostIdLists(post.getLocalTablePostId());
 
         PostUploadService.addPostToUpload(post);
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
@@ -552,7 +552,7 @@ public class PostsListFragment extends Fragment
                     // user is already looking at the blog post list, so it doesn't make sense bothering them
 
                     // also in case this postId was in our ignore list, delete it from the list as well
-                    AppPrefs.deleteIdFromPendingDraftsIgnorePostIdList(post.getPostId());
+                    AppPrefs.deleteIdFromAllPendingDraftsIgnorePostIdLists(post.getPostId());
                 }
             }
         });

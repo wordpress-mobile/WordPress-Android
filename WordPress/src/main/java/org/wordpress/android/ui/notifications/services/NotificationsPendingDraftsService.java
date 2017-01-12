@@ -131,108 +131,116 @@ public class NotificationsPendingDraftsService extends Service {
 
                 ArrayList<Post> draftPosts =  WordPress.wpDB.getDraftPostList(WordPress.getCurrentBlog().getLocalTableBlogId());
                 if (draftPosts != null && draftPosts.size() > 0) {
-                    ArrayList<Post> draftPostsNotInIgnoreList;
+
                     // now check those that have been sitting there for more than 1 day now.
                     long now = System.currentTimeMillis();
                     long one_day_ago = now - ONE_DAY;
                     long one_week_ago = now - ONE_WEEK;
                     long one_month_ago = now - ONE_MONTH;
+                    ArrayList<Post> draftPostsNotInIgnoreLists =  getPostsNotInAnyPendingDraftsIgnorePostIdList(now, draftPosts);
 
-                    // only process posts that are not in the ignore list
-                    draftPostsNotInIgnoreList = getPostsNotInPendingDraftsIgnorePostIdList(draftPosts);
 
-                    if (draftPostsNotInIgnoreList.size() > 0) {
-                        // we only want to show this notification for one of the drafts if only one
-                        // exists, and show a group notification in case there are more than one
-                        int totalDrafts = draftPostsNotInIgnoreList.size();
+                    // check the size and build the notification accordingly
+                    int totalDraftsNotInIgnoreLists = draftPostsNotInIgnoreLists.size();
+                    if (draftPostsNotInIgnoreLists.size() > 1) {
+                        // only show draft count for drafts that were not in any ignore list
+                        showPendingCountNotification(now, draftPostsNotInIgnoreLists);
+                    }
+                    else if (totalDraftsNotInIgnoreLists == 1) {
 
-                        // check the size and build the notification accordingly
                         long daysInDraft = 0;
-                        if (totalDrafts == 1) {
-                            // if there is only one draft, we'e sure to have it in the draftPostsNotInIgnoreList
-                            Post post = draftPostsNotInIgnoreList.get(0);
 
-                            // only notify the user if the last time they have been notified about this particular post was
-                            // at least MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's
-                            // not do it constantly each time the app comes to the foreground
-                            if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
-                                daysInDraft = (now - post.getDateLastUpdated()) / ONE_DAY;
-                                long postId = post.getLocalTablePostId();
-                                boolean isPage = post.isPage();
-                                post.setDateLastNotified(now);
+                        // if there is only one draft, we'e sure to have it in the draftPosts
+                        Post post = draftPostsNotInIgnoreLists.get(0);
 
-                                // TODO: HERE CHECK THE daysInDraft and show the right message
-                                // use the right message for 1 day, 1 week and 1 month old
-                                if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
-                                    String formattedString = getString(R.string.pending_draft_one_generic);
+                        // at this point, this means we have one draft that has either never been marked
+                        // for ignore, or it has been marked for ignore but we are now on a different timeframe
+                        // (i.e. it was marked ignore for the day-old timeframe and now it's been a week).
+                        // Because of that, we should be safe to eliminate it from the other ignore lists.
+                        AppPrefs.deleteIdFromAllPendingDraftsIgnorePostIdLists(post.getLocalTablePostId());
 
-                                    long dateLastUpdated = post.getDateLastUpdated();
-                                    if (dateLastUpdated < one_month_ago) {
-                                        formattedString = getString(R.string.pending_draft_one_month);
-                                    }
-                                    else
-                                    if (dateLastUpdated < one_week_ago) {
-                                        // use any of the available 2 string formats, randomly
-                                        Random randomNum = new Random();
-                                        int result = randomNum.nextInt(2);
-                                        if (result == 0)
-                                            formattedString = getString(R.string.pending_draft_one_week_1);
-                                        else
-                                            formattedString = getString(R.string.pending_draft_one_week_2);
-                                    }
-                                    else
-                                    if (dateLastUpdated < one_day_ago) {
-                                        // use any of the available 2 string formats, randomly
-                                        Random randomNum = new Random();
-                                        int result = randomNum.nextInt(2);
-                                        if (result == 0)
-                                            formattedString = getString(R.string.pending_draft_one_day_1);
-                                        else
-                                            formattedString = getString(R.string.pending_draft_one_day_2);
-                                    }
 
-                                    buildSinglePendingDraftNotification(post.getTitle(), formattedString, postId, isPage);
+                        // only notify the user if the last time they have been notified about this particular post was
+                        // at least MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's
+                        // not do it constantly each time the app comes to the foreground
+                        if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
+                            daysInDraft = (now - post.getDateLastUpdated()) / ONE_DAY;
+                            long postId = post.getLocalTablePostId();
+                            boolean isPage = post.isPage();
+                            post.setDateLastNotified(now);
 
-                                } else {
-                                    // if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't know (i.e. value for lastUpdated
-                                    // is zero) then just show a generic message
-                                    buildSinglePendingDraftNotificationGeneric(post.getTitle(), postId, isPage);
+                            // TODO: HERE CHECK THE daysInDraft and show the right message
+                            // use the right message for 1 day, 1 week and 1 month old
+                            if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
+                                String formattedString = getString(R.string.pending_draft_one_generic);
+
+                                long dateLastUpdated = post.getDateLastUpdated();
+                                if (dateLastUpdated < one_month_ago) {
+                                    formattedString = getString(R.string.pending_draft_one_month);
                                 }
-                                WordPress.wpDB.updatePost(post);
-                            }
-                        } else if (totalDrafts > 1) {
-                            long longestLivingDraft = 0;
-                            boolean onlyPagesFound = true;
-                            boolean doShowNotification = false;
-
-                            for (Post post : draftPostsNotInIgnoreList) {
-
-                                // update each post dateLastNotified field to now
-                                if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
-                                    if (post.getDateLastNotified() > longestLivingDraft) {
-                                        doShowNotification = true;
-                                        longestLivingDraft = post.getDateLastNotified();
-                                        if (!post.isPage()) {
-                                            onlyPagesFound = false;
-                                        }
-                                    }
-                                    post.setDateLastNotified(now);
-                                    WordPress.wpDB.updatePost(post);
+                                else
+                                if (dateLastUpdated < one_week_ago) {
+                                    // use any of the available 2 string formats, randomly
+                                    Random randomNum = new Random();
+                                    int result = randomNum.nextInt(2);
+                                    if (result == 0)
+                                        formattedString = getString(R.string.pending_draft_one_week_1);
+                                    else
+                                        formattedString = getString(R.string.pending_draft_one_week_2);
                                 }
-                            }
+                                else
+                                if (dateLastUpdated < one_day_ago) {
+                                    // use any of the available 2 string formats, randomly
+                                    Random randomNum = new Random();
+                                    int result = randomNum.nextInt(2);
+                                    if (result == 0)
+                                        formattedString = getString(R.string.pending_draft_one_day_1);
+                                    else
+                                        formattedString = getString(R.string.pending_draft_one_day_2);
+                                }
 
-                            // if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
-                            // then show the notification again
-                            if (doShowNotification) {
-                                buildPendingDraftsNotification(draftPostsNotInIgnoreList, onlyPagesFound);
+                                buildSinglePendingDraftNotification(post.getTitle(), formattedString, postId, isPage);
+
+                            } else {
+                                // if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't know (i.e. value for lastUpdated
+                                // is zero) then just show a generic message
+                                buildSinglePendingDraftNotificationGeneric(post.getTitle(), postId, isPage);
                             }
+                            WordPress.wpDB.updatePost(post);
                         }
                     }
-
                 }
                 completed();
             }
         }).start();
+    }
+
+    private void showPendingCountNotification(long now, ArrayList<Post> draftPostsNotInIgnoreList) {
+        long longestLivingDraft = 0;
+        boolean onlyPagesFound = true;
+        boolean doShowNotification = false;
+
+        for (Post post : draftPostsNotInIgnoreList) {
+
+            // update each post dateLastNotified field to now
+            if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
+                if (post.getDateLastNotified() > longestLivingDraft) {
+                    doShowNotification = true;
+                    longestLivingDraft = post.getDateLastNotified();
+                    if (!post.isPage()) {
+                        onlyPagesFound = false;
+                    }
+                }
+                post.setDateLastNotified(now);
+                WordPress.wpDB.updatePost(post);
+            }
+        }
+
+        // if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
+        // then show the notification again
+        if (doShowNotification) {
+            buildPendingDraftsNotification(draftPostsNotInIgnoreList, onlyPagesFound);
+        }
     }
 
     private String getPostTitle(String postTitle) {
@@ -376,10 +384,91 @@ public class NotificationsPendingDraftsService extends Service {
         builder.setDeleteIntent(dismissPendingIntent);
     }
 
-    private ArrayList<Post> getPostsNotInPendingDraftsIgnorePostIdList(ArrayList<Post> postSet) {
+    private ArrayList<Post> getPostsNotInAnyPendingDraftsIgnorePostIdList(long now, ArrayList<Post> postSet) {
         ArrayList<Post> postsNotInIgnorePostList = new ArrayList<>();
         if (postSet != null) {
-            ArrayList<Long> idList = AppPrefs.getPendingDraftsIgnorePostIdList();
+            ArrayList<Long> idListDay = AppPrefs.getPendingDraftsIgnorePostIdList(AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_DAY);
+            ArrayList<Long> idListWeek = AppPrefs.getPendingDraftsIgnorePostIdList(AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_WEEK);
+            ArrayList<Long> idListMonth = AppPrefs.getPendingDraftsIgnorePostIdList(AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH);
+
+            for (Post onePost : postSet) {
+                if (onePost != null) {
+                    boolean foundId = false;
+                    for (Long oneId : idListDay) {
+                        if (onePost.getLocalTablePostId() == oneId
+                                && isCurrentIgnoreTimeFrameDay(getDraftCurrentIgnoreTimeframeCandidate(now, onePost))) {
+                            foundId = true;
+                            break;
+                        }
+                    }
+
+                    if (!foundId) {
+                        for (Long oneId : idListWeek) {
+                            if (onePost.getLocalTablePostId() == oneId
+                                    && isCurrentIgnoreTimeFrameWeek(getDraftCurrentIgnoreTimeframeCandidate(now, onePost))) {
+                                foundId = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!foundId) {
+                        for (Long oneId : idListMonth) {
+                            if (onePost.getLocalTablePostId() == oneId
+                                    && isCurrentIgnoreTimeFrameMonth(getDraftCurrentIgnoreTimeframeCandidate(now, onePost))) {
+                                foundId = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!foundId) {
+                        postsNotInIgnorePostList.add(onePost);
+                    }
+                }
+            }
+        }
+        return postsNotInIgnorePostList;
+    }
+
+    private boolean isCurrentIgnoreTimeFrameDay(AppPrefs.DeletablePrefKey timeFrameKey) {
+        return (timeFrameKey == AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_DAY);
+    }
+
+    private boolean isCurrentIgnoreTimeFrameWeek(AppPrefs.DeletablePrefKey timeFrameKey) {
+        return (timeFrameKey == AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_WEEK);
+    }
+
+    private boolean isCurrentIgnoreTimeFrameMonth(AppPrefs.DeletablePrefKey timeFrameKey) {
+        return (timeFrameKey == AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH);
+    }
+
+    private AppPrefs.DeletablePrefKey getDraftCurrentIgnoreTimeframeCandidate(long now, Post post) {
+        long one_day_ago = now - ONE_DAY;
+        long one_week_ago = now - ONE_WEEK;
+        long one_month_ago = now - ONE_MONTH;
+
+        long dateLastUpdated = post.getDateLastUpdated();
+        if (dateLastUpdated < one_month_ago) {
+            return AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH;
+        }
+        else
+        if (dateLastUpdated < one_week_ago) {
+            return AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_WEEK;
+        }
+        else
+        if (dateLastUpdated < one_day_ago) {
+            return AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_DAY;
+        }
+
+        //default: month as it's older
+        return AppPrefs.DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST_MONTH;
+    }
+
+    private ArrayList<Post> getPostsNotInPendingDraftsIgnorePostIdList(ArrayList<Post> postSet, AppPrefs.DeletablePrefKey listToCheck) {
+        ArrayList<Post> postsNotInIgnorePostList = new ArrayList<>();
+        if (postSet != null) {
+            ArrayList<Long> idList = AppPrefs.getPendingDraftsIgnorePostIdList(listToCheck);
 
             for (Post onePost : postSet) {
                 if (onePost != null) {
