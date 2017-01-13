@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.CommentSqlUtils;
@@ -269,8 +268,8 @@ public class CommentStore extends Store {
             case REMOVE_COMMENT:
                 removeComment((CommentModel) action.getPayload());
                 break;
-            case REMOVE_WPCOM_COMMENTS:
-                removeWpComComments((SitesModel) action.getPayload());
+            case REMOVE_ALL_COMMENTS:
+                removeAllComments();
                 break;
             case DELETE_COMMENT:
                 deleteComment((RemoteCommentPayload) action.getPayload());
@@ -354,10 +353,10 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
-    private void removeWpComComments(SitesModel payload) {
-        int rowsAffected = CommentSqlUtils.removeWpComComments(payload);
+    private void removeAllComments() {
+        int rowsAffected = CommentSqlUtils.removeAllComments();
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
-        event.causeOfChange = CommentAction.REMOVE_WPCOM_COMMENTS;
+        event.causeOfChange = CommentAction.REMOVE_ALL_COMMENTS;
         emitChange(event);
     }
 
