@@ -364,6 +364,8 @@ public class MediaStore extends Store {
 
     private void removeAllMedia() {
         MediaSqlUtils.deleteAllMedia();
+        OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_ALL_MEDIA, null);
+        emitChange(event);
     }
 
     //
