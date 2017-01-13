@@ -226,10 +226,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             return;
         }
 
-        // otherwise set the title to the site name
+        // otherwise set the title to the title of the post
         ReaderBlogIdPostId ids = getAdapterBlogIdPostIdAtPosition(position);
         if (ids != null) {
-            String title = ReaderPostTable.getPostBlogName(ids.getBlogId(), ids.getPostId());
+            String title = ReaderPostTable.getPostTitle(ids.getBlogId(), ids.getPostId());
             if (!title.isEmpty()) {
                 setTitle(title);
                 return;
