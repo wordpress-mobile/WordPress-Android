@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
@@ -133,6 +134,14 @@ public class SiteStore extends Store {
         public SiteModel site;
         public OnPostFormatsChanged(SiteModel site) {
             this.site = site;
+        }
+    }
+
+    public class OnURLChecked extends OnChanged<SiteError> {
+        public String url;
+        public boolean isWPCom;
+        public OnURLChecked(@NonNull String url) {
+            this.url = url;
         }
     }
 
@@ -568,6 +577,9 @@ public class SiteStore extends Store {
             case CREATE_NEW_SITE:
                 createNewSite((NewSitePayload) action.getPayload());
                 break;
+            case IS_WPCOM_URL:
+                checkUrlIsWPCom((String) action.getPayload());
+                break;
             case CREATED_NEW_SITE:
                 handleCreateNewSiteCompleted((NewSiteResponsePayload) action.getPayload());
                 break;
@@ -684,6 +696,21 @@ public class SiteStore extends Store {
         if (!payload.isError()) {
             SiteSqlUtils.deleteSite(payload.site);
         }
+        emitChange(event);
+    }
+
+    private void checkUrlIsWPCom(String payload) {
+        mSiteRestClient.checkUrlIsWPCom(payload);
+    }
+
+    private void handleCheckedIsWPComUrl(IsWPComResponsePayload payload) {
+        OnURLChecked event = new OnURLChecked(payload.url);
+        if (payload.isError()) {
+            // Return invalid site for all errors (this endpoint is not documented and seems a bit drunk).
+            // Client likely needs to know if there was an error or not.
+            event.error = new SiteError(SiteErrorType.INVALID_SITE);
+        }
+        event.isWPCom = payload.isWPCom;
         emitChange(event);
     }
 
