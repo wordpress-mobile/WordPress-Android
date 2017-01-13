@@ -580,6 +580,9 @@ public class SiteStore extends Store {
             case DELETED_SITE:
                 handleDeletedSite((SiteRestClient.DeleteSiteResponsePayload) action.getPayload());
                 break;
+            case CHECKED_IS_WPCOM_URL:
+                handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
+                break;
         }
     }
 
