@@ -132,8 +132,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                         // "unauthorized" and "unknown_blog" errors expected if the site is not accessible via
                         // the WPCom REST API.
                         if (error instanceof WPComGsonNetworkError
-                            && ("unauthorized".equals(((WPComGsonNetworkError) error).apiError) ||
-                                "unknown_blog".equals(((WPComGsonNetworkError) error).apiError))) {
+                            && ("unauthorized".equals(((WPComGsonNetworkError) error).apiError)
+                                || "unknown_blog".equals(((WPComGsonNetworkError) error).apiError))) {
                             payload.isWPCom = false;
                         } else {
                             payload.error = error;
