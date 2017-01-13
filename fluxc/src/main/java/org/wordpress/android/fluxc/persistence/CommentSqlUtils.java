@@ -9,7 +9,6 @@ import com.yarolegovich.wellsql.WellSql;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.SitesModel;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,14 +69,8 @@ public class CommentSqlUtils {
                 .execute();
     }
 
-    public static int removeWpComComments(SitesModel sitesModel) {
-        if (sitesModel == null || sitesModel.getSites().size() == 0) {
-            return 0;
-        }
-
-        return WellSql.delete(CommentModel.class)
-                .where().isIn(CommentModelTable.LOCAL_SITE_ID, sitesModel.getSiteIds()).endWhere()
-                .execute();
+    public static int removeAllComments() {
+        return WellSql.delete(CommentModel.class).execute();
     }
 
     public static CommentModel getCommentByLocalCommentId(int localId) {
