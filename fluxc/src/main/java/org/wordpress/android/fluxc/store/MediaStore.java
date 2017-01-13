@@ -247,6 +247,9 @@ public class MediaStore extends Store {
             case REMOVE_MEDIA:
                 removeMedia(((MediaListPayload) action.getPayload()).media);
                 break;
+            case REMOVE_ALL_MEDIA:
+                removeAllMedia();
+                break;
         }
     }
 
@@ -359,8 +362,8 @@ public class MediaStore extends Store {
         return getNextSiteMediaToDelete(siteModel) != null;
     }
 
-    public int deleteAllMedia() {
-        return MediaSqlUtils.deleteAllMedia();
+    private void removeAllMedia() {
+        MediaSqlUtils.deleteAllMedia();
     }
 
     //
