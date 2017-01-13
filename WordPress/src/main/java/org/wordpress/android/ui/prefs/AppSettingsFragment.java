@@ -134,23 +134,25 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         Resources res = getResources();
         Configuration conf = res.getConfiguration();
-        Locale currentLocale = conf.locale != null ? conf.locale : LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
-
-        if (currentLocale.toString().equals(languageCode)) return;
-
-        updateLanguagePreference(languageCode);
-
-        // update configuration
+        // will return conf.locale if conf is non-null, or Locale.getDefault()
+        Locale currentLocale = LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
         Locale newLocale = WPPrefUtils.languageLocale(languageCode);
-        conf.locale = newLocale;
-        res.updateConfiguration(conf, res.getDisplayMetrics());
 
-        if (LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext()).equals(newLocale)) {
+        if (currentLocale.toString().equals(newLocale.getDisplayLanguage())) {
+            return;
+        }
+
+        if (Locale.getDefault().toString().equals(newLocale.toString())) {
             // remove custom locale key when original device locale is selected
             mSettings.edit().remove(LANGUAGE_PREF_KEY).apply();
         } else {
             mSettings.edit().putString(LANGUAGE_PREF_KEY, newLocale.toString()).apply();
         }
+        updateLanguagePreference(languageCode);
+
+        // update configuration
+        conf.locale = newLocale;
+        res.updateConfiguration(conf, res.getDisplayMetrics());
 
         // Track language change on Mixpanel because we have both the device language and app selected language
         // data in Tracks metadata.

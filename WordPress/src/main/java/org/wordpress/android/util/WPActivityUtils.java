@@ -114,7 +114,7 @@ public class WPActivityUtils {
             String locale = sharedPreferences.getString(AppSettingsFragment.LANGUAGE_PREF_KEY, "");
 
             if (!TextUtils.isEmpty(contextCountry)) {
-                contextLanguage += "-" + contextCountry;
+                contextLanguage += "_" + contextCountry;
             }
 
             if (!locale.equals(contextLanguage)) {
