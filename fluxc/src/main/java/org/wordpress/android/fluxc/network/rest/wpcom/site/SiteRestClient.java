@@ -69,6 +69,14 @@ public class SiteRestClient extends BaseWPComRestClient {
         public DeleteSiteError error;
     }
 
+    public static class IsWPComResponsePayload extends Payload {
+        public IsWPComResponsePayload() {
+        }
+        public String url;
+        public BaseNetworkError error;
+        public boolean isWPCom;
+    }
+
     @Inject
     public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
                           AccessToken accessToken, UserAgent userAgent) {
@@ -97,6 +105,40 @@ public class SiteRestClient extends BaseWPComRestClient {
                         SitesModel payload = new SitesModel(new ArrayList<SiteModel>());
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void checkUrlIsWPCom(@NonNull final String testedUrl) {
+        String url = WPCOMREST.sites.getUrlV1_1() + testedUrl;
+        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                SiteWPComRestResponse.class,
+                new Listener<SiteWPComRestResponse>() {
+                    @Override
+                    public void onResponse(SiteWPComRestResponse response) {
+                        IsWPComResponsePayload payload = new IsWPComResponsePayload();
+                        payload.url = testedUrl;
+                        payload.isWPCom = true;
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        IsWPComResponsePayload payload = new IsWPComResponsePayload();
+                        payload.url = testedUrl;
+                        // "unauthorized" and "unknown_blog" errors expected if the site is not accessible via
+                        // the WPCom REST API.
+                        if (error instanceof WPComGsonNetworkError
+                            && ("unauthorized".equals(((WPComGsonNetworkError) error).apiError) ||
+                                "unknown_blog".equals(((WPComGsonNetworkError) error).apiError))) {
+                            payload.isWPCom = false;
+                        } else {
+                            payload.error = error;
+                        }
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
                     }
                 }
         );
