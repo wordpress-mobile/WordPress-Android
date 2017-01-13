@@ -73,7 +73,6 @@ public class SiteRestClient extends BaseWPComRestClient {
         public IsWPComResponsePayload() {
         }
         public String url;
-        public BaseNetworkError error;
         public boolean isWPCom;
     }
 
