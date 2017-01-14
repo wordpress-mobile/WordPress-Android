@@ -272,6 +272,20 @@ public class ReaderBlogTable {
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
+    public static String getBlogName(long blogId) {
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT name FROM tbl_blog_info WHERE blog_id=?",
+                args);
+    }
+
+    public static String getFeedName(long feedId) {
+        String[] args = {Long.toString(feedId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT name FROM tbl_blog_info WHERE feed_id=?",
+                args);
+    }
+
     public static ReaderRecommendBlogList getRecommendedBlogs() {
         String sql = " SELECT * FROM tbl_recommended_blogs ORDER BY title";
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, null);
