@@ -231,6 +231,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -415,7 +416,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onStart() {
         super.onStart();
-        mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
 
