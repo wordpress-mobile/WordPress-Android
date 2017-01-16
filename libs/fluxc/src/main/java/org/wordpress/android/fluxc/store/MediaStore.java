@@ -294,17 +294,15 @@ public class MediaStore extends Store {
     }
 
     public WellCursor<MediaModel> getNotDeletedSiteMediaAsCursor(SiteModel site) {
-        String deletedState = UploadState.DELETED.toString();
-        return MediaSqlUtils.getSiteMediaExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, deletedState);
+        return MediaSqlUtils.getSiteMediaExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, UploadState.DELETED);
     }
 
     public WellCursor<MediaModel> getNotDeletedSiteImagesAsCursor(SiteModel site) {
-        String deletedState = UploadState.DELETED.toString();
-        return MediaSqlUtils.getSiteImagesExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, deletedState);
+        return MediaSqlUtils.getSiteImagesExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, UploadState.DELETED);
     }
 
     public WellCursor<MediaModel> getNotDeletedUnattachedMediaAsCursor(SiteModel site) {
-        String deletedState = UploadState.DELETED.toString();
+        UploadState deletedState = UploadState.DELETED;
         return MediaSqlUtils.getUnattchedMediaExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, deletedState);
     }
 
