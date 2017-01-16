@@ -384,6 +384,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         media.setVideoPressGuid(from.videopress_guid);
         media.setVideoPressProcessingDone(from.videopress_processing_done);
         media.setDeleted(MediaWPComRestResponse.DELETED_STATUS.equals(from.status));
+        if (!media.getDeleted()) {
+            media.setUploadState(MediaModel.UploadState.UPLOADED.toString());
+        } else {
+            media.setUploadState(MediaModel.UploadState.DELETED.toString());
+        }
         return media;
     }
 
