@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
@@ -292,6 +293,21 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getAllSiteMediaAsCursor(siteModel);
     }
 
+    public WellCursor<MediaModel> getNotDeletedSiteMediaAsCursor(SiteModel site) {
+        String deletedState = UploadState.DELETED.toString();
+        return MediaSqlUtils.getSiteMediaExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, deletedState);
+    }
+
+    public WellCursor<MediaModel> getNotDeletedSiteImagesAsCursor(SiteModel site) {
+        String deletedState = UploadState.DELETED.toString();
+        return MediaSqlUtils.getSiteImagesExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, deletedState);
+    }
+
+    public WellCursor<MediaModel> getNotDeletedUnattachedMediaAsCursor(SiteModel site) {
+        String deletedState = UploadState.DELETED.toString();
+        return MediaSqlUtils.getUnattchedMediaExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, deletedState);
+    }
+
     public int getSiteMediaCount(SiteModel siteModel) {
         return getAllSiteMedia(siteModel).size();
     }
@@ -346,7 +362,7 @@ public class MediaStore extends Store {
     }
 
     public List<MediaModel> getLocalSiteMedia(SiteModel siteModel) {
-        MediaModel.UploadState expectedState = MediaModel.UploadState.UPLOADED;
+        UploadState expectedState = UploadState.UPLOADED;
         return MediaSqlUtils.getSiteMediaExcluding(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
     }
 
@@ -376,7 +392,7 @@ public class MediaStore extends Store {
 
     public MediaModel getNextSiteMediaToDelete(SiteModel siteModel) {
         List<MediaModel> media = MediaSqlUtils.matchSiteMedia(siteModel,
-                MediaModelTable.UPLOAD_STATE, MediaModel.UploadState.DELETE.toString());
+                MediaModelTable.UPLOAD_STATE, UploadState.DELETE.toString());
         return media.size() > 0 ? media.get(0) : null;
     }
 

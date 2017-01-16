@@ -99,12 +99,38 @@ public class MediaSqlUtils {
                 .endGroup().endWhere();
     }
 
-    public static List<MediaModel> getSiteMediaExcluding(SiteModel siteModel, String column, Object value) {
+    public static SelectQuery<MediaModel> getMediaExcludingQuery(SiteModel site, String column, Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.SITE_ID, siteModel.getSiteId())
+                .equals(MediaModelTable.SITE_ID, site.getSiteId())
                 .notContains(column, value)
-                .endGroup().endWhere().getAsModel();
+                .endGroup().endWhere();
+    }
+
+    public static List<MediaModel> getSiteMediaExcluding(SiteModel site, String column, Object value) {
+        return getMediaExcludingQuery(site, column, value).getAsModel();
+    }
+
+    public static WellCursor<MediaModel> getSiteMediaExcludingAsCursor(SiteModel site, String column, Object value) {
+        return getMediaExcludingQuery(site, column, value).getAsCursor();
+    }
+
+    public static WellCursor<MediaModel> getSiteImagesExcludingAsCursor(SiteModel site, String column, Object value) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.SITE_ID, site.getSiteId())
+                .equals(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
+                .notContains(column, value)
+                .endGroup().endWhere().getAsCursor();
+    }
+
+    public static WellCursor<MediaModel> getUnattchedMediaExcludingAsCursor(SiteModel site, String col, Object value) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.SITE_ID, site.getSiteId())
+                .equals(MediaModelTable.POST_ID, 0)
+                .notContains(col, value)
+                .endGroup().endWhere().getAsCursor();
     }
 
     public static List<MediaModel> matchSiteMedia(SiteModel siteModel, String column, Object value) {
