@@ -69,7 +69,7 @@ public class CommentSqlUtils {
                 .execute();
     }
 
-    public static int removeAllComments() {
+    public static int deleteAllComments() {
         return WellSql.delete(CommentModel.class).execute();
     }
 
