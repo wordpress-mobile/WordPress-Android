@@ -354,7 +354,7 @@ public class CommentStore extends Store {
     }
 
     private void removeAllComments() {
-        int rowsAffected = CommentSqlUtils.removeAllComments();
+        int rowsAffected = CommentSqlUtils.deleteAllComments();
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.REMOVE_ALL_COMMENTS;
         emitChange(event);
