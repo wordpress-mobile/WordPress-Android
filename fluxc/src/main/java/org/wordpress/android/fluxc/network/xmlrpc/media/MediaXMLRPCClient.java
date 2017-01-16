@@ -371,6 +371,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             media.setHeight(MapUtils.getMapInt(metadataMap, "height"));
         }
 
+        media.setUploadState(MediaModel.UploadState.UPLOADED.toString());
+        
         return media;
     }
 
