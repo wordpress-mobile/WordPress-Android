@@ -293,17 +293,25 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getAllSiteMediaAsCursor(siteModel);
     }
 
+    private static final List<String> NOT_DELETED_STATES = new ArrayList<>();
+    static {
+        NOT_DELETED_STATES.add(UploadState.DELETE.toString());
+        NOT_DELETED_STATES.add(UploadState.FAILED.toString());
+        NOT_DELETED_STATES.add(UploadState.QUEUED.toString());
+        NOT_DELETED_STATES.add(UploadState.UPLOADED.toString());
+        NOT_DELETED_STATES.add(UploadState.UPLOADING.toString());
+    }
+
     public WellCursor<MediaModel> getNotDeletedSiteMediaAsCursor(SiteModel site) {
-        return MediaSqlUtils.getSiteMediaExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, UploadState.DELETED);
+        return MediaSqlUtils.getMediaWithStates(site, NOT_DELETED_STATES);
     }
 
     public WellCursor<MediaModel> getNotDeletedSiteImagesAsCursor(SiteModel site) {
-        return MediaSqlUtils.getSiteImagesExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, UploadState.DELETED);
+        return MediaSqlUtils.getImagesWithStates(site, NOT_DELETED_STATES);
     }
 
     public WellCursor<MediaModel> getNotDeletedUnattachedMediaAsCursor(SiteModel site) {
-        UploadState deletedState = UploadState.DELETED;
-        return MediaSqlUtils.getUnattchedMediaExcludingAsCursor(site, MediaModelTable.UPLOAD_STATE, deletedState);
+        return MediaSqlUtils.getUnattachedMediaWithStates(site, NOT_DELETED_STATES);
     }
 
     public int getSiteMediaCount(SiteModel siteModel) {

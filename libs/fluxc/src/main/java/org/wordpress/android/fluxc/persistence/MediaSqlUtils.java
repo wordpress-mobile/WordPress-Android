@@ -20,6 +20,32 @@ public class MediaSqlUtils {
         return getAllSiteMediaQuery(siteModel).getAsCursor();
     }
 
+    public static WellCursor<MediaModel> getMediaWithStates(SiteModel site, List<String> uploadStates) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.SITE_ID, site.getSiteId())
+                .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
+                .endGroup().endWhere().getAsCursor();
+    }
+
+    public static WellCursor<MediaModel> getImagesWithStates(SiteModel site, List<String> uploadStates) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.SITE_ID, site.getSiteId())
+                .equals(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
+                .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
+                .endGroup().endWhere().getAsCursor();
+    }
+
+    public static WellCursor<MediaModel> getUnattachedMediaWithStates(SiteModel site, List<String> uploadStates) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.SITE_ID, site.getSiteId())
+                .equals(MediaModelTable.POST_ID, 0)
+                .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
+                .endGroup().endWhere().getAsCursor();
+    }
+
     private static SelectQuery<MediaModel> getAllSiteMediaQuery(SiteModel siteModel) {
         return WellSql.select(MediaModel.class)
                 .where().equals(MediaModelTable.SITE_ID, siteModel.getSiteId()).endWhere();
@@ -109,36 +135,6 @@ public class MediaSqlUtils {
 
     public static List<MediaModel> getSiteMediaExcluding(SiteModel site, String column, Object value) {
         return getMediaExcludingQuery(site, column, value).getAsModel();
-    }
-
-    public static WellCursor<MediaModel> getSiteMediaExcludingAsCursor(SiteModel site, String column, Object value) {
-        return getMediaExcludingQuery(site, column, value).getAsCursor();
-    }
-
-    public static WellCursor<MediaModel> getNotDeletedSiteMediaAsCursor(SiteModel site) {
-        return WellSql.select(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.SITE_ID, site.getSiteId())
-                .not().equals(MediaModelTable.UPLOAD_STATE, MediaModel.UploadState.DELETED)
-                .endGroup().endWhere().getAsCursor();
-    }
-
-    public static WellCursor<MediaModel> getSiteImagesExcludingAsCursor(SiteModel site, String column, Object value) {
-        return WellSql.select(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.SITE_ID, site.getSiteId())
-                .equals(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
-                .not().equals(column, value)
-                .endGroup().endWhere().getAsCursor();
-    }
-
-    public static WellCursor<MediaModel> getUnattchedMediaExcludingAsCursor(SiteModel site, String col, Object value) {
-        return WellSql.select(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.SITE_ID, site.getSiteId())
-                .equals(MediaModelTable.POST_ID, 0)
-                .not().equals(col, value)
-                .endGroup().endWhere().getAsCursor();
     }
 
     public static List<MediaModel> matchSiteMedia(SiteModel siteModel, String column, Object value) {
