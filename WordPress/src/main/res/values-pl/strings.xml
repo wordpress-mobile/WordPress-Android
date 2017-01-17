@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-31 08:41:47+0000
+Translation-Revision-Date: 2017-01-14 12:14:52+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.3.0-alpha
 Language: pl
@@ -8,12 +8,12 @@ Language: pl
 <resources>
 	<string name="reader_photo_by">Zdjęcie wykonane przez %s</string>
 	<string name="all_your_sites">Wszystkie moje witryny </string>
-	<string name="reader_label_visit">Odwiedź</string>
 	<string name="pending_draft_more">Opracowałeś %d wpis/y/ów,  ale nie został/y przez ciebie  opublikowany/e. Stuknij aby to sprawdzić. </string>
+	<string name="reader_label_visit">Przejdź do witryny</string>
 	<string name="pending_draft_one">%2$d dni temu opracowałeś wpis \'%1$s\' , ale nie został przez ciebie opublikowany. </string>
 	<string name="pending_draft_one_generic">Opracowałeś wpis \'%s\', ale nie został opublikowany. </string>
 	<string name="no_default_app_available_to_open_link">Nie można otworzyć odnośnika</string>
-	<string name="notification_pending_drafts">Powiadom mnie o szkicach oczekujących na publikację </string>
+	<string name="notification_pending_drafts">Powiadom o szkicach do zatw.</string>
 	<string name="invalid_verification_code_format">Musi zawierać 6 cyfr</string>
 	<string name="confirm_discard_changes">Odrzucić niezapisane zmiany?</string>
 	<string name="swipe_for_more">Przeciągnij aby wczytać więcej</string>
@@ -37,15 +37,15 @@ Language: pl
 	<string name="comment_q_action_processing">Przetwarzanie...</string>
 	<string name="comment_q_action_done_generic">Akcja wykonana!</string>
 	<string name="comment_liked">Komentarz polubiony</string>
-	<string name="sign_in_wpcom">Zaloguj do WordPress.com</string>
-	<string name="signout">Wyloguj</string>
+	<string name="sign_in_wpcom">Zaloguj się do WordPress.com</string>
+	<string name="signout">Wyloguj się</string>
 	<string name="reader_label_global_related_posts">Więcej na WordPress.com</string>
 	<string name="reader_label_local_related_posts">Więcej w %s</string>
 	<string name="preference_open_device_settings">Przejdź do ustawień urządzenia</string>
 	<string name="comment_moderated_unapproved">Komentarz niezatwierdzony</string>
 	<string name="invite_invalid_email">%s: Nieprawidłowy email</string>
 	<string name="invite_user_blocked_invites">%s: Użytkownik zablokował zaproszenia</string>
-	<string name="invite_already_following">%s: Już śledzony</string>
+	<string name="invite_already_following">%s: Już obserwowany</string>
 	<string name="invite_already_a_member">%s: Jest już członkiem</string>
 	<string name="invite_username_not_found">%s: Użytkownik nie odnaleziony</string>
 	<string name="comment_moderated_approved">Komentarz zatwierdzony!</string>
@@ -77,7 +77,7 @@ Language: pl
 	<string name="people_dropdown_item_followers">Obserwujący</string>
 	<string name="people_dropdown_item_team">Zespół</string>
 	<string name="invite_message_usernames_limit">Zaproś do 10 adresów email i/lub użytkowników WordPress.com. \nTym, którym będzie potrzebna nazwa użytkownika zostaną przesłane instrukcje jak ją utworzyć.</string>
-	<string name="viewer_remove_confirmation_message">Jeśli usuniesz tego oglądającego, nie będzie mógł odwiedzić tej witryny.\nCzy nadal chcesz usunąć tego oglądającego?</string>
+	<string name="viewer_remove_confirmation_message">Jeśli usuniesz tego oglądającego, nie będzie mógł przejść do tej witryny.\nCzy nadal chcesz usunąć tego oglądającego?</string>
 	<string name="follower_remove_confirmation_message">Jeśli usuniesz tego obserwującego, przestanie on otrzymywać powiadomienia o tej witrynie, chyba że zacznie ponownie obserwować.\nCzy wciąż chcesz usunąć tego obserwującego?</string>
 	<string name="follower_subscribed_since">Od %1$s</string>
 	<string name="reader_label_view_gallery">Zabacz Galerię</string>
@@ -102,9 +102,9 @@ Language: pl
 	<string name="image_width">Szerokość</string>
 	<string name="format_bar_description_bold">Pogrubienie</string>
 	<string name="image_link_to">Odnośnik do</string>
-	<string name="image_caption">Etykieta</string>
 	<string name="image_alt_text">Alternatywny tekst</string>
-	<string name="image_settings_save_toast">Zmiany zapisano</string>
+	<string name="image_settings_save_toast">Zmiany zostały zapisane</string>
+	<string name="image_caption">Podpis pod obrazkiem</string>
 	<string name="image_settings_dismiss_dialog_title">Odrzucić niezapisane zmiany?</string>
 	<string name="stop_upload_button">Zatrzymaj przesyłanie</string>
 	<string name="stop_upload_dialog_title">Zatrzymać przesyłanie?</string>
@@ -344,8 +344,8 @@ Language: pl
 	<string name="site_settings_paging_dialog_description">Podziel wątki komentarzy na kilka stron</string>
 	<string name="site_settings_paging_dialog_header">Komentarzy na strone</string>
 	<string name="site_settings_close_after_dialog_title">Zamknij komentowanie</string>
-	<string name="site_settings_blacklist_description">Komentarz zostanie oznaczony jako spam jeśli zawiera jedno z tych słów wewnątrz swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa - np. słowo "press" będzie dopasowane do "WordPress"</string>
-	<string name="site_settings_hold_for_moderation_description">Komentarz zostanie umieszczony w kolejce do moderacji Jeśli zawiera jedno z poniższych słów wewnątrz swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa - np. słowo "press" będzie dopasowane do "WordPress"</string>
+	<string name="site_settings_blacklist_description">Komentarz zostanie oznaczony jako spam jeśli zawiera przynajmniej jedno ze słów z poniższej listy wewnątrz swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa - np. słowo "press" będzie dopasowane do słowa  "WordPress". </string>
+	<string name="site_settings_hold_for_moderation_description">Komentarz zostanie umieszczony w kolejce do moderacji jeśli zawiera przynajmniej jedno ze słów z poniższej listy wewnątrz swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa - np. słowo "press" będzie dopasowane do słowa "WordPress". </string>
 	<string name="site_settings_list_editor_input_hint">Wprowadź słowo lub frazę</string>
 	<string name="site_settings_list_editor_no_items_text">Brak elementów</string>
 	<string name="site_settings_learn_more_caption">Możesz unieważnić te ustawienia dla poszczególnych wpisów.</string>
@@ -387,7 +387,7 @@ Language: pl
 	<string name="site_settings_language_hint">Główny język, w którym ten blog jest prowadzony</string>
 	<string name="site_settings_privacy_hint">Ustawienia kto może oglądać twoją witrynę</string>
 	<string name="site_settings_address_hint">Zmiana twojego adresu nie jest aktualnie wspierana</string>
-	<string name="site_settings_tagline_hint">Krótki opis lub zajawka opisująca twojego bloga</string>
+	<string name="site_settings_tagline_hint">Krótki opis lub chwytliwe wyrażenie opisujące twojego bloga</string>
 	<string name="site_settings_title_hint">W kilku słowach, wyjaśnij o czym jest ta witryna</string>
 	<string name="site_settings_whitelist_known_summary">Komentarze od znanych tobie użytkowników</string>
 	<string name="site_settings_whitelist_all_summary">Komentarze wszystkich użytkowników</string>
@@ -443,7 +443,7 @@ Language: pl
 	<string name="media_details_label_date_added">Dodano</string>
 	<string name="selected_theme">Wybrany motyw</string>
 	<string name="could_not_load_theme">Nie można wczytać szablonu</string>
-	<string name="theme_activation_error">Coś poszło nie tak. Nie można było uaktywnić motywu</string>
+	<string name="theme_activation_error">Coś poszło nie tak. Nie można było włączyć motywu</string>
 	<string name="theme_by_author_prompt_append">o %1$s</string>
 	<string name="theme_prompt">Dziękujemy za wybranie %1$s</string>
 	<string name="theme_view">Podgląd</string>
@@ -483,16 +483,16 @@ Language: pl
 	<string name="unread">Nieprzeczytane</string>
 	<string name="notifications_empty_view_reader">Przejdź do Czytnika</string>
 	<string name="notifications_empty_action_followers_likes">Zostań zauważony: komentuj wpisy, które przeczytałeś.</string>
-	<string name="notifications_empty_action_comments">Dołącz do konwersacji: komentuj wpisy z blogów, które śledzisz</string>
+	<string name="notifications_empty_action_comments">Dołącz do konwersacji: komentuj wpisy z blogów, które obserwujesz</string>
 	<string name="notifications_empty_action_unread">Ożyw dyskusję: dodaj nowy wpis.</string>
-	<string name="notifications_empty_action_all">Bądź aktywny! Skomentuj wpisy z blogów, które śledzisz.</string>
+	<string name="notifications_empty_action_all">Bądź aktywny! Skomentuj wpisy z blogów, które obserwujesz. </string>
 	<string name="notifications_empty_likes">Brak nowych polubień... na razie.</string>
-	<string name="notifications_empty_followers">Brak nowych śledzących... jeszcze.</string>
+	<string name="notifications_empty_followers">Brak nowych obserwujących... póki co.</string>
 	<string name="notifications_empty_comments">Brak nowych komentarzy... jeszcze.</string>
 	<string name="notifications_empty_unread">Jesteś na bieżąco!</string>
 	<string name="stats_widget_error_jetpack_no_blogid">Proszę wejdź w statystki w aplikacji i spróbuj dodać widget później</string>
 	<string name="stats_widget_error_readd_widget">Proszę usuń widget i dodaj go ponownie</string>
-	<string name="stats_widget_error_no_visible_blog">Brak dostępu dla statystyk bez widocznego bloga</string>
+	<string name="stats_widget_error_no_visible_blog">Brak dostępu dla statystyk bez widocznego blogu</string>
 	<string name="stats_widget_error_no_permissions">Twoje konto WordPress.com nie ma dostępu do statystyk na tym blogu</string>
 	<string name="stats_widget_error_no_account">Proszę zalogować się do WordPressa</string>
 	<string name="stats_widget_error_generic">Statystyki nie mogły być wczytane</string>
@@ -508,14 +508,14 @@ Language: pl
 	<string name="reader_short_comment_count_one">1 Komentarz</string>
 	<string name="reader_label_submit_comment">WYŚLIJ</string>
 	<string name="reader_hint_comment_on_post">Dodaj komentarz do wpisu...</string>
-	<string name="reader_discover_visit_blog">Odwiedź %s</string>
+	<string name="reader_discover_visit_blog">Przejdź do %s</string>
 	<string name="reader_discover_attribution_blog">Oryginalnie opublikowano %s</string>
 	<string name="reader_discover_attribution_author">Pierwotnie opublikowano przez %s</string>
 	<string name="reader_discover_attribution_author_and_blog">Po raz pierwszy opublikowano przez %1$s na %2$s</string>
 	<string name="reader_short_like_count_multi">%s polubień</string>
 	<string name="reader_short_like_count_one">1 polubienie</string>
-	<string name="reader_label_follow_count">%,d osób śledzi</string>
 	<string name="reader_short_like_count_none">Polubienie</string>
+	<string name="reader_label_follow_count">%,d obserwujących</string>
 	<string name="reader_menu_tags">Edytuj tagi i blogi</string>
 	<string name="reader_title_post_detail">Wpis czytnika</string>
 	<string name="local_draft_explainer">Ten wpis posiada lokalny szkic, który nie został opublikowany</string>
@@ -566,7 +566,7 @@ Language: pl
 	<string name="tabbar_accessibility_label_my_site">Moja witryna</string>
 	<string name="tabbar_accessibility_label_me">Ja</string>
 	<string name="passcodelock_prompt_message">Wprowadź PIN</string>
-	<string name="editor_toast_changes_saved">Zmiany zapisane</string>
+	<string name="editor_toast_changes_saved">Zmiany zostały zapisane</string>
 	<string name="push_auth_expired">Zapytanie wygasło. Zaloguj się na WordPress.com aby spróbować ponownie.</string>
 	<string name="ignore">Ignoruj</string>
 	<string name="stats_insights_best_ever">Najwięcej wyświetleń</string>
@@ -579,9 +579,9 @@ Language: pl
 	<string name="stats_insights">Trendy</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Aby podejrzeć statystyki, zaloguj się na konto WordPress.com, do którego podłączyłeś Jetpacka.</string>
 	<string name="stats_other_recent_stats_moved_label">Szukasz swoich pozostałych ostatnich statystyk? Przenieśliśmy je do strony "Trendy"</string>
-	<string name="me_disconnect_from_wordpress_com">Wyloguj z WordPress.com</string>
-	<string name="me_btn_login_logout">Zaloguj/Wyloguj</string>
+	<string name="me_disconnect_from_wordpress_com">Wyloguj się z WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Zaloguj się do WordPress.com</string>
+	<string name="me_btn_login_logout">Zaloguj/Wyloguj się</string>
 	<string name="account_settings">Ustawienia konta</string>
 	<string name="me_btn_support">Pomoc i wsparcie</string>
 	<string name="site_picker_cant_hide_current_site">"%s" została ukryta ponieważ jest to aktualna witryna</string>
@@ -654,13 +654,13 @@ Language: pl
 	<string name="stats_view_search_terms">Wyrażenia</string>
 	<string name="stats_entry_search_terms">Wyrażenie</string>
 	<string name="stats_empty_search_terms">Nie zarejestrowano żadnych wyszukiwanych wyrażeń.</string>
-	<string name="stats_empty_search_terms_desc">Dowiedz się więcej na temat ruchu na Twojej stronie przez przeglądanie wyrażeń, których szukali, by trafić na Twoją witrynę.</string>
 	<string name="stats_followers_total_wpcom_paged">Wyświetlanie od %1$d do %2$d z %3$s obserwujących przez WordPress.com</string>
 	<string name="stats_search_terms_unknown_search_terms">Nieznane kryteria wyszukiwania</string>
 	<string name="error_notification_open">Nie udało się otworzyć powiadomienia</string>
 	<string name="stats_followers_total_email_paged">Wyświetlanie od %1$d do %2$d z %3$s obserwujących przez email</string>
 	<string name="publisher">Wydawca:</string>
 	<string name="reader_empty_posts_request_failed">Nie udało się pobrać wpisów</string>
+	<string name="stats_empty_search_terms_desc">Dowiedz się więcej na temat ruchu na twojej stronie przez przeglądanie wyrażeń, których szukali, by trafić na twoją witrynę.</string>
 	<string name="stats_months_and_years">Miesiące i lata</string>
 	<string name="reader_label_new_posts">Nowe wpisy</string>
 	<string name="stats_total">Suma</string>
@@ -694,13 +694,10 @@ Language: pl
 	<string name="stats_empty_referrers_title">Nie zarejestrowano żadnych źródeł ruchu</string>
 	<string name="stats_empty_clicks_title">Nie zarejestrowano żadnych kliknięć</string>
 	<string name="stats_empty_referrers_desc">Dowiedz się więcej na temat widoczności swojej witryny dzięki sprawdzeniu, jakie strony i wyszukiwarki kierują na nią większość ruchu.</string>
-	<string name="stats_empty_clicks_desc">Jeśli Twoja treść zawiera odnośniki do innych witryn, zobaczysz, które z nich są najczęściej otwierane.</string>
 	<string name="stats_empty_tags_and_categories">Brak wyświetleń otagowanych wpisów lub stron</string>
 	<string name="stats_followers_months">%1$d miesięcy</string>
-	<string name="stats_followers_total_wpcom">Liczba śledzących z WordPress.com: %1$s</string>
 	<string name="stats_comments_by_posts_and_pages">Wg Wpisów i Stron</string>
 	<string name="stats_comments_by_authors">Wg Autorów</string>
-	<string name="stats_empty_publicize">Brak śledzących przez Publicize</string>
 	<string name="stats_empty_video_desc">Jeśli dodajesz swoje filmy przy pomocy VideoPress, możesz zobaczyć ich liczby wyświetleń.</string>
 	<string name="stats_empty_comments_desc">Jeśli zezwalasz na zamieszczanie komentarzy na swojej stronie, możesz poznać najczęściej komentujących oraz najczęściej komentowaną treść, w oparciu o 1000 ostatnich komentarzy.</string>
 	<string name="stats_empty_tags_and_categories_desc">Poznaj najbardziej popularne tematy na swojej stronie, wyłonione w oparciu o najpopularniejsze wpisy z zeszłego tygodnia.</string>
@@ -731,6 +728,9 @@ Language: pl
 	<string name="stats_empty_publicize_desc">Obserwuj swoich czytelników poprzez rozmaite serwisy społecznościowe używające Publicize.</string>
 	<string name="stats_followers_total_email">Liczba obserwujących przez e-mail: %1$s</string>
 	<string name="stats_empty_followers_desc">Śledź ogólną liczbę obserwujących oraz czas od kiedy są twoimi czytelnikami.</string>
+	<string name="stats_followers_total_wpcom">Liczba obserwujących z WordPress.com: %1$s</string>
+	<string name="stats_empty_publicize">Brak obserwujących przez Publicize</string>
+	<string name="stats_empty_clicks_desc">Jeśli twoja treść zawiera odnośniki do innych witryn, zobaczysz, które z nich są najczęściej otwierane.</string>
 	<string name="ssl_certificate_details">Szczegóły</string>
 	<string name="delete_sure_post">Usuń ten wpis</string>
 	<string name="delete_sure">Usuń ten szkic</string>
@@ -754,7 +754,6 @@ Language: pl
 	<string name="reader_label_comments_closed">Możliwość komentowania jest wyłączona</string>
 	<string name="faq_button">FAQ</string>
 	<string name="browse_our_faq_button">Przejrzyj nasze FAQ</string>
-	<string name="nux_help_description">Odwiedź centrum pomocy, aby uzyskać odpowiedzi na najczęściej zadawane pytania lub odwiedź forum, aby zadać nowe</string>
 	<string name="older_last_week">Starsze niż tydzień</string>
 	<string name="older_two_days">Starsze niż 2 dni</string>
 	<string name="older_month">Starsze niż miesiąc</string>
@@ -764,7 +763,6 @@ Language: pl
 	<string name="error_refresh_unauthorized_posts">Nie masz uprawnień, by oglądać lub edytować wpisy</string>
 	<string name="error_refresh_unauthorized_pages">Nie masz uprawnień, by oglądać lub edytować strony</string>
 	<string name="error_refresh_unauthorized_comments">Nie masz uprawnień, by oglądać lub edytować komentarze</string>
-	<string name="stats_no_blog">Nie udało się załadować statystyk dla wskazanego bloga</string>
 	<string name="select_a_blog">Wybierz witrynę WordPressa</string>
 	<string name="sending_content">Wysyłanie %s treści</string>
 	<string name="uploading_total">Wysyłanie %1$d z %2$d</string>
@@ -779,6 +777,8 @@ Language: pl
 	<string name="mnu_comment_liked">Polubiony</string>
 	<string name="signing_out">Wylogowywanie...</string>
 	<string name="reader_empty_posts_liked">Nie polubiłeś jeszcze żadnych wpisów</string>
+	<string name="stats_no_blog">Nie udało się załadować statystyk dla wskazanego blogu</string>
+	<string name="nux_help_description">Przejdź do centrum pomocy, aby uzyskać odpowiedzi na najczęściej zadawane pytania lub odwiedź forum, aby zadać nowe</string>
 	<string name="reader_menu_block_blog">Zablokuj ten blog</string>
 	<string name="reader_toast_err_block_blog">Nie można zablokować tego blogu</string>
 	<string name="reader_toast_blog_blocked">Wpisy z tego blogu nie będą już widoczne</string>
@@ -800,17 +800,17 @@ Language: pl
 	<string name="schedule_verb">Zaplanuj</string>
 	<string name="reader_title_subs">Tagi i blogi</string>
 	<string name="reader_page_followed_tags">Obserwowane tagi</string>
-	<string name="reader_toast_err_already_follow_blog">Już śledzisz ten blog</string>
 	<string name="reader_label_tag_preview">Wpisy otagowane %s</string>
 	<string name="reader_empty_recommended_blogs">Brak polecanych blogów</string>
 	<string name="reader_toast_err_get_blog_info">Nie udało się pobrać informacji o blogu</string>
-	<string name="reader_toast_err_follow_blog">Nie udało się śledzić tego bloga</string>
 	<string name="reader_label_followed_blog">Blog obserwowany</string>
-	<string name="reader_toast_err_unfollow_blog">Nie udało się wyłączyć śledzenia tego blogu</string>
 	<string name="reader_title_tag_preview">Tag Czytnika</string>
 	<string name="reader_page_followed_blogs">Obserwowane blogi</string>
 	<string name="reader_title_blog_preview">Blog Czytnika</string>
 	<string name="reader_hint_add_tag_or_url">Wpisz adres lub tag aby obserwować</string>
+	<string name="reader_toast_err_already_follow_blog">Już obserwujesz ten blog</string>
+	<string name="reader_toast_err_unfollow_blog">Nie udało się wyłączyć obserwowania tego blogu</string>
+	<string name="reader_toast_err_follow_blog">Nie udało się włączyć obserwowania tego blogu</string>
 	<string name="saving">Zapisywanie...</string>
 	<string name="media_empty_list">Brak mediów</string>
 	<string name="ptr_tip_message">Porada: przeciągnij w dół aby odświeżyć</string>
@@ -853,7 +853,6 @@ Language: pl
 	<string name="blog_name_required">Wpisz adres strony</string>
 	<string name="no_network_message">Brak dostępnej sieci</string>
 	<string name="no_site_error">Nie można nawiązać połączenia ze stroną WordPressa</string>
-	<string name="blog_not_found">Wystąpił błąd podczas dostępu do tego bloga</string>
 	<string name="error_refresh_pages">Strony nie mogły zostać odświeżone w tej chwili</string>
 	<string name="error_refresh_notifications">Powiadomienia nie mogły zostać odświeżone w tej chwili</string>
 	<string name="error_refresh_comments">Komentarze nie mogły zostać odświeżone w tej chwili</string>
@@ -881,8 +880,9 @@ Language: pl
 	<string name="reply_failed">Wystąpił błąd przy próbie odpowiedzi</string>
 	<string name="sdcard_message">Do wysyłania mediów niezbędne jest podłączenie karty SD</string>
 	<string name="username_or_password_incorrect">Niepoprawna nazwa użytkownika lub hasło</string>
-	<string name="could_not_remove_account">Nie można usunąć bloga</string>
 	<string name="invalid_url_message">Sprawdź, czy wprowadzony adres URL jest poprawny</string>
+	<string name="blog_not_found">Wystąpił błąd podczas dostępu do tego blogu</string>
+	<string name="could_not_remove_account">Nie można usunąć blogu</string>
 	<string name="trash">Usuń</string>
 	<string name="mnu_comment_unapprove">Odrzuć</string>
 	<string name="blog_title_invalid">Nieprawidłowy tytuł strony</string>
@@ -908,7 +908,6 @@ Language: pl
 	<string name="category_name">Nazwa kategorii</string>
 	<string name="category_slug">Uproszczona nazwa kategorii (opcjonalnie)</string>
 	<string name="category_desc">Opis kategorii (opcjonalnie)</string>
-	<string name="category_parent">Rodzic kategorii (opcjonalnie)</string>
 	<string name="share_action_post">Nowy wpis</string>
 	<string name="share_action_media">Biblioteka mediów</string>
 	<string name="account_details">Szczegóły konta</string>
@@ -938,7 +937,6 @@ Language: pl
 	<string name="theme_current_theme">Aktualny motyw</string>
 	<string name="author_name">Autor</string>
 	<string name="author_url">Adres strony autora</string>
-	<string name="media_gallery_image_order">Kolejność obrazów</string>
 	<string name="media_gallery_type_thumbnail_grid">Siatka miniatur</string>
 	<string name="media_error_no_permission">Nie masz uprawnień do przeglądania biblioteki mediów</string>
 	<string name="cannot_delete_multi_media_items">Niektóre media nie mogły zostać w tej chwili usunięte. Spróbuj ponownie później. \n</string>
@@ -947,11 +945,9 @@ Language: pl
 	<string name="file_error_create">Nie udało się utworzyć tymczasowego pliku do wgrania. Upewnij się, że na Twoim urządzeniu jest wystarczająco dużo wolnego miejsca.</string>
 	<string name="open_source_licenses">Licencje otwartego oprogramowania</string>
 	<string name="pending_review">Oczekuje na przegląd</string>
-	<string name="http_credentials">Logowanie HTTP (opcjonalne)</string>
 	<string name="http_authorization_required">Wymagana autoryzacja</string>
 	<string name="reader_toast_err_add_tag">Nie udało się dodać tagu</string>
 	<string name="reader_toast_err_remove_tag">Nie udało się usunąć tagu</string>
-	<string name="site_address">Adres strony na Twoim hostingu</string>
 	<string name="email_cant_be_used_to_signup">Nie możesz użyć tego adresu email do rejestracji, ponieważ jego serwer blokuje naszą korespondencję. Użyj innego usługodawcy emailów.</string>
 	<string name="reader_title_applog">Dziennik aplikacji</string>
 	<string name="trash_no">Nie usuwaj</string>
@@ -962,7 +958,6 @@ Language: pl
 	<string name="sure_to_cancel_edit_comment">Anulować edytowanie tego komentarza?</string>
 	<string name="dlg_trashing_comments">Wysyłanie do kosza</string>
 	<string name="mnu_comment_trash">Kosz</string>
-	<string name="create_a_link">Stwórz link</string>
 	<string name="media_gallery_num_columns">Liczba kolumn</string>
 	<string name="edit_post">Edytuj wpis</string>
 	<string name="author_email">E-mail autora</string>
@@ -981,16 +976,21 @@ Language: pl
 	<string name="file_not_found">Nie znaleziono pliku do wysłania. Został usunięty lub przeniesiony?</string>
 	<string name="notifications_empty_all">Brak powiadomień... na razie. </string>
 	<string name="invalid_site_url_message">Sprawdź, czy wpisany adres URL jest prawidłowy</string>
-	<string name="remove_account">Usuń bloga</string>
 	<string name="blog_removed_successfully">Blog usunięto</string>
 	<string name="link_enter_url_text">Tekst odnośnika (opcjonalny)</string>
 	<string name="comment_status_trash">W koszu</string>
 	<string name="comment_status_approved">Zatwierdzony</string>
-	<string name="deleting_page">Kasowanie strony</string>
-	<string name="deleting_post">Kasowanie wpisu</string>
+	<string name="media_gallery_image_order">Kolejność obrazków</string>
+	<string name="remove_account">Usuń blog</string>
+	<string name="site_address">Adres witryny z własnym hostingiem</string>
+	<string name="create_a_link">Stwórz odnośnik</string>
+	<string name="http_credentials">Dane uwierzytelniające HTTP (opcjonalne)</string>
+	<string name="category_parent">Kategoria nadrzędna (opcjonalnie):</string>
 	<string name="share_url_post">Udostępnij wpis</string>
 	<string name="share_url_page">Udostępnij stronę</string>
 	<string name="share_link">Udostępnij odnośnik</string>
+	<string name="deleting_post">Usuwanie wpisu</string>
+	<string name="deleting_page">Usuwanie strony</string>
 	<string name="creating_your_account">Tworzenie twojego konta</string>
 	<string name="creating_your_site">Tworzenie twojej strony</string>
 	<string name="reader_empty_posts_in_tag_updating">Ładowanie wpisów...</string>
@@ -999,26 +999,26 @@ Language: pl
 	<string name="reader_label_reply">Odpowiedz</string>
 	<string name="download">Pobieranie mediów</string>
 	<string name="comment_spammed">Komentarz został oznaczony jako spam</string>
-	<string name="cant_share_no_visible_blog">Nie możesz udostępnić do WordPressa bez widocznego bloga</string>
 	<string name="reader_likes_you_and_multi">Ty i %,d innych lubią to</string>
 	<string name="reader_likes_multi">%,d osób lubi to</string>
 	<string name="video">Film</string>
+	<string name="cant_share_no_visible_blog">Nie możesz udostępnić do WordPressa bez widocznego blogu</string>
 	<string name="select_time">Wybierz czas</string>
 	<string name="reader_likes_you_and_one">Ty i jedna inna osoba lubicie to</string>
 	<string name="reader_toast_err_get_post">Nie można pobrać tego wpisu</string>
 	<string name="select_date">Wybierz datę</string>
 	<string name="pick_photo">Wybierz zdjęcie</string>
-	<string name="account_two_step_auth_enabled">To konto ma włączoną dwustopniową weryfikację. Odwiedź ustawienia bezpieczeństwa na WordPress.com i wygeneruj hasło aplikacji.</string>
 	<string name="validating_user_data">Sprawdzanie danych użytkownika</string>
 	<string name="validating_site_data">Sprawdzanie danych strony</string>
 	<string name="reader_empty_followed_blogs_description">Nie martw się - stuknij ikonę w prawym górnym rogu, aby rozpocząć przeglądanie!</string>
 	<string name="pick_video">Wybierz film</string>
+	<string name="account_two_step_auth_enabled">To konto ma włączoną dwustopniową weryfikację. Przejdź do ustawień bezpieczeństwa na WordPress.com i wygeneruj hasło aplikacji.</string>
 	<string name="password_invalid">Potrzebujesz bardziej bezpiecznego hasła. Upewnij się, że użyłeś 7 lub więcej znaków, wielkich i małych liter, liczb albo znaków specjalnych.</string>
 	<string name="nux_tap_continue">Kontynuuj</string>
 	<string name="nux_welcome_create_account">Utwórz konto</string>
-	<string name="nux_add_selfhosted_blog">Dodaj samodzielnie hostowaną stronę</string>
 	<string name="nux_oops_not_selfhosted_blog">Zaloguj się do WordPress.com</string>
 	<string name="signing_in">Logowanie...</string>
+	<string name="nux_add_selfhosted_blog">Dodaj samodzielnie hostowaną witrynę</string>
 	<string name="media_add_popup_title">Dodaj do biblioteki mediów</string>
 	<string name="media_add_new_media_gallery">Tworzenie galerii</string>
 	<string name="empty_list_default">Lista jest pusta</string>
@@ -1032,9 +1032,7 @@ Language: pl
 	<string name="button_next">Następny</string>
 	<string name="username_invalid">Nieprawidłowa nazwa użytkownika</string>
 	<string name="nux_tutorial_get_started_title">Rozpocznij!</string>
-	<string name="reader_toast_err_view_image">Nie można zobaczyć obrazu</string>
 	<string name="reader_toast_err_url_intent">Nie można otworzyć %s</string>
-	<string name="reader_empty_followed_tags">Nie śledzisz żadnych tagów</string>
 	<string name="limit_reached">Wykorzystano limit. Spróbuj ponownie za 1 minutę. Podjęcie ponownej próby przed upływem podanego czasu spowoduj jedynie wydłużenie czasu oczekiwania. Jeśli uważasz, że jest to błąd, skontaktuj się z nami.</string>
 	<string name="reader_likes_one">Jedna osoba lubi to</string>
 	<string name="reader_toast_err_comment_failed">Nie udało się opublikować twojego komentarza</string>
@@ -1048,6 +1046,8 @@ Language: pl
 	<string name="reader_btn_follow">Obserwuj</string>
 	<string name="reader_toast_err_tag_exists">Obserwujesz już ten tag</string>
 	<string name="reader_likes_only_you">Lubisz to</string>
+	<string name="reader_empty_followed_tags">Nie obserwujesz żadnych tagów</string>
+	<string name="reader_toast_err_view_image">Nie można wyświetlić obrazka</string>
 	<string name="themes">Motywy</string>
 	<string name="all">Wszystkie</string>
 	<string name="unattached">Niezałączone</string>
@@ -1060,7 +1060,6 @@ Language: pl
 	<string name="media_edit_title_text">Tytuł</string>
 	<string name="media_edit_description_text">Opis</string>
 	<string name="media_edit_title_hint">Wprowadź tytuł</string>
-	<string name="media_edit_caption_hint">Wprowadź etykietę</string>
 	<string name="media_edit_description_hint">Wprowadź opis</string>
 	<string name="media_edit_success">Zaktualizowano</string>
 	<string name="media_edit_failure">Nie udało się zaktualizować</string>
@@ -1094,8 +1093,6 @@ Language: pl
 	<string name="media_add_popup_capture_photo">Wykonaj zdjęcie</string>
 	<string name="media_gallery_image_order_reverse">Odwrócona</string>
 	<string name="media_gallery_type_circles">Kręgi</string>
-	<string name="theme_activating_button">Aktywowanie</string>
-	<string name="theme_activate_button">Aktywuj</string>
 	<string name="share_action_title">Dodaj do...</string>
 	<string name="stats_view_referrers">Polecający</string>
 	<string name="stats_entry_referrers">Polecający</string>
@@ -1103,9 +1100,12 @@ Language: pl
 	<string name="passcode_preference_title">Blokada PIN</string>
 	<string name="passcode_turn_off">Wyłącz blokadę PIN</string>
 	<string name="passcode_turn_on">Włącz blokadę PIN</string>
-	<string name="media_edit_caption_text">Etykieta</string>
 	<string name="images">Obrazki</string>
 	<string name="post_excerpt">Fragment wpisu</string>
+	<string name="media_edit_caption_hint">Wprowadź podpis pod obrazkiem</string>
+	<string name="media_edit_caption_text">Podpis pod obrazkiem</string>
+	<string name="theme_activating_button">Włączanie</string>
+	<string name="theme_activate_button">Włącz</string>
 	<string name="discard">Odrzuć</string>
 	<string name="upload">Załaduj</string>
 	<string name="notifications">Powiadomienia</string>
@@ -1133,15 +1133,15 @@ Language: pl
 	<string name="page">Strona</string>
 	<string name="post">Wpis</string>
 	<string name="featured_in_post">Załącz obraz w treści wpisu</string>
-	<string name="featured">Ustaw ikonę wpisu</string>
-	<string name="caption">Nagłówek (opcjonalny)</string>
-	<string name="blogusername">blogusername</string>
+	<string name="featured">Ustaw jako obrazek wyróżniający</string>
+	<string name="caption">Podpis pod obrazkiem (opcjonalnie)</string>
 	<string name="ok">OK</string>
-	<string name="scaled_image">Zmień szerokosć obrazu</string>
-	<string name="upload_scaled_image">Załaduj i wprowadź adres do przeskalowanego obrazu</string>
+	<string name="blogusername">nazwa użytkownika blogu</string>
+	<string name="upload_scaled_image">Załaduj i wprowadź odnośnik do przeskalowanego obrazka</string>
+	<string name="scaled_image">Szerokosć obrazka przeskalowanego</string>
 	<string name="scheduled">Zaplanowane</string>
-	<string name="link_enter_url">URL</string>
-	<string name="uploading">Przesyłanie</string>
+	<string name="link_enter_url">Adres URL</string>
+	<string name="uploading">Przesyłanie...</string>
 	<string name="version">Wersja</string>
 	<string name="app_title">WordPress dla Androida</string>
 	<string name="tos">Warunki korzystania</string>
@@ -1157,7 +1157,7 @@ Language: pl
 	<string name="quickpress_add_alert_title">Wpisz nazwę skrótu</string>
 	<string name="today">Dzisiaj</string>
 	<string name="settings">Ustawienia</string>
-	<string name="share_url">Udostępnij URL</string>
+	<string name="share_url">Udostępnij adres URL</string>
 	<string name="quickpress_window_title">Wybierz blog dla skrótu QuickPress</string>
 	<string name="quickpress_add_error">Nazwa skrótu nie może być pusta</string>
 	<string name="draft">Szkic</string>
@@ -1180,7 +1180,7 @@ Language: pl
 	<string name="approve">Zaakceptuj</string>
 	<string name="none">Brak</string>
 	<string name="blogs">Blogi</string>
-	<string name="select_photo">Wybierz obraz z galerii</string>
+	<string name="select_photo">Wybierz zdjęcie z galerii</string>
 	<string name="add">Dodaj</string>
 	<string name="yes">Tak</string>
 	<string name="no">Nie</string>
