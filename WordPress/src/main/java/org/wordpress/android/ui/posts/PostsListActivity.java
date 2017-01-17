@@ -58,6 +58,10 @@ public class PostsListActivity extends AppCompatActivity {
      * upload error notification
      */
     private void showErrorDialogIfNeeded(Bundle extras) {
+        if (WordPress.getCurrentBlog() == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found);
+            finish();
+        }
         if (extras == null || !extras.containsKey(EXTRA_ERROR_MSG) || isFinishing()) {
             return;
         }

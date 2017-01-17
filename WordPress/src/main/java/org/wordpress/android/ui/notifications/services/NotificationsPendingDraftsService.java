@@ -47,7 +47,7 @@ public class NotificationsPendingDraftsService extends Service {
     public static void checkPrefsAndStartService(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean shouldNotifyOfPendingDrafts = prefs.getBoolean(context.getString(R.string.pref_key_notification_pending_drafts), true);
-        if (shouldNotifyOfPendingDrafts) {
+        if (shouldNotifyOfPendingDrafts && WordPress.getCurrentBlog() != null) {
             NotificationsPendingDraftsService.startService(context);
         }
 
@@ -79,7 +79,7 @@ public class NotificationsPendingDraftsService extends Service {
     }
 
     private void performDraftsCheck() {
-        if (running) {
+        if (running || WordPress.getCurrentBlog() == null) {
             return;
         }
         running = true;
@@ -94,6 +94,12 @@ public class NotificationsPendingDraftsService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                if (WordPress.getCurrentBlog() == null) {
+                    AppLog.w(AppLog.T.NOTIFS, "Current blog is null. No drafts checking.");
+                    completed();
+                    return;
+                }
+
                 ArrayList<Post> draftPosts =  WordPress.wpDB.getDraftPostList(WordPress.getCurrentBlog().getLocalTableBlogId());
                 if (draftPosts != null && draftPosts.size() > 0) {
                     ArrayList<Post> draftPostsNotInIgnoreList;
@@ -138,11 +144,14 @@ public class NotificationsPendingDraftsService extends Service {
                         } else if (draftPostsOlderThan3Days.size() > 1) {
                             long longestLivingDraft = 0;
                             boolean onlyPagesFound = true;
+                            boolean doShowNotification = false;
                             for (Post post : draftPostsOlderThan3Days) {
 
                                 // update each post dateLastNotified field to now
                                 if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
-                                    if (post.getDateLastNotified() > longestLivingDraft) {
+
+                                    if (post.getDateLastNotified() >= longestLivingDraft) {
+                                        doShowNotification = true;
                                         longestLivingDraft = post.getDateLastNotified();
                                         if (!post.isPage()) {
                                             onlyPagesFound = false;
@@ -155,14 +164,14 @@ public class NotificationsPendingDraftsService extends Service {
 
                             // if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
                             // then show the notification again
-                            if (longestLivingDraft > 0) {
+                            if (doShowNotification) {
                                 buildPendingDraftsNotification(draftPostsOlderThan3Days, onlyPagesFound);
                             }
                         }
                     }
 
-                    completed();
                 }
+                completed();
             }
         }).start();
     }
@@ -280,7 +289,7 @@ public class NotificationsPendingDraftsService extends Service {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, openDraftIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.gridicons_pencil, getText(R.string.edit),
+        builder.addAction(R.drawable.ic_edit_icon, getText(R.string.edit),
                 pendingIntent);
     }
 

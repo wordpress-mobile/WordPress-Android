@@ -108,6 +108,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
             actionBar.setHomeButtonEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.site_picker_title);
         }
     }
 
