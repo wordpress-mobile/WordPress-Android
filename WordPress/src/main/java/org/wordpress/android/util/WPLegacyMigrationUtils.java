@@ -93,10 +93,11 @@ public class WPLegacyMigrationUtils {
             int numRows = c.getCount();
             c.moveToFirst();
             for (int i = 0; i < numRows; i++) {
-                // TODO: Create sites
-                String username = c.getString(0);
-                String password = c.getString(1);
-                String url = c.getString(2);
+                SiteModel siteModel = new SiteModel();
+                siteModel.setUsername(c.getString(0));
+                siteModel.setPassword(c.getString(1));
+                siteModel.setUrl(c.getString(2));
+                siteList.add(siteModel);
                 c.moveToNext();
             }
             c.close();
