@@ -824,6 +824,7 @@ public class ReaderPostDetailFragment extends Fragment
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     showPost();
+                    EventBus.getDefault().post(new ReaderEvents.SinglePostDownloaded());
                 }
             }
 

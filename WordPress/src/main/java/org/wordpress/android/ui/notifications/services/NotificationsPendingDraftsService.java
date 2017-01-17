@@ -29,6 +29,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static com.android.volley.Request.Method.HEAD;
+
 public class NotificationsPendingDraftsService extends Service {
     private boolean running = false;
     public static final int PENDING_DRAFTS_NOTIFICATION_ID = GCMMessageService.GENERIC_LOCAL_NOTIFICATION_ID + 1;
@@ -152,6 +154,8 @@ public class NotificationsPendingDraftsService extends Service {
                 } else if (draftPostsOlderThan3Days.size() > 1) {
                     long longestLivingDraft = 0;
                     boolean onlyPagesFound = true;
+                    boolean doShowNotification = false;
+
                     for (PostModel post : draftPostsOlderThan3Days) {
                         long dateLastNotified = AppPrefs.getPendingDraftsLastNotificationDate(post);
 
@@ -159,17 +163,19 @@ public class NotificationsPendingDraftsService extends Service {
                         if ((now - dateLastNotified) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
                             if (dateLastNotified > longestLivingDraft) {
                                 longestLivingDraft = dateLastNotified;
+                                doShowNotification = true;
                                 if (!post.isPage()) {
                                     onlyPagesFound = false;
                                 }
                             }
                             AppPrefs.setPendingDraftsLastNotificationDate(post, now);
+
                         }
                     }
 
                     // if there was at least one notification that exceeded the minimum elapsed time to repeat the notif,
                     // then show the notification again
-                    if (longestLivingDraft > 0) {
+                    if (doShowNotification) {
                         buildPendingDraftsNotification(draftPostsOlderThan3Days, onlyPagesFound);
                     }
                 }

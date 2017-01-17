@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-06 08:01:22+0000
+Translation-Revision-Date: 2017-01-04 16:39:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: sv_SE
 -->
 <resources>
-	<string name="invalid_verification_code_format">Måste vara et sexsiffrigt nummer</string>
+	<string name="reader_photo_by">Foto: %s</string>
+	<string name="reader_label_visit">Gå till</string>
+	<string name="all_your_sites">Alla mina webbplatser</string>
+	<string name="pending_draft_more">Du har skrivit %d utkast till inlägg som inte är publicerade. Peka för att undersöka.</string>
+	<string name="pending_draft_one">Du skrev utkastet ”%1$s” för %2$d dagar sedan utan att publicera det.</string>
+	<string name="pending_draft_one_generic">Du har skrivit utkastet ”%s” utan att publicera det.</string>
+	<string name="no_default_app_available_to_open_link">Det går inte att öppna länken</string>
+	<string name="notification_pending_drafts">Informera mig om opublicerade utkast</string>
 	<string name="confirm_discard_changes">Kasta bort osparade ändringar?</string>
+	<string name="invalid_verification_code_format">Måste vara ett sexsiffrigt nummer</string>
 	<string name="swipe_for_more">Dra för att se mer</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Du har inte behörighet att visa detta inlägg. Testa att logga in på WordPress.com först och sedan använda knappen högst upp för att öppna ett webbläsarfönster istället.</string>
 	<string name="reader_err_get_post_not_authorized_signin">Du har inte behörighet att visa detta inlägg. Testa att logga in på WordPress.com först.</string>
