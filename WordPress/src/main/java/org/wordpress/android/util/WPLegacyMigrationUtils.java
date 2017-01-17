@@ -45,12 +45,13 @@ public class WPLegacyMigrationUtils {
         return token;
     }
 
-    public static SitesModel migrateSelfHostedSitesFromDeprecatedDB(Context context, Dispatcher dispatcher) {
-        SitesModel sitesModel = getSelfHostedSitesFromDeprecatedDB(context);
-        if (sitesModel != null) {
+    public static List<SiteModel> migrateSelfHostedSitesFromDeprecatedDB(Context context, Dispatcher dispatcher) {
+        List<SiteModel> siteList = getSelfHostedSitesFromDeprecatedDB(context);
+        if (siteList != null && siteList.size() > 0) {
+            SitesModel sitesModel = new SitesModel(siteList);
             dispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sitesModel));
         }
-        return sitesModel;
+        return siteList;
     }
 
     private static String getDeprecatedPreferencesAccessTokenThenDelete(Context context) {
@@ -93,7 +94,7 @@ public class WPLegacyMigrationUtils {
         return token;
     }
 
-    private static SitesModel getSelfHostedSitesFromDeprecatedDB(Context context) {
+    private static List<SiteModel> getSelfHostedSitesFromDeprecatedDB(Context context) {
         List<SiteModel> siteList = new ArrayList<>();
         try {
             SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
@@ -114,6 +115,6 @@ public class WPLegacyMigrationUtils {
         } catch (SQLException e) {
             // DB doesn't exist
         }
-        return siteList.size() > 0 ? new SitesModel(siteList) : null;
+        return siteList;
     }
 }
