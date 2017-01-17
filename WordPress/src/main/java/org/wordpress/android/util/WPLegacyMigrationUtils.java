@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class WPLegacyMigrationUtils {
         return token;
     }
 
-    private static List<SiteModel> getSelfHostedSitedFromDeprecatedDB(Context context) {
+    private static SitesModel getSelfHostedSitedFromDeprecatedDB(Context context) {
         List<SiteModel> siteList = new ArrayList<>();
         try {
             SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
@@ -104,6 +105,6 @@ public class WPLegacyMigrationUtils {
         } catch (SQLException e) {
             // DB doesn't exist
         }
-        return siteList;
+        return siteList.size() > 0 ? new SitesModel(siteList) : null;
     }
 }
