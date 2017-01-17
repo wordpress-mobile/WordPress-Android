@@ -10,7 +10,11 @@ import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link #migrateAccessTokenToAccountStore(Context, Dispatcher)} moves an existing access token from a previous version
@@ -26,6 +30,7 @@ public class WPLegacyMigrationUtils {
     private static final String DEPRECATED_ACCOUNTS_TABLE = "accounts";
     private static final String DEPRECATED_ACCESS_TOKEN_COLUMN = "access_token";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
+    private static final String DEPRECATED_BLOGS_TABLE = "accounts";
 
     public static String migrateAccessTokenToAccountStore(Context context, Dispatcher dispatcher) {
         String token = getLatestDeprecatedAccessToken(context);
@@ -76,5 +81,28 @@ public class WPLegacyMigrationUtils {
             // DB doesn't exist
         }
         return token;
+    }
+
+    private static List<SiteModel> getSelfHostedSitedFromDeprecatedDB(Context context) {
+        List<SiteModel> siteList = new ArrayList<>();
+        try {
+            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            String[] fields = new String[]{"username", "password", "url"};
+            String byString = "dotcomFlag=0";
+            Cursor c = db.query(DEPRECATED_BLOGS_TABLE, fields, byString, null, null, null, null);
+            int numRows = c.getCount();
+            c.moveToFirst();
+            for (int i = 0; i < numRows; i++) {
+                // TODO: Create sites
+                String username = c.getString(0);
+                String password = c.getString(1);
+                String url = c.getString(2);
+                c.moveToNext();
+            }
+            c.close();
+        } catch (SQLException e) {
+            // DB doesn't exist
+        }
+        return siteList;
     }
 }
