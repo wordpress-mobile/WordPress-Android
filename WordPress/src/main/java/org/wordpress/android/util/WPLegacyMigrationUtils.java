@@ -46,7 +46,7 @@ public class WPLegacyMigrationUtils {
     }
 
     public static SitesModel migrateSelfHostedSitesFromDeprecatedDB(Context context, Dispatcher dispatcher) {
-        SitesModel sitesModel = getSelfHostedSitedFromDeprecatedDB(context);
+        SitesModel sitesModel = getSelfHostedSitesFromDeprecatedDB(context);
         if (sitesModel != null) {
             dispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sitesModel));
         }
@@ -93,7 +93,7 @@ public class WPLegacyMigrationUtils {
         return token;
     }
 
-    private static SitesModel getSelfHostedSitedFromDeprecatedDB(Context context) {
+    private static SitesModel getSelfHostedSitesFromDeprecatedDB(Context context) {
         List<SiteModel> siteList = new ArrayList<>();
         try {
             SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
