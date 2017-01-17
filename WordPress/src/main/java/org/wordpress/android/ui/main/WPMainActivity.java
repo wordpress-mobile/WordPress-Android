@@ -698,12 +698,19 @@ public class WPMainActivity extends AppCompatActivity {
             AppPrefs.setSelectedSite(-1);
             return;
         }
+
         // When we select a site, we want to update its informations or options
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
 
         // Make selected site visible
         selectedSite.setIsVisible(true);
         AppPrefs.setSelectedSite(selectedSite.getId());
+
+        // once the user switches to another blog, clean any pending draft notifications for any other blog,
+        // and check if they have any drafts pending for this new blog
+        NativeNotificationsUtils.dismissNotification(NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID,
+                this);
+        NotificationsPendingDraftsService.checkPrefsAndStartService(this, mSelectedSite);
     }
 
     /**

@@ -13,6 +13,9 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -22,6 +25,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 public class NotificationsPendingDraftsService extends Service {
     private boolean running = false;
@@ -32,20 +38,22 @@ public class NotificationsPendingDraftsService extends Service {
     private static final long MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION = 24 * 60 * 60 * 1000; // 24 hours
     private static final long MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE = 30; // 30 days
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
+    private SiteModel mSite;
 
-    private static void startService(Context context) {
+    @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
+
+    public static void checkPrefsAndStartService(Context context, SiteModel site) {
         if (context == null) {
             return;
         }
-        Intent intent = new Intent(context, NotificationsPendingDraftsService.class);
-        context.startService(intent);
-    }
-
-    public static void checkPrefsAndStartService(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean shouldNotifyOfPendingDrafts = prefs.getBoolean(context.getString(R.string.pref_key_notification_pending_drafts), true);
-        if (shouldNotifyOfPendingDrafts && WordPress.getCurrentBlog() != null) {
-            NotificationsPendingDraftsService.startService(context);
+        boolean shouldNotifyOfPendingDrafts = prefs.getBoolean(
+                context.getString(R.string.pref_key_notification_pending_drafts), true);
+        if (shouldNotifyOfPendingDrafts) {
+            Intent intent = new Intent(context, NotificationsPendingDraftsService.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startService(intent);
         }
     }
 
@@ -57,6 +65,7 @@ public class NotificationsPendingDraftsService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.NOTIFS, "notifications pending drafts service > created");
     }
 
@@ -69,6 +78,7 @@ public class NotificationsPendingDraftsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
+            mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
             if (running) {
                 return START_NOT_STICKY;
             }
@@ -91,10 +101,15 @@ public class NotificationsPendingDraftsService extends Service {
     // more than 30 days)
     // MORE: “You drafted %d posts but never published them. Tap to check.”
     private void performDraftsCheck() {
-        ArrayList<PostModel> draftPosts = WordPress.wpDB.getDraftPostList(WordPress.getCurrentBlog().getLocalTableBlogId());
-        // TODO: Get draft posts for last selected site.
-
-        if (draftPosts != null && draftPosts.size() > 0) {
+        // TODO: Add a "getLocalDrafts" method to the Post Store
+        List<PostModel> posts = mPostStore.getPostsForSite(mSite);
+        ArrayList<PostModel> draftPosts = new ArrayList<>();
+        for (PostModel post: posts) {
+            if (post.isLocalDraft()) {
+                draftPosts.add(post);
+            }
+        }
+        if (draftPosts.size() > 0) {
             ArrayList<PostModel> draftPostsNotInIgnoreList;
             // now check those that have been sitting there for more than 3 days now.
             long now = System.currentTimeMillis();
@@ -113,43 +128,42 @@ public class NotificationsPendingDraftsService extends Service {
                 }
 
                 // check the size and build the notification accordingly
-                long daysInDraft = 0;
+                long daysInDraft;
                 if (draftPostsOlderThan3Days.size() == 1) {
                     PostModel post = draftPostsOlderThan3Days.get(0);
 
                     // only notify the user if the last time they have been notified about this particular
                     // post was at least MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION ago, but let's
                     // not do it constantly each time the app comes to the foreground
-                    if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
-                        daysInDraft = (now - post.getDateLastUpdated()) / ONE_DAY;
-                        long postId = post.getLocalTablePostId();
+                    long dateLocallyChanged = DateTimeUtils.timestampFromIso8601Millis(post.getDateLocallyChanged());
+                    long dateLastNotified = AppPrefs.getPendingDraftsLastNotificationDate(post);
+                    if ((now - dateLastNotified) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
+                        daysInDraft = (now - dateLocallyChanged) / ONE_DAY;
                         boolean isPage = post.isPage();
-
-                        post.setDateLastNotified(now);
+                        AppPrefs.setPendingDraftsLastNotificationDate(post, now);
                         if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
-                            buildSinglePendingDraftNotification(post.getTitle(), daysInDraft, postId, isPage);
+                            buildSinglePendingDraftNotification(post.getTitle(), daysInDraft, post.getId(), isPage);
                         } else {
                             // if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't
                             // know (i.e. value for lastUpdated is zero) then just show a generic message
-                            buildSinglePendingDraftNotificationGeneric(post.getTitle(), postId, isPage);
+                            buildSinglePendingDraftNotificationGeneric(post.getTitle(), post.getId(), isPage);
                         }
-                        WordPress.wpDB.updatePost(post);
                     }
                 } else if (draftPostsOlderThan3Days.size() > 1) {
                     long longestLivingDraft = 0;
                     boolean onlyPagesFound = true;
-                    for (Post post : draftPostsOlderThan3Days) {
+                    for (PostModel post : draftPostsOlderThan3Days) {
+                        long dateLastNotified = AppPrefs.getPendingDraftsLastNotificationDate(post);
 
                         // update each post dateLastNotified field to now
-                        if ((now - post.getDateLastNotified()) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
-                            if (post.getDateLastNotified() > longestLivingDraft) {
-                                longestLivingDraft = post.getDateLastNotified();
+                        if ((now - dateLastNotified) > MINIMUM_ELAPSED_TIME_BEFORE_REPEATING_NOTIFICATION) {
+                            if (dateLastNotified > longestLivingDraft) {
+                                longestLivingDraft = dateLastNotified;
                                 if (!post.isPage()) {
                                     onlyPagesFound = false;
                                 }
                             }
-                            post.setDateLastNotified(now);
-                            WordPress.wpDB.updatePost(post);
+                            AppPrefs.setPendingDraftsLastNotificationDate(post, now);
                         }
                     }
 
@@ -211,7 +225,7 @@ public class NotificationsPendingDraftsService extends Service {
     private PendingIntent getResultIntentForMultiplePosts(ArrayList<PostModel> posts, boolean isPage) {
 
         // convert posts list to csv id list
-        ArrayList<Long> postIdList = new ArrayList<>();
+        ArrayList<Integer> postIdList = new ArrayList<>();
         for (PostModel post : posts) {
             postIdList.add(post.getId());
         }

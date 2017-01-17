@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -89,6 +90,9 @@ public class AppPrefs {
 
         // local IDs of sites recently chosen in the site picker
         RECENTLY_PICKED_SITE_IDS,
+
+        // list of last time a notification has been created for a draft
+        PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES,
     }
 
     /**
@@ -493,6 +497,18 @@ public class AppPrefs {
 
     public static void setReaderSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
+    }
+
+    public static long getPendingDraftsLastNotificationDate(PostModel post) {
+        String key = DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES.name() + "-" + post.getId();
+        return prefs().getLong(key, 0);
+    }
+
+    public static void setPendingDraftsLastNotificationDate(PostModel post, long timestamp) {
+        String key = DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES.name() + "-" + post.getId();
+        SharedPreferences.Editor editor = prefs().edit();
+        editor.putLong(key, timestamp);
+        editor.apply();
     }
 
     public static ArrayList<Long> getPendingDraftsIgnorePostIdList() {

@@ -57,7 +57,6 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -313,7 +312,6 @@ public class WordPress extends MultiDexApplication {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
             NotificationsUpdateService.startService(getContext());
-            NotificationsPendingDraftsService.checkPrefsAndStartService(getContext());
         }
     }
 
@@ -751,7 +749,6 @@ public class WordPress extends MultiDexApplication {
                     } else {
                         NotificationsUpdateService.startService(getContext());
                     }
-                    NotificationsPendingDraftsService.checkPrefsAndStartService(getContext());
                 }
 
                 // Rate limited PN Token Update

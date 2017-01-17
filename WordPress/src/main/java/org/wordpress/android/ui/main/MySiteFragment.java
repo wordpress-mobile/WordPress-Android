@@ -25,11 +25,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
-import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
-import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -86,19 +84,6 @@ public class MySiteFragment extends Fragment
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
-    }
-
-    public void setSelectedSite(int locaSiteId) {
-        if (getActivity() instanceof WPMainActivity) {
-            WPMainActivity mainActivity = (WPMainActivity) getActivity();
-            mainActivity.setSelectedSite(locaSiteId);
-
-            // once the user switches to another blog, clean any pending draft notifications for any other blog,
-            // and check if they have any drafts pending for this new blog
-            NativeNotificationsUtils.dismissNotification(
-                    NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
-            NotificationsPendingDraftsService.checkPrefsAndStartService(getActivity());
-        }
     }
 
     public @Nullable SiteModel getSelectedSite() {
