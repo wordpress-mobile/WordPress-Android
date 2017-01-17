@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -42,6 +43,14 @@ public class WPLegacyMigrationUtils {
             dispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         }
         return token;
+    }
+
+    public static SitesModel migrateSelfHostedSitesFromDeprecatedDB(Context context, Dispatcher dispatcher) {
+        SitesModel sitesModel = getSelfHostedSitedFromDeprecatedDB(context);
+        if (sitesModel != null) {
+            dispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sitesModel));
+        }
+        return sitesModel;
     }
 
     private static String getDeprecatedPreferencesAccessTokenThenDelete(Context context) {

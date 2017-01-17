@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -208,6 +209,9 @@ public class WordPress extends MultiDexApplication {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
             }
         }
+
+        // Migrate self-hosted sites to FluxC
+        WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
 
         ProfilingUtils.start("App Startup");
         // Enable log recording
