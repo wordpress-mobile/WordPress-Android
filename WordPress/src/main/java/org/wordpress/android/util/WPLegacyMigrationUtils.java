@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 
 import java.util.ArrayList;
@@ -47,9 +46,10 @@ public class WPLegacyMigrationUtils {
 
     public static List<SiteModel> migrateSelfHostedSitesFromDeprecatedDB(Context context, Dispatcher dispatcher) {
         List<SiteModel> siteList = getSelfHostedSitesFromDeprecatedDB(context);
-        if (siteList != null && siteList.size() > 0) {
-            SitesModel sitesModel = new SitesModel(siteList);
-            dispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sitesModel));
+        if (siteList != null) {
+            for (SiteModel siteModel : siteList) {
+                dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
+            }
         }
         return siteList;
     }
