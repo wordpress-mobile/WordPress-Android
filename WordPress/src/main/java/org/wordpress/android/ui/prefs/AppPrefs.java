@@ -126,6 +126,9 @@ public class AppPrefs {
 
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
+
+        // Self-hosted sites migration to FluxC
+        SELF_HOSTED_SITES_MIGRATED_TO_FLUXC,
     }
 
     private static SharedPreferences prefs() {
@@ -643,5 +646,13 @@ public class AppPrefs {
         // store in prefs
         String idsAsString = TextUtils.join(",", currentIds);
         setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
+    }
+
+    public static boolean isSelfHostedSitesMigratedToFluxC() {
+        return getBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, false);
+    }
+
+    public static void setSelfHostedSitesMigratedToFluxC(boolean alreadyShown) {
+        setBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, alreadyShown);
     }
 }

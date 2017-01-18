@@ -211,11 +211,14 @@ public class WordPress extends MultiDexApplication {
         }
 
         // Migrate self-hosted sites to FluxC
-        List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
-        if (siteList != null) {
-            for (SiteModel siteModel : siteList) {
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel));
+        if (!AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
+            List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
+            if (siteList != null) {
+                for (SiteModel siteModel : siteList) {
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel));
+                }
             }
+            AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
         }
 
         ProfilingUtils.start("App Startup");
