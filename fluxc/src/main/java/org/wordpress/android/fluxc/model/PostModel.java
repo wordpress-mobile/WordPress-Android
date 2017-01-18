@@ -53,8 +53,10 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     @Column private long mParentId;
     @Column private String mParentTitle;
 
+    // Local only
     @Column private boolean mIsLocalDraft;
     @Column private boolean mIsLocallyChanged;
+    @Column private String mDateLocallyChanged; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
 
     // XML-RPC only, needed to work around a bug with the API:
     // https://github.com/wordpress-mobile/WordPress-Android/pull/3425
@@ -337,6 +339,14 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
 
     public void setHasCapabilityDeletePost(boolean hasCapabilityDeletePost) {
         mHasCapabilityDeletePost = hasCapabilityDeletePost;
+    }
+
+    public String getDateLocallyChanged() {
+        return mDateLocallyChanged;
+    }
+
+    public void setDateLocallyChanged(String dateLocallyChanged) {
+        mDateLocallyChanged = dateLocallyChanged;
     }
 
     @Override
