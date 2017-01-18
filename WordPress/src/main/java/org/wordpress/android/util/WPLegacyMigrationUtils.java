@@ -99,7 +99,7 @@ public class WPLegacyMigrationUtils {
         try {
             SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
             String[] fields = new String[]{"username", "password", "url"};
-            String byString = "dotcomFlag=0";
+            String byString = "dotcomFlag=0 AND api_blogid = 0";
             Cursor c = db.query(DEPRECATED_BLOGS_TABLE, fields, byString, null, null, null, null);
             int numRows = c.getCount();
             c.moveToFirst();
