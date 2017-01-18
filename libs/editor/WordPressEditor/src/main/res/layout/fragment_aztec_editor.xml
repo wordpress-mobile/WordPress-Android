@@ -14,6 +14,7 @@
     </org.wordpress.aztec.toolbar.AztecToolbar>
 
     <ScrollView
+        android:fillViewport="true"
         android:layout_above="@+id/formatting_toolbar"
         android:layout_alignParentTop="true"
         android:layout_height="wrap_content"
@@ -26,13 +27,14 @@
 
             <org.wordpress.aztec.AztecText
                 android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
                 android:background="@null"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:inputType="textNoSuggestions|textMultiLine"
-                aztec:textColor="@color/grey_dark" />
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                aztec:textColor="@color/grey_dark" >
+            </org.wordpress.aztec.AztecText>
 
             <View
                 android:id="@+id/sourceview_horizontal_divider"
@@ -43,13 +45,14 @@
                 style="@style/DividerSourceView"/>
 
             <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_width="match_parent" >
 
                 <org.wordpress.aztec.AztecText
                     android:id="@+id/aztec"
+                    android:gravity="top|start"
                     android:hint="@string/edit_hint"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:paddingEnd="16dp"
                     android:paddingLeft="16dp"
@@ -58,7 +61,6 @@
                     android:paddingTop="16dp"
                     android:scrollbars="vertical"
                     android:textCursorDrawable="?attr/textColor"
-                    aztec:textColor="@color/grey_dark"
                     aztec:bulletColor="@color/blue_medium"
                     aztec:bulletMargin="@dimen/bullet_margin"
                     aztec:bulletPadding="@dimen/bullet_padding"
@@ -74,23 +76,25 @@
                     aztec:quoteMargin="@dimen/quote_margin"
                     aztec:quotePadding="@dimen/quote_padding"
                     aztec:quoteWidth="@dimen/quote_width"
-                    />
+                    aztec:textColor="@color/grey_dark" >
+                </org.wordpress.aztec.AztecText>
 
                 <org.wordpress.aztec.source.SourceViewEditText
                     android:id="@+id/source"
+                    android:gravity="top|start"
                     android:hint="@string/source_hint"
-                    android:layout_height="wrap_content"
+                    android:inputType="textNoSuggestions|textMultiLine"
+                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:paddingTop="16dp"
                     android:paddingLeft="16dp"
                     android:paddingStart="16dp"
                     android:paddingRight="16dp"
                     android:paddingEnd="16dp"
-                    android:gravity="top|start"
                     android:scrollbars="vertical"
                     android:textSize="14sp"
-                    android:visibility="gone"
-                    android:inputType="textNoSuggestions|textMultiLine" />
+                    android:visibility="gone" >
+                </org.wordpress.aztec.source.SourceViewEditText>
 
             </FrameLayout>
 
