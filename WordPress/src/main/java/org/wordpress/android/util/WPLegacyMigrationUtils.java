@@ -113,7 +113,9 @@ public class WPLegacyMigrationUtils {
                 SiteModel siteModel = new SiteModel();
                 siteModel.setUsername(c.getString(0));
                 siteModel.setPassword(c.getString(1));
-                siteModel.setXmlRpcUrl(c.getString(2));
+                String url = c.getString(2);
+                siteModel.setUrl(url);
+                siteModel.setXmlRpcUrl(url);
                 siteList.add(siteModel);
                 c.moveToNext();
             }
