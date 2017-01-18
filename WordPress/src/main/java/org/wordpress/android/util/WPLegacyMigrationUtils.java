@@ -99,7 +99,12 @@ public class WPLegacyMigrationUtils {
         try {
             SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
             String[] fields = new String[]{"username", "password", "url"};
-            String byString = "dotcomFlag=0 AND api_blogid = 0";
+
+            // To exclude the jetpack sites we need to check for empty password
+            // Since it was an encrypted field in the previous DB, we need to compare with the encrypted empty text
+            String encryptedEmptyPassword = "AS3vw/BNTdl=";
+            String byString = String.format("dotcomFlag=0 AND NOT(dotcomFlag=0 AND password='%s')",
+                    encryptedEmptyPassword);
             Cursor c = db.query(DEPRECATED_BLOGS_TABLE, fields, byString, null, null, null, null);
             int numRows = c.getCount();
             c.moveToFirst();
