@@ -104,6 +104,7 @@ public class SiteStore extends Store {
         }
         public DeleteSiteError(DeleteSiteErrorType errorType) {
             this.type = errorType;
+            this.message = "";
         }
     }
 
