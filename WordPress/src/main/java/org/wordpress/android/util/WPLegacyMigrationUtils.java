@@ -33,6 +33,9 @@ public class WPLegacyMigrationUtils {
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
     private static final String DEPRECATED_BLOGS_TABLE = "accounts";
 
+    // Empty text encrypted with the previous DB secret
+    private static final String ENCRYPTED_EMPTY_PASSWORD = "AS3vw/BNTdI=";
+
     public static String migrateAccessTokenToAccountStore(Context context, Dispatcher dispatcher) {
         String token = getLatestDeprecatedAccessToken(context);
 
@@ -101,10 +104,8 @@ public class WPLegacyMigrationUtils {
             String[] fields = new String[]{"username", "password", "url"};
 
             // To exclude the jetpack sites we need to check for empty password
-            // Since it was an encrypted field in the previous DB, we need to compare with the encrypted empty text
-            String encryptedEmptyPassword = "AS3vw/BNTdl=";
             String byString = String.format("dotcomFlag=0 AND NOT(dotcomFlag=0 AND password='%s')",
-                    encryptedEmptyPassword);
+                    ENCRYPTED_EMPTY_PASSWORD);
             Cursor c = db.query(DEPRECATED_BLOGS_TABLE, fields, byString, null, null, null, null);
             int numRows = c.getCount();
             c.moveToFirst();
