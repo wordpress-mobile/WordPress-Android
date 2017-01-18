@@ -304,8 +304,7 @@ public class StatsUtils {
     }
 
     public static synchronized BaseStatsModel parseResponse(StatsService.StatsEndpointsEnum endpointName, long siteId,
-                                                            JSONObject response)
-            throws JSONException {
+                                                            JSONObject response) throws JSONException {
         BaseStatsModel model = null;
         switch (endpointName) {
             case VISITS:

@@ -38,6 +38,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -46,6 +47,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static com.android.volley.Request.Method.HEAD;
 
 public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
@@ -223,6 +225,7 @@ public class SitePickerActivity extends AppCompatActivity
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.site_picker_title);
         }
     }
 
@@ -239,7 +242,23 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void setNewAdapter(String lastSearch, boolean isInSearchMode) {
-        mAdapter = new SitePickerAdapter(this, mCurrentLocalId, lastSearch, isInSearchMode);
+        mAdapter = new SitePickerAdapter(
+                this,
+                mCurrentLocalId,
+                lastSearch,
+                isInSearchMode,
+                new SitePickerAdapter.OnDataLoadedListener() {
+            @Override
+            public void onBeforeLoad(boolean isEmpty) {
+                if (isEmpty) {
+                    showProgress(true);
+                }
+            }
+            @Override
+            public void onAfterLoad() {
+                showProgress(false);
+            }
+        });
         mAdapter.setOnSiteClickListener(this);
         mAdapter.setOnSelectedCountChangedListener(this);
     }
@@ -361,7 +380,6 @@ public class SitePickerActivity extends AppCompatActivity
             hideSoftKeyboard();
             setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.localId));
             mDidUserSelectSite = true;
-            SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.localId);
             finish();
         }
     }
@@ -377,6 +395,10 @@ public class SitePickerActivity extends AppCompatActivity
         getAdapter().setLastSearch(s);
         getAdapter().searchSites(s);
         return true;
+    }
+
+    public void showProgress(boolean show) {
+        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {

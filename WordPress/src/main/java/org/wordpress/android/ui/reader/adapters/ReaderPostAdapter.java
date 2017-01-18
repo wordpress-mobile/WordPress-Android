@@ -87,7 +87,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_TAG_HEADER  = 3;
     private static final int VIEW_TYPE_GAP_MARKER  = 4;
 
-    private static final long ITEM_ID_CUSTOM_VIEW = -1L;
+    private static final long ITEM_ID_HEADER     = -1L;
+    private static final long ITEM_ID_GAP_MARKER = -2L;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -595,7 +596,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasTagHeader() {
-        return mCurrentTag != null && mCurrentTag.isTagTopic();
+        return mCurrentTag != null && mCurrentTag.isTagTopic() && !isEmpty();
     }
 
     private boolean isDiscover() {
@@ -722,10 +723,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public long getItemId(int position) {
-        if (getItemViewType(position) == VIEW_TYPE_POST) {
-            return getItem(position).getStableId();
-        } else {
-            return ITEM_ID_CUSTOM_VIEW;
+        switch (getItemViewType(position)) {
+            case VIEW_TYPE_TAG_HEADER :
+            case VIEW_TYPE_SITE_HEADER :
+                return ITEM_ID_HEADER;
+            case VIEW_TYPE_GAP_MARKER :
+                return ITEM_ID_GAP_MARKER;
+            default:
+                return getItem(position).getStableId();
         }
     }
 

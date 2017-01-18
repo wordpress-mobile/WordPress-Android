@@ -55,7 +55,7 @@
                         android:layout_below="@+id/layout_post_detail_content"
                         android:orientation="vertical">
 
-                        <org.wordpress.android.ui.reader.views.ReaderRelatedPostsView
+                        <org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
                             android:id="@+id/related_posts_view_local"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                             android:visibility="gone"
                             tools:visibility="visible" />
 
-                        <org.wordpress.android.ui.reader.views.ReaderRelatedPostsView
+                        <org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
                             android:id="@+id/related_posts_view_global"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

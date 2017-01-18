@@ -94,6 +94,7 @@ public class NotificationsActions {
                             List<Note> notes = NotificationsActions.parseNotes(response);
                             if (notes.size() > 0) {
                                 NotificationsTable.saveNote(notes.get(0));
+                                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(notes.get(0).isUnread()));
                             } else {
                                 AppLog.e(AppLog.T.NOTIFS, "Success, but no note!!!???");
                             }

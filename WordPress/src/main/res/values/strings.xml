@@ -53,6 +53,7 @@
     <string name="deselect_all">Deselect all</string>
     <string name="notification_sound">Notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
+    <string name="notification_pending_drafts">Notify me on pending drafts</string>
     <string name="notification_blink">Blink notification light</string>
     <string name="sure_to_remove_account">Remove this site?</string>
     <string name="yes">Yes</string>
@@ -90,6 +91,7 @@
     <string name="could_not_load_page">Could not load page</string>
     <string name="send">Send</string>
     <string name="swipe_for_more">Swipe for more</string>
+    <string name="no_default_app_available_to_open_link">Unable to open the link</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -342,6 +344,11 @@
     <string name="comment_q_action_liking">Liking…</string>
     <string name="comment_q_action_approving">Approving…</string>
     <string name="comment_q_action_replying">Replying…</string>
+
+    <!-- pending draft local notifications -->
+    <string name="pending_draft_one_generic">You drafted \'%s\' but never published it.</string>
+    <string name="pending_draft_one">You drafted \'%1$s\' %2$d days ago but never published it.</string>
+    <string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -866,6 +873,7 @@
     <string name="notification_settings">Notification Settings</string>
     <string name="notifications_sights_and_sounds">Sights and Sounds</string>
     <string name="your_sites">Your Sites</string>
+    <string name="all_your_sites">All My Sites</string>
     <string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
     <string name="notifications_account_emails">Email from WordPress.com</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
@@ -1095,11 +1103,14 @@
     <!--
       Jetpack strings
     -->
+    <string name="jetpack_info">Jetpack info</string>
     <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
     <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_not_connected">Jetpack plugin not connected</string>
     <string name="jetpack_not_connected_message">The Jetpack plugin is installed, but not connected to WordPress.com. Do you want to connect Jetpack?</string>
+    <string name="jetpack_stats_module_disabled_message">The Jetpack plugin is connected, but the Stats module is not active. Do you want to activate Stats?</string>
+    <string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
 
     <!--
       reader strings
@@ -1199,7 +1210,6 @@
     <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
-    <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
     <string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
     <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
@@ -1213,6 +1223,7 @@
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
     <string name="reader_toast_err_already_liked">You have already liked that comment</string>
+    <string name="reader_toast_err_url_intent">Unable to open %s</string>
 
     <!-- snackbar messages -->
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>

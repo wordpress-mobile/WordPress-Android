@@ -32,10 +32,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.credentials.Credential;
+import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -62,6 +66,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.networking.OAuthAuthenticator;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -85,6 +90,7 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -97,7 +103,6 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String TAG = "sign_in_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
-    public static final String MAGIC_LINK_PROPERTY = "magic_link";
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
@@ -173,11 +178,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
-    private boolean mInhibitMagicLogin;
     private boolean mSmartLockEnabled = true;
-    private boolean mShouldShowPassword;
     private boolean mIsActivityFinishing;
-
+    private boolean mInhibitMagicLogin; // Prevent showing magic links as that is only applicable for initial sign in
+    private boolean mIsMagicLinksEnabled = true;
 
     public interface OnMagicLinkRequestInteraction {
         void onMagicLinkRequestSuccess(String email);
@@ -195,6 +199,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mInhibitMagicLogin = getActivity() != null
                 && (getActivity().getIntent().getBooleanExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, false)
                 || !WPActivityUtils.isEmailClientAvailable(getActivity()));
+
+        AnalyticsTracker.track(Stat.LOGIN_ACCESSED);
     }
 
     @Override
@@ -316,7 +322,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((didPressNextKey(actionId, event) || didPressEnterKey(actionId, event)) && !isEnterPasswordMode()) {
+                if ((didPressNextKey(actionId, event) || didPressEnterKey(actionId, event)) && mIsMagicLinksEnabled) {
                     signIn();
                     return true;
                 } else {
@@ -366,7 +372,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         } else {
             mSmartLockEnabled = true;
         }
-        if (mShouldShowPassword) {
+        if (!mIsMagicLinksEnabled) {
             showPasswordFieldAndFocus();
         } else if (mInhibitMagicLogin) {
             showPasswordField(false);
@@ -382,6 +388,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPasswordLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
+        switchToDotOrgIcon(true);
+        switchBackgroundToDotOrg(true, true);
         if (!prefillUrl.isEmpty()) {
             mUrlEditText.setText(prefillUrl);
         }
@@ -407,6 +415,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private void showPasswordField() {
         if (isAdded()) {
+            mIsMagicLinksEnabled = false;
             mPasswordLayout.setVisibility(View.VISIBLE);
             mForgotPassword.setVisibility(View.VISIBLE);
             if (!mSelfHosted) {
@@ -421,6 +430,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             if (mInhibitMagicLogin) {
                 showDotComSignInForm();
             } else {
+                mIsMagicLinksEnabled = true;
                 configureMagicLinkUI();
             }
         } else {
@@ -437,7 +447,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUrlButtonLayout.setVisibility(View.GONE);
         mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
         switchToDotOrgIcon(false);
-        switchBackgroundToDotOrg(false);
+        switchBackgroundToDotOrg(false, false);
     }
 
     protected void showSelfHostedSignInForm(){
@@ -447,7 +457,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
         showPasswordField();
         switchToDotOrgIcon(true);
-        switchBackgroundToDotOrg(true);
+        switchBackgroundToDotOrg(true, false);
     }
 
     private void switchToDotOrgIcon(boolean showDotOrg) {
@@ -474,33 +484,25 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private void switchBackgroundToDotOrg(boolean useDotOrg) {
+    private void switchBackgroundToDotOrg(boolean useDotOrg, boolean noFading) {
         if (getView() == null) {
             return;
         }
 
         TransitionDrawable transition = (TransitionDrawable) getView().getBackground();
         if (useDotOrg) {
-            transition.startTransition(500);
+            transition.startTransition(noFading ? 0 : 500);
         } else {
-            transition.reverseTransition(500);
+            transition.reverseTransition(noFading ? 0 : 500);
         }
-    }
-
-    protected void track(Stat stat, Map<String, Boolean> properties) {
-        if (properties == null) {
-            properties = new HashMap<>();
-        }
-        properties.put(MAGIC_LINK_PROPERTY, true);
-        AnalyticsTracker.track(stat, properties);
     }
 
     public void setToken(String token) {
         mToken = token;
     }
 
-    public void setShouldShowPassword(boolean shouldShowPassword) {
-        mShouldShowPassword = shouldShowPassword;
+    public void setIsMagicLinkEnabled(boolean isMagicLinksEnabled) {
+        mIsMagicLinksEnabled = isMagicLinksEnabled;
     }
 
     private void initInfoButtons(View rootView) {
@@ -554,7 +556,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onCredentialRetrieved(Credential credential) {
         AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
         if (isAdded() && canAutofillUsernameAndPassword()) {
-            track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED, null);
+            AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
             mUsernameEditText.setText(credential.getId());
             mPasswordEditText.setText(credential.getPassword());
         }
@@ -592,10 +594,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mIconSwitcher.setPadding(mIconSwitcher.getPaddingLeft(), 0, mIconSwitcher.getPaddingRight(), mIconSwitcher
                     .getPaddingBottom());
         }
-    }
-
-    private boolean isEnterPasswordMode() {
-        return mPasswordLayout.getVisibility() == View.VISIBLE;
     }
 
     private final OnClickListener mOnLoginFormClickListener = new OnClickListener() {
@@ -679,6 +677,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         transaction.replace(R.id.fragment_container, newUserFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+
+        AnalyticsTracker.track(Stat.CREATE_ACCOUNT_INITIATED);
     }
 
     private String getForgotPasswordURL() {
@@ -698,8 +698,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         public void onClick(View v) {
             String forgotPasswordUrl = getForgotPasswordURL();
             AppLog.i(T.NUX, "User tapped forgot password link: " + forgotPasswordUrl);
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(forgotPasswordUrl));
-            startActivity(intent);
+            ActivityLauncher.openUrlExternal(getContext(), forgotPasswordUrl);
         }
     };
 
@@ -724,11 +723,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private void trackAnalyticsSignIn() {
         AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
-        Map<String, Boolean> properties = new HashMap<String, Boolean>();
+        Map<String, Boolean> properties = new HashMap<>();
         properties.put("dotcom_user", isWPComLogin());
-        track(Stat.SIGNED_IN, properties);
+        AnalyticsTracker.track(Stat.SIGNED_IN, properties);
         if (!isWPComLogin()) {
-            track(Stat.ADDED_SELF_HOSTED_SITE, null);
+            AnalyticsTracker.track(Stat.ADDED_SELF_HOSTED_SITE);
         }
     }
 
@@ -764,7 +763,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             // move on the the main activity
             Intent intent = new Intent(getActivity(), WPMainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
+            intent.putExtra(SignInActivity.MAGIC_LOGIN, mIsMagicLinksEnabled);
             getActivity().startActivity(intent);
         }
     }
@@ -793,7 +792,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private String getAuthCodeFromClipboard() {
         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
 
-        if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null) {
+        if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null
+            && clipboard.getPrimaryClip().getItemAt(0).getText() != null) {
             String code = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
 
             mTwoStepAuthCodeMatcher.reset(code);
@@ -892,7 +892,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void signIn() {
-        if (mSelfHosted || isEnterPasswordMode()) {
+        if (mSelfHosted || !mIsMagicLinksEnabled) {
             if (!isUserDataValid()) {
                 return;
             }
@@ -1235,6 +1235,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
+            AnalyticsTracker.track(Stat.LOGIN_FAILED);
             showAuthError(event.error.type, event.error.message);
             updateMigrationStatusIfNeeded();
             endProgress();

@@ -54,6 +54,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static com.android.volley.Request.Method.HEAD;
+
 /**
  * Background service to retrieve Stats.
  * Parsing of response(s) and submission of new network calls are done by using a ThreadPoolExecutor with a single thread.
@@ -569,10 +571,8 @@ public class StatsService extends Service {
                     AppLog.e(T.STATS, "Error while loading Stats!");
                     StatsUtils.logVolleyErrorDetails(volleyError);
                     BaseStatsModel mResponseObjectModel = null;
-
                     EventBus.getDefault().post(new StatsEvents.SectionUpdateError(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, volleyError));
-
                     updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
@@ -588,8 +588,10 @@ public class StatsService extends Service {
         }*/
         EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(false));
         stopSelf(mServiceStartId);
+        synchronized (mStatsNetworkRequests) {
+            mStatsNetworkRequests.clear();
+        }
     }
-
 
     private void checkAllRequestsFinished(Request<JSONObject> req) {
         synchronized (mStatsNetworkRequests) {

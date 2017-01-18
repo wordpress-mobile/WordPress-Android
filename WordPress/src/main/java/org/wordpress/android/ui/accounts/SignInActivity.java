@@ -268,7 +268,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     @Override
     public void onEnterPasswordRequested() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
-        getSignInFragment().setShouldShowPassword(true);
+        getSignInFragment().setIsMagicLinkEnabled(false);
 
         popBackStackToSignInFragment();
     }

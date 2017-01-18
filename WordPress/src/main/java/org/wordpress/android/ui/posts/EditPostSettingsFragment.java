@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Location;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -972,8 +971,8 @@ public class EditPostSettingsFragment extends Fragment
 
     private void viewLocation() {
         if (mPostLocation != null && mPostLocation.isValid()) {
-            String uri = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
-            startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+            String locationString = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
+            ActivityLauncher.openUrlExternal(getActivity(), locationString);
         } else {
             showLocationNotAvailableError();
             showLocationAdd();
