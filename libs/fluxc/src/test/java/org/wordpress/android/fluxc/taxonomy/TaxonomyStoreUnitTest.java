@@ -140,6 +140,17 @@ public class TaxonomyStoreUnitTest {
     }
 
     @Test
+    public void testGetTermByName() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        TermModel category = TaxonomyTestUtils.generateSampleCategory();
+        TaxonomySqlUtils.insertOrUpdateTerm(category);
+
+        assertEquals(category, mTaxonomyStore.getCategoryByName(site, category.getName()));
+    }
+
+    @Test
     public void testClearTaxonomy() {
         SiteModel site = new SiteModel();
         site.setId(6);
@@ -214,5 +225,43 @@ public class TaxonomyStoreUnitTest {
         idList.add(category2.getRemoteTermId());
 
         assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
+    }
+
+    @Test
+    public void testGetTagsFromPost() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        TermModel tag = TaxonomyTestUtils.generateSampleTag();
+        TaxonomySqlUtils.insertOrUpdateTerm(tag);
+
+        TermModel tag2 = TaxonomyTestUtils.generateSampleTag();
+        tag2.setRemoteTermId(6);
+        tag2.setName("Something");
+        TaxonomySqlUtils.insertOrUpdateTerm(tag2);
+
+        List<String> nameList = new ArrayList<>();
+        nameList.add(tag.getName());
+        nameList.add(tag2.getName());
+
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteNameList(nameList, site, DEFAULT_TAXONOMY_TAG).size());
+
+        // Unsynced tag ID should be ignored in the final list
+        TermModel unsyncedTag = TaxonomyTestUtils.generateSampleTag();
+        unsyncedTag.setRemoteTermId(66);
+        unsyncedTag.setName("More");
+        nameList.add(unsyncedTag.getName());
+
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteNameList(nameList, site, DEFAULT_TAXONOMY_TAG).size());
+
+        // Empty list should return empty tag list
+        nameList.clear();
+
+        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteNameList(nameList, site, DEFAULT_TAXONOMY_TAG).size());
+
+        // List with only unsynced tags should return empty tag list
+        nameList.add(unsyncedTag.getName());
+
+        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteNameList(nameList, site, DEFAULT_TAXONOMY_TAG).size());
     }
 }
