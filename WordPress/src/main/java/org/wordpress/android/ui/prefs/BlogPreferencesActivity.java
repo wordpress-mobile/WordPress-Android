@@ -180,6 +180,25 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         finish();
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void OnSiteDeleted(SiteStore.OnSiteDeleted event) {
+        FragmentManager fragmentManager = getFragmentManager();
+        SiteSettingsFragment siteSettingsFragment =
+                (SiteSettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
+
+        if (siteSettingsFragment != null) {
+            if (event.isError()) {
+                siteSettingsFragment.handleDeleteSiteError(event.error);
+                return;
+            }
+
+            siteSettingsFragment.handleSiteDeleted();
+            setResult(RESULT_BLOG_REMOVED);
+            finish();
+        }
+    }
+
     private void loadSettingsForBlog() {
         mUsernameET.setText(mSite.getUsername());
         mPasswordET.setText(mSite.getPassword());
