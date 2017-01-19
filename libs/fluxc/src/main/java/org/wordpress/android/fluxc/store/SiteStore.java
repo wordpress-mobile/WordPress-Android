@@ -617,10 +617,10 @@ public class SiteStore extends Store {
                 updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
                 break;
             case DELETED_SITE:
-                handleDeletedSite((SiteRestClient.DeleteSiteResponsePayload) action.getPayload());
+                handleDeletedSite((DeleteSiteResponsePayload) action.getPayload());
                 break;
             case EXPORTED_SITE:
-                handleExportedSite((SiteRestClient.ExportSiteResponsePayload) action.getPayload());
+                handleExportedSite((ExportSiteResponsePayload) action.getPayload());
                 break;
             case CHECKED_IS_WPCOM_URL:
                 handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
