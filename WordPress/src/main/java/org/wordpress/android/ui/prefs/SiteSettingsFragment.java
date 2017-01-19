@@ -43,8 +43,6 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -245,8 +243,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onPause() {
         super.onPause();
-        // Locally save the site
-        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
+        // Locally save the site. mSite can be null after site deletion.
+        if (mSite != null) {
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
+        }
         mIsFragmentPaused = true;
     }
 
@@ -1257,6 +1257,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
         dismissProgressDialog(mDeleteSiteProgressDialog);
         mDeleteSiteProgressDialog = null;
+        mSite = null;
     }
 
     public void handleDeleteSiteError(SiteStore.DeleteSiteError error) {
