@@ -722,6 +722,31 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Notifications - Unliked Comment");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_comment_unlikes_from_notification");
                 break;
+            case NOTIFICATION_PENDING_DRAFTS_TAPPED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Pending Drafts Tapped");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_tapped");
+                break;
+            case NOTIFICATION_PENDING_DRAFTS_IGNORED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Pending Drafts Ignored");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_ignored");
+                break;
+            case NOTIFICATION_PENDING_DRAFTS_DISMISSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Pending Drafts Dismissed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_dismissed");
+                break;
+            case NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Pending Drafts Settings Enabled");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_settings_enabled");
+                break;
+            case NOTIFICATION_PENDING_DRAFTS_SETTINGS_DISABLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Notifications - Pending Drafts Settings Disabled");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("notifications_pending_drafts_settings_disabled");
+                break;
             case OPENED_POSTS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Posts");
@@ -769,6 +794,30 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case OPENED_PERSON:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("People Management - Accessed Details");
+                break;
+            case CREATE_ACCOUNT_INITIATED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Create Account Initiated");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_create_account_initiated");
+                instructions.setCurrentDateForPeopleProperty("last_time_create_account_initiated");
+                break;
+            case CREATE_ACCOUNT_EMAIL_EXISTS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Create Account Email Exists");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_create_account_email_exists");
+                instructions.setCurrentDateForPeopleProperty("last_time_create_account_email_exists");
+                break;
+            case CREATE_ACCOUNT_USERNAME_EXISTS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Create Account Username Exists");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_create_account_username_exists");
+                instructions.setCurrentDateForPeopleProperty("last_time_create_account_username_exists");
+                break;
+            case CREATE_ACCOUNT_FAILED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Create Account Failed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_create_account_failed");
+                instructions.setCurrentDateForPeopleProperty("last_time_create_account_failed");
                 break;
             case CREATED_ACCOUNT:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -924,6 +973,12 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Support - User Replied to Helpshift");
                 instructions.addSuperPropertyToFlag("support_user_replied_to_helpshift");
+                break;
+            case LOGIN_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_login_accessed");
+                instructions.setCurrentDateForPeopleProperty("last_time_login_accessed");
                 break;
             case LOGIN_MAGIC_LINK_EXITED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

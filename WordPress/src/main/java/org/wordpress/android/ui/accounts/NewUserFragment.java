@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -42,6 +41,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.networking.OAuthAuthenticator;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
@@ -276,6 +276,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                 break;
             case USERNAME_EXISTS: // Returned error message for username_exists is too vague ("Invalid user input")
                 showUsernameError(getString(R.string.username_exists));
+                AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_USERNAME_EXISTS);
                 break;
             case PASSWORD_INVALID:
                 showPasswordError(message);
@@ -283,9 +284,12 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             case EMAIL_CANT_BE_USED_TO_SIGNUP:
             case EMAIL_INVALID:
             case EMAIL_NOT_ALLOWED:
-            case EMAIL_EXISTS:
             case EMAIL_RESERVED:
                 showEmailError(message);
+                break;
+            case EMAIL_EXISTS:
+                showEmailError(message);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_EMAIL_EXISTS);
                 break;
             default:
                 break;
@@ -425,8 +429,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         termsOfServiceTextView.setOnClickListener(new OnClickListener() {
                                                       @Override
                                                       public void onClick(View v) {
-                                                          Uri uri = Uri.parse(getString(R.string.wordpresscom_tos_url));
-                                                          startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                                                          ActivityLauncher.openUrlExternal(getContext(),
+                                                                  getString(R.string.wordpresscom_tos_url));
                                                       }
                                                   }
         );
@@ -585,6 +589,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             endProgress();
+            AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_FAILED);
             showUserError(event.error.type, event.error.message);
             return;
         }
@@ -605,6 +610,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             endProgress();
+            AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_FAILED);
             showSiteError(event.error.message);
             return;
         }

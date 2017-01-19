@@ -11,8 +11,8 @@
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/site_picker_container_padding_bottom"
-        android:paddingTop="@dimen/site_picker_container_padding_top">
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_blavatar"
@@ -56,6 +56,10 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/grey_lighten_20" />
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@color/grey_lighten_20"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </LinearLayout>

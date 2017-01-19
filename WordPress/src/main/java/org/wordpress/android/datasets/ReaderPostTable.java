@@ -305,6 +305,13 @@ public class ReaderPostTable {
                 args);
     }
 
+    public static String getPostBlogName(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT blog_name FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
+    }
+
     public static String getPostText(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
@@ -434,6 +441,11 @@ public class ReaderPostTable {
     public static int deletePostsInBlog(long blogId) {
         String[] args = {Long.toString(blogId)};
         return ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id = ?", args);
+    }
+
+    public static void deletePost(long blogId, long postId) {
+        String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
+        ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id=? AND post_id=?", args);
     }
 
     /*

@@ -224,6 +224,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             // clear up the back-from-login flag anyway
             mBackFromLogin = false;
         }
+
+        refreshComments();
     }
 
     @SuppressWarnings("unused")

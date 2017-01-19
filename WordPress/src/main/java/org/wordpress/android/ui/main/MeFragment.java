@@ -62,6 +62,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -213,6 +214,8 @@ public class MeFragment extends Fragment {
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(MeFragment.this,
                         CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE)) {
                     askForCameraOrGallery();
+                } else {
+                    AppLockManager.getInstance().setExtendedTimeout();
                 }
             }
         });
@@ -676,11 +679,10 @@ public class MeFragment extends Fragment {
     }
 
     public void onEventMainThread(GravatarLoadFinished event) {
-        showGravatarProgressBar(false);
-
-        if (!event.success) {
+        if (!event.success && mIsUpdatingGravatar) {
             Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast.LENGTH_SHORT).show();
         }
+        showGravatarProgressBar(false);
     }
 
     // injects a fabricated cache entry to the request cache
