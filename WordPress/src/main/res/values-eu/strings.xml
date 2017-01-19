@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-07 14:32:13+0000
+Translation-Revision-Date: 2017-01-04 18:21:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: eu_ES
 -->
 <resources>
+	<string name="notifications_label_new_notifications">Jakinarazpen berriak</string>
+	<string name="comment_q_action_replying">Erantzuten...</string>
+	<string name="comment_q_action_approving">Onartzen...</string>
+	<string name="comment_q_action_liking">Estekatzen...</string>
+	<string name="comment_q_action_processing">Prozesatzen...</string>
+	<string name="comment_q_action_done_generic">Ekintza eginda!</string>
 	<string name="reader_label_image_count_one">Irudi 1</string>
 	<string name="timespan_now">orain</string>
 	<string name="role_admin">Administratzailea</string>

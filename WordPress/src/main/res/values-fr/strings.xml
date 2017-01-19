@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-28 13:08:46+0000
+Translation-Revision-Date: 2017-01-05 14:24:30+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.3.0-alpha
 Language: fr
 -->
 <resources>
+	<string name="reader_photo_by">Photo par %s</string>
+	<string name="reader_label_visit">Visitez</string>
+	<string name="all_your_sites">Tous Mes Sites</string>
+	<string name="pending_draft_more">Vous avez rédigé %d articles, mais vous ne les avez jamais publiés. Appuyez pour les vérifier.</string>
+	<string name="pending_draft_one">Vous avez rédigé «&amp;nbsp;%1$s&amp;nbsp;» il y a %2$d jours, mais vous ne l’avez jamais publié.</string>
+	<string name="pending_draft_one_generic">Vous avez rédigé «&amp;nbsp;%s&amp;nbsp;», mais vous ne l\'avez jamais publié.</string>
+	<string name="no_default_app_available_to_open_link">Impossible d’ouvrir le lien</string>
+	<string name="notification_pending_drafts">Me notifier quand des brouillons sont en attente</string>
+	<string name="invalid_verification_code_format">Doit être un nombre à six chiffres</string>
+	<string name="confirm_discard_changes">Annuler les modifications non sauvegardées&amp;nbsp;?</string>
+	<string name="swipe_for_more">Glissez pour plus</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Vous n’êtes pas autorisé à voir cet article. Essayez de vous connecter à WordPress.com ou utilisez le bouton en haut pour l’ouvrir dans le navigateur à la place.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Vous n\'êtes pas autorisé à voir ce poste. Essayez de vous connecter à WordPress.com d\'abord.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Vous n\'êtes pas autorisé à voir cet article. Utilisez le bouton d\'action pour essayer dans un navigateur à la place.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Vous ne pouvez pas aimer tant que vous êtes déconnecté de WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Vous avez déjà aimé ce commentaire</string>
 	<string name="reader_toast_err_comment_not_found">Commentaire introuvable !</string>
+	<string name="reader_toast_err_cannot_like_post">La tentative pour aimer cet article a échoué</string>
 	<string name="reader_title_post_detail_wpcom">Article WordPress.com</string>
 	<string name="reader_title_deeplink">Lecteur WordPress</string>
+	<string name="error_notif_q_action_reply">Vous ne pouvez pas répondre pour commenter. Veuillez réessayer plus tard.</string>
+	<string name="error_notif_q_action_approve">Impossible d\'approuver ce commentaire. Veuillez réessayer plus tard.</string>
+	<string name="error_notif_q_action_like">Impossible d\'aimer ce commentaire. Veuillez réessayer plus tard.</string>
+	<string name="notifications_label_new_notifications_subtitle">Tapez pour les montrer</string>
 	<string name="notifications_label_new_notifications">Nouvelles notifications</string>
 	<string name="comment_q_action_replying">Réponse en cours...</string>
 	<string name="comment_q_action_approving">Approbation en cours...</string>
+	<string name="comment_q_action_liking">Aimer...</string>
 	<string name="comment_q_action_processing">Traitement en cours...</string>
 	<string name="comment_q_action_done_generic">Terminé !</string>
 	<string name="signout">Se déconnecter</string>
 	<string name="sign_in_wpcom">Se connecter à WordPress.com</string>
+	<string name="comment_liked">Commentaire aimé</string>
 	<string name="reader_label_global_related_posts">Articles connexes sur WordPress.com</string>
 	<string name="reader_label_local_related_posts">Articles connexes dans %s</string>
 	<string name="preference_open_device_settings">Réglages des appareils ouverts</string>
