@@ -283,7 +283,7 @@ Language: pl
 	<string name="editor_page_title_placeholder">Tytuł strony</string>
 	<string name="editor_post_title_placeholder">Tytuł wpisu</string>
 	<string name="email_address">Adres e-mail</string>
-	<string name="preference_show_visual_editor">Pokaż edytor wizualny</string>
+	<string name="preference_editor_type">Pokaż edytor wizualny</string>
 	<string name="preference_editor">Edytor</string>
 	<string name="dlg_sure_to_delete_comments">Trwale usunąć te komentarze ?</string>
 	<string name="dlg_sure_to_delete_comment">Trwale usunąć ten komentarz ?</string>

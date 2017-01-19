@@ -256,7 +256,7 @@ Language: ja_JP
 	<string name="editor_page_title_placeholder">ページタイトル</string>
 	<string name="editor_post_title_placeholder">投稿タイトル</string>
 	<string name="email_address">メールアドレス</string>
-	<string name="preference_show_visual_editor">ビジュアルエディターを表示</string>
+	<string name="preference_editor_type">ビジュアルエディターを表示</string>
 	<string name="dlg_sure_to_delete_comments">これらのコメントを完全に削除しますか ?</string>
 	<string name="preference_editor">編集者</string>
 	<string name="dlg_sure_to_delete_comment">このコメントを完全に削除しますか ?</string>

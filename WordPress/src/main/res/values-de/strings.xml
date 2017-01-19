@@ -256,7 +256,7 @@ Language: de
 	<string name="editor_page_title_placeholder">Seitentitel</string>
 	<string name="editor_post_title_placeholder">Beitragstitel</string>
 	<string name="email_address">E-Mail-Adresse</string>
-	<string name="preference_show_visual_editor">Visuellen Editor anzeigen</string>
+	<string name="preference_editor_type">Visuellen Editor anzeigen</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Möchtest du diese Kommentare dauerhaft löschen?</string>
 	<string name="dlg_sure_to_delete_comment">Möchtest du diesen Kommentar dauerhaft löschen?</string>

@@ -29,7 +29,7 @@
             android:defaultValue="true"
             android:key="@string/pref_key_visual_editor_enabled"
             android:layout="@layout/preference_layout"
-            android:title="@string/preference_show_visual_editor" />
+            android:title="@string/preference_editor_type" />
 
     </PreferenceCategory>
 

@@ -283,7 +283,7 @@ Language: es
 	<string name="editor_page_title_placeholder">Título página</string>
 	<string name="editor_post_title_placeholder">Título entrada</string>
 	<string name="email_address">Correo electrónico</string>
-	<string name="preference_show_visual_editor">Mostrar editor visual</string>
+	<string name="preference_editor_type">Mostrar editor visual</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">¿Eliminar de forma permanente estos comentarios?</string>
 	<string name="dlg_sure_to_delete_comment">¿Eliminar de forma permanente este comentario?</string>

@@ -268,7 +268,7 @@ Language: fr
 	<string name="editor_page_title_placeholder">Titre de la page</string>
 	<string name="editor_post_title_placeholder">Titre de l\'article</string>
 	<string name="email_address">Adresse de messagerie</string>
-	<string name="preference_show_visual_editor">Afficher l\'éditeur visuel</string>
+	<string name="preference_editor_type">Afficher l\'éditeur visuel</string>
 	<string name="preference_editor">Éditeur</string>
 	<string name="dlg_sure_to_delete_comments">Supprimer définitivement ces commentaires ?</string>
 	<string name="dlg_sure_to_delete_comment">Supprimer définitivement ce commentaire ? </string>

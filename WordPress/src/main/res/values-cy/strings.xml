@@ -256,7 +256,7 @@ Language: cy_GB
 	<string name="editor_page_title_placeholder">Teitl Tudalen</string>
 	<string name="editor_post_title_placeholder">Teitl Cofnod</string>
 	<string name="email_address">Cyfeiriad e-bost</string>
-	<string name="preference_show_visual_editor">Dangos y golygydd gweledol</string>
+	<string name="preference_editor_type">Dangos y golygydd gweledol</string>
 	<string name="preference_editor">Golygydd</string>
 	<string name="dlg_sure_to_delete_comments">Dileu\'r sylwadau hyn yn barhaol?</string>
 	<string name="dlg_sure_to_delete_comment">Dileu\'r sylwadau hyn yn barhaol?</string>

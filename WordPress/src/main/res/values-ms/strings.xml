@@ -283,7 +283,7 @@ Language: ms
 	<string name="editor_page_title_placeholder">Tajuk Halaman</string>
 	<string name="editor_post_title_placeholder">Tajuk Kiriman</string>
 	<string name="email_address">Alamat emel</string>
-	<string name="preference_show_visual_editor">Tunjukkan penyunting visual</string>
+	<string name="preference_editor_type">Tunjukkan penyunting visual</string>
 	<string name="preference_editor">Penyunting</string>
 	<string name="dlg_sure_to_delete_comments">Hapuskan ulasan ini secara kekal?</string>
 	<string name="dlg_sure_to_delete_comment">Hapuskan ulasan ini secara kekal?</string>
