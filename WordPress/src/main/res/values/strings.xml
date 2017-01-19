@@ -640,6 +640,12 @@
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
 
+    <string-array name="editor_entries">
+        <item>Aztec</item>
+        <item>Legacy</item>
+        <item>Visual</item>
+    </string-array>
+
     <!-- stats -->
     <string name="stats">Stats</string>
     <string name="stats_for">Stats for %s</string>

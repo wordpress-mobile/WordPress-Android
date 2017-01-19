@@ -7,13 +7,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -114,16 +114,19 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final SwitchPreference visualEditorSwitch = (SwitchPreference) findPreference(getActivity()
-                    .getString(R.string.pref_key_visual_editor_enabled));
-            visualEditorSwitch.setChecked(AppPrefs.isVisualEditorEnabled());
-            visualEditorSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            final ListPreference editorType = (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
+            editorType.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
-                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                    if (newValue == null) return false;
-                    visualEditorSwitch.setChecked((Boolean) newValue);
-                    AppPrefs.setVisualEditorEnabled((Boolean) newValue);
-                    return true;
+                public boolean onPreferenceChange(final Preference preference, final Object value) {
+                    if (value != null) {
+                        int index = Integer.parseInt(value.toString());
+                        CharSequence[] entries = editorType.getEntries();
+                        editorType.setSummary(entries[index]);
+
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             });
         }
