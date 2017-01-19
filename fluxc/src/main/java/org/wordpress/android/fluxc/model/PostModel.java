@@ -438,6 +438,10 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mLongitude = LONGITUDE_REMOVED_VALUE;
     }
 
+    public void clearFeaturedImage() {
+        setFeaturedImageId(-1);
+    }
+
     public boolean featuredImageHasChanged() {
         return (mLastKnownRemoteFeaturedImageId != mFeaturedImageId);
     }
