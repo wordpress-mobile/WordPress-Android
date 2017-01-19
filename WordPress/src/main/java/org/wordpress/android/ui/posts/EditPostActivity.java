@@ -3,9 +3,11 @@ package org.wordpress.android.ui.posts;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -82,6 +84,7 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -125,6 +128,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver.POST_ID_EXTRA;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
@@ -860,6 +865,40 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private class SaveAndFinishTask extends AsyncTask<Void, Void, Boolean> {
+
+        private static final int BROADCAST_BASE_REQUEST_CODE = 111;
+
+        private void scheduleNextPendingDraftNotification(Context context, long localPostId) {
+            /*
+            Have +1 day, +1 week, +1 month reminders, with different messages randomly chosen, that could even be fun:
+
+            1 day:
+                You drafted “post title” yesterday. Don’t forget to publish it!
+                Did you know that “post title” is still a draft? Publish away!
+            1 week:
+                Your draft, “post title” awaits you — be sure to publish it!
+                “Post title” remains a draft. Remember to publish it!
+            1 month
+                Don’t leave it hanging! “Post title” is waiting to be published.
+            * */
+
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            Intent intent = new Intent(context, NotificationsPendingDraftsReceiver.class);
+            intent.putExtra(POST_ID_EXTRA, localPostId);
+
+            PendingIntent alarmIntentOneDay = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent alarmIntentOneWeek = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE + 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent alarmIntentOneMonth = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE + 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            long now = System.currentTimeMillis();
+
+            alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_DAY, alarmIntentOneDay);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_WEEK, alarmIntentOneWeek);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_MONTH, alarmIntentOneMonth);
+
+        }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             // Fetch post title and content from editor fields and update the Post object
@@ -897,7 +936,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     }
                     savePostToDb();
                 }
+
+                // now set the pending notification alarm to be triggered in the next day, week, and month
+                scheduleNextPendingDraftNotification(EditPostActivity.this, mPost.getLocalTablePostId());
             }
+
             return true;
         }
 
