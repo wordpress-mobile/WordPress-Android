@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -16,6 +17,11 @@ import org.wordpress.android.fluxc.store.AccountStore;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
 
 /**
  * {@link #migrateAccessTokenToAccountStore(Context, Dispatcher)} moves an existing access token from a previous version
@@ -33,8 +39,7 @@ public class WPLegacyMigrationUtils {
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
     private static final String DEPRECATED_BLOGS_TABLE = "accounts";
 
-    // Empty text encrypted with the previous DB secret
-    private static final String ENCRYPTED_EMPTY_PASSWORD = "AS3vw/BNTdI=";
+    private static final String DEPRECATED_DB_PASSWORD_SECRET = BuildConfig.DB_SECRET;
 
     public static String migrateAccessTokenToAccountStore(Context context, Dispatcher dispatcher) {
         String token = getLatestDeprecatedAccessToken(context);
@@ -105,7 +110,7 @@ public class WPLegacyMigrationUtils {
 
             // To exclude the jetpack sites we need to check for empty password
             String byString = String.format("dotcomFlag=0 AND NOT(dotcomFlag=0 AND password='%s')",
-                    ENCRYPTED_EMPTY_PASSWORD);
+                    encryptPassword(""));
             Cursor c = db.query(DEPRECATED_BLOGS_TABLE, fields, byString, null, null, null, null);
             int numRows = c.getCount();
             c.moveToFirst();
@@ -124,5 +129,20 @@ public class WPLegacyMigrationUtils {
             // DB doesn't exist
         }
         return siteList;
+    }
+
+    private static String encryptPassword(String clearText) {
+        try {
+            DESKeySpec keySpec = new DESKeySpec(
+                    DEPRECATED_DB_PASSWORD_SECRET.getBytes("UTF-8"));
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey key = keyFactory.generateSecret(keySpec);
+
+            Cipher cipher = Cipher.getInstance("DES");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            return Base64.encodeToString(cipher.doFinal(clearText.getBytes("UTF-8")), Base64.DEFAULT);
+        } catch (Exception e) {
+        }
+        return clearText;
     }
 }
