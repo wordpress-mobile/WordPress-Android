@@ -205,17 +205,38 @@ public class TaxonomyStore extends Store {
     }
 
     /**
-     * Returns a category as a {@link TermModel} given its remote id.
+     * Returns a tag as a {@link TermModel} given its remote id.
      */
     public TermModel getTagByRemoteId(SiteModel site, long remoteId) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, DEFAULT_TAXONOMY_TAG);
     }
 
     /**
-     * Returns a category as a {@link TermModel} given its remote id.
+     * Returns a term as a {@link TermModel} given its remote id.
      */
     public TermModel getTermByRemoteId(SiteModel site, long remoteId, String taxonomyName) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, taxonomyName);
+    }
+
+    /**
+     * Returns a category as a {@link TermModel} given its name.
+     */
+    public TermModel getCategoryByName(SiteModel site, String categoryName) {
+        return TaxonomySqlUtils.getTermByName(site, categoryName, DEFAULT_TAXONOMY_CATEGORY);
+    }
+
+    /**
+     * Returns a tag as a {@link TermModel} given its name.
+     */
+    public TermModel getTagByName(SiteModel site, String tagName) {
+        return TaxonomySqlUtils.getTermByName(site, tagName, DEFAULT_TAXONOMY_TAG);
+    }
+
+    /**
+     * Returns a term as a {@link TermModel} given its name.
+     */
+    public TermModel getTermByName(SiteModel site, String termName, String taxonomyName) {
+        return TaxonomySqlUtils.getTermByName(site, termName, taxonomyName);
     }
 
     /**
@@ -229,7 +250,7 @@ public class TaxonomyStore extends Store {
      * Returns all the tags for the given post as a {@link TermModel} list.
      */
     public List<TermModel> getTagsForPost(PostModel post, SiteModel site) {
-        return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getTagIdList(), site, DEFAULT_TAXONOMY_TAG);
+        return TaxonomySqlUtils.getTermsFromRemoteNameList(post.getTagNameList(), site, DEFAULT_TAXONOMY_TAG);
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
