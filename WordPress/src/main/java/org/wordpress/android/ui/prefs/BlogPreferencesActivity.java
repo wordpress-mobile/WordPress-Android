@@ -175,6 +175,13 @@ public class BlogPreferencesActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteRemoved(OnSiteRemoved event) {
+        setResult(RESULT_BLOG_REMOVED);
+        finish();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void OnSiteDeleted(SiteStore.OnSiteDeleted event) {
         FragmentManager fragmentManager = getFragmentManager();
         SiteSettingsFragment siteSettingsFragment =
