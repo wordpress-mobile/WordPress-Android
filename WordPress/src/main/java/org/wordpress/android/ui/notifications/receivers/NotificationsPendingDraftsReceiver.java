@@ -28,7 +28,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     public static final long ONE_WEEK = ONE_DAY * 7;
     public static final long ONE_MONTH = ONE_WEEK * 4;
 
-    private static final long MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE = 31; // just over a month
+    private static final long MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE = 40; // just over a month
 
     private static final int BASE_REQUEST_CODE = 100;
 
