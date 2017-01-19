@@ -230,7 +230,7 @@ public class PostRestClient extends BaseWPComRestClient {
         post.setIsPage(from.type.equals("page"));
 
         if (from.post_thumbnail != null) {
-            post.setFeaturedImageId(from.post_thumbnail.id);
+            post.setFeaturedImageId(from.post_thumbnail.ID);
         }
         post.setPostFormat(from.format);
         if (from.geo != null) {
@@ -297,9 +297,9 @@ public class PostRestClient extends BaseWPComRestClient {
         if (post.featuredImageHasChanged()) {
             if (post.getFeaturedImageId() < 1 && !post.isLocalDraft()) {
                 // The featured image was removed from a live post
-                params.put("post_thumbnail", "");
+                params.put("featured_image", "");
             } else {
-                params.put("post_thumbnail", String.valueOf(post.getFeaturedImageId()));
+                params.put("featured_image", String.valueOf(post.getFeaturedImageId()));
             }
         }
 
