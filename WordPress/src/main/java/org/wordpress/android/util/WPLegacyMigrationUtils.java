@@ -118,7 +118,9 @@ public class WPLegacyMigrationUtils {
             for (int i = 0; i < numRows; i++) {
                 SiteModel siteModel = new SiteModel();
                 siteModel.setUsername(c.getString(0));
-                siteModel.setPassword(c.getString(1));
+                // Decrypt password before migrating since we no longer encrypt passwords in FluxC
+                String encryptedPwd = c.getString(1);
+                siteModel.setPassword(decryptPassword(encryptedPwd));
                 String url = c.getString(2);
                 siteModel.setUrl(url);
                 siteModel.setXmlRpcUrl(url);
@@ -145,5 +147,22 @@ public class WPLegacyMigrationUtils {
         } catch (Exception e) {
         }
         return clearText;
+    }
+
+    private static String decryptPassword(String encryptedPwd) {
+        try {
+            DESKeySpec keySpec = new DESKeySpec(
+                    DEPRECATED_DB_PASSWORD_SECRET.getBytes("UTF-8"));
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey key = keyFactory.generateSecret(keySpec);
+
+            byte[] encryptedWithoutB64 = Base64.decode(encryptedPwd, Base64.DEFAULT);
+            Cipher cipher = Cipher.getInstance("DES");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            byte[] plainTextPwdBytes = cipher.doFinal(encryptedWithoutB64);
+            return new String(plainTextPwdBytes);
+        } catch (Exception e) {
+        }
+        return encryptedPwd;
     }
 }
