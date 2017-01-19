@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,10 @@ public class WPLegacyMigrationUtils {
     public static List<SiteModel> migrateSelfHostedSitesFromDeprecatedDB(Context context, Dispatcher dispatcher) {
         List<SiteModel> siteList = getSelfHostedSitesFromDeprecatedDB(context);
         if (siteList != null) {
+            AppLog.i(T.DB, "Starting migration of " + siteList.size() + " self-hosted sites to FluxC");
             for (SiteModel siteModel : siteList) {
+                AppLog.i(T.DB, "Migrating self-hosted site with url: " + siteModel.getXmlRpcUrl()
+                        + " username: " + siteModel.getUsername());
                 dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
             }
         }

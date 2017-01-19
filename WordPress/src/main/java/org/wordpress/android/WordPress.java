@@ -214,6 +214,7 @@ public class WordPress extends MultiDexApplication {
         if (!AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
             List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
             if (siteList != null) {
+                AppLog.i(T.DB, "Fetching the site info for migrated self-hosted sites");
                 for (SiteModel siteModel : siteList) {
                     mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel));
                 }
