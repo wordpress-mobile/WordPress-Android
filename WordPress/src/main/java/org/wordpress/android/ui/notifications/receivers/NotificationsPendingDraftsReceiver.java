@@ -10,17 +10,17 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
 
 import java.util.Random;
 
-import static org.wordpress.android.push.GCMMessageService.GENERIC_LOCAL_NOTIFICATION_ID;
 
 public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
 
-    public static final int PENDING_DRAFTS_NOTIFICATION_ID = GENERIC_LOCAL_NOTIFICATION_ID + 1;
+    public static final int PENDING_DRAFTS_NOTIFICATION_ID = GCMMessageService.GENERIC_LOCAL_NOTIFICATION_ID + 1;
     public static final String POST_ID_EXTRA = "postId";
     public static final String IS_PAGE_EXTRA = "isPage";
 
