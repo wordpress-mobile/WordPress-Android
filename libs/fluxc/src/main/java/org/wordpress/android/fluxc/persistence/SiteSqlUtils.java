@@ -14,6 +14,9 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import java.util.List;
 
 public class SiteSqlUtils {
+    public static class DuplicateSiteException extends Exception {
+    }
+
     public static List<SiteModel> getAllSitesWith(String field, Object value) {
         return WellSql.select(SiteModel.class)
                 .where().equals(field, value).endWhere()
@@ -55,7 +58,7 @@ public class SiteSqlUtils {
                 .getAsCursor().getCount();
     }
 
-    public static int insertOrUpdateSite(SiteModel site) {
+    public static int insertOrUpdateSite(SiteModel site) throws DuplicateSiteException {
         if (site == null) {
             return 0;
         }
@@ -74,6 +77,18 @@ public class SiteSqlUtils {
                     .equals(SiteModelTable.SITE_ID, site.getSiteId())
                     .equals(SiteModelTable.URL, site.getUrl())
                     .endGroup().endWhere().getAsModel();
+        }
+
+        // If the site is a self hosted, maybe it's already in the DB as a Jetpack site, and we don't want to create
+        // a duplicate.
+        if (siteResult.isEmpty() && !site.isWPCom()) {
+            siteResult = WellSql.select(SiteModel.class)
+                    .where()
+                    .equals(SiteModelTable.XMLRPC_URL, site.getXmlRpcUrl())
+                    .endWhere().getAsModel();
+            if (!siteResult.isEmpty()) {
+                throw new DuplicateSiteException();
+            }
         }
 
         if (siteResult.isEmpty()) {
