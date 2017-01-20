@@ -79,7 +79,7 @@ public class SiteSqlUtils {
         if (siteResult.isEmpty()) {
             // No site with this local ID, or REMOTE_ID + URL, then insert it
             WellSql.insert(site).asSingleTransaction(true).execute();
-            return 0;
+            return 1;
         } else {
             // Update old site
             int oldId = siteResult.get(0).getId();
