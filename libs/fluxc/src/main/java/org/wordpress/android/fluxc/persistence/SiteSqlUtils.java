@@ -81,13 +81,19 @@ public class SiteSqlUtils {
 
         // If the site is a self hosted, maybe it's already in the DB as a Jetpack site, and we don't want to create
         // a duplicate.
-        if (siteResult.isEmpty() && !site.isWPCom()) {
+        if (siteResult.isEmpty()) {
             siteResult = WellSql.select(SiteModel.class)
                     .where()
                     .equals(SiteModelTable.XMLRPC_URL, site.getXmlRpcUrl())
                     .endWhere().getAsModel();
             if (!siteResult.isEmpty()) {
-                throw new DuplicateSiteException();
+                // If the site already in the DB is a self hosted and the new one is a .com, it means we upgraded from
+                // self hosted to jetpack, we want to update the site with the new informations.
+                if (siteResult.get(0).isWPCom() || !site.isWPCom()) {
+                    // In other cases (examples: adding the same self hosted twice or adding self hosted on top of an
+                    // existing jetpack site), we consider it as an error.
+                    throw new DuplicateSiteException();
+                }
             }
         }
 
