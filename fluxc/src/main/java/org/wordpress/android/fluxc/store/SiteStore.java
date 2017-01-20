@@ -757,7 +757,7 @@ public class SiteStore extends Store {
     private void handleCheckedIsWPComUrl(IsWPComResponsePayload payload) {
         OnURLChecked event = new OnURLChecked(payload.url);
         if (payload.isError()) {
-            // Return invalid site for all errors (this endpoint is not documented and seems a bit drunk).
+            // Return invalid site for all errors (this endpoint seems a bit drunk).
             // Client likely needs to know if there was an error or not.
             event.error = new SiteError(SiteErrorType.INVALID_SITE);
         }
