@@ -69,6 +69,11 @@ public class SiteRestClient extends BaseWPComRestClient {
         public DeleteSiteError error;
     }
 
+    public static class ExportSiteResponsePayload extends Payload {
+        public ExportSiteResponsePayload() {
+        }
+    }
+
     public static class IsWPComResponsePayload extends Payload {
         public IsWPComResponsePayload() {
         }
@@ -256,6 +261,29 @@ public class SiteRestClient extends BaseWPComRestClient {
                         payload.error = new DeleteSiteError(networkError.apiError, networkError.message);
                         payload.site = site;
                         mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void exportSite(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).exports.start.getUrlV1_1();
+        final WPComGsonRequest<ExportSiteResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                ExportSiteResponse.class,
+                new Listener<ExportSiteResponse>() {
+                    @Override
+                    public void onResponse(ExportSiteResponse response) {
+                        ExportSiteResponsePayload payload = new ExportSiteResponsePayload();
+                        mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        ExportSiteResponsePayload payload = new ExportSiteResponsePayload();
+                        payload.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
                     }
                 }
         );
