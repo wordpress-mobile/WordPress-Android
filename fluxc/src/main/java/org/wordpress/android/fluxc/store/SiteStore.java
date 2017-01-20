@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
@@ -109,6 +110,14 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class ExportSiteError implements OnChangedError {
+        public ExportSiteErrorType type;
+
+        public ExportSiteError(ExportSiteErrorType type) {
+            this.type = type;
+        }
+    }
+
     // OnChanged Events
     public class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
@@ -131,6 +140,11 @@ public class SiteStore extends Store {
     public class OnSiteDeleted extends OnChanged<DeleteSiteError> {
         public OnSiteDeleted(DeleteSiteError error) {
             this.error = error;
+        }
+    }
+
+    public class OnSiteExported extends OnChanged<ExportSiteError> {
+        public OnSiteExported() {
         }
     }
 
@@ -175,6 +189,11 @@ public class SiteStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum ExportSiteErrorType {
+        INVALID_SITE,
+        GENERIC_ERROR
     }
 
     // Enums
@@ -567,6 +586,9 @@ public class SiteStore extends Store {
             case DELETE_SITE:
                 deleteSite((SiteModel) action.getPayload());
                 break;
+            case EXPORT_SITE:
+                exportSite((SiteModel) action.getPayload());
+                break;
             case REMOVE_SITE:
                 removeSite((SiteModel) action.getPayload());
                 break;
@@ -595,7 +617,10 @@ public class SiteStore extends Store {
                 updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
                 break;
             case DELETED_SITE:
-                handleDeletedSite((SiteRestClient.DeleteSiteResponsePayload) action.getPayload());
+                handleDeletedSite((DeleteSiteResponsePayload) action.getPayload());
+                break;
+            case EXPORTED_SITE:
+                handleExportedSite((ExportSiteResponsePayload) action.getPayload());
                 break;
             case CHECKED_IS_WPCOM_URL:
                 handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
@@ -661,6 +686,16 @@ public class SiteStore extends Store {
         mSiteRestClient.deleteSite(site);
     }
 
+    private void exportSite(SiteModel site) {
+        if (!site.isWPCom()) {
+            OnSiteExported event = new OnSiteExported();
+            event.error = new ExportSiteError(ExportSiteErrorType.INVALID_SITE);
+            emitChange(event);
+            return;
+        }
+        mSiteRestClient.exportSite(site);
+    }
+
     private void updateSite(SiteModel siteModel) {
         OnSiteChanged event;
         if (siteModel.isError()) {
@@ -702,6 +737,15 @@ public class SiteStore extends Store {
         OnSiteDeleted event = new OnSiteDeleted(payload.error);
         if (!payload.isError()) {
             SiteSqlUtils.deleteSite(payload.site);
+        }
+        emitChange(event);
+    }
+
+    private void handleExportedSite(ExportSiteResponsePayload payload) {
+        OnSiteExported event = new OnSiteExported();
+        if (payload.isError()) {
+            // TODO: what kind of error could we get here?
+            event.error = new ExportSiteError(ExportSiteErrorType.GENERIC_ERROR);
         }
         emitChange(event);
     }
