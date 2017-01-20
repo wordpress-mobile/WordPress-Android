@@ -163,6 +163,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
+    // Pending draft notification base request code for alarms
+    private static final int BROADCAST_BASE_REQUEST_CODE = 111;
+
     private Handler mHandler;
     private boolean mShowNewEditor;
 
@@ -671,6 +674,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 PostUploadService.addPostToUpload(mPost);
                 PostUploadService.setLegacyMode(!mShowNewEditor);
                 startService(new Intent(EditPostActivity.this, PostUploadService.class));
+                cancelPendingDraftAlarms(EditPostActivity.this, mPost.getLocalTablePostId());
                 setResult(RESULT_OK);
                 finish();
             }
@@ -864,11 +868,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return mIsNewPost;
     }
 
-    private class SaveAndFinishTask extends AsyncTask<Void, Void, Boolean> {
-
-        private static final int BROADCAST_BASE_REQUEST_CODE = 111;
-
-        private void scheduleNextPendingDraftNotification(Context context, long localPostId) {
+    private void scheduleNextPendingDraftNotification(Context context, long localPostId) {
             /*
             Have +1 day, +1 week, +1 month reminders, with different messages randomly chosen, that could even be fun:
 
@@ -882,22 +882,56 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 Don’t leave it hanging! “Post title” is waiting to be published.
             * */
 
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-            Intent intent = new Intent(context, NotificationsPendingDraftsReceiver.class);
-            intent.putExtra(POST_ID_EXTRA, localPostId);
+        Intent intent = getNotificationsPendingDraftReceiverIntent(context, localPostId);
 
-            PendingIntent alarmIntentOneDay = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            PendingIntent alarmIntentOneWeek = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE + 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            PendingIntent alarmIntentOneMonth = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE + 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent alarmIntentOneDay = getOneDayAlarmIntent(context, intent);
+        PendingIntent alarmIntentOneWeek = getOneWeekAlarmIntent(context, intent);;
+        PendingIntent alarmIntentOneMonth = getOneMonthAlarmIntent(context, intent);;
 
-            long now = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
 
-            alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_DAY, alarmIntentOneDay);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_WEEK, alarmIntentOneWeek);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_MONTH, alarmIntentOneMonth);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_DAY, alarmIntentOneDay);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_WEEK, alarmIntentOneWeek);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_MONTH, alarmIntentOneMonth);
+    }
 
-        }
+    private void cancelPendingDraftAlarms(Context context, long localPostId) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = getNotificationsPendingDraftReceiverIntent(context, localPostId);
+
+        PendingIntent alarmIntentOneDay = getOneDayAlarmIntent(context, intent);
+        PendingIntent alarmIntentOneWeek = getOneWeekAlarmIntent(context, intent);;
+        PendingIntent alarmIntentOneMonth = getOneMonthAlarmIntent(context, intent);;
+
+        alarmManager.cancel(alarmIntentOneDay);
+        alarmManager.cancel(alarmIntentOneWeek);
+        alarmManager.cancel(alarmIntentOneMonth);
+    }
+
+    private Intent getNotificationsPendingDraftReceiverIntent(Context context, long localPostId) {
+        Intent intent = new Intent(context, NotificationsPendingDraftsReceiver.class);
+        intent.putExtra(POST_ID_EXTRA, localPostId);
+        return intent;
+    }
+    private PendingIntent getOneDayAlarmIntent(Context context, Intent notifPendingDraftReceiverIntent) {
+        PendingIntent alarmIntentOneDay = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE, notifPendingDraftReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return alarmIntentOneDay;
+    }
+
+    private PendingIntent getOneWeekAlarmIntent(Context context, Intent notifPendingDraftReceiverIntent) {
+        PendingIntent alarmIntentOneWeek = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE + 1, notifPendingDraftReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return alarmIntentOneWeek;
+    }
+
+    private PendingIntent getOneMonthAlarmIntent(Context context, Intent notifPendingDraftReceiverIntent) {
+        PendingIntent alarmIntentOneMonth = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE + 1, notifPendingDraftReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return alarmIntentOneMonth;
+    }
+
+    private class SaveAndFinishTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
