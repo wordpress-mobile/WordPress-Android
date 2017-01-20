@@ -321,6 +321,34 @@ public class StatsUtils {
         }
     }
 
+    public static synchronized boolean isJetpackDisconnectedOrDeactivatedError(final Serializable error) {
+        if (error == null || !(error instanceof com.android.volley.ServerError)) {
+            return false;
+        }
+        com.android.volley.ServerError volleyError = (com.android.volley.ServerError) error;
+        if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
+            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase();
+            return errorMessage.contains("jetpack") && errorMessage.contains("connected");
+        } else {
+            AppLog.e(T.STATS, "Network response is null in Volley. Can't check if it is a Rest Disabled error.");
+            return false;
+        }
+    }
+
+    public static synchronized boolean isJetpackStatsModuleDisabledError(final Serializable error) {
+        if (error == null || !(error instanceof com.android.volley.ServerError)) {
+            return false;
+        }
+        com.android.volley.ServerError volleyError = (com.android.volley.ServerError) error;
+        if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
+            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase();
+            return errorMessage.contains("stats") && errorMessage.contains("module") && errorMessage.contains("enabled");
+        } else {
+            AppLog.e(T.STATS, "Network response is null in Volley. Can't check if it is a Rest Disabled error.");
+            return false;
+        }
+    }
+
     public static synchronized BaseStatsModel parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
             throws JSONException {
         BaseStatsModel model = null;

@@ -570,26 +570,40 @@ public class StatsService extends Service {
                     AppLog.e(T.STATS, "Error while loading Stats!");
                     StatsUtils.logVolleyErrorDetails(volleyError);
                     BaseStatsModel mResponseObjectModel = null;
+
                     // Check here if this is an authentication error
                     // .com authentication errors are handled automatically by the app
-                    if (volleyError instanceof com.android.volley.AuthFailureError) {
-                        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(
-                                Integer.parseInt(mRequestBlogId)
-                        );
-                        Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
-                        if (blog != null && blog.isJetpackPowered()) {
-                            // It's a kind of edge case, but the Jetpack site could have REST Disabled
-                            // In that case (only used in insights for now) shows the error in the module that use the REST API
+                    int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(
+                            Integer.parseInt(mRequestBlogId)
+                    );
+                    Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
+                    if (blog == null) {
+                        stopService();
+                        return;
+                    }
+
+                    if (!blog.isDotcomFlag()) {
+                        if (volleyError instanceof com.android.volley.AuthFailureError) {
                             if (!StatsUtils.isRESTDisabledError(volleyError)) {
+                                // It's a kind of edge case, but the Jetpack site could have REST Disabled
+                                // In that case (only used in insights for now) shows the error in the module that use the REST API
                                 EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
+                            }
+                        } else if (volleyError instanceof com.android.volley.ServerError && mStatsNetworkRequests.size() == 1) {
+                            // only the last connection triggers the error
+                            if (StatsUtils.isJetpackDisconnectedOrDeactivatedError(volleyError)) {
+                                EventBus.getDefault().post(new StatsEvents.JetpackNotConnectedOrDeactivatedError(localId));
+                            } else if (StatsUtils.isJetpackStatsModuleDisabledError(volleyError)) {
+                                EventBus.getDefault().post(new StatsEvents.JetpackStatsModuleNotConnectedError(localId));
+                            } else {
+                                // show the generic error into the module UI
                             }
                         }
                     }
 
-
+                    // default - publish error into the module UI
                     EventBus.getDefault().post(new StatsEvents.SectionUpdateError(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, volleyError));
-
                     updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
@@ -605,8 +619,10 @@ public class StatsService extends Service {
         }*/
         EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(false));
         stopSelf(mServiceStartId);
+        synchronized (mStatsNetworkRequests) {
+            mStatsNetworkRequests.clear();
+        }
     }
-
 
     private void checkAllRequestsFinished(Request<JSONObject> req) {
         synchronized (mStatsNetworkRequests) {

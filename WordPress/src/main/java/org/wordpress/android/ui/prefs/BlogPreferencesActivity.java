@@ -71,6 +71,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.setHomeButtonEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setTitle(StringUtils.unescapeHTML(blog.getNameOrHostUrl()));
             }
 
             FragmentManager fragmentManager = getFragmentManager();

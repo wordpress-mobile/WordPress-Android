@@ -31,7 +31,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.PromoDialog;
@@ -607,6 +606,59 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
+    private void showJetpackStatsModuleAlert() {
+        if (isFinishing()) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        if (currentBlog == null) {
+            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        if (currentBlog.isAdmin()) {
+            builder.setMessage(getString(R.string.jetpack_stats_module_disabled_message))
+                    .setTitle(getString(R.string.jetpack_info));
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    String stringToLoad = currentBlog.getAdminUrl();
+                    String jetpackConnectPageAdminPath = "admin.php?page=jetpack#/engagement";
+                    stringToLoad = stringToLoad.endsWith("/") ? stringToLoad + jetpackConnectPageAdminPath :
+                            stringToLoad + "/" + jetpackConnectPageAdminPath;
+                    String authURL = WPWebViewActivity.getBlogLoginUrl(currentBlog);
+                    Intent jetpackIntent = new Intent(StatsActivity.this, WPWebViewActivity.class);
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, currentBlog.getUsername());
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, currentBlog.getPassword());
+                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+                    startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                }
+            });
+            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog. Hide Stats.
+                    finish();
+                }
+            });
+        } else {
+            builder.setMessage(getString(R.string.jetpack_stats_module_disabled_message_not_admin))
+                    .setTitle(getString(R.string.jetpack_info));
+            builder.setPositiveButton(R.string.yes, null);
+        }
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // User pressed the back key Hide Stats.
+                finish();
+            }
+        });
+        dialog.show();
+    }
+
     private void showJetpackNonConnectedAlert() {
         if (isFinishing()) {
             return;
@@ -879,6 +931,40 @@ public class StatsActivity extends AppCompatActivity
             Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
             finish();
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.JetpackNotConnectedOrDeactivatedError event) {
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        if (currentBlog == null) {
+            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        // Re-launch a blog option synching here o be sure we will have Jetpack status update next time we will start Stats again.
+        // This is because blog options could not be synched if the user has just deactivated/removed or disconnected the plugin.
+        new ApiHelper.RefreshBlogContentTask(currentBlog, null).execute(false);
+
+        if (TextUtils.isEmpty(currentBlog.getJetpackVersion())) {
+            // jetpack_version option is available, but not the jetpack_client_id ----> Jetpack available but not connected.
+            showJetpackNonConnectedAlert();
+        } else {
+            // Blog has not returned jetpack_version/jetpack_client_id.
+            showJetpackMissingAlert();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.JetpackStatsModuleNotConnectedError event) {
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+        showJetpackStatsModuleAlert();
     }
 
     @SuppressWarnings("unused")
