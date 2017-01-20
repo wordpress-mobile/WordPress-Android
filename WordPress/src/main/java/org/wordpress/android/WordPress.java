@@ -85,6 +85,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -207,6 +208,18 @@ public class WordPress extends MultiDexApplication {
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
             }
+        }
+
+        // Migrate self-hosted sites to FluxC
+        if (!AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
+            List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
+            if (siteList != null) {
+                AppLog.i(T.DB, "Fetching the site info for migrated self-hosted sites");
+                for (SiteModel siteModel : siteList) {
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel));
+                }
+            }
+            AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
         }
 
         ProfilingUtils.start("App Startup");
