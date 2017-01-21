@@ -170,9 +170,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
         }
 
-        setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : (isDeepLinking() ? R.string
-                .reader_title_post_detail_wpcom : R.string.reader_title_post_detail));
-
         // for related posts, show an X in the toolbar which closes the activity - using the
         // back button will navigate through related posts
         if (mIsRelatedPostView) {
@@ -211,11 +208,46 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 }
 
                 mLastSelectedPosition = position;
+                updateTitle(position);
             }
         });
 
         mViewPager.setPageTransformer(false,
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+    }
+
+    /*
+     * set the activity title based on the post at the passed position
+     */
+    private void updateTitle(int position) {
+        // for related posts, always show "Related Post" as the title
+        if (mIsRelatedPostView) {
+            setTitle(R.string.reader_title_related_post_detail);
+            return;
+        }
+
+        // otherwise set the title to the title of the post
+        ReaderBlogIdPostId ids = getAdapterBlogIdPostIdAtPosition(position);
+        if (ids != null) {
+            String title = ReaderPostTable.getPostTitle(ids.getBlogId(), ids.getPostId());
+            if (!title.isEmpty()) {
+                setTitle(title);
+                return;
+            }
+        }
+
+        // default when post hasn't been retrieved yet
+        setTitle(isDeepLinking() ? R.string.reader_title_post_detail_wpcom : R.string.reader_title_post_detail);
+    }
+
+    /*
+     * used by the detail fragment when a post was requested due to not existing locally
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.SinglePostDownloaded event) {
+        if (!isFinishing()) {
+            updateTitle(mViewPager.getCurrentItem());
+        }
     }
 
     private boolean isDeepLinking() {
@@ -635,9 +667,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         if (adapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
                             trackPostAtPositionIfNeeded(newPosition);
+                            updateTitle(newPosition);
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                             trackPostAtPositionIfNeeded(currentPosition);
+                            updateTitle(currentPosition);
                         }
 
                         // let the user know they can swipe between posts

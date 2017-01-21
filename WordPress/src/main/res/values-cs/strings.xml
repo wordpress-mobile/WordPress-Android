@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-05 21:13:56+0000
+Translation-Revision-Date: 2016-12-25 15:43:25+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.3.0-alpha
 Language: cs_CZ
 -->
 <resources>
+	<string name="reader_photo_by">Fotka od %s</string>
+	<string name="reader_label_visit">Návštěva</string>
+	<string name="all_your_sites">Všechny moje stránky</string>
+	<string name="pending_draft_more">Váš koncept příspěvku %d nebude nikdy publikován. Klepnutím to zkontrolujete.</string>
+	<string name="pending_draft_one">Váš koncept \'%1$s\' starý %2$d dní nebude nikdy publikován.</string>
+	<string name="pending_draft_one_generic">Váš koncept \'%s\' nebude nikdy publikován.</string>
+	<string name="no_default_app_available_to_open_link">Nelze otevřít odkaz</string>
+	<string name="notification_pending_drafts">Upozornit na čekající koncepty</string>
 	<string name="invalid_verification_code_format">Musí být šestimístné číslo</string>
 	<string name="confirm_discard_changes">Zahodit neuložené změny?</string>
 	<string name="swipe_for_more">Přejetím více</string>

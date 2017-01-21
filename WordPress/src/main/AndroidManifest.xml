@@ -53,6 +53,9 @@
     <uses-feature
         android:name="android.hardware.screen.portrait"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.screen.landscape"
+        android:required="false" />
 
     <application
         android:name=".WordPress"
