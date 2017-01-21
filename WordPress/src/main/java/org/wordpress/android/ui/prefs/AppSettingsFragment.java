@@ -114,14 +114,29 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final ListPreference editorType = (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
-            editorType.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            final ListPreference editorTypePreference = (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
+            editorTypePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(final Preference preference, final Object value) {
                     if (value != null) {
                         int index = Integer.parseInt(value.toString());
-                        CharSequence[] entries = editorType.getEntries();
-                        editorType.setSummary(entries[index]);
+                        CharSequence[] entries = editorTypePreference.getEntries();
+                        editorTypePreference.setSummary(entries[index]);
+
+                        switch (index) {
+                            case 0:
+                                AppPrefs.setAztecEditorEnabled(true);
+                                AppPrefs.setVisualEditorEnabled(false);
+                                break;
+                            case 1:
+                                AppPrefs.setAztecEditorEnabled(false);
+                                AppPrefs.setVisualEditorEnabled(true);
+                                break;
+                            default:
+                                AppPrefs.setAztecEditorEnabled(false);
+                                AppPrefs.setVisualEditorEnabled(false);
+                                break;
+                        }
 
                         return true;
                     } else {
@@ -129,6 +144,14 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                     }
                 }
             });
+
+            String editorTypeKey = getString(R.string.pref_key_editor_type);
+            String editorTypeSetting = mSettings.getString(editorTypeKey, "");
+
+            if (!editorTypeSetting.equalsIgnoreCase("")) {
+                CharSequence[] entries = editorTypePreference.getEntries();
+                editorTypePreference.setSummary(entries[Integer.parseInt(editorTypeSetting)]);
+            }
         }
     }
 

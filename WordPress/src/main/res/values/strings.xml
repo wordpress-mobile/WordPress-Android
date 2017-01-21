@@ -642,8 +642,8 @@
 
     <string-array name="editor_entries">
         <item>Aztec</item>
-        <item>Legacy</item>
         <item>Visual</item>
+        <item>Legacy</item>
     </string-array>
 
     <!-- stats -->
