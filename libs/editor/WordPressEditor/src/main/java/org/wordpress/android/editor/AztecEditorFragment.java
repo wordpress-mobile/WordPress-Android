@@ -20,6 +20,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.AztecText;
+import org.wordpress.aztec.Html;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 
@@ -38,6 +39,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     private AztecText title;
     private AztecText content;
     private SourceViewEditText source;
+    private Html.ImageGetter imageLoader;
 
     public static AztecEditorFragment newInstance(String title, String content) {
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -69,12 +71,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
         // initialize the text & HTML
         source.history = content.history;
+        content.setImageGetter(imageLoader);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
         setHasOptionsMenu(true);
 
         return view;
+    }
+
+    public void setImageLoader(Html.ImageGetter imageLoader) {
+        this.imageLoader = imageLoader;
     }
 
     @Override

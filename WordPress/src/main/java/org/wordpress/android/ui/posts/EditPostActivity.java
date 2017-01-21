@@ -83,6 +83,7 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -955,7 +956,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     // TODO: switch between legacy and new editor here (AB test?)
                     if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
-                        return new AztecEditorFragment();
+                        AztecEditorFragment editor = AztecEditorFragment.newInstance("", "");
+                        editor.setImageLoader(new AztecImageLoader(getBaseContext()));
 //                        return new EditorFragment();
                     } else {
                         return new EditorFragment();
