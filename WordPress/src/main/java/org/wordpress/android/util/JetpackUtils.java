@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -12,9 +13,9 @@ import org.wordpress.android.ui.WPWebViewActivity;
 public class JetpackUtils {
     public static final int REQUEST_JETPACK = 1120;
 
-    private static void showJetpackStatsModuleAlert(final Activity activity, final SiteModel site) {
+    public static void showJetpackStatsModuleAlert(final Activity activity, final SiteModel site) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        if (site.getHasCapabilityManageOptions()) {
+        if (site.isSelfHostedAdmin()) {
             builder.setMessage(activity.getString(R.string.jetpack_stats_module_disabled_message))
                     .setTitle(activity.getString(R.string.jetpack_info));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -56,9 +57,9 @@ public class JetpackUtils {
         dialog.show();
     }
 
-    private void showJetpackNonConnectedAlert(final Activity activity, final SiteModel site) {
+    public static void showJetpackNonConnectedAlert(final Activity activity, final SiteModel site) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        if (site.getHasCapabilityManageOptions()) {
+        if (site.isSelfHostedAdmin()) {
             builder.setMessage(activity.getString(R.string.jetpack_not_connected_message))
                     .setTitle(activity.getString(R.string.jetpack_not_connected));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -101,9 +102,9 @@ public class JetpackUtils {
         dialog.show();
     }
 
-    private void showJetpackMissingAlert(final Activity activity, final SiteModel site) {
+    public static void showInstallJetpackAlert(final Activity activity, final SiteModel site) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        if (site.getHasCapabilityManageOptions()) {
+        if (site.isSelfHostedAdmin()) {
             builder.setMessage(activity.getString(R.string.jetpack_message))
                     .setTitle(activity.getString(R.string.jetpack_not_found));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
