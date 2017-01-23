@@ -189,19 +189,7 @@ public class StatsActivity extends AppCompatActivity
         }
 
         // If the site is not connected via wpcom (Jetpack included), then show a dialog to the user.
-        if (!mSite.isWPCom()) {
-            if (!mAccountStore.hasAccessToken()) {
-                // If the user is not connected to WordPress.com, ask him to connect first.
-                return;
-            }
-            if (mSite.getSiteId() == 0 || mSite.getSiteId() == -1) {
-                // If the wpcom site id is 0 (undefined), Jetpack is not installed,
-                JetpackUtils.showInstallJetpackAlert(this, mSite);
-            } else {
-                // else it's installed but either disconnected or misconfigured.
-                JetpackUtils.showJetpackNonConnectedAlert(this, mSite);
-            }
-        }
+        checkIfSiteHasAccessibleStats(mSite);
 
         // create the fragments without forcing the re-creation. If the activity is restarted fragments can already
         // be there, and ready to be displayed without making any network connections. A fragment calls the stats service
@@ -283,6 +271,37 @@ public class StatsActivity extends AppCompatActivity
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_ACCESSED, mSite);
             trackStatsAnalytics();
         }
+    }
+
+    private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
+        // If the site is not connected via wpcom (Jetpack included), then show a dialog to the user.
+        if (!site.isWPCom()) {
+            if (!mAccountStore.hasAccessToken()) {
+                // If the user is not connected to WordPress.com, ask him to connect first.
+                startWPComLoginActivity();
+                return false;
+            }
+            if (site.getSiteId() == 0) {
+                // If the wpcom site id is 0 (undefined), Jetpack is not installed,
+                JetpackUtils.showInstallJetpackAlert(this, site);
+                return false;
+            } else {
+                // else it's installed but either disconnected or misconfigured.
+                JetpackUtils.showJetpackNonConnectedAlert(this, site);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void startWPComLoginActivity() {
+        mResultCode = RESULT_CANCELED;
+        Intent signInIntent = new Intent(this, SignInActivity.class);
+        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, mSite.getId());
+        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
+                getString(R.string.stats_sign_in_jetpack_different_com_account)
+        );
+        startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
     }
 
     private void trackStatsAnalytics() {
