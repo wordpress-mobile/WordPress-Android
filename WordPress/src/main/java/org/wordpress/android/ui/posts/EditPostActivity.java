@@ -59,8 +59,8 @@ import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
-import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
@@ -161,6 +161,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
     private Handler mHandler;
+    private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
 
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
@@ -224,6 +225,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
+        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // Set up the action bar.
@@ -953,15 +955,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    // TODO: switch between legacy and new editor here (AB test?)
-                    if (mShowNewEditor) {
-                        EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
+                    // TODO: Remove editor options after testing.
+                    if (mShowAztecEditor) {
                         AztecEditorFragment editor = AztecEditorFragment.newInstance("", "");
                         editor.setImageLoader(new AztecImageLoader(getBaseContext()));
-//                        return new EditorFragment();
-                    } else {
+                        return editor;
+                    } else if (mShowNewEditor) {
+                        EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
                         return new EditorFragment();
-//                        return new LegacyEditorFragment();
+                    } else {
+                        return new LegacyEditorFragment();
                     }
                 case 1:
                     return new EditPostSettingsFragment();

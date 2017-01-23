@@ -59,6 +59,9 @@ public class AppPrefs {
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
 
+        // aztec editor enabled
+        AZTEC_EDITOR_ENABLED,
+
         // visual editor enabled
         VISUAL_EDITOR_ENABLED,
 
@@ -364,6 +367,16 @@ public class AppPrefs {
         } else {
             return getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
         }
+    }
+
+    // Aztec Editor
+    public static void setAztecEditorEnabled(boolean isEnabled) {
+        setBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
+        AnalyticsTracker.track(isEnabled ? Stat.EDITOR_AZTEC_TOGGLED_ON : Stat.EDITOR_AZTEC_TOGGLED_OFF);
+    }
+
+    public static boolean isAztecEditorEnabled() {
+        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, true);
     }
 
     // Visual Editor

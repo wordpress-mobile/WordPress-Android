@@ -291,9 +291,9 @@ Language: ro
 	<string name="editor_page_title_placeholder">Titlu pagină</string>
 	<string name="editor_post_title_placeholder">Titlu articol</string>
 	<string name="email_address">Adresă email</string>
-	<string name="preference_show_visual_editor">Arată editorul vizual</string>
-	<string name="dlg_sure_to_delete_comments">Șterg permanent aceste comentarii?</string>
+	<string name="preference_editor_type">Arată editorul vizual</string>
 	<string name="preference_editor">Editor</string>
+	<string name="dlg_sure_to_delete_comments">Șterg permanent aceste comentarii?</string>
 	<string name="dlg_sure_to_delete_comment">Șterg permanent acest comentariu?</string>
 	<string name="mnu_comment_delete_permanently">Ștergere</string>
 	<string name="comment_deleted_permanently">Comentariu șters</string>

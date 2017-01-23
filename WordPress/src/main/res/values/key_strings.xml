@@ -19,7 +19,7 @@
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
     <string name="pref_key_editor" translatable="false">wp_pref_editor</string>
-    <string name="pref_key_visual_editor_enabled" translatable="false">wp_pref_visual_editor_enabled</string>
+    <string name="pref_key_editor_type" translatable="false">pref_key_editor_type</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
     <string name="pref_notification_other_blogs" translatable="false">wp_pref_notification_other_blogs</string>
@@ -163,6 +163,13 @@
         <item>1800</item>
         <item>1900</item>
         <item>2000</item>
+    </string-array>
+
+    <!-- App Settings - Editor -->
+    <string-array name="editor_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
     <!-- Used as values to a preference in Site Settings -->

@@ -280,7 +280,7 @@ Language: gl_ES
 	<string name="editor_page_title_placeholder">Título da páxina</string>
 	<string name="editor_post_title_placeholder">Título do artigo</string>
 	<string name="email_address">Correo electrónico</string>
-	<string name="preference_show_visual_editor">Mostrar o editor visual</string>
+	<string name="preference_editor_type">Mostrar o editor visual</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Eliminar definitivamente estes comentarios?</string>
 	<string name="dlg_sure_to_delete_comment">Eliminar definitivamente este comentario?</string>

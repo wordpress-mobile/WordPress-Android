@@ -291,9 +291,9 @@ Language: it
 	<string name="editor_page_title_placeholder">Titolo della pagina</string>
 	<string name="editor_post_title_placeholder">Titolo dell\'articolo</string>
 	<string name="email_address">Indirizzo e-mail</string>
-	<string name="preference_show_visual_editor">Mostra editor visuale</string>
-	<string name="dlg_sure_to_delete_comments">Eliminare in modo permanente questi commenti?</string>
+	<string name="preference_editor_type">Mostra editor visuale</string>
 	<string name="preference_editor">Editor</string>
+	<string name="dlg_sure_to_delete_comments">Eliminare in modo permanente questi commenti?</string>
 	<string name="dlg_sure_to_delete_comment">Eliminare in modo permanente questo commento?</string>
 	<string name="mnu_comment_delete_permanently">Elimina</string>
 	<string name="mnu_comment_untrash">Ripristina</string>

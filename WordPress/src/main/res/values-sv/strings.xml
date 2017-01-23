@@ -291,7 +291,7 @@ Language: sv_SE
 	<string name="editor_page_title_placeholder">Sidans rubrik</string>
 	<string name="editor_post_title_placeholder">Inläggets rubrik</string>
 	<string name="email_address">E-postadress</string>
-	<string name="preference_show_visual_editor">Visa visuell redigerare</string>
+	<string name="preference_editor_type">Visa visuell redigerare</string>
 	<string name="dlg_sure_to_delete_comments">Radera dessa kommentarer premanent?</string>
 	<string name="preference_editor">Redigerare</string>
 	<string name="dlg_sure_to_delete_comment">Radera denna kommentar premanent?</string>

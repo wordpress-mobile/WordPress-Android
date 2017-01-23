@@ -256,7 +256,7 @@ Language: nl
 	<string name="editor_page_title_placeholder">Paginatitel</string>
 	<string name="editor_post_title_placeholder">Berichttitel</string>
 	<string name="email_address">E-mailadres</string>
-	<string name="preference_show_visual_editor">Visual Editor weergeven</string>
+	<string name="preference_editor_type">Visual Editor weergeven</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Deze reacties permanent verwijderen?</string>
 	<string name="dlg_sure_to_delete_comment">Deze reactie permanent verwijderen?</string>

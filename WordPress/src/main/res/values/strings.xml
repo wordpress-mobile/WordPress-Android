@@ -638,7 +638,13 @@
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
-    <string name="preference_show_visual_editor">Show visual editor</string>
+    <string name="preference_editor_type">Set editor type</string>
+
+    <string-array name="editor_entries">
+        <item>Aztec</item>
+        <item>Visual</item>
+        <item>Legacy</item>
+    </string-array>
 
     <!-- stats -->
     <string name="stats">Stats</string>
