@@ -13,7 +13,7 @@ public class PostWPComRestResponse extends Payload implements Response {
     }
 
     public class PostThumbnail {
-        public long id;
+        public long ID;
         public String URL;
         public String guid;
         public String mime_type;
