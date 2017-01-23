@@ -927,7 +927,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private PendingIntent getOneMonthAlarmIntent(Context context, Intent notifPendingDraftReceiverIntent) {
-        PendingIntent alarmIntentOneMonth = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE + 1, notifPendingDraftReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent alarmIntentOneMonth = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE + 2, notifPendingDraftReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         return alarmIntentOneMonth;
     }
 
