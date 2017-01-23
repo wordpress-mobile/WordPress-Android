@@ -198,7 +198,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         oldModel.setTimezone(getOption(siteOptions, TIME_ZONE_KEY, String.class));
         oldModel.setLoginUrl(getOption(siteOptions, LOGIN_URL_KEY, String.class));
         oldModel.setAdminUrl(getOption(siteOptions, ADMIN_URL_KEY, String.class));
-        long wpComIdForJetpack = string2Long(getOption(siteOptions, JETPACK_CLIENT_ID_KEY, String.class), -1);
+        long wpComIdForJetpack = string2Long(getOption(siteOptions, JETPACK_CLIENT_ID_KEY, String.class), 0);
         oldModel.setSiteId(wpComIdForJetpack);
         // If the site is not public, it's private. Note: this field doesn't always exist.
         oldModel.setIsPrivate(false);
