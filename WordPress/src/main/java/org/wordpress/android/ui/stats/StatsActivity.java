@@ -34,8 +34,10 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.JetpackUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -180,6 +182,26 @@ public class StatsActivity extends AppCompatActivity
             }
         }
 
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
+        // If the site is not connected via wpcom (Jetpack included), then show a dialog to the user.
+        if (!mSite.isWPCom()) {
+            if (!mAccountStore.hasAccessToken()) {
+                // If the user is not connected to WordPress.com, ask him to connect first.
+                return;
+            }
+            if (mSite.getSiteId() == 0 || mSite.getSiteId() == -1) {
+                // If the wpcom site id is 0 (undefined), Jetpack is not installed,
+                JetpackUtils.showInstallJetpackAlert(this, mSite);
+            } else {
+                // else it's installed but either disconnected or misconfigured.
+                JetpackUtils.showJetpackNonConnectedAlert(this, mSite);
+            }
+        }
 
         // create the fragments without forcing the re-creation. If the activity is restarted fragments can already
         // be there, and ready to be displayed without making any network connections. A fragment calls the stats service
