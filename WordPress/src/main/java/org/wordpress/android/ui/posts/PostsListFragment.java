@@ -45,7 +45,6 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver.PENDING_DRAFTS_NOTIFICATION_ID;
 
 public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
@@ -69,6 +68,7 @@ public class PostsListFragment extends Fragment
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
+    private long mPostIdForPostToBeDeleted = 0;
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
@@ -363,7 +363,8 @@ public class PostsListFragment extends Fragment
     public void onDetach() {
         if (mShouldCancelPendingDraftNotification) {
             // delete the pending draft notification if available
-            NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
+            int pushId = NotificationsPendingDraftsReceiver.makePendingDraftNotificationId(mPostIdForPostToBeDeleted);
+            NativeNotificationsUtils.dismissNotification(pushId, getActivity());
             mShouldCancelPendingDraftNotification = false;
         }
         super.onDetach();
@@ -546,6 +547,7 @@ public class PostsListFragment extends Fragment
             }
         });
 
+        mPostIdForPostToBeDeleted = post.getPostId();
         mShouldCancelPendingDraftNotification = true;
         snackbar.show();
     }
