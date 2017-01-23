@@ -1,27 +1,40 @@
 package org.wordpress.android.editor;
 
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ContentResolver;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spanned;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.AztecText;
+import org.wordpress.aztec.Html;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AztecEditorFragment extends EditorFragmentAbstract implements OnImeBackListener, EditorMediaUploadListener {
 
@@ -31,6 +44,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTENT = "content";
 
+    private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_TEXT = Arrays.asList(ClipDescription
+            .MIMETYPE_TEXT_PLAIN, ClipDescription.MIMETYPE_TEXT_HTML);
+    private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
+
     private boolean mIsKeyboardOpen = false;
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
@@ -38,6 +55,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     private AztecText title;
     private AztecText content;
     private SourceViewEditText source;
+    private Html.ImageGetter imageLoader;
 
     public static AztecEditorFragment newInstance(String title, String content) {
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -69,12 +87,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
         // initialize the text & HTML
         source.history = content.history;
+        content.setImageGetter(imageLoader);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
+
+        content.setOnDragListener(mOnDragListener);
+        source.setOnDragListener(mOnDragListener);
 
         setHasOptionsMenu(true);
 
         return view;
+    }
+
+    public void setImageLoader(Html.ImageGetter imageLoader) {
+        this.imageLoader = imageLoader;
     }
 
     @Override
@@ -96,6 +122,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             mIsKeyboardOpen = true;
             mHideActionBarOnSoftKeyboardUp = true;
             hideActionBarIfNeeded();
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mEditorDragAndDropListener = (EditorDragAndDropListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement EditorDragAndDropListener");
         }
     }
 
@@ -286,4 +323,130 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
         return returnValue;
     }
+
+    private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
+        private boolean isSupported(ClipDescription clipDescription, List<String> mimeTypesToCheck) {
+            if (clipDescription == null) {
+                return false;
+            }
+
+            for (String supportedMimeType : mimeTypesToCheck) {
+                if (clipDescription.hasMimeType(supportedMimeType)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        @Override
+        public boolean onDrag(View view, DragEvent dragEvent) {
+            switch (dragEvent.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    return isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_TEXT) ||
+                            isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE);
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    // would be nice to start marking the place the item will drop
+                    break;
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    int x = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getX());
+                    int y = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getY());
+
+                    content.setSelection(content.getOffsetForPosition(x, y));
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    // clear any drop marking maybe
+                    break;
+                case DragEvent.ACTION_DROP:
+                    if (source.getVisibility() == View.VISIBLE) {
+                        if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
+                            // don't allow dropping images into the HTML source
+                            ToastUtils.showToast(getActivity(), R.string.editor_dropped_html_images_not_allowed,
+                                    ToastUtils.Duration.LONG);
+                            return true;
+                        } else {
+                            // let the system handle the text drop
+                            return false;
+                        }
+                    }
+
+                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE) &&
+                            isTitleFocused()) {
+                        // don't allow dropping images into the title field
+                        ToastUtils.showToast(getActivity(), R.string.editor_dropped_title_images_not_allowed,
+                                ToastUtils.Duration.LONG);
+                        return true;
+                    }
+
+                    if (isAdded()) {
+                        mEditorDragAndDropListener.onRequestDragAndDropPermissions(dragEvent);
+                    }
+
+                    ClipDescription clipDescription = dragEvent.getClipDescription();
+                    if (clipDescription.getMimeTypeCount() < 1) {
+                        break;
+                    }
+
+                    ContentResolver contentResolver = getActivity().getContentResolver();
+                    ArrayList<Uri> uris = new ArrayList<>();
+                    boolean unsupportedDropsFound = false;
+
+                    for (int i = 0; i < dragEvent.getClipData().getItemCount(); i++) {
+                        ClipData.Item item = dragEvent.getClipData().getItemAt(i);
+                        Uri uri = item.getUri();
+
+                        final String uriType = uri != null ? contentResolver.getType(uri) : null;
+                        if (uriType != null && DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE.contains(uriType)) {
+                            uris.add(uri);
+                            continue;
+                        } else if (item.getText() != null) {
+                            insertTextToEditor(item.getText().toString());
+                            continue;
+                        } else if (item.getHtmlText() != null) {
+                            insertTextToEditor(item.getHtmlText());
+                            continue;
+                        }
+
+                        // any other drop types are not supported, including web URLs. We cannot proactively
+                        // determine their mime type for filtering
+                        unsupportedDropsFound = true;
+                    }
+
+                    if (unsupportedDropsFound) {
+                        ToastUtils.showToast(getActivity(), R.string.editor_dropped_unsupported_files, ToastUtils
+                                .Duration.LONG);
+                    }
+
+                    if (uris.size() > 0) {
+                        mEditorDragAndDropListener.onMediaDropped(uris);
+                    }
+
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    // clear any drop marking maybe
+                default:
+                    break;
+            }
+            return true;
+        }
+
+        private void insertTextToEditor(String text) {
+            if (text != null) {
+                content.getText().insert(content.getSelectionStart(), reformatVisually(Utils.escapeHtml(text)));
+            } else {
+                ToastUtils.showToast(getActivity(), R.string.editor_dropped_text_error, ToastUtils.Duration.SHORT);
+                AppLog.d(AppLog.T.EDITOR, "Dropped text was null!");
+            }
+        }
+
+        private String reformatVisually(String text) {
+            // TODO: implement wp.loadText (see wpload.js)
+            return text;
+        }
+
+        private boolean isTitleFocused() {
+            return title.isFocused();
+        }
+    };
+
 }
