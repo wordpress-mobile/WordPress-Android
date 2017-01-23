@@ -1243,9 +1243,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
         bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
         bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+        passHelpshiftErrorOriginTag(bundle);
         nuxAlert.setArguments(bundle);
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
+    }
+
+    protected void passHelpshiftErrorOriginTag(Bundle bundle) {
+        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY,
+                isWPComLogin() ? Tag.ORIGIN_LOGIN_SCREEN_ERROR_WPCOM
+                        : (isJetpackAuth() ? Tag.ORIGIN_LOGIN_SCREEN_ERROR_JETPACK
+                                : Tag.ORIGIN_LOGIN_SCREEN_ERROR_SELFHOSTED));
     }
 
     protected void handleInvalidUsernameOrPassword(int messageId) {
@@ -1283,6 +1291,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
                     SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
                     SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
+            Bundle bundle = nuxAlert.getArguments();
+            passHelpshiftErrorOriginTag(bundle);
+            nuxAlert.setArguments(bundle);
         }
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();

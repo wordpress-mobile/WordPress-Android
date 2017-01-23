@@ -156,7 +156,8 @@ public class SignInDialogFragment extends DialogFragment {
                         SignInFragment.ENTERED_URL_KEY));
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
                         SignInFragment.ENTERED_USERNAME_KEY));
-                HelpshiftHelper.getInstance().showConversation(getActivity(), Tag.ORIGIN_LOGIN_SCREEN_ERROR);
+                Tag origin = (Tag) arguments.getSerializable(HelpshiftHelper.ORIGIN_KEY);
+                HelpshiftHelper.getInstance().showConversation(getActivity(), origin);
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_APPLICATION_LOG:
