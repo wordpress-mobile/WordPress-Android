@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -323,7 +324,7 @@ public class PostStore extends Store {
                 handlePushPostCompleted((RemotePostPayload) action.getPayload());
                 break;
             case UPDATE_POST:
-                updatePost((PostModel) action.getPayload());
+                updatePost((PostModel) action.getPayload(), true);
                 break;
             case DELETE_POST:
                 deletePost((RemotePostPayload) action.getPayload());
@@ -422,7 +423,7 @@ public class PostStore extends Store {
             if (payload.isError()) {
                 onPostUploaded.error = payload.error;
             } else {
-                updatePost(payload.post);
+                updatePost(payload.post, false);
             }
             emitChange(onPostUploaded);
             return;
@@ -434,7 +435,7 @@ public class PostStore extends Store {
             event.causeOfChange = PostAction.UPDATE_POST;
             emitChange(event);
         } else {
-            updatePost(payload.post);
+            updatePost(payload.post, false);
         }
     }
 
@@ -447,7 +448,7 @@ public class PostStore extends Store {
             if (payload.site.isWPCom()) {
                 // The WP.COM REST API response contains the modified post, so we're already in sync with the server
                 // All we need to do is store it and emit OnPostChanged
-                updatePost(payload.post);
+                updatePost(payload.post, false);
                 emitChange(new OnPostUploaded(payload.post));
             } else {
                 // XML-RPC does not respond to new/edit post calls with the modified post
@@ -464,6 +465,7 @@ public class PostStore extends Store {
         newPost.setLocalSiteId(payload.site.getId());
         newPost.setIsLocalDraft(true);
         newPost.setIsPage(payload.isPage);
+        newPost.setDateLocallyChanged((DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC())));
         if (payload.categoryIds != null && !payload.categoryIds.isEmpty()) {
             newPost.setCategoryIdList(payload.categoryIds);
         }
@@ -484,9 +486,11 @@ public class PostStore extends Store {
         }
     }
 
-    private void updatePost(PostModel post) {
+    private void updatePost(PostModel post, boolean changeLocalDate) {
+        if (changeLocalDate) {
+            post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(DateTimeUtils.nowUTC())));
+        }
         int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
-
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.UPDATE_POST;
         emitChange(onPostChanged);
