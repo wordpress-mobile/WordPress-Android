@@ -176,6 +176,10 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                     if (resultCode == RESULT_OK) {
                         TermModel newCategory = (TermModel) extras.getSerializable(AddCategoryActivity.KEY_CATEGORY);
 
+                        // Save selected categories
+                        updateSelectedCategoryList();
+                        mListScrollPositionManager.saveScrollOffset();
+
                         mSwipeToRefreshHelper.setRefreshing(true);
                         RemoteTermPayload payload = new RemoteTermPayload(newCategory, mSite);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(payload));
