@@ -111,11 +111,15 @@ public class MediaUploadService extends Service {
             // stop service if there are no media items in the queue
             stopSelf();
         } else {
-            performUpload(mQueue.get(0));
-            mHandler.postDelayed(mFailsafeRunnable, PROGRESS_TIMEOUT_MS);
+            startQueuedUpload();
         }
 
         return START_REDELIVER_INTENT;
+    }
+
+    public void startQueuedUpload() {
+        performUpload(mQueue.get(0));
+        mHandler.postDelayed(mFailsafeRunnable, PROGRESS_TIMEOUT_MS);
     }
 
     @SuppressWarnings("unused")

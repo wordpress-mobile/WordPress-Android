@@ -54,6 +54,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -65,6 +66,7 @@ import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -607,13 +609,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private final ServiceConnection mConnection = new ServiceConnection() {
         @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            AppLog.i(T.MEDIA, "MediaUploadService connected");
             mUploadService = (MediaUploadService.MediaUploadBinder) service;
             if (!mPendingUploads.isEmpty()) {
                 for(MediaModel media : mPendingUploads) {
                     mUploadService.addMediaToQueue(media);
                 }
+            }
+            if (mUploadService.getService() != null) {
+                mUploadService.getService().startQueuedUpload();
             }
             mBound = true;
         }
@@ -776,6 +781,18 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (!file.exists()) {
             return;
         }
+
+        MediaModel currentUpload = new MediaModel();
+
+        // TODO: MediaUtils Import, Note: I wrote that so I could test the rest
+        String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
+        currentUpload.setFileName(filename);
+        currentUpload.setFilePath(path);
+        // TODO: better mime type handling
+        currentUpload.setMimeType(org.wordpress.android.fluxc.utils.MediaUtils.getMimeTypeForExtension(
+                org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path)));
+        addMediaToUploadService(currentUpload);
+
 
         // TODO
 //        String mimeType = MediaUtils.getMediaFileMimeType(file);
