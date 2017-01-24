@@ -7,14 +7,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ReaderRelatedPostList extends ArrayList<ReaderRelatedPost> {
+public class ReaderSimplePostList extends ArrayList<ReaderSimplePost> {
 
-    public static ReaderRelatedPostList fromJsonPosts(@NonNull JSONArray jsonPosts) {
-        ReaderRelatedPostList posts = new ReaderRelatedPostList();
+    public static ReaderSimplePostList fromJsonPosts(@NonNull JSONArray jsonPosts) {
+        ReaderSimplePostList posts = new ReaderSimplePostList();
         for (int i = 0; i < jsonPosts.length(); i++) {
             JSONObject jsonRelatedPost = jsonPosts.optJSONObject(i);
             if (jsonRelatedPost != null) {
-                ReaderRelatedPost relatedPost = ReaderRelatedPost.fromJson(jsonRelatedPost);
+                ReaderSimplePost relatedPost = ReaderSimplePost.fromJson(jsonRelatedPost);
                 if (relatedPost != null) {
                     posts.add(relatedPost);
                 }

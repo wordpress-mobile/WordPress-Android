@@ -27,16 +27,19 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.push.NotificationsScreenLockWatchService;
 import org.wordpress.android.ui.ActivityId;
@@ -45,6 +48,8 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
+import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
@@ -72,8 +77,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
-
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
@@ -90,6 +93,7 @@ public class WPMainActivity extends AppCompatActivity {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject MemorizingTrustManager mMemorizingTrustManager;
 
@@ -218,7 +222,13 @@ public class WPMainActivity extends AppCompatActivity {
                         false));
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
-                    launchWithNoteId();
+                    if (getIntent().hasExtra(NotificationsPendingDraftsService.POST_ID_EXTRA) ||
+                            getIntent().hasExtra(NotificationsPendingDraftsService.GROUPED_POST_ID_LIST_EXTRA)) {
+                        launchWithPostId(getIntent().getLongExtra(NotificationsPendingDraftsService.POST_ID_EXTRA, 0),
+                                getIntent().getBooleanExtra(NotificationsPendingDraftsService.IS_PAGE_EXTRA, false));
+                    } else {
+                        launchWithNoteId();
+                    }
                 } else {
                     int position = AppPrefs.getMainTabIndex();
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
@@ -329,7 +339,7 @@ public class WPMainActivity extends AppCompatActivity {
                 String voiceReply = null;
                 Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
                 if (remoteInput != null) {
-                    CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_OR_INLINE_REPLY);
+                    CharSequence replyText = remoteInput.getCharSequence(GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY);
                     if (replyText != null) {
                         voiceReply = replyText.toString();
                     }
@@ -343,7 +353,7 @@ public class WPMainActivity extends AppCompatActivity {
                     return;
                 } else {
                     boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply, false, null);
+                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply, NotesAdapter.FILTERS.FILTER_ALL);
                 }
 
             } else {
@@ -356,6 +366,30 @@ public class WPMainActivity extends AppCompatActivity {
         }
 
         GCMMessageService.removeAllNotifications(this);
+    }
+
+    /**
+     * called from an internal pending draft notification, so the user can land in the local draft and take action
+     * such as finish editing and publish, or delete the post, etc.
+     */
+    private void launchWithPostId(long postId, boolean isPage) {
+        if (isFinishing() || getIntent() == null) return;
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
+        NativeNotificationsUtils.dismissNotification(NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID, this);
+
+        // if no specific post id passed, show the list
+        if (postId == 0 ) {
+            // show list
+            if (isPage) {
+                ActivityLauncher.viewCurrentBlogPages(this, getSelectedSite());
+            } else {
+                ActivityLauncher.viewCurrentBlogPosts(this, getSelectedSite());
+            }
+        } else {
+            PostModel post = mPostStore.getPostByLocalPostId(postId);
+            ActivityLauncher.editPostOrPageForResult(this, getSelectedSite(), post);
+        }
     }
 
     @Override
@@ -664,12 +698,19 @@ public class WPMainActivity extends AppCompatActivity {
             AppPrefs.setSelectedSite(-1);
             return;
         }
+
         // When we select a site, we want to update its informations or options
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
 
         // Make selected site visible
         selectedSite.setIsVisible(true);
         AppPrefs.setSelectedSite(selectedSite.getId());
+
+        // once the user switches to another blog, clean any pending draft notifications for any other blog,
+        // and check if they have any drafts pending for this new blog
+        NativeNotificationsUtils.dismissNotification(NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID,
+                this);
+        NotificationsPendingDraftsService.checkPrefsAndStartService(this, mSelectedSite);
     }
 
     /**

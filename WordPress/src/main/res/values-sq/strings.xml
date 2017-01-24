@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-18 15:57:48+0000
+Translation-Revision-Date: 2016-12-21 16:19:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="reader_photo_by">Foto nga %s</string>
+	<string name="all_your_sites">Krejt Sajtet e Mi</string>
+	<string name="pending_draft_more">Keni skicuar %d postime, por s&amp;#8217;i botuat kurrë. Prekeni që të kontrolloni.</string>
+	<string name="reader_label_visit">Vizitë</string>
+	<string name="pending_draft_one">Keni skicuar \'%1$s\' %2$d ditë më parë, por s&amp;#8217;e botuat kurrë.</string>
+	<string name="pending_draft_one_generic">Keni skicuar \'%s\', por s&amp;#8217;e botuat kurrë.</string>
+	<string name="no_default_app_available_to_open_link">S’arrihet të hapet lidhja</string>
+	<string name="notification_pending_drafts">Njoftomë për skica në pritje të botimit</string>
+	<string name="invalid_verification_code_format">Duhet të jetë një numër me gjashtë shifra</string>
+	<string name="confirm_discard_changes">Të hidhen tej ndryshimet e paruajtura?</string>
+	<string name="swipe_for_more">Për më tepër, fërkojeni</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">S&amp;#8217;jeni i autorizuar ta shihni këtë postim. Provoni së pari të hyni në WordPress.com, ose përdorni butonin e sipërm të veprimeve që të hapni një shfletues.</string>
 	<string name="reader_err_get_post_not_authorized_signin">S&amp;#8217;jeni i autorizuar ta shihni këtë postim. Provoni së pari të hyni në WordPress.com.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">S&amp;#8217;jeni i autorizuar ta shihni këtë postim. Përdorni butonin e sipërm të veprimeve që të hapni një shfletues.</string>

@@ -83,24 +83,27 @@
                 tools:text="date" />
 
             <LinearLayout
+                android:id="@+id/reply_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/count_likes"
-                android:orientation="horizontal">
+                android:background="?android:selectableItemBackground"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/margin_small"
+                android:paddingLeft="@dimen/margin_small"
+                android:paddingRight="@dimen/margin_small"
+                android:paddingTop="@dimen/margin_small">
 
                 <ImageView
-                    android:id="@+id/image_comment_reply"
                     android:layout_width="@dimen/reader_button_icon"
                     android:layout_height="@dimen/reader_button_icon"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/margin_medium"
                     android:padding="@dimen/margin_extra_small"
                     app:srcCompat="@drawable/ic_action_reply" />
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/text_comment_reply"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -115,7 +118,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_large" />
+                android:paddingBottom="@dimen/margin_small"
+                android:paddingLeft="@dimen/margin_large"
+                android:paddingTop="@dimen/margin_small" />
 
         </RelativeLayout>
 

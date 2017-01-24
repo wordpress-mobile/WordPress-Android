@@ -133,7 +133,7 @@
 
     <dimen name="reader_featured_image_height_cardview">100dp</dimen>
 
-    <dimen name="reader_related_post_image_width">72dp</dimen>
+    <dimen name="reader_simple_post_image_width">72dp</dimen>
 
     <item name="reader_photo_title_shadow_offset" type="dimen" format="float">3.0</item>
     <item name="reader_photo_title_shadow_radius" type="dimen" format="float">1.5</item>
@@ -225,8 +225,6 @@
     <!--site picker-->
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
     <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
-    <dimen name="site_picker_container_padding_bottom">11dp</dimen>
-    <dimen name="site_picker_container_padding_top">10dp</dimen>
 
     <dimen name="menu_item_height">48dp</dimen>
     <dimen name="menu_item_width">168dp</dimen>
