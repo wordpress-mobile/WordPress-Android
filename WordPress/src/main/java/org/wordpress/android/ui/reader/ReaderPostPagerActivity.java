@@ -68,7 +68,6 @@ import de.greenrobot.event.EventBus;
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.AutoHideToolbarListener {
-    private static final String KEY_TRACKED_POST = "tracked_post";
 
     /**
      * Type of URL intercepted
@@ -111,7 +110,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private boolean mBackFromLogin;
 
     private final HashSet<Integer> mTrackedPositions = new HashSet<>();
-    private boolean mTrackedPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,7 +144,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
                 mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
             }
-            mTrackedPost = savedInstanceState.getBoolean(KEY_TRACKED_POST);
             mPostSlugsResolutionUnderway = savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY);
         } else {
             mIsFeed = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_FEED, false);
@@ -560,8 +557,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             outState.putLong(ReaderConstants.ARG_BLOG_ID, id.getBlogId());
             outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
         }
-
-        outState.putBoolean(KEY_TRACKED_POST, mTrackedPost);
 
         outState.putBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY, mPostSlugsResolutionUnderway);
 
