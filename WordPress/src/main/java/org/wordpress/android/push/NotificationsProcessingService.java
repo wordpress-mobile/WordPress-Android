@@ -39,6 +39,7 @@ import java.util.HashMap;
  * - reply-to-comment
  * - approve
  * - 2fa approve & ignore
+ * - pending draft notification ignore & dismissal
  */
 
 public class NotificationsProcessingService extends Service {
@@ -182,9 +183,6 @@ public class NotificationsProcessingService extends Service {
 
                 // check special cases for pending draft notifications - dismiss
                 if (mActionType.equals(ARG_ACTION_DRAFT_PENDING_DISMISS)) {
-                    //dismiss notif
-                    NativeNotificationsUtils.dismissNotification(
-                            NotificationsPendingDraftsReceiver.PENDING_DRAFTS_NOTIFICATION_ID, mContext);
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_DISMISSED);
                     return;
                 }
