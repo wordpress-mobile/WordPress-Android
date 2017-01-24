@@ -357,4 +357,24 @@ public class SiteStoreUnitTest {
                 SiteModelTable.IS_WPCOM, true, "EYE");
         assertEquals(1, matchingSites.size());
     }
+
+    @Test
+    public void testRemoveAllSites() {
+        SiteModel wpComSite = generateWPComSite();
+        SiteModel jetpackSite = generateJetpackSite();
+        SiteModel jetpackRestSite = generateJetpackSiteOverRestOnly();
+        SiteModel selfHostedSite = generateSelfHostedNonJPSite();
+
+        SiteSqlUtils.insertOrUpdateSite(wpComSite);
+        SiteSqlUtils.insertOrUpdateSite(jetpackSite);
+        SiteSqlUtils.insertOrUpdateSite(jetpackRestSite);
+        SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
+
+        // first make sure sites are inserted successfully
+        assertEquals(4, mSiteStore.getSitesCount());
+
+        SiteSqlUtils.deleteAllSites();
+
+        assertEquals(0, mSiteStore.getSitesCount());
+    }
 }
