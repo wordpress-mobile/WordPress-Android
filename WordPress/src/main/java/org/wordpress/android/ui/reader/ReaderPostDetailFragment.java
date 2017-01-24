@@ -810,6 +810,7 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.OnRequestListener listener = new ReaderActions.OnRequestListener() {
             @Override
             public void onSuccess() {
+                mHasAlreadyRequestedPost = true;
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     showPost();
@@ -819,6 +820,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             @Override
             public void onFailure(int statusCode) {
+                mHasAlreadyRequestedPost = true;
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     onRequestFailure(statusCode);
@@ -976,7 +978,6 @@ public class ReaderPostDetailFragment extends Fragment
                 // post couldn't be loaded which means it doesn't exist in db, so request it from
                 // the server if it hasn't already been requested
                 if (!mHasAlreadyRequestedPost) {
-                    mHasAlreadyRequestedPost = true;
                     AppLog.i(T.READER, "reader post detail > post not found, requesting it");
                     requestPost();
                 } else if (!TextUtils.isEmpty(mErrorMessage)) {
