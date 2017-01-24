@@ -292,6 +292,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                 ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_failed, Duration.LONG);
             }
         } else {
+            mSelectedCategories.add(event.term.getRemoteTermId());
             populateCategoryList();
             if (!isFinishing()) {
                 ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_success, Duration.SHORT);
