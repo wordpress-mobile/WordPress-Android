@@ -372,7 +372,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
 
         media.setUploadState(MediaModel.UploadState.UPLOADED.toString());
-        
         return media;
     }
 
