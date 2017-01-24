@@ -27,7 +27,7 @@ import java.util.List;
 public class WordPressDB {
     private static final String COLUMN_NAME_ID = "_id";
 
-    private static final int DATABASE_VERSION = 50;
+    private static final int DATABASE_VERSION = 51;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -199,6 +199,7 @@ public class WordPressDB {
             case 49:
                 // Delete simperium DB since we're removing Simperium from the app.
                 ctx.deleteDatabase("simperium-store");
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }

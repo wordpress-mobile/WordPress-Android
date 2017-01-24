@@ -66,6 +66,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private RelativeLayout mPeopleView;
+    private RelativeLayout mPageView;
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
@@ -83,13 +84,6 @@ public class MySiteFragment extends Fragment
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
-    }
-
-    public void setSelectedSite(int locaSiteId) {
-        if (getActivity() instanceof WPMainActivity) {
-            WPMainActivity mainActivity = (WPMainActivity) getActivity();
-            mainActivity.setSelectedSite(locaSiteId);
-        }
     }
 
     public @Nullable SiteModel getSelectedSite() {
@@ -153,6 +147,7 @@ public class MySiteFragment extends Fragment
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
+        mPageView = (RelativeLayout) rootView.findViewById(R.id.row_pages);
 
         // hide the FAB the first time the fragment is created in order to animate it in onResume()
         if (savedInstanceState == null) {
@@ -372,12 +367,16 @@ public class MySiteFragment extends Fragment
 
         // Hide the Plan item if the Plans feature is not available for this blog
         String planShortName = site.getPlanShortName();
-        if (!TextUtils.isEmpty(planShortName)) {
+        if (!TextUtils.isEmpty(planShortName) && site.getHasCapabilityManageOptions()) {
             mCurrentPlanNameTextView.setText(planShortName);
             mPlanContainer.setVisibility(View.VISIBLE);
         } else {
             mPlanContainer.setVisibility(View.GONE);
         }
+
+        // Do not show pages menu item to Collaborators.
+        int pageVisibility = site.isSelfHostedAdmin() || site.getHasCapabilityEditPages() ? View.VISIBLE : View.GONE;
+        mPageView.setVisibility(pageVisibility);
     }
 
     private void toggleAdminVisibility(@Nullable final SiteModel site) {

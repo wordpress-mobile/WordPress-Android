@@ -54,7 +54,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
-    public static final String NOTE_ALLOW_NAVIGATE_LIST_EXTRA = "allowNavigateList";
     public static final String NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter";
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
@@ -215,7 +214,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             mFilterRadioGroup.setVisibility(View.GONE);
             mSwipeRefreshLayout.setVisibility(View.GONE);
         } else {
-            mNotesAdapter.reloadNotesFromDBAsync();
+            getNotesAdapter().reloadNotesFromDBAsync();
         }
     }
 
@@ -252,7 +251,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNoteForReply(getActivity(), noteId, false, null, true, mNotesAdapter.getCurrentFilter());
+            openNoteForReply(getActivity(), noteId, false, null, mNotesAdapter.getCurrentFilter());
         }
     };
 
@@ -270,7 +269,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                                         String noteId,
                                         boolean shouldShowKeyboard,
                                         String replyText,
-                                        boolean allowNavigateList,
                                         NotesAdapter.FILTERS filter) {
         if (noteId == null || activity == null) {
             return;
@@ -285,10 +283,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         if (!TextUtils.isEmpty(replyText)) {
             detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText);
         }
-        if (allowNavigateList) {
-            detailIntent.putExtra(NOTE_ALLOW_NAVIGATE_LIST_EXTRA, true);
-            detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter);
-        }
+        detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter);
 
         openNoteForReplyWithParams(detailIntent, activity);
     }

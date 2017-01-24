@@ -564,10 +564,8 @@ public class PostUploadService extends Service {
     private String buildErrorMessage(PostModel post, PostError error) {
         // TODO: We should interpret event.error.type and pass our own string rather than use event.error.message
         String postType = mContext.getResources().getText(post.isPage() ? R.string.page : R.string.post).toString().toLowerCase();
-
         String errorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(), postType);
         errorMessage += ": " + error.message;
-
         return errorMessage;
     }
 

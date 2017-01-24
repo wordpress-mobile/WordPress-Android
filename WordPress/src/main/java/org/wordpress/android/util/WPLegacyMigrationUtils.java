@@ -7,10 +7,23 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Base64;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.util.AppLog.T;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
 
 /**
  * {@link #migrateAccessTokenToAccountStore(Context, Dispatcher)} moves an existing access token from a previous version
@@ -26,6 +39,9 @@ public class WPLegacyMigrationUtils {
     private static final String DEPRECATED_ACCOUNTS_TABLE = "accounts";
     private static final String DEPRECATED_ACCESS_TOKEN_COLUMN = "access_token";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
+    private static final String DEPRECATED_BLOGS_TABLE = "accounts";
+
+    private static final String DEPRECATED_DB_PASSWORD_SECRET = BuildConfig.DB_SECRET;
 
     public static String migrateAccessTokenToAccountStore(Context context, Dispatcher dispatcher) {
         String token = getLatestDeprecatedAccessToken(context);
@@ -36,6 +52,19 @@ public class WPLegacyMigrationUtils {
             dispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         }
         return token;
+    }
+
+    public static List<SiteModel> migrateSelfHostedSitesFromDeprecatedDB(Context context, Dispatcher dispatcher) {
+        List<SiteModel> siteList = getSelfHostedSitesFromDeprecatedDB(context);
+        if (siteList != null) {
+            AppLog.i(T.DB, "Starting migration of " + siteList.size() + " self-hosted sites to FluxC");
+            for (SiteModel siteModel : siteList) {
+                AppLog.i(T.DB, "Migrating self-hosted site with url: " + siteModel.getXmlRpcUrl()
+                        + " username: " + siteModel.getUsername());
+                dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
+            }
+        }
+        return siteList;
     }
 
     private static String getDeprecatedPreferencesAccessTokenThenDelete(Context context) {
@@ -76,5 +105,68 @@ public class WPLegacyMigrationUtils {
             // DB doesn't exist
         }
         return token;
+    }
+
+    private static List<SiteModel> getSelfHostedSitesFromDeprecatedDB(Context context) {
+        List<SiteModel> siteList = new ArrayList<>();
+        try {
+            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            String[] fields = new String[]{"username", "password", "url"};
+
+            // To exclude the jetpack sites we need to check for empty password
+            String byString = String.format("dotcomFlag=0 AND NOT(dotcomFlag=0 AND password='%s')",
+                    encryptPassword(""));
+            Cursor c = db.query(DEPRECATED_BLOGS_TABLE, fields, byString, null, null, null, null);
+            int numRows = c.getCount();
+            c.moveToFirst();
+            for (int i = 0; i < numRows; i++) {
+                SiteModel siteModel = new SiteModel();
+                siteModel.setUsername(c.getString(0));
+                // Decrypt password before migrating since we no longer encrypt passwords in FluxC
+                String encryptedPwd = c.getString(1);
+                siteModel.setPassword(decryptPassword(encryptedPwd));
+                String url = c.getString(2);
+                siteModel.setUrl(url);
+                siteModel.setXmlRpcUrl(url);
+                siteList.add(siteModel);
+                c.moveToNext();
+            }
+            c.close();
+        } catch (SQLException e) {
+            // DB doesn't exist
+        }
+        return siteList;
+    }
+
+    private static String encryptPassword(String clearText) {
+        try {
+            DESKeySpec keySpec = new DESKeySpec(
+                    DEPRECATED_DB_PASSWORD_SECRET.getBytes("UTF-8"));
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey key = keyFactory.generateSecret(keySpec);
+
+            Cipher cipher = Cipher.getInstance("DES");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            return Base64.encodeToString(cipher.doFinal(clearText.getBytes("UTF-8")), Base64.DEFAULT);
+        } catch (Exception e) {
+        }
+        return clearText;
+    }
+
+    private static String decryptPassword(String encryptedPwd) {
+        try {
+            DESKeySpec keySpec = new DESKeySpec(
+                    DEPRECATED_DB_PASSWORD_SECRET.getBytes("UTF-8"));
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey key = keyFactory.generateSecret(keySpec);
+
+            byte[] encryptedWithoutB64 = Base64.decode(encryptedPwd, Base64.DEFAULT);
+            Cipher cipher = Cipher.getInstance("DES");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            byte[] plainTextPwdBytes = cipher.doFinal(encryptedWithoutB64);
+            return new String(plainTextPwdBytes);
+        } catch (Exception e) {
+        }
+        return encryptedPwd;
     }
 }

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-19 15:37:04+0000
+Translation-Revision-Date: 2016-12-20 19:13:06+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.3.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="reader_photo_by">Fotografie de %s</string>
+	<string name="reader_label_visit">Vizitează</string>
+	<string name="all_your_sites">Toate siturile mele</string>
+	<string name="pending_draft_more">Ai %d articole în ciornă pe care nu le-ai publicat. Atinge pentru a verifica.</string>
+	<string name="pending_draft_one">Ai o ciornă \'%1$s\' de acum %2$d zile dar n-ai publicat-o.</string>
+	<string name="pending_draft_one_generic">Ai o ciornă \'%s\' dar n-ai publicat-o.</string>
+	<string name="no_default_app_available_to_open_link">Nu pot deschide legătura</string>
+	<string name="notification_pending_drafts">Notifică-mă despre ciorne în așteptare</string>
+	<string name="confirm_discard_changes">Renunți la modificările nesalvate?</string>
+	<string name="invalid_verification_code_format">Trebuie să fie un număr din șase cifre</string>
+	<string name="swipe_for_more">Trage cu degetul pentru mai mult</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Nu ești autorizat să vezi acest articol. Încearcă mai întâi să te autentifici în WordPress.com sau folosește butonul de acțiune de sus pentru a deschide un navigator ca o alternativă.</string>
 	<string name="reader_err_get_post_not_authorized_signin">Nu ești autorizat să vezi acest articol. Încearcă mai întâi să te autentifici în WordPress.com.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">Nu ești autorizat să vezi acest articol. Folosește butonul de acțiune de sus pentru a încerca un navigator în schimb.</string>

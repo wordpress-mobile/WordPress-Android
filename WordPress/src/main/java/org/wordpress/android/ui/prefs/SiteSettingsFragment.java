@@ -197,6 +197,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private ActionMode mActionMode;
     private MultiSelectRecyclerViewAdapter mAdapter;
 
+    // Delete site
+    private ProgressDialog mDeleteSiteProgressDialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -240,8 +243,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onPause() {
         super.onPause();
-        // Locally save the site
-        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
+        // Locally save the site. mSite can be null after site deletion.
+        if (mSite != null) {
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
+        }
         mIsFragmentPaused = true;
     }
 
@@ -1210,26 +1215,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         return WPPrefUtils.getPrefAndSetClickListener(this, id, this);
     }
 
-    private void handleDeleteSiteError() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.error_deleting_site);
-        builder.setMessage(R.string.error_deleting_site_summary);
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
-                        HelpshiftHelper.Tag.ORIGIN_DELETE_SITE, mAccountStore.getAccount().getUserName());
-            }
-        });
-        builder.show();
-    }
-
     private void exportSite() {
         if (mSite.isWPCom()) {
             final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.exporting_content_progress), true, true);
@@ -1261,29 +1246,52 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void deleteSite() {
         if (mSite.isWPCom()) {
-            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.delete_site_progress), true, false);
+            mDeleteSiteProgressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.delete_site_progress), true, false);
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_REQUESTED, mSite);
-            WordPress.getRestClientUtils().deleteSite(mSite.getSiteId(), new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat
-                                    .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
-                            progressDialog.dismiss();
-                            mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            HashMap<String, Object> errorProperty = new HashMap<>();
-                            errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
-                            AnalyticsUtils.trackWithSiteDetails(
-                                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, mSite,
-                                    errorProperty);
-                            dismissProgressDialog(progressDialog);
-                            handleDeleteSiteError();
-                        }
-                    });
+            mDispatcher.dispatch(SiteActionBuilder.newDeleteSiteAction(mSite));
         }
+    }
+
+    public void handleSiteDeleted() {
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat
+                .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
+        dismissProgressDialog(mDeleteSiteProgressDialog);
+        mDeleteSiteProgressDialog = null;
+        mSite = null;
+    }
+
+    public void handleDeleteSiteError(SiteStore.DeleteSiteError error) {
+        AppLog.e(AppLog.T.SETTINGS, "SiteDeleted error: " + error.type);
+
+        HashMap<String, Object> errorProperty = new HashMap<>();
+        errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.message);
+        AnalyticsUtils.trackWithSiteDetails(
+                AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, mSite,
+                errorProperty);
+        dismissProgressDialog(mDeleteSiteProgressDialog);
+        mDeleteSiteProgressDialog = null;
+
+        showDeleteSiteErrorDialog();
+    }
+
+    private void showDeleteSiteErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.error_deleting_site);
+        builder.setMessage(R.string.error_deleting_site_summary);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
+                        HelpshiftHelper.Tag.ORIGIN_DELETE_SITE, mAccountStore.getAccount().getUserName());
+            }
+        });
+        builder.show();
     }
 
     private MultiSelectRecyclerViewAdapter getAdapter() {

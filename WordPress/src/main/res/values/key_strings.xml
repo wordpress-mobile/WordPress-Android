@@ -28,6 +28,7 @@
     <string name="pref_notification_account_emails" translatable="false">wp_pref_notification_account_emails</string>
     <string name="pref_notification_sights_sounds" translatable="false">wp_pref_notification_sights_sounds</string>
     <string name="pref_key_notification_site_settings" translatable="false">wp_pref_notification_site_settings</string>
+    <string name="pref_key_notification_pending_drafts" translatable="false">wp_pref_notification_pending_drafts</string>
     <string name="pref_key_site_screen" translatable="false">wp_pref_site_screen</string>
     <string name="pref_key_site_general" translatable="false">wp_pref_site_general</string>
     <string name="pref_key_site_account" translatable="false">wp_pref_site_account</string>

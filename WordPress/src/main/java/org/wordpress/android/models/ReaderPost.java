@@ -16,6 +16,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
 import java.util.Iterator;
@@ -307,7 +308,7 @@ public class ReaderPost {
 
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
-            String thisTagName = JSONUtils.getStringDecoded(jsonThisTag, "slug");
+            String thisTagName = UrlUtils.urlDecode(JSONUtils.getString(jsonThisTag, "slug"));
 
             // if the number of posts on this blog that use this tag is higher than previous,
             // set this as the most popular tag, and set the second most popular tag to
@@ -732,28 +733,6 @@ public class ReaderPost {
             dtDisplay = DateTimeUtils.dateFromIso8601(this.datePublished);
         }
         return dtDisplay;
-    }
-
-    /*
-     * determine which tag to display for this post
-     *  - no tag if this is a private blog or there is no primary tag for this post
-     *  - primary tag, unless it's the same as the currently selected tag
-     *  - secondary tag if primary tag is the same as the currently selected tag
-     */
-    private transient String tagForDisplay;
-    public String getTagForDisplay(final String currentTagName) {
-        if (tagForDisplay == null) {
-            if (!isPrivate && hasPrimaryTag()) {
-                if (getPrimaryTag().equalsIgnoreCase(currentTagName)) {
-                    tagForDisplay = getSecondaryTag();
-                } else {
-                    tagForDisplay = getPrimaryTag();
-                }
-            } else {
-                tagForDisplay = "";
-            }
-        }
-        return tagForDisplay;
     }
 
     /*
