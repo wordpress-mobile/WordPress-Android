@@ -79,7 +79,10 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
     public void fetchTerms(final SiteModel site, final String taxonomyName) {
         String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomyName).terms.getUrlV1_1();
 
-        final WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, null,
+        Map<String, String> params = new HashMap<>();
+        params.put("number", "1000");
+
+        final WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, params,
                 TermsResponse.class,
                 new Listener<TermsResponse>() {
                     @Override
