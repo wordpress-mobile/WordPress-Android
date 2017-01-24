@@ -237,6 +237,10 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private void updateSelectedCategoryList() {
         SparseBooleanArray selectedItems = mListView.getCheckedItemPositions();
         for (int i = 0; i < selectedItems.size(); i++) {
+            if (selectedItems.keyAt(i) >= mCategoryLevels.size()) {
+                continue;
+            }
+
             long categoryRemoteId = mCategoryLevels.get(selectedItems.keyAt(i)).getCategoryId();
             if (selectedItems.get(selectedItems.keyAt(i))) {
                 mSelectedCategories.add(categoryRemoteId);
