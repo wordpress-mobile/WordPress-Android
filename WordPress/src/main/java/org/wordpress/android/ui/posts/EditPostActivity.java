@@ -236,6 +236,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        mDispatcher.register(this);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -425,13 +426,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onStart() {
         super.onStart();
-        mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
-        mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -454,6 +453,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     protected void onDestroy() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+        mDispatcher.unregister(this);
         super.onDestroy();
     }
 
