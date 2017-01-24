@@ -1228,6 +1228,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
+
+        if (event.isError()) {
+            endProgress();
+        }
     }
 
     @SuppressWarnings("unused")
