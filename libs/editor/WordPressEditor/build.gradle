@@ -14,6 +14,7 @@ apply plugin: 'signing'
 repositories {
     mavenLocal()
     jcenter()
+    maven { url "https://jitpack.io" }
 }
 
 android {
@@ -50,7 +51,7 @@ dependencies {
     compile 'com.android.support:support-v4:25.0.1'
     compile 'com.android.support:design:25.0.1'
     compile 'org.wordpress:utils:1.11.0'
-    compile 'org.wordpress:aztec:0.0.1'
+    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:develop-SNAPSHOT')
 }
 
 signing {
