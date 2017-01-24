@@ -50,7 +50,6 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_APPROVE = "action_approve";
     public static final String ARG_ACTION_AUTH_APPROVE = "action_auth_aprove";
     public static final String ARG_ACTION_AUTH_IGNORE = "action_auth_ignore";
-    public static final String ARG_ACTION_DRAFT_PENDING_EDIT = "action_draft_pending_edit";
     public static final String ARG_ACTION_DRAFT_PENDING_DISMISS = "action_draft_pending_dismiss";
     public static final String ARG_ACTION_DRAFT_PENDING_IGNORE = "action_draft_pending_ignore";
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
