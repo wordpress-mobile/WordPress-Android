@@ -12,7 +12,6 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 repositories {
-    mavenLocal()
     jcenter()
     maven { url "https://jitpack.io" }
 }
