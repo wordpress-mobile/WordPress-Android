@@ -184,6 +184,26 @@ public class CommentStoreUnitTest {
         assertEquals(15, CommentSqlUtils.getCommentsCountForSite(siteModel, CommentStatus.SPAM, CommentStatus.ALL));
     }
 
+    @Test
+    public void testRemoveAllComments() {
+        SiteModel site1 = new SiteModel();
+        site1.setId(21);
+        insertTestComments(site1);
+
+        SiteModel site2 = new SiteModel();
+        site2.setId(22);
+        insertTestComments(site2);
+
+        // Make sure the comments are inserted successfully before
+        assertEquals(15, CommentSqlUtils.getCommentsCountForSite(site1, CommentStatus.ALL));
+        assertEquals(15, CommentSqlUtils.getCommentsCountForSite(site2, CommentStatus.ALL));
+
+        CommentSqlUtils.deleteAllComments();
+
+        // Test if all the comments are deleted successfully
+        assertEquals(0, CommentSqlUtils.getCommentsCountForSite(site1, CommentStatus.ALL));
+        assertEquals(0, CommentSqlUtils.getCommentsCountForSite(site2, CommentStatus.ALL));
+    }
 
     private void insertTestComments(SiteModel siteModel) {
         // Init Comment Models
