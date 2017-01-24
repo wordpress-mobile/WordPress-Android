@@ -44,6 +44,7 @@ import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
@@ -145,6 +146,12 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
             }
             mPostSlugsResolutionUnderway = savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY);
+            if (savedInstanceState.containsKey(ReaderConstants.KEY_TRACKED_POSITIONS)) {
+                Serializable positions = savedInstanceState.getSerializable(ReaderConstants.KEY_TRACKED_POSITIONS);
+                if (positions instanceof HashSet) {
+                    mTrackedPositions.addAll((HashSet<Integer>) positions);
+                }
+            }
         } else {
             mIsFeed = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_FEED, false);
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -559,6 +566,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
 
         outState.putBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY, mPostSlugsResolutionUnderway);
+
+        if (mTrackedPositions.size() > 0) {
+            outState.putSerializable(ReaderConstants.KEY_TRACKED_POSITIONS, mTrackedPositions);
+        }
 
         super.onSaveInstanceState(outState);
     }
