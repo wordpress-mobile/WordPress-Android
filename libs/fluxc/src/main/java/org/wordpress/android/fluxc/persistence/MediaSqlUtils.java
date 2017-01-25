@@ -198,4 +198,15 @@ public class MediaSqlUtils {
                 .equals(column, value)
                 .endGroup().endWhere().execute();
     }
+
+    public static int deleteAllSiteMedia(SiteModel site) {
+        if (site == null) {
+            return 0;
+        }
+
+        return WellSql.delete(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.SITE_ID, site.getSiteId())
+                .endGroup().endWhere().execute();
+    }
 }
