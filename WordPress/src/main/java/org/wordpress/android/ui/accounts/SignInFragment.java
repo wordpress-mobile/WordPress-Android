@@ -1178,6 +1178,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onAccountChanged(OnAccountChanged event) {
         if (event.isError()) {
             AppLog.e(T.API, "onAccountChanged has error: " + event.error.type + " - " + event.error.message);
+            showAccountError(event.error.type, event.error.message);
             endProgress();
             return;
         }
@@ -1323,6 +1324,24 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             case GENERIC_ERROR:
             default:
                 showGenericErrorDialog(getResources().getString(R.string.nux_cannot_log_in));
+                break;
+        }
+    }
+
+    private void showAccountError(AccountStore.AccountErrorType error, String errorMessage) {
+        switch (error) {
+            case ACCOUNT_FETCH_ERROR:
+                showError(R.string.error_fetch_my_profile);
+                break;
+            case SETTINGS_FETCH_ERROR:
+                showError(R.string.error_fetch_account_settings);
+                break;
+            case SETTINGS_POST_ERROR:
+                showError(R.string.error_post_account_settings);
+                break;
+            case GENERIC_ERROR:
+            default:
+                showError(errorMessage);
                 break;
         }
     }
