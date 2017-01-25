@@ -77,7 +77,6 @@ public class SiteSqlUtils {
         // Looks like a new site, make sure we don't already have it.
         if (siteResult.isEmpty()) {
             AppLog.d(T.DB, "Site not found using local id");
-            // TODO: Make the URL enough, we could get surprise with the site id with .org sites becoming jetpack sites
             siteResult = WellSql.select(SiteModel.class)
                     .where().beginGroup()
                     .equals(SiteModelTable.SITE_ID, site.getSiteId())
