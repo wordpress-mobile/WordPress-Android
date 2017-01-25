@@ -20,18 +20,22 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.StringUtils;
-import org.xmlrpc.android.ApiHelper;
+import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
@@ -45,6 +49,7 @@ public class MediaEditFragment extends Fragment {
     public static final int MISSING_MEDIA_ID = -1;
 
     @Inject MediaStore mMediaStore;
+    @Inject Dispatcher mDispatcher;
 
     private NetworkImageView mNetworkImageView;
     private ImageView mLocalImageView;
@@ -66,6 +71,7 @@ public class MediaEditFragment extends Fragment {
     private ImageLoader mImageLoader;
 
     private SiteModel mSite;
+    private MediaModel mMediaModel;
 
     public interface MediaEditFragmentCallback {
         void onResume(Fragment fragment);
@@ -123,6 +129,17 @@ public class MediaEditFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
+    }
 
     @Override
     public void onDetach() {
@@ -188,28 +205,19 @@ public class MediaEditFragment extends Fragment {
     public void loadMedia(long mediaId) {
         mMediaId = mediaId;
         if (getActivity() != null && mMediaId != MISSING_MEDIA_ID) {
-            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, mMediaId);
-            refreshViews(mediaModel);
+            mMediaModel = mMediaStore.getSiteMediaWithId(mSite, mMediaId);
+            refreshViews(mMediaModel);
         } else {
             refreshViews(null);
         }
     }
 
-    void editMedia() {
+    void saveMedia() {
         ActivityUtils.hideKeyboard(getActivity());
-        final long mediaId = getMediaId();
-        final String title = mTitleView.getText().toString();
-        final String description = mDescriptionView.getText().toString();
-        final String caption = mCaptionView.getText().toString();
-
-    }
-
-    private void setMediaUpdating(boolean isUpdating) {
-        mIsMediaUpdating = isUpdating;
-    }
-
-    private boolean isMediaUpdating() {
-        return mIsMediaUpdating;
+        mMediaModel.setTitle(mTitleView.getText().toString());
+        mMediaModel.setDescription(mDescriptionView.getText().toString());
+        mMediaModel.setCaption(mCaptionView.getText().toString());
+        mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, mMediaModel)));
     }
 
     private void refreshImageView(MediaModel mediaModel, boolean isLocal) {
@@ -275,9 +283,9 @@ public class MediaEditFragment extends Fragment {
         mCaptionView.setEnabled(!isLocal);
         mDescriptionView.setEnabled(!isLocal);
 
-        mTitleOriginal = mTitleView.getText().toString();
-        mCaptionOriginal = mCaptionView.getText().toString();
-        mDescriptionOriginal = mDescriptionView.getText().toString();
+        mTitleOriginal = mediaModel.getTitle();
+        mCaptionOriginal = mediaModel.getCaption();
+        mDescriptionOriginal = mediaModel.getDescription();
 
         mTitleView.setText(mediaModel.getTitle());
         mTitleView.requestFocus();
@@ -308,7 +316,7 @@ public class MediaEditFragment extends Fragment {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_save_media) {
             item.setActionView(R.layout.progressbar);
-            editMedia();
+            saveMedia();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -340,5 +348,21 @@ public class MediaEditFragment extends Fragment {
                 (!StringUtils.equals(mTitleOriginal, mTitleView.getText().toString())
                 || !StringUtils.equals(mCaptionOriginal, mCaptionView.getText().toString())
                 || !StringUtils.equals(mDescriptionOriginal, mDescriptionView.getText().toString()));
+    }
+
+    // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        mIsMediaUpdating = false;
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+            Toast.makeText(getActivity(), event.isError() ? R.string.media_edit_failure : R.string.media_edit_success,
+                    Toast.LENGTH_LONG).show();
+        }
+        if (hasCallback()) {
+            mCallback.onSavedEdit(mMediaId, !event.isError());
+        }
     }
 }
