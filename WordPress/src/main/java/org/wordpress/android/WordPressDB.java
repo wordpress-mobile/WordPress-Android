@@ -47,18 +47,9 @@ public class WordPressDB {
             + Theme.BLOG_ID + " text, "
             + Theme.IS_CURRENT + " boolean default false);";
 
-    // categories
-    private static final String CREATE_TABLE_CATEGORIES = "create table if not exists cats (id integer primary key autoincrement, "
-            + "blog_id text, wp_id integer, category_name text not null);";
-    private static final String CATEGORIES_TABLE = "cats";
-
-
     // add new table for QuickPress homescreen shortcuts
     private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
     private static final String QUICKPRESS_SHORTCUTS_TABLE = "quickpress_shortcuts";
-
-    // add category parent id to keep track of category hierarchy
-    private static final String ADD_PARENTID_IN_CATEGORIES = "alter table cats add parent_id integer default 0;";
 
     private static final String DROP_TABLE_PREFIX = "DROP TABLE IF EXISTS ";
 
@@ -68,7 +59,6 @@ public class WordPressDB {
         db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
         // Create tables if they don't exist
-        db.execSQL(CREATE_TABLE_CATEGORIES);
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         db.execSQL(CREATE_TABLE_THEMES);
         SiteSettingsTable.createTable(db);
@@ -109,7 +99,6 @@ public class WordPressDB {
             case 16:
                 currentVersion++;
             case 17:
-                db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 currentVersion++;
             case 18:
                 currentVersion++;
@@ -221,75 +210,6 @@ public class WordPressDB {
      * Deletes all the things! Use wisely.
      */
     public void dangerouslyDeleteAllContent() {
-        db.delete(CATEGORIES_TABLE, null, null);
-    }
-
-    // Categories
-    public boolean insertCategory(int id, int wp_id, int parent_id, String category_name) {
-        ContentValues values = new ContentValues();
-        values.put("blog_id", id);
-        values.put("wp_id", wp_id);
-        values.put("category_name", category_name.toString());
-        values.put("parent_id", parent_id);
-        boolean returnValue = false;
-        synchronized (this) {
-            returnValue = db.insert(CATEGORIES_TABLE, null, values) > 0;
-        }
-
-        return (returnValue);
-    }
-
-    public List<String> loadCategories(int id) {
-        Cursor c = db.query(CATEGORIES_TABLE, new String[] { "id", "wp_id",
-                "category_name" }, "blog_id=" + Integer.toString(id), null, null, null, null);
-        int numRows = c.getCount();
-        c.moveToFirst();
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < numRows; ++i) {
-            String category_name = c.getString(2);
-            if (category_name != null) {
-                list.add(category_name);
-            }
-            c.moveToNext();
-        }
-        c.close();
-
-        return list;
-    }
-
-    public int getCategoryId(int id, String category) {
-        Cursor c = db.query(CATEGORIES_TABLE, new String[] { "wp_id" },
-                "category_name=? AND blog_id=?", new String[] {category, String.valueOf(id)},
-                null, null, null);
-        if (c.getCount() == 0)
-            return 0;
-        c.moveToFirst();
-        int categoryID = 0;
-        categoryID = c.getInt(0);
-
-        c.close();
-
-        return categoryID;
-    }
-
-    public int getCategoryParentId(int id, String category) {
-        Cursor c = db.query(CATEGORIES_TABLE, new String[] { "parent_id" },
-                "category_name=? AND blog_id=?", new String[] {category, String.valueOf(id)},
-                null, null, null);
-        if (c.getCount() == 0)
-            return -1;
-        c.moveToFirst();
-        int categoryParentID = c.getInt(0);
-
-        c.close();
-
-        return categoryParentID;
-    }
-
-    public void clearCategories(int id) {
-        // clear out the table since we are refreshing the whole enchilada
-        db.delete(CATEGORIES_TABLE, "blog_id=" + id, null);
-
     }
 
     public boolean addQuickPressShortcut(int blogId, String name) {

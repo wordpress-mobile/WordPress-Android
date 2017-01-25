@@ -324,6 +324,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
      * Request a list of post categories for a site via the WordPress REST API.
      */
     private void fetchCategories() {
+        // TODO: Replace with FluxC (GET_CATEGORIES + TaxonomyStore.getCategoriesForSite())
         WordPress.getRestClientUtilsV1_1().getCategories(mSite.getSiteId(),
                 new RestRequest.Listener() {
                     @Override

@@ -286,7 +286,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
-                // TODO: Use TaxonomyStore in SiteSettingsInterface and get default category remote id
+                categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
                 String postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
                 InstantiatePostPayload payload = new InstantiatePostPayload(mSite, mIsPage, categories, postFormat);
                 mDispatcher.dispatch(PostActionBuilder.newInstantiatePostAction(payload));
@@ -841,7 +841,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updatePostSettings();
+            mEditPostSettingsFragment.updatePostSettings(mPost);
         }
 
         mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis()));

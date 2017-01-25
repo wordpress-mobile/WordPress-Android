@@ -41,18 +41,24 @@ import android.widget.Toast;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.apache.commons.lang.StringUtils;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
@@ -75,15 +81,17 @@ import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
+    private static final String KEY_POST = "KEY_POST";
+
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
@@ -105,8 +113,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private long mFeaturedImageId;
 
-    // TODO: Should be List<TaxonomyModel>
-    private ArrayList<String> mCategories;
+    private List<TermModel> mCategories;
 
     private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
@@ -122,13 +129,14 @@ public class EditPostSettingsFragment extends Fragment
 
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
+    @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
 
     public static EditPostSettingsFragment newInstance(SiteModel site, PostModel post) {
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
-        bundle.putSerializable(EditPostActivity.EXTRA_POST, post);
+        bundle.putSerializable(KEY_POST, post);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -137,6 +145,8 @@ public class EditPostSettingsFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+        mDispatcher.register(this);
+
         if (getActivity() != null) {
             PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
         }
@@ -147,14 +157,14 @@ public class EditPostSettingsFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mPost = (PostModel) getArguments().getSerializable(EditPostActivity.EXTRA_POST);
+                mPost = (PostModel) getArguments().getSerializable(KEY_POST);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(EditPostActivity.EXTRA_POST);
+                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(KEY_POST);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mPost = (PostModel) savedInstanceState.getSerializable(EditPostActivity.EXTRA_POST);
+            mPost = (PostModel) savedInstanceState.getSerializable(KEY_POST);
         }
 
         if (mSite == null) {
@@ -162,14 +172,18 @@ public class EditPostSettingsFragment extends Fragment
             getActivity().finish();
         }
 
-        // Update post formats, in case anything changed.
+        // Update post formats and categories, in case anything changed.
         mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
+        if (!mPost.isPage()) {
+            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(KEY_POST, mPost);
     }
 
     @Override
@@ -177,6 +191,7 @@ public class EditPostSettingsFragment extends Fragment
         if (mSuggestionServiceConnectionManager != null) {
             mSuggestionServiceConnectionManager.unbindFromService();
         }
+        mDispatcher.unregister(this);
         super.onDestroy();
     }
 
@@ -195,8 +210,6 @@ public class EditPostSettingsFragment extends Fragment
         mDay = c.get(Calendar.DAY_OF_MONTH);
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
-        // TODO: TaxonomyStore
-        //mCategories = new ArrayList<String>();
 
         mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
@@ -406,14 +419,10 @@ public class EditPostSettingsFragment extends Fragment
                 break;
         }
 
-        // TODO: Re-implement when we can have access to category names from IDs via TaxonomyStore
-//        if (!mPost.isPage()) {
-//            mCategories = mPost.getCategoryIdList();
-//        }
-//        String tags = mPost.getKeywords();
-//        if (!tags.equals("")) {
-//            mTagsEditText.setText(tags);
-//        }
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        if (!tags.equals("")) {
+            mTagsEditText.setText(tags);
+        }
 
         if (AppPrefs.isVisualEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
@@ -481,7 +490,9 @@ public class EditPostSettingsFragment extends Fragment
                 case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                     extras = data.getExtras();
                     if (extras != null && extras.containsKey("selectedCategories")) {
-                        mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
+                        @SuppressWarnings("unchecked")
+                        List<TermModel> categoryList = (List<TermModel>) extras.getSerializable("selectedCategories");
+                        mCategories = categoryList;
                         populateSelectedCategories();
                     }
                     break;
@@ -505,13 +516,13 @@ public class EditPostSettingsFragment extends Fragment
         if (id == R.id.pubDate) {
             showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", mSite.getId());
-            if (mCategories != null && mCategories.size() > 0) {
-                bundle.putSerializable("categories", new HashSet<>(mCategories));
-            }
             Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
-            categoriesIntent.putExtras(bundle);
+            categoriesIntent.putExtra(WordPress.SITE, mSite);
+
+            // Make sure the PostModel is up to date with current category selections
+            updatePostSettings(mPost);
+            categoriesIntent.putExtra(SelectCategoriesActivity.KEY_POST, mPost);
+
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.categoryButton) {
             onCategoryButtonClick(v);
@@ -627,10 +638,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     /**
-     * Updates post object with content of this fragment
+     * Updates given post object with current status of settings fields
      */
-    public void updatePostSettings() {
-        if (!isAdded() || mPost == null) {
+    public void updatePostSettings(PostModel post) {
+        if (!isAdded() || post == null) {
             return;
         }
 
@@ -639,20 +650,20 @@ public class EditPostSettingsFragment extends Fragment
         boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
-        if (mIsCustomPubDate && publishImmediately && !mPost.isLocalDraft()) {
+        if (mIsCustomPubDate && publishImmediately && !post.isLocalDraft()) {
             publicationDateIso8601 = DateTimeUtils.iso8601FromDate(new Date());
         } else if (!publishImmediately) {
             if (mIsCustomPubDate) {
                 publicationDateIso8601 = mCustomPubDate;
-            } else if (StringUtils.isNotEmpty(mPost.getDateCreated())) {
-                publicationDateIso8601 = mPost.getDateCreated();
+            } else if (StringUtils.isNotEmpty(post.getDateCreated())) {
+                publicationDateIso8601 = post.getDateCreated();
             }
         }
 
-        mPost.setDateCreated(publicationDateIso8601);
+        post.setDateCreated(publicationDateIso8601);
 
         String tags = "", postFormat = "";
-        if (!mPost.isPage()) {
+        if (!post.isPage()) {
             tags = EditTextUtils.getText(mTagsEditText);
 
             // post format
@@ -666,32 +677,34 @@ public class EditPostSettingsFragment extends Fragment
         if (mStatusSpinner != null) {
             status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition()).toString();
         } else {
-            status = mPost.getStatus();
+            status = post.getStatus();
         }
 
-        if (mPost.supportsLocation()) {
+        if (post.supportsLocation()) {
             if (mPostLocation == null) {
-                mPost.clearLocation();
+                post.clearLocation();
             } else {
-                mPost.setLocation(mPostLocation);
+                post.setLocation(mPostLocation);
             }
         }
 
-        // TODO: Implement when we have TaxonomyStore
-//        if (mCategories != null) {
-//            mPost.setJSONCategories(new JSONArray(mCategories));
-//        }
-
-        if (AppPrefs.isVisualEditorEnabled()) {
-            mPost.setFeaturedImageId(mFeaturedImageId);
+        if (mCategories != null) {
+            List<Long> categoryIds = new ArrayList<>();
+            for (TermModel category : mCategories) {
+                categoryIds.add(category.getRemoteTermId());
+            }
+            post.setCategoryIdList(categoryIds);
         }
 
-        mPost.setExcerpt(excerpt);
-        // TODO: Implement when we have TaxonomyStore
-        //mPost.setKeywords(tags);
-        mPost.setStatus(status);
-        mPost.setPassword(password);
-        mPost.setPostFormat(postFormat);
+        if (AppPrefs.isVisualEditorEnabled()) {
+            post.setFeaturedImageId(mFeaturedImageId);
+        }
+
+        post.setExcerpt(excerpt);
+        post.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+        post.setStatus(status);
+        post.setPassword(password);
+        post.setPostFormat(postFormat);
     }
 
     /*
@@ -699,7 +712,7 @@ public class EditPostSettingsFragment extends Fragment
      */
     private void updatePostSettingsAndSaveButton() {
         if (isAdded()) {
-            updatePostSettings();
+            updatePostSettings(mPost);
             getActivity().invalidateOptionsMenu();
         }
     }
@@ -1036,7 +1049,7 @@ public class EditPostSettingsFragment extends Fragment
 
         // Remove clicked category from list
         for (int i = 0; i < mCategories.size(); i++) {
-            if (mCategories.get(i).equals(categoryName)) {
+            if (mCategories.get(i).getName().equals(categoryName)) {
                 mCategories.remove(i);
                 listChanged = true;
                 break;
@@ -1051,7 +1064,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void populateSelectedCategories() {
         // Remove previous category buttons if any + select category button
-        List<View> viewsToRemove = new ArrayList<View>();
+        List<View> viewsToRemove = new ArrayList<>();
         for (int i = 0; i < mSectionCategories.getChildCount(); i++) {
             View v = mSectionCategories.getChildAt(i);
             if (v == null)
@@ -1071,23 +1084,34 @@ public class EditPostSettingsFragment extends Fragment
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 
         if (mCategories != null) {
-            for (String categoryName : mCategories) {
+            for (TermModel category : mCategories) {
                 AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button,
                         null);
-                if (categoryName != null && buttonCategory != null) {
-                    buttonCategory.setText(Html.fromHtml(categoryName));
-                    buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
+                if (category != null && category.getName() != null && buttonCategory != null) {
+                    buttonCategory.setText(Html.fromHtml(category.getName()));
+                    buttonCategory.setTag(CATEGORY_PREFIX_TAG + category.getName());
                     buttonCategory.setOnClickListener(this);
                     mSectionCategories.addView(buttonCategory);
                 }
             }
         }
 
-        // Add select category button
+        // Add select category button once the category list has been initialized
         Button selectCategory = (Button) layoutInflater.inflate(R.layout.category_select_button, null);
-        if (selectCategory != null) {
+        if (selectCategory != null && mCategories != null) {
             selectCategory.setOnClickListener(this);
             mSectionCategories.addView(selectCategory);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTaxonomyChanged(OnTaxonomyChanged event) {
+        switch (event.causeOfChange) {
+            case FETCH_CATEGORIES:
+                mCategories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
+                populateSelectedCategories();
+                break;
         }
     }
 }
