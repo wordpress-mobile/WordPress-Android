@@ -50,7 +50,6 @@ public class HelpshiftHelper {
 
     public enum Tag {
         ORIGIN_UNKNOWN("origin:unknown"),
-        ORIGIN_LOGIN_SCREEN_HELP("origin:login-screen-help"),
         ORIGIN_LOGIN_SCREEN_WPCOM("origin:wpcom-login-screen"),
         ORIGIN_LOGIN_SCREEN_SELFHOSTED("origin:wporg-login-screen"),
         ORIGIN_LOGIN_SCREEN_JETPACK("origin:jetpack-login-screen"),

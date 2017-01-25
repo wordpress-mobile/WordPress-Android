@@ -496,7 +496,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 // Used to pass data to an eventual support service
                 intent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
                 intent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_LOGIN_SCREEN_HELP);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, chooseHelpshiftLoginTag());
                 startActivity(intent);
             }
         };
@@ -1243,19 +1243,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
         bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
         bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-        passHelpshiftErrorOriginTag(bundle);
+        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, chooseHelpshiftLoginTag());
         nuxAlert.setArguments(bundle);
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
     }
 
-    protected void passHelpshiftErrorOriginTag(Bundle bundle) {
+    protected Tag chooseHelpshiftLoginTag() {
         // Tag assignment:
-        //  ORIGIN_LOGIN_SCREEN_WPCOM for when trying to log into a WPCOM site,
         //  ORIGIN_LOGIN_SCREEN_JETPACK when trying to view stats on a Jetpack site and need to login with WPCOM
+        //  ORIGIN_LOGIN_SCREEN_WPCOM for when trying to log into a WPCOM site and UI not in forced self-hosted mode
         //  ORIGIN_LOGIN_SCREEN_SELFHOSTED when logging in a selfhosted site
-        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, isWPComLogin() ? Tag.ORIGIN_LOGIN_SCREEN_WPCOM
-                        : (isJetpackAuth() ? Tag.ORIGIN_LOGIN_SCREEN_JETPACK : Tag.ORIGIN_LOGIN_SCREEN_SELFHOSTED));
+        return isJetpackAuth() ? Tag.ORIGIN_LOGIN_SCREEN_JETPACK :
+                ((isWPComLogin() && !mSelfHosted) ? Tag.ORIGIN_LOGIN_SCREEN_WPCOM : Tag.ORIGIN_LOGIN_SCREEN_SELFHOSTED);
     }
 
     protected void handleInvalidUsernameOrPassword(int messageId) {
@@ -1294,7 +1294,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
                     SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
             Bundle bundle = nuxAlert.getArguments();
-            passHelpshiftErrorOriginTag(bundle);
+            bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, chooseHelpshiftLoginTag());
             nuxAlert.setArguments(bundle);
         }
         ft.add(nuxAlert, "alert");
