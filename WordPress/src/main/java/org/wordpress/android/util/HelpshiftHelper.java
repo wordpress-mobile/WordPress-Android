@@ -54,6 +54,7 @@ public class HelpshiftHelper {
         ORIGIN_LOGIN_SCREEN_ERROR_WPCOM("origin:wpcom-login-screen-error"),
         ORIGIN_LOGIN_SCREEN_ERROR_SELFHOSTED("origin:wporg-login-screen-error"),
         ORIGIN_LOGIN_SCREEN_ERROR_JETPACK("origin:jetpack-login-screen-error"),
+        ORIGIN_SIGNUP_SCREEN("origin:signup-screen"),
         ORIGIN_ME_SCREEN_HELP("origin:me-screen-help"),
         ORIGIN_START_OVER("origin:start-over"),
         ORIGIN_DELETE_SITE("origin:delete-site");
