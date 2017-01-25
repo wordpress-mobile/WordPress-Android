@@ -10,10 +10,15 @@ import com.yarolegovich.wellsql.mapper.InsertMapper;
 
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.List;
 
 public class SiteSqlUtils {
+    public static class DuplicateSiteException extends Exception {
+    }
+
     public static List<SiteModel> getAllSitesWith(String field, Object value) {
         return WellSql.select(SiteModel.class)
                 .where().equals(field, value).endWhere()
@@ -55,10 +60,12 @@ public class SiteSqlUtils {
                 .getAsCursor().getCount();
     }
 
-    public static int insertOrUpdateSite(SiteModel site) {
+    public static int insertOrUpdateSite(SiteModel site) throws DuplicateSiteException {
         if (site == null) {
             return 0;
         }
+
+        AppLog.d(T.DB, "insertOrUpdateSite: " + site.getUrl());
 
         // If the site already exist and has an id, we want to update it.
         List<SiteModel> siteResult = WellSql.select(SiteModel.class)
@@ -66,9 +73,10 @@ public class SiteSqlUtils {
                 .equals(SiteModelTable.ID, site.getId())
                 .endGroup().endWhere().getAsModel();
 
+
         // Looks like a new site, make sure we don't already have it.
         if (siteResult.isEmpty()) {
-            // TODO: Make the URL enough, we could get surprise with the site id with .org sites becoming jetpack sites
+            AppLog.d(T.DB, "Site not found using local id");
             siteResult = WellSql.select(SiteModel.class)
                     .where().beginGroup()
                     .equals(SiteModelTable.SITE_ID, site.getSiteId())
@@ -76,12 +84,36 @@ public class SiteSqlUtils {
                     .endGroup().endWhere().getAsModel();
         }
 
+
+        // If the site is a self hosted, maybe it's already in the DB as a Jetpack site, and we don't want to create
+        // a duplicate.
         if (siteResult.isEmpty()) {
-            // No site with this local ID, or REMOTE_ID + URL, then insert it
+            AppLog.d(T.DB, "Site not found using remote id + url");
+            siteResult = WellSql.select(SiteModel.class)
+                    .where()
+                    .equals(SiteModelTable.XMLRPC_URL, site.getXmlRpcUrl())
+                    .endWhere().getAsModel();
+            if (!siteResult.isEmpty()) {
+                AppLog.d(T.DB, "Site found using xmlrpc url: " + site.getXmlRpcUrl());
+                // If the site already in the DB is a self hosted and the new one is a .com, it means we upgraded from
+                // self hosted to jetpack, we want to update the site with the new informations.
+                if (siteResult.get(0).isWPCom() || !site.isWPCom()) {
+                    AppLog.d(T.DB, "Site is a duplicate");
+                    // In other cases (examples: adding the same self hosted twice or adding self hosted on top of an
+                    // existing jetpack site), we consider it as an error.
+                    throw new DuplicateSiteException();
+                }
+            }
+        }
+
+        if (siteResult.isEmpty()) {
+            // No site with this local ID, REMOTE_ID + URL, or XMLRPC URL, then insert it
+            AppLog.d(T.DB, "Inserting site: " + site.getUrl());
             WellSql.insert(site).asSingleTransaction(true).execute();
-            return 0;
+            return 1;
         } else {
             // Update old site
+            AppLog.d(T.DB, "Updating site: " + site.getUrl());
             int oldId = siteResult.get(0).getId();
             return WellSql.update(SiteModel.class).whereId(oldId)
                     .put(site, new UpdateAllExceptId<SiteModel>()).execute();

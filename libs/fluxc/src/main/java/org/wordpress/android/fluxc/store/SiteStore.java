@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPCo
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -165,6 +166,7 @@ public class SiteStore extends Store {
 
     public enum SiteErrorType {
         INVALID_SITE,
+        DUPLICATE_SITE,
         GENERIC_ERROR
     }
 
@@ -697,27 +699,31 @@ public class SiteStore extends Store {
     }
 
     private void updateSite(SiteModel siteModel) {
-        OnSiteChanged event;
+        OnSiteChanged event = new OnSiteChanged(0);
         if (siteModel.isError()) {
-            event = new OnSiteChanged(0);
             // TODO: what kind of error could we get here?
             event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
         } else {
-            int rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
-            event = new OnSiteChanged(rowsAffected);
+            try {
+                event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
+            } catch (DuplicateSiteException e) {
+                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
         }
         emitChange(event);
     }
 
     private void updateSites(SitesModel sitesModel) {
-        OnSiteChanged event;
+        OnSiteChanged event = new OnSiteChanged(0);
         if (sitesModel.isError()) {
-            event = new OnSiteChanged(0);
             // TODO: what kind of error could we get here?
             event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
         } else {
-            int rowsAffected = createOrUpdateSites(sitesModel);
-            event = new OnSiteChanged(rowsAffected);
+            try {
+                event.rowsAffected = createOrUpdateSites(sitesModel);
+            } catch (DuplicateSiteException e) {
+                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
         }
         emitChange(event);
     }
@@ -757,7 +763,7 @@ public class SiteStore extends Store {
     private void handleCheckedIsWPComUrl(IsWPComResponsePayload payload) {
         OnURLChecked event = new OnURLChecked(payload.url);
         if (payload.isError()) {
-            // Return invalid site for all errors (this endpoint is not documented and seems a bit drunk).
+            // Return invalid site for all errors (this endpoint seems a bit drunk).
             // Client likely needs to know if there was an error or not.
             event.error = new SiteError(SiteErrorType.INVALID_SITE);
         }
@@ -765,7 +771,7 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private int createOrUpdateSites(SitesModel sites) {
+    private int createOrUpdateSites(SitesModel sites) throws DuplicateSiteException {
         int rowsAffected = 0;
         for (SiteModel site : sites.getSites()) {
             rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
