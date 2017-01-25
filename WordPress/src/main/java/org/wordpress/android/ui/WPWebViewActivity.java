@@ -191,6 +191,15 @@ public class WPWebViewActivity extends WebViewActivity {
             if (!TextUtils.isEmpty(authURL)) {
                 allowedURL.add(authURL);
             }
+
+            // In this case Links are disabled, but WP removes "?preview=true" from the passed URL, and internally redirects to it.
+            // EX:  Published posts on a site with Plain permalink structure settings.
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
+            if (!TextUtils.isEmpty(addressToLoad) && addressToLoad.endsWith("preview=true")) {
+                int indexOf = addressToLoad.lastIndexOf("preview=true");
+                //allowedURL.add(addressToLoad.substring(0, indexOf-1));
+                allowedURL.add(addressToLoad.substring(0, addressToLoad.length() - 13));
+            }
         }
 
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
