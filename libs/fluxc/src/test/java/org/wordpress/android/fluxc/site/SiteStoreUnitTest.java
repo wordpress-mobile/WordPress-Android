@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.SiteStore;
 
@@ -60,7 +61,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testInsertOrUpdateSite() {
+    public void testInsertOrUpdateSite() throws DuplicateSiteException {
         SiteModel site = generateWPComSite();
         SiteSqlUtils.insertOrUpdateSite(site);
 
@@ -69,7 +70,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testHasSiteAndgetCountMethods() {
+    public void testHasSiteAndgetCountMethods() throws DuplicateSiteException {
         assertFalse(mSiteStore.hasSite());
         assertTrue(mSiteStore.getSites().isEmpty());
 
@@ -114,7 +115,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testHasSiteWithSiteIdAndXmlRpcUrl() {
+    public void testHasSiteWithSiteIdAndXmlRpcUrl() throws DuplicateSiteException {
         assertFalse(mSiteStore.hasSelfHostedSiteWithSiteIdAndXmlRpcUrl(124, ""));
 
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
@@ -131,7 +132,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testHasWPComOrJetpackSiteWithSiteId() {
+    public void testHasWPComOrJetpackSiteWithSiteId() throws DuplicateSiteException {
         assertFalse(mSiteStore.hasWPComOrJetpackSiteWithSiteId(673));
 
         SiteModel wpComSite = generateWPComSite();
@@ -149,7 +150,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testWPComSiteVisibility() {
+    public void testWPComSiteVisibility() throws DuplicateSiteException {
         // Should not cause any errors
         mSiteStore.isWPComSiteVisibleByLocalId(45);
         SiteSqlUtils.setSiteVisibility(null, true);
@@ -173,7 +174,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testSetAllWPComSitesVisibility() {
+    public void testSetAllWPComSitesVisibility() throws DuplicateSiteException {
         SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
         SiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
 
@@ -202,7 +203,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testGetIdForIdMethods() {
+    public void testGetIdForIdMethods() throws DuplicateSiteException {
         assertEquals(0, mSiteStore.getLocalIdForRemoteSiteId(555));
         assertEquals(0, mSiteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(2626, ""));
         assertEquals(0, mSiteStore.getSiteIdForLocalId(5577));
@@ -233,7 +234,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testGetSiteBySiteId() {
+    public void testGetSiteBySiteId() throws DuplicateSiteException {
         assertNull(mSiteStore.getSiteBySiteId(555));
 
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
@@ -249,7 +250,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testDeleteSite() {
+    public void testDeleteSite() throws DuplicateSiteException {
         SiteModel wpComSite = generateWPComSite();
 
         // Should not cause any errors
@@ -263,7 +264,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testGetWPComSites() {
+    public void testGetWPComSites() throws DuplicateSiteException {
         SiteModel wpComSite = generateWPComSite();
         SiteModel jetpackSiteOverSelfHosted = generateJetpackSite();
         SiteModel jetpackSiteOverRestOnly = generateJetpackSiteOverRestOnly();
@@ -281,7 +282,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testGetPostFormats() {
+    public void testGetPostFormats() throws DuplicateSiteException {
         SiteModel site = generateWPComSite();
         SiteSqlUtils.insertOrUpdateSite(site);
 
@@ -297,7 +298,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testSearchSitesByNameMatching() {
+    public void testSearchSitesByNameMatching() throws DuplicateSiteException {
         SiteModel wpComSite1 = generateWPComSite();
         wpComSite1.setName("Doctor Emmet Brown Homepage");
         SiteModel wpComSite2 = generateWPComSite();
@@ -317,7 +318,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testSearchSitesByNameOrUrlMatching() {
+    public void testSearchSitesByNameOrUrlMatching() throws DuplicateSiteException {
         SiteModel wpComSite1 = generateWPComSite();
         wpComSite1.setName("Doctor Emmet Brown Homepage");
         SiteModel wpComSite2 = generateWPComSite();
@@ -337,7 +338,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testSearchWPComSitesByNameOrUrlMatching() {
+    public void testSearchWPComSitesByNameOrUrlMatching() throws DuplicateSiteException {
         SiteModel wpComSite1 = generateWPComSite();
         wpComSite1.setName("Doctor Emmet Brown Homepage");
         SiteModel wpComSite2 = generateWPComSite();
