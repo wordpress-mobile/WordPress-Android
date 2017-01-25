@@ -25,10 +25,11 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSite;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOverXMLRPC;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOverRestOnly;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generatePostFormats;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedNonJPSite;
@@ -100,8 +101,8 @@ public class SiteStoreUnitTest {
         assertEquals(1, mSiteStore.getSelfHostedSitesCount());
 
         // Test counts with one .COM, one self-hosted and one Jetpack site
-        SiteModel jetpackSite = generateJetpackSite();
-        SiteSqlUtils.insertOrUpdateSite(jetpackSite);
+        SiteModel jetpackSiteOverXMLRPC = generateJetpackSiteOverXMLRPC();
+        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverXMLRPC);
 
         assertTrue(mSiteStore.hasSite());
         assertTrue(mSiteStore.hasWPComSite());
@@ -109,8 +110,8 @@ public class SiteStoreUnitTest {
         assertTrue(mSiteStore.hasJetpackSite());
 
         assertEquals(3, mSiteStore.getSitesCount());
-        assertEquals(2, mSiteStore.getWPComSitesCount());
-        assertEquals(1, mSiteStore.getSelfHostedSitesCount());
+        assertEquals(1, mSiteStore.getWPComSitesCount());
+        assertEquals(2, mSiteStore.getSelfHostedSitesCount());
         assertEquals(1, mSiteStore.getJetpackSitesCount());
     }
 
@@ -124,7 +125,7 @@ public class SiteStoreUnitTest {
         assertTrue(mSiteStore.hasSelfHostedSiteWithSiteIdAndXmlRpcUrl(selfHostedSite.getSelfHostedSiteId(),
                 selfHostedSite.getXmlRpcUrl()));
 
-        SiteModel jetpackSite = generateJetpackSite();
+        SiteModel jetpackSite = generateJetpackSiteOverXMLRPC();
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
         assertTrue(mSiteStore.hasSelfHostedSiteWithSiteIdAndXmlRpcUrl(jetpackSite.getSelfHostedSiteId(),
@@ -140,7 +141,7 @@ public class SiteStoreUnitTest {
 
         assertTrue(mSiteStore.hasWPComOrJetpackSiteWithSiteId(wpComSite.getSiteId()));
 
-        SiteModel jetpackSite = generateJetpackSite();
+        SiteModel jetpackSite = generateJetpackSiteOverXMLRPC();
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
         // hasWPComOrJetpackSiteWithSiteId() should be able to locate a Jetpack site with either the site id or the
@@ -210,7 +211,7 @@ public class SiteStoreUnitTest {
 
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
         SiteModel wpComSite = generateWPComSite();
-        SiteModel jetpackSite = generateJetpackSite();
+        SiteModel jetpackSite = generateJetpackSiteOverXMLRPC();
         SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
         SiteSqlUtils.insertOrUpdateSite(wpComSite);
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
@@ -239,7 +240,7 @@ public class SiteStoreUnitTest {
 
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
         SiteModel wpComSite = generateWPComSite();
-        SiteModel jetpackSite = generateJetpackSite();
+        SiteModel jetpackSite = generateJetpackSiteOverXMLRPC();
         SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
         SiteSqlUtils.insertOrUpdateSite(wpComSite);
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
@@ -266,17 +267,19 @@ public class SiteStoreUnitTest {
     @Test
     public void testGetWPComSites() throws DuplicateSiteException {
         SiteModel wpComSite = generateWPComSite();
-        SiteModel jetpackSiteOverSelfHosted = generateJetpackSite();
+        SiteModel jetpackSiteOverXMLRPC = generateJetpackSiteOverXMLRPC();
         SiteModel jetpackSiteOverRestOnly = generateJetpackSiteOverRestOnly();
 
         SiteSqlUtils.insertOrUpdateSite(wpComSite);
-        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverSelfHosted);
-        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
+        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverXMLRPC);
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
 
         List<SiteModel> wpComSites = SiteSqlUtils.getAllWPComSites();
 
-        assertEquals(3, wpComSites.size());
+        assertEquals(2, wpComSites.size());
+        for (SiteModel site : wpComSites) {
+            assertNotEquals(jetpackSiteOverXMLRPC.getId(), site.getId());
+        }
     }
 
     @Test
