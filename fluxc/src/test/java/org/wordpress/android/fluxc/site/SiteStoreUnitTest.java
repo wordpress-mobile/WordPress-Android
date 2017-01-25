@@ -108,8 +108,8 @@ public class SiteStoreUnitTest {
         assertTrue(mSiteStore.hasJetpackSite());
 
         assertEquals(3, mSiteStore.getSitesCount());
-        assertEquals(1, mSiteStore.getWPComSitesCount());
-        assertEquals(2, mSiteStore.getSelfHostedSitesCount());
+        assertEquals(2, mSiteStore.getWPComSitesCount());
+        assertEquals(1, mSiteStore.getSelfHostedSitesCount());
         assertEquals(1, mSiteStore.getJetpackSitesCount());
     }
 

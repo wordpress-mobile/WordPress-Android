@@ -29,7 +29,7 @@ public class SiteUtils {
         SiteModel example = new SiteModel();
         example.setSiteId(982);
         example.setSelfHostedSiteId(8);
-        example.setIsWPCom(false);
+        example.setIsWPCom(true);
         example.setIsJetpack(true);
         example.setIsVisible(true);
         example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
@@ -39,7 +39,7 @@ public class SiteUtils {
     public static SiteModel generateJetpackSiteOverRestOnly() {
         SiteModel example = new SiteModel();
         example.setSiteId(5623);
-        example.setIsWPCom(false);
+        example.setIsWPCom(true);
         example.setIsJetpack(true);
         example.setIsVisible(true);
         example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
