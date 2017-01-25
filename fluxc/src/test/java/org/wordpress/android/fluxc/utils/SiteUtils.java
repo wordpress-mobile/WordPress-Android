@@ -25,11 +25,11 @@ public class SiteUtils {
         return example;
     }
 
-    public static SiteModel generateJetpackSite() {
+    public static SiteModel generateJetpackSiteOverXMLRPC() {
         SiteModel example = new SiteModel();
         example.setSiteId(982);
         example.setSelfHostedSiteId(8);
-        example.setIsWPCom(true);
+        example.setIsWPCom(false);
         example.setIsJetpack(true);
         example.setIsVisible(true);
         example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
