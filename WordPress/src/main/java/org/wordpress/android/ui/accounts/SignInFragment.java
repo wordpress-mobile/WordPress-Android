@@ -1254,7 +1254,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onAvailabilityChecked(OnAvailabilityChecked event) {
         if (event.isError()) {
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
-            return;
         }
 
         if (event.type == IsAvailable.EMAIL && !event.isAvailable) {
