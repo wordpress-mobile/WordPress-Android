@@ -42,7 +42,17 @@ public class SiteUtils {
         example.setIsWPCom(true);
         example.setIsJetpack(true);
         example.setIsVisible(true);
-        example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
+        example.setXmlRpcUrl("http://jetpack2.url/xmlrpc.php");
+        return example;
+    }
+
+    public static SiteModel generateSelfHostedSiteFutureJetpack() {
+        SiteModel example = new SiteModel();
+        example.setSelfHostedSiteId(8);
+        example.setIsWPCom(false);
+        example.setIsJetpack(false);
+        example.setIsVisible(true);
+        example.setXmlRpcUrl("http://jetpack2.url/xmlrpc.php");
         return example;
     }
 
