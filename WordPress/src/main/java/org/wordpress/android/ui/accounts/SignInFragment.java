@@ -32,14 +32,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.credentials.Credential;
-import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -90,7 +86,6 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -119,9 +114,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private static final String MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_SECTION = "10";
     private static final String MISSING_XMLRPC_METHOD_HELPSHIFT_FAQ_ID = "11";
-
-    private static final String INVALID_URL_HELPSHIFT_FAQ_SECTION = "10";
-    private static final String INVALID_URL_HELPSHIFT_FAQ_ID = "2";
 
     private static final String NO_SITE_HELPSHIFT_FAQ_SECTION = "10";
     private static final String NO_SITE_HELPSHIFT_FAQ_ID = "2"; //using the same as in INVALID URL
@@ -1116,6 +1108,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
         endProgress();
     }
+
     private void showGenericErrorDialog(String errorMessage) {
         showGenericErrorDialog(errorMessage, null, null);
     }
@@ -1141,29 +1134,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         ft.commitAllowingStateLoss();
     }
 
-    private void showAuthError(AuthenticationErrorType error, String errorMessage) {
-        switch (error) {
-            case INCORRECT_USERNAME_OR_PASSWORD:
-            case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
-                handleInvalidUsernameOrPassword(R.string.username_or_password_incorrect);
-                break;
-            case INVALID_OTP:
-                showTwoStepCodeError(R.string.invalid_verification_code);
-                break;
-            case NEEDS_2FA:
-                setTwoStepAuthVisibility(true);
-                mTwoStepEditText.setText(getAuthCodeFromClipboard());
-                break;
-            case INVALID_REQUEST:
-                // TODO: STORES: could be specific?
-            default:
-                // For all other kind of error, show a dialog with API Response error message
-                AppLog.e(T.NUX, "Server response: " + errorMessage);
-                showGenericErrorDialog(errorMessage);
-                break;
-        }
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -1173,7 +1143,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Override
     public void onStart() {
         super.onStart();
-        // Autofill username / password if string fields are set (only usefull after an error in sign up).
+        // Autofill username / password if string fields are set (only useful after an error in sign up).
         // This can't be done in onCreateView
         if (mUsername != null) {
             mUsernameEditText.setText(mUsername);
@@ -1201,63 +1171,64 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private void fetchAccountSettingsAndSites() {
-        if (mAccountStore.hasAccessToken()) {
-            // Fetch user infos
-            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
-            // Fetch sites
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
-            // Setup legacy access token storage
-            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
-            // Start Notification service
-            NotificationsUpdateService.startService(getActivity().getApplicationContext());
-        }
-    }
-
     // OnChanged events
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        AppLog.i(T.NUX, event.toString());
+        if (event.isError()) {
+            AppLog.e(T.API, "onAccountChanged has error: " + event.error.type + " - " + event.error.message);
+            endProgress();
+            return;
+        }
+
+        AppLog.i(T.NUX, "onAccountChanged: " + event.toString());
+
+        // Success
         mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
         mAccountFetched |= event.causeOfChange == AccountAction.FETCH_ACCOUNT;
+
         // Finish activity if sites have been fetched
         if (mSitesFetched && mAccountSettingsFetched && mAccountFetched) {
             updateMigrationStatusIfNeeded();
             finishCurrentActivity();
-        }
-
-        if (event.isError()) {
-            endProgress();
         }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
+            AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(Stat.LOGIN_FAILED);
             showAuthError(event.error.type, event.error.message);
             updateMigrationStatusIfNeeded();
             endProgress();
             return;
         }
+
+        AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
+
         fetchAccountSettingsAndSites();
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        AppLog.i(T.NUX, event.toString());
+        if (event.isError()) {
+            AppLog.e(T.API, "onSiteChanged has error: " + event.error.type + " - " + event.error.toString());
+            endProgress();
+            return;
+        }
+
+        AppLog.i(T.NUX, "onSiteChanged: " + event.toString());
 
         // Login Successful
         trackAnalyticsSignIn();
         mSitesFetched = true;
+
         // Finish activity if account settings have been fetched or if it's a wporg site
-        if (((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) && !event.isError()) {
+        if (((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin())) {
             updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
@@ -1267,10 +1238,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDiscoverySucceeded(OnDiscoveryResponse event) {
         if (event.isError()) {
+            AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name() + " - " + event.error.toString());
             handleDiscoveryError(event.error, event.failedEndpoint);
             return;
         }
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
+
         mSelfhostedPayload.url = event.xmlRpcEndpoint;
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(mSelfhostedPayload));
     }
@@ -1280,8 +1253,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onAvailabilityChecked(OnAvailabilityChecked event) {
         if (event.isError()) {
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
+            return;
         }
-        if (!event.isError() && event.type == IsAvailable.EMAIL && !event.isAvailable) {
+
+        if (event.type == IsAvailable.EMAIL && !event.isAvailable) {
             // Email address exists in WordPress.com
             if (mListener != null) {
                 mListener.onMagicLinkRequestSuccess(mUsername);
@@ -1292,7 +1267,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
+    private void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
         AppLog.e(T.API, "Discover error: " + error);
         endProgress();
         if (!isAdded()) {
@@ -1313,7 +1288,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                                     mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
                                 }
                             });
-
                 break;
             case HTTP_AUTH_REQUIRED:
                 askForHttpAuthCredentials(failedEndpoint);
@@ -1350,6 +1324,43 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             default:
                 showGenericErrorDialog(getResources().getString(R.string.nux_cannot_log_in));
                 break;
+        }
+    }
+
+    private void showAuthError(AuthenticationErrorType error, String errorMessage) {
+        switch (error) {
+            case INCORRECT_USERNAME_OR_PASSWORD:
+            case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
+                handleInvalidUsernameOrPassword(R.string.username_or_password_incorrect);
+                break;
+            case INVALID_OTP:
+                showTwoStepCodeError(R.string.invalid_verification_code);
+                break;
+            case NEEDS_2FA:
+                setTwoStepAuthVisibility(true);
+                mTwoStepEditText.setText(getAuthCodeFromClipboard());
+                break;
+            case INVALID_REQUEST:
+                // TODO: STORES: could be specific?
+            default:
+                // For all other kind of error, show a dialog with API Response error message
+                AppLog.e(T.NUX, "Server response: " + errorMessage);
+                showGenericErrorDialog(errorMessage);
+                break;
+        }
+    }
+
+    private void fetchAccountSettingsAndSites() {
+        if (mAccountStore.hasAccessToken()) {
+            // Fetch user infos
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+            // Fetch sites
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+            // Setup legacy access token storage
+            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
+            // Start Notification service
+            NotificationsUpdateService.startService(getActivity().getApplicationContext());
         }
     }
 
