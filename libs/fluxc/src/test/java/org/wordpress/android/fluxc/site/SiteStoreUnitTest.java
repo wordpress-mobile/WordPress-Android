@@ -25,7 +25,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -33,6 +32,7 @@ import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSite;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOverRestOnly;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generatePostFormats;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedNonJPSite;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedSiteFutureJetpack;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateWPComSite;
 
 @RunWith(RobolectricTestRunner.class)
@@ -272,13 +272,52 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(wpComSite);
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverSelfHosted);
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
+        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
 
         List<SiteModel> wpComSites = SiteSqlUtils.getAllWPComSites();
 
-        assertEquals(2, wpComSites.size());
-        for (SiteModel site : wpComSites) {
-            assertNotEquals(jetpackSiteOverSelfHosted.getId(), site.getId());
+        assertEquals(3, wpComSites.size());
+    }
+
+    @Test
+    public void testInsertDuplicateSites() throws DuplicateSiteException {
+        SiteModel futureJetpack = generateSelfHostedSiteFutureJetpack();
+        SiteModel jetpack = generateJetpackSiteOverRestOnly();
+
+        // Insert a self hosted site that will later be converted to Jetpack
+        SiteSqlUtils.insertOrUpdateSite(futureJetpack);
+        // Insert the same site but Jetpack powered this time
+        SiteSqlUtils.insertOrUpdateSite(jetpack);
+
+        // Previous site should be converted to a Jetpack site and we should see only one site
+        int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
+        assertEquals(1, sitesCount);
+
+        List<SiteModel> wpComSites  = SiteSqlUtils.getAllWPComSites();
+        assertEquals(1, wpComSites.size());
+        assertEquals(jetpack.getSiteId(), wpComSites.get(0).getSiteId());
+        assertTrue(wpComSites.get(0).isJetpack());
+        assertTrue(wpComSites.get(0).isWPCom());
+    }
+
+    @Test
+    public void testInsertDuplicateSitesError() throws DuplicateSiteException {
+        SiteModel futureJetpack = generateSelfHostedSiteFutureJetpack();
+        SiteModel jetpack = generateJetpackSiteOverRestOnly();
+
+        // Insert a Jetpack powered site
+        SiteSqlUtils.insertOrUpdateSite(jetpack);
+        boolean duplicate = false;
+        try {
+            // Insert the same site but via self hosted this time (this should fail)
+            SiteSqlUtils.insertOrUpdateSite(futureJetpack);
+        } catch (DuplicateSiteException e) {
+            // Caught !
+            duplicate = true;
         }
+        assertTrue(duplicate);
+        int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
+        assertEquals(1, sitesCount);
     }
 
     @Test
