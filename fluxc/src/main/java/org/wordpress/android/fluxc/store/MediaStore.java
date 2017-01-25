@@ -554,9 +554,12 @@ public class MediaStore extends Store {
     private void handleAllMediaFetched(@NonNull MediaListPayload payload) {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_ALL_MEDIA, payload.media);
 
-        if (!payload.isError() && !payload.media.isEmpty()) {
-            for (MediaModel media : payload.media) {
-                updateMedia(media, false);
+        if (!payload.isError()) {
+            MediaSqlUtils.deleteAllSiteMedia(payload.site);
+            if (!payload.media.isEmpty()) {
+                for (MediaModel media : payload.media) {
+                    updateMedia(media, false);
+                }
             }
         }
 
