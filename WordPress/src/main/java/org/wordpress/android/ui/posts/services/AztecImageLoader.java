@@ -21,8 +21,10 @@ public class AztecImageLoader implements Html.ImageGetter {
         WordPress.imageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), response.getBitmap());
-                callbacks.onImageLoaded(bitmapDrawable);
+                if (response.getBitmap() != null) {
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), response.getBitmap());
+                    callbacks.onImageLoaded(bitmapDrawable);
+                }
             }
 
             @Override
