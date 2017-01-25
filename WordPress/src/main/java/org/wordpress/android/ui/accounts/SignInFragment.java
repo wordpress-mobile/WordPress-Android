@@ -1251,13 +1251,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     protected void passHelpshiftErrorOriginTag(Bundle bundle) {
         // Tag assignment:
-        //  ORIGIN_LOGIN_SCREEN_ERROR_WPCOM for when trying to log into a WPCOM site,
-        //  ORIGIN_LOGIN_SCREEN_ERROR_JETPACK when trying to view stats on a Jetpack site and need to login with WPCOM
-        //  ORIGIN_LOGIN_SCREEN_ERROR_SELFHOSTED when logging in a selfhosted site
-        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY,
-                isWPComLogin() ? Tag.ORIGIN_LOGIN_SCREEN_ERROR_WPCOM
-                        : (isJetpackAuth() ? Tag.ORIGIN_LOGIN_SCREEN_ERROR_JETPACK
-                                : Tag.ORIGIN_LOGIN_SCREEN_ERROR_SELFHOSTED));
+        //  ORIGIN_LOGIN_SCREEN_WPCOM for when trying to log into a WPCOM site,
+        //  ORIGIN_LOGIN_SCREEN_JETPACK when trying to view stats on a Jetpack site and need to login with WPCOM
+        //  ORIGIN_LOGIN_SCREEN_SELFHOSTED when logging in a selfhosted site
+        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, isWPComLogin() ? Tag.ORIGIN_LOGIN_SCREEN_WPCOM
+                        : (isJetpackAuth() ? Tag.ORIGIN_LOGIN_SCREEN_JETPACK : Tag.ORIGIN_LOGIN_SCREEN_SELFHOSTED));
     }
 
     protected void handleInvalidUsernameOrPassword(int messageId) {
