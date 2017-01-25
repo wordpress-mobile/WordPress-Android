@@ -14,7 +14,9 @@ import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.util.AppLog;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -39,8 +41,27 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         // here build notifications
         mContext = context;
 
-        // get extras from intent in order to build notification
-        long postId = intent.getLongExtra(POST_ID_EXTRA, 0);
+        // for the case of being spanned after device restarts, get the latest drafts
+        // and check the lastUpdated
+        String action = intent.getAction();
+        if (action != null && action.equals("android.intent.action.BOOT_COMPLETED")) {
+            AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from BOOT_COMPLETED");
+            // build notifications for existing local drafts
+            int localBlogId = WordPress.getCurrentLocalTableBlogId();
+            if (localBlogId != -1) {
+                ArrayList<Post> draftPosts = WordPress.wpDB.getDraftPostList(localBlogId);
+                for (Post post : draftPosts) {
+                    buildNotificationForPostId(post.getLocalTablePostId());
+                }
+            }
+        } else {
+            AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from alarm");
+            // get extras from intent in order to build notification
+            buildNotificationForPostId(intent.getLongExtra(POST_ID_EXTRA, 0));
+        }
+    }
+
+    private void buildNotificationForPostId(long postId) {
         if (postId != 0) {
             Post post = WordPress.wpDB.getPostForLocalTablePostId(postId);
             if (post != null) {
@@ -90,7 +111,6 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                 }
             }
         }
-
     }
 
     private String getPostTitle(String postTitle) {
