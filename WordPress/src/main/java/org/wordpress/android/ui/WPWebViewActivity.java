@@ -196,8 +196,7 @@ public class WPWebViewActivity extends WebViewActivity {
             // EX:  Published posts on a site with Plain permalink structure settings.
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
             if (!TextUtils.isEmpty(addressToLoad) && addressToLoad.endsWith("preview=true")) {
-                int indexOf = addressToLoad.lastIndexOf("preview=true");
-                //allowedURL.add(addressToLoad.substring(0, indexOf-1));
+                // Remove "(?|&)preview=true" string
                 allowedURL.add(addressToLoad.substring(0, addressToLoad.length() - 13));
             }
         }
