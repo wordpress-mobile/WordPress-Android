@@ -98,10 +98,11 @@ public class MediaUploadService extends Service {
         }
 
         mSite = (SiteModel) intent.getSerializableExtra(SITE_KEY);
-        long[] mediaIdList = intent.getLongArrayExtra(MEDIA_LIST_KEY);
-
-        if (mediaIdList != null && mediaIdList.length > 0) {
-            populateQueue(mediaIdList);
+        List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
+        if (mediaList != null) {
+            for (MediaModel media : mediaList) {
+                mQueue.add(media);
+            }
         }
 
         if (mQueue.isEmpty()) {
@@ -186,16 +187,6 @@ public class MediaUploadService extends Service {
         MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
         return true;
-    }
-
-    private void populateQueue(@NonNull long[] mediaIdList) {
-        // search store for media items
-        for (long mediaId : mediaIdList) {
-            MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
-            if (media != null) {
-                mQueue.add(media);
-            }
-        }
     }
 
     private MediaModel getQueueMediaWithId(long mediaId) {

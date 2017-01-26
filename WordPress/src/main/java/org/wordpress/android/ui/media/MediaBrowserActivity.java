@@ -112,6 +112,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private MediaDeleteService.MediaDeleteBinder mDeleteService;
     private MediaUploadService.MediaUploadBinder mUploadService;
     private ArrayList<MediaModel> mPendingUploads;
+    private boolean mDeleteServiceBound;
+    private boolean mUploadServiceBound;
 
     private String mQuery;
     private String mMediaCapturePath;
@@ -207,13 +209,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onStop() {
         unregisterReceiver(mReceiver);
         mDispatcher.unregister(this);
-        if (mDeleteService != null) {
-            unbindService(mDeleteConnection);
-        }
-        if (mUploadService != null) {
-            unbindService(mUploadConnection);
-        }
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        doUnbindDeleteService();
+        doUnbindUploadService();
     }
 
     @Override
@@ -699,6 +702,28 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     };
 
+    private void doBindDeleteService(Intent intent) {
+        bindService(intent, mDeleteConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+        mDeleteServiceBound = true;
+    }
+
+    private void doBindUploadService(Intent intent) {
+        bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+        mUploadServiceBound = true;
+    }
+
+    private void doUnbindDeleteService() {
+        if (mDeleteServiceBound) {
+            unbindService(mDeleteConnection);
+        }
+    }
+
+    private void doUnbindUploadService() {
+        if (mUploadServiceBound) {
+            unbindService(mUploadConnection);
+        }
+    }
+
     private final ServiceConnection mDeleteConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
@@ -900,7 +925,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             intent.putExtra(MediaDeleteService.SITE_KEY, mSite);
             if (mediaToDelete != null) {
                 intent.putExtra(MediaDeleteService.MEDIA_LIST_KEY, mediaToDelete);
-                bindService(intent, mDeleteConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+                doBindDeleteService(intent);
             }
             startService(intent);
         }
@@ -917,8 +942,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             Intent intent = new Intent(this, MediaUploadService.class);
             intent.putExtra(MediaUploadService.SITE_KEY, mSite);
             if (mediaToUpload != null) {
-                intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaToUpload.toArray());
-                bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+                intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaToUpload);
+                doBindUploadService(intent);
             }
             startService(intent);
         }
