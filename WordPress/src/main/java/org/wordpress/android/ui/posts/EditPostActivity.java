@@ -7,10 +7,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -20,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -85,6 +88,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
@@ -173,8 +177,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
     private Map<Long, List<Long>> mPendingGalleryUploads = new HashMap<>();
 
-    // -1=no response yet, 0=unavailable, 1=available
-    private boolean mMediaUploadServiceStarted;
     private List<String> mPendingVideoPressInfoRequests;
 
     /**
@@ -1714,15 +1716,42 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    private MediaUploadService.MediaUploadBinder mUploadService;
+    private MediaDeleteService.MediaDeleteBinder mDeleteService;
+
+    private ServiceConnection mUploadConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mUploadService = (MediaUploadService.MediaUploadBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mUploadService = null;
+        }
+    };
+
+    private ServiceConnection mDeleteConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mDeleteService = (MediaDeleteService.MediaDeleteBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mDeleteService = null;
+        }
+    };
+
     /**
      * Starts the upload service to upload selected media.
      */
     private void startMediaUploadService() {
-        if (!mMediaUploadServiceStarted) {
+        if (mUploadService == null) {
             Intent intent = new Intent(this, MediaUploadService.class);
             intent.putExtra(WordPress.SITE, mSite);
+            bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
             startService(intent);
-            mMediaUploadServiceStarted = true;
         }
     }
 
@@ -1730,9 +1759,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Stops the upload service.
      */
     private void stopMediaUploadService() {
-        if (mMediaUploadServiceStarted) {
+        if (mUploadService != null) {
             stopService(new Intent(this, MediaUploadService.class));
-            mMediaUploadServiceStarted = false;
+            unbindService(mUploadConnection);
+            mUploadService = null;
         }
     }
 
@@ -1836,9 +1866,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        String blogId = String.valueOf(mSite.getId());
-
-        if (!mMediaUploadServiceStarted) {
+        if (mUploadService == null) {
             startMediaUploadService();
         } else {
         }
@@ -1847,6 +1875,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
+        MediaModel media = new MediaModel();
+        media.setMediaId(Long.valueOf(mediaId));
+        MediaPayload payload = new MediaPayload(mSite, media);
+        mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
     @Override

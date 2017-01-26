@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -36,23 +35,31 @@ public class MediaDeleteService extends Service {
         public MediaDeleteService getService() {
             return MediaDeleteService.this;
         }
-        public boolean addMediaToDeleteQueue(@NonNull MediaModel media) {
-            return mDeleteQueue != null && mDeleteQueue.add(media);
+
+        public void addMediaToDeleteQueue(@NonNull MediaModel media) {
+            getDeleteQueue().add(media);
+            deleteNextInQueue();
         }
-        public boolean removeMediaFromDeleteQueue(@NonNull MediaModel media) {
-            return mDeleteQueue != null && mDeleteQueue.remove(media);
+
+        public void removeMediaFromDeleteQueue(@NonNull MediaModel media) {
+            getDeleteQueue().remove(media);
+            deleteNextInQueue();
+        }
+
+        public List<MediaModel> getCompletedItems() {
+            return getCompletedItems();
         }
     }
 
     private final IBinder mBinder = new MediaDeleteBinder();
 
-    private SiteModel mSite;
-    private MediaModel mCurrentDelete;
-    private List<MediaModel> mDeleteQueue;
-    private List<MediaModel> mCompletedItems = new ArrayList<>();
-
+    private SiteModel mSite; // required for payloads
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+
+    private MediaModel mCurrentDelete;
+    private List<MediaModel> mDeleteQueue;
+    private List<MediaModel> mCompletedItems;
 
     @Override
     public void onCreate() {
@@ -65,7 +72,7 @@ public class MediaDeleteService extends Service {
     @Override
     public void onDestroy() {
         mDispatcher.unregister(this);
-        // TODO: if event not dispatched for ongoing upload cancel it and dispatch cancel event
+        // TODO: if event not dispatched for ongoing delete cancel it and dispatch cancel event
         super.onDestroy();
     }
 
@@ -110,26 +117,32 @@ public class MediaDeleteService extends Service {
         deleteNextInQueue();
     }
 
+    public @NonNull List<MediaModel> getDeleteQueue() {
+        if (mDeleteQueue == null) {
+            mDeleteQueue = new ArrayList<>();
+        }
+        return mDeleteQueue;
+    }
+
+    public @NonNull List<MediaModel> getCompletedItems() {
+        if (mCompletedItems == null) {
+            mCompletedItems = new ArrayList<>();
+        }
+        return mCompletedItems;
+    }
+
     private void handleMediaChangedSuccess(@NonNull OnMediaChanged event) {
         switch (event.cause) {
             case DELETE_MEDIA:
-                if (mCurrentDelete == null) {
-                    AppLog.d(T.MEDIA, "Unexpected delete event received, no request was sent.");
-                    break;
+                if (mCurrentDelete != null) {
+                    AppLog.d(T.MEDIA, mCurrentDelete.getTitle() + " successfully deleted!");
+                    completeCurrentDelete();
                 }
-                // update store media
-                mCurrentDelete.setUploadState(MediaUploadState.DELETED.toString());
-                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mCurrentDelete));
-                mCompletedItems.add(mCurrentDelete);
                 break;
             case REMOVE_MEDIA:
                 if (mCurrentDelete != null) {
                     AppLog.d(T.MEDIA, "Successfully deleted " + mCurrentDelete.getTitle());
-                }
-                break;
-            case UPDATE_MEDIA:
-                if (mCurrentDelete != null) {
-                    AppLog.d(T.MEDIA, mCurrentDelete.getTitle() + " marked as deleted.");
+                    completeCurrentDelete();
                 }
                 break;
         }
@@ -140,29 +153,29 @@ public class MediaDeleteService extends Service {
 
         switch (event.error.type) {
             case UNAUTHORIZED:
-                AppLog.v(T.MEDIA, "Unauthorized site access. Stopping service.");
+                AppLog.v(T.MEDIA, "Unauthorized site access. Stopping MediaDeleteService.");
                 // stop delete service until authorized to perform actions on site
                 stopSelf();
                 break;
             case NULL_MEDIA_ARG:
                 // shouldn't happen, get back to deleting the queue
                 AppLog.d(T.MEDIA, "Null media argument supplied, skipping current delete.");
+                completeCurrentDelete();
                 break;
             case MEDIA_NOT_FOUND:
                 if (media == null) {
                     break;
                 }
-                AppLog.d(T.MEDIA, "Could not find media (id=" + media.getMediaId() + "). on remote ");
+                AppLog.d(T.MEDIA, "Could not find media (id=" + media.getMediaId() + "). on remote");
                 // remove media from local database
                 mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mCurrentDelete));
                 break;
             case PARSE_ERROR:
                 AppLog.d(T.MEDIA, "Error parsing reponse to " + event.cause.toString() + ".");
+                completeCurrentDelete();
                 break;
             default:
-                // mark media as deleted to prevent continuous delete requests
-                mCurrentDelete.setDeleted(true);
-                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mCurrentDelete));
+                completeCurrentDelete();
                 break;
         }
     }
@@ -173,11 +186,13 @@ public class MediaDeleteService extends Service {
     private void deleteNextInQueue() {
         // waiting for response to current delete request
         if (mCurrentDelete != null) {
+            AppLog.i(T.MEDIA, "Ignoring request to deleteNextInQueue, only one media item can be deleted at a time.");
             return;
         }
 
         // somehow lost our reference to the site, stop service
         if (mSite == null) {
+            AppLog.i(T.MEDIA, "Unexpected state, site is null. Stopping MediaDeleteService.");
             stopSelf();
             return;
         }
@@ -209,10 +224,24 @@ public class MediaDeleteService extends Service {
                media.getMediaId() == mCurrentDelete.getMediaId();
     }
 
+    /**
+     * @return the next item in the queue to delete, null if queue is empty
+     */
     private MediaModel nextMediaToDelete() {
-        if (mDeleteQueue != null) {
-            return mDeleteQueue.get(0);
+        if (!getDeleteQueue().isEmpty()) {
+            return getDeleteQueue().get(0);
         }
-        return mMediaStore.getNextSiteMediaToDelete(mSite);
+        return null;
+    }
+
+    /**
+     * Moves current delete from the queue into the completed list.
+     */
+    private void completeCurrentDelete() {
+        if (mCurrentDelete != null) {
+            getCompletedItems().add(mCurrentDelete);
+            getDeleteQueue().remove(mCurrentDelete);
+            mCurrentDelete = null;
+        }
     }
 }

@@ -408,7 +408,7 @@ public class MediaGridAdapter extends CursorAdapter {
     public Cursor swapCursor(Cursor newCursor) {
         if (newCursor == null) {
             mCursorDataCount = 0;
-            return super.swapCursor(newCursor);
+            return super.swapCursor(null);
         }
 
         mCursorDataCount = newCursor.getCount();

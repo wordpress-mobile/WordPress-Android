@@ -34,7 +34,6 @@ public class MediaUploadService extends Service {
 
     public interface MediaUploadCallback {
         void onUploadBegin(MediaModel media);
-        void onUploadQueueProcessed(List<MediaModel> media);
         void onMediaUploaded(MediaModel media);
         void onMediaError(MediaStore.MediaError error);
     }
@@ -46,10 +45,6 @@ public class MediaUploadService extends Service {
 
         public void addMediaToQueue(MediaModel media) {
             MediaUploadService.this.mQueue.add(media);
-        }
-
-        public boolean pauseUpload() {
-            return MediaUploadService.this.pauseUpload();
         }
 
         public boolean cancelUpload(boolean continueUploading) {
@@ -79,11 +74,13 @@ public class MediaUploadService extends Service {
         super.onCreate();
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
+        mCurrentUpload = null;
     }
 
     @Override
     public void onDestroy() {
         mDispatcher.unregister(this);
+        // TODO: if event not dispatched for ongoing upload cancel it and dispatch cancel event
         super.onDestroy();
     }
 
@@ -180,19 +177,14 @@ public class MediaUploadService extends Service {
         }
     }
 
-    private boolean pauseUpload() {
-        // TODO: not implemented in FluxC
-        return false;
-    }
-
     private boolean cancelUpload() {
         if (mCurrentUpload == null) {
-            return true;
+            return false;
         }
 
         MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
-        return false;
+        return true;
     }
 
     private void populateQueue(@NonNull long[] mediaIdList) {
@@ -221,8 +213,6 @@ public class MediaUploadService extends Service {
         mCurrentUpload = null;
         if (!mQueue.isEmpty()) {
             performUpload(mQueue.get(0));
-        } else if(mListener != null) {
-            mListener.onUploadQueueProcessed(mCompletedItems);
         }
     }
 
