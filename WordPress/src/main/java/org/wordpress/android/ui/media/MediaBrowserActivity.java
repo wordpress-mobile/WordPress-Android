@@ -805,8 +805,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
             }
             if (mimetype == null) {
-                // TODO: can't upload or default type?
-                return;
+                // Default to image jpeg
+                mimetype = "image/jpeg";
             }
         }
         currentUpload.setMimeType(mimetype);
