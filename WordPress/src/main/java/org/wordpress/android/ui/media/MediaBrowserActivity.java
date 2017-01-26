@@ -96,44 +96,31 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
 
+    private SiteModel mSite;
+
     private MediaGridFragment mMediaGridFragment;
     private MediaItemFragment mMediaItemFragment;
     private MediaEditFragment mMediaEditFragment;
     private PopupWindow mAddMediaPopup;
 
+    // Views
     private Toolbar mToolbar;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
     private Menu mMenu;
-    private String mQuery;
 
-    private SiteModel mSite;
-
-    private boolean mBound;
-    private String mMediaCapturePath;
+    // Services
+    private MediaDeleteService.MediaDeleteBinder mDeleteService;
     private MediaUploadService.MediaUploadBinder mUploadService;
-    private List<MediaModel> mPendingUploads;
+    private ArrayList<MediaModel> mPendingUploads;
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(SAVED_QUERY, mQuery);
-        outState.putSerializable(WordPress.SITE, mSite);
-        if (!TextUtils.isEmpty(mMediaCapturePath)) {
-            outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
-        }
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
-        mQuery = savedInstanceState.getString(SAVED_QUERY);
-    }
+    private String mQuery;
+    private String mMediaCapturePath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         ((WordPress) getApplication()).component().inject(this);
 
         if (savedInstanceState == null) {
@@ -161,29 +148,24 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        FragmentTransaction ft = fm.beginTransaction();
 
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
-
         mMediaItemFragment = (MediaItemFragment) fm.findFragmentByTag(MediaItemFragment.TAG);
+        mMediaEditFragment = (MediaEditFragment) fm.findFragmentByTag(MediaEditFragment.TAG);
+
+        FragmentTransaction ft = fm.beginTransaction();
         if (mMediaItemFragment != null) {
             ft.hide(mMediaGridFragment);
         }
-
-        mMediaEditFragment = (MediaEditFragment) fm.findFragmentByTag(MediaEditFragment.TAG);
         if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout()) {
             ft.hide(mMediaItemFragment);
         }
-
         ft.commitAllowingStateLoss();
 
         setupAddMenuPopup();
 
-        String action = getIntent().getAction();
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            // We arrived here from a share action
-            uploadSharedFiles();
-        }
+        // if media was shared add it to the library
+        handleSharedMedia();
     }
 
     @Override
@@ -212,10 +194,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     protected void onResume() {
         super.onResume();
-        if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
-            startMediaUploadService();
-        }
-        startMediaDeleteService();
         ActivityId.trackLastActivity(ActivityId.MEDIA);
     }
 
@@ -228,14 +206,36 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onStop() {
         unregisterReceiver(mReceiver);
         mDispatcher.unregister(this);
+        if (mDeleteService != null) {
+            unbindService(mDeleteConnection);
+        }
         super.onStop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(SAVED_QUERY, mQuery);
+        outState.putSerializable(WordPress.SITE, mSite);
+        if (!TextUtils.isEmpty(mMediaCapturePath)) {
+            outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
+        mQuery = savedInstanceState.getString(SAVED_QUERY);
     }
 
     @Override
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-
             if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mMediaEditFragment.isDirty()) {
                 // alert the user that there are unsaved changes
                 new AlertDialog.Builder(this)
@@ -311,6 +311,23 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
+        // only MEDIA_PERMISSION_REQUEST_CODE is handled
+        if (requestCode != MEDIA_PERMISSION_REQUEST_CODE) {
+            return;
+        }
+
+        for (int grantResult : results) {
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
+                return;
+            }
+        }
+
+        showNewMediaMenu();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         mMenu = menu;
@@ -326,7 +343,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
 
-        //open search bar if we were searching for something before
+        // open search bar if we were searching for something before
         if (!TextUtils.isEmpty(mQuery) && mMediaGridFragment != null && mMediaGridFragment.isVisible()) {
             String tempQuery = mQuery; //temporary hold onto query
             MenuItemCompat.expandActionView(mSearchMenuItem); //this will reset mQuery
@@ -402,9 +419,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         // load last search query
-        if (!TextUtils.isEmpty(mQuery))
+        if (!TextUtils.isEmpty(mQuery)) {
             onQueryTextChange(mQuery);
+        }
+
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
+
         return true;
     }
 
@@ -414,7 +434,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mMediaGridFragment.setFilterVisibility(View.VISIBLE);
             mMediaGridFragment.setFilter(Filter.ALL);
         }
+
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
+
         return true;
     }
 
@@ -423,8 +445,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mMediaGridFragment != null) {
             mMediaGridFragment.search(query);
         }
+
         mQuery = query;
         mSearchView.clearFocus();
+
         return true;
     }
 
@@ -433,7 +457,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mMediaGridFragment != null) {
             mMediaGridFragment.search(newText);
         }
+
         mQuery = newText;
+
         return true;
     }
 
@@ -455,30 +481,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() == 0) {
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.hide(mMediaGridFragment);
             mMediaGridFragment.clearSelectedItems();
             mMediaItemFragment = MediaItemFragment.newInstance(mSite, mediaId);
+
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.hide(mMediaGridFragment);
             ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
             ft.addToBackStack(null);
             ft.commitAllowingStateLoss();
+
             mQuery = tempQuery;
         }
-    }
-
-    @Override
-    public void onMediaItemListDownloaded() {
-        if (mMediaItemFragment != null) {
-            mMediaGridFragment.setRefreshing(false);
-            if (mMediaItemFragment.isInLayout()) {
-                mMediaItemFragment.loadDefaultMedia();
-            }
-        }
-    }
-
-    @Override
-    public void onMediaItemListDownloadStart() {
-        mMediaGridFragment.setRefreshing(true);
     }
 
     @Override
@@ -506,15 +519,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
         if (event.isError()) {
-            AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error:" + event.error.message);
+            AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.message);
             ToastUtils.showToast(this, "Media error occurred: " + event.error.message, ToastUtils.Duration.LONG);
             return;
         }
 
         switch (event.cause) {
             case DELETE_MEDIA:
-                if (event.media == null) {
-                    // we need the media details to take action
+                if (event.media == null || event.media.isEmpty()) {
                     break;
                 }
 
@@ -596,7 +608,48 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mMediaGridFragment.updateSpinnerAdapter();
     }
 
+    public void deleteMedia(final ArrayList<Long> ids) {
+        Set<String> sanitizedIds = new HashSet<>(ids.size());
+
+        // phone layout: pop the item fragment if it's visible
+        doPopBackStack(getFragmentManager());
+
+        final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
+        // Make sure there are no media in "uploading"
+        for (long currentId : ids) {
+            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, currentId);
+            if (mediaModel == null) {
+                continue;
+            }
+            if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
+                mediaToDelete.add(mediaModel);
+                mediaModel.setUploadState(MediaUploadState.DELETE.toString());
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
+                sanitizedIds.add(String.valueOf(currentId));
+            }
+        }
+
+        if (sanitizedIds.size() != ids.size()) {
+            if (ids.size() == 1) {
+                Toast.makeText(this, R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        // mark items for delete without actually deleting items yet,
+        // and then refresh the grid
+        if (!mediaToDelete.isEmpty()) {
+            startMediaDeleteService(mediaToDelete);
+        }
+        if (mMediaGridFragment != null) {
+            mMediaGridFragment.clearSelectedItems();
+            mMediaGridFragment.refreshMediaFromDB();
+        }
+    }
+
     private final OnBackStackChangedListener mOnBackStackChangedListener = new OnBackStackChangedListener() {
+        @Override
         public void onBackStackChanged() {
             FragmentManager manager = getFragmentManager();
             MediaGridFragment mediaGridFragment = (MediaGridFragment) manager.findFragmentById(R.id.mediaGridFragment);
@@ -626,6 +679,18 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
+        }
+    };
+
+    private final ServiceConnection mDeleteConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mDeleteService = (MediaDeleteService.MediaDeleteBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mDeleteService = null;
         }
     };
 
@@ -720,42 +785,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    public void deleteMedia(final ArrayList<Long> ids) {
-        Set<String> sanitizedIds = new HashSet<>(ids.size());
-
-        // phone layout: pop the item fragment if it's visible
-        doPopBackStack(getFragmentManager());
-
-        // Make sure there are no media in "uploading"
-        for (long currentId : ids) {
-            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, currentId);
-            if (mediaModel == null) {
-                continue;
-            }
-            if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
-                mediaModel.setUploadState(MediaUploadState.DELETE.toString());
-                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
-                sanitizedIds.add(String.valueOf(currentId));
-            }
-        }
-
-        if (sanitizedIds.size() != ids.size()) {
-            if (ids.size() == 1) {
-                Toast.makeText(this, R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, R.string.cannot_delete_multi_media_items, Toast.LENGTH_LONG).show();
-            }
-        }
-
-        // mark items for delete without actually deleting items yet,
-        // and then refresh the grid
-        startMediaDeleteService();
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.clearSelectedItems();
-            mMediaGridFragment.refreshMediaFromDB();
-        }
-    }
-
     private void addMediaToUploadService(@NonNull MediaModel media) {
         if (!mBound) {
             startMediaUploadService();
@@ -839,15 +868,29 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
         uploadList(multi_stream);
 
-        // clear the intent's action, so that in case the user rotates, we don't re-upload the same
-        // files
+        // clear the intent's action, so that in case the user rotates, we don't re-upload the same files
         getIntent().setAction(null);
     }
 
-    private void startMediaDeleteService() {
-        if (NetworkUtils.isNetworkAvailable(this)) {
+    private void startMediaDeleteService(ArrayList<MediaModel> mediaToDelete) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            AppLog.v(AppLog.T.MEDIA, "Unable to start MediaDeleteService, internet connection required.");
+            return;
+        }
+
+        if (mDeleteService != null) {
+            if (mediaToDelete != null && !mediaToDelete.isEmpty()) {
+                for (MediaModel media : mediaToDelete) {
+                    mDeleteService.addMediaToDeleteQueue(media);
+                }
+            }
+        } else {
             Intent intent = new Intent(this, MediaDeleteService.class);
-            intent.putExtra(WordPress.SITE, mSite);
+            intent.putExtra(MediaDeleteService.SITE_KEY, mSite);
+            if (mediaToDelete != null) {
+                intent.putExtra(MediaDeleteService.MEDIA_LIST_KEY, mediaToDelete);
+                bindService(intent, mDeleteConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+            }
             startService(intent);
         }
     }

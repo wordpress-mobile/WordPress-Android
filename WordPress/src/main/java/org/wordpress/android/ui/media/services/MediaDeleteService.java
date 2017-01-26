@@ -224,6 +224,9 @@ public class MediaDeleteService extends Service {
                media.getMediaId() == mCurrentDelete.getMediaId();
     }
 
+    /**
+     * @return the next item in the queue to delete, null if queue is empty
+     */
     private MediaModel nextMediaToDelete() {
         if (!getDeleteQueue().isEmpty()) {
             return getDeleteQueue().get(0);
@@ -231,6 +234,9 @@ public class MediaDeleteService extends Service {
         return null;
     }
 
+    /**
+     * Moves current delete from the queue into the completed list.
+     */
     private void completeCurrentDelete() {
         if (mCurrentDelete != null) {
             getCompletedItems().add(mCurrentDelete);
