@@ -65,7 +65,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -128,7 +127,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected String mTwoStepCode;
     protected String mHttpUsername;
     protected String mHttpPassword;
-    protected Blog mJetpackBlog;
 
     protected WPTextView mSignInButton;
     protected WPTextView mCreateAccountButton;
@@ -147,6 +145,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private boolean mSmartLockEnabled = true;
     private boolean mInhibitMagicLogin; // Prevent showing magic links as that is only applicable for initial sign in
     private boolean mIsMagicLinksEnabled = true;
+
+    private JetpackCallbacks mJetpackCallbacks;
 
     public interface OnMagicLinkRequestInteraction {
         void onMagicLinkRequestSuccess(String email);
@@ -303,6 +303,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mListener = (SignInFragment.OnMagicLinkRequestInteraction) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement OnMagicLinkRequestInteraction");
+        }
+        if (context instanceof JetpackCallbacks) {
+            mJetpackCallbacks = (JetpackCallbacks) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement JetpackCallbacks");
         }
     }
 
@@ -496,7 +501,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 // Used to pass data to an eventual support service
                 intent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
                 intent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_LOGIN_SCREEN_HELP);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
+                        (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
                 startActivity(intent);
             }
         };
@@ -621,13 +627,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSignInButton.setText(getString(R.string.button_next));
     }
 
-    private boolean isJetpackAuth() {
-        return mJetpackBlog != null;
-    }
-
     // Set blog for Jetpack auth
-    public void setBlogAndCustomMessageForJetpackAuth(Blog blog, String customAuthMessage) {
-        mJetpackBlog = blog;
+    public void setCustomMessageForJetpackAuth(String customAuthMessage) {
         if(customAuthMessage != null && mJetpackAuthLabel != null) {
             mJetpackAuthLabel.setText(customAuthMessage);
         }
@@ -910,7 +911,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void signInAndFetchBlogListWPCom() {
-        LoginWPCom login = new LoginWPCom(mUsername, mPassword, mTwoStepCode, mShouldSendTwoStepSMS, mJetpackBlog);
+        LoginWPCom login = new LoginWPCom(mUsername, mPassword, mTwoStepCode, mShouldSendTwoStepSMS,
+                mJetpackCallbacks.getJetpackBlog());
         login.execute(new LoginAbstract.Callback() {
             @Override
             public void onSuccess() {
@@ -942,7 +944,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mShouldSendTwoStepSMS = false;
 
         // Finish this activity if we've authenticated to a Jetpack site
-        if (isJetpackAuth() && getActivity() != null) {
+        if (mJetpackCallbacks.isJetpackAuth() && getActivity() != null) {
             getActivity().setResult(Activity.RESULT_OK);
             getActivity().finish();
             return;
@@ -1243,21 +1245,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
         bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
         bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-        passHelpshiftErrorOriginTag(bundle);
+        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
+                (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
         nuxAlert.setArguments(bundle);
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
-    }
-
-    protected void passHelpshiftErrorOriginTag(Bundle bundle) {
-        // Tag assignment:
-        //  ORIGIN_LOGIN_SCREEN_ERROR_WPCOM for when trying to log into a WPCOM site,
-        //  ORIGIN_LOGIN_SCREEN_ERROR_JETPACK when trying to view stats on a Jetpack site and need to login with WPCOM
-        //  ORIGIN_LOGIN_SCREEN_ERROR_SELFHOSTED when logging in a selfhosted site
-        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY,
-                isWPComLogin() ? Tag.ORIGIN_LOGIN_SCREEN_ERROR_WPCOM
-                        : (isJetpackAuth() ? Tag.ORIGIN_LOGIN_SCREEN_ERROR_JETPACK
-                                : Tag.ORIGIN_LOGIN_SCREEN_ERROR_SELFHOSTED));
     }
 
     protected void handleInvalidUsernameOrPassword(int messageId) {
@@ -1296,7 +1288,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
                     SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
             Bundle bundle = nuxAlert.getArguments();
-            passHelpshiftErrorOriginTag(bundle);
+            bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
+                    (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
             nuxAlert.setArguments(bundle);
         }
         ft.add(nuxAlert, "alert");
