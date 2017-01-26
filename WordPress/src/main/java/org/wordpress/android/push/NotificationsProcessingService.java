@@ -28,6 +28,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
@@ -172,7 +173,7 @@ public class NotificationsProcessingService extends Service {
                     long postId = mIntent.getLongExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0);
                     if (postId != 0) {
                         NativeNotificationsUtils.dismissNotification(
-                                NotificationsPendingDraftsReceiver.makePendingDraftNotificationId(postId),
+                                PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
                                 mContext
                         );
                     }

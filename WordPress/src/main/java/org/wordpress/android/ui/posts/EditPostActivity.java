@@ -3,11 +3,9 @@ package org.wordpress.android.ui.posts;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -84,7 +82,7 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
-import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -129,8 +127,6 @@ import java.util.regex.Pattern;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver.POST_ID_EXTRA;
-
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
     public static final String EXTRA_POSTID = "postId";
@@ -162,9 +158,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static int PAGE_PREVIEW = 2;
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
-
-    // Pending draft notification base request code for alarms
-    private static final int BROADCAST_BASE_REQUEST_CODE = 111;
 
     private Handler mHandler;
     private boolean mShowNewEditor;
@@ -674,7 +667,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 PostUploadService.addPostToUpload(mPost);
                 PostUploadService.setLegacyMode(!mShowNewEditor);
                 startService(new Intent(EditPostActivity.this, PostUploadService.class));
-                cancelPendingDraftAlarms(EditPostActivity.this, mPost.getLocalTablePostId());
+                PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getLocalTablePostId());
                 setResult(RESULT_OK);
                 finish();
             }
@@ -868,69 +861,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return mIsNewPost;
     }
 
-    private void scheduleNextPendingDraftNotification(Context context, long localPostId) {
-            /*
-            Have +1 day, +1 week, +1 month reminders, with different messages randomly chosen, that could even be fun:
-
-            1 day:
-                You drafted “post title” yesterday. Don’t forget to publish it!
-                Did you know that “post title” is still a draft? Publish away!
-            1 week:
-                Your draft, “post title” awaits you — be sure to publish it!
-                “Post title” remains a draft. Remember to publish it!
-            1 month
-                Don’t leave it hanging! “Post title” is waiting to be published.
-            * */
-
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = getNotificationsPendingDraftReceiverIntent(context, localPostId);
-
-        PendingIntent alarmIntentOneDay = getOneDayAlarmIntent(context, intent);
-        PendingIntent alarmIntentOneWeek = getOneWeekAlarmIntent(context, intent);;
-        PendingIntent alarmIntentOneMonth = getOneMonthAlarmIntent(context, intent);;
-
-        long now = System.currentTimeMillis();
-
-        alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_DAY, alarmIntentOneDay);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_WEEK, alarmIntentOneWeek);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, now + NotificationsPendingDraftsReceiver.ONE_MONTH, alarmIntentOneMonth);
-    }
-
-    private void cancelPendingDraftAlarms(Context context, long localPostId) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = getNotificationsPendingDraftReceiverIntent(context, localPostId);
-
-        PendingIntent alarmIntentOneDay = getOneDayAlarmIntent(context, intent);
-        PendingIntent alarmIntentOneWeek = getOneWeekAlarmIntent(context, intent);;
-        PendingIntent alarmIntentOneMonth = getOneMonthAlarmIntent(context, intent);;
-
-        alarmManager.cancel(alarmIntentOneDay);
-        alarmManager.cancel(alarmIntentOneWeek);
-        alarmManager.cancel(alarmIntentOneMonth);
-    }
-
-    private Intent getNotificationsPendingDraftReceiverIntent(Context context, long localPostId) {
-        Intent intent = new Intent(context, NotificationsPendingDraftsReceiver.class);
-        intent.putExtra(POST_ID_EXTRA, localPostId);
-        return intent;
-    }
-    private PendingIntent getOneDayAlarmIntent(Context context, Intent notifPendingDraftReceiverIntent) {
-        PendingIntent alarmIntentOneDay = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE, notifPendingDraftReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return alarmIntentOneDay;
-    }
-
-    private PendingIntent getOneWeekAlarmIntent(Context context, Intent notifPendingDraftReceiverIntent) {
-        PendingIntent alarmIntentOneWeek = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE + 1, notifPendingDraftReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return alarmIntentOneWeek;
-    }
-
-    private PendingIntent getOneMonthAlarmIntent(Context context, Intent notifPendingDraftReceiverIntent) {
-        PendingIntent alarmIntentOneMonth = PendingIntent.getBroadcast(context, BROADCAST_BASE_REQUEST_CODE + 2, notifPendingDraftReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return alarmIntentOneMonth;
-    }
-
     private class SaveAndFinishTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
@@ -972,7 +902,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
 
                 // now set the pending notification alarm to be triggered in the next day, week, and month
-                scheduleNextPendingDraftNotification(EditPostActivity.this, mPost.getLocalTablePostId());
+                PendingDraftsNotificationsUtils.scheduleNextNotifications(EditPostActivity.this, mPost);
             }
 
             return true;

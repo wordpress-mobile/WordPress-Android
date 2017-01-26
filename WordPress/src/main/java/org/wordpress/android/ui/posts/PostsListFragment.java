@@ -28,6 +28,7 @@ import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
@@ -363,7 +364,7 @@ public class PostsListFragment extends Fragment
     public void onDetach() {
         if (mShouldCancelPendingDraftNotification) {
             // delete the pending draft notification if available
-            int pushId = NotificationsPendingDraftsReceiver.makePendingDraftNotificationId(mPostIdForPostToBeDeleted);
+            int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(mPostIdForPostToBeDeleted);
             NativeNotificationsUtils.dismissNotification(pushId, getActivity());
             mShouldCancelPendingDraftNotification = false;
         }
@@ -541,7 +542,7 @@ public class PostsListFragment extends Fragment
                     mShouldCancelPendingDraftNotification = false;
 
                     // delete the pending draft notification if available
-                    int pushId = NotificationsPendingDraftsReceiver.makePendingDraftNotificationId(post.getPostId());
+                    int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.getPostId());
                     NativeNotificationsUtils.dismissNotification(pushId, getActivity());
                 }
             }
