@@ -54,7 +54,6 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -72,7 +71,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -87,7 +85,7 @@ import javax.inject.Inject;
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
-        MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback {
+        MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback, MediaUploadService.MediaUploadCallback {
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -194,6 +192,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     protected void onResume() {
         super.onResume();
+        startMediaUploadService(mPendingUploads);
+        startMediaDeleteService(null);
         ActivityId.trackLastActivity(ActivityId.MEDIA);
     }
 
@@ -208,6 +208,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mDispatcher.unregister(this);
         if (mDeleteService != null) {
             unbindService(mDeleteConnection);
+        }
+        if (mUploadService != null) {
+            unbindService(mUploadConnection);
         }
         super.onStop();
     }
@@ -265,45 +268,24 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || requestCode == RequestCodes.TAKE_PHOTO ||
-                requestCode == RequestCodes.TAKE_VIDEO) {
-            String path;
-
-            switch (requestCode) {
-                case RequestCodes.PICTURE_LIBRARY:
-                case RequestCodes.VIDEO_LIBRARY:
-                    Uri imageUri = data.getData();
-                    fetchMedia(imageUri);
-                    break;
-                case RequestCodes.TAKE_PHOTO:
-                    if (resultCode == Activity.RESULT_OK) {
-                        path = mMediaCapturePath;
-                        mMediaCapturePath = null;
-                        queueFileForUpload(path);
-                    }
-                    break;
-                case RequestCodes.TAKE_VIDEO:
-                    if (resultCode == Activity.RESULT_OK) {
-                        path = getRealPathFromURI(MediaUtils.getLastRecordedVideoUri(this));
-                        queueFileForUpload(path);
-                    }
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MEDIA_PERMISSION_REQUEST_CODE:
-                for (int grantResult : grantResults) {
-                    if (grantResult == PackageManager.PERMISSION_DENIED) {
-                        ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
-                        return;
-                    }
+            case RequestCodes.PICTURE_LIBRARY:
+            case RequestCodes.VIDEO_LIBRARY:
+                Uri imageUri = data.getData();
+                fetchMedia(imageUri);
+                break;
+            case RequestCodes.TAKE_PHOTO:
+                if (resultCode == Activity.RESULT_OK) {
+                    String path = mMediaCapturePath;
+                    mMediaCapturePath = null;
+                    queueFileForUpload(path);
                 }
-                showNewMediaMenu();
+                break;
+            case RequestCodes.TAKE_VIDEO:
+                if (resultCode == Activity.RESULT_OK) {
+                    String path = getRealPathFromURI(MediaUtils.getLastRecordedVideoUri(this));
+                    queueFileForUpload(path);
+                }
                 break;
             default:
                 break;
@@ -356,55 +338,54 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == android.R.id.home) {
-            onBackPressed();
-            return true;
-        } else if (i == R.id.menu_new_media) {
-            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-                showNewMediaMenu();
-            } else {
-                AppLockManager.getInstance().setExtendedTimeout();
-            }
-            return true;
-        } else if (i == R.id.menu_search) {
-            mSearchMenuItem = item;
-            MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
-            MenuItemCompat.expandActionView(mSearchMenuItem);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_new_media:
+                if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+                    showNewMediaMenu();
+                }
+                return true;
+            case R.id.menu_search:
+                mSearchMenuItem = item;
+                MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+                MenuItemCompat.expandActionView(mSearchMenuItem);
 
-            mSearchView = (SearchView) item.getActionView();
-            mSearchView.setOnQueryTextListener(this);
+                mSearchView = (SearchView) item.getActionView();
+                mSearchView.setOnQueryTextListener(this);
 
-            // load last saved query
-            if (!TextUtils.isEmpty(mQuery)) {
-                onQueryTextSubmit(mQuery);
-                mSearchView.setQuery(mQuery, true);
-            }
-            return true;
-        } else if (i == R.id.menu_edit_media) {
-            long mediaId = mMediaItemFragment.getMediaId();
-            FragmentManager fm = getFragmentManager();
+                // load last saved query
+                if (!TextUtils.isEmpty(mQuery)) {
+                    onQueryTextSubmit(mQuery);
+                    mSearchView.setQuery(mQuery, true);
+                }
+                return true;
+            case R.id.menu_edit_media:
+                long mediaId = mMediaItemFragment.getMediaId();
 
-            if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
-                // phone layout: hide item details, show and update edit fragment
-                FragmentTransaction ft = fm.beginTransaction();
+                if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
+                    // phone layout: hide item details, show and update edit fragment
+                    FragmentManager fm = getFragmentManager();
+                    mMediaEditFragment = MediaEditFragment.newInstance(mSite, mediaId);
 
-                if (mMediaItemFragment.isVisible())
-                    ft.hide(mMediaItemFragment);
+                    FragmentTransaction ft = fm.beginTransaction();
+                    if (mMediaItemFragment.isVisible()) {
+                        ft.hide(mMediaItemFragment);
+                    }
+                    ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
+                    ft.addToBackStack(null);
+                    ft.commitAllowingStateLoss();
+                } else {
+                    // tablet layout: update edit fragment
+                    mMediaEditFragment.loadMedia(mediaId);
+                }
 
-                mMediaEditFragment = MediaEditFragment.newInstance(mSite, mediaId);
-                ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
-                ft.addToBackStack(null);
-                ft.commitAllowingStateLoss();
-            } else {
-                // tablet layout: update edit fragment
-                mMediaEditFragment.loadMedia(mediaId);
-            }
+                if (mSearchView != null) {
+                    mSearchView.clearFocus();
+                }
 
-            if (mSearchView != null) {
-                mSearchView.clearFocus();
-            }
-            return true;
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -470,7 +451,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onMediaItemSelected(long mediaId) {
-        String tempQuery = mQuery;
+        final String tempQuery = mQuery;
+
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
@@ -511,8 +493,23 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         } else {
             mPendingUploads.add(media);
-            startMediaUploadService();
+            startMediaUploadService(mPendingUploads);
         }
+    }
+
+    @Override
+    public void onUploadBegin(MediaModel media) {
+        // TODO: indicate in UI
+    }
+
+    @Override
+    public void onMediaUploaded(MediaModel media) {
+        // TODO: update UI
+    }
+
+    @Override
+    public void onMediaError(MediaStore.MediaError error) {
+        // TODO: update UI
     }
 
     @SuppressWarnings("unused")
@@ -520,18 +517,31 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
         if (event.isError()) {
             AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.message);
+            switch (event.error.type) {
+                case GENERIC_ERROR:
+            }
             ToastUtils.showToast(this, "Media error occurred: " + event.error.message, ToastUtils.Duration.LONG);
             return;
         }
 
         switch (event.cause) {
+            case FETCH_ALL_MEDIA:
+//                if (mMediaItemFragment != null) {
+//                    mMediaGridFragment.setRefreshing(false);
+//                    if (mMediaItemFragment.isInLayout()) {
+//                        mMediaItemFragment.loadDefaultMedia();
+//                    }
+//                }
+                break;
             case DELETE_MEDIA:
                 if (event.media == null || event.media.isEmpty()) {
                     break;
                 }
 
-                // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
-                // view (if it was the one displayed)
+                MediaModel media = event.media.get(0);
+
+                // If the media was deleted, remove it from multi select (if it was selected) and hide it from the
+                // detail view (if it was the one displayed)
                 for (MediaModel mediaModel : event.media) {
                     long mediaId = mediaModel.getMediaId();
                     mMediaGridFragment.removeFromMultiSelect(mediaId);
@@ -648,6 +658,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
+    public void uploadList(List<Uri> uriList) {
+        for (Uri uri : uriList) {
+            fetchMedia(uri);
+        }
+    }
+
     private final OnBackStackChangedListener mOnBackStackChangedListener = new OnBackStackChangedListener() {
         @Override
         public void onBackStackChanged() {
@@ -660,11 +676,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     };
 
-    private final ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mUploadConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             AppLog.i(T.MEDIA, "MediaUploadService connected");
             mUploadService = (MediaUploadService.MediaUploadBinder) service;
+            mUploadService.setListener(MediaBrowserActivity.this);
             if (!mPendingUploads.isEmpty()) {
                 for(MediaModel media : mPendingUploads) {
                     mUploadService.addMediaToQueue(media);
@@ -673,12 +690,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (mUploadService.getService() != null) {
                 mUploadService.getService().startQueuedUpload();
             }
-            mBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
+            mUploadService = null;
         }
     };
 
@@ -700,7 +716,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 // Coming from zero connection. Continue what's pending for delete
                 if (mMediaStore.hasSiteMediaToDelete(mSite)) {
-                    startMediaDeleteService();
+                    startMediaDeleteService(null);
                 }
             }
         }
@@ -786,8 +802,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void addMediaToUploadService(@NonNull MediaModel media) {
-        if (!mBound) {
-            startMediaUploadService();
+        if (mUploadService == null) {
+            ArrayList<MediaModel> mediaToUpload = new ArrayList<>();
+            mediaToUpload.add(media);
+            startMediaUploadService(mediaToUpload);
         }
 
         if (mUploadService != null) {
@@ -848,25 +866,33 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 //        }
 //        saveMedia(fromMediaFile(mediaFile));
 //        addMediaToUploadService(fromMediaFile(mediaFile));
+        MediaModel media = new MediaModel();
+        String extension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
+        String mimeType = org.wordpress.android.fluxc.utils.MediaUtils.getMimeTypeForExtension(extension);
+        media.setFilePath(path);
+        media.setSiteId(mSite.getSiteId());
+        media.setFileExtension(extension);
+        media.setMimeType(mimeType);
+        media.setUploadState(MediaUploadState.QUEUED.toString());
+        addMediaToUploadService(media);
     }
 
-    public void uploadList(List<Uri> uriList) {
-        for (Uri uri : uriList) {
-            fetchMedia(uri);
-        }
-    }
-
-    private void uploadSharedFiles() {
+    private void handleSharedMedia() {
         Intent intent = getIntent();
-        String action = intent.getAction();
+
         final List<Uri> multi_stream;
-        if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+        if (Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction())) {
             multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
-        } else {
+        } else if (Intent.ACTION_SEND.equals(intent.getAction())) {
             multi_stream = new ArrayList<>();
             multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+        } else {
+            multi_stream = null;
         }
-        uploadList(multi_stream);
+
+        if (multi_stream != null) {
+            uploadList(multi_stream);
+        }
 
         // clear the intent's action, so that in case the user rotates, we don't re-upload the same files
         getIntent().setAction(null);
@@ -895,28 +921,22 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void startMediaUploadService() {
-        if (!mBound && NetworkUtils.isNetworkAvailable(this)) {
+    private void startMediaUploadService(ArrayList<MediaModel> mediaToUpload) {
+        if (mUploadService != null) {
+            if (mediaToUpload != null && !mediaToUpload.isEmpty()) {
+                for (MediaModel media : mediaToUpload) {
+                    mUploadService.addMediaToQueue(media);
+                }
+            }
+        } else if (NetworkUtils.isNetworkAvailable(this)) {
             Intent intent = new Intent(this, MediaUploadService.class);
             intent.putExtra(MediaUploadService.SITE_KEY, mSite);
-            intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, getQueuedMedia());
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+            if (mediaToUpload != null) {
+                intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaToUpload);
+                bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+            }
             startService(intent);
         }
-    }
-
-    private long[] getQueuedMedia() {
-        List<MediaModel> siteMedia = mMediaStore.getAllSiteMedia(mSite);
-        if (siteMedia == null || siteMedia.size() == 0) {
-            return null;
-        }
-        long[] mediaIds = new long[siteMedia.size()];
-        for (int i = 0; i < siteMedia.size(); ++i) {
-            if (MediaUploadState.QUEUED.toString().equals(siteMedia.get(i).getUploadState())) {
-                mediaIds[i] = siteMedia.get(i).getMediaId();
-            }
-        }
-        return mediaIds;
     }
 
     private void doPopBackStack(FragmentManager fm) {
