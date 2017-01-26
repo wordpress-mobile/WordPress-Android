@@ -127,6 +127,7 @@ public class MediaUploadService extends Service {
 
         // ignore if event media is not recognized
         if (queueMedia == null || queueMedia.getMediaId() != mCurrentUpload.getMediaId()) {
+            AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + queueMedia);
             return;
         }
 

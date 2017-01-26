@@ -518,10 +518,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
         if (event.isError()) {
-            AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.message);
-            switch (event.error.type) {
-                case GENERIC_ERROR:
-            }
+            AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.type
+                                     + " - " + event.error.message);
             ToastUtils.showToast(this, "Media error occurred: " + event.error.message, ToastUtils.Duration.LONG);
             return;
         }
@@ -572,7 +570,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Subscribe
     public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
         if (event.isError()) {
-            AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.message);
+            AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
+                                     + " - " + event.error.message);
         } else if (event.completed) {
             AppLog.d(AppLog.T.MEDIA, event.media.getTitle() + " upload complete");
         }
