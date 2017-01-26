@@ -464,18 +464,17 @@ public class MediaStore extends Store {
         }
     }
 
+    private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media) {
+        OnMediaUploaded onMediaUploaded = new OnMediaUploaded(media, 1, true);
+        onMediaUploaded.error = new MediaError(errorType, errorMessage);
+        emitChange(onMediaUploaded);
+    }
+
     private void performUploadMedia(MediaPayload payload) {
-        if (payload.media == null) {
-            // null or empty media list -or- list contains a null value
-            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.UPLOAD_MEDIA, null);
+        String errorMessage = isWellFormedForUpload(payload.media);
+        if (errorMessage != null) {
+            notifyMediaUploadError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, payload.media);
             return;
-        } else {
-            String errorMessage = isWellFormedForUpload(payload.media);
-            if (errorMessage != null) {
-                notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, MediaAction.UPLOAD_MEDIA,
-                        payload.media);
-                return;
-            }
         }
 
         if (payload.site.isWPCom()) {
