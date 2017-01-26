@@ -555,7 +555,10 @@ public class MediaStore extends Store {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_ALL_MEDIA, payload.media);
 
         if (!payload.isError()) {
-            MediaSqlUtils.deleteAllSiteMedia(payload.site);
+            // delete all media if first page is requested
+            if (payload.filter == null || payload.filter.offset == 0) {
+                MediaSqlUtils.deleteAllSiteMedia(payload.site);
+            }
             if (!payload.media.isEmpty()) {
                 for (MediaModel media : payload.media) {
                     updateMedia(media, false);
