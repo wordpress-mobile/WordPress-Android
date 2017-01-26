@@ -695,6 +695,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 for(MediaModel media : mPendingUploads) {
                     mUploadService.addMediaToQueue(media);
                 }
+                mPendingUploads.clear();
             }
             if (mUploadService.getService() != null) {
                 mUploadService.getService().startQueuedUpload();
@@ -942,6 +943,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 for (MediaModel media : mediaToUpload) {
                     mUploadService.addMediaToQueue(media);
                 }
+                mediaToUpload.clear();
             }
         } else if (NetworkUtils.isNetworkAvailable(this)) {
             Intent intent = new Intent(this, MediaUploadService.class);
@@ -949,6 +951,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (mediaToUpload != null) {
                 intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaToUpload);
                 doBindUploadService(intent);
+                mediaToUpload.clear();
             }
             startService(intent);
         }
