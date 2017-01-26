@@ -576,7 +576,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                                      + " - " + event.error.message);
         } else if (event.completed) {
-            AppLog.d(AppLog.T.MEDIA, event.media.getTitle() + " upload complete");
+            String title = "";
+            if (event.media != null) {
+                title = event.media.getTitle();
+            }
+            AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
         }
     }
 
