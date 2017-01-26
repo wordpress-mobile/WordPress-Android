@@ -80,6 +80,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String SHARABLE_URL = "sharable_url";
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
+    public static final String ALLOWED_URLS = "allowed_urls";
     public static final String USE_GLOBAL_WPCOM_USER = "USE_GLOBAL_WPCOM_USER";
 
     private static final String ENCODING_UTF8 = "UTF-8";
@@ -89,7 +90,7 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     // Note: The webview has links disabled!!
-    public static void openPostOrPage(Context context, Blog blog, Post post, String url) {
+    public static void openPostOrPage(Context context, Blog blog, Post post, String url, String[] listOfAllowedURLs) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -116,6 +117,7 @@ public class WPWebViewActivity extends WebViewActivity {
             intent.putExtra(AUTHENTICATION_PASSWD, blog.getPassword());
         }
         intent.putExtra(URL_TO_LOAD, url);
+        intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         intent.putExtra(AUTHENTICATION_URL, authURL);
         intent.putExtra(LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         intent.putExtra(DISABLE_LINKS_ON_PAGE, true);
@@ -192,12 +194,11 @@ public class WPWebViewActivity extends WebViewActivity {
                 allowedURL.add(authURL);
             }
 
-            // In this case Links are disabled, but WP removes "?preview=true" from the passed URL, and internally redirects to it.
-            // EX:  Published posts on a site with Plain permalink structure settings.
-            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
-            if (!TextUtils.isEmpty(addressToLoad) && addressToLoad.endsWith("preview=true")) {
-                // Remove "(?|&)preview=true" string
-                allowedURL.add(addressToLoad.substring(0, addressToLoad.length() - 13));
+            if(extras.getStringArray(ALLOWED_URLS) != null) {
+                String[] urls = extras.getStringArray(ALLOWED_URLS);
+                for (String currentURL: urls) {
+                    allowedURL.add(currentURL);
+                }
             }
         }
 
