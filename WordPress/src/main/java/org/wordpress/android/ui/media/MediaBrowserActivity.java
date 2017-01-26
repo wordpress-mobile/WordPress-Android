@@ -946,7 +946,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             Intent intent = new Intent(this, MediaUploadService.class);
             intent.putExtra(MediaUploadService.SITE_KEY, mSite);
             if (mediaToUpload != null) {
-                intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaToUpload);
+                intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaToUpload.toArray());
                 bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
             }
             startService(intent);
