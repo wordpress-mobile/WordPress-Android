@@ -34,7 +34,8 @@
                 android:layout_width="match_parent"
                 android:padding="16dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                aztec:textColor="@color/grey_dark" >
+                aztec:textColor="@color/grey_dark"
+                android:imeOptions="flagNoExtractUi" >
             </org.wordpress.aztec.AztecText>
 
             <View
@@ -77,7 +78,8 @@
                     aztec:quoteMargin="@dimen/quote_margin"
                     aztec:quotePadding="@dimen/quote_padding"
                     aztec:quoteWidth="@dimen/quote_width"
-                    aztec:textColor="@color/grey_dark" >
+                    aztec:textColor="@color/grey_dark"
+                    android:imeOptions="flagNoExtractUi" >
                 </org.wordpress.aztec.AztecText>
 
                 <org.wordpress.aztec.source.SourceViewEditText
@@ -94,6 +96,7 @@
                     android:paddingEnd="16dp"
                     android:scrollbars="vertical"
                     android:textSize="14sp"
+                    android:imeOptions="flagNoExtractUi"
                     android:visibility="gone" >
                 </org.wordpress.aztec.source.SourceViewEditText>
 

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,7 +37,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AztecEditorFragment extends EditorFragmentAbstract implements OnImeBackListener, EditorMediaUploadListener {
+public class AztecEditorFragment extends EditorFragmentAbstract implements View.OnTouchListener,
+        AztecText.OnImeBackListener, EditorMediaUploadListener {
 
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
@@ -78,6 +80,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
 
+        // Setup hiding the action bar when the soft keyboard is displayed for narrow viewports
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
+            mHideActionBarOnSoftKeyboardUp = true;
+        }
+
         title = (AztecText) view.findViewById(R.id.title);
         content = (AztecText)view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
@@ -90,6 +98,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         content.setImageGetter(imageLoader);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
+
+        title.setOnTouchListener(this);
+        content.setOnTouchListener(this);
+        source.setOnTouchListener(this);
+
+        title.setOnImeBackListener(this);
+        content.setOnImeBackListener(this);
+        source.setOnImeBackListener(this);
 
         content.setOnDragListener(mOnDragListener);
         source.setOnDragListener(mOnDragListener);
@@ -179,6 +195,40 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Toggle action bar auto-hiding for the new orientation
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
+                && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
+            mHideActionBarOnSoftKeyboardUp = true;
+            hideActionBarIfNeeded();
+        } else {
+            mHideActionBarOnSoftKeyboardUp = false;
+            showActionBarIfNeeded();
+        }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            // If the WebView or EditText has received a touch event, the keyboard will be displayed and the action bar
+            // should hide
+            mIsKeyboardOpen = true;
+            hideActionBarIfNeeded();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        mIsKeyboardOpen = false;
+        showActionBarIfNeeded();
+
+        return super.onBackPressed();
     }
 
     /**
