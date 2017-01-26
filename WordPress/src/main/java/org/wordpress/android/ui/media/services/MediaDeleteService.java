@@ -133,23 +133,13 @@ public class MediaDeleteService extends Service {
     private void handleMediaChangedSuccess(@NonNull OnMediaChanged event) {
         switch (event.cause) {
             case DELETE_MEDIA:
-                if (mCurrentDelete == null) {
-                    AppLog.d(T.MEDIA, "Unexpected delete event received, no request was sent.");
-                    break;
+                if (mCurrentDelete != null) {
+                    AppLog.d(T.MEDIA, mCurrentDelete.getTitle() + " successfully deleted!");
                 }
-                // update store media
-                mCurrentDelete.setUploadState(MediaUploadState.DELETED.toString());
-                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mCurrentDelete));
-                mCompletedItems.add(mCurrentDelete);
                 break;
             case REMOVE_MEDIA:
                 if (mCurrentDelete != null) {
                     AppLog.d(T.MEDIA, "Successfully deleted " + mCurrentDelete.getTitle());
-                }
-                break;
-            case UPDATE_MEDIA:
-                if (mCurrentDelete != null) {
-                    AppLog.d(T.MEDIA, mCurrentDelete.getTitle() + " marked as deleted.");
                 }
                 break;
         }
@@ -180,9 +170,6 @@ public class MediaDeleteService extends Service {
                 AppLog.d(T.MEDIA, "Error parsing reponse to " + event.cause.toString() + ".");
                 break;
             default:
-                // mark media as deleted to prevent continuous delete requests
-                mCurrentDelete.setDeleted(true);
-                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mCurrentDelete));
                 break;
         }
     }
@@ -193,11 +180,13 @@ public class MediaDeleteService extends Service {
     private void deleteNextInQueue() {
         // waiting for response to current delete request
         if (mCurrentDelete != null) {
+            AppLog.i(T.MEDIA, "Ignoring request to deleteNextInQueue, only one media item can be deleted at a time.");
             return;
         }
 
         // somehow lost our reference to the site, stop service
         if (mSite == null) {
+            AppLog.i(T.MEDIA, "Unexpected state, site is null. Stopping MediaDeleteService.");
             stopSelf();
             return;
         }
