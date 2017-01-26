@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -39,10 +38,12 @@ public class MediaDeleteService extends Service {
 
         public void addMediaToDeleteQueue(@NonNull MediaModel media) {
             getDeleteQueue().add(media);
+            deleteNextInQueue();
         }
 
         public void removeMediaFromDeleteQueue(@NonNull MediaModel media) {
             getDeleteQueue().remove(media);
+            deleteNextInQueue();
         }
 
         public List<MediaModel> getCompletedItems() {
@@ -135,11 +136,13 @@ public class MediaDeleteService extends Service {
             case DELETE_MEDIA:
                 if (mCurrentDelete != null) {
                     AppLog.d(T.MEDIA, mCurrentDelete.getTitle() + " successfully deleted!");
+                    completeCurrentDelete();
                 }
                 break;
             case REMOVE_MEDIA:
                 if (mCurrentDelete != null) {
                     AppLog.d(T.MEDIA, "Successfully deleted " + mCurrentDelete.getTitle());
+                    completeCurrentDelete();
                 }
                 break;
         }
@@ -157,6 +160,7 @@ public class MediaDeleteService extends Service {
             case NULL_MEDIA_ARG:
                 // shouldn't happen, get back to deleting the queue
                 AppLog.d(T.MEDIA, "Null media argument supplied, skipping current delete.");
+                completeCurrentDelete();
                 break;
             case MEDIA_NOT_FOUND:
                 if (media == null) {
@@ -168,8 +172,10 @@ public class MediaDeleteService extends Service {
                 break;
             case PARSE_ERROR:
                 AppLog.d(T.MEDIA, "Error parsing reponse to " + event.cause.toString() + ".");
+                completeCurrentDelete();
                 break;
             default:
+                completeCurrentDelete();
                 break;
         }
     }
@@ -224,6 +230,12 @@ public class MediaDeleteService extends Service {
         }
         return null;
     }
+
+    private void completeCurrentDelete() {
+        if (mCurrentDelete != null) {
+            getCompletedItems().add(mCurrentDelete);
+            getDeleteQueue().remove(mCurrentDelete);
+            mCurrentDelete = null;
         }
     }
 }
