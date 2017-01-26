@@ -37,6 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -272,22 +273,23 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
                 Uri imageUri = data.getData();
-                fetchMedia(imageUri);
+                String mimeType = getContentResolver().getType(imageUri);
+                fetchMedia(imageUri, mimeType);
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    String path = mMediaCapturePath;
                     mMediaCapturePath = null;
-                    queueFileForUpload(path);
+                    if (data != null) {
+                        Uri uri = data.getData();
+                        queueFileForUpload(uri, getContentResolver().getType(uri));
+                    }
                 }
                 break;
             case RequestCodes.TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
-                    String path = getRealPathFromURI(MediaUtils.getLastRecordedVideoUri(this));
-                    queueFileForUpload(path);
+                    Uri uri = MediaUtils.getLastRecordedVideoUri(this);
+                    queueFileForUpload(uri, getContentResolver().getType(uri));
                 }
-                break;
-            default:
                 break;
         }
     }
@@ -660,7 +662,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     public void uploadList(List<Uri> uriList) {
         for (Uri uri : uriList) {
-            fetchMedia(uri);
+            fetchMedia(uri, getContentResolver().getType(uri));
         }
     }
 
@@ -776,7 +778,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void fetchMedia(Uri mediaUri) {
+    private void fetchMedia(Uri mediaUri, final String mimeType) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
             // Create an AsyncTask to download the file
             new AsyncTask<Uri, Integer, Uri>() {
@@ -786,18 +788,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     return MediaUtils.downloadExternalMedia(MediaBrowserActivity.this, imageUri);
                 }
 
-            protected void onPostExecute(Uri newUri) {
-                if (newUri != null) {
-                    String path = getRealPathFromURI(newUri);
-                    queueFileForUpload(path);
+                protected void onPostExecute(Uri uri) {
+                    if (uri != null) {
+                        queueFileForUpload(uri, mimeType);
+                    } else {
+                        Toast.makeText(MediaBrowserActivity.this, getString(R.string.error_downloading_image),
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else
-                    Toast.makeText(MediaBrowserActivity.this, getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
-            }}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
-            // It is a regular local media file
-            String path = getRealPathFromURI(mediaUri);
-            queueFileForUpload(path);
+            queueFileForUpload(mediaUri, mimeType);
         }
     }
 
@@ -818,7 +819,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void queueFileForUpload(String path) {
+    private void queueFileForUpload(Uri uri, String mimetype) {
+        // It is a regular local media file
+        String path = getRealPathFromURI(uri);
+
         if (path == null || path.equals("")) {
             Toast.makeText(this, "Error opening file", Toast.LENGTH_SHORT).show();
             return;
@@ -835,9 +839,20 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
         currentUpload.setFileName(filename);
         currentUpload.setFilePath(path);
-        // TODO: better mime type handling
-        currentUpload.setMimeType(org.wordpress.android.fluxc.utils.MediaUtils.getMimeTypeForExtension(
-                org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path)));
+
+        // Try to get mimetype if none was passed to this method
+        if (mimetype == null) {
+            mimetype = getContentResolver().getType(uri);
+            String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
+            if (mimetype == null) {
+                mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+            }
+            if (mimetype == null) {
+                // TODO: can't upload or default type?
+                return;
+            }
+        }
+        currentUpload.setMimeType(mimetype);
         addMediaToUploadService(currentUpload);
 
 

@@ -42,6 +42,7 @@ import org.wordpress.android.ui.notifications.services.NotificationsPendingDraft
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
+import org.wordpress.android.ui.posts.AddCategoryActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
@@ -178,4 +179,5 @@ public interface AppComponent {
 
     void inject(NotificationsPendingDraftsService object);
     void inject(SelectCategoriesActivity object);
+    void inject(AddCategoryActivity object);
 }
