@@ -818,7 +818,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void queueFileForUpload(Uri uri, String mimetype) {
+    private void queueFileForUpload(Uri uri, String mimeType) {
         // It is a regular local media file
         String path = getRealPathFromURI(uri);
 
@@ -832,60 +832,31 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return;
         }
 
-        MediaModel currentUpload = new MediaModel();
-
-        // TODO: MediaUtils Import, Note: I wrote that so I could test the rest
+        MediaModel media = new MediaModel();
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
-        currentUpload.setFileName(filename);
-        currentUpload.setFilePath(path);
+        String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
 
         // Try to get mimetype if none was passed to this method
-        if (mimetype == null) {
-            mimetype = getContentResolver().getType(uri);
-            String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
-            if (mimetype == null) {
-                mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+        if (mimeType == null) {
+            mimeType = getContentResolver().getType(uri);
+            if (mimeType == null) {
+                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
             }
-            if (mimetype == null) {
+            if (mimeType == null) {
                 // Default to image jpeg
-                mimetype = "image/jpeg";
+                mimeType = "image/jpeg";
             }
         }
-        currentUpload.setMimeType(mimetype);
-        addMediaToUploadService(currentUpload);
+        // If file extension is null, upload won't work on wordpress.com
+        if (fileExtension == null) {
+            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+            filename += "." + fileExtension;
+        }
 
-
-        // TODO
-//        String mimeType = MediaUtils.getMediaFileMimeType(file);
-//        String fileName = MediaUtils.getMediaFileName(file, mimeType);
-
-//        MediaFile mediaFile = new MediaFile();
-//        mediaFile.setBlogId(String.valueOf(mSite.getId()));
-//        mediaFile.setFileName(fileName);
-//        mediaFile.setFilePath(path);
-//        mediaFile.setUploadState("queued");
-//        mediaFile.setDateCreatedGMT(System.currentTimeMillis());
-//        mediaFile.setMediaId(String.valueOf(System.currentTimeMillis()));
-//        if (mimeType != null && mimeType.startsWith("image")) {
-//            // get width and height
-//            BitmapFactory.Options bfo = new BitmapFactory.Options();
-//            bfo.inJustDecodeBounds = true;
-//            BitmapFactory.decodeFile(path, bfo);
-//            mediaFile.setWidth(bfo.outWidth);
-//            mediaFile.setHeight(bfo.outHeight);
-//        }
-//
-//        if (!TextUtils.isEmpty(mimeType)) {
-//            mediaFile.setMimeType(mimeType);
-//        }
-//        saveMedia(fromMediaFile(mediaFile));
-//        addMediaToUploadService(fromMediaFile(mediaFile));
-        MediaModel media = new MediaModel();
-        String extension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
-        String mimeType = org.wordpress.android.fluxc.utils.MediaUtils.getMimeTypeForExtension(extension);
+        media.setFileName(filename);
         media.setFilePath(path);
         media.setSiteId(mSite.getSiteId());
-        media.setFileExtension(extension);
+        media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
         media.setUploadState(MediaUploadState.QUEUED.toString());
         addMediaToUploadService(media);
