@@ -281,4 +281,13 @@ public class HelpshiftHelper {
         config.put("showSearchOnNewConversation", true);
         return config;
     }
+
+    public static Tag chooseHelpshiftLoginTag(boolean isJetpackAuth, boolean isWPComMode) {
+        // Tag assignment:
+        //  ORIGIN_LOGIN_SCREEN_JETPACK when trying to view stats on a Jetpack site and need to login with WPCOM
+        //  ORIGIN_LOGIN_SCREEN_WPCOM for when trying to log into a WPCOM site and UI not in forced self-hosted mode
+        //  ORIGIN_LOGIN_SCREEN_SELFHOSTED when logging in a selfhosted site
+        return isJetpackAuth ? Tag.ORIGIN_LOGIN_SCREEN_JETPACK :
+                (isWPComMode ? Tag.ORIGIN_LOGIN_SCREEN_WPCOM : Tag.ORIGIN_LOGIN_SCREEN_SELFHOSTED);
+    }
 }
