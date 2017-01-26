@@ -116,6 +116,9 @@ public class MediaUploadService extends Service {
     }
 
     public void startQueuedUpload() {
+        if (mQueue.isEmpty()) {
+            return;
+        }
         performUpload(mQueue.get(0));
         mHandler.postDelayed(mFailsafeRunnable, PROGRESS_TIMEOUT_MS);
     }
