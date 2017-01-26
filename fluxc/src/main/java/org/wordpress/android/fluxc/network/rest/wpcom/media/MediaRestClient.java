@@ -395,18 +395,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (media == null) return null;
 
         final Map<String, Object> params = new HashMap<>();
-        if (!TextUtils.isEmpty(media.getTitle())) {
-            params.put(TITLE_EDIT_KEY, media.getTitle());
-        }
-        if (!TextUtils.isEmpty(media.getDescription())) {
-            params.put(DESCRIPTION_EDIT_KEY, media.getDescription());
-        }
-        if (!TextUtils.isEmpty(media.getCaption())) {
-            params.put(CAPTION_EDIT_KEY, media.getCaption());
-        }
-        if (!TextUtils.isEmpty(media.getAlt())) {
-            params.put(ALT_EDIT_KEY, media.getAlt());
-        }
+        // Title, description, caption and alt of a media can be empty
+        params.put(TITLE_EDIT_KEY, media.getTitle());
+        params.put(DESCRIPTION_EDIT_KEY, media.getDescription());
+        params.put(CAPTION_EDIT_KEY, media.getCaption());
+        params.put(ALT_EDIT_KEY, media.getAlt());
         if (media.getPostId() > 0) {
             params.put(PARENT_EDIT_KEY, String.valueOf(media.getPostId()));
         }
