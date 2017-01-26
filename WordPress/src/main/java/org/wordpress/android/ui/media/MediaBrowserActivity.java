@@ -570,7 +570,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
@@ -581,6 +581,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 title = event.media.getTitle();
             }
             AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
+            mMediaGridFragment.refreshMediaFromDB();
         }
     }
 

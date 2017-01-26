@@ -16,10 +16,10 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -154,7 +154,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
         mIsRefreshing = false;
         if (event.isError()) {
@@ -174,12 +174,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
             // the activity may be done by the time we get this, so check for it
             if (!isFinishing()) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mGridAdapter.setRefreshing(false);
-                    }
-                });
+                mGridAdapter.setRefreshing(false);
             }
         } else {
             MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
@@ -192,19 +187,14 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
             // the activity may be gone by the time this finishes, so check for it
             if (!isFinishing()) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mGridAdapter.setRefreshing(false);
-                        if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
-                            Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
-                            mGridAdapter.swapCursor(cursor);
-                        } else {
-                            Cursor cursor = mMediaStore.getSiteImagesAsCursor(mSite);
-                            mGridAdapter.swapCursor(cursor);
-                        }
-                    }
-                });
+                mGridAdapter.setRefreshing(false);
+                if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
+                    Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
+                    mGridAdapter.swapCursor(cursor);
+                } else {
+                    Cursor cursor = mMediaStore.getSiteImagesAsCursor(mSite);
+                    mGridAdapter.swapCursor(cursor);
+                }
             }
         }
     }
