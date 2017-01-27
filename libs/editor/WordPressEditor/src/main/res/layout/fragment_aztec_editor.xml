@@ -34,6 +34,8 @@
                 android:layout_width="match_parent"
                 android:padding="16dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textStyle="bold"
+                aztec:lineSpacingExtra="0.9dp"
                 aztec:textColor="@color/grey_dark" >
             </org.wordpress.aztec.AztecText>
 
@@ -62,21 +64,22 @@
                     android:paddingTop="16dp"
                     android:scrollbars="vertical"
                     android:textCursorDrawable="?attr/textColor"
-                    aztec:bulletColor="@color/blue_medium"
+                    aztec:bulletColor="@color/format_bar_divider"
                     aztec:bulletMargin="@dimen/bullet_margin"
                     aztec:bulletPadding="@dimen/bullet_padding"
                     aztec:bulletWidth="@dimen/bullet_width"
                     aztec:historyEnable="true"
                     aztec:historySize="10"
-                    aztec:lineSpacingExtra="0.8dp"
-                    aztec:lineSpacingMultiplier="@dimen/spacing_multiplier"
-                    aztec:linkColor="@color/blue_wordpress"
+                    aztec:lineSpacingExtra="1.3dp"
+                    aztec:lineSpacingMultiplier="1.2"
+                    aztec:linkColor="@color/blue_medium"
                     aztec:linkUnderline="false"
-                    aztec:quoteBackground="@color/blue_wordpress"
-                    aztec:quoteColor="@color/blue_medium"
+                    aztec:quoteBackground="@color/aztec_quote_background"
+                    aztec:quoteColor="@color/format_bar_divider"
                     aztec:quoteMargin="@dimen/quote_margin"
                     aztec:quotePadding="@dimen/quote_padding"
                     aztec:quoteWidth="@dimen/quote_width"
+                    android:textSize="16sp"
                     aztec:textColor="@color/grey_dark" >
                 </org.wordpress.aztec.AztecText>
 
