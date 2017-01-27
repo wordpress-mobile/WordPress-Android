@@ -201,8 +201,6 @@
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"
                   android:theme="@style/Calypso.NoActionBar"/>
-        <activity android:name=".ui.plans.PlanPostPurchaseActivity"
-                  android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Stats Activities -->
         <activity
