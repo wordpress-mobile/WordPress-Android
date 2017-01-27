@@ -8,7 +8,6 @@ import android.content.Intent;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
-import org.wordpress.android.util.AppLog;
 
 
 public class PendingDraftsNotificationsUtils {
@@ -48,16 +47,11 @@ public class PendingDraftsNotificationsUtils {
 
         long dateLastUpdated = post.getDateLastUpdated();
 
-        AppLog.i(AppLog.T.NOTIFS, "current time: " + now);
-
         // set alarms for one day + one week + one month if just over a day but less than a week,
         // set alarms for a week and another for a month, if over a week but less than a month
         // set alarm for a month for anything further than a month
         long postId = post.getLocalTablePostId();
         if (dateLastUpdated > one_day_ago) {
-
-            AppLog.i(AppLog.T.NOTIFS, "scheduling 3 alarms for post: " + postId + " dateLastUpdated: " + dateLastUpdated);
-
             // last updated is within a 24 hour timeframe
             PendingIntent alarmIntentOneDay = getOneDayAlarmIntent(context, intent, postId);
             alarmManager.set(AlarmManager.RTC_WAKEUP, dateLastUpdated + NotificationsPendingDraftsReceiver.ONE_DAY, alarmIntentOneDay);
@@ -70,9 +64,6 @@ public class PendingDraftsNotificationsUtils {
         }
         else
         if (dateLastUpdated > one_week_ago) {
-
-            AppLog.i(AppLog.T.NOTIFS, "scheduling 2 alarms for post: " + postId + " dateLastUpdated: " + dateLastUpdated);
-
             // last updated is within a 1 week timeframe (between 1 day and 7 days)
             PendingIntent alarmIntentOneWeek = getOneWeekAlarmIntent(context, intent, postId);
             alarmManager.set(AlarmManager.RTC_WAKEUP, dateLastUpdated + NotificationsPendingDraftsReceiver.ONE_WEEK, alarmIntentOneWeek);
@@ -82,15 +73,10 @@ public class PendingDraftsNotificationsUtils {
         }
         else
         if (dateLastUpdated > one_month_ago) {
-
-            AppLog.i(AppLog.T.NOTIFS, "scheduling 1 alarm for post: " + postId + " dateLastUpdated: " + dateLastUpdated);
-
             // last updated is within a 1 month timeframe (between 7 days and 30 days)
             PendingIntent alarmIntentOneMonth = getOneMonthAlarmIntent(context, intent, postId);
             alarmManager.set(AlarmManager.RTC_WAKEUP, dateLastUpdated + NotificationsPendingDraftsReceiver.ONE_MONTH, alarmIntentOneMonth);
         }
-
-        AppLog.i(AppLog.T.NOTIFS, "finished scheduling for post: " + postId);
 
     }
 
