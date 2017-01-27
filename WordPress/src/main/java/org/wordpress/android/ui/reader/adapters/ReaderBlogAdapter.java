@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.adapters;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,8 @@ public class ReaderBlogAdapter
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
-    private ReaderBlogList mFollowedBlogs = new ReaderBlogList();
+    private ReaderBlogList mAllFollowedBlogs = new ReaderBlogList();
+    private ReaderBlogList mFilteredFollowedBlogs = new ReaderBlogList();
     private FollowedBlogFilter mFollowedBlogFilter;
 
     @SuppressWarnings("UnusedParameters")
@@ -87,7 +89,7 @@ public class ReaderBlogAdapter
             case RECOMMENDED:
                 return mRecommendedBlogs.size();
             case FOLLOWED:
-                return mFollowedBlogs.size();
+                return mFilteredFollowedBlogs.size();
             default:
                 return 0;
         }
@@ -128,7 +130,7 @@ public class ReaderBlogAdapter
                     break;
 
                 case FOLLOWED:
-                    final ReaderBlog blogInfo = mFollowedBlogs.get(position);
+                    final ReaderBlog blogInfo = mFilteredFollowedBlogs.get(position);
                     if (blogInfo.hasName()) {
                         blogHolder.txtTitle.setText(blogInfo.getName());
                     } else {
@@ -155,7 +157,7 @@ public class ReaderBlogAdapter
                                 mClickListener.onBlogClicked(mRecommendedBlogs.get(clickedPosition));
                                 break;
                             case FOLLOWED:
-                                mClickListener.onBlogClicked(mFollowedBlogs.get(clickedPosition));
+                                mClickListener.onBlogClicked(mFilteredFollowedBlogs.get(clickedPosition));
                                 break;
                         }
                     }
@@ -217,7 +219,7 @@ public class ReaderBlogAdapter
 
                 case FOLLOWED:
                     tmpFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
-                    return !mFollowedBlogs.isSameList(tmpFollowedBlogs);
+                    return !mAllFollowedBlogs.isSameList(tmpFollowedBlogs);
 
                 default:
                     return false;
@@ -232,9 +234,9 @@ public class ReaderBlogAdapter
                         mRecommendedBlogs = (ReaderRecommendBlogList) tmpRecommendedBlogs.clone();
                         break;
                     case FOLLOWED:
-                        mFollowedBlogs = (ReaderBlogList) tmpFollowedBlogs.clone();
+                        mAllFollowedBlogs = (ReaderBlogList) tmpFollowedBlogs.clone();
                         // sort followed blogs by name/domain to match display
-                        Collections.sort(mFollowedBlogs, new Comparator<ReaderBlog>() {
+                        Collections.sort(mAllFollowedBlogs, new Comparator<ReaderBlog>() {
                             @Override
                             public int compare(ReaderBlog thisBlog, ReaderBlog thatBlog) {
                                 String thisName = getBlogNameForComparison(thisBlog);
@@ -282,6 +284,23 @@ public class ReaderBlogAdapter
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
 
+            if (TextUtils.isEmpty(constraint)) {
+                results.values = mAllFollowedBlogs;
+                results.count = mAllFollowedBlogs.size();
+            } else {
+                ReaderBlogList blogs = new ReaderBlogList();
+                String lowerCaseConstraint = constraint.toString().toLowerCase();
+                for (ReaderBlog blog: mAllFollowedBlogs) {
+                    if (blog.getName().toLowerCase().contains(lowerCaseConstraint)) {
+                        blogs.add(blog);
+                    } else if (blog.getUrl().toLowerCase().contains(lowerCaseConstraint)) {
+                        blogs.add(blog);
+                    }
+                }
+                results.values = blogs;
+                results.count = blogs.size();
+            }
+
             return results;
         }
 
@@ -290,7 +309,7 @@ public class ReaderBlogAdapter
             if (results.count == 0)
                 notifyDataSetChanged();
             else {
-                mFollowedBlogs = (ReaderBlogList) results.values;
+                mFilteredFollowedBlogs = (ReaderBlogList) results.values;
                 notifyDataSetChanged();
             }
         }
