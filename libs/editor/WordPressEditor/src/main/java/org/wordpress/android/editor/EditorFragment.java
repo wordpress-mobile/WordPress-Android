@@ -1010,13 +1010,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             AppLog.e(T.EDITOR, e);
             Thread.currentThread().interrupt();
         }
-
+        
         mContentHtml = StringUtils.notNullStr(mContentHtml);
-        // Remove ZERO WIDTH SPACE character - http://www.fileformat.info/info/unicode/char/200b/index.htm
-        // from the beginning of the content. See: https://github.com/wordpress-mobile/WordPress-Android/issues/5009
-        if (mContentHtml.length() > 0 && mContentHtml.charAt(0) == '\u200B') {
-            mContentHtml = mContentHtml.substring(1, mContentHtml.length());
-        }
+
         return mContentHtml;
     }
 
