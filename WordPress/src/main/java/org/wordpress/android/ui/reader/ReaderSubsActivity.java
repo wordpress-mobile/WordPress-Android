@@ -15,6 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.URLUtil;
@@ -58,7 +61,7 @@ import de.greenrobot.event.EventBus;
  * followed tags, followed blogs, and recommended blogs
  */
 public class ReaderSubsActivity extends AppCompatActivity
-                                implements ReaderTagAdapter.TagDeletedListener {
+        implements ReaderTagAdapter.TagDeletedListener {
 
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
@@ -138,13 +141,15 @@ public class ReaderSubsActivity extends AppCompatActivity
             restorePreviousPage();
         }
 
-        // remember which page the user last viewed - note this listener must be assigned
-        // after we've already called restorePreviousPage()
+        // note this listener must be assigned after we've already called restorePreviousPage()
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                // remember which page the user last viewed
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
                 AppPrefs.setReaderSubsPageTitle(pageTitle);
+                // ensure the toolbar reflects the current page
+                invalidateOptionsMenu();
             }
         });
     }
@@ -164,6 +169,28 @@ public class ReaderSubsActivity extends AppCompatActivity
         if (!mHasPerformedUpdate) {
             performUpdate();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.reader_subs, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // search is only available on the followed sites pages
+        MenuItem mnuSearch = menu.findItem(R.id.menu_search);
+        if (mnuSearch != null) {
+            boolean showSearch = (mViewPager.getCurrentItem() == TAB_IDX_FOLLOWED_BLOGS);
+            mnuSearch.setVisible(showSearch);
+        }
+
+        return true;
     }
 
     @SuppressWarnings("unused")
@@ -253,7 +280,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         // is it a url or a tag?
         boolean isUrl = !entry.contains(" ")
-                     && (entry.contains(".") || entry.contains("://"));
+                && (entry.contains(".") || entry.contains("://"));
         if (isUrl) {
             addAsUrl(entry);
         } else {
@@ -372,6 +399,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                     followBlogUrl(blogUrl);
                 }
             }
+
             @Override
             public void onFailure(int statusCode) {
                 if (!isFinishing()) {
@@ -450,6 +478,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, yOffset);
         toast.show();
     }
+
     /*
      * triggered by a tag fragment's adapter after user removes a tag - note that the network
      * request has already been made when this is called
@@ -519,7 +548,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         private void refreshFollowedTagFragment() {
-            for (Fragment fragment: mFragments) {
+            for (Fragment fragment : mFragments) {
                 if (fragment instanceof ReaderTagFragment) {
                     ReaderTagFragment tagFragment = (ReaderTagFragment) fragment;
                     tagFragment.refresh();
@@ -528,7 +557,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         private void refreshBlogFragments(ReaderBlogType blogType) {
-            for (Fragment fragment: mFragments) {
+            for (Fragment fragment : mFragments) {
                 if (fragment instanceof ReaderBlogFragment) {
                     ReaderBlogFragment blogFragment = (ReaderBlogFragment) fragment;
                     if (blogType == null || blogType.equals(blogFragment.getBlogType())) {
