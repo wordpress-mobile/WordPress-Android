@@ -1010,10 +1010,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             AppLog.e(T.EDITOR, e);
             Thread.currentThread().interrupt();
         }
-        
-        mContentHtml = StringUtils.notNullStr(mContentHtml);
 
-        return mContentHtml;
+        return StringUtils.notNullStr(mContentHtml);
     }
 
     @Override
