@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -27,7 +29,10 @@ import java.util.Comparator;
 /*
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
  */
-public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ReaderBlogAdapter
+        extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements Filterable
+{
 
     private static final int VIEW_TYPE_ITEM = 0;
 
@@ -43,6 +48,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogList mFollowedBlogs = new ReaderBlogList();
+    private FollowedBlogFilter mFollowedBlogFilter;
 
     @SuppressWarnings("UnusedParameters")
     public ReaderBlogAdapter(Context context, ReaderBlogType blogType) {
@@ -257,6 +263,35 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return StringUtils.notNullStr(UrlUtils.getHost(blog.getUrl()));
             } else {
                 return "";
+            }
+        }
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (mFollowedBlogFilter == null) {
+            mFollowedBlogFilter = new FollowedBlogFilter();
+        }
+
+        return mFollowedBlogFilter;
+    }
+
+    private class FollowedBlogFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            if (results.count == 0)
+                notifyDataSetChanged();
+            else {
+                mFollowedBlogs = (ReaderBlogList) results.values;
+                notifyDataSetChanged();
             }
         }
     }
