@@ -180,7 +180,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             NotificationsActions.markNoteAsRead(note);
             note.setRead();
             NotificationsTable.saveNote(note);
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+            EventBus.getDefault().postSticky(new NotificationEvents.NotificationsChanged());
         }
     }
 
