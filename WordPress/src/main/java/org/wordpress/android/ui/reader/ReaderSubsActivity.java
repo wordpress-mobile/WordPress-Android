@@ -11,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -174,8 +175,28 @@ public class ReaderSubsActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.reader_subs, menu);
+
+        MenuItem mnuSearch = menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) mnuSearch.getActionView();
+        searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+              @Override
+              public boolean onQueryTextSubmit(String query) {
+                  //submitSearchQuery(query);
+                  return true;
+              }
+
+              @Override
+              public boolean onQueryTextChange(String newText) {
+                  return true;
+              }
+          }
+        );
+
         return true;
     }
 
