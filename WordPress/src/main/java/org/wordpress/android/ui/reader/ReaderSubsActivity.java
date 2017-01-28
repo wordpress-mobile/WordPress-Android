@@ -69,11 +69,14 @@ public class ReaderSubsActivity extends AppCompatActivity
     private ImageButton mBtnAdd;
     private WPViewPager mViewPager;
     private SubsPageAdapter mPageAdapter;
+    private SearchView mSearchView;
 
     private String mLastAddedTagName;
     private boolean mHasPerformedUpdate;
+    private boolean mShouldExpandSearch;
 
     private static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
+    private static final String KEY_EXPAND_SEARCH = "expand_search";
 
     private static final int NUM_TABS = 3;
 
@@ -173,6 +176,10 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
     }
 
+    private boolean isSearchExpanded() {
+        return mSearchView != null && !mSearchView.isIconified();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -181,8 +188,8 @@ public class ReaderSubsActivity extends AppCompatActivity
         inflater.inflate(R.menu.reader_subs, menu);
 
         MenuItem mnuSearch = menu.findItem(R.id.menu_search);
-        SearchView searchView = (SearchView) mnuSearch.getActionView();
-        searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
+        mSearchView = (SearchView) mnuSearch.getActionView();
+        mSearchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
 
         MenuItemCompat.setOnActionExpandListener(mnuSearch, new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -196,7 +203,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             }
         });
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
               @Override
               public boolean onQueryTextSubmit(String query) {
                   return true;
@@ -208,6 +215,11 @@ public class ReaderSubsActivity extends AppCompatActivity
               }
           }
         );
+
+        if (mShouldExpandSearch) {
+            mShouldExpandSearch = false;
+            mnuSearch.expandActionView();
+        }
 
         return true;
     }
@@ -264,6 +276,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         if (state != null) {
             mLastAddedTagName = state.getString(KEY_LAST_ADDED_TAG_NAME);
             mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
+            mShouldExpandSearch = state.getBoolean(KEY_EXPAND_SEARCH);
         }
     }
 
@@ -288,8 +301,12 @@ public class ReaderSubsActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
+
         if (mLastAddedTagName != null) {
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
+        }
+        if (mViewPager.getCurrentItem() == TAB_IDX_FOLLOWED_BLOGS) {
+            outState.putBoolean(KEY_EXPAND_SEARCH, isSearchExpanded());
         }
         super.onSaveInstanceState(outState);
     }
@@ -605,7 +622,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                 if (fragment instanceof ReaderBlogFragment) {
                     ReaderBlogFragment blogFragment = (ReaderBlogFragment) fragment;
                     if (blogFragment.getBlogType() == ReaderBlogType.FOLLOWED) {
-                        blogFragment.setFilter(constraint);
+                        blogFragment.setFilterConstraint(constraint);
                     }
                 }
             }

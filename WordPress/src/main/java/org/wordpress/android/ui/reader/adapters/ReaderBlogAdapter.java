@@ -49,7 +49,8 @@ public class ReaderBlogAdapter
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogList mAllFollowedBlogs = new ReaderBlogList();
-    private ReaderBlogList mFilteredFollowedBlogs = new ReaderBlogList();
+    private final ReaderBlogList mFilteredFollowedBlogs = new ReaderBlogList();
+
     private FollowedBlogFilter mFilter;
     private String mFilterConstraint;
 
@@ -292,7 +293,7 @@ public class ReaderBlogAdapter
     /*
      * filters the list of followed sites - pass null to show all
      */
-    public void setFilter(String constraint) {
+    public void setFilterConstraint(String constraint) {
         mFilterConstraint = constraint;
         getFilter().filter(mFilterConstraint);
     }

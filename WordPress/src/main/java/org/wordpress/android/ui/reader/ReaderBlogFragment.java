@@ -26,8 +26,9 @@ public class ReaderBlogFragment extends Fragment
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
     private boolean mWasPaused;
+
     private static final String ARG_BLOG_TYPE = "blog_type";
-    private static final String ARG_FILTER_CONSTRAINT = "filter_constraint";
+    private static final String KEY_SEARCH_CONSTRAINT = "search_constraint";
 
     static ReaderBlogFragment newInstance(ReaderBlogType blogType) {
         AppLog.d(AppLog.T.READER, "reader blog fragment > newInstance");
@@ -96,7 +97,7 @@ public class ReaderBlogFragment extends Fragment
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         if (getBlogAdapter().hasFilter()) {
-            outState.putString(ARG_FILTER_CONSTRAINT, getBlogAdapter().getFilterConstraint());
+            outState.putString(KEY_SEARCH_CONSTRAINT, getBlogAdapter().getFilterConstraint());
         }
         super.onSaveInstanceState(outState);
     }
@@ -107,8 +108,8 @@ public class ReaderBlogFragment extends Fragment
             if (args.containsKey(ARG_BLOG_TYPE)) {
                 mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
             }
-            if (args.containsKey(ARG_FILTER_CONSTRAINT)) {
-                setFilter(args.getString(ARG_FILTER_CONSTRAINT));
+            if (args.containsKey(KEY_SEARCH_CONSTRAINT)) {
+                setFilterConstraint(args.getString(KEY_SEARCH_CONSTRAINT));
             }
         }
     }
@@ -137,8 +138,8 @@ public class ReaderBlogFragment extends Fragment
         }
     }
 
-    void setFilter(String constraint) {
-        getBlogAdapter().setFilter(constraint);
+    void setFilterConstraint(String constraint) {
+        getBlogAdapter().setFilterConstraint(constraint);
     }
 
     private boolean hasBlogAdapter() {
