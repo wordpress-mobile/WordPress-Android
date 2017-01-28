@@ -3,7 +3,12 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -25,6 +30,7 @@ public class ReaderBlogFragment extends Fragment
     private ReaderRecyclerView mRecyclerView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
+    private SearchView mSearchView;
     private boolean mWasPaused;
 
     private static final String ARG_BLOG_TYPE = "blog_type";
@@ -58,6 +64,10 @@ public class ReaderBlogFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
+
+        // options menu (with search) only appears for followed blogs
+        setHasOptionsMenu(getBlogType() == ReaderBlogType.FOLLOWED);
+
         return view;
     }
 
@@ -131,6 +141,48 @@ public class ReaderBlogFragment extends Fragment
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.reader_subs, menu);
+
+        MenuItem mnuSearch = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) mnuSearch.getActionView();
+        mSearchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
+
+        MenuItemCompat.setOnActionExpandListener(mnuSearch, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                setFilterConstraint(null);
+                return true;
+            }
+        });
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                               @Override
+                                               public boolean onQueryTextSubmit(String query) {
+                                                   return true;
+                                               }
+
+                                               @Override
+                                               public boolean onQueryTextChange(String newText) {
+                                                   setFilterConstraint(newText);
+                                                   return true;
+                                               }
+                                           }
+        );
+    }
+
+    private boolean isSearchExpanded() {
+        return mSearchView != null && !mSearchView.isIconified();
+    }
+
     void refresh() {
         if (hasBlogAdapter()) {
             AppLog.d(AppLog.T.READER, "reader subs > refreshing blog fragment " + getBlogType().name());
@@ -138,7 +190,7 @@ public class ReaderBlogFragment extends Fragment
         }
     }
 
-    void setFilterConstraint(String constraint) {
+    private void setFilterConstraint(String constraint) {
         getBlogAdapter().setFilterConstraint(constraint);
     }
 

@@ -7,19 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.URLUtil;
@@ -69,14 +64,11 @@ public class ReaderSubsActivity extends AppCompatActivity
     private ImageButton mBtnAdd;
     private WPViewPager mViewPager;
     private SubsPageAdapter mPageAdapter;
-    private SearchView mSearchView;
 
     private String mLastAddedTagName;
     private boolean mHasPerformedUpdate;
-    private boolean mShouldExpandSearch;
 
     private static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
-    private static final String KEY_EXPAND_SEARCH = "expand_search";
 
     private static final int NUM_TABS = 3;
 
@@ -176,68 +168,6 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
     }
 
-    private boolean isSearchExpanded() {
-        return mSearchView != null && !mSearchView.isIconified();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.reader_subs, menu);
-
-        MenuItem mnuSearch = menu.findItem(R.id.menu_search);
-        mSearchView = (SearchView) mnuSearch.getActionView();
-        mSearchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
-
-        MenuItemCompat.setOnActionExpandListener(mnuSearch, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                getPageAdapter().filterFollowedBlogFragment(null);
-                return true;
-            }
-        });
-
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-              @Override
-              public boolean onQueryTextSubmit(String query) {
-                  return true;
-              }
-              @Override
-              public boolean onQueryTextChange(String newText) {
-                  getPageAdapter().filterFollowedBlogFragment(newText);
-                  return true;
-              }
-          }
-        );
-
-        if (mShouldExpandSearch) {
-            mShouldExpandSearch = false;
-            mnuSearch.expandActionView();
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        // search is only available on the followed sites pages
-        MenuItem mnuSearch = menu.findItem(R.id.menu_search);
-        if (mnuSearch != null) {
-            boolean showSearch = (mViewPager.getCurrentItem() == TAB_IDX_FOLLOWED_BLOGS);
-            mnuSearch.setVisible(showSearch);
-        }
-
-        return true;
-    }
-
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
         AppLog.d(AppLog.T.READER, "reader subs > followed tags changed");
@@ -276,7 +206,6 @@ public class ReaderSubsActivity extends AppCompatActivity
         if (state != null) {
             mLastAddedTagName = state.getString(KEY_LAST_ADDED_TAG_NAME);
             mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
-            mShouldExpandSearch = state.getBoolean(KEY_EXPAND_SEARCH);
         }
     }
 
@@ -301,12 +230,8 @@ public class ReaderSubsActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
-
         if (mLastAddedTagName != null) {
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
-        }
-        if (mViewPager.getCurrentItem() == TAB_IDX_FOLLOWED_BLOGS) {
-            outState.putBoolean(KEY_EXPAND_SEARCH, isSearchExpanded());
         }
         super.onSaveInstanceState(outState);
     }
@@ -612,17 +537,6 @@ public class ReaderSubsActivity extends AppCompatActivity
                     ReaderBlogFragment blogFragment = (ReaderBlogFragment) fragment;
                     if (blogType == null || blogType.equals(blogFragment.getBlogType())) {
                         blogFragment.refresh();
-                    }
-                }
-            }
-        }
-
-        private void filterFollowedBlogFragment(String constraint) {
-            for (Fragment fragment : mFragments) {
-                if (fragment instanceof ReaderBlogFragment) {
-                    ReaderBlogFragment blogFragment = (ReaderBlogFragment) fragment;
-                    if (blogFragment.getBlogType() == ReaderBlogType.FOLLOWED) {
-                        blogFragment.setFilterConstraint(constraint);
                     }
                 }
             }
