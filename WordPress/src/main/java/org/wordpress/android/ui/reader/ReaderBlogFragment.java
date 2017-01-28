@@ -27,6 +27,7 @@ public class ReaderBlogFragment extends Fragment
     private ReaderBlogType mBlogType;
     private boolean mWasPaused;
     private static final String ARG_BLOG_TYPE = "blog_type";
+    private static final String ARG_FILTER_CONSTRAINT = "filter_constraint";
 
     static ReaderBlogFragment newInstance(ReaderBlogType blogType) {
         AppLog.d(AppLog.T.READER, "reader blog fragment > newInstance");
@@ -94,6 +95,9 @@ public class ReaderBlogFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
+        if (getBlogAdapter().hasFilter()) {
+            outState.putString(ARG_FILTER_CONSTRAINT, getBlogAdapter().getFilterConstraint());
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -102,6 +106,9 @@ public class ReaderBlogFragment extends Fragment
             mWasPaused = args.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
             if (args.containsKey(ARG_BLOG_TYPE)) {
                 mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
+            }
+            if (args.containsKey(ARG_FILTER_CONSTRAINT)) {
+                setFilter(args.getString(ARG_FILTER_CONSTRAINT));
             }
         }
     }

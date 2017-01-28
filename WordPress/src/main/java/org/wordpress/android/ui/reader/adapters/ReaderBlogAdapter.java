@@ -285,6 +285,10 @@ public class ReaderBlogAdapter
         return mFilter;
     }
 
+    public String getFilterConstraint() {
+        return mFilterConstraint;
+    }
+
     /*
      * filters the list of followed sites - pass null to show all
      */
