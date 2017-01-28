@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -183,15 +184,26 @@ public class ReaderSubsActivity extends AppCompatActivity
         SearchView searchView = (SearchView) mnuSearch.getActionView();
         searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
 
+        MenuItemCompat.setOnActionExpandListener(mnuSearch, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                getPageAdapter().filterFollowedBlogFragment(null);
+                return true;
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
               @Override
               public boolean onQueryTextSubmit(String query) {
-                  //submitSearchQuery(query);
                   return true;
               }
-
               @Override
               public boolean onQueryTextChange(String newText) {
+                  getPageAdapter().filterFollowedBlogFragment(newText);
                   return true;
               }
           }
@@ -583,6 +595,17 @@ public class ReaderSubsActivity extends AppCompatActivity
                     ReaderBlogFragment blogFragment = (ReaderBlogFragment) fragment;
                     if (blogType == null || blogType.equals(blogFragment.getBlogType())) {
                         blogFragment.refresh();
+                    }
+                }
+            }
+        }
+
+        private void filterFollowedBlogFragment(String constraint) {
+            for (Fragment fragment : mFragments) {
+                if (fragment instanceof ReaderBlogFragment) {
+                    ReaderBlogFragment blogFragment = (ReaderBlogFragment) fragment;
+                    if (blogFragment.getBlogType() == ReaderBlogType.FOLLOWED) {
+                        blogFragment.setFilter(constraint);
                     }
                 }
             }

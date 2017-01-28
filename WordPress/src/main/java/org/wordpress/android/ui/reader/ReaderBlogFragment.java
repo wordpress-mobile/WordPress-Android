@@ -72,7 +72,11 @@ public class ReaderBlogFragment extends Fragment
                     emptyView.setText(R.string.reader_empty_recommended_blogs);
                     break;
                 case FOLLOWED:
-                    emptyView.setText(R.string.reader_empty_followed_blogs_title);
+                    if (getBlogAdapter().hasFilter()) {
+                        emptyView.setText(R.string.reader_empty_followed_blogs_search_title);
+                    } else {
+                        emptyView.setText(R.string.reader_empty_followed_blogs_title);
+                    }
                     break;
             }
         }
@@ -124,6 +128,10 @@ public class ReaderBlogFragment extends Fragment
             AppLog.d(AppLog.T.READER, "reader subs > refreshing blog fragment " + getBlogType().name());
             getBlogAdapter().refresh();
         }
+    }
+
+    void setFilter(String constraint) {
+        getBlogAdapter().setFilter(constraint);
     }
 
     private boolean hasBlogAdapter() {

@@ -50,7 +50,8 @@ public class ReaderBlogAdapter
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogList mAllFollowedBlogs = new ReaderBlogList();
     private ReaderBlogList mFilteredFollowedBlogs = new ReaderBlogList();
-    private FollowedBlogFilter mFollowedBlogFilter;
+    private FollowedBlogFilter mFilter;
+    private String mFilterConstraint;
 
     @SuppressWarnings("UnusedParameters")
     public ReaderBlogAdapter(Context context, ReaderBlogType blogType) {
@@ -244,6 +245,12 @@ public class ReaderBlogAdapter
                                 return thisName.compareToIgnoreCase(thatName);
                             }
                         });
+                        if (hasFilter()) {
+                            getFilter().filter(mFilterConstraint);
+                        } else {
+                            mFilteredFollowedBlogs.clear();
+                            mFilteredFollowedBlogs.addAll(mAllFollowedBlogs);
+                        }
                         break;
                 }
                 notifyDataSetChanged();
@@ -271,11 +278,23 @@ public class ReaderBlogAdapter
 
     @Override
     public Filter getFilter() {
-        if (mFollowedBlogFilter == null) {
-            mFollowedBlogFilter = new FollowedBlogFilter();
+        if (mFilter == null) {
+            mFilter = new FollowedBlogFilter();
         }
 
-        return mFollowedBlogFilter;
+        return mFilter;
+    }
+
+    /*
+     * filters the list of followed sites - pass null to show all
+     */
+    public void setFilter(String constraint) {
+        mFilterConstraint = constraint;
+        getFilter().filter(mFilterConstraint);
+    }
+
+    public boolean hasFilter() {
+        return !TextUtils.isEmpty(mFilterConstraint);
     }
 
     private class FollowedBlogFilter extends Filter {
@@ -306,12 +325,20 @@ public class ReaderBlogAdapter
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            if (results.count == 0)
-                notifyDataSetChanged();
-            else {
-                mFilteredFollowedBlogs = (ReaderBlogList) results.values;
-                notifyDataSetChanged();
+            mFilteredFollowedBlogs.clear();
+            if (results.count > 0) {
+                mFilteredFollowedBlogs.addAll((ReaderBlogList) results.values);
             }
+            notifyDataSetChanged();
+            if (mDataLoadedListener != null) {
+                mDataLoadedListener.onDataLoaded(isEmpty());
+            }
+        }
+
+        @Override
+        public CharSequence convertResultToString (Object resultValue) {
+            ReaderBlog blog = (ReaderBlog) resultValue;
+            return blog.getName();
         }
     }
 }
