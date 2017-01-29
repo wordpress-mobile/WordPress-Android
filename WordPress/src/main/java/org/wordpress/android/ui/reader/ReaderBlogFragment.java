@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -21,7 +20,6 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.WPActivityUtils;
 
 /*
  * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
@@ -210,8 +208,7 @@ public class ReaderBlogFragment extends Fragment
 
     private ReaderBlogAdapter getBlogAdapter() {
         if (mAdapter == null) {
-            Context context = WPActivityUtils.getThemedContext(getActivity());
-            mAdapter = new ReaderBlogAdapter(context, getBlogType());
+            mAdapter = new ReaderBlogAdapter(getBlogType(), mSearchConstraint);
             mAdapter.setBlogClickListener(this);
             mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override

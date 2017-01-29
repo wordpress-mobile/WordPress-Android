@@ -54,11 +54,11 @@ public class ReaderBlogAdapter
     private FollowedBlogFilter mFilter;
     private String mFilterConstraint;
 
-    @SuppressWarnings("UnusedParameters")
-    public ReaderBlogAdapter(Context context, ReaderBlogType blogType) {
+    public ReaderBlogAdapter(ReaderBlogType blogType, String constraint) {
         super();
         setHasStableIds(false);
         mBlogType = blogType;
+        mFilterConstraint = constraint;
     }
 
     public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
