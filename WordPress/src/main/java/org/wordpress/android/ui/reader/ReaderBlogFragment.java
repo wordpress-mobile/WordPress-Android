@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,7 +31,7 @@ public class ReaderBlogFragment extends Fragment
     private ReaderRecyclerView mRecyclerView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
-    private SearchView mSearchView;
+    private String mSearchConstraint;
     private boolean mWasPaused;
 
     private static final String ARG_BLOG_TYPE = "blog_type";
@@ -119,7 +120,7 @@ public class ReaderBlogFragment extends Fragment
                 mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
             }
             if (args.containsKey(KEY_SEARCH_CONSTRAINT)) {
-                setFilterConstraint(args.getString(KEY_SEARCH_CONSTRAINT));
+                mSearchConstraint = args.getString(KEY_SEARCH_CONSTRAINT);
             }
         }
     }
@@ -148,15 +149,14 @@ public class ReaderBlogFragment extends Fragment
         inflater.inflate(R.menu.reader_subs, menu);
 
         MenuItem mnuSearch = menu.findItem(R.id.menu_search);
-        mSearchView = (SearchView) mnuSearch.getActionView();
-        mSearchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
+        final SearchView searchView = (SearchView) mnuSearch.getActionView();
+        searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
 
         MenuItemCompat.setOnActionExpandListener(mnuSearch, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
             }
-
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 setFilterConstraint(null);
@@ -164,23 +164,32 @@ public class ReaderBlogFragment extends Fragment
             }
         });
 
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                                               @Override
-                                               public boolean onQueryTextSubmit(String query) {
-                                                   return true;
-                                               }
-
-                                               @Override
-                                               public boolean onQueryTextChange(String newText) {
-                                                   setFilterConstraint(newText);
-                                                   return true;
-                                               }
-                                           }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+               @Override
+               public boolean onQueryTextSubmit(String query) {
+                   setFilterConstraint(query);
+                   return true;
+               }
+               @Override
+               public boolean onQueryTextChange(String newText) {
+                   setFilterConstraint(newText);
+                   return true;
+               }
+           }
         );
-    }
 
-    private boolean isSearchExpanded() {
-        return mSearchView != null && !mSearchView.isIconified();
+        if (!TextUtils.isEmpty(mSearchConstraint)) {
+            mnuSearch.expandActionView();
+            searchView.clearFocus();
+            searchView.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAdded()) {
+                        searchView.setQuery(mSearchConstraint, true);
+                    }
+                }
+            });
+        }
     }
 
     void refresh() {
@@ -191,6 +200,7 @@ public class ReaderBlogFragment extends Fragment
     }
 
     private void setFilterConstraint(String constraint) {
+        mSearchConstraint = constraint;
         getBlogAdapter().setFilterConstraint(constraint);
     }
 
