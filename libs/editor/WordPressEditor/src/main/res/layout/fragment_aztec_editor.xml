@@ -29,7 +29,7 @@
                 android:id="@+id/title"
                 android:background="@null"
                 android:hint="@string/post_title"
-                android:inputType="textNoSuggestions|textMultiLine"
+                android:inputType="textNoSuggestions"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:padding="16dp"
