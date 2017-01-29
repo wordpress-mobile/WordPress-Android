@@ -294,8 +294,10 @@ public class ReaderBlogAdapter
      * filters the list of followed sites - pass null to show all
      */
     public void setFilterConstraint(String constraint) {
-        mFilterConstraint = constraint;
-        getFilter().filter(mFilterConstraint);
+        if (!StringUtils.equals(constraint, mFilterConstraint)) {
+            mFilterConstraint = constraint;
+            getFilter().filter(mFilterConstraint);
+        }
     }
 
     public boolean hasFilter() {
@@ -317,7 +319,7 @@ public class ReaderBlogAdapter
                 for (ReaderBlog blog: mAllFollowedBlogs) {
                     if (blog.getName().toLowerCase().contains(lowerCaseConstraint)) {
                         blogs.add(blog);
-                    } else if (blog.getUrl().toLowerCase().contains(lowerCaseConstraint)) {
+                    } else if (UrlUtils.getHost(blog.getUrl()).toLowerCase().contains(lowerCaseConstraint)) {
                         blogs.add(blog);
                     }
                 }

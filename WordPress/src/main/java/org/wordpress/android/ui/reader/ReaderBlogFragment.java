@@ -29,6 +29,8 @@ public class ReaderBlogFragment extends Fragment
     private ReaderRecyclerView mRecyclerView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
+    private MenuItem mSearchMenu;
+    private SearchView mSearchView;
     private String mSearchConstraint;
     private boolean mWasPaused;
 
@@ -140,17 +142,20 @@ public class ReaderBlogFragment extends Fragment
         }
     }
 
+    /*
+     * note this will only be called for followed blogs
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.reader_subs, menu);
 
-        MenuItem mnuSearch = menu.findItem(R.id.menu_search);
-        final SearchView searchView = (SearchView) mnuSearch.getActionView();
-        searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
+        mSearchMenu = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) mSearchMenu.getActionView();
+        mSearchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
 
-        MenuItemCompat.setOnActionExpandListener(mnuSearch, new MenuItemCompat.OnActionExpandListener() {
+        MenuItemCompat.setOnActionExpandListener(mSearchMenu, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
@@ -161,29 +166,34 @@ public class ReaderBlogFragment extends Fragment
                 return true;
             }
         });
+    }
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-               @Override
-               public boolean onQueryTextSubmit(String query) {
-                   setFilterConstraint(query);
-                   return true;
-               }
-               @Override
-               public boolean onQueryTextChange(String newText) {
-                   setFilterConstraint(newText);
-                   return true;
-               }
-           }
-        );
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                setFilterConstraint(query);
+                return true;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                AppLog.w(AppLog.T.READER, "onQueryTextChange > " + newText);
+                //setFilterConstraint(newText);
+                return true;
+            }
+        });
 
         if (!TextUtils.isEmpty(mSearchConstraint)) {
-            mnuSearch.expandActionView();
-            searchView.clearFocus();
-            searchView.post(new Runnable() {
+            mSearchMenu.expandActionView();
+            mSearchView.clearFocus();
+            mSearchView.post(new Runnable() {
                 @Override
                 public void run() {
                     if (isAdded()) {
-                        searchView.setQuery(mSearchConstraint, true);
+                        mSearchView.setQuery(mSearchConstraint, false);
                     }
                 }
             });
