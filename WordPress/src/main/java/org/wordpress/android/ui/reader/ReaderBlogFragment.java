@@ -29,10 +29,7 @@ public class ReaderBlogFragment extends Fragment
     private ReaderRecyclerView mRecyclerView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
-    private MenuItem mSearchMenu;
-    private SearchView mSearchView;
     private String mSearchFilter;
-    private boolean mWasPaused;
 
     private static final String ARG_BLOG_TYPE = "blog_type";
     private static final String KEY_SEARCH_FILTER = "search_filter";
@@ -100,13 +97,11 @@ public class ReaderBlogFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setAdapter(getBlogAdapter());
-        refresh();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
-        outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         if (getBlogAdapter().hasSearchFilter()) {
             outState.putString(KEY_SEARCH_FILTER, getBlogAdapter().getSearchFilter());
         }
@@ -115,7 +110,6 @@ public class ReaderBlogFragment extends Fragment
 
     private void restoreState(Bundle args) {
         if (args != null) {
-            mWasPaused = args.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
             if (args.containsKey(ARG_BLOG_TYPE)) {
                 mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
             }
@@ -126,20 +120,9 @@ public class ReaderBlogFragment extends Fragment
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mWasPaused = true;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        // refresh the adapter if the fragment is resuming from a paused state so that changes
-        // made in another activity (such as follow state) are reflected here
-        if (mWasPaused) {
-            mWasPaused = false;
-            refresh();
-        }
+        refresh();
     }
 
     /*
@@ -148,55 +131,49 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-
         inflater.inflate(R.menu.reader_subs, menu);
-
-        mSearchMenu = menu.findItem(R.id.menu_search);
-        mSearchView = (SearchView) mSearchMenu.getActionView();
-        mSearchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
-
-        MenuItemCompat.setOnActionExpandListener(mSearchMenu, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                setFilterConstraint(null);
-                return true;
-            }
-        });
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        MenuItem searchMenu = menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) searchMenu.getActionView();
+        searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
+
+        MenuItemCompat.setOnActionExpandListener(searchMenu, new MenuItemCompat.OnActionExpandListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                setFilterConstraint(query);
+            public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
             }
             @Override
-            public boolean onQueryTextChange(String newText) {
-                AppLog.w(AppLog.T.READER, "onQueryTextChange > " + newText);
-                //setSearchFilter(newText);
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                setSearchFilter(null);
                 return true;
             }
         });
 
-        if (!TextUtils.isEmpty(mSearchFilter)) {
-            mSearchMenu.expandActionView();
-            mSearchView.clearFocus();
-            mSearchView.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAdded()) {
-                        mSearchView.setQuery(mSearchFilter, false);
-                    }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                setSearchFilter(query);
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!TextUtils.isEmpty(newText)) {
+                    setSearchFilter(newText);
                 }
-            });
+                return false;
+            }
+        });
+
+        // make sure the search view is expanded and reflects the current filter
+        if (!TextUtils.isEmpty(mSearchFilter)) {
+            searchMenu.expandActionView();
+            searchView.clearFocus();
+            searchView.setQuery(mSearchFilter, false);
         }
     }
 
@@ -207,7 +184,7 @@ public class ReaderBlogFragment extends Fragment
         }
     }
 
-    private void setFilterConstraint(String constraint) {
+    private void setSearchFilter(String constraint) {
         mSearchFilter = constraint;
         getBlogAdapter().setSearchFilter(constraint);
     }
