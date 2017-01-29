@@ -145,8 +145,6 @@ public class ReaderSubsActivity extends AppCompatActivity
                 // remember which page the user last viewed
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
                 AppPrefs.setReaderSubsPageTitle(pageTitle);
-                // ensure the toolbar reflects the current page
-                invalidateOptionsMenu();
             }
         });
     }
