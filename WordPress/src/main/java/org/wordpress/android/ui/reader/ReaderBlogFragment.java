@@ -31,11 +31,11 @@ public class ReaderBlogFragment extends Fragment
     private ReaderBlogType mBlogType;
     private MenuItem mSearchMenu;
     private SearchView mSearchView;
-    private String mSearchConstraint;
+    private String mSearchFilter;
     private boolean mWasPaused;
 
     private static final String ARG_BLOG_TYPE = "blog_type";
-    private static final String KEY_SEARCH_CONSTRAINT = "search_constraint";
+    private static final String KEY_SEARCH_FILTER = "search_filter";
 
     static ReaderBlogFragment newInstance(ReaderBlogType blogType) {
         AppLog.d(AppLog.T.READER, "reader blog fragment > newInstance");
@@ -85,7 +85,7 @@ public class ReaderBlogFragment extends Fragment
                     emptyView.setText(R.string.reader_empty_recommended_blogs);
                     break;
                 case FOLLOWED:
-                    if (getBlogAdapter().hasFilter()) {
+                    if (getBlogAdapter().hasSearchFilter()) {
                         emptyView.setText(R.string.reader_empty_followed_blogs_search_title);
                     } else {
                         emptyView.setText(R.string.reader_empty_followed_blogs_title);
@@ -107,8 +107,8 @@ public class ReaderBlogFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
-        if (getBlogAdapter().hasFilter()) {
-            outState.putString(KEY_SEARCH_CONSTRAINT, getBlogAdapter().getFilterConstraint());
+        if (getBlogAdapter().hasSearchFilter()) {
+            outState.putString(KEY_SEARCH_FILTER, getBlogAdapter().getSearchFilter());
         }
         super.onSaveInstanceState(outState);
     }
@@ -119,8 +119,8 @@ public class ReaderBlogFragment extends Fragment
             if (args.containsKey(ARG_BLOG_TYPE)) {
                 mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
             }
-            if (args.containsKey(KEY_SEARCH_CONSTRAINT)) {
-                mSearchConstraint = args.getString(KEY_SEARCH_CONSTRAINT);
+            if (args.containsKey(KEY_SEARCH_FILTER)) {
+                mSearchFilter = args.getString(KEY_SEARCH_FILTER);
             }
         }
     }
@@ -181,19 +181,19 @@ public class ReaderBlogFragment extends Fragment
             @Override
             public boolean onQueryTextChange(String newText) {
                 AppLog.w(AppLog.T.READER, "onQueryTextChange > " + newText);
-                //setFilterConstraint(newText);
+                //setSearchFilter(newText);
                 return true;
             }
         });
 
-        if (!TextUtils.isEmpty(mSearchConstraint)) {
+        if (!TextUtils.isEmpty(mSearchFilter)) {
             mSearchMenu.expandActionView();
             mSearchView.clearFocus();
             mSearchView.post(new Runnable() {
                 @Override
                 public void run() {
                     if (isAdded()) {
-                        mSearchView.setQuery(mSearchConstraint, false);
+                        mSearchView.setQuery(mSearchFilter, false);
                     }
                 }
             });
@@ -208,8 +208,8 @@ public class ReaderBlogFragment extends Fragment
     }
 
     private void setFilterConstraint(String constraint) {
-        mSearchConstraint = constraint;
-        getBlogAdapter().setFilterConstraint(constraint);
+        mSearchFilter = constraint;
+        getBlogAdapter().setSearchFilter(constraint);
     }
 
     private boolean hasBlogAdapter() {
@@ -218,7 +218,7 @@ public class ReaderBlogFragment extends Fragment
 
     private ReaderBlogAdapter getBlogAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ReaderBlogAdapter(getBlogType(), mSearchConstraint);
+            mAdapter = new ReaderBlogAdapter(getBlogType(), mSearchFilter);
             mAdapter.setBlogClickListener(this);
             mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override

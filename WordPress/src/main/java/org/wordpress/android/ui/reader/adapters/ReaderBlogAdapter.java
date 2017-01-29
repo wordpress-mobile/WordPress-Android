@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -30,10 +27,7 @@ import java.util.Comparator;
 /*
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
  */
-public class ReaderBlogAdapter
-        extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-        implements Filterable
-{
+public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_ITEM = 0;
 
@@ -49,16 +43,15 @@ public class ReaderBlogAdapter
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogList mAllFollowedBlogs = new ReaderBlogList();
-    private final ReaderBlogList mFilteredFollowedBlogs = new ReaderBlogList();
+    private ReaderBlogList mFilteredFollowedBlogs = new ReaderBlogList();
 
-    private FollowedBlogFilter mFilter;
-    private String mFilterConstraint;
+    private String mSearchFilter;
 
-    public ReaderBlogAdapter(ReaderBlogType blogType, String constraint) {
+    public ReaderBlogAdapter(ReaderBlogType blogType, String searchFilter) {
         super();
         setHasStableIds(false);
         mBlogType = blogType;
-        mFilterConstraint = constraint;
+        mSearchFilter = searchFilter;
     }
 
     public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
@@ -200,7 +193,7 @@ public class ReaderBlogAdapter
     private boolean mIsTaskRunning = false;
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderRecommendBlogList tmpRecommendedBlogs;
-        ReaderBlogList tmpFollowedBlogs;
+        ReaderBlogList tmpFilteredBlogs;
 
         @Override
         protected void onPreExecute() {
@@ -220,8 +213,21 @@ public class ReaderBlogAdapter
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
 
                 case FOLLOWED:
-                    tmpFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
-                    return !mAllFollowedBlogs.isSameList(tmpFollowedBlogs);
+                    tmpFilteredBlogs = new ReaderBlogList();
+                    mAllFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
+                    if (hasSearchFilter()) {
+                        String query = mSearchFilter.toString().toLowerCase();
+                        for (ReaderBlog blog: mAllFollowedBlogs) {
+                            if (blog.getName().toLowerCase().contains(query)) {
+                                tmpFilteredBlogs.add(blog);
+                            } else if (UrlUtils.getHost(blog.getUrl()).toLowerCase().contains(query)) {
+                                tmpFilteredBlogs.add(blog);
+                            }
+                        }
+                    } else {
+                        tmpFilteredBlogs.addAll(mAllFollowedBlogs);
+                    }
+                    return !mFilteredFollowedBlogs.isSameList(tmpFilteredBlogs);
 
                 default:
                     return false;
@@ -236,9 +242,9 @@ public class ReaderBlogAdapter
                         mRecommendedBlogs = (ReaderRecommendBlogList) tmpRecommendedBlogs.clone();
                         break;
                     case FOLLOWED:
-                        mAllFollowedBlogs = (ReaderBlogList) tmpFollowedBlogs.clone();
+                        mFilteredFollowedBlogs = (ReaderBlogList) tmpFilteredBlogs.clone();
                         // sort followed blogs by name/domain to match display
-                        Collections.sort(mAllFollowedBlogs, new Comparator<ReaderBlog>() {
+                        Collections.sort(mFilteredFollowedBlogs, new Comparator<ReaderBlog>() {
                             @Override
                             public int compare(ReaderBlog thisBlog, ReaderBlog thatBlog) {
                                 String thisName = getBlogNameForComparison(thisBlog);
@@ -246,12 +252,6 @@ public class ReaderBlogAdapter
                                 return thisName.compareToIgnoreCase(thatName);
                             }
                         });
-                        if (hasFilter()) {
-                            getFilter().filter(mFilterConstraint);
-                        } else {
-                            mFilteredFollowedBlogs.clear();
-                            mFilteredFollowedBlogs.addAll(mAllFollowedBlogs);
-                        }
                         break;
                 }
                 notifyDataSetChanged();
@@ -277,75 +277,22 @@ public class ReaderBlogAdapter
         }
     }
 
-    @Override
-    public Filter getFilter() {
-        if (mFilter == null) {
-            mFilter = new FollowedBlogFilter();
-        }
-
-        return mFilter;
-    }
-
-    public String getFilterConstraint() {
-        return mFilterConstraint;
+    public String getSearchFilter() {
+        return mSearchFilter;
     }
 
     /*
      * filters the list of followed sites - pass null to show all
      */
-    public void setFilterConstraint(String constraint) {
-        if (!StringUtils.equals(constraint, mFilterConstraint)) {
-            mFilterConstraint = constraint;
-            getFilter().filter(mFilterConstraint);
+    public void setSearchFilter(String constraint) {
+        if (!StringUtils.equals(constraint, mSearchFilter)) {
+            mSearchFilter = constraint;
+            refresh();
         }
     }
 
-    public boolean hasFilter() {
-        return !TextUtils.isEmpty(mFilterConstraint);
+    public boolean hasSearchFilter() {
+        return !TextUtils.isEmpty(mSearchFilter);
     }
 
-    private class FollowedBlogFilter extends Filter {
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults results = new FilterResults();
-
-            if (TextUtils.isEmpty(constraint)) {
-                results.values = mAllFollowedBlogs;
-                results.count = mAllFollowedBlogs.size();
-            } else {
-                ReaderBlogList blogs = new ReaderBlogList();
-                String lowerCaseConstraint = constraint.toString().toLowerCase();
-                for (ReaderBlog blog: mAllFollowedBlogs) {
-                    if (blog.getName().toLowerCase().contains(lowerCaseConstraint)) {
-                        blogs.add(blog);
-                    } else if (UrlUtils.getHost(blog.getUrl()).toLowerCase().contains(lowerCaseConstraint)) {
-                        blogs.add(blog);
-                    }
-                }
-                results.values = blogs;
-                results.count = blogs.size();
-            }
-
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            mFilteredFollowedBlogs.clear();
-            if (results.count > 0) {
-                mFilteredFollowedBlogs.addAll((ReaderBlogList) results.values);
-            }
-            notifyDataSetChanged();
-            if (mDataLoadedListener != null) {
-                mDataLoadedListener.onDataLoaded(isEmpty());
-            }
-        }
-
-        @Override
-        public CharSequence convertResultToString (Object resultValue) {
-            ReaderBlog blog = (ReaderBlog) resultValue;
-            return blog.getName();
-        }
-    }
 }
