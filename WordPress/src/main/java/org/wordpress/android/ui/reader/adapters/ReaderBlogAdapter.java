@@ -42,8 +42,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
-    private ReaderBlogList mAllFollowedBlogs = new ReaderBlogList();
-    private ReaderBlogList mFilteredFollowedBlogs = new ReaderBlogList();
+    private ReaderBlogList mFollowedBlogs = new ReaderBlogList();
 
     private String mSearchFilter;
 
@@ -84,7 +83,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case RECOMMENDED:
                 return mRecommendedBlogs.size();
             case FOLLOWED:
-                return mFilteredFollowedBlogs.size();
+                return mFollowedBlogs.size();
             default:
                 return 0;
         }
@@ -125,7 +124,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     break;
 
                 case FOLLOWED:
-                    final ReaderBlog blogInfo = mFilteredFollowedBlogs.get(position);
+                    final ReaderBlog blogInfo = mFollowedBlogs.get(position);
                     if (blogInfo.hasName()) {
                         blogHolder.txtTitle.setText(blogInfo.getName());
                     } else {
@@ -152,7 +151,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 mClickListener.onBlogClicked(mRecommendedBlogs.get(clickedPosition));
                                 break;
                             case FOLLOWED:
-                                mClickListener.onBlogClicked(mFilteredFollowedBlogs.get(clickedPosition));
+                                mClickListener.onBlogClicked(mFollowedBlogs.get(clickedPosition));
                                 break;
                         }
                     }
@@ -193,7 +192,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean mIsTaskRunning = false;
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderRecommendBlogList tmpRecommendedBlogs;
-        ReaderBlogList tmpFilteredBlogs;
+        ReaderBlogList tmpFollowedBlogs;
 
         @Override
         protected void onPreExecute() {
@@ -213,21 +212,30 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
 
                 case FOLLOWED:
-                    tmpFilteredBlogs = new ReaderBlogList();
-                    mAllFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
+                    tmpFollowedBlogs = new ReaderBlogList();
+                    ReaderBlogList allFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
                     if (hasSearchFilter()) {
-                        String query = mSearchFilter.toString().toLowerCase();
-                        for (ReaderBlog blog: mAllFollowedBlogs) {
+                        String query = mSearchFilter.toLowerCase();
+                        for (ReaderBlog blog: allFollowedBlogs) {
                             if (blog.getName().toLowerCase().contains(query)) {
-                                tmpFilteredBlogs.add(blog);
+                                tmpFollowedBlogs.add(blog);
                             } else if (UrlUtils.getHost(blog.getUrl()).toLowerCase().contains(query)) {
-                                tmpFilteredBlogs.add(blog);
+                                tmpFollowedBlogs.add(blog);
                             }
                         }
                     } else {
-                        tmpFilteredBlogs.addAll(mAllFollowedBlogs);
+                        tmpFollowedBlogs.addAll(allFollowedBlogs);
                     }
-                    return !mFilteredFollowedBlogs.isSameList(tmpFilteredBlogs);
+                    // sort followed blogs by name/domain to match display
+                    Collections.sort(tmpFollowedBlogs, new Comparator<ReaderBlog>() {
+                        @Override
+                        public int compare(ReaderBlog thisBlog, ReaderBlog thatBlog) {
+                            String thisName = getBlogNameForComparison(thisBlog);
+                            String thatName = getBlogNameForComparison(thatBlog);
+                            return thisName.compareToIgnoreCase(thatName);
+                        }
+                    });
+                    return !mFollowedBlogs.isSameList(tmpFollowedBlogs);
 
                 default:
                     return false;
@@ -242,16 +250,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         mRecommendedBlogs = (ReaderRecommendBlogList) tmpRecommendedBlogs.clone();
                         break;
                     case FOLLOWED:
-                        mFilteredFollowedBlogs = (ReaderBlogList) tmpFilteredBlogs.clone();
-                        // sort followed blogs by name/domain to match display
-                        Collections.sort(mFilteredFollowedBlogs, new Comparator<ReaderBlog>() {
-                            @Override
-                            public int compare(ReaderBlog thisBlog, ReaderBlog thatBlog) {
-                                String thisName = getBlogNameForComparison(thisBlog);
-                                String thatName = getBlogNameForComparison(thatBlog);
-                                return thisName.compareToIgnoreCase(thatName);
-                            }
-                        });
+                        mFollowedBlogs = (ReaderBlogList) tmpFollowedBlogs.clone();
                         break;
                 }
                 notifyDataSetChanged();
