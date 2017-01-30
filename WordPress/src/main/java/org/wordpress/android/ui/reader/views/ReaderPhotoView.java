@@ -18,10 +18,13 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
+
+import javax.inject.Inject;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -30,6 +33,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * but adds pinch/zoom and the ability to first load a lo-res version of the image
  */
 public class ReaderPhotoView extends RelativeLayout {
+    @Inject FluxCImageLoader mImageLoader;
 
     public interface PhotoViewListener {
         void onTapPhotoView();
@@ -53,6 +57,7 @@ public class ReaderPhotoView extends RelativeLayout {
 
     public ReaderPhotoView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
 
         inflate(context, R.layout.reader_photo_view, this);
 
@@ -122,7 +127,7 @@ public class ReaderPhotoView extends RelativeLayout {
 
         showProgress();
 
-        mLoResContainer = WordPress.imageLoader.get(mLoResImageUrl,
+        mLoResContainer = mImageLoader.get(mLoResImageUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -156,7 +161,7 @@ public class ReaderPhotoView extends RelativeLayout {
         Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
         int maxSize = Math.max(pt.x, pt.y);
 
-        mHiResContainer = WordPress.imageLoader.get(mHiResImageUrl,
+        mHiResContainer = mImageLoader.get(mHiResImageUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

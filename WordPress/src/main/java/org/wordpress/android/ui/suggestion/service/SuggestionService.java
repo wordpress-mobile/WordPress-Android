@@ -14,10 +14,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.models.Tag;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -26,10 +30,13 @@ public class SuggestionService extends Service {
     private final List<Long> mCurrentlyRequestingSuggestionsSiteIds = new ArrayList<>();
     private final List<Long> mCurrentlyRequestingTagsSiteIds = new ArrayList<>();
 
+    @Inject @Named("v1") RestClientUtils mRestClientUtilsV1;
+
     @Override
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.SUGGESTION, "service created");
+        ((WordPress) getApplication()).component().inject(this);
     }
 
     @Override
@@ -73,7 +80,7 @@ public class SuggestionService extends Service {
 
         AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating suggestions for siteId: " + siteId);
         String path = "/users/suggest" + "?site_id=" + siteId;
-        WordPress.getRestClientUtils().get(path, listener, errorListener);
+        mRestClientUtilsV1.get(path, listener, errorListener);
     }
 
     private void handleSuggestionsUpdatedResponse(final long siteId, final JSONObject jsonObject) {
@@ -126,7 +133,7 @@ public class SuggestionService extends Service {
 
         AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating tags for siteId: " + siteId);
         String path = "/sites/" + siteId + "/tags";
-        WordPress.getRestClientUtils().get(path, listener, errorListener);
+        mRestClientUtilsV1.get(path, listener, errorListener);
     }
 
     private void handleTagsUpdatedResponse(final long siteId, final JSONObject jsonObject) {

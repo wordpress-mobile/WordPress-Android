@@ -15,12 +15,13 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.util.AppLog;
@@ -30,6 +31,7 @@ import java.util.EnumSet;
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -50,6 +52,8 @@ public class ReaderUpdateService extends Service {
     private static final String ARG_UPDATE_TASKS = "update_tasks";
 
     @Inject AccountStore mAccountStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+    @Inject @Named("v1.2") RestClientUtils mRestClientUtilsV1_2;
 
     public static void startService(Context context, EnumSet<UpdateTask> tasks) {
         if (context == null || tasks == null || tasks.size() == 0) {
@@ -137,7 +141,7 @@ public class ReaderUpdateService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "reader service > updating tags");
-        WordPress.getRestClientUtilsV1_2().get("read/menu", null, null, listener, errorListener);
+        mRestClientUtilsV1_2.get("read/menu", null, null, listener, errorListener);
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
@@ -264,7 +268,7 @@ public class ReaderUpdateService extends Service {
 
         AppLog.d(AppLog.T.READER, "reader service > updating followed blogs");
         // request using ?meta=site,feed to get extra info
-        WordPress.getRestClientUtilsV1_1().get("read/following/mine?meta=site%2Cfeed", listener, errorListener);
+        mRestClientUtilsV1_1.get("read/following/mine?meta=site%2Cfeed", listener, errorListener);
     }
 
     private void handleFollowedBlogsResponse(final JSONObject jsonObject) {
@@ -315,7 +319,7 @@ public class ReaderUpdateService extends Service {
         String path = "read/recommendations/mine/"
                     + "?source=mobile"
                     + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
-        WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
+        mRestClientUtilsV1_1.get(path, listener, errorListener);
     }
     private void handleRecommendedBlogsResponse(final JSONObject jsonObject) {
         new Thread() {

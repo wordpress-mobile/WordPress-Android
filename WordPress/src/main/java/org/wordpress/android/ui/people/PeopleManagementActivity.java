@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -27,6 +28,7 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -79,6 +81,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     private int mEmailFollowersLastFetchedPage;
 
     @Inject AccountStore mAccountStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     private SiteModel mSite;
 
@@ -265,7 +268,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         mUsersFetchRequestInProgress = true;
 
-        PeopleUtils.fetchUsers(site, offset, new PeopleUtils.FetchUsersCallback() {
+        PeopleUtils.fetchUsers(mRestClientUtilsV1_1, site, offset, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
@@ -306,7 +309,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         mFollowersFetchRequestInProgress = true;
 
-        PeopleUtils.fetchFollowers(site, page, new PeopleUtils.FetchFollowersCallback() {
+        PeopleUtils.fetchFollowers(mRestClientUtilsV1_1, site, page, new PeopleUtils.FetchFollowersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
@@ -348,7 +351,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         mEmailFollowersFetchRequestInProgress = true;
 
-        PeopleUtils.fetchEmailFollowers(site, page, new PeopleUtils.FetchFollowersCallback() {
+        PeopleUtils.fetchEmailFollowers(mRestClientUtilsV1_1, site, page, new PeopleUtils.FetchFollowersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
@@ -390,7 +393,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         mViewersFetchRequestInProgress = true;
 
-        PeopleUtils.fetchViewers(site, offset, new PeopleUtils.FetchViewersCallback() {
+        PeopleUtils.fetchViewers(mRestClientUtilsV1_1, site, offset, new PeopleUtils.FetchViewersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
@@ -468,7 +471,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             personDetailFragment.changeRole(event.newRole);
         }
 
-        PeopleUtils.updateRole(mSite, person.getPersonID(), event.newRole, event.localTableBlogId,
+        PeopleUtils.updateRole(mRestClientUtilsV1_1, mSite, person.getPersonID(), event.newRole, event.localTableBlogId,
                 new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {
@@ -566,11 +569,11 @@ public class PeopleManagementActivity extends AppCompatActivity
         };
 
         if (personType == Person.PersonType.FOLLOWER || personType == Person.PersonType.EMAIL_FOLLOWER) {
-            PeopleUtils.removeFollower(mSite, person.getPersonID(), personType, callback);
+            PeopleUtils.removeFollower(mRestClientUtilsV1_1, mSite, person.getPersonID(), personType, callback);
         } else if(personType == Person.PersonType.VIEWER) {
-            PeopleUtils.removeViewer(mSite, person.getPersonID(), callback);
+            PeopleUtils.removeViewer(mRestClientUtilsV1_1, mSite, person.getPersonID(), callback);
         } else {
-            PeopleUtils.removeUser(mSite, person.getPersonID(),callback);
+            PeopleUtils.removeUser(mRestClientUtilsV1_1, mSite, person.getPersonID(),callback);
         }
     }
 

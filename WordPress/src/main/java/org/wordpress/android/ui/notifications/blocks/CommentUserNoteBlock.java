@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
@@ -34,8 +36,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     public CommentUserNoteBlock(Context context, JSONObject noteObject,
                                 OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                                OnGravatarClickedListener onGravatarClickedListener) {
-        super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener);
+                                OnGravatarClickedListener onGravatarClickedListener, ImageLoader imageLoader) {
+        super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageLoader);
 
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
@@ -90,7 +92,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                         getNoteData().optJSONObject("comment_text"),
                         noteBlockHolder.commentTextView,
                         getOnNoteBlockTextClickListener(),
-                        false)
+                        false, mImageLoader)
         );
 
         // Change display based on comment status and type:

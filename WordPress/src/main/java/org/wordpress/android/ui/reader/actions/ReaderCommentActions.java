@@ -6,13 +6,13 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUser;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -35,7 +35,8 @@ public class ReaderCommentActions {
      * add the passed comment text to the passed post - caller must pass a unique "fake" comment id
      * to give the comment that's generated locally
      */
-    public static ReaderComment submitPostComment(final ReaderPost post,
+    public static ReaderComment submitPostComment(RestClientUtils restClientUtilsV1_1,
+                                                  final ReaderPost post,
                                                   final long fakeCommentId,
                                                   final String commentText,
                                                   final long replyToCommentId,
@@ -113,7 +114,7 @@ public class ReaderCommentActions {
         };
 
         AppLog.i(T.READER, "submitting comment");
-        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
+        restClientUtilsV1_1.post(path, params, null, listener, errorListener);
 
         return newComment;
     }
@@ -121,8 +122,8 @@ public class ReaderCommentActions {
     /*
      * like or unlike the passed comment
      */
-    public static boolean performLikeAction(final ReaderComment comment, boolean isAskingToLike,
-                                            final long wpComUserId) {
+    public static boolean performLikeAction(RestClientUtils restClientUtilsV1_1, final ReaderComment comment,
+                                            boolean isAskingToLike, final long wpComUserId) {
         if (comment == null) {
             return false;
         }
@@ -177,7 +178,7 @@ public class ReaderCommentActions {
             }
         };
 
-        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
+        restClientUtilsV1_1.post(path, listener, errorListener);
         return true;
     }
 }

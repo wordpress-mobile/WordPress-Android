@@ -21,13 +21,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * An adapter for the media gallery listViews.
@@ -52,12 +54,13 @@ public class MediaGridAdapter extends CursorAdapter {
     private final Handler mHandler;
     private final int mLocalImageWidth;
     private final LayoutInflater mInflater;
-    private ImageLoader mImageLoader;
     private Context mContext;
     private SiteModel mSite;
 
     // Must be an ArrayList (order is important for galleries)
     private ArrayList<String> mSelectedItems;
+
+    @Inject FluxCImageLoader mImageLoader;
 
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
@@ -73,8 +76,9 @@ public class MediaGridAdapter extends CursorAdapter {
         LOCAL, NETWORK, PROGRESS, SPACER
     }
 
-    public MediaGridAdapter(Context context, SiteModel site, Cursor c, int flags, ImageLoader imageLoader) {
+    public MediaGridAdapter(Context context, SiteModel site, Cursor c, int flags) {
         super(context, c, flags);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         mContext = context;
         mSite = site;
         mSelectedItems = new ArrayList<String>();
@@ -82,15 +86,6 @@ public class MediaGridAdapter extends CursorAdapter {
         mInflater = LayoutInflater.from(context);
         mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
         mHandler = new Handler();
-        setImageLoader(imageLoader);
-    }
-
-    void setImageLoader(ImageLoader imageLoader) {
-        if (imageLoader != null) {
-            mImageLoader = imageLoader;
-        } else {
-            mImageLoader = WordPress.imageLoader;
-        }
     }
 
     public ArrayList<String> getSelectedItems() {

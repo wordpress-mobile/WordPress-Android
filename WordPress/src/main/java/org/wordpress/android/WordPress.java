@@ -20,15 +20,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
-import com.wordpress.rest.RestClient;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -44,6 +40,7 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.module.AppContextModule;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -52,7 +49,6 @@ import org.wordpress.android.modules.AppComponent;
 import org.wordpress.android.modules.DaggerAppComponent;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
-import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
@@ -91,6 +87,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
@@ -100,25 +97,19 @@ public class WordPress extends MultiDexApplication {
     public static String versionName;
     public static WordPressDB wpDB;
 
-    public static RequestQueue requestQueue;
-    public static ImageLoader imageLoader;
-
-    private static RestClientUtils mRestClientUtils;
-    private static RestClientUtils mRestClientUtilsVersion1_1;
-    private static RestClientUtils mRestClientUtilsVersion1_2;
-    private static RestClientUtils mRestClientUtilsVersion1_3;
-    private static RestClientUtils mRestClientUtilsVersion0;
-
     private static final int SECONDS_BETWEEN_SITE_UPDATE = 60 * 60; // 1 hour
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 15 * 60; // 15 minutes
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
-    private static BitmapLruCache mBitmapCache;
+    private static BitmapLruCache sBitmapCache;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject AccessToken mAccessToken;
+    @Inject @Named("regular") RequestQueue mRequestQueue;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     private AppComponent mAppComponent;
     public AppComponent component() {
@@ -168,15 +159,16 @@ public class WordPress extends MultiDexApplication {
         }
     };
 
+    // TODO: remove this static method, replace it with injection
     public static BitmapLruCache getBitmapCache() {
-        if (mBitmapCache == null) {
+        if (sBitmapCache == null) {
             // The cache size will be measured in kilobytes rather than
             // number of items. See http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
             int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
             int cacheSize = maxMemory / 16;  //Use 1/16th of the available memory for this memory cache.
-            mBitmapCache = new BitmapLruCache(cacheSize);
+            sBitmapCache = new BitmapLruCache(cacheSize);
         }
-        return mBitmapCache;
+        return sBitmapCache;
     }
 
     @Override
@@ -246,9 +238,6 @@ public class WordPress extends MultiDexApplication {
         mDispatcher.register(this);
 
         RestClientUtils.setUserAgent(getUserAgent());
-
-        // Volley networking setup
-        setupVolleyQueue();
 
         // PasscodeLock setup
         if(!AppLockManager.getInstance().isAppLockFeatureEnabled()) {
@@ -328,14 +317,6 @@ public class WordPress extends MultiDexApplication {
         }
     }
 
-    public static void setupVolleyQueue() {
-        requestQueue = Volley.newRequestQueue(mContext);
-        imageLoader = new ImageLoader(requestQueue, getBitmapCache());
-        VolleyLog.setTag(AppLog.TAG);
-        // http://stackoverflow.com/a/17035814
-        imageLoader.setBatchedResponseDelay(0);
-    }
-
     private void initWpDb() {
         if (!createAndVerifyWpDb()) {
             AppLog.e(T.DB, "Invalid database, sign out user and delete database");
@@ -357,50 +338,6 @@ public class WordPress extends MultiDexApplication {
 
     public static Context getContext() {
         return mContext;
-    }
-
-    public static RestClientUtils getRestClientUtils() {
-        if (mRestClientUtils == null) {
-            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtils = new RestClientUtils(mContext, requestQueue, authenticator, null);
-        }
-        return mRestClientUtils;
-    }
-
-    public static RestClientUtils getRestClientUtilsV1_1() {
-        if (mRestClientUtilsVersion1_1 == null) {
-            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtilsVersion1_1 = new RestClientUtils(mContext, requestQueue, authenticator,
-                    null, RestClient.REST_CLIENT_VERSIONS.V1_1);
-        }
-        return mRestClientUtilsVersion1_1;
-    }
-
-    public static RestClientUtils getRestClientUtilsV1_2() {
-        if (mRestClientUtilsVersion1_2 == null) {
-            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtilsVersion1_2 = new RestClientUtils(mContext, requestQueue, authenticator,
-                    null, RestClient.REST_CLIENT_VERSIONS.V1_2);
-        }
-        return mRestClientUtilsVersion1_2;
-    }
-
-    public static RestClientUtils getRestClientUtilsV1_3() {
-        if (mRestClientUtilsVersion1_3 == null) {
-            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtilsVersion1_3 = new RestClientUtils(mContext, requestQueue, authenticator,
-                    null, RestClient.REST_CLIENT_VERSIONS.V1_3);
-        }
-        return mRestClientUtilsVersion1_3;
-    }
-
-    public static RestClientUtils getRestClientUtilsV0() {
-        if (mRestClientUtilsVersion0 == null) {
-            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtilsVersion0 = new RestClientUtils(mContext, requestQueue, authenticator,
-                    null, RestClient.REST_CLIENT_VERSIONS.V0);
-        }
-        return mRestClientUtilsVersion0;
     }
 
     /**
@@ -490,9 +427,9 @@ public class WordPress extends MultiDexApplication {
     public void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses
         // a Volley request
-        VolleyUtils.cancelAllRequests(requestQueue);
+        VolleyUtils.cancelAllRequests(mRequestQueue);
 
-        NotificationsUtils.unregisterDevicePushNotifications(context);
+        NotificationsUtils.unregisterDevicePushNotifications(mRestClientUtilsV1_1, context);
         try {
             String gcmId = BuildConfig.GCM_ID;
             if (!TextUtils.isEmpty(gcmId)) {
@@ -658,8 +595,8 @@ public class WordPress extends MultiDexApplication {
                     break;
             }
 
-            if (evictBitmaps && mBitmapCache != null) {
-                mBitmapCache.evictAll();
+            if (evictBitmaps && sBitmapCache != null) {
+                sBitmapCache.evictAll();
             }
         }
 

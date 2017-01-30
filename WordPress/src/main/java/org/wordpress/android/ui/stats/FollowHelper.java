@@ -20,12 +20,17 @@ import org.wordpress.android.util.ToastUtils;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 
-class FollowHelper {
+import javax.inject.Inject;
+import javax.inject.Named;
+
+public class FollowHelper {
+    @Inject @Named("v1") RestClientUtils mRestClientUtilsV1;
 
     private final WeakReference<Activity> mActivityRef;
 
     public FollowHelper(Activity activity) {
         mActivityRef = new WeakReference<>(activity);
+        ((WordPress) activity.getApplicationContext()).component().inject(this);
     }
 
 
@@ -53,7 +58,6 @@ class FollowHelper {
                 item.setTitle(workingText);
                 item.setOnMenuItemClickListener(null);
 
-                final RestClientUtils restClientUtils = WordPress.getRestClientUtils();
                 final String restPath;
                 if (!followData.isFollowing()) {
                     restPath = String.format(Locale.US, "/sites/%s/follows/new", followData.getSiteID());
@@ -63,7 +67,7 @@ class FollowHelper {
 
                 followData.isRestCallInProgress = true;
                 FollowRestListener vListener = new FollowRestListener(mActivityRef.get(), followData);
-                restClientUtils.post(restPath, vListener, vListener);
+                mRestClientUtilsV1.post(restPath, vListener, vListener);
                 AppLog.d(AppLog.T.STATS, "Enqueuing the following REST request " + restPath);
                 return true;
             }

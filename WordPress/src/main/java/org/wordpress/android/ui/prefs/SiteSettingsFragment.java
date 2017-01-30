@@ -54,6 +54,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -70,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Allows interfacing with WordPress site settings. Works with WP.com and WP.org v4.5+ (pending).
@@ -127,6 +129,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject @Named("v1") RestClientUtils mRestClientUtilsV1;
 
     private SiteModel mSite;
 
@@ -773,7 +776,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void requestPurchasesForDeletionCheck() {
         final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.checking_purchases), true, false);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_REQUESTED, mSite);
-        WordPress.getRestClientUtils().getSitePurchases(mSite.getSiteId(), new RestRequest.Listener() {
+        mRestClientUtilsV1.getSitePurchases(mSite.getSiteId(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 dismissProgressDialog(progressDialog);
@@ -1218,7 +1221,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void exportSite() {
         if (mSite.isWPCom()) {
             final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.exporting_content_progress), true, true);
-            WordPress.getRestClientUtils().exportContentAll(mSite.getSiteId(), new RestRequest.Listener() {
+            mRestClientUtilsV1.exportContentAll(mSite.getSiteId(), new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
                             if (isAdded()) {

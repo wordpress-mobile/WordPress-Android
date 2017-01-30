@@ -46,9 +46,11 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
@@ -82,6 +84,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -136,6 +139,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Inject AccountStore mAccountStore;
     @Inject CommentStore mCommentStore;
     @Inject SiteStore mSiteStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+    @Inject FluxCImageLoader mImageLoader;
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -625,7 +630,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 WordPress.getContext()));
 
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz);
+        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz, mImageLoader);
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         if (mComment.getAuthorProfileImageUrl() != null) {
@@ -744,7 +749,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                ReaderPostActions.requestBlogPost(site.getSiteId(), postId, new ReaderActions.OnRequestListener() {
+                ReaderPostActions.requestBlogPost(mRestClientUtilsV1_1, site.getSiteId(), postId,
+                        new ReaderActions.OnRequestListener() {
                     @Override
                     public void onSuccess() {
                         if (!isAdded()) return;

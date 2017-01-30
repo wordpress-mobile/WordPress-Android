@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
@@ -74,6 +75,7 @@ import org.wordpress.android.widgets.WPViewPager;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -96,6 +98,7 @@ public class WPMainActivity extends AppCompatActivity {
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject MemorizingTrustManager mMemorizingTrustManager;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -308,9 +311,9 @@ public class WPMainActivity extends AppCompatActivity {
                     String actionType = getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
                     if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
                         // ping the push auth endpoint with the token, wp.com will take care of the rest!
-                        NotificationsUtils.sendTwoFactorAuthToken(token);
+                        NotificationsUtils.sendTwoFactorAuthToken(mRestClientUtilsV1_1, token);
                     } else {
-                        NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+                        NotificationsUtils.showPushAuthAlert(mRestClientUtilsV1_1, WPMainActivity.this, token, title, message);
                     }
                 }
 
@@ -324,7 +327,7 @@ public class WPMainActivity extends AppCompatActivity {
         }
 
         // Then hit the server
-        NotificationsActions.updateNotesSeenTimestamp();
+        NotificationsActions.updateNotesSeenTimestamp(mRestClientUtilsV1_1);
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 

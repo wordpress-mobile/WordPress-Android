@@ -15,6 +15,7 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.PlanFeaturesHighlightSection;
@@ -25,11 +26,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.inject.Inject;
+
 public class PlanFragment extends Fragment {
     private static final String SITE_PLAN = "SITE_PLAN";
 
     private ViewGroup mPlanContainerView;
     private Plan mPlanDetails;
+
+    @Inject FluxCImageLoader mImageLoader;
 
     public static PlanFragment newInstance(Plan sitePlan) {
         PlanFragment fragment = new PlanFragment();
@@ -41,6 +46,8 @@ public class PlanFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(SITE_PLAN)) {
                 Serializable serial = savedInstanceState.getSerializable(SITE_PLAN);
@@ -84,7 +91,7 @@ public class PlanFragment extends Fragment {
         NetworkImageView imgPlan = (NetworkImageView) getView().findViewById(R.id.image_plan_icon);
         String iconUrl = PlansUtils.getIconUrlForPlan(mPlanDetails, iconSize);
         if (!TextUtils.isEmpty(iconUrl)) {
-            imgPlan.setImageUrl(iconUrl, WordPress.imageLoader);
+            imgPlan.setImageUrl(iconUrl, mImageLoader);
             imgPlan.setVisibility(View.VISIBLE);
         } else {
             imgPlan.setVisibility(View.GONE);
@@ -156,7 +163,7 @@ public class PlanFragment extends Fragment {
         NetworkImageView imgIcon = (NetworkImageView) view.findViewById(R.id.image_icon);
         String iconUrl = feature.getIconForPlan(mPlanDetails.getProductID());
         if (!TextUtils.isEmpty(iconUrl)) {
-            imgIcon.setImageUrl(iconUrl, WordPress.imageLoader);
+            imgIcon.setImageUrl(iconUrl, mImageLoader);
         } else {
             imgIcon.setDefaultImageResId(R.drawable.noticon_publish);
         }

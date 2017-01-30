@@ -16,6 +16,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
@@ -51,20 +52,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
         openWPCOMURL(activity, url, currentTheme, site, isCurrentTheme);
     }
 
-    /*
-     * opens the current theme for the current blog
-     */
-    public static void openCurrentTheme(Activity activity, SiteModel site, ThemeWebActivityType type) {
-        String themeId = WordPress.wpDB.getCurrentThemeId(String.valueOf(site.getSiteId()));
-        if (themeId.isEmpty()) {
-            requestAndOpenCurrentTheme(activity, site);
-        } else {
-            openTheme(activity, site, themeId, type, true);
-        }
-    }
-
-    private static void requestAndOpenCurrentTheme(final Activity activity, final SiteModel site) {
-        WordPress.getRestClientUtilsV1_1().getCurrentTheme(site.getSiteId(),
+    private static void requestAndOpenCurrentTheme(RestClientUtils restClientUtilsV1_1, final Activity activity,
+                                                   final SiteModel site) {
+        restClientUtilsV1_1.getCurrentTheme(site.getSiteId(),
                 new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {

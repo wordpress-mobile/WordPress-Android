@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -13,7 +14,6 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
@@ -54,7 +54,8 @@ public class ReaderPostActions {
     /**
      * like/unlike the passed post
      */
-    public static boolean performLikeAction(final ReaderPost post,
+    public static boolean performLikeAction(RestClientUtils restClientUtilsV1_1,
+                                            final ReaderPost post,
                                             final boolean isAskingToLike,
                                             final long wpComUserId) {
         // do nothing if post's like state is same as passed
@@ -103,7 +104,7 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
+        restClientUtilsV1_1.post(path, listener, errorListener);
         return true;
     }
 
@@ -111,7 +112,7 @@ public class ReaderPostActions {
      * get the latest version of this post - note that the post is only considered changed if the
      * like/comment count has changed, or if the current user's like/follow status has changed
      */
-    public static void updatePost(final ReaderPost localPost,
+    public static void updatePost(RestClientUtils restClientUtilsV1_2, final ReaderPost localPost,
                                   final UpdateResultListener resultListener) {
         String path = "read/sites/" + localPost.blogId + "/posts/" + localPost.postId + "/?meta=site,likes";
 
@@ -131,7 +132,7 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "updating post");
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        restClientUtilsV1_2.get(path, null, null, listener, errorListener);
     }
 
     private static void handleUpdatePostResponse(final ReaderPost localPost,
@@ -229,30 +230,28 @@ public class ReaderPostActions {
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestBlogPost(final long blogId,
-            final long postId,
-            final ReaderActions.OnRequestListener requestListener) {
+    public static void requestBlogPost(RestClientUtils restClientUtilsV1_1, final long blogId,
+            final long postId, final ReaderActions.OnRequestListener requestListener) {
         String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
-        requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
+        requestPost(restClientUtilsV1_1, path, requestListener);
     }
 
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestFeedPost(final long feedId, final long feedItemId,
+    public static void requestFeedPost(RestClientUtils restClientUtilsV1_3, final long feedId, final long feedItemId,
             final ReaderActions.OnRequestListener requestListener) {
         String path = "read/feed/" + feedId + "/posts/" + feedItemId + "/?meta=site,likes";
-        requestPost(WordPress.getRestClientUtilsV1_3(), path, requestListener);
+        requestPost(restClientUtilsV1_3, path, requestListener);
     }
 
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestBlogPost(final String blogSlug,
-            final String postSlug,
-            final ReaderActions.OnRequestListener requestListener) {
+    public static void requestBlogPost(RestClientUtils restClientUtilsV1_1, final String blogSlug,
+            final String postSlug, final ReaderActions.OnRequestListener requestListener) {
         String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
-        requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
+        requestPost(restClientUtilsV1_1, path, requestListener);
     }
 
     private static void requestPost(RestClientUtils restClientUtils, String path, final ReaderActions
@@ -302,11 +301,11 @@ public class ReaderPostActions {
                 + "&t="    + mRandom.nextInt();
     }
 
-    public static void bumpPageViewForPost(SiteStore siteStore, long blogId, long postId) {
-        bumpPageViewForPost(siteStore, ReaderPostTable.getBlogPost(blogId, postId, true));
+    public static void bumpPageViewForPost(RequestQueue requestQueue, SiteStore siteStore, long blogId, long postId) {
+        bumpPageViewForPost(requestQueue, siteStore, ReaderPostTable.getBlogPost(blogId, postId, true));
     }
 
-    public static void bumpPageViewForPost(SiteStore siteStore, ReaderPost post) {
+    public static void bumpPageViewForPost(RequestQueue requestQueue, SiteStore siteStore, ReaderPost post) {
         if (post == null) {
             return;
         }
@@ -348,14 +347,14 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.requestQueue.add(request);
+        requestQueue.add(request);
     }
 
     /*
      * request posts related to the passed one, endpoint returns a combined list of related posts
      * posts from across wp.com and related posts from the same site as the passed post
      */
-    public static void requestRelatedPosts(final ReaderPost sourcePost) {
+    public static void requestRelatedPosts(RestClientUtils restClientUtilsV1_2, final ReaderPost sourcePost) {
         if (sourcePost == null) return;
 
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -379,7 +378,7 @@ public class ReaderPostActions {
                 + "?size_local=" + NUM_RELATED_POSTS_TO_REQUEST
                 + "&size_global=" + NUM_RELATED_POSTS_TO_REQUEST
                 + "&fields=" + ReaderSimplePost.SIMPLE_POST_FIELDS;
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        restClientUtilsV1_2.get(path, null, null, listener, errorListener);
     }
 
     private static void handleRelatedPostsResponse(final ReaderPost sourcePost,

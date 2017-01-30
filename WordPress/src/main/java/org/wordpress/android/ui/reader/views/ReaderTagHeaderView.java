@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.models.ReaderTagHeaderInfo;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -22,6 +23,9 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashMap;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 /**
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
  */
@@ -30,6 +34,8 @@ public class ReaderTagHeaderView extends RelativeLayout {
     private WPNetworkImageView mImageView;
     private TextView mTxtAttribution;
     private ReaderTag mCurrentTag;
+
+    @Inject @Named("v1") RestClientUtils mRestClientUtils;
 
     private static final ReaderTagHeaderInfoList mTagInfoCache = new ReaderTagHeaderInfoList();
 
@@ -52,6 +58,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
         View view = inflate(context, R.layout.reader_tag_header_view, this);
         mImageView = (WPNetworkImageView) view.findViewById(R.id.image_tag_header);
         mTxtAttribution = (TextView) view.findViewById(R.id.text_attribution);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
     }
 
     public void setCurrentTag(final ReaderTag tag) {
@@ -111,7 +118,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
         String tagNameForApi = ReaderUtils.sanitizeWithDashes(mCurrentTag.getTagSlug());
         String path = "read/tags/" + tagNameForApi + "/images?number=1";
 
-        WordPress.getRestClientUtilsV1_2().get(path, new RestRequest.Listener() {
+        mRestClientUtils.get(path, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject == null) return;

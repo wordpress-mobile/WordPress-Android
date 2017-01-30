@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.text.TextUtils;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
@@ -27,16 +26,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import de.greenrobot.event.EventBus;
 
 
 public class NotificationsUpdateService extends Service {
-
     public static final String IS_TAPPED_ON_NOTIFICATION = "is-tapped-on-notification";
 
     private boolean running = false;
     private String mNoteId;
     private boolean isStartedByTappingOnNotification = false;
+
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     public static void startService(Context context) {
         if (context == null) {
@@ -65,6 +68,7 @@ public class NotificationsUpdateService extends Service {
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.NOTIFS, "notifications update service > created");
+        ((WordPress) getApplication()).component().inject(this);
     }
 
     @Override
@@ -93,7 +97,7 @@ public class NotificationsUpdateService extends Service {
         params.put("num_note_items", "20");
         params.put("fields", RestClientUtils.NOTIFICATION_FIELDS);
         RestListener listener = new RestListener();
-        WordPress.getRestClientUtilsV1_1().getNotifications(params, listener, listener);
+        mRestClientUtilsV1_1.getNotifications(params, listener, listener);
     }
 
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {

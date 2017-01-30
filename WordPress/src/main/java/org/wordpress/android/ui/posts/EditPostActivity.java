@@ -78,6 +78,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -140,9 +141,6 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-
-import static com.android.volley.Request.Method.HEAD;
-import static org.wordpress.android.R.string.post;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
@@ -222,6 +220,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     private SiteModel mSite;
 
@@ -346,7 +345,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mHasSetPostContent = mEditorFragment != null) {
-            mEditorFragment.setImageLoader(WordPress.imageLoader);
+            mEditorFragment.setImageLoader(mImageLoader);
         }
 
         // Ensure we have a valid post
@@ -1133,7 +1132,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
         trackAddMediaEvents(mediaFile.isVideo(), true);
-        mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
+        mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), mImageLoader);
     }
 
     /**
@@ -1583,7 +1582,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
         if (mediaFile != null) {
-            mEditorFragment.appendMediaFile(mediaFile, path, WordPress.imageLoader);
+            mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
         }
 
         return true;
@@ -1605,7 +1604,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mediaFile.setVideo(isVideo);
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
         return true;
     }
 

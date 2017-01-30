@@ -11,9 +11,9 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
@@ -51,10 +51,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
-
-import static com.android.volley.Request.Method.HEAD;
 
 /**
  * Background service to retrieve Stats.
@@ -217,6 +216,7 @@ public class StatsService extends Service {
     private final ThreadPoolExecutor singleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
     @Inject SiteStore mSiteStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     @Override
     public void onCreate() {
@@ -350,10 +350,7 @@ public class StatsService extends Service {
                 }
         }
 
-        final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
-
         String period = timeframe.getLabelForRestCall();
-
         RestListener vListener = new RestListener(sectionToUpdate, blogId, timeframe, date, maxResultsRequested, pageRequested);
 
         final String periodDateMaxPlaceholder =  "?period=%s&date=%s&max=%s";
@@ -425,9 +422,9 @@ public class StatsService extends Service {
             }
 
             // We need to check if we already have the same request in the queue
-            if (checkIfRequestShouldBeEnqueued(restClientUtils, path)) {
+            if (checkIfRequestShouldBeEnqueued(path)) {
                 AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + path);
-                Request<JSONObject> currentRequest = restClientUtils.get(path, vListener, vListener);
+                Request<JSONObject> currentRequest = mRestClientUtilsV1_1.get(path, vListener, vListener);
                 vListener.currentRequest = currentRequest;
                 currentRequest.setTag("StatsCall");
                 mStatsNetworkRequests.add(currentRequest);
@@ -451,8 +448,8 @@ public class StatsService extends Service {
      *  unfortunately we have to change the REST Client and RestClientUtils a lot if we want follow this way...
      *
      */
-    private boolean checkIfRequestShouldBeEnqueued(final RestClientUtils restClientUtils, String path) {
-        String absoluteRequestPath = restClientUtils.getRestClient().getAbsoluteURL(path);
+    private boolean checkIfRequestShouldBeEnqueued(String path) {
+        String absoluteRequestPath = mRestClientUtilsV1_1.getRestClient().getAbsoluteURL(path);
         Iterator<Request<JSONObject>> it = mStatsNetworkRequests.iterator();
         while (it.hasNext()) {
             Request<JSONObject> req = it.next();

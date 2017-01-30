@@ -18,6 +18,7 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderUserList;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -25,6 +26,9 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -36,6 +40,8 @@ public class ReaderCommentService extends Service {
     private static final String ARG_NEXT_PAGE   = "next_page";
 
     private static int mCurrentPage;
+
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     public static void startService(Context context, long blogId, long postId, boolean requestNextPage) {
         if (context == null) return;
@@ -74,6 +80,7 @@ public class ReaderCommentService extends Service {
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.READER, "reader comment service > created");
+        ((WordPress) getApplication()).component().inject(this);
     }
 
     @Override
@@ -124,16 +131,14 @@ public class ReaderCommentService extends Service {
         return START_NOT_STICKY;
     }
 
-    private static void updateCommentsForPost(final long blogId,
-                                              final long postId,
-                                              final int pageNumber,
-                                              final ReaderActions.UpdateResultListener resultListener) {
+    private void updateCommentsForPost(final long blogId, final long postId, final int pageNumber,
+                                       final ReaderActions.UpdateResultListener resultListener) {
         String path = "sites/" + blogId + "/posts/" + postId + "/replies/"
-                    + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
-                    + "&meta=likes"
-                    + "&hierarchical=true"
-                    + "&order=ASC"
-                    + "&page=" + pageNumber;
+                      + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
+                      + "&meta=likes"
+                      + "&hierarchical=true"
+                      + "&order=ASC"
+                      + "&page=" + pageNumber;
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -149,8 +154,9 @@ public class ReaderCommentService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "updating comments");
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        mRestClientUtilsV1_1.get(path, null, null, listener, errorListener);
     }
+
     private static void handleUpdateCommentsResponse(final JSONObject jsonObject,
                                                      final long blogId,
                                                      final int pageNumber,

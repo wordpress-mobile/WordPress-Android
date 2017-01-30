@@ -21,6 +21,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.widgets.WPTextView;
@@ -28,11 +29,16 @@ import org.wordpress.android.widgets.WPTextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class MagicLinkRequestFragment extends Fragment {
     public static final String EMAIL_KEY = "email";
     public static final String CLIENT_ID_KEY = "client_id";
     public static final String CLIENT_SECRET_KEY = "client_secret";
     public static final String ERROR_KEY = "error";
+
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtils;
 
     public interface OnMagicLinkFragmentInteraction {
         void onMagicLinkSent();
@@ -60,6 +66,7 @@ public class MagicLinkRequestFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         if (getArguments() != null) {
             mEmail = getArguments().getString(ARG_EMAIL_ADDRESS);
         }
@@ -126,7 +133,8 @@ public class MagicLinkRequestFragment extends Fragment {
         params.put(CLIENT_ID_KEY, BuildConfig.OAUTH_APP_ID);
         params.put(CLIENT_SECRET_KEY, BuildConfig.OAUTH_APP_SECRET);
 
-        WordPress.getRestClientUtilsV1_1().sendLoginEmail(params, new RestRequest.Listener() {
+        // TODO: this should be replaced by a FluxC dispatch call
+        mRestClientUtils.sendLoginEmail(params, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (mListener != null) {

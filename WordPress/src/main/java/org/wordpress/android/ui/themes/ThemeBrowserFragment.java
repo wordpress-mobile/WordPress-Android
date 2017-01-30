@@ -25,14 +25,17 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Theme;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.models.Theme;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
+
+import javax.inject.Inject;
 
 /**
  * A fragment display the themes on a grid view.
@@ -69,6 +72,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private ProgressBar mProgressBar;
 
     private SiteModel mSite;
+    @Inject FluxCImageLoader mImageLoader;
 
     public static ThemeBrowserFragment newInstance(SiteModel site) {
         ThemeBrowserFragment fragment = new ThemeBrowserFragment();
@@ -81,6 +85,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
@@ -370,7 +375,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             String requestUrl = (String) niv.getTag();
             if (requestUrl != null) {
                 // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.imageLoader.get(requestUrl, new ImageListener() {
+                ImageContainer container = mImageLoader.get(requestUrl, new ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                     }

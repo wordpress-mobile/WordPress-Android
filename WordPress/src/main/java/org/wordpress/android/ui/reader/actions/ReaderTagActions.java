@@ -5,11 +5,11 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
@@ -22,7 +22,7 @@ public class ReaderTagActions {
         throw new AssertionError();
     }
 
-    public static boolean deleteTag(final ReaderTag tag,
+    public static boolean deleteTag(RestClientUtils restClientUtilsV1_1, final ReaderTag tag,
                                     final ReaderActions.ActionListener actionListener) {
         if (tag == null) {
             ReaderActions.callActionListener(actionListener, false);
@@ -62,12 +62,12 @@ public class ReaderTagActions {
         };
 
         ReaderTagTable.deleteTag(tag);
-        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
+        restClientUtilsV1_1.post(path, listener, errorListener);
 
         return true;
     }
 
-    public static boolean addTag(final ReaderTag tag,
+    public static boolean addTag(RestClientUtils restClientUtilsV1_1, final ReaderTag tag,
                                  final ReaderActions.ActionListener actionListener) {
         if (tag == null) {
             ReaderActions.callActionListener(actionListener, false);
@@ -119,7 +119,7 @@ public class ReaderTagActions {
         };
 
         ReaderTagTable.addOrUpdateTag(newTag);
-        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
+        restClientUtilsV1_1.post(path, listener, errorListener);
 
         return true;
     }

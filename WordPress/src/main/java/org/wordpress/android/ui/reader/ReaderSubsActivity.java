@@ -24,12 +24,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -51,15 +55,16 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import de.greenrobot.event.EventBus;
 
 /**
  * activity which shows the user's subscriptions and recommended subscriptions - includes
  * followed tags, followed blogs, and recommended blogs
  */
-public class ReaderSubsActivity extends AppCompatActivity
-                                implements ReaderTagAdapter.TagDeletedListener {
-
+public class ReaderSubsActivity extends AppCompatActivity implements ReaderTagAdapter.TagDeletedListener {
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
     private WPViewPager mViewPager;
@@ -76,9 +81,13 @@ public class ReaderSubsActivity extends AppCompatActivity
     private static final int TAB_IDX_FOLLOWED_BLOGS = 1;
     private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
 
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+    @Inject @Named("regular") RequestQueue mRequestQueue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplicationContext()).component().inject(this);
 
         setContentView(R.layout.reader_activity_subs);
         restoreState(savedInstanceState);
@@ -349,7 +358,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             }
         };
 
-        ReaderTagActions.addTag(tag, actionListener);
+        ReaderTagActions.addTag(mRestClientUtilsV1_1, tag, actionListener);
     }
 
     /*
@@ -393,7 +402,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                 }
             }
         };
-        ReaderBlogActions.checkUrlReachable(blogUrl, requestListener);
+        ReaderBlogActions.checkUrlReachable(mRequestQueue, blogUrl, requestListener);
     }
 
     private void followBlogUrl(String normUrl) {
@@ -418,7 +427,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         // note that this uses the endpoint to follow as a feed since typed URLs are more
         // likely to point to a feed than a wp blog (and the endpoint should internally
         // follow it as a blog if it is one)
-        ReaderBlogActions.followFeedByUrl(normUrl, followListener);
+        ReaderBlogActions.followFeedByUrl(mRestClientUtilsV1_1, normUrl, followListener);
     }
 
     /*

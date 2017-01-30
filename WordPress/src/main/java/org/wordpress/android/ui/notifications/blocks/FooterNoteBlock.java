@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -14,8 +16,9 @@ import org.wordpress.android.util.JSONUtils;
 public class FooterNoteBlock extends NoteBlock {
     private NoteBlockClickableSpan mClickableSpan;
 
-    public FooterNoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
-        super(noteObject, onNoteBlockTextClickListener);
+    public FooterNoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                           ImageLoader imageLoader) {
+        super(noteObject, onNoteBlockTextClickListener, imageLoader);
     }
 
     public void setClickableSpan(JSONObject rangeObject, String noteType) {
@@ -73,7 +76,7 @@ public class FooterNoteBlock extends NoteBlock {
     @Override
     Spannable getNoteText() {
         return NotificationsUtils.getSpannableContentForRanges(getNoteData(), null,
-                getOnNoteBlockTextClickListener(), true);
+                getOnNoteBlockTextClickListener(), true, mImageLoader);
     }
 
     public Object getViewHolder(View view) {

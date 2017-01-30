@@ -11,8 +11,9 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
-import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.CategoryModel;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 
@@ -22,7 +23,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-class DotComSiteSettings extends SiteSettingsInterface {
+import javax.inject.Inject;
+import javax.inject.Named;
+
+public class DotComSiteSettings extends SiteSettingsInterface {
     // WP.com REST keys used in response to a settings GET and POST request
     public static final String LANGUAGE_ID_KEY = "lang_id";
     public static final String PRIVACY_KEY = "blog_public";
@@ -73,11 +77,15 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String CAT_NUM_POSTS_KEY = "found";
     private static final String CATEGORIES_KEY = "categories";
 
+    @Inject @Named("v1") RestClientUtils mRestClientUtilsV1;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+
     /**
      * Only instantiated by {@link SiteSettingsInterface}.
      */
     DotComSiteSettings(Activity host, SiteModel site, SiteSettingsListener listener) {
         super(host, site, listener);
+        ((WordPress) host.getApplicationContext()).component().inject(this);
     }
 
     @Override
@@ -87,7 +95,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         final Map<String, String> params = serializeDotComParams();
         if (params == null || params.isEmpty()) return;
 
-        WordPress.getRestClientUtils().setGeneralSiteSettings(
+        mRestClientUtilsV1.setGeneralSiteSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -126,7 +134,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     @Override
     protected void fetchRemoteData() {
         fetchCategories();
-        WordPress.getRestClientUtils().getGeneralSettings(
+        mRestClientUtilsV1.getGeneralSettings(
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -325,7 +333,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
      */
     private void fetchCategories() {
         // TODO: Replace with FluxC (GET_CATEGORIES + TaxonomyStore.getCategoriesForSite())
-        WordPress.getRestClientUtilsV1_1().getCategories(mSite.getSiteId(),
+        mRestClientUtilsV1_1.getCategories(mSite.getSiteId(),
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {

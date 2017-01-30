@@ -18,20 +18,22 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
+
+import javax.inject.Inject;
 
 /**
  * A fragment for editing media on the Media tab
@@ -58,9 +60,9 @@ public class MediaEditFragment extends Fragment {
     private String mMediaId;
     private ScrollView mScrollView;
     private View mLinearLayout;
-    private ImageLoader mImageLoader;
-
     private SiteModel mSite;
+
+    @Inject FluxCImageLoader mImageLoader;
 
     public interface MediaEditFragmentCallback {
         void onResume(Fragment fragment);
@@ -81,6 +83,7 @@ public class MediaEditFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
 
         if (savedInstanceState == null) {
             if (getArguments() != null) {
@@ -98,8 +101,6 @@ public class MediaEditFragment extends Fragment {
         }
 
         setHasOptionsMenu(true);
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mImageLoader = WordPress.imageLoader;
 
         // retain this fragment across configuration changes
         setRetainInstance(true);

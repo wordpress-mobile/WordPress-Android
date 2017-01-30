@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -74,6 +76,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -196,7 +199,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
             return;
         }
 
-        NotificationsUtils.getPushNotificationSettings(getActivity(), new RestRequest.Listener() {
+        NotificationsUtils.getPushNotificationSettings(mRestClientUtilsV1_1, getActivity(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 AppLog.d(T.NOTIFS, "Get settings action succeeded");
@@ -497,7 +500,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
             }
 
             if (settingsObject.length() > 0) {
-                WordPress.getRestClientUtilsV1_1().post("/me/notifications/settings", settingsObject, null, null, null);
+                mRestClientUtilsV1_1.post("/me/notifications/settings", settingsObject, null, null, null);
             }
         }
     };

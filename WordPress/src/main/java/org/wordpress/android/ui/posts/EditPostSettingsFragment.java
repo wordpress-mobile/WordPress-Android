@@ -58,6 +58,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
@@ -128,6 +129,7 @@ public class EditPostSettingsFragment extends Fragment
     @Inject SiteStore mSiteStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
+    @Inject FluxCImageLoader mImageLoader;
 
     public static EditPostSettingsFragment newInstance(SiteModel site, PostModel post) {
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
@@ -446,7 +448,7 @@ public class EditPostSettingsFragment extends Fragment
                     int imageWidth = (maxWidth - padding);
 
                     String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, mSite, imageWidth);
-                    WordPressMediaUtils.loadNetworkImage(thumbUrl, mFeaturedImageView);
+                    WordPressMediaUtils.loadNetworkImage(thumbUrl, mFeaturedImageView, mImageLoader);
                 }
 
                 if (cursor != null) {

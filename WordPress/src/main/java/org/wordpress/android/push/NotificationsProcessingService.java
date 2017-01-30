@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload
 import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
@@ -87,6 +89,7 @@ public class NotificationsProcessingService extends Service {
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject CommentStore mCommentStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -382,7 +385,7 @@ public class NotificationsProcessingService extends Service {
                 successMessage = getString(R.string.comment_q_action_done_generic);
             }
 
-            NotificationsActions.markNoteAsRead(mNote);
+            NotificationsActions.markNoteAsRead(mRestClientUtilsV1_1, mNote);
 
             //dismiss any other pending result notification
             NativeNotificationsUtils.dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID, mContext);
@@ -458,9 +461,7 @@ public class NotificationsProcessingService extends Service {
             if (noteId == null) return;
 
             HashMap<String, String> params = new HashMap<>();
-            WordPress.getRestClientUtils().getNotification(params,
-                    noteId, listener, errorListener
-            );
+            mRestClientUtilsV1_1.getNotification(params, noteId, listener, errorListener);
         }
 
         // Like or unlike a comment via the REST API

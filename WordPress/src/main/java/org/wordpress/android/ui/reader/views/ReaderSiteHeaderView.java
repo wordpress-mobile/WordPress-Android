@@ -10,8 +10,9 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.models.ReaderBlog;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.NetworkUtils;
@@ -19,6 +20,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * topmost view in post adapter when showing blog preview - displays description, follower
@@ -37,6 +39,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private OnBlogInfoLoadedListener mBlogInfoListener;
 
     @Inject AccountStore mAccountStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     public ReaderSiteHeaderView(Context context) {
         this(context, null);
@@ -88,9 +91,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 }
             };
             if (mFeedId != 0) {
-                ReaderBlogActions.updateFeedInfo(mFeedId, null, listener);
+                ReaderBlogActions.updateFeedInfo(mRestClientUtilsV1_1, mFeedId, null, listener);
             } else {
-                ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
+                ReaderBlogActions.updateBlogInfo(mRestClientUtilsV1_1, mBlogId, null, listener);
             }
         }
     }
@@ -185,9 +188,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         boolean result;
         if (mFeedId != 0) {
-            result = ReaderBlogActions.followFeedById(mFeedId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followFeedById(mRestClientUtilsV1_1, mFeedId, isAskingToFollow, listener);
         } else {
-            result = ReaderBlogActions.followBlogById(mBlogId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followBlogById(mRestClientUtilsV1_1, mBlogId, isAskingToFollow, listener);
         }
 
         if (result) {

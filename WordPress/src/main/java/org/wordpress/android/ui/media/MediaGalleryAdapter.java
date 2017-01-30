@@ -7,34 +7,28 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
+
+import javax.inject.Inject;
 
 /**
  * Adapter for a drag-sort listview where the user can drag media items to sort their order
  * for a media gallery
  */
-class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
-    private ImageLoader mImageLoader;
+public class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
+    @Inject FluxCImageLoader mImageLoader;
 
-    public MediaGalleryAdapter(Context context, int layout, Cursor c, boolean autoRequery, ImageLoader imageLoader) {
+    public MediaGalleryAdapter(Context context, int layout, Cursor c, boolean autoRequery) {
         super(context, layout, c, autoRequery);
-        setImageLoader(imageLoader);
-    }
-
-    void setImageLoader(ImageLoader imageLoader) {
-        if (imageLoader != null) {
-            mImageLoader = imageLoader;
-        } else {
-            mImageLoader = WordPress.imageLoader;
-        }
+        ((WordPress) context.getApplicationContext()).component().inject(this);
     }
 
     private static class GridViewHolder {

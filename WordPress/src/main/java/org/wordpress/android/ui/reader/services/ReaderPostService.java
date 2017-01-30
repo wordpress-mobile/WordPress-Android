@@ -17,6 +17,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
@@ -26,6 +27,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -34,11 +38,12 @@ import de.greenrobot.event.EventBus;
  */
 
 public class ReaderPostService extends Service {
-
     private static final String ARG_TAG     = "tag";
     private static final String ARG_ACTION  = "action";
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_FEED_ID = "feed_id";
+
+    @Inject @Named("v1.2") RestClientUtils mRestClientUtilsV1_2;
 
     public enum UpdateAction {
         REQUEST_NEWER,          // request the newest posts for this tag/blog/feed
@@ -85,6 +90,7 @@ public class ReaderPostService extends Service {
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.READER, "reader post service > created");
+        ((WordPress) getApplication()).component().inject(this);
     }
 
     @Override
@@ -157,7 +163,7 @@ public class ReaderPostService extends Service {
         requestPostsForFeed(feedId, action, listener);
     }
 
-    private static void requestPostsWithTag(final ReaderTag tag,
+    private void requestPostsWithTag(final ReaderTag tag,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
         String path = getRelativeEndpointForTag(tag);
@@ -212,10 +218,10 @@ public class ReaderPostService extends Service {
             }
         };
 
-        WordPress.getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener);
+        mRestClientUtilsV1_2.get(sb.toString(), null, null, listener, errorListener);
     }
 
-    private static void requestPostsForBlog(final long blogId,
+    private void requestPostsForBlog(final long blogId,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
         String path = "read/sites/" + blogId + "/posts/?meta=site,likes";
@@ -242,10 +248,10 @@ public class ReaderPostService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "updating posts in blog " + blogId);
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        mRestClientUtilsV1_2.get(path, null, null, listener, errorListener);
     }
 
-    private static void requestPostsForFeed(final long feedId,
+    private void requestPostsForFeed(final long feedId,
                                             final UpdateAction updateAction,
                                             final UpdateResultListener resultListener) {
         String path = "read/feed/" + feedId + "/posts/?meta=site,likes";
@@ -271,7 +277,7 @@ public class ReaderPostService extends Service {
         };
 
         AppLog.d(AppLog.T.READER, "updating posts in feed " + feedId);
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        mRestClientUtilsV1_2.get(path, null, null, listener, errorListener);
     }
 
     /*
