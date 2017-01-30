@@ -35,6 +35,10 @@ public class FluxCImageLoader extends ImageLoader {
         mAccessToken = accessToken;
         mHTTPAuthManager = httpAuthManager;
         mUserAgent = userAgent;
+        // http://stackoverflow.com/a/17035814 - Responses from the ImageLoader are actually delayed / batched
+        // up before being delivered. So images that are ready are not being delivered as soon as they
+        // possible can be to achieve a sort of page load aesthetic.
+        setBatchedResponseDelay(0);
     }
 
     @Override
