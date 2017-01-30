@@ -123,8 +123,9 @@ public class MediaGridFragment extends Fragment
     private final OnItemSelectedListener mFilterSelectedListener = new OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            // need this to stop the bug where onItemSelected is called during initialization, before user input
+            // onItemSelected will be called during initialization, so ignore first call
             if (!mSpinnerHasLaunched) {
+                mSpinnerHasLaunched = true;
                 return;
             }
             if (position == Filter.CUSTOM_DATE.ordinal()) {
