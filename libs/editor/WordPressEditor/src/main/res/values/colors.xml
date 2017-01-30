@@ -15,7 +15,4 @@
     <color name="format_bar_divider">@color/wp_gray_lighten_10</color>
     <color name="sourceview_separator">@color/wp_gray_lighten_30</color>
     <color name="sourceview_placeholder_text">@color/wp_gray</color>
-
-    <color name="aztec_quote_background">#E8F0F5</color>
-    <color name="aztec_highlight_text_color">@color/wp_gray</color>
 </resources>
