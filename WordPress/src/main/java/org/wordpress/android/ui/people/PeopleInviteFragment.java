@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.people;
 
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Role;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
@@ -42,6 +42,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import static org.wordpress.android.R.id.usernames;
+
 public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
     private static final String FLAG_SUCCESS = "SUCCESS";
@@ -59,6 +64,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     private String mCustomMessage = "";
     private boolean mInviteOperationInProgress = false;
     private SiteModel mSite;
+
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     public static PeopleInviteFragment newInstance(SiteModel site) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -100,6 +107,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+
         updateSiteOrFinishActivity(savedInstanceState);
         // retain this fragment across configuration changes
         // WARNING: use setRetainInstance wisely. In this case we need this to be able to get the
@@ -120,7 +129,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mUsernamesContainer = (ViewGroup) view.findViewById(R.id.usernames);
+        mUsernamesContainer = (ViewGroup) view.findViewById(usernames);
         mUsernamesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -302,7 +311,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                 mUsernameButtons.put(username, buttonizeUsername(username));
             }
 
-            validateAndStyleUsername(usernames, null);
+            validateAndStyleUsername(mRestClientUtilsV1_1, usernames, null);
         }
     }
 
@@ -344,11 +353,11 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         mUsernameButtons.put(username, usernameButton);
 
-        validateAndStyleUsername(Collections.singletonList(username), validationEndListener);
+        validateAndStyleUsername(mRestClientUtilsV1_1, Collections.singletonList(username), validationEndListener);
     }
 
     private void removeUsername(String username) {
-        final ViewGroup usernamesView = (ViewGroup) getView().findViewById(R.id.usernames);
+        final ViewGroup usernamesView = (ViewGroup) getView().findViewById(usernames);
 
         ViewGroup removedButton = mUsernameButtons.remove(username);
         mUsernameResults.remove(username);
@@ -389,7 +398,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             // clear the username results list and let the 'validate' routine do the updates
             mUsernameResults.clear();
 
-            validateAndStyleUsername(mUsernameButtons.keySet(), null);
+            validateAndStyleUsername(mRestClientUtilsV1_1, mUsernameButtons.keySet(), null);
         }
     }
 
@@ -398,7 +407,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         mRoleTextView.setText(newRole.toDisplayString());
     }
 
-    private void validateAndStyleUsername(Collection<String> usernames, final ValidationEndListener validationEndListener) {
+    private void validateAndStyleUsername(RestClientUtils restClientUtilsV1_1, Collection<String> usernames,
+                                          final ValidationEndListener validationEndListener) {
         List<String> usernamesToCheck = new ArrayList<>();
 
         for (String username : usernames) {
@@ -416,7 +426,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         if (usernamesToCheck.size() > 0) {
             long dotComBlogId = mSite.getSiteId();
-            PeopleUtils.validateUsernames(usernamesToCheck, mRole, dotComBlogId,
+            PeopleUtils.validateUsernames(restClientUtilsV1_1, usernamesToCheck, mRole, dotComBlogId,
                     new PeopleUtils.ValidateUsernameCallback() {
                 @Override
                 public void onUsernameValidation(String username, ValidationResult validationResult) {
@@ -597,7 +607,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         enableSendButton(false);
 
         long dotComBlogId = mSite.getSiteId();
-        PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mRole, mCustomMessage, dotComBlogId,
+        PeopleUtils.sendInvitations(mRestClientUtilsV1_1, new ArrayList<>(mUsernameButtons.keySet()), mRole,
+                mCustomMessage, dotComBlogId,
                 new PeopleUtils.InvitationsSendCallback() {
                     @Override
                     public void onSent(List<String> succeededUsernames, Map<String, String> failedUsernameErrors) {

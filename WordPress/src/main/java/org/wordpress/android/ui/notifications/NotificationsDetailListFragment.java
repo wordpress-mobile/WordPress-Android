@@ -19,11 +19,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.BlockType;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
@@ -44,6 +46,9 @@ import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
     private static final String KEY_NOTE_ID = "noteId";
     private static final String KEY_LIST_POSITION = "listPosition";
@@ -61,6 +66,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
     private NoteBlockAdapter mNoteBlockAdapter;
 
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+
     public NotificationsDetailListFragment() {
     }
 
@@ -73,6 +80,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_NOTE_ID)) {
             // The note will be set in onResume()
@@ -464,7 +472,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
         // Request the reader post so that loading reader activities will work.
         if (mNote.isUserList() && !ReaderPostTable.postExists(mNote.getSiteId(), mNote.getPostId())) {
-            ReaderPostActions.requestBlogPost(mNote.getSiteId(), mNote.getPostId(), null);
+            ReaderPostActions.requestBlogPost(mRestClientUtilsV1_1, mNote.getSiteId(), mNote.getPostId(), null);
         }
 
         // Request reader comments until we retrieve the comment for this note

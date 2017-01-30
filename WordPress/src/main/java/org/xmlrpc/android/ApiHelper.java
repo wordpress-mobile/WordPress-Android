@@ -9,6 +9,7 @@ import android.webkit.URLUtil;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.RedirectError;
+import com.android.volley.RequestQueue;
 import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
@@ -519,8 +520,9 @@ public class ApiHelper {
      * @param stringUrl URL to fetch contents for.
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
-    public static String getResponse(final String stringUrl) throws SSLHandshakeException, TimeoutError, TimeoutException {
-        return getResponse(stringUrl, 0);
+    public static String getResponse(RequestQueue requestQueue, final String stringUrl)
+            throws SSLHandshakeException, TimeoutError, TimeoutException {
+        return getResponse(requestQueue, stringUrl, 0);
     }
 
     private static String getRedirectURL(String oldURL, NetworkResponse networkResponse) {
@@ -540,11 +542,12 @@ public class ApiHelper {
         return null;
     }
 
-    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException, TimeoutError, TimeoutException {
+    public static String getResponse(RequestQueue requestQueue, final String stringUrl, int numberOfRedirects)
+            throws SSLHandshakeException, TimeoutError, TimeoutException {
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest request = new StringRequest(stringUrl, future, future);
         request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, 0, 1));
-        WordPress.requestQueue.add(request);
+        requestQueue.add(request);
         try {
             return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
@@ -571,7 +574,7 @@ public class ApiHelper {
                     }
                     // Retry getResponse
                     AppLog.i(T.API, "Follow redirect from " + stringUrl + " to " + newURL);
-                    return getResponse(newURL, numberOfRedirects + 1);
+                    return getResponse(requestQueue, newURL, numberOfRedirects + 1);
                 }
             } else if (e.getCause() != null && e.getCause() instanceof com.android.volley.TimeoutError) {
                 AppLog.e(T.API, e);

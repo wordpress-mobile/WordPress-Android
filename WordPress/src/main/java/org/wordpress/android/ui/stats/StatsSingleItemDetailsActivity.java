@@ -47,6 +47,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *  Single item details activity.
@@ -102,10 +104,12 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     private static final String ARG_AVERAGES_EXPANDED_ROWS = "ARG_AVERAGES_EXPANDED_ROWS";
     private static final String ARG_RECENT_EXPANDED_ROWS = "ARG_RECENT_EXPANDED_ROWS";
 
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplicationContext()).component().inject(this);
 
         setContentView(R.layout.stats_activity_single_post_details);
 
@@ -312,9 +316,6 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             return;
         }
 
-        final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
-
-
         // View and visitor counts for a site
         final String singlePostRestPath = String.format(
                 "/sites/%s/stats/post/%s", mRemoteBlogID, mRemoteItemID);
@@ -322,7 +323,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
 
         RestBatchCallListener vListener = new RestBatchCallListener(this);
-        restClientUtils.get(singlePostRestPath, vListener, vListener);
+        mRestClientUtilsV1_1.get(singlePostRestPath, vListener, vListener);
 
         mIsUpdatingStats = true;
         mSwipeToRefreshHelper.setRefreshing(true);

@@ -141,9 +141,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static com.android.volley.Request.Method.HEAD;
-import static org.wordpress.android.R.string.post;
-
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
     public static final String EXTRA_POST = "postModel";
@@ -346,7 +343,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mHasSetPostContent = mEditorFragment != null) {
-            mEditorFragment.setImageLoader(WordPress.imageLoader);
+            mEditorFragment.setImageLoader(WordPress.sImageLoader);
         }
 
         // Ensure we have a valid post
@@ -1133,7 +1130,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
         trackAddMediaEvents(mediaFile.isVideo(), true);
-        mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
+        mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.sImageLoader);
     }
 
     /**
@@ -1583,7 +1580,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
         if (mediaFile != null) {
-            mEditorFragment.appendMediaFile(mediaFile, path, WordPress.imageLoader);
+            mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
         }
 
         return true;
@@ -1605,7 +1602,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mediaFile.setVideo(isVideo);
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.sImageLoader);
         return true;
     }
 

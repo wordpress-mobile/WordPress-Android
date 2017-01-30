@@ -9,9 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -22,13 +24,17 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 /**
  * topmost view in post detail - shows blavatar + avatar, author name, blog name, and follow button
  */
 public class ReaderPostDetailHeaderView extends LinearLayout {
-
     private ReaderPost mPost;
     private ReaderFollowButton mFollowButton;
+
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     public ReaderPostDetailHeaderView(Context context) {
         super(context);
@@ -48,6 +54,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_post_detail_header_view, this);
         mFollowButton = (ReaderFollowButton) view.findViewById(R.id.header_follow_button);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
     }
 
     public void setPost(@NonNull ReaderPost post, boolean isSignedInWPCom) {
@@ -121,9 +128,9 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             }
         };
         if (mPost.isExternal) {
-            ReaderBlogActions.updateFeedInfo(mPost.feedId, null, listener);
+            ReaderBlogActions.updateFeedInfo(mRestClientUtilsV1_1, mPost.feedId, null, listener);
         } else {
-            ReaderBlogActions.updateBlogInfo(mPost.blogId, null, listener);
+            ReaderBlogActions.updateBlogInfo(mRestClientUtilsV1_1, mPost.blogId, null, listener);
         }
     }
 
@@ -236,9 +243,9 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         boolean result;
         if (mPost.isExternal) {
-            result = ReaderBlogActions.followFeedById(mPost.feedId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followFeedById(mRestClientUtilsV1_1, mPost.feedId, isAskingToFollow, listener);
         } else {
-            result = ReaderBlogActions.followBlogById(mPost.blogId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followBlogById(mRestClientUtilsV1_1, mPost.blogId, isAskingToFollow, listener);
         }
 
         if (result) {

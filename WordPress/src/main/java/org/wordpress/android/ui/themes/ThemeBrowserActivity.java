@@ -28,6 +28,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -40,6 +41,9 @@ import org.wordpress.android.widgets.WPAlertDialogFragment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * The theme browser.
@@ -60,6 +64,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private SiteModel mSite;
 
+    @Inject @Named("v1") RestClientUtils mRestClientUtilsV1;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+    @Inject @Named("v1.2") RestClientUtils mRestClientUtilsV1_2;
+
     public static boolean isAccessible(SiteModel site) {
         // themes are only accessible to admin wordpress.com users
         return site != null && site.isWPCom() && site.getHasCapabilityEditThemeOptions();
@@ -68,6 +76,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplicationContext()).component().inject(this);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -172,7 +181,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (mThemeBrowserFragment != null) {
             page = mThemeBrowserFragment.getPage();
         }
-        WordPress.getRestClientUtilsV1_2().getFreeThemes(mSite.getSiteId(), THEME_FETCH_MAX, page, new Listener() {
+        mRestClientUtilsV1_2.getFreeThemes(mSite.getSiteId(), THEME_FETCH_MAX, page, new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         new FetchThemesTask().execute(response);
@@ -210,7 +219,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             page = mThemeSearchFragment.getPage();
         }
 
-        WordPress.getRestClientUtilsV1_2().getFreeSearchThemes(mSite.getSiteId(), THEME_FETCH_MAX, page, searchTerm, new
+        mRestClientUtilsV1_2.getFreeSearchThemes(mSite.getSiteId(), THEME_FETCH_MAX, page, searchTerm, new
                 Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -239,7 +248,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     public void fetchCurrentTheme() {
-        WordPress.getRestClientUtilsV1_1().getCurrentTheme(mSite.getSiteId(), new Listener() {
+        mRestClientUtilsV1_1.getCurrentTheme(mSite.getSiteId(), new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
@@ -304,7 +313,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void fetchPurchasedThemes() {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            WordPress.getRestClientUtilsV1_1().getPurchasedThemes(mSite.getSiteId(), new Listener() {
+            mRestClientUtilsV1_1.getPurchasedThemes(mSite.getSiteId(), new Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     new FetchThemesTask().execute(response);
@@ -380,7 +389,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private void activateTheme(final String themeId) {
         final String newThemeId = themeId;
 
-        WordPress.getRestClientUtils().setTheme(mSite.getSiteId(), themeId, new Listener() {
+        mRestClientUtilsV1.setTheme(mSite.getSiteId(), themeId, new Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 WordPress.wpDB.setCurrentTheme(String.valueOf(mSite.getSiteId()), newThemeId);

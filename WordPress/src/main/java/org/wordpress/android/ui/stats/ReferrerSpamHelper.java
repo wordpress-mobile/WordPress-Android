@@ -23,12 +23,17 @@ import org.wordpress.android.util.UrlUtils;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 
-class ReferrerSpamHelper {
+import javax.inject.Inject;
+import javax.inject.Named;
 
+public class ReferrerSpamHelper {
     private final WeakReference<Activity> mActivityRef;
+
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     public ReferrerSpamHelper(Activity activity) {
         mActivityRef = new WeakReference<>(activity);
+        ((WordPress) activity.getApplicationContext()).component().inject(this);
     }
 
     // return the domain of the passed ReferrerGroupModel or null.
@@ -75,7 +80,6 @@ class ReferrerSpamHelper {
                 );
                 item.setOnMenuItemClickListener(null);
 
-                final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
                 final String restPath;
                 final boolean isMarkingAsSpamInProgress;
                 if (referrerGroup.isMarkedAsSpam) {
@@ -88,7 +92,7 @@ class ReferrerSpamHelper {
 
                 referrerGroup.isRestCallInProgress = true;
                 ReferrerSpamRestListener vListener = new ReferrerSpamRestListener(mActivityRef.get(), referrerGroup, isMarkingAsSpamInProgress);
-                restClientUtils.post(restPath, vListener, vListener);
+                mRestClientUtilsV1_1.post(restPath, vListener, vListener);
                 AppLog.d(AppLog.T.STATS, "Enqueuing the following REST request " + restPath);
                 return true;
             }

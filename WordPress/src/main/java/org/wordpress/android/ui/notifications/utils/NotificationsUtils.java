@@ -35,6 +35,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
@@ -75,7 +76,8 @@ public class NotificationsUtils {
         void onTokenInvalid();
     }
 
-    public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
+    public static void getPushNotificationSettings(RestClientUtils restClientUtilsV1_1,
+                                                   Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
@@ -83,10 +85,11 @@ public class NotificationsUtils {
         if (!TextUtils.isEmpty(deviceID)) {
             settingsEndpoint += "?device_id=" + deviceID;
         }
-        WordPress.getRestClientUtilsV1_1().get(settingsEndpoint, listener, errorListener);
+        restClientUtilsV1_1.get(settingsEndpoint, listener, errorListener);
     }
 
-    public static void registerDeviceForPushNotifications(final Context ctx, String token) {
+    public static void registerDeviceForPushNotifications(RestClientUtils restClientUtilsV1_1, final Context ctx,
+                                                          String token) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         String uuid = settings.getString(WPCOM_PUSH_DEVICE_UUID, null);
         if (uuid == null)
@@ -129,10 +132,10 @@ public class NotificationsUtils {
             }
         };
 
-        WordPress.getRestClientUtils().post("/devices/new", contentStruct, null, listener, errorListener);
+        restClientUtilsV1_1.post("/devices/new", contentStruct, null, listener, errorListener);
     }
 
-    public static void unregisterDevicePushNotifications(final Context ctx) {
+    public static void unregisterDevicePushNotifications(RestClientUtils restClientUtilsV1_1, final Context ctx) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -156,7 +159,7 @@ public class NotificationsUtils {
         if (TextUtils.isEmpty(deviceID)) {
             return;
         }
-        WordPress.getRestClientUtils().post("/devices/" + deviceID + "/delete", listener, errorListener);
+        restClientUtilsV1_1.post("/devices/" + deviceID + "/delete", listener, errorListener);
     }
 
     public static Spannable getSpannableContentForRanges(JSONObject subject) {
@@ -257,7 +260,7 @@ public class NotificationsUtils {
         WPImageGetter imageGetter = new WPImageGetter(
                 textView,
                 context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
-                WordPress.imageLoader,
+                WordPress.sImageLoader,
                 loading,
                 failed
         );
@@ -354,7 +357,8 @@ public class NotificationsUtils {
     }
 
 
-    public static void showPushAuthAlert(Context context, final String token, String title, String message) {
+    public static void showPushAuthAlert(final RestClientUtils restClientUtilsV1_1, Context context, final String token,
+                                         String title, String message) {
         if (context == null ||
                 TextUtils.isEmpty(token) ||
                 TextUtils.isEmpty(title) ||
@@ -368,7 +372,7 @@ public class NotificationsUtils {
         builder.setPositiveButton(R.string.mnu_comment_approve, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                sendTwoFactorAuthToken(token);
+                sendTwoFactorAuthToken(restClientUtilsV1_1, token);
             }
         });
 
@@ -383,12 +387,12 @@ public class NotificationsUtils {
         dialog.show();
     }
 
-    public static void sendTwoFactorAuthToken(String token){
+    public static void sendTwoFactorAuthToken(RestClientUtils restClientUtilsV1_1, String token){
         // ping the push auth endpoint with the token, wp.com will take care of the rest!
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("action", "authorize_login");
         tokenMap.put("push_token", token);
-        WordPress.getRestClientUtilsV1_1().post(PUSH_AUTH_ENDPOINT, tokenMap, null, null,
+        restClientUtilsV1_1.post(PUSH_AUTH_ENDPOINT, tokenMap, null, null,
                 new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

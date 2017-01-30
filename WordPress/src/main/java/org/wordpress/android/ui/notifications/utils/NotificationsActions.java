@@ -6,9 +6,9 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.util.AppLog;
 
@@ -21,15 +21,15 @@ public class NotificationsActions {
 
     // Get the latest note from the local DB and send its timestamp to the server.
     // The server will discard the value if we've already seen a most recent note elsewhere or on this device.
-    public static void updateNotesSeenTimestamp() {
+    public static void updateNotesSeenTimestamp(RestClientUtils restClientUtilsV1_1) {
         ArrayList<Note> latestNotes = NotificationsTable.getLatestNotes(1);
         if (latestNotes.size() == 0) return;
-        updateSeenTimestamp(latestNotes.get(0));
+        updateSeenTimestamp(restClientUtilsV1_1, latestNotes.get(0));
     }
 
     // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
-    public static void updateSeenTimestamp(Note note) {
-        WordPress.getRestClientUtilsV1_1().markNotificationsSeen(
+    public static void updateSeenTimestamp(RestClientUtils restClientUtilsV1_1, Note note) {
+        restClientUtilsV1_1.markNotificationsSeen(
                 String.valueOf(note.getTimestamp()),
                 new RestRequest.Listener() {
                     @Override
@@ -58,14 +58,14 @@ public class NotificationsActions {
         return notes;
     }
 
-    public static void markNoteAsRead(final Note note) {
+    public static void markNoteAsRead(RestClientUtils restClientUtilsV1_1, final Note note) {
         if (note == null) {
             return;
         }
 
         // mark the note as read if it's unread
         if (note.isUnread()) {
-            WordPress.getRestClientUtilsV1_1().decrementUnreadCount(note.getId(), "9999", new RestRequest.Listener() {
+            restClientUtilsV1_1.decrementUnreadCount(note.getId(), "9999", new RestRequest.Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     note.setRead();
@@ -80,8 +80,10 @@ public class NotificationsActions {
         }
     }
 
-    public static void downloadNoteAndUpdateDB(final String noteID, final RestRequest.Listener respoListener, final RestRequest.ErrorListener errorListener) {
-        WordPress.getRestClientUtilsV1_1().getNotification(
+    public static void downloadNoteAndUpdateDB(RestClientUtils restClientUtilsV1_1, final String noteID,
+                                               final RestRequest.Listener respoListener,
+                                               final RestRequest.ErrorListener errorListener) {
+        restClientUtilsV1_1.getNotification(
                 noteID,
                 new RestRequest.Listener() {
                     @Override

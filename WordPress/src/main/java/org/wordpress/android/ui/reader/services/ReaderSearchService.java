@@ -15,11 +15,15 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -28,9 +32,10 @@ import de.greenrobot.event.EventBus;
  */
 
 public class ReaderSearchService extends Service {
-
     private static final String ARG_QUERY   = "query";
     private static final String ARG_OFFSET  = "offset";
+
+    @Inject @Named("v1.2") RestClientUtils mRestClientUtilsV1_2;
 
     public static void startService(Context context, @NonNull String query, int offset) {
         Intent intent = new Intent(context, ReaderSearchService.class);
@@ -55,6 +60,7 @@ public class ReaderSearchService extends Service {
     public void onCreate() {
         super.onCreate();
         AppLog.i(AppLog.T.READER, "reader search service > created");
+        ((WordPress) getApplication()).component().inject(this);
     }
 
     @Override
@@ -103,7 +109,7 @@ public class ReaderSearchService extends Service {
 
         AppLog.d(AppLog.T.READER, "reader search service > starting search for " + query);
         EventBus.getDefault().post(new ReaderEvents.SearchPostsStarted(query, offset));
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        mRestClientUtilsV1_2.get(path, null, null, listener, errorListener);
     }
 
     private static void handleSearchResponse(final String query, final int offset, final JSONObject jsonObject) {

@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
@@ -57,6 +58,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -90,6 +92,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private boolean mBackFromLogin;
 
     @Inject AccountStore mAccountStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+    @Inject @Named("v1.2") RestClientUtils mRestClientUtilsV1_2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -191,7 +195,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private void updatePostAndComments() {
         //to do a complete refresh we need to get updated post and new comments
-        ReaderPostActions.updatePost(mPost, new ReaderActions.UpdateResultListener() {
+        ReaderPostActions.updatePost(mRestClientUtilsV1_2, mPost, new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (isFinishing()) {
@@ -457,8 +461,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
                         } else {
                             long wpComUserId = mAccountStore.getAccount().getUserId();
-                            if (ReaderCommentActions.performLikeAction(comment, true, wpComUserId) &&
-                                    getCommentAdapter().refreshComment(mCommentId)) {
+                            if (ReaderCommentActions.performLikeAction(mRestClientUtilsV1_1, comment, true, wpComUserId)
+                                && getCommentAdapter().refreshComment(mCommentId)) {
                                 getCommentAdapter().setAnimateLikeCommentId(mCommentId);
 
                                 AnalyticsUtils.trackWithReaderPostDetails(
@@ -640,13 +644,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         };
 
         long wpComUserId = mAccountStore.getAccount().getUserId();
-        ReaderComment newComment = ReaderCommentActions.submitPostComment(
-                getPost(),
-                fakeCommentId,
-                commentText,
-                mReplyToCommentId,
-                actionListener,
-                wpComUserId);
+        ReaderComment newComment = ReaderCommentActions.submitPostComment(mRestClientUtilsV1_1, getPost(),
+                fakeCommentId, commentText, mReplyToCommentId, actionListener, wpComUserId);
 
         if (newComment != null) {
             mEditComment.setText(null);

@@ -13,6 +13,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -21,9 +22,11 @@ import org.wordpress.android.util.HelpshiftHelper;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class GCMRegistrationIntentService extends IntentService {
     @Inject AccountStore mAccountStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     public GCMRegistrationIntentService() {
         super("GCMRegistrationIntentService");
@@ -67,7 +70,7 @@ public class GCMRegistrationIntentService extends IntentService {
                     preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid).apply();
                 }
                 preferences.edit().putString(NotificationsUtils.WPCOM_PUSH_DEVICE_TOKEN, gcmToken).apply();
-                NotificationsUtils.registerDeviceForPushNotifications(this, gcmToken);
+                NotificationsUtils.registerDeviceForPushNotifications(mRestClientUtilsV1_1, this, gcmToken);
             }
 
             // Register to other kind of notifications

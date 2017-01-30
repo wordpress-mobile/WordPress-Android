@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -42,6 +43,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -72,6 +74,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private boolean mIsAnimatingOutNewNotificationsBar;
 
     @Inject AccountStore mAccountStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
@@ -148,7 +151,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 false
         ));
         // Then hit the server
-        NotificationsActions.updateNotesSeenTimestamp();
+        NotificationsActions.updateNotesSeenTimestamp(mRestClientUtilsV1_1);
 
         // Removes app notifications from the system bar
         new Thread(new Runnable() {
@@ -554,7 +557,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
         } else {
             // Moderation done -> refresh the note before calling the end.
-            NotificationsActions.downloadNoteAndUpdateDB(event.noteId,
+            NotificationsActions.downloadNoteAndUpdateDB(mRestClientUtilsV1_1, event.noteId,
                     new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -575,7 +578,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     @SuppressWarnings("unused")
     public void onEventMainThread(final NotificationEvents.NoteLikeStatusChanged event) {
         // Like/unlike done -> refresh the note and update db
-        NotificationsActions.downloadNoteAndUpdateDB(event.noteId,
+        NotificationsActions.downloadNoteAndUpdateDB(mRestClientUtilsV1_1, event.noteId,
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {

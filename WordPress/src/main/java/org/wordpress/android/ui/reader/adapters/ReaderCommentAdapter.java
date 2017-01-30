@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
@@ -42,6 +43,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderPost mPost;
@@ -71,6 +73,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -370,7 +373,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
         ReaderAnim.animateLikeButton(holder.countLikes.getImageView(), isAskingToLike);
 
-        if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike, mAccountStore.getAccount().getUserId())) {
+        if (!ReaderCommentActions.performLikeAction(mRestClientUtilsV1_1, comment, isAskingToLike,
+                mAccountStore.getAccount().getUserId())) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }

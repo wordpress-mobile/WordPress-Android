@@ -27,10 +27,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -56,6 +56,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -95,6 +96,7 @@ public class GCMMessageService extends GcmListenerService {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     private static final String KEY_CATEGORY_COMMENT_LIKE = "comment-like";
     private static final String KEY_CATEGORY_COMMENT_REPLY = "comment-reply";
@@ -113,7 +115,8 @@ public class GCMMessageService extends GcmListenerService {
     private void synchronizedHandleDefaultPush(@NonNull Bundle data) {
         // sActiveNotificationsMap being static, we can't just synchronize the method
         synchronized (GCMMessageService.class) {
-            sNotificationHelper.handleDefaultPush(this, data, mAccountStore.getAccount().getUserId());
+            sNotificationHelper.handleDefaultPush(mRestClientUtilsV1_1, this, data,
+                    mAccountStore.getAccount().getUserId());
         }
     }
 
@@ -339,7 +342,8 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private static class NotificationHelper {
-        private void handleDefaultPush(Context context, @NonNull Bundle data, long wpcomUserId) {
+        private void handleDefaultPush(RestClientUtils restClientUtilsV1_1, Context context, @NonNull Bundle data,
+                                       long wpcomUserId) {
             // if a notification is received while the app has not yet been launched after last power on,
             // the screenlockwatchservice won't be running. Let's start it now.
             context.startService(new Intent(context, NotificationsScreenLockWatchService.class));
@@ -370,10 +374,11 @@ public class GCMMessageService extends GcmListenerService {
                 return;
             }
 
-            buildAndShowNotificationFromNoteData(context, data);
+            buildAndShowNotificationFromNoteData(restClientUtilsV1_1, context, data);
         }
 
-        private void buildAndShowNotificationFromNoteData(Context context, Bundle data) {
+        private void buildAndShowNotificationFromNoteData(RestClientUtils restClientUtilsV1_1, Context context,
+                                                          Bundle data) {
             if (data == null) {
                 AppLog.e(T.NOTIFS, "Push notification received without a valid Bundle!");
                 return;
@@ -390,7 +395,7 @@ public class GCMMessageService extends GcmListenerService {
             NotificationsUtils.buildNoteObjectFromBundleAndSaveIt(data);
             EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
             // Always do this, since a note can be updated on the server after a PN is sent
-            NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID, null, null);
+            NotificationsActions.downloadNoteAndUpdateDB(restClientUtilsV1_1, wpcomNoteID, null, null);
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 

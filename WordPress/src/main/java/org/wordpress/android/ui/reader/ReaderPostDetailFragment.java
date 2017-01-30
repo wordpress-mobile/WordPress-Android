@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
@@ -71,6 +72,7 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.util.EnumSet;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -124,6 +126,9 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+    @Inject @Named("v1.2") RestClientUtils mRestClientUtilsV1_2;
+    @Inject @Named("v1.3") RestClientUtils mRestClientUtilsV1_3;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(false, blogId, postId, null, 0, false, null, null, false);
@@ -425,7 +430,7 @@ public class ReaderPostDetailFragment extends Fragment
             likeCount.setSelected(isAskingToLike);
             ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
-            boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike,
+            boolean success = ReaderPostActions.performLikeAction(mRestClientUtilsV1_1, mPost, isAskingToLike,
                     mAccountStore.getAccount().getUserId());
             if (!success) {
                 likeCount.setSelected(!isAskingToLike);
@@ -526,7 +531,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void requestRelatedPosts() {
         if (hasPost() && mPost.isWP()) {
-            ReaderPostActions.requestRelatedPosts(mPost);
+            ReaderPostActions.requestRelatedPosts(mRestClientUtilsV1_2, mPost);
         }
     }
 
@@ -680,7 +685,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             }
         };
-        ReaderPostActions.updatePost(mPost, resultListener);
+        ReaderPostActions.updatePost(mRestClientUtilsV1_2, mPost, resultListener);
     }
 
     private void refreshIconCounts() {
@@ -838,9 +843,9 @@ public class ReaderPostDetailFragment extends Fragment
         };
 
         if (mIsFeed) {
-            ReaderPostActions.requestFeedPost(mBlogId, mPostId, listener);
+            ReaderPostActions.requestFeedPost(mRestClientUtilsV1_3, mBlogId, mPostId, listener);
         } else {
-            ReaderPostActions.requestBlogPost(mBlogId, mPostId, listener);
+            ReaderPostActions.requestBlogPost(mRestClientUtilsV1_1, mBlogId, mPostId, listener);
         }
     }
 

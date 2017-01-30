@@ -3,13 +3,13 @@ package org.wordpress.android.ui.reader.utils;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -129,7 +129,8 @@ public class ReaderVideoUtils {
     /*
      * unlike YouTube thumbnails, Vimeo thumbnails require network request
      */
-    public static void requestVimeoThumbnail(final String videoUrl, final VideoThumbnailListener thumbListener) {
+    public static void requestVimeoThumbnail(RequestQueue requestQueue, final String videoUrl,
+                                             final VideoThumbnailListener thumbListener) {
         // useless without a listener
         if (thumbListener==null)
             return;
@@ -166,7 +167,7 @@ public class ReaderVideoUtils {
         String url = "http://vimeo.com/api/v2/video/" + id + ".json";
         JsonArrayRequest request = new JsonArrayRequest(url, listener, errorListener);
 
-        WordPress.requestQueue.add(request);
+        requestQueue.add(request);
     }
 
     public interface VideoThumbnailListener {

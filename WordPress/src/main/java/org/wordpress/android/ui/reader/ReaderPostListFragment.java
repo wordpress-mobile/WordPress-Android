@@ -34,13 +34,14 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -79,6 +80,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -123,6 +125,7 @@ public class ReaderPostListFragment extends Fragment
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     @Inject AccountStore mAccountStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     private static class HistoryStack extends Stack<String> {
         private final String keyName;
@@ -770,7 +773,7 @@ public class ReaderPostListFragment extends Fragment
             }
         };
 
-        if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
+        if (ReaderBlogActions.followBlogForPost(mRestClientUtilsV1_1, post, isAskingToFollow, actionListener)) {
             getPostAdapter().setFollowStatusForBlog(post.blogId, isAskingToFollow);
         }
     }
@@ -798,7 +801,8 @@ public class ReaderPostListFragment extends Fragment
 
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
-        final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
+        final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(mRestClientUtilsV1_1, post.blogId,
+                actionListener);
         // Only pass the blogID if available. Do not track feedID
         AnalyticsUtils.trackWithSiteId(
                 AnalyticsTracker.Stat.READER_BLOG_BLOCKED,
@@ -812,7 +816,7 @@ public class ReaderPostListFragment extends Fragment
         View.OnClickListener undoListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReaderBlogActions.undoBlockBlogFromReader(blockResult);
+                ReaderBlogActions.undoBlockBlogFromReader(mRestClientUtilsV1_1, blockResult);
                 refreshPosts();
             }
         };

@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.android.volley.RequestQueue;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -27,6 +29,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
@@ -54,6 +57,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -118,6 +122,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private boolean mTrackedPost;
 
     @Inject SiteStore mSiteStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+    @Inject @Named("regular") RequestQueue mRequestQueue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -370,7 +376,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         mPostId = post.postId;
                     } else {
                         // not stored locally, so request it
-                        ReaderPostActions.requestBlogPost(blogIdentifier, postIdentifier,
+                        ReaderPostActions.requestBlogPost(mRestClientUtilsV1_1, blogIdentifier, postIdentifier,
                                 new ReaderActions.OnRequestListener() {
                                     @Override
                                     public void onSuccess() {
@@ -626,7 +632,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
      */
     private void trackPost(long blogId, long postId) {
         // bump the page view
-        ReaderPostActions.bumpPageViewForPost(mSiteStore, blogId, postId);
+        ReaderPostActions.bumpPageViewForPost(mRequestQueue, mSiteStore, blogId, postId);
 
         // analytics tracking
         AnalyticsUtils.trackWithReaderPostDetails(

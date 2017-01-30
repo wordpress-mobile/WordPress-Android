@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.models.ReaderSimplePost;
@@ -22,10 +24,14 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 /**
  * single simple post view
  */
 public class ReaderSimplePostView extends LinearLayout {
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     public interface OnSimplePostClickListener {
         void onSimplePostClick(View v, long siteId, long postId);
@@ -56,6 +62,7 @@ public class ReaderSimplePostView extends LinearLayout {
 
     private void initView(Context context) {
         inflate(context, R.layout.reader_simple_post_view, this);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
     }
 
     public void showPost(ReaderSimplePost simplePost,
@@ -150,7 +157,7 @@ public class ReaderSimplePostView extends LinearLayout {
         // disable follow button until call completes
         btnFollow.setEnabled(false);
 
-        ReaderBlogActions.followBlogById(mSimplePost.getSiteId(), isAskingToFollow, listener);
+        ReaderBlogActions.followBlogById(mRestClientUtilsV1_1, mSimplePost.getSiteId(), isAskingToFollow, listener);
         btnFollow.setIsFollowedAnimated(isAskingToFollow);
     }
 

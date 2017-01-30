@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -50,6 +51,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -65,6 +67,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
 
     private String mNoteId;
 
@@ -105,7 +108,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
-        NotificationsActions.updateSeenTimestamp(note);
+        NotificationsActions.updateSeenTimestamp(mRestClientUtilsV1_1, note);
 
         Map<String, String> properties = new HashMap<>();
         properties.put("notification_type", note.getType());
@@ -186,7 +189,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, note.getId());
         // mark the note as read if it's unread
         if (note.isUnread()) {
-            NotificationsActions.markNoteAsRead(note);
+            NotificationsActions.markNoteAsRead(mRestClientUtilsV1_1, note);
             note.setRead();
             NotificationsTable.saveNote(note);
             EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());

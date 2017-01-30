@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
@@ -30,6 +31,11 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashSet;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import static org.wordpress.android.WordPress.sImageLoader;
 
 /**
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
@@ -63,16 +69,19 @@ public class WPNetworkImageView extends AppCompatImageView {
     private int mCropWidth;
     private int mCropHeight;
 
+    @Inject @Named("regular") RequestQueue mRequestQueue;
+
     private static final HashSet<String> mUrlSkipList = new HashSet<>();
 
     public WPNetworkImageView(Context context) {
-        super(context);
+        this(context, null);
     }
     public WPNetworkImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
     public WPNetworkImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
     }
 
     public void setImageUrl(String url, ImageType imageType) {
@@ -132,7 +141,8 @@ public class WPNetworkImageView extends AppCompatImageView {
         } else if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
             // vimeo videos require network request to get thumbnail
             showDefaultImage();
-            ReaderVideoUtils.requestVimeoThumbnail(videoUrl, new ReaderVideoUtils.VideoThumbnailListener() {
+            ReaderVideoUtils.requestVimeoThumbnail(mRequestQueue, videoUrl,
+                    new ReaderVideoUtils.VideoThumbnailListener() {
                 @Override
                 public void onResponse(boolean successful, String thumbnailUrl) {
                     if (successful) {
@@ -194,7 +204,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
+        ImageLoader.ImageContainer newContainer = sImageLoader.get(mUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

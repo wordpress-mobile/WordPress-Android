@@ -300,7 +300,7 @@ public class WordPressMediaUtils {
      * Loads the given network image URL into the {@link NetworkImageView}, using the default {@link ImageLoader}.
      */
     public static void loadNetworkImage(String imageUrl, NetworkImageView imageView) {
-        loadNetworkImage(imageUrl, imageView, WordPress.imageLoader);
+        loadNetworkImage(imageUrl, imageView, WordPress.sImageLoader);
     }
 
     /**

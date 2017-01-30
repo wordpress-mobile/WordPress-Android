@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.github.xizzhu.simpletooltip.ToolTip;
 import com.github.xizzhu.simpletooltip.ToolTipView;
 import com.yalantis.ucrop.UCrop;
@@ -78,6 +79,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.greenrobot.event.EventBus;
 
@@ -112,6 +114,7 @@ public class MeFragment extends Fragment {
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject @Named("regular") RequestQueue mRequestQueue;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -725,7 +728,7 @@ public class MeFragment extends Fragment {
         entry.responseHeaders.put("X-Android-Selected-Protocol", "http/1.1");
         entry.responseHeaders.put("X-Android-Sent-Millis", String.valueOf(currentTimeMs));
 
-        WordPress.requestQueue.getCache().put(Request.Method.GET + ":" + avatarUrl, entry);
+        mRequestQueue.getCache().put(Request.Method.GET + ":" + avatarUrl, entry);
     }
 
     private class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
