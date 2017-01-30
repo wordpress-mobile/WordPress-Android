@@ -400,9 +400,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         params.put(DESCRIPTION_EDIT_KEY, media.getDescription());
         params.put(CAPTION_EDIT_KEY, media.getCaption());
         params.put(ALT_EDIT_KEY, media.getAlt());
-        if (media.getPostId() > 0) {
-            params.put(PARENT_EDIT_KEY, String.valueOf(media.getPostId()));
-        }
+        params.put(PARENT_EDIT_KEY, String.valueOf(media.getPostId()));
         return params;
     }
 
