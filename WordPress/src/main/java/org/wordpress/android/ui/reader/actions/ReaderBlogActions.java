@@ -397,7 +397,7 @@ public class ReaderBlogActions {
                 blogUrl,
                 listener,
                 errorListener);
-        WordPress.requestQueue.add(request);
+        WordPress.sRequestQueue.add(request);
     }
 
     /*

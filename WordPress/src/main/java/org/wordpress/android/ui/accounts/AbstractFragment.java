@@ -14,12 +14,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.android.volley.toolbox.Volley;
-
 import org.wordpress.android.R;
 import org.wordpress.android.util.WPActivityUtils;
-
-import static org.wordpress.android.WordPress.requestQueue;
 
 /**
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
@@ -34,9 +30,6 @@ public abstract class AbstractFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mSystemService = (ConnectivityManager) getActivity().getApplicationContext().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(getActivity());
-        }
     }
 
     protected void startProgress(String message) {

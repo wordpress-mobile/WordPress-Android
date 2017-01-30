@@ -725,7 +725,7 @@ public class MeFragment extends Fragment {
         entry.responseHeaders.put("X-Android-Selected-Protocol", "http/1.1");
         entry.responseHeaders.put("X-Android-Sent-Millis", String.valueOf(currentTimeMs));
 
-        WordPress.requestQueue.getCache().put(Request.Method.GET + ":" + avatarUrl, entry);
+        WordPress.sRequestQueue.getCache().put(Request.Method.GET + ":" + avatarUrl, entry);
     }
 
     private class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
