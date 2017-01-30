@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
@@ -160,21 +159,10 @@ public class MediaGridFragment extends Fragment
 
         mResultView = (TextView) view.findViewById(R.id.media_filter_result_text);
 
+        mSpinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
         mSpinner = (CustomSpinner) view.findViewById(R.id.media_filter_spinner);
         mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
         mSpinner.setOnItemSelectedEvenIfUnchangedListener(mFilterSelectedListener);
-
-        mSpinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
-        mSpinnerContainer.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isInMultiSelect()) {
-                    mSpinnerHasLaunched = true;
-                    mSpinner.performClick();
-                }
-            }
-
-        });
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
