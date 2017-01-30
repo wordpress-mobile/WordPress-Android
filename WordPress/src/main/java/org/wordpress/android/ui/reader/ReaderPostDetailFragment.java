@@ -1042,6 +1042,9 @@ public class ReaderPostDetailFragment extends Fragment
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
 
+            // only enable showing blog preview from the header if we're not already
+            // previewing a blog
+            headerView.setEnableBlogPreview(getPostListType() != ReaderPostListType.BLOG_PREVIEW);
 
             headerView.setPost(mPost);
             tagStrip.setPost(mPost);

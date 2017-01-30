@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -200,7 +199,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
             if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
-                txtAuthorAndBlogName.setTextColor(Color.DKGRAY);
+                int color = itemView.getContext().getResources().getColor(R.color.grey_dark);
+                txtAuthorAndBlogName.setTextColor(color);
             } else {
                 postHeaderView.setOnClickListener(new View.OnClickListener() {
                     @Override
