@@ -291,14 +291,12 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private void notifyMediaProgress(MediaModel media, float progress, MediaError error) {
-        ProgressPayload payload = new ProgressPayload(media, progress, false);
-        payload.error = error;
+        ProgressPayload payload = new ProgressPayload(media, progress, false, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
-        ProgressPayload payload = new ProgressPayload(media, 1.f, error == null);
-        payload.error = error;
+        ProgressPayload payload = new ProgressPayload(media, 1.f, error == null, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
@@ -318,7 +316,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private void notifyMediaUploadCanceled(MediaModel media) {
-        ProgressPayload payload = new ProgressPayload(media, -1.f, false);
+        ProgressPayload payload = new ProgressPayload(media, -1.f, false, true);
         mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload));
     }
 
