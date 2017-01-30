@@ -50,7 +50,6 @@ import org.wordpress.android.modules.AppComponent;
 import org.wordpress.android.modules.DaggerAppComponent;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
-import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
@@ -121,6 +120,8 @@ public class WordPress extends MultiDexApplication {
     public static RequestQueue sRequestQueue;
     @Inject FluxCImageLoader mImageLoader;
     public static FluxCImageLoader sImageLoader;
+    @Inject OAuthAuthenticator mOAuthAuthenticator;
+    public static OAuthAuthenticator sOAuthAuthenticator;
 
     private AppComponent mAppComponent;
     public AppComponent component() {
@@ -199,16 +200,14 @@ public class WordPress extends MultiDexApplication {
         // Init static fields from dagger injected singletons, for legacy Actions/Utils
         sRequestQueue = mRequestQueue;
         sImageLoader = mImageLoader;
+        sOAuthAuthenticator = mOAuthAuthenticator;
 
         // Migrate access token AccountStore
-        if (mAccountStore.hasAccessToken()) {
-            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
-        } else {
+        if (!mAccountStore.hasAccessToken()) {
             // it will take some time to update the access token in the AccountStore if it was migrated
             // so it will be set to the migrated token
             String migratedToken = WPLegacyMigrationUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
             if (!TextUtils.isEmpty(migratedToken)) {
-                OAuthAuthenticator.sAccessToken = migratedToken;
                 AppPrefs.setAccessTokenMigrated(true);
                 mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
@@ -356,16 +355,14 @@ public class WordPress extends MultiDexApplication {
 
     public static RestClientUtils getRestClientUtils() {
         if (sRestClientUtils == null) {
-            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            sRestClientUtils = new RestClientUtils(mContext, sRequestQueue, authenticator, null);
+            sRestClientUtils = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator, null);
         }
         return sRestClientUtils;
     }
 
     public static RestClientUtils getRestClientUtilsV1_1() {
         if (sRestClientUtilsVersion1_1 == null) {
-            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            sRestClientUtilsVersion1_1 = new RestClientUtils(mContext, sRequestQueue, authenticator,
+            sRestClientUtilsVersion1_1 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
                     null, RestClient.REST_CLIENT_VERSIONS.V1_1);
         }
         return sRestClientUtilsVersion1_1;
@@ -373,8 +370,7 @@ public class WordPress extends MultiDexApplication {
 
     public static RestClientUtils getRestClientUtilsV1_2() {
         if (sRestClientUtilsVersion1_2 == null) {
-            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            sRestClientUtilsVersion1_2 = new RestClientUtils(mContext, sRequestQueue, authenticator,
+            sRestClientUtilsVersion1_2 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
                     null, RestClient.REST_CLIENT_VERSIONS.V1_2);
         }
         return sRestClientUtilsVersion1_2;
@@ -382,8 +378,7 @@ public class WordPress extends MultiDexApplication {
 
     public static RestClientUtils getRestClientUtilsV1_3() {
         if (sRestClientUtilsVersion1_3 == null) {
-            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            sRestClientUtilsVersion1_3 = new RestClientUtils(mContext, sRequestQueue, authenticator,
+            sRestClientUtilsVersion1_3 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
                     null, RestClient.REST_CLIENT_VERSIONS.V1_3);
         }
         return sRestClientUtilsVersion1_3;
@@ -391,8 +386,7 @@ public class WordPress extends MultiDexApplication {
 
     public static RestClientUtils getRestClientUtilsV0() {
         if (sRestClientUtilsVersion0 == null) {
-            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            sRestClientUtilsVersion0 = new RestClientUtils(mContext, sRequestQueue, authenticator,
+            sRestClientUtilsVersion0 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
                     null, RestClient.REST_CLIENT_VERSIONS.V0);
         }
         return sRestClientUtilsVersion0;

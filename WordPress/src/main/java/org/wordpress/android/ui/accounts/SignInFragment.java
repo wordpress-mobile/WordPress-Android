@@ -32,14 +32,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.credentials.Credential;
-import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -65,7 +61,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnDiscoveryResponse;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
-import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
@@ -90,7 +85,6 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -1208,8 +1202,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
             // Fetch sites
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
-            // Setup legacy access token storage
-            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
             // Start Notification service
             NotificationsUpdateService.startService(getActivity().getApplicationContext());
         }
