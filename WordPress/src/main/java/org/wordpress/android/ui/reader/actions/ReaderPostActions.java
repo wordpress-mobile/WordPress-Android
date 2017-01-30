@@ -348,7 +348,7 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.requestQueue.add(request);
+        WordPress.sRequestQueue.add(request);
     }
 
     /*

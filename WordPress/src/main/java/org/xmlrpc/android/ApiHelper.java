@@ -544,7 +544,7 @@ public class ApiHelper {
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest request = new StringRequest(stringUrl, future, future);
         request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, 0, 1));
-        WordPress.requestQueue.add(request);
+        WordPress.sRequestQueue.add(request);
         try {
             return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {

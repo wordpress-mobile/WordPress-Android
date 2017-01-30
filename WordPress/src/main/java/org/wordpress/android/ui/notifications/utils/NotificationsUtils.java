@@ -257,7 +257,7 @@ public class NotificationsUtils {
         WPImageGetter imageGetter = new WPImageGetter(
                 textView,
                 context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
-                WordPress.imageLoader,
+                WordPress.sImageLoader,
                 loading,
                 failed
         );
