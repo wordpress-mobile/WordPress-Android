@@ -112,9 +112,11 @@ public class MediaStore extends Store {
         public MediaModel media;
         public float progress;
         public boolean completed;
+        public boolean canceled;
         public MediaError error;
-        public ProgressPayload(MediaModel media, float progress, boolean completed) {
+        public ProgressPayload(MediaModel media, float progress, boolean completed, boolean canceled) {
             this(media, progress, completed, null);
+            this.canceled = canceled;
         }
         public ProgressPayload(MediaModel media, float progress, boolean completed, MediaError error) {
             this.media = media;
@@ -162,10 +164,12 @@ public class MediaStore extends Store {
         public MediaModel media;
         public float progress;
         public boolean completed;
-        public OnMediaUploaded(MediaModel media, float progress, boolean completed) {
+        public boolean canceled;
+        public OnMediaUploaded(MediaModel media, float progress, boolean completed, boolean canceled) {
             this.media = media;
             this.progress = progress;
             this.completed = completed;
+            this.canceled = canceled;
         }
     }
 
@@ -465,7 +469,7 @@ public class MediaStore extends Store {
     }
 
     private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media) {
-        OnMediaUploaded onMediaUploaded = new OnMediaUploaded(media, 1, true);
+        OnMediaUploaded onMediaUploaded = new OnMediaUploaded(media, 1, true, false);
         onMediaUploaded.error = new MediaError(errorType, errorMessage);
         emitChange(onMediaUploaded);
     }
@@ -545,7 +549,8 @@ public class MediaStore extends Store {
         if (!payload.isError() && payload.completed) {
             updateMedia(payload.media, false);
         }
-        OnMediaUploaded onMediaUploaded = new OnMediaUploaded(payload.media, payload.progress, payload.completed);
+        OnMediaUploaded onMediaUploaded =
+                new OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled);
         onMediaUploaded.error = payload.error;
         emitChange(onMediaUploaded);
     }
