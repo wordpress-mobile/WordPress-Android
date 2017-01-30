@@ -30,7 +30,6 @@ public class ReaderBlogFragment extends Fragment
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
     private String mSearchFilter;
-    private boolean mIgnoreOnQueryTextChange;
 
     private static final String ARG_BLOG_TYPE = "blog_type";
     private static final String KEY_SEARCH_FILTER = "search_filter";
@@ -56,10 +55,6 @@ public class ReaderBlogFragment extends Fragment
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.READER, "reader blog fragment > restoring instance state");
             restoreState(savedInstanceState);
-            // the searchView's onQueryTextChange is always called with the empty string after
-            // the fragment is recreated, which loses the existing search filter - work around
-            // this by ignoring it after recreation when a filter exists
-            mIgnoreOnQueryTextChange = !TextUtils.isEmpty(mSearchFilter);
         }
     }
 
@@ -167,9 +162,7 @@ public class ReaderBlogFragment extends Fragment
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (mIgnoreOnQueryTextChange) {
-                    mIgnoreOnQueryTextChange = false;
-                } else {
+                if (!TextUtils.isEmpty(newText)) {
                     setSearchFilter(newText);
                 }
                 return false;
