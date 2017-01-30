@@ -44,6 +44,7 @@ import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
@@ -68,7 +69,6 @@ import de.greenrobot.event.EventBus;
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.AutoHideToolbarListener {
-    private static final String KEY_TRACKED_POST = "tracked_post";
 
     /**
      * Type of URL intercepted
@@ -111,7 +111,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private boolean mBackFromLogin;
 
     private final HashSet<Integer> mTrackedPositions = new HashSet<>();
-    private boolean mTrackedPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,8 +145,13 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
                 mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
             }
-            mTrackedPost = savedInstanceState.getBoolean(KEY_TRACKED_POST);
             mPostSlugsResolutionUnderway = savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY);
+            if (savedInstanceState.containsKey(ReaderConstants.KEY_TRACKED_POSITIONS)) {
+                Serializable positions = savedInstanceState.getSerializable(ReaderConstants.KEY_TRACKED_POSITIONS);
+                if (positions instanceof HashSet) {
+                    mTrackedPositions.addAll((HashSet<Integer>) positions);
+                }
+            }
         } else {
             mIsFeed = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_FEED, false);
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -561,9 +565,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
         }
 
-        outState.putBoolean(KEY_TRACKED_POST, mTrackedPost);
-
         outState.putBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY, mPostSlugsResolutionUnderway);
+
+        if (mTrackedPositions.size() > 0) {
+            outState.putSerializable(ReaderConstants.KEY_TRACKED_POSITIONS, mTrackedPositions);
+        }
 
         super.onSaveInstanceState(outState);
     }

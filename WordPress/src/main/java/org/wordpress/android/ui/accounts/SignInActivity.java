@@ -31,8 +31,9 @@ import org.wordpress.android.ui.accounts.login.MagicLinkSentFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-public class SignInActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener, MagicLinkRequestFragment.OnMagicLinkFragmentInteraction,
-        SignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
+public class SignInActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
+        MagicLinkRequestFragment.OnMagicLinkFragmentInteraction, SignInFragment.OnMagicLinkRequestInteraction,
+        MagicLinkSentFragment.OnMagicLinkSentInteraction, JetpackCallbacks {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int REQUEST_CODE = 5000;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
@@ -51,6 +52,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
 
     private SmartLockHelper mSmartLockHelper;
     private ProgressDialog mProgressDialog;
+    private Blog mJetpackBlog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,10 +159,10 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         if (extras != null) {
             actionMode = extras.getInt(EXTRA_START_FRAGMENT, -1);
             if (extras.containsKey(EXTRA_JETPACK_SITE_AUTH)) {
-                Blog jetpackBlog = WordPress.getBlog(extras.getInt(EXTRA_JETPACK_SITE_AUTH));
-                if (jetpackBlog != null) {
+                mJetpackBlog = WordPress.getBlog(extras.getInt(EXTRA_JETPACK_SITE_AUTH));
+                if (mJetpackBlog != null) {
                     String customMessage = extras.getString(EXTRA_JETPACK_MESSAGE_AUTH, null);
-                    getSignInFragment().setBlogAndCustomMessageForJetpackAuth(jetpackBlog, customMessage);
+                    getSignInFragment().setCustomMessageForJetpackAuth(customMessage);
                 }
             } else if (extras.containsKey(EXTRA_IS_AUTH_ERROR)) {
                 getSignInFragment().showAuthErrorMessage();
@@ -278,5 +280,15 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
 
         MagicLinkRequestFragment magicLinkRequestFragment = MagicLinkRequestFragment.newInstance(email);
         slideInFragment(magicLinkRequestFragment);
+    }
+
+    @Override
+    public boolean isJetpackAuth() {
+        return mJetpackBlog != null;
+    }
+
+    @Override
+    public Blog getJetpackBlog() {
+        return mJetpackBlog;
     }
 }
