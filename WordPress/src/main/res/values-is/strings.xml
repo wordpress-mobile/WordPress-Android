@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-05 17:48:31+0000
+Translation-Revision-Date: 2017-01-27 15:22:29+0000
 Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 != 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n % 100 != 81 && n % 100 != 91);
 Generator: GlotPress/2.3.0-alpha
 Language: is
 -->
 <resources>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Jetpack viðbótin er tengd, en tölfræðieiningin er ekki virk. Hafðu samband við vefstjóra.</string>
+	<string name="jetpack_stats_module_disabled_message">Jetpack viðbótin er tengd, en tölfræðieiningin er ekki virk. Viltu virkja tölfræðina?</string>
+	<string name="jetpack_info">Jetpack upplýsingar</string>
 	<string name="reader_photo_by">Mynd eftir %s</string>
 	<string name="all_your_sites">Allir mínir vefir</string>
 	<string name="reader_label_visit">Heimsækja</string>
@@ -1130,11 +1133,11 @@ Language: is
 	<string name="posts">Færslur</string>
 	<string name="page">Síða</string>
 	<string name="post">Færsla</string>
-	<string name="featured">Nota sem einkennandi mynd</string>
 	<string name="anonymous">Nafnlaust</string>
 	<string name="caption">Myndatexti (valkvæmt)</string>
 	<string name="no_network_title">Ekkert net tiltækt</string>
 	<string name="featured_in_post">Hafa mynd með í efni færslu</string>
+	<string name="featured">Nota sem einkennismynd</string>
 	<string name="ok">Í lagi</string>
 	<string name="blogusername">bloggnotandanafn</string>
 	<string name="scaled_image">Breidd minnkaðrar myndar</string>
