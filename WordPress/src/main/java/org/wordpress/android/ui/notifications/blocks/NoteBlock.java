@@ -22,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtils;
@@ -43,6 +42,7 @@ public class NoteBlock {
     private boolean mIsBadge;
     private boolean mHasAnimatedBadge;
     private int mBackgroundColor;
+    protected ImageLoader mImageLoader;
 
     public interface OnNoteBlockTextClickListener {
         void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan);
@@ -51,9 +51,11 @@ public class NoteBlock {
         void showSitePreview(long siteId, String siteUrl);
     }
 
-    public NoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+    public NoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                     ImageLoader imageLoader) {
         mNoteData = noteObject;
         mOnNoteBlockTextClickListener = onNoteBlockTextClickListener;
+        mImageLoader = imageLoader;
     }
 
     OnNoteBlockTextClickListener getOnNoteBlockTextClickListener() {
@@ -69,8 +71,8 @@ public class NoteBlock {
     }
 
     Spannable getNoteText() {
-        return NotificationsUtils.getSpannableContentForRanges(mNoteData, null,
-                mOnNoteBlockTextClickListener, false);
+        return NotificationsUtils.getSpannableContentForRanges(mNoteData, null, mOnNoteBlockTextClickListener, false,
+                mImageLoader);
     }
 
     String getMetaHomeTitle() {
@@ -145,7 +147,7 @@ public class NoteBlock {
         if (hasImageMediaItem()) {
             // Request image, and animate it when loaded
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
-            WordPress.sImageLoader.get(getNoteMediaItem().optString("url", ""), new ImageLoader.ImageListener() {
+            mImageLoader.get(getNoteMediaItem().optString("url", ""), new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (!mHasAnimatedBadge && response.getBitmap() != null && view.getContext() != null) {

@@ -20,7 +20,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -51,7 +50,6 @@ import org.wordpress.android.modules.DaggerAppComponent;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.networking.WPImageLoader;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -99,14 +97,12 @@ public class WordPress extends MultiDexApplication {
     public static String versionName;
     public static WordPressDB wpDB;
 
-    public static ImageLoader sImageLoader;
-
     private static final int SECONDS_BETWEEN_SITE_UPDATE = 60 * 60; // 1 hour
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 15 * 60; // 15 minutes
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
-    private static BitmapLruCache mBitmapCache;
+    private static BitmapLruCache sBitmapCache;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -163,15 +159,16 @@ public class WordPress extends MultiDexApplication {
         }
     };
 
+    // TODO: remove this static method, replace it with injection
     public static BitmapLruCache getBitmapCache() {
-        if (mBitmapCache == null) {
+        if (sBitmapCache == null) {
             // The cache size will be measured in kilobytes rather than
             // number of items. See http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
             int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
             int cacheSize = maxMemory / 16;  //Use 1/16th of the available memory for this memory cache.
-            mBitmapCache = new BitmapLruCache(cacheSize);
+            sBitmapCache = new BitmapLruCache(cacheSize);
         }
-        return mBitmapCache;
+        return sBitmapCache;
     }
 
     @Override
@@ -241,9 +238,6 @@ public class WordPress extends MultiDexApplication {
         mDispatcher.register(this);
 
         RestClientUtils.setUserAgent(getUserAgent());
-
-        // Volley networking setup
-        setupImageLoader();
 
         // PasscodeLock setup
         if(!AppLockManager.getInstance().isAppLockFeatureEnabled()) {
@@ -321,12 +315,6 @@ public class WordPress extends MultiDexApplication {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
             NotificationsUpdateService.startService(getContext());
         }
-    }
-
-    public void setupImageLoader() {
-        sImageLoader = new WPImageLoader(mRequestQueue, getBitmapCache(), mAccessToken);
-        // http://stackoverflow.com/a/17035814
-        sImageLoader.setBatchedResponseDelay(0);
     }
 
     private void initWpDb() {
@@ -607,8 +595,8 @@ public class WordPress extends MultiDexApplication {
                     break;
             }
 
-            if (evictBitmaps && mBitmapCache != null) {
-                mBitmapCache.evictAll();
+            if (evictBitmaps && sBitmapCache != null) {
+                sBitmapCache.evictAll();
             }
         }
 

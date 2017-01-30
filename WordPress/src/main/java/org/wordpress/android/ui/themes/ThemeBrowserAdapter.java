@@ -20,9 +20,12 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.widgets.HeaderGridView;
+
+import javax.inject.Inject;
 
 /**
  * Adapter for the {@link ThemeBrowserFragment}'s listview
@@ -34,8 +37,12 @@ public class ThemeBrowserAdapter extends CursorAdapter {
     private final ThemeBrowserFragment.ThemeBrowserFragmentCallback mCallback;
     private int mViewWidth;
 
-    public ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery, ThemeBrowserFragment.ThemeBrowserFragmentCallback callback) {
+    @Inject FluxCImageLoader mImageLoader;
+
+    public ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery,
+                               ThemeBrowserFragment.ThemeBrowserFragmentCallback callback) {
         super(context, c, autoRequery);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
         mViewWidth = AppPrefs.getThemeImageSizeWidth();
@@ -122,7 +129,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             requestURL = screenshotURL;
         }
 
-        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, WordPress.sImageLoader);
+        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, mImageLoader);
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

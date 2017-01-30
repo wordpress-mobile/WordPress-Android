@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
@@ -162,8 +163,8 @@ public class NotificationsUtils {
         restClientUtilsV1_1.post("/devices/" + deviceID + "/delete", listener, errorListener);
     }
 
-    public static Spannable getSpannableContentForRanges(JSONObject subject) {
-        return getSpannableContentForRanges(subject, null, null, false);
+    public static Spannable getSpannableContentForRanges(JSONObject subject, ImageLoader imageLoader) {
+        return getSpannableContentForRanges(subject, null, null, false, imageLoader);
     }
 
     /**
@@ -176,7 +177,7 @@ public class NotificationsUtils {
      */
     public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
                                                          final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                                                         boolean isFooter) {
+                                                         boolean isFooter, ImageLoader imageLoader) {
         if (blockObject == null) {
             return new SpannableStringBuilder();
         }
@@ -187,7 +188,7 @@ public class NotificationsUtils {
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
         // Add ImageSpans for note media
-        addImageSpansForBlockMedia(textView, blockObject, spannableStringBuilder);
+        addImageSpansForBlockMedia(textView, blockObject, spannableStringBuilder, imageLoader);
 
         // Process Ranges to add links and text formatting
         JSONArray rangesArray = blockObject.optJSONArray("ranges");
@@ -243,7 +244,9 @@ public class NotificationsUtils {
     /**
      * Adds ImageSpans to the passed SpannableStringBuilder
      */
-    private static void addImageSpansForBlockMedia(TextView textView, JSONObject subject, SpannableStringBuilder spannableStringBuilder) {
+    private static void addImageSpansForBlockMedia(TextView textView, JSONObject subject,
+                                                   SpannableStringBuilder spannableStringBuilder,
+                                                   ImageLoader imageLoader) {
         if (textView == null || subject == null || spannableStringBuilder == null) return;
 
         Context context = textView.getContext();
@@ -260,7 +263,7 @@ public class NotificationsUtils {
         WPImageGetter imageGetter = new WPImageGetter(
                 textView,
                 context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
-                WordPress.sImageLoader,
+                imageLoader,
                 loading,
                 failed
         );

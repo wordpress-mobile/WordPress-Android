@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -22,6 +24,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
 
@@ -36,6 +40,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private final OnLoadMoreListener mOnLoadMoreListener;
     private final ArrayList<Note> mNotes = new ArrayList<>();
     private final ArrayList<Note> mFilteredNotes = new ArrayList<>();
+
+    @Inject FluxCImageLoader mImageLoader;
 
     public enum FILTERS {
         FILTER_ALL, FILTER_LIKE, FILTER_COMMENT, FILTER_UNREAD,
@@ -56,6 +62,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener) {
         super();
+        ((WordPress) context.getApplicationContext()).component().inject(this);
 
         mDataLoadedListener = dataLoadedListener;
         mOnLoadMoreListener = onLoadMoreListener;
@@ -254,7 +261,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
 
         // Subject is stored in db as html to preserve text formatting
-        CharSequence noteSubjectSpanned = note.getFormattedSubject();
+        CharSequence noteSubjectSpanned = note.getFormattedSubject(mImageLoader);
         // Trim the '\n\n' added by Html.fromHtml()
         noteSubjectSpanned = noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
         noteViewHolder.txtSubject.setText(noteSubjectSpanned);

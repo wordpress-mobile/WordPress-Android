@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.util.GravatarUtils;
@@ -30,8 +32,9 @@ public class UserNoteBlock extends NoteBlock {
             Context context,
             JSONObject noteObject,
             OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-            OnGravatarClickedListener onGravatarClickedListener) {
-        super(noteObject, onNoteBlockTextClickListener);
+            OnGravatarClickedListener onGravatarClickedListener,
+            ImageLoader imageLoader) {
+        super(noteObject, onNoteBlockTextClickListener, imageLoader);
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.notifications_avatar_sz));
         }

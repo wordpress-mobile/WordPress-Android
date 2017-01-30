@@ -23,6 +23,7 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -34,8 +35,6 @@ import java.util.HashSet;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import static org.wordpress.android.WordPress.sImageLoader;
 
 /**
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
@@ -70,6 +69,7 @@ public class WPNetworkImageView extends AppCompatImageView {
     private int mCropHeight;
 
     @Inject @Named("regular") RequestQueue mRequestQueue;
+    @Inject FluxCImageLoader mImageLoader;
 
     private static final HashSet<String> mUrlSkipList = new HashSet<>();
 
@@ -204,7 +204,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        ImageLoader.ImageContainer newContainer = sImageLoader.get(mUrl,
+        ImageLoader.ImageContainer newContainer = mImageLoader.get(mUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

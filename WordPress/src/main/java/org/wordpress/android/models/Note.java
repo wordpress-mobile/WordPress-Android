@@ -7,12 +7,15 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -25,6 +28,8 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
+
+import javax.inject.Inject;
 
 public class Note {
     private static final String TAG = "NoteModel";
@@ -52,6 +57,8 @@ public class Note {
     private JSONObject mNoteJSON;
     private final String mKey;
 
+    @Inject FluxCImageLoader mImageLoader;
+
     private final Object mSyncLock = new Object();
     private String mLocalStatus;
 
@@ -76,9 +83,8 @@ public class Note {
         mNoteJSON = noteJSON;
     }
 
-    public Note(JSONObject noteJSON){
-        mNoteJSON = noteJSON;
-        mKey = mNoteJSON.optString("id", "");
+    public Note(JSONObject noteJSON) {
+        this(noteJSON.optString("id", ""), noteJSON);
     }
 
     public JSONObject getJSON() {
@@ -191,8 +197,8 @@ public class Note {
         return null;
     }
 
-    public Spannable getFormattedSubject() {
-        return NotificationsUtils.getSpannableContentForRanges(getSubject());
+    public Spannable getFormattedSubject(ImageLoader imageLoader) {
+        return NotificationsUtils.getSpannableContentForRanges(getSubject(), imageLoader);
     }
 
     public String getTitle() {

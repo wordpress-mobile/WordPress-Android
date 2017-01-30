@@ -46,6 +46,7 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.Suggestion;
@@ -139,6 +140,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Inject CommentStore mCommentStore;
     @Inject SiteStore mSiteStore;
     @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+    @Inject FluxCImageLoader mImageLoader;
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -628,7 +630,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 WordPress.getContext()));
 
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz);
+        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz, mImageLoader);
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         if (mComment.getAuthorProfileImageUrl() != null) {

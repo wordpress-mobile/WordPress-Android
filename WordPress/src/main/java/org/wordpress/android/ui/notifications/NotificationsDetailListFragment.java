@@ -24,6 +24,7 @@ import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
@@ -67,6 +68,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private NoteBlockAdapter mNoteBlockAdapter;
 
     @Inject @Named("v1.1") RestClientUtils mRestClientUtilsV1_1;
+    @Inject FluxCImageLoader mImageLoader;
 
     public NotificationsDetailListFragment() {
     }
@@ -323,7 +325,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         mNote.getHeader(),
                         imageType,
                         mOnNoteBlockTextClickListener,
-                        mOnGravatarClickedListener
+                        mOnGravatarClickedListener,
+                        mImageLoader
                 );
 
                 headerNoteBlock.setIsComment(mNote.isCommentType());
@@ -358,7 +361,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         getActivity(),
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
-                                        mOnGravatarClickedListener
+                                        mOnGravatarClickedListener,
+                                        mImageLoader
                                 );
 
                                 // Set listener for comment status changes, so we can update bg and text colors
@@ -371,17 +375,18 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         getActivity(),
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
-                                        mOnGravatarClickedListener
+                                        mOnGravatarClickedListener,
+                                        mImageLoader
                                 );
                             }
                         } else if (isFooterBlock(noteObject)) {
-                            noteBlock = new FooterNoteBlock(noteObject, mOnNoteBlockTextClickListener);
+                            noteBlock = new FooterNoteBlock(noteObject, mOnNoteBlockTextClickListener, mImageLoader);
                             ((FooterNoteBlock)noteBlock).setClickableSpan(
                                     JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
                                     mNote.getType()
                             );
                         } else {
-                            noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
+                            noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener, mImageLoader);
                         }
 
                         // Badge notifications apply different colors and formatting

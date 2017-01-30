@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
@@ -29,8 +31,9 @@ public class HeaderNoteBlock extends NoteBlock {
 
     public HeaderNoteBlock(Context context, JSONArray headerArray, WPNetworkImageView.ImageType imageType,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                           UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
-        super(new JSONObject(), onNoteBlockTextClickListener);
+                           UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener,
+                           ImageLoader imageLoader) {
+        super(new JSONObject(), onNoteBlockTextClickListener, imageLoader);
 
         mHeaderArray = headerArray;
         mImageType = imageType;
@@ -54,7 +57,8 @@ public class HeaderNoteBlock extends NoteBlock {
     public View configureView(View view) {
         final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder)view.getTag();
 
-        Spannable spannable = NotificationsUtils.getSpannableContentForRanges(mHeaderArray.optJSONObject(0));
+        Spannable spannable = NotificationsUtils.getSpannableContentForRanges(mHeaderArray.optJSONObject(0),
+                mImageLoader);
         noteBlockHolder.nameTextView.setText(spannable);
 
         noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), mImageType);
