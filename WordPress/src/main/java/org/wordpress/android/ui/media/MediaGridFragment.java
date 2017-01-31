@@ -483,10 +483,9 @@ public class MediaGridFragment extends Fragment
     }
 
     public void updateFilterText() {
-        int countAll = mMediaStore.getSiteMediaCount(mSite);
-        int countImages = mMediaStore.getSiteImageCount(mSite);
-        int countUnattached = mMediaStore.getUnattachedSiteMediaCount(mSite);
-
+        int countAll = mMediaStore.getAllSiteMediaAsCursor(mSite).getCount();
+        int countImages = mMediaStore.getNotDeletedSiteImagesAsCursor(mSite).getCount();
+        int countUnattached = mMediaStore.getNotDeletedUnattachedMediaAsCursor(mSite).getCount();
         setFiltersText(countAll, countImages, countUnattached);
     }
 
