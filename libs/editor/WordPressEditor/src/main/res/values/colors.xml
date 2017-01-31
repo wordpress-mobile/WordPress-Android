@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <color name="legacy_format_bar_button_selected">#00aadc</color>
-    <color name="legacy_placeholder_content_text">#21759B</color>
-    <color name="legacy_format_bar_background">#eeeeee</color>
-    <color name="legacy_pressed_wordpress">#CC78C8E6</color>
+
+    <color name="format_bar_background">#f9fbfc</color>
+    <color name="format_bar_button_highlighted_color">@color/wp_blue</color>
+    <color name="format_bar_button_normal_color">@color/wp_gray_lighten_10</color>
+    <color name="format_bar_divider">@color/wp_gray_lighten_10</color>
+    <color name="format_bar_ripple_animation">@color/wp_gray_lighten_10</color>
 
     <color name="image_options_label">@color/wp_gray</color>
 
-    <color name="format_bar_button_normal_color">@color/wp_gray_lighten_10</color>
-    <color name="format_bar_button_highlighted_color">@color/wp_blue</color>
-    <color name="format_bar_background">#f9fbfc</color>
-    <color name="format_bar_ripple_animation">@color/wp_gray_lighten_10</color>
+    <color name="legacy_format_bar_background">#eeeeee</color>
+    <color name="legacy_format_bar_button_selected">#00aadc</color>
+    <color name="legacy_placeholder_content_text">#21759B</color>
+    <color name="legacy_pressed_wordpress">#CC78C8E6</color>
 
-    <color name="format_bar_divider">@color/wp_gray_lighten_10</color>
-    <color name="sourceview_separator">@color/wp_gray_lighten_30</color>
     <color name="sourceview_placeholder_text">@color/wp_gray</color>
+    <color name="sourceview_separator">@color/wp_gray_lighten_30</color>
+
+    <!-- AZTEC -->
+    <color name="bullet">@color/wp_grey_darken_30</color>
+    <color name="code">@color/text</color>
+    <color name="code_background">@color/wp_gray_light</color>
+    <color name="hint_text">@color/wp_gray</color>
+    <color name="link">@color/wp_blue_medium</color>
+    <color name="quote">@color/wp_gray</color>
+    <color name="quote_background">@color/wp_gray_lighten_30</color>
+    <color name="text">@color/wp_grey_darken_30</color>
+
 </resources>
