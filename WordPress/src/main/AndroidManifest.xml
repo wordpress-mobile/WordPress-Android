@@ -363,6 +363,7 @@
 
         <activity
             android:name=".ui.ShareIntentReceiverActivity"
+            android:excludeFromRecents="true"
             android:theme="@style/Calypso.FloatingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
