@@ -343,7 +343,7 @@
     <!-- pending draft local notifications -->
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
     <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
-    <string name="pending_draft_one_week_1">Your draft, \'%1$s\' awaits you - be sure to publish it!</string>
+    <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
     <string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
     <string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
     <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
