@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
@@ -145,8 +144,9 @@ public class MediaGridFragment extends Fragment
     private final OnItemSelectedListener mFilterSelectedListener = new OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            // need this to stop the bug where onItemSelected is called during initialization, before user input
+            // onItemSelected will be called during initialization, so ignore first call
             if (!mSpinnerHasLaunched) {
+                mSpinnerHasLaunched = true;
                 return;
             }
             if (position == Filter.CUSTOM_DATE.ordinal()) {
@@ -228,21 +228,10 @@ public class MediaGridFragment extends Fragment
 
         mResultView = (TextView) view.findViewById(R.id.media_filter_result_text);
 
+        mSpinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
         mSpinner = (CustomSpinner) view.findViewById(R.id.media_filter_spinner);
         mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
         mSpinner.setOnItemSelectedEvenIfUnchangedListener(mFilterSelectedListener);
-
-        mSpinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
-        mSpinnerContainer.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isInMultiSelect()) {
-                    mSpinnerHasLaunched = true;
-                    mSpinner.performClick();
-                }
-            }
-
-        });
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),

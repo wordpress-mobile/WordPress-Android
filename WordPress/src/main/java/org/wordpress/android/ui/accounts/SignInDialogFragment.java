@@ -24,6 +24,8 @@ import org.wordpress.android.widgets.WPTextView;
 
 import javax.inject.Inject;
 
+import static com.android.volley.Request.Method.HEAD;
+
 public class SignInDialogFragment extends DialogFragment {
     private static String ARG_TITLE = "title";
     private static String ARG_DESCRIPTION = "message";
@@ -192,8 +194,9 @@ public class SignInDialogFragment extends DialogFragment {
                         SignInFragment.ENTERED_URL_KEY));
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
                         SignInFragment.ENTERED_USERNAME_KEY));
+                Tag origin = (Tag) arguments.getSerializable(HelpshiftHelper.ORIGIN_KEY);
                 HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
-                        Tag.ORIGIN_LOGIN_SCREEN_ERROR, mAccountStore.getAccount().getUserName());
+                        origin, mAccountStore.getAccount().getUserName());
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_APPLICATION_LOG:

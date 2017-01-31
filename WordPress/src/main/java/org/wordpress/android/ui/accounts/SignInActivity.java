@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts;
 
-import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,7 +34,7 @@ import org.wordpress.android.util.AppLog.T;
 import javax.inject.Inject;
 
 public class SignInActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        MagicLinkRequestFragment.OnMagicLinkFragmentInteraction,
+        MagicLinkRequestFragment.OnMagicLinkFragmentInteraction, JetpackCallbacks,
         SignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int REQUEST_CODE = 5000;
@@ -54,6 +53,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
 
     private SmartLockHelper mSmartLockHelper;
     private ProgressDialog mProgressDialog;
+    private SiteModel mJetpackSite;
 
     @Inject SiteStore mSiteStore;
 
@@ -164,10 +164,10 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         if (extras != null) {
             actionMode = extras.getInt(EXTRA_START_FRAGMENT, -1);
             if (extras.containsKey(EXTRA_JETPACK_SITE_AUTH)) {
-                SiteModel jetpackSite = mSiteStore.getSiteByLocalId(extras.getInt(EXTRA_JETPACK_SITE_AUTH));
-                if (jetpackSite != null) {
+                mJetpackSite = mSiteStore.getSiteByLocalId(extras.getInt(EXTRA_JETPACK_SITE_AUTH));
+                if (mJetpackSite != null) {
                     String customMessage = extras.getString(EXTRA_JETPACK_MESSAGE_AUTH, null);
-                    getSignInFragment().setBlogAndCustomMessageForJetpackAuth(jetpackSite, customMessage);
+                    getSignInFragment().setBlogAndCustomMessageForJetpackAuth(mJetpackSite, customMessage);
                 }
             } else if (extras.containsKey(EXTRA_IS_AUTH_ERROR)) {
                 getSignInFragment().showAuthErrorMessage();
@@ -277,5 +277,15 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     public void onMagicLinkRequestSuccess(String email) {
         MagicLinkRequestFragment magicLinkRequestFragment = MagicLinkRequestFragment.newInstance(email);
         slideInFragment(magicLinkRequestFragment);
+    }
+
+    @Override
+    public boolean isJetpackAuth() {
+        return mJetpackSite != null;
+    }
+
+    @Override
+    public SiteModel getJetpackSite() {
+        return mJetpackSite;
     }
 }
