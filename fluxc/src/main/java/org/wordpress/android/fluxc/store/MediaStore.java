@@ -297,7 +297,7 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getAllSiteMediaAsCursor(siteModel);
     }
 
-    private static final List<String> NOT_DELETED_STATES = new ArrayList<>();
+    public static final List<String> NOT_DELETED_STATES = new ArrayList<>();
     static {
         NOT_DELETED_STATES.add(UploadState.DELETE.toString());
         NOT_DELETED_STATES.add(UploadState.FAILED.toString());
