@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +47,18 @@ public class MediaUploadService extends Service {
 
         public void addMediaToQueue(MediaModel media) {
             MediaUploadService.this.mQueue.add(media);
+            uploadNextInQueue();
         }
 
-        public boolean cancelUpload(boolean continueUploading) {
-            return MediaUploadService.this.cancelUpload();
+        public void cancelUpload(boolean continueUploading) {
+            MediaUploadService.this.cancelUpload();
+            if (continueUploading) {
+                uploadNextInQueue();
+            }
+        }
+
+        public List<MediaModel> getCompletedItems() {
+            return MediaUploadService.this.getCompletedItems();
         }
 
         public void setListener(MediaUploadCallback listener) {
@@ -58,12 +67,12 @@ public class MediaUploadService extends Service {
     }
 
     private final IBinder mBinder = new MediaUploadBinder();
-    private final List<MediaModel> mQueue = new ArrayList<>();
-    private final List<MediaModel> mCompletedItems = new ArrayList<>();
 
     private MediaUploadCallback mListener;
     private SiteModel mSite;
     private MediaModel mCurrentUpload;
+    private List<MediaModel> mQueue;
+    private List<MediaModel> mCompletedItems;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -78,8 +87,10 @@ public class MediaUploadService extends Service {
 
     @Override
     public void onDestroy() {
+        if (mCurrentUpload != null) {
+            cancelUpload();
+        }
         mDispatcher.unregister(this);
-        // TODO: if event not dispatched for ongoing upload cancel it and dispatch cancel event
         super.onDestroy();
     }
 
@@ -100,77 +111,126 @@ public class MediaUploadService extends Service {
         List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
         if (mediaList != null) {
             for (MediaModel media : mediaList) {
-                mQueue.add(media);
+                getUploadQueue().add(media);
             }
         }
 
-        if (mQueue.isEmpty()) {
+        if (getUploadQueue().isEmpty()) {
             // stop service if there are no media items in the queue
             stopSelf();
-        } else {
-            startQueuedUpload();
+            return START_NOT_STICKY;
         }
+
+        uploadNextInQueue();
 
         return START_REDELIVER_INTENT;
     }
 
-    public void startQueuedUpload() {
-        if (mQueue.isEmpty()) {
-            return;
-        }
-        performUpload(mQueue.get(0));
-    }
-
     @SuppressWarnings("unused")
     @Subscribe
-    public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
-        long mediaId = event.media.getMediaId();
-        MediaModel queueMedia = getQueueMediaWithId(mediaId);
-
-        // ignore if event media is not recognized
-        if (queueMedia == null || queueMedia.getMediaId() != mCurrentUpload.getMediaId()) {
-            AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + queueMedia);
+    public void onMediaUploaded(OnMediaUploaded event) {
+        // event for unknown media, ignoring
+        if (event.media == null || !matchesInProgressMedia(event.media)) {
+            AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
             return;
         }
 
         if (event.isError()) {
-            AppLog.w(AppLog.T.MEDIA, "Error uploading media: " + event.error.message);
-            queueMedia.setUploadState(MediaModel.UploadState.FAILED.toString());
-            completeMediaAndContinue(queueMedia);
-            if (mListener != null) {
-                mListener.onMediaError(event.error);
-            }
-        } else if (event.completed) {
-            AppLog.i(AppLog.T.MEDIA, event.media.getTitle() + " uploaded!");
-            completeMediaAndContinue(queueMedia);
-            if (mListener != null) {
-                mListener.onMediaUploaded(event.media);
-            }
+            handleOnMediaUploadedError(event);
         } else {
+            handleOnMediaUploadedSuccess(event);
         }
 
-        if (mQueue.isEmpty()) {
-            AppLog.v(AppLog.T.MEDIA, "All queued media processed.");
+        uploadNextInQueue();
+    }
+
+    public @NonNull List<MediaModel> getUploadQueue() {
+        if (mQueue == null) {
+            mQueue = new ArrayList<>();
+        }
+        return mQueue;
+    }
+
+    public @NonNull List<MediaModel> getCompletedItems() {
+        if (mCompletedItems == null) {
+            mCompletedItems = new ArrayList<>();
+        }
+        return mCompletedItems;
+    }
+
+    private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
+        if (event.progress == -1.f) {
+            // Upload canceled
+            AppLog.i(T.MEDIA, "Upload successfully canceled.");
+            if (mListener != null) {
+                mListener.onUploadCanceled(event.media);
+            }
+        } else if (event.completed) {
+            AppLog.i(T.MEDIA, event.media.getTitle() + " uploaded!");
+            mCurrentUpload.setMediaId(event.media.getMediaId());
+            completeCurrentUpload();
+            if (mListener != null) {
+                mListener.onUploadSuccess(event.media);
+            }
+        } else {
+            if (mListener != null) {
+                mListener.onUploadProgress(event.media, event.progress);
+            }
         }
     }
 
-    private void performUpload(@NonNull final MediaModel media) {
-        // do nothing if there is an upload in progress
+    private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
+        AppLog.w(T.MEDIA, "Error uploading media: " + event.error.message);
+        mCurrentUpload.setUploadState(MediaModel.UploadState.FAILED.toString());
+        completeCurrentUpload();
+        if (mListener != null) {
+            mListener.onUploadError(event.media, event.error);
+        }
+    }
+
+    private void uploadNextInQueue() {
+        // waiting for response to current upload request
         if (mCurrentUpload != null) {
+            AppLog.i(T.MEDIA, "Ignoring request to uploadNextInQueue, only one media item can be uploaded at a time.");
             return;
         }
 
-        // stop service if the site is null (shouldn't happen)
-        if (mSite == null || mQueue.isEmpty()) {
-            AppLog.v(AppLog.T.MEDIA, mSite == null ? "Site" : "Queue" + " not specified, stopping service.");
+        // somehow lost our reference to the site, stop service
+        if (mSite == null) {
+            AppLog.i(T.MEDIA, "Unexpected state, site is null. Stopping MediaUploadService.");
             stopSelf();
             return;
         }
 
-        mCurrentUpload = media;
+        mCurrentUpload = nextMediaToUpload();
 
-        // dispatch upload action
-        MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
+        if (mCurrentUpload == null) {
+            AppLog.v(T.MEDIA, "No more media items to upload. Stopping MediaUploadService.");
+            stopSelf();
+            return;
+        }
+
+        dispatchUploadAction(mCurrentUpload);
+    }
+
+    private void cancelUpload() {
+        if (mCurrentUpload != null) {
+            MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
+            mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+        }
+    }
+
+    private void completeCurrentUpload() {
+        if (mCurrentUpload != null) {
+            getCompletedItems().add(mCurrentUpload);
+            getUploadQueue().remove(mCurrentUpload);
+            mCurrentUpload = null;
+        }
+    }
+
+    private void dispatchUploadAction(final @NonNull MediaModel media) {
+        AppLog.i(T.MEDIA, "Dispatching upload action: " + media.getTitle());
+        MediaPayload payload = new MediaPayload(mSite, media);
         mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
         if (mListener != null) {
@@ -178,35 +238,16 @@ public class MediaUploadService extends Service {
         }
     }
 
-    private boolean cancelUpload() {
-        if (mCurrentUpload == null) {
-            return false;
+    private MediaModel nextMediaToUpload() {
+        if (!getUploadQueue().isEmpty()) {
+            return getUploadQueue().get(0);
         }
-
-        MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
-        mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
-        return true;
-    }
-
-    private MediaModel getQueueMediaWithId(long mediaId) {
-        for (MediaModel media : mQueue) {
-            if (media.getMediaId() == mediaId) {
-                return media;
-            }
-        }
-
         return null;
     }
 
-    private void completeMediaAndContinue(@NonNull MediaModel media) {
-        mCompletedItems.add(media);
-        mQueue.remove(media);
-        mCurrentUpload = null;
-        if (!mQueue.isEmpty()) {
-            performUpload(mQueue.get(0));
-        }
+    private boolean matchesInProgressMedia(final @NonNull MediaModel media) {
+        // TODO
+        return mCurrentUpload != null &&
+                media.getSiteId() == mCurrentUpload.getSiteId();
     }
-
-
-        }
 }

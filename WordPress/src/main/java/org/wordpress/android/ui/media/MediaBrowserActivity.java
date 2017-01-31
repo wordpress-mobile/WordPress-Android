@@ -708,9 +708,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 mPendingUploads.clear();
             }
-            if (mUploadService.getService() != null) {
-                mUploadService.getService().startQueuedUpload();
-            }
         }
 
         @Override

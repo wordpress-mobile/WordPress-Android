@@ -104,10 +104,10 @@ public class MediaDeleteService extends Service {
     public void onMediaChanged(OnMediaChanged event) {
         // event for unknown media, ignoring
         if (event.media == null || event.media.isEmpty() || !matchesInProgressMedia(event.media.get(0))) {
+            AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
             return;
         }
 
-        MediaModel media = event.media.get(0);
         if (event.isError()) {
             handleOnMediaChangedError(event);
         } else {
