@@ -80,6 +80,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String SHARABLE_URL = "sharable_url";
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
+    public static final String ALLOWED_URLS = "allowed_urls";
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
@@ -96,8 +97,9 @@ public class WPWebViewActivity extends WebViewActivity {
         openWPCOMURL(context, url);
     }
 
-    // Note: The webview has links disabled
-    public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url) {
+    // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
+    public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
+                                                     String[] listOfAllowedURLs) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -123,6 +125,7 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
+            intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(site, post));
         }
@@ -201,6 +204,13 @@ public class WPWebViewActivity extends WebViewActivity {
             }
             if (!TextUtils.isEmpty(authURL)) {
                 allowedURL.add(authURL);
+            }
+
+            if(extras.getStringArray(ALLOWED_URLS) != null) {
+                String[] urls = extras.getStringArray(ALLOWED_URLS);
+                for (String currentURL: urls) {
+                    allowedURL.add(currentURL);
+                }
             }
         }
 

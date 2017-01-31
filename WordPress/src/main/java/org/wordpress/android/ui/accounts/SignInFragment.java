@@ -70,7 +70,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
@@ -176,6 +175,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private boolean mIsActivityFinishing;
     private boolean mInhibitMagicLogin; // Prevent showing magic links as that is only applicable for initial sign in
     private boolean mIsMagicLinksEnabled = true;
+
+    private JetpackCallbacks mJetpackCallbacks;
 
     public interface OnMagicLinkRequestInteraction {
         void onMagicLinkRequestSuccess(String email);
@@ -334,6 +335,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mListener = (SignInFragment.OnMagicLinkRequestInteraction) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement OnMagicLinkRequestInteraction");
+        }
+        if (context instanceof JetpackCallbacks) {
+            mJetpackCallbacks = (JetpackCallbacks) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement JetpackCallbacks");
         }
     }
 
@@ -507,7 +513,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 // Used to pass data to an eventual support service
                 intent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
                 intent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_LOGIN_SCREEN_HELP);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
+                        (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
                 startActivity(intent);
             }
         };
@@ -643,7 +650,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     // Set blog for Jetpack auth
     public void setBlogAndCustomMessageForJetpackAuth(SiteModel site, String customAuthMessage) {
         mJetpackSite = site;
-        if(customAuthMessage != null && mJetpackAuthLabel != null) {
+        if (customAuthMessage != null && mJetpackAuthLabel != null) {
             mJetpackAuthLabel.setText(customAuthMessage);
         }
 
@@ -1092,6 +1099,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
         bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
         bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
+                (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
         nuxAlert.setArguments(bundle);
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
@@ -1130,7 +1139,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
                 SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG,
                 faqAction, faqId, faqSection);
-
+        Bundle bundle = nuxAlert.getArguments();
+        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
+                (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
+        nuxAlert.setArguments(bundle);
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
     }

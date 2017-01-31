@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-05 14:24:30+0000
+Translation-Revision-Date: 2017-01-25 09:45:38+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.3.0-alpha
 Language: fr
 -->
 <resources>
+	<string name="jetpack_stats_module_disabled_message_not_admin">L’extension Jetpack est connectée mais le module de Stats n’est pas actif. Contactez l’administrateur du site.</string>
+	<string name="jetpack_stats_module_disabled_message">L’extension Jetpack est connectée mais le module de Stats n’est pas actif. Voulez vous l’activer ?</string>
+	<string name="jetpack_info">Info jetpack</string>
 	<string name="reader_photo_by">Photo par %s</string>
 	<string name="reader_label_visit">Visitez</string>
 	<string name="all_your_sites">Tous Mes Sites</string>
@@ -15,7 +18,7 @@ Language: fr
 	<string name="no_default_app_available_to_open_link">Impossible d’ouvrir le lien</string>
 	<string name="notification_pending_drafts">Me notifier quand des brouillons sont en attente</string>
 	<string name="invalid_verification_code_format">Doit être un nombre à six chiffres</string>
-	<string name="confirm_discard_changes">Annuler les modifications non sauvegardées&amp;nbsp;?</string>
+	<string name="confirm_discard_changes">Annuler les modifications non sauvegardées ?</string>
 	<string name="swipe_for_more">Glissez pour plus</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Vous n’êtes pas autorisé à voir cet article. Essayez de vous connecter à WordPress.com ou utilisez le bouton en haut pour l’ouvrir dans le navigateur à la place.</string>
 	<string name="reader_err_get_post_not_authorized_signin">Vous n\'êtes pas autorisé à voir ce poste. Essayez de vous connecter à WordPress.com d\'abord.</string>
