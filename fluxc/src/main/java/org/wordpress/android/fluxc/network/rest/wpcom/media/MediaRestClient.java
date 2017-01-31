@@ -48,7 +48,7 @@ import okhttp3.OkHttpClient;
  *
  * <ul>
  *     <li>Fetch existing media from a WP.com site
- *     (via {@link #fetchAllMedia(SiteModel, MediaFilter)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
+ *     (via {@link #fetchAllMedia(SiteModel)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
  *     <li>Push new media to a WP.com site
  *     (via {@link #uploadMedia(SiteModel, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
@@ -60,6 +60,9 @@ import okhttp3.OkHttpClient;
 public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
     private Call mCurrentUploadCall;
+
+    private int mFetchAllOffset = 0;
+    private List<MediaModel> mFetchedMedia = new ArrayList<>();
 
     public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                            OkHttpClient okClient, AccessToken accessToken, UserAgent userAgent) {
@@ -121,24 +124,37 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchAllMedia(final SiteModel site, final MediaFilter filter) {
+    public void fetchAllMedia(final SiteModel site) {
         if (site == null) {
+            AppLog.w(T.MEDIA, "No site given with FETCH_ALL_MEDIA request, dispatching error.");
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyAllMediaFetched(null, null, error, filter);
+            notifyAllMediaFetched(null, null, error, null);
             return;
         }
 
+        final MediaFilter filter = new MediaFilter();
+        filter.number = MediaFilter.ALL_NUMBER;
+        final Map<String, String> params = new HashMap<>();
+        params.put("number", String.valueOf(MediaFilter.MAX_NUMBER));
+        params.put("offset", String.valueOf(mFetchAllOffset));
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
-        Map<String, String> params = getQueryParams(filter);
         add(WPComGsonRequest.buildGetRequest(url, params, MultipleMediaResponse.class,
                 new Listener<MultipleMediaResponse>() {
                     @Override
                     public void onResponse(MultipleMediaResponse response) {
-                        List<MediaModel> media = getMediaListFromRestResponse(response, site.getSiteId());
-                        if (media != null) {
-                            AppLog.v(T.MEDIA, "Fetched all media for site");
-                            notifyAllMediaFetched(site, media, null, filter);
+                        List<MediaModel> responseMedia = getMediaListFromRestResponse(response, site.getSiteId());
+                        if (responseMedia != null) {
+                            mFetchedMedia.addAll(responseMedia);
+                            if (responseMedia.size() < MediaFilter.MAX_NUMBER) {
+                                AppLog.v(T.MEDIA, "Fetched all media for site. count=" + mFetchedMedia.size());
+                                notifyAllMediaFetched(site, mFetchedMedia, null, filter);
+                                mFetchAllOffset = 0;
+                                mFetchedMedia = new ArrayList<>();
+                            } else {
+                                mFetchAllOffset += MediaFilter.MAX_NUMBER;
+                                fetchAllMedia(site);
+                            }
                         } else {
                             AppLog.w(T.MEDIA, "could not parse Fetch all media response: " + response);
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
@@ -416,68 +432,6 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
         if (!TextUtils.isEmpty(media.getAlt())) {
             params.put("alt", media.getAlt());
-        }
-        return params;
-    }
-
-    /**
-     * Query parameters are used by WP.com REST API endpoints to filter media.
-     */
-    private Map<String, String> getQueryParams(final MediaFilter filter) {
-        if (filter == null) return null;
-
-        final Map<String, String> params = new HashMap<>();
-        if (filter.fields != null && !filter.fields.isEmpty()) {
-            params.put("fields", TextUtils.join(",", filter.fields));
-        }
-        if (filter.number > 0) {
-            params.put("number", String.valueOf(filter.number));
-        }
-        if (filter.offset > 0) {
-            params.put("offset", String.valueOf(filter.offset));
-        }
-        if (filter.page > 0) {
-            params.put("page", String.valueOf(filter.page));
-        }
-        if (!TextUtils.isEmpty(filter.searchQuery)) {
-            params.put("search", filter.searchQuery);
-        }
-        if (filter.postId > 0) {
-            params.put("post_ID", String.valueOf(filter.postId));
-        }
-        if (!TextUtils.isEmpty(filter.mimeType)) {
-            params.put("mime_type", filter.mimeType);
-        }
-        if (!TextUtils.isEmpty(filter.after)) {
-            params.put("after", filter.after);
-        }
-        if (!TextUtils.isEmpty(filter.before)) {
-            params.put("before", filter.before);
-        }
-        if (filter.sortOrder != null) {
-            switch (filter.sortOrder) {
-                case ASCENDING:
-                    params.put("order", "ASC");
-                    break;
-                case DESCENDING:
-                default:
-                    params.put("order", "DESC");
-                    break;
-            }
-        }
-        if (filter.sortField != null) {
-            switch (filter.sortField) {
-                case TITLE:
-                    params.put("order_by", "title");
-                    break;
-                case ID:
-                    params.put("order_by", "ID");
-                    break;
-                case DATE:
-                default:
-                    params.put("order_by", "date");
-                    break;
-            }
         }
         return params;
     }
