@@ -31,8 +31,8 @@ import javax.inject.Singleton;
 @Singleton
 public class MediaStore extends Store {
     public static class MediaFilter {
-        public static final int MAX_NUMBER          = 100;
-        public static final long UNATTACHED_POST_ID = 0;
+        public static final int ALL_NUMBER = -1;
+        public static final int MAX_NUMBER = 100;
 
         public enum SortOrder {
             DESCENDING, ASCENDING
@@ -490,9 +490,9 @@ public class MediaStore extends Store {
 
     private void performFetchAllMedia(MediaListPayload payload) {
         if (payload.site.isWPCom()) {
-            mMediaRestClient.fetchAllMedia(payload.site, payload.filter);
+            mMediaRestClient.fetchAllMedia(payload.site);
         } else {
-            mMediaXmlrpcClient.fetchAllMedia(payload.site, payload.filter);
+            mMediaXmlrpcClient.fetchAllMedia(payload.site);
         }
     }
 
