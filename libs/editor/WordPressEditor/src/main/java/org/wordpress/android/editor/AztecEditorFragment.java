@@ -5,6 +5,9 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -17,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -32,6 +36,7 @@ import org.wordpress.aztec.Html;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.AztecToolbarClickListener;
+import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -239,6 +244,31 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
+        final String safeMediaUrl = Utils.escapeQuotes(mediaUrl);
+
+        if (URLUtil.isNetworkUrl(mediaUrl)) {
+            String mediaId = mediaFile.getMediaId();
+            if (mediaFile.isVideo()) {
+                // TODO: insert video
+            } else {
+                // TODO: insert image
+            }
+//            mActionStartedAt = System.currentTimeMillis();
+        } else {
+            String id = mediaFile.getMediaId();
+            if (mediaFile.isVideo()) {
+                // TODO: insert local video
+//                mUploadingMedia.put(id, MediaType.VIDEO);
+            } else {
+                AttributesImpl attrs = new AttributesImpl();
+                attrs.addAttribute("", "data-wpid", "data-wpid", "string", id);
+                attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
+
+                Bitmap bitmap = BitmapFactory.decodeFile(safeMediaUrl);
+                content.getLineBlockFormatter().insertMedia(new BitmapDrawable(getResources(), bitmap), attrs);
+//                mUploadingMedia.put(id, MediaType.IMAGE);
+            }
+        }
     }
 
     @Override
