@@ -137,9 +137,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static com.android.volley.Request.Method.HEAD;
-import static org.wordpress.android.R.string.post;
-
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
     public static final String EXTRA_POST = "postModel";
@@ -446,7 +443,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             AppLog.d(T.EDITOR, "Illegal state! Can't unregister receiver that was no registered");
         }
 
-        stopMediaUploadService();
         mHandler.removeCallbacks(mAutoSave);
         mHandler = null;
     }
@@ -1056,7 +1052,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         if (media != null) {
             trackAddMediaEvents(media.isVideo(), true);
-            // TODO: change signature of appendMediaFile to use MediaModel
+            mEditorFragment.appendMediaFile(WPStoreUtils.fromMediaModel(media), media.getUrl(), WordPress.imageLoader);
         }
     }
 
@@ -1327,7 +1323,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     } else {
                         mediaFile.setFileName(wpIS.getImageSource().toString());
                         mediaFile.setFilePath(wpIS.getImageSource().toString());
-                        // TODO: saveMediaFile
+                        updateMediaFileOnServer(mediaFile);
                     }
 
                     int tagStart = postContent.getSpanStart(wpIS);
