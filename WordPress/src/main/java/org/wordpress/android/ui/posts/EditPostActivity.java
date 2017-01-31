@@ -1051,7 +1051,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         if (media != null) {
             trackAddMediaEvents(media.isVideo(), true);
-            mEditorFragment.appendMediaFile(WPStoreUtils.fromMediaModel(media), media.getUrl(), WordPress.imageLoader);
+            mEditorFragment.appendMediaFile(WPStoreUtils.fromMediaModel(media), media.getUrl(), WordPress.sImageLoader);
         }
     }
 

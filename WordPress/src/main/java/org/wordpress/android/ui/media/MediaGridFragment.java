@@ -294,7 +294,7 @@ public class MediaGridFragment extends Fragment
             String tag = (String) imageView.getTag();
             if (tag != null && tag.startsWith("http")) {
                 // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.imageLoader.get(tag, new ImageListener() {
+                ImageContainer container = WordPress.sImageLoader.get(tag, new ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) { }
 
@@ -588,7 +588,7 @@ public class MediaGridFragment extends Fragment
         mGridView.requestFocusFromTouch();
         mGridView.setSelection(0);
         // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter.setImageLoader(WordPress.imageLoader);
+        mGridAdapter.setImageLoader(WordPress.sImageLoader);
         mGridAdapter.changeCursor(null);
         resetSpinnerAdapter();
         mHasRetrievedAllMedia = false;
@@ -682,21 +682,6 @@ public class MediaGridFragment extends Fragment
         mFiltersText[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
         mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
         mFiltersText[3] = getResources().getString(R.string.custom_date) + "...";
-    }
-
-    /*
-     * called by activity when blog is changed
-     */
-    protected void reset() {
-        mGridAdapter.clearSelection();
-        mGridView.setSelection(0);
-        mGridView.requestFocusFromTouch();
-        mGridView.setSelection(0);
-        // TOOD: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter.setImageLoader(WordPress.sImageLoader);
-        mGridAdapter.changeCursor(null);
-        resetSpinnerAdapter();
-        mHasRetrievedAllMedia = false;
     }
 
     private void updateActionButtons(int selectCount) {
