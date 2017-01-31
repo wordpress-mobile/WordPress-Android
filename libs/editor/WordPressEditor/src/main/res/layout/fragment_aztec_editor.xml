@@ -64,7 +64,6 @@
                     android:paddingStart="16dp"
                     android:paddingTop="16dp"
                     android:scrollbars="vertical"
-                    android:textCursorDrawable="?attr/textColor"
                     aztec:bulletColor="@color/bullet"
                     aztec:bulletMargin="@dimen/bullet_margin"
                     aztec:bulletPadding="@dimen/bullet_padding"
