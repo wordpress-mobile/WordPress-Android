@@ -5,13 +5,7 @@ public class ApiHelper {
         public static final String GET_POST_FORMATS = "wp.getPostFormats";
         public static final String GET_CATEGORIES = "wp.getCategories";
         public static final String GET_OPTIONS = "wp.getOptions";
-        public static final String GET_TERM = "wp.getTerm";
-
-
-        public static final String NEW_CATEGORY = "wp.newCategory";
-
         public static final String SET_OPTIONS = "wp.setOptions";
-
         public static final String UPLOAD_FILE = "wp.uploadFile";
     }
 

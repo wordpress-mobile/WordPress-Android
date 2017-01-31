@@ -39,6 +39,10 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
+import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
@@ -379,7 +383,7 @@ public class MediaGridFragment extends Fragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+    public void onMediaChanged(OnMediaChanged event) {
         if (event.isError()) {
             handleFetchAllMediaError(event.error.type);
             return;
@@ -797,16 +801,16 @@ public class MediaGridFragment extends Fragment
             mGridAdapter.setRefreshing(true);
 
             // TODO: figure out how to integrate `auto` to callback
-            MediaStore.MediaFilter fetchFilter = new MediaStore.MediaFilter();
+            MediaFilter fetchFilter = new MediaFilter();
             fetchFilter.offset = mMediaFetchOffset;
             fetchFilter.number = NUM_PER_FETCH;
             mMediaFetchOffset += NUM_PER_FETCH;
-            MediaStore.MediaListPayload payload = new MediaStore.MediaListPayload(mSite, null, fetchFilter);
+            MediaListPayload payload = new MediaListPayload(mSite, null, fetchFilter);
             mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
         }
     }
 
-    private void handleFetchAllMediaSuccess(MediaStore.OnMediaChanged event) {
+    private void handleFetchAllMediaSuccess(OnMediaChanged event) {
         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
 
         Cursor mediaCursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
@@ -836,9 +840,9 @@ public class MediaGridFragment extends Fragment
         }
     }
 
-    private void handleFetchAllMediaError(MediaStore.MediaErrorType errorType) {
+    private void handleFetchAllMediaError(MediaErrorType errorType) {
         AppLog.e(AppLog.T.MEDIA, "Media error occurred: " + errorType);
-        final boolean isPermissionError = (errorType == MediaStore.MediaErrorType.UNAUTHORIZED);
+        final boolean isPermissionError = (errorType == MediaErrorType.UNAUTHORIZED);
         if (getActivity() != null) {
             if (!isPermissionError) {
                 ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media),

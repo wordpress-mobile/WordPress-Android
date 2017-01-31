@@ -88,7 +88,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
-import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
@@ -1493,8 +1492,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO ||
-                requestCode == RequestCodes.TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
                 case MediaGalleryActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
@@ -1717,7 +1715,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private MediaUploadService.MediaUploadBinder mUploadService;
-    private MediaDeleteService.MediaDeleteBinder mDeleteService;
 
     private ServiceConnection mUploadConnection = new ServiceConnection() {
         @Override
@@ -1728,18 +1725,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mUploadService = null;
-        }
-    };
-
-    private ServiceConnection mDeleteConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mDeleteService = (MediaDeleteService.MediaDeleteBinder) service;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mDeleteService = null;
         }
     };
 
