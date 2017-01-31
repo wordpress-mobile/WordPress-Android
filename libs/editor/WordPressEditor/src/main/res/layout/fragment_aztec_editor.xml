@@ -76,7 +76,7 @@
                     aztec:linkColor="@color/link"
                     aztec:lineSpacingExtra="@dimen/spacing_extra_body"
                     aztec:lineSpacingMultiplier="@dimen/spacing_multiplier_body"
-                    aztec:linkUnderline="false"
+                    aztec:linkUnderline="true"
                     aztec:quoteBackground="@color/quote_background"
                     aztec:quoteColor="@color/quote"
                     aztec:quoteMargin="@dimen/quote_margin"
