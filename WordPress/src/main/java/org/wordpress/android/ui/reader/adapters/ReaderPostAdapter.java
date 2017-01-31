@@ -201,6 +201,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
                 int color = itemView.getContext().getResources().getColor(R.color.grey_dark);
                 txtAuthorAndBlogName.setTextColor(color);
+                // remove the ripple background
+                postHeaderView.setBackground(null);
             } else {
                 postHeaderView.setOnClickListener(new View.OnClickListener() {
                     @Override
