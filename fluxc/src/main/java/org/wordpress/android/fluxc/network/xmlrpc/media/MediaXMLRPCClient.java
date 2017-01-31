@@ -62,6 +62,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     // track the network call to support cancelling
     private Call mCurrentUploadCall;
 
+    private int mFetchAllOffset = 0;
+    private List<MediaModel> mFetchedMedia = new ArrayList<>();
+
     public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okClient,
                              AccessToken accessToken, UserAgent userAgent,
                              HTTPAuthManager httpAuthManager) {
@@ -107,6 +110,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             }));
     }
 
+    /**
+     * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.uploadFile
+     */
     public void uploadMedia(SiteModel site, final MediaModel media) {
         URL xmlrpcUrl;
         try {
@@ -176,18 +182,39 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         });
     }
 
-    public void fetchAllMedia(final SiteModel site, final MediaFilter filter) {
-        List<Object> params = getBasicParams(site, null);
-        if (filter != null) {
-            params.add(getQueryParams(filter));
+    /**
+     * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
+     */
+    public void fetchAllMedia(final SiteModel site) {
+        if (site == null) {
+            AppLog.w(T.MEDIA, "No site given with FETCH_ALL_MEDIA request, dispatching error.");
+            // caller may be expecting a notification
+            MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            notifyAllMediaFetched(null, null, error, null);
+            return;
         }
+
+        List<Object> params = getBasicParams(site, null);
+        final MediaFilter filter = new MediaFilter();
+        filter.number = MediaFilter.MAX_NUMBER;
+        filter.offset = mFetchAllOffset;
+        params.add(getQueryParams(filter));
+
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params, new Listener() {
             @Override
             public void onResponse(Object response) {
-                List<MediaModel> media = getMediaListFromXmlrpcResponse(response, site.getSelfHostedSiteId());
-                if (media != null) {
-                    AppLog.v(T.MEDIA, "Fetched all media for site via XMLRPC.GET_MEDIA_LIBRARY");
-                    notifyAllMediaFetched(site, media, null, filter);
+                List<MediaModel> responseMedia = getMediaListFromXmlrpcResponse(response, site.getSelfHostedSiteId());
+                if (responseMedia != null) {
+                    mFetchedMedia.addAll(responseMedia);
+                    if (responseMedia.size() < MediaFilter.MAX_NUMBER) {
+                        AppLog.v(T.MEDIA, "Fetched all media for site via XMLRPC.GET_MEDIA_LIBRARY");
+                        notifyAllMediaFetched(site, mFetchedMedia, null, filter);
+                        mFetchAllOffset = 0;
+                        mFetchedMedia = new ArrayList<>();
+                    } else {
+                        mFetchAllOffset += MediaFilter.MAX_NUMBER;
+                        fetchAllMedia(site);
+                    }
                 } else {
                     AppLog.w(T.MEDIA, "could not parse XMLRPC.GET_MEDIA_LIBRARY response: " + response);
                     MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
@@ -204,6 +231,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }));
     }
 
+    /**
+     * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaItem
+     */
     public void fetchMedia(final SiteModel site, final MediaModel media) {
         if (site == null || media == null) {
             // caller may be expecting a notification
