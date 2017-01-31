@@ -31,12 +31,14 @@ import org.wordpress.aztec.AztecText;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
+import org.wordpress.aztec.toolbar.AztecToolbarClickListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AztecEditorFragment extends EditorFragmentAbstract implements OnImeBackListener, EditorMediaUploadListener {
+public class AztecEditorFragment extends EditorFragmentAbstract implements OnImeBackListener, EditorMediaUploadListener,
+        AztecToolbarClickListener {
 
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
@@ -55,6 +57,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     private AztecText title;
     private AztecText content;
     private SourceViewEditText source;
+    private AztecToolbar formattingToolbar;
     private Html.ImageGetter imageLoader;
 
     public static AztecEditorFragment newInstance(String title, String content) {
@@ -82,8 +85,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         content = (AztecText)view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
-        AztecToolbar formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
+        formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         formattingToolbar.setEditor(content, source);
+        formattingToolbar.setToolbarListener(this);
 
         // initialize the text & HTML
         source.history = content.history;
@@ -95,6 +99,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         source.setOnDragListener(mOnDragListener);
 
         setHasOptionsMenu(true);
+
+        registerForContextMenu(formattingToolbar);
 
         return view;
     }
@@ -449,4 +455,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
     };
 
+    @Override
+    public void onToolbarAddMediaClicked() {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+
+        if (isActionInProgress()) {
+            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
+            return;
+        }
+
+        if (source.isFocused()) {
+            ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
+        } else {
+            mEditorFragmentListener.onAddMediaClicked();
+            getActivity().openContextMenu(formattingToolbar);
+        }
+    }
 }
