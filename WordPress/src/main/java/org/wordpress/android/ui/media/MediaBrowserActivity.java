@@ -949,6 +949,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void startMediaUploadService(ArrayList<MediaModel> mediaToUpload) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            AppLog.v(AppLog.T.MEDIA, "Unable to start MediaUploadService, internet connection required.");
+            return;
+        }
+
         if (mUploadService != null) {
             if (mediaToUpload != null && !mediaToUpload.isEmpty()) {
                 for (MediaModel media : mediaToUpload) {
