@@ -290,7 +290,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+        activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
     public static void viewMediaGalleryPickerForSiteAndMediaIds(Activity activity, @NonNull SiteModel site,
