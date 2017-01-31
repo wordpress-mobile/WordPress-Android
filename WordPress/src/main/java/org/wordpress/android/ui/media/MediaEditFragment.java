@@ -111,7 +111,7 @@ public class MediaEditFragment extends Fragment {
 
         setHasOptionsMenu(true);
         // TODO: We want to inject the image loader in this class instead of using a static field.
-        mImageLoader = WordPress.imageLoader;
+        mImageLoader = WordPress.sImageLoader;
 
         // retain this fragment across configuration changes
         setRetainInstance(true);

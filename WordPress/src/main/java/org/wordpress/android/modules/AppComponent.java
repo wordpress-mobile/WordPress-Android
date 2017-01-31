@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseStoreModule;
+import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -89,7 +90,9 @@ import dagger.Component;
         AppSecretsModule.class,
         ReleaseBaseModule.class,
         ReleaseNetworkModule.class,
-        ReleaseStoreModule.class
+        ReleaseStoreModule.class,
+        LegacyModule.class,
+        ReleaseToolsModule.class
 })
 public interface AppComponent {
     void inject(WordPress application);

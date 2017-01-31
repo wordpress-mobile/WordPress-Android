@@ -224,8 +224,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (mDroppedMediaUris != null) {
                 final List<Uri> mediaUris = mDroppedMediaUris;
                 mDroppedMediaUris = null;
-
-                fetchMedia(mediaUris);
+                EditPostActivity.this.fetchMedia(mediaUris);
             }
         }
     };
@@ -336,7 +335,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mHasSetPostContent = mEditorFragment != null) {
-            mEditorFragment.setImageLoader(WordPress.imageLoader);
+            mEditorFragment.setImageLoader(WordPress.sImageLoader);
         }
 
         // Ensure we have a valid post
@@ -1459,7 +1458,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         MediaFile mediaFile = queueFileForUpload(path, new ArrayList<Long>());
         if (mediaFile != null) {
-            mEditorFragment.appendMediaFile(mediaFile, path, WordPress.imageLoader);
+            mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
         }
 
         return true;
@@ -1480,7 +1479,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mediaUri.getEncodedPath() != null) {
             mediaFile.setVideo(isVideo);
         }
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.sImageLoader);
         return true;
     }
 

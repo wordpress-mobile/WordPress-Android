@@ -33,7 +33,7 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         if (imageLoader != null) {
             mImageLoader = imageLoader;
         } else {
-            mImageLoader = WordPress.imageLoader;
+            mImageLoader = WordPress.sImageLoader;
         }
     }
 

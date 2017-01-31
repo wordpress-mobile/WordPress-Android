@@ -127,6 +127,7 @@ dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
     compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~missing-integration-functionality-SNAPSHOT') {
+//    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~fluxc-image-loader-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 

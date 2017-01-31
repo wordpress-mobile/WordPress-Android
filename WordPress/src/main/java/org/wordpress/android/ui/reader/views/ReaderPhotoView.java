@@ -122,7 +122,7 @@ public class ReaderPhotoView extends RelativeLayout {
 
         showProgress();
 
-        mLoResContainer = WordPress.imageLoader.get(mLoResImageUrl,
+        mLoResContainer = WordPress.sImageLoader.get(mLoResImageUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -156,7 +156,7 @@ public class ReaderPhotoView extends RelativeLayout {
         Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
         int maxSize = Math.max(pt.x, pt.y);
 
-        mHiResContainer = WordPress.imageLoader.get(mHiResImageUrl,
+        mHiResContainer = WordPress.sImageLoader.get(mHiResImageUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

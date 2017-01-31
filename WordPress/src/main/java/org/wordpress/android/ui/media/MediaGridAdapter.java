@@ -89,7 +89,7 @@ public class MediaGridAdapter extends CursorAdapter {
         if (imageLoader != null) {
             mImageLoader = imageLoader;
         } else {
-            mImageLoader = WordPress.imageLoader;
+            mImageLoader = WordPress.sImageLoader;
         }
     }
 
