@@ -144,7 +144,6 @@ public class ReaderBlogFragment extends Fragment
             }
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                setSearchFilter(null);
                 return true;
             }
         });
@@ -181,6 +180,7 @@ public class ReaderBlogFragment extends Fragment
 
     private void setSearchFilter(String constraint) {
         mSearchFilter = constraint;
+        AppLog.w(AppLog.T.READER, "reader subs > search: " + constraint);
         getBlogAdapter().setSearchFilter(constraint);
     }
 
