@@ -30,6 +30,7 @@ public class ReaderBlogFragment extends Fragment
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
     private String mSearchFilter;
+    private boolean mIgnoreNextSearch;
 
     private static final String ARG_BLOG_TYPE = "blog_type";
     private static final String KEY_SEARCH_FILTER = "search_filter";
@@ -54,6 +55,7 @@ public class ReaderBlogFragment extends Fragment
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.READER, "reader blog fragment > restoring instance state");
+            mIgnoreNextSearch = true;
             restoreState(savedInstanceState);
         }
     }
@@ -156,7 +158,13 @@ public class ReaderBlogFragment extends Fragment
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (!TextUtils.isEmpty(newText)) {
+                // when the fragment is recreated this will be called with an empty query
+                // string, causing the existing search query to be lost - work around this
+                // by ignoring the next search performed after recreation
+                if (mIgnoreNextSearch) {
+                    mIgnoreNextSearch = false;
+                    AppLog.i(AppLog.T.READER, "reader subs > ignoring search");
+                } else {
                     setSearchFilter(newText);
                 }
                 return false;
@@ -180,7 +188,6 @@ public class ReaderBlogFragment extends Fragment
 
     private void setSearchFilter(String constraint) {
         mSearchFilter = constraint;
-        AppLog.w(AppLog.T.READER, "reader subs > search: " + constraint);
         getBlogAdapter().setSearchFilter(constraint);
     }
 
