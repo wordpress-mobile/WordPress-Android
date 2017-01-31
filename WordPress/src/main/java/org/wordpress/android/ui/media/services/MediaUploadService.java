@@ -3,7 +3,6 @@ package org.wordpress.android.ui.media.services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 
@@ -30,8 +29,6 @@ public class MediaUploadService extends Service {
     public static final String SITE_KEY = "mediaSite";
     public static final String MEDIA_LIST_KEY = "mediaList";
 
-    private static final long PROGRESS_TIMEOUT_MS = 30 * 1000;
-
     public interface MediaUploadCallback {
         void onUploadBegin(MediaModel media);
         void onMediaUploaded(MediaModel media);
@@ -56,7 +53,6 @@ public class MediaUploadService extends Service {
         }
     }
 
-    private final Handler mHandler = new Handler();
     private final IBinder mBinder = new MediaUploadBinder();
     private final List<MediaModel> mQueue = new ArrayList<>();
     private final List<MediaModel> mCompletedItems = new ArrayList<>();
@@ -64,7 +60,6 @@ public class MediaUploadService extends Service {
     private MediaUploadCallback mListener;
     private SiteModel mSite;
     private MediaModel mCurrentUpload;
-    private long mLastProgressUpdate;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -120,7 +115,6 @@ public class MediaUploadService extends Service {
             return;
         }
         performUpload(mQueue.get(0));
-        mHandler.postDelayed(mFailsafeRunnable, PROGRESS_TIMEOUT_MS);
     }
 
     @SuppressWarnings("unused")
@@ -149,7 +143,6 @@ public class MediaUploadService extends Service {
                 mListener.onMediaUploaded(event.media);
             }
         } else {
-            mLastProgressUpdate = System.currentTimeMillis();
         }
 
         if (mQueue.isEmpty()) {
@@ -166,7 +159,6 @@ public class MediaUploadService extends Service {
         // stop service if the site is null (shouldn't happen)
         if (mSite == null || mQueue.isEmpty()) {
             AppLog.v(AppLog.T.MEDIA, mSite == null ? "Site" : "Queue" + " not specified, stopping service.");
-            mHandler.removeCallbacks(mFailsafeRunnable);
             stopSelf();
             return;
         }
@@ -211,15 +203,6 @@ public class MediaUploadService extends Service {
         }
     }
 
-    private final Runnable mFailsafeRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mCurrentUpload != null && System.currentTimeMillis() - mLastProgressUpdate > PROGRESS_TIMEOUT_MS) {
-                AppLog.w(AppLog.T.MEDIA, PROGRESS_TIMEOUT_MS + "ms since last server message, starting next upload.");
-                completeMediaAndContinue(mCurrentUpload);
-            }
 
-            mHandler.postDelayed(mFailsafeRunnable, PROGRESS_TIMEOUT_MS);
         }
-    };
 }
