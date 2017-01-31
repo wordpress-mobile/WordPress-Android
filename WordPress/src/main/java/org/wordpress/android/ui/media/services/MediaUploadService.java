@@ -13,7 +13,9 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
@@ -31,8 +33,10 @@ public class MediaUploadService extends Service {
 
     public interface MediaUploadCallback {
         void onUploadBegin(MediaModel media);
-        void onMediaUploaded(MediaModel media);
-        void onMediaError(MediaStore.MediaError error);
+        void onUploadSuccess(MediaModel media);
+        void onUploadCanceled(MediaModel media);
+        void onUploadError(MediaModel media, MediaError error);
+        void onUploadProgress(MediaModel media, float progress);
     }
 
     public class MediaUploadBinder extends Binder {

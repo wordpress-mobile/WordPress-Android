@@ -55,6 +55,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -508,13 +509,23 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onMediaUploaded(MediaModel media) {
+    public void onUploadSuccess(MediaModel media) {
         // TODO: update UI
     }
 
     @Override
-    public void onMediaError(MediaStore.MediaError error) {
+    public void onUploadCanceled(MediaModel media) {
+        // TODO
+    }
+
+    @Override
+    public void onUploadError(MediaModel media, MediaError error) {
         // TODO: update UI
+    }
+
+    @Override
+    public void onUploadProgress(MediaModel media, float progress) {
+        // TODO
     }
 
     @SuppressWarnings("unused")
