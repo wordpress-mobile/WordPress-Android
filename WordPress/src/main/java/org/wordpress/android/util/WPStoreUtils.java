@@ -15,6 +15,10 @@ public class WPStoreUtils {
     }
 
     public static MediaModel fromMediaFile(MediaFile file) {
+        if (file == null) {
+            return null;
+        }
+
         MediaModel mediaModel = new MediaModel();
         mediaModel.setFileName(file.getFileName());
         mediaModel.setFilePath(file.getFilePath());
@@ -28,5 +32,24 @@ public class WPStoreUtils {
         mediaModel.setUploadState(file.getUploadState());
         mediaModel.setSiteId(Long.valueOf(file.getBlogId()));
         return mediaModel;
+    }
+
+    public static MediaFile fromMediaModel(MediaModel media) {
+        if (media == null) {
+            return  null;
+        }
+
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setBlogId(String.valueOf(media.getSiteId()));
+        mediaFile.setMediaId(String.valueOf(media.getMediaId()));
+        mediaFile.setFileName(media.getFileName());
+        mediaFile.setFilePath(media.getFilePath());
+        mediaFile.setMimeType(media.getMimeType());
+        mediaFile.setThumbnailURL(media.getThumbnailUrl());
+        mediaFile.setTitle(media.getTitle());
+        mediaFile.setDescription(media.getDescription());
+        mediaFile.setCaption(media.getCaption());
+        mediaFile.setUploadState(media.getUploadState());
+        return mediaFile;
     }
 }
