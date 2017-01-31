@@ -53,7 +53,7 @@ public class SiteWPComRestResponse extends Payload implements Response {
         public Links links;
     }
 
-    public int ID;
+    public long ID;
     public String URL;
     public String name;
     public String description;
