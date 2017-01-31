@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.media;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import com.wellsql.generated.MediaModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -14,6 +15,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
@@ -22,6 +24,8 @@ import org.wordpress.android.fluxc.utils.MediaUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static org.wordpress.android.fluxc.store.MediaStore.NOT_DELETED_STATES;
 
 @RunWith(RobolectricTestRunner.class)
 public class MediaSqlUtilsTest {
@@ -313,11 +317,69 @@ public class MediaSqlUtilsTest {
         Assert.assertEquals(SMALL_TEST_POOL + 1, media.get(0).getMediaId());
     }
 
+    @Test
+    public void testGetNotDeletedUnattachedMediaAsCursor() {
+        SiteModel site = getTestSiteWithId(TEST_SITE_ID);
+
+        // Insert media
+        insertBasicTestItems(SMALL_TEST_POOL);
+
+        // Insert one deleted media
+        MediaModel image = getTestMedia(42);
+        image.setUploadState(UploadState.DELETED.toString());
+        Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(image));
+
+        Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils.getMediaWithStates(site, NOT_DELETED_STATES).getCount());
+    }
+
+    @Test
+    public void testGetNotDeletedSiteMediaAsCursor() {
+        SiteModel site = getTestSiteWithId(TEST_SITE_ID);
+
+        // Insert media
+        insertBasicTestItems(SMALL_TEST_POOL);
+
+        // Insert one detached but deleted media
+        MediaModel media = getTestMedia(42);
+        media.setUploadState(UploadState.DELETED.toString());
+        Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(media));
+
+        // Insert one attached media
+        media = getTestMedia(43);
+        media.setUploadState(UploadState.UPLOADED.toString());
+        media.setPostId(42);
+
+        Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(media));
+        Cursor c = MediaSqlUtils.getUnattachedMediaWithStates(site, NOT_DELETED_STATES);
+        Assert.assertEquals(SMALL_TEST_POOL, c.getCount());
+    }
+
+    @Test
+    public void testGetNotDeletedSiteImagesAsCursor() {
+        SiteModel site = getTestSiteWithId(TEST_SITE_ID);
+
+        // Insert images
+        insertImageTestItems(SMALL_TEST_POOL);
+
+        // Insert one deleted image
+        MediaModel image = getTestMedia(42);
+        image.setMimeType(MediaUtils.MIME_TYPE_IMAGE + "jpg");
+        image.setUploadState(UploadState.DELETED.toString());
+        Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(image));
+
+        Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils.getImagesWithStates(site, NOT_DELETED_STATES).getCount());
+        Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils.getMediaWithStates(site, NOT_DELETED_STATES).getCount());
+    }
+
+    // Utilities
+
     private long[] insertBasicTestItems(int num) {
         long[] testItemIds = new long[num];
         for (int i = 0; i < num; ++i) {
             testItemIds[i] = mRandom.nextLong();
-            Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(getTestMedia(testItemIds[i])));
+            MediaModel media = getTestMedia(testItemIds[i]);
+            media.setUploadState(UploadState.UPLOADED.toString());
+            Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(media));
         }
         return testItemIds;
     }
@@ -325,9 +387,10 @@ public class MediaSqlUtilsTest {
     private long[] insertImageTestItems(int num) {
         long[] testItemIds = new long[num];
         for (int i = 0; i < num; ++i) {
-            testItemIds[i] = mRandom.nextLong();
+            testItemIds[i] = Math.abs(mRandom.nextInt());
             MediaModel image = getTestMedia(testItemIds[i]);
             image.setMimeType(MediaUtils.MIME_TYPE_IMAGE + "jpg");
+            image.setUploadState(UploadState.UPLOADED.toString());
             Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(image));
         }
         return testItemIds;
