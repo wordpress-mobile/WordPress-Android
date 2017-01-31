@@ -128,8 +128,8 @@ public class MediaSqlUtils {
     public static SelectQuery<MediaModel> getMediaExcludingQuery(SiteModel site, String column, Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.SITE_ID, site.getSiteId())
                 .not().equals(column, value)
+                .equals(MediaModelTable.SITE_ID, site.getSiteId())
                 .endGroup().endWhere();
     }
 
