@@ -1501,6 +1501,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
+                    uploadMedia(imageUri);
                     fetchMedia(Arrays.asList(imageUri));
                     break;
                 case RequestCodes.TAKE_PHOTO:
@@ -1533,6 +1534,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     }
                     break;
             }
+        }
+    }
+
+    private List<MediaModel> mPendingUploads = new ArrayList<>();
+
+    private void uploadMedia(Uri uri) {
+        MediaModel media = new MediaModel();
+        media.setFilePath(uri.getPath());
+        media.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(media.getFilePath()));
+        media.setFileName(org.wordpress.android.fluxc.utils.MediaUtils.getFileName(media.getFilePath()));
+        media.setMimeType(org.wordpress.android.fluxc.utils.MediaUtils.getMimeTypeForExtension(media.getFileExtension()));
+        media.setSiteId(mSite.getSiteId());
+        media.setTitle(media.getFileName());
+        if (mUploadService != null) {
+            mUploadService.addMediaToQueue(media);
+        } else {
+            mPendingUploads.add(media);
+            startMediaUploadService();
         }
     }
 
@@ -1715,6 +1734,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mUploadService = (MediaUploadService.MediaUploadBinder) service;
+            if (!mPendingUploads.isEmpty()) {
+                for (MediaModel media : mPendingUploads) {
+                    mUploadService.addMediaToQueue(media);
+                }
+            }
         }
 
         @Override
