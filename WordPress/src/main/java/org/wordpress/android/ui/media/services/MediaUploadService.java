@@ -46,7 +46,7 @@ public class MediaUploadService extends Service {
         }
 
         public void addMediaToQueue(MediaModel media) {
-            MediaUploadService.this.mQueue.add(media);
+            getUploadQueue().add(media);
             uploadNextInQueue();
         }
 
