@@ -265,7 +265,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
 
                 Bitmap bitmap = BitmapFactory.decodeFile(safeMediaUrl);
-                content.getLineBlockFormatter().insertMedia(new BitmapDrawable(getResources(), bitmap), attrs);
+                content.insertMedia(new BitmapDrawable(getResources(), bitmap), attrs);
 //                mUploadingMedia.put(id, MediaType.IMAGE);
             }
         }
