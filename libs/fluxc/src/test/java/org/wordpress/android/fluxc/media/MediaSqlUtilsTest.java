@@ -99,7 +99,8 @@ public class MediaSqlUtilsTest {
         for (int i = 0; i < SMALL_TEST_POOL; i += 2) {
             mediaIds.add(testIds[i]);
         }
-        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithIds(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), mediaIds);
+        List<MediaModel> media = MediaSqlUtils.
+                getSiteMediaWithIds(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), mediaIds);
         Assert.assertEquals(SMALL_TEST_POOL / 2, media.size());
         for (int i = 0; i < media.size(); ++i) {
             Assert.assertEquals(media.get(i).getMediaId(), testIds[i * 2]);
