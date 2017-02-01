@@ -333,14 +333,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         if (mediaType != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
             if (mediaType.equals(MediaType.IMAGE)) {
-                String remoteMediaId = mediaFile.getMediaId();
-//                content.replaceLocalImageWithRemoteImage(localMediaId, remoteMediaId, remoteUrl);
+                AttributesImpl attrs = new AttributesImpl();
+                attrs.addAttribute("", "src", "src", "string", remoteUrl);
+
+                content.removeOverlayProgress(new LocalImagePredicate(localMediaId), attrs);
             } else if (mediaType.equals(MediaType.VIDEO)) {
-//                String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
-//                String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
-//                        mediaFile.getVideoPressShortCode());
-//                mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
-//                        ", '" + remoteUrl + "', '" + posterUrl + "', '" + videoPressId + "');");
+                // TODO: update video element
             }
         }
     }
@@ -349,6 +347,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         @Override
         public boolean matches(@NotNull Attributes attrs) {
             return attrs.getIndex("data-wpid") > -1;
+        }
+    };
+
+    private class LocalImagePredicate implements AztecText.AttributePredicate {
+        private String mDataWpid;
+
+        LocalImagePredicate(String dataWpid) {
+            mDataWpid = dataWpid;
+        }
+
+        @Override
+        public boolean matches(@NotNull Attributes attrs) {
+            return attrs.getIndex("data-wpid") > -1 && attrs.getValue("data-wpid").equals(mDataWpid);
         }
     };
 
@@ -366,11 +377,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
-//                    content.markImageUploadFailed(mediaId, Utils.escapeQuotes(errorMessage));
+                    // TODO: mark media as upload-failed
                     break;
                 case VIDEO:
-//                    mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ", '"
-//                            + Utils.escapeQuotes(errorMessage) + "');");
+                    // TODO: mark media as upload-failed
             }
             mFailedMediaIds.add(mediaId);
             mUploadingMedia.remove(mediaId);
