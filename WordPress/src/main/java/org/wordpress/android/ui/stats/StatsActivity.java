@@ -24,6 +24,8 @@ import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -79,6 +81,7 @@ public class StatsActivity extends AppCompatActivity
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
 
     private int mResultCode = -1;
     private SiteModel mSite;
@@ -550,6 +553,10 @@ public class StatsActivity extends AppCompatActivity
             if (resultCode == RESULT_CANCELED) {
                 finish();
             }
+        }
+        if (requestCode == REQUEST_JETPACK) {
+            // Refresh the site in case we're back from Jetpack install Webview
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
         }
     }
 
