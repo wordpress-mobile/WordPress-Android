@@ -103,7 +103,7 @@ public class MediaSqlUtils {
     private static SelectQuery<MediaModel> getSiteImagesQuery(SiteModel siteModel) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getSiteId())
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
                 .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
                 .endGroup().endWhere();
     }
@@ -166,7 +166,7 @@ public class MediaSqlUtils {
 
         List<MediaModel> existingMedia = WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, media.getId())
+                .equals(MediaModelTable.LOCAL_SITE_ID, media.getLocalSiteId())
                 .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
                 .endGroup().endWhere().getAsModel();
 
