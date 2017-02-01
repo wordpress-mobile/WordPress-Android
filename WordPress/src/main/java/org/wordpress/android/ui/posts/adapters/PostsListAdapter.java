@@ -98,7 +98,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mLayoutInflater = LayoutInflater.from(context);
 
         mSite = site;
-        mIsStatsSupported = site.isWPCom() || site.isJetpack();
+        mIsStatsSupported = site.isWPCom();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int contentSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);

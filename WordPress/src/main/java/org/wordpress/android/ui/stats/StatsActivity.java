@@ -278,15 +278,17 @@ public class StatsActivity extends AppCompatActivity
                 startWPComLoginActivity();
                 return false;
             }
-            if (site.getSiteId() == 0) {
-                // If the wpcom site id is 0 (undefined), Jetpack is not installed or not activated
+
+            if (!site.isJetpackInstalled()) {
                 JetpackUtils.showInstallJetpackAlert(this, site);
                 return false;
-            } else {
-                // else it's installed but either disconnected or misconfigured.
+            }
+
+            if (!site.isJetpackConnected()) {
                 JetpackUtils.showJetpackNonConnectedAlert(this, site);
                 return false;
             }
+            // TODO: if Jetpack site, we should check the stats option is enabled
         }
         return true;
     }

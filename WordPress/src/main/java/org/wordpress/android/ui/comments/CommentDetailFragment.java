@@ -1059,7 +1059,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // adjust enabledActions if this is a Jetpack site
-        if (canLike() && site.isJetpack()) {
+        if (canLike() && site.isJetpackConnected()) {
             // delete LIKE action from enabledActions for Jetpack sites
             mEnabledActions.remove(EnabledActions.ACTION_LIKE);
         }
