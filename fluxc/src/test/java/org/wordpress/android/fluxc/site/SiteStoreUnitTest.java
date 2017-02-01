@@ -299,7 +299,7 @@ public class SiteStoreUnitTest {
         List<SiteModel> wpComSites  = SiteSqlUtils.getAllWPComSites();
         assertEquals(1, wpComSites.size());
         assertEquals(jetpack.getSiteId(), wpComSites.get(0).getSiteId());
-        assertTrue(wpComSites.get(0).isJetpack());
+        assertTrue(wpComSites.get(0).isJetpackConnected());
         assertTrue(wpComSites.get(0).isWPCom());
     }
 
