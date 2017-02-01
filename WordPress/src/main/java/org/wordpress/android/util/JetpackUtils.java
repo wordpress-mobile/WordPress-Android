@@ -8,11 +8,10 @@ import android.content.Intent;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 
 public class JetpackUtils {
-    public static final int REQUEST_JETPACK = 1120;
-
     public static void showJetpackStatsModuleAlert(final Activity activity, final SiteModel site) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         if (site.isSelfHostedAdmin()) {
@@ -30,7 +29,7 @@ public class JetpackUtils {
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
                     jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-                    activity.startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                    activity.startActivityForResult(jetpackIntent, RequestCodes.REQUEST_JETPACK);
                     // TODO: track analytics here?
                 }
             });
@@ -74,7 +73,7 @@ public class JetpackUtils {
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
                     jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-                    activity.startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                    activity.startActivityForResult(jetpackIntent, RequestCodes.REQUEST_JETPACK);
                     // TODO: rename STATS_SELECTED_CONNECT_JETPACK to something more generic
                     AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_CONNECT_JETPACK);
                 }
@@ -118,7 +117,7 @@ public class JetpackUtils {
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
                     jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-                    activity.startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                    activity.startActivityForResult(jetpackIntent, RequestCodes.REQUEST_JETPACK);
                     // TODO: rename STATS_SELECTED_INSTALL_JETPACK to something more generic
                     AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
                 }

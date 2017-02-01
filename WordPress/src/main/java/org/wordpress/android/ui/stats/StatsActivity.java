@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.lang.StringUtils;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -29,7 +31,9 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -69,7 +73,6 @@ public class StatsActivity extends AppCompatActivity
     private Spinner mSpinner;
     private NestedScrollViewExt mOuterScrollView;
 
-    private static final int REQUEST_JETPACK = 7000;
     public static final String ARG_LOCAL_TABLE_SITE_ID = "ARG_LOCAL_TABLE_SITE_ID";
     public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
     public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
@@ -125,19 +128,12 @@ public class StatsActivity extends AppCompatActivity
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
-
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
 
-                        if (mIsUpdatingStats) {
-                            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
-                            return;
-                        }
-
-                        mRequestedDate = StatsUtils.getCurrentDateTZ(mSite);
-                        updateTimeframeAndDateAndStartRefreshOfFragments(true);
+                        refreshStatsFromCurrentDate();
                     }
                 });
 
@@ -328,6 +324,7 @@ public class StatsActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
+        mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -336,6 +333,7 @@ public class StatsActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @Override
@@ -554,7 +552,7 @@ public class StatsActivity extends AppCompatActivity
                 finish();
             }
         }
-        if (requestCode == REQUEST_JETPACK) {
+        if (requestCode == RequestCodes.REQUEST_JETPACK) {
             // Refresh the site in case we're back from Jetpack install Webview
             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
         }
@@ -585,6 +583,16 @@ public class StatsActivity extends AppCompatActivity
                 break;
             }
         }
+    }
+
+    private void refreshStatsFromCurrentDate() {
+        if (mIsUpdatingStats) {
+            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
+            return;
+        }
+
+        mRequestedDate = StatsUtils.getCurrentDateTZ(mSite);
+        updateTimeframeAndDateAndStartRefreshOfFragments(true);
     }
 
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
@@ -778,4 +786,19 @@ public class StatsActivity extends AppCompatActivity
             return true;
         }
     };
+
+    // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        // "Reload" current site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        SiteModel site = mSiteStore.getSiteByLocalId(mSite.getId());
+        if (site != null) {
+            mSite = site;
+        }
+
+        // Refresh Stats
+        refreshStatsFromCurrentDate();
+    }
 }
