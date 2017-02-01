@@ -37,7 +37,6 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     // Associated IDs
     @Column private int mLocalSiteId;
-    @Column private long mSiteId;
     @Column private long mMediaId;
     @Column private long mPostId;
     @Column private long mAuthorId;
@@ -94,8 +93,7 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
         MediaModel otherMedia = (MediaModel) other;
 
-        return getId() == otherMedia.getId() && getSiteId() == otherMedia.getSiteId()
-                && getLocalSiteId() == otherMedia.getLocalSiteId()
+        return getId() == otherMedia.getId() && getLocalSiteId() == otherMedia.getLocalSiteId()
                 && getMediaId() == otherMedia.getMediaId() && getPostId() == otherMedia.getPostId()
                 && getAuthorId() == otherMedia.getAuthorId() && getWidth() == otherMedia.getWidth()
                 && getHeight() == otherMedia.getHeight() && getLength() == otherMedia.getLength()
@@ -136,14 +134,6 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     public int getLocalSiteId() {
         return mLocalSiteId;
-    }
-
-    public void setSiteId(long siteId) {
-        mSiteId = siteId;
-    }
-
-    public long getSiteId() {
-        return mSiteId;
     }
 
     public void setMediaId(long mediaId) {
