@@ -25,7 +25,7 @@ import java.util.Random;
 
 @RunWith(RobolectricTestRunner.class)
 public class MediaSqlUtilsTest {
-    private static final int TEST_SITE_ID = 1;
+    private static final int TEST_LOCAL_SITE_ID = 1;
     private static final int SMALL_TEST_POOL = 10;
 
     private Random mRandom = new Random(System.currentTimeMillis());
@@ -43,7 +43,7 @@ public class MediaSqlUtilsTest {
     @Test
     public void testInsertNullMedia() {
         Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(null));
-        Assert.assertTrue(MediaSqlUtils.getAllSiteMedia(getTestSiteWithId(TEST_SITE_ID)).isEmpty());
+        Assert.assertTrue(MediaSqlUtils.getAllSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID)).isEmpty());
     }
 
     // Inserts a media item with various known fields then retrieves and validates those fields
@@ -55,7 +55,7 @@ public class MediaSqlUtilsTest {
         String testCaption = getTestString();
         MediaModel testMedia = getTestMedia(testId, testTitle, testDescription, testCaption);
         Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(testMedia));
-        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(getTestSiteWithId(TEST_SITE_ID), testId);
+        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), testId);
         Assert.assertEquals(1, media.size());
         Assert.assertNotNull(media.get(0));
         Assert.assertEquals(testId, media.get(0).getMediaId());
@@ -68,7 +68,7 @@ public class MediaSqlUtilsTest {
     @Test
     public void testGetAllSiteMedia() {
         long[] testIds = insertBasicTestItems(SMALL_TEST_POOL);
-        List<MediaModel> storedMedia = MediaSqlUtils.getAllSiteMedia(getTestSiteWithId(TEST_SITE_ID));
+        List<MediaModel> storedMedia = MediaSqlUtils.getAllSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID));
         Assert.assertEquals(testIds.length, storedMedia.size());
         for (int i = 0; i < testIds.length; ++i) {
             Assert.assertNotNull(storedMedia.get(i));
@@ -82,12 +82,12 @@ public class MediaSqlUtilsTest {
         long testId = Math.abs(mRandom.nextLong());
         MediaModel testMedia = getTestMedia(testId);
         Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(testMedia));
-        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(getTestSiteWithId(TEST_SITE_ID), testId);
+        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), testId);
         Assert.assertEquals(1, media.size());
         Assert.assertNotNull(media.get(0));
         Assert.assertEquals(testId, media.get(0).getMediaId());
         Assert.assertEquals(1, MediaSqlUtils.deleteMedia(testMedia));
-        media = MediaSqlUtils.getAllSiteMedia(getTestSiteWithId(TEST_SITE_ID));
+        media = MediaSqlUtils.getAllSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID));
         Assert.assertTrue(media.isEmpty());
     }
 
@@ -99,7 +99,7 @@ public class MediaSqlUtilsTest {
         for (int i = 0; i < SMALL_TEST_POOL; i += 2) {
             mediaIds.add(testIds[i]);
         }
-        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithIds(getTestSiteWithId(TEST_SITE_ID), mediaIds);
+        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithIds(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), mediaIds);
         Assert.assertEquals(SMALL_TEST_POOL / 2, media.size());
         for (int i = 0; i < media.size(); ++i) {
             Assert.assertEquals(media.get(i).getMediaId(), testIds[i * 2]);
@@ -121,7 +121,7 @@ public class MediaSqlUtilsTest {
             Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(image));
             Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(video));
         }
-        List<MediaModel> images = MediaSqlUtils.getSiteImages(getTestSiteWithId(TEST_SITE_ID));
+        List<MediaModel> images = MediaSqlUtils.getSiteImages(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID));
         Assert.assertEquals(imageIds.size(), images.size());
         for (int i = 0; i < imageIds.size(); ++i) {
             Assert.assertTrue(images.get(0).getMimeType().contains(MediaUtils.MIME_TYPE_IMAGE));
@@ -138,7 +138,7 @@ public class MediaSqlUtilsTest {
             exclusion.add(imageIds[i]);
         }
         List<MediaModel> includedImages = MediaSqlUtils
-                .getSiteImagesExcluding(getTestSiteWithId(TEST_SITE_ID), exclusion);
+                .getSiteImagesExcluding(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), exclusion);
         Assert.assertEquals(SMALL_TEST_POOL - exclusion.size(), includedImages.size());
         for (int i = 0; i < includedImages.size(); ++i) {
             Assert.assertFalse(exclusion.contains(includedImages.get(i).getMediaId()));
@@ -157,7 +157,7 @@ public class MediaSqlUtilsTest {
         }
         for (int i = 0; i < testTitles.length; ++i) {
             List<MediaModel> mediaModels = MediaSqlUtils
-                    .searchSiteMedia(getTestSiteWithId(TEST_SITE_ID), MediaModelTable.TITLE, testTitles[i]);
+                    .searchSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), MediaModelTable.TITLE, testTitles[i]);
             Assert.assertEquals(SMALL_TEST_POOL - i, mediaModels.size());
         }
     }
@@ -174,7 +174,7 @@ public class MediaSqlUtilsTest {
         }
         for (String testTitle : testTitles) {
             List<MediaModel> mediaModels = MediaSqlUtils
-                    .matchSiteMedia(getTestSiteWithId(TEST_SITE_ID), MediaModelTable.TITLE, testTitle);
+                    .matchSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), MediaModelTable.TITLE, testTitle);
             Assert.assertEquals(1, mediaModels.size());
             Assert.assertEquals(testTitle, mediaModels.get(0).getTitle());
         }
@@ -193,7 +193,7 @@ public class MediaSqlUtilsTest {
         long testPostId = 10;
         long testAuthorId = 100;
         String testGuid = "testGuid";
-        long testSiteId = 1000;
+        int testLocalSiteId = 1000;
         String testUploadDate = "testUploadDate";
         String testTitle = "testTitle";
         String testDescription = "testDescription";
@@ -237,7 +237,7 @@ public class MediaSqlUtilsTest {
         testModel.setVideoPressGuid(testVideoPressGuid);
         testModel.setVideoPressProcessingDone(testVideoPressProcessing);
         testModel.setUploadState(testUploadState);
-        testModel.setSiteId(testSiteId);
+        testModel.setLocalSiteId(testLocalSiteId);
         testModel.setHorizontalAlignment(testHorizontalAlign);
         testModel.setVerticalAlignment(testVerticalAlign);
         testModel.setFeatured(testFeatured);
@@ -268,7 +268,7 @@ public class MediaSqlUtilsTest {
         testModel.setFeatured(!testFeatured);
         testModel.setFeaturedInPost(!testFeaturedInPost);
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testModel));
-        List<MediaModel> media = MediaSqlUtils.getAllSiteMedia(getTestSiteWithId(testSiteId));
+        List<MediaModel> media = MediaSqlUtils.getAllSiteMedia(getTestSiteWithLocalId(testLocalSiteId));
         Assert.assertEquals(1, media.size());
         MediaModel testMedia = media.get(0);
         Assert.assertEquals(testId, testMedia.getMediaId());
@@ -307,8 +307,8 @@ public class MediaSqlUtilsTest {
             Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(getTestMedia(i, testTitle, "", "")));
         }
         Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils
-                .deleteMatchingSiteMedia(getTestSiteWithId(TEST_SITE_ID), MediaModelTable.TITLE, testTitle));
-        List<MediaModel> media = MediaSqlUtils.getAllSiteMedia(getTestSiteWithId(TEST_SITE_ID));
+                .deleteMatchingSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), MediaModelTable.TITLE, testTitle));
+        List<MediaModel> media = MediaSqlUtils.getAllSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID));
         Assert.assertEquals(1, media.size());
         Assert.assertEquals(SMALL_TEST_POOL + 1, media.get(0).getMediaId());
     }
@@ -336,7 +336,7 @@ public class MediaSqlUtilsTest {
     private MediaModel getTestMedia(long mediaId) {
         MediaModel media = new MediaModel();
         media.setId(1);
-        media.setSiteId(TEST_SITE_ID);
+        media.setLocalSiteId(TEST_LOCAL_SITE_ID);
         media.setMediaId(mediaId);
         return media;
     }
@@ -344,7 +344,7 @@ public class MediaSqlUtilsTest {
     private MediaModel getTestMedia(long mediaId, String title, String description, String caption) {
         MediaModel media = new MediaModel();
         media.setId(1);
-        media.setSiteId(TEST_SITE_ID);
+        media.setLocalSiteId(TEST_LOCAL_SITE_ID);
         media.setMediaId(mediaId);
         media.setTitle(title);
         media.setDescription(description);
@@ -356,9 +356,9 @@ public class MediaSqlUtilsTest {
         return "BaseTestString-" + mRandom.nextInt();
     }
 
-    private SiteModel getTestSiteWithId(long siteId) {
+    private SiteModel getTestSiteWithLocalId(int localSiteId) {
         SiteModel siteModel = new SiteModel();
-        siteModel.setSiteId(siteId);
+        siteModel.setId(localSiteId);
         return siteModel;
     }
 }
