@@ -134,9 +134,7 @@ public class StatsActivity extends AppCompatActivity
                         }
 
                         mRequestedDate = StatsUtils.getCurrentDateTZ(mSite);
-                        if (checkCredentials()) {
-                            updateTimeframeAndDateAndStartRefreshOfFragments(true);
-                        }
+                        updateTimeframeAndDateAndStartRefreshOfFragments(true);
                     }
                 });
 
@@ -282,7 +280,7 @@ public class StatsActivity extends AppCompatActivity
                 return false;
             }
             if (site.getSiteId() == 0) {
-                // If the wpcom site id is 0 (undefined), Jetpack is not installed,
+                // If the wpcom site id is 0 (undefined), Jetpack is not installed or not activated
                 JetpackUtils.showInstallJetpackAlert(this, site);
                 return false;
             } else {
@@ -341,9 +339,7 @@ public class StatsActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
-        if (NetworkUtils.checkConnection(this)) {
-            checkCredentials();
-        } else {
+        if (!NetworkUtils.checkConnection(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
         ActivityId.trackLastActivity(ActivityId.STATS);
@@ -603,25 +599,6 @@ public class StatsActivity extends AppCompatActivity
     @Override
     public void onOverviewItemChanged(StatsVisitorsAndViewsFragment.OverviewLabel newItem) {
         mTabToSelectOnGraph = newItem;
-    }
-
-    private boolean checkCredentials() {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            AppLog.w(AppLog.T.STATS, "StatsActivity > cannot check credentials since no internet connection available");
-            return false;
-        }
-
-        long siteId = mSite.getSiteId();
-
-        // siteId is always available for dotcom blogs. It could be 0 on some self hosted sites.
-        if (siteId == 0) {
-            // TODO: STORES: we could log the user in wpcom if he uses a self hosted site and has jetpack installed
-            Toast.makeText(this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
-            AppLog.e(T.STATS, "Invalid site id for: " + mSite.getUrl());
-            finish();
-        }
-
-        return true;
     }
 
     private void bumpPromoAnaylticsAndShowPromoDialogIfNecessary() {
