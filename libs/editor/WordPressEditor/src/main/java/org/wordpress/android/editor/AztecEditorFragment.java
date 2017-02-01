@@ -24,6 +24,7 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ProfilingUtils;
@@ -36,11 +37,16 @@ import org.wordpress.aztec.Html;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.AztecToolbarClickListener;
+import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class AztecEditorFragment extends EditorFragmentAbstract implements OnImeBackListener, EditorMediaUploadListener,
         AztecToolbarClickListener {
@@ -65,6 +71,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     private AztecToolbar formattingToolbar;
     private Html.ImageGetter imageLoader;
 
+    private Map<String, MediaType> mUploadingMedia;
+    private Set<String> mFailedMediaIds;
+
     public static AztecEditorFragment newInstance(String title, String content) {
         AztecEditorFragment fragment = new AztecEditorFragment();
         Bundle args = new Bundle();
@@ -85,6 +94,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
+
+        mUploadingMedia = new HashMap<>();
+        mFailedMediaIds = new HashSet<>();
 
         title = (AztecText) view.findViewById(R.id.title);
         content = (AztecText)view.findViewById(R.id.aztec);
@@ -145,6 +157,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EditorDragAndDropListener");
         }
+    }
+
+    @Override
+    public void onDetach() {
+        // Soft cancel (delete flag off) all media uploads currently in progress
+        for (String mediaId : mUploadingMedia.keySet()) {
+            mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, false);
+        }
+        super.onDetach();
     }
 
     @Override
@@ -266,7 +287,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
                 Bitmap bitmap = BitmapFactory.decodeFile(safeMediaUrl);
                 content.insertMedia(new BitmapDrawable(getResources(), bitmap), attrs);
-//                mUploadingMedia.put(id, MediaType.IMAGE);
+                mUploadingMedia.put(id, MediaType.IMAGE);
             }
         }
     }
@@ -281,12 +302,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public boolean isUploadingMedia() {
-        return false;
+        return (mUploadingMedia.size() > 0);
     }
 
     @Override
     public boolean hasFailedMediaUploads() {
-        return false;
+        return (mFailedMediaIds.size() > 0);
     }
 
     @Override
@@ -308,14 +329,52 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+        final MediaType mediaType = mUploadingMedia.get(localMediaId);
+        if (mediaType != null) {
+            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            if (mediaType.equals(MediaType.IMAGE)) {
+                String remoteMediaId = mediaFile.getMediaId();
+//                content.replaceLocalImageWithRemoteImage(localMediaId, remoteMediaId, remoteUrl);
+            } else if (mediaType.equals(MediaType.VIDEO)) {
+//                String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
+//                String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
+//                        mediaFile.getVideoPressShortCode());
+//                mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
+//                        ", '" + remoteUrl + "', '" + posterUrl + "', '" + videoPressId + "');");
+            }
+        }
     }
+
+    private AztecText.AttributePredicate mDataWpidPredicate = new AztecText.AttributePredicate() {
+        @Override
+        public boolean matches(@NotNull Attributes attrs) {
+            return attrs.getIndex("data-wpid") > -1;
+        }
+    };
 
     @Override
     public void onMediaUploadProgress(final String mediaId, final float progress) {
+        final MediaType mediaType = mUploadingMedia.get(mediaId);
+        if (mediaType != null) {
+            content.setProgressOnMedia(mDataWpidPredicate, progress);
+        }
     }
 
     @Override
     public void onMediaUploadFailed(final String mediaId, final String errorMessage) {
+        MediaType mediaType = mUploadingMedia.get(mediaId);
+        if (mediaType != null) {
+            switch (mediaType) {
+                case IMAGE:
+//                    content.markImageUploadFailed(mediaId, Utils.escapeQuotes(errorMessage));
+                    break;
+                case VIDEO:
+//                    mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ", '"
+//                            + Utils.escapeQuotes(errorMessage) + "');");
+            }
+            mFailedMediaIds.add(mediaId);
+            mUploadingMedia.remove(mediaId);
+        }
     }
 
     @Override
