@@ -215,10 +215,10 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             // We also set the isWPCom flag, since this site should be available by the WPCOM REST API
             // TODO: check for jetpack options and turn this off if the REST API is disabled
             oldModel.setIsWPCom(true);
+            oldModel.setSiteId(jetpackClientId);
+        } else {
+            oldModel.setSiteId(0);
         }
-
-        // Update the wpcom site id of our model
-        oldModel.setSiteId(jetpackClientId);
     }
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
