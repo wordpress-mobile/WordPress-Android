@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +31,10 @@ import javax.inject.Inject;
 
 public class MediaUploadService extends Service {
     public static final String SITE_KEY = "mediaSite";
+    public static final String LISTENER_KEY = "mediaUploadListener";
     public static final String MEDIA_LIST_KEY = "mediaList";
 
-    public interface MediaUploadCallback {
+    public interface MediaUploadListener extends Serializable {
         void onUploadBegin(MediaModel media);
         void onUploadSuccess(MediaModel media);
         void onUploadCanceled(MediaModel media);
@@ -61,14 +63,14 @@ public class MediaUploadService extends Service {
             return MediaUploadService.this.getCompletedItems();
         }
 
-        public void setListener(MediaUploadCallback listener) {
+        public void setListener(MediaUploadListener listener) {
             MediaUploadService.this.mListener = listener;
         }
     }
 
     private final IBinder mBinder = new MediaUploadBinder();
 
-    private MediaUploadCallback mListener;
+    private MediaUploadListener mListener;
     private SiteModel mSite;
     private MediaModel mCurrentUpload;
     private List<MediaModel> mQueue;
@@ -113,6 +115,7 @@ public class MediaUploadService extends Service {
             for (MediaModel media : mediaList) {
                 getUploadQueue().add(media);
             }
+        mListener = (MediaUploadListener) intent.getSerializableExtra(LISTENER_KEY);
         }
 
         if (getUploadQueue().isEmpty()) {
