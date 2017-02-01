@@ -62,7 +62,7 @@ public class FluxCImageLoader extends ImageLoader {
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("User-Agent", mUserAgent.getUserAgent());
                 if (WPUrlUtils.safeToAddWordPressComAuthToken(url)) {
                     headers.put("Authorization", "Bearer " + mAccessToken.get());
