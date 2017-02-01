@@ -150,11 +150,6 @@ public class SiteSqlUtils {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
-                .or()
-                .beginGroup()
-                .equals(SiteModelTable.IS_JETPACK, true)
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, false)
-                .endGroup()
                 .endGroup().endWhere()
                 .getAsModel();
     }

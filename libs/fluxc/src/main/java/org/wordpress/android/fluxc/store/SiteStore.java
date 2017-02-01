@@ -372,14 +372,14 @@ public class SiteStore extends Store {
      * Returns all Jetpack sites in the store.
      */
     public List<SiteModel> getJetpackSites() {
-        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_JETPACK, true);
+        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true);
     }
 
     /**
      * Returns the number of Jetpack sites in the store.
      */
     public int getJetpackSitesCount() {
-        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_JETPACK, true);
+        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true);
     }
 
     /**
@@ -534,7 +534,7 @@ public class SiteStore extends Store {
                 .where().beginGroup()
                 .equals(SiteModelTable.ID, localId)
                 .beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, true).or().equals(SiteModelTable.IS_JETPACK, true)
+                .equals(SiteModelTable.IS_WPCOM, true).or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
                 .endGroup().endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
     }
