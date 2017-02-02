@@ -138,7 +138,8 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
-        ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
+        ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
+        MediaUploadService.MediaUploadListener {
     public static final String EXTRA_POST = "postModel";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -768,6 +769,29 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void onUploadBegin(MediaModel media) {
+    }
+
+    @Override
+    public void onUploadSuccess(MediaModel media) {
+        mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()), WPStoreUtils.fromMediaModel(media));
+    }
+
+    @Override
+    public void onUploadCanceled(MediaModel media) {
+    }
+
+    @Override
+    public void onUploadError(MediaModel media, MediaStore.MediaError error) {
+        mEditorMediaUploadListener.onMediaUploadFailed(String.valueOf(media.getId()), error.message);
+    }
+
+    @Override
+    public void onUploadProgress(MediaModel media, float progress) {
+        mEditorMediaUploadListener.onMediaUploadProgress(String.valueOf(media.getId()), progress);
     }
 
     private void launchPictureLibrary() {
