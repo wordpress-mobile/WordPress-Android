@@ -853,6 +853,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (mPendingUploads == null) {
                 mPendingUploads = new ArrayList<>();
             }
+            media.setUploadState(MediaUploadState.QUEUED.name());
+            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             mPendingUploads.add(media);
         }
     }
