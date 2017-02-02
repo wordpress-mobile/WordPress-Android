@@ -195,7 +195,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
         ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
-                new WPNetworkImageListener(mUrl, isInLayoutPass, imageLoadListener), 0, 0, getScaleType());
+                new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener), 0, 0, getScaleType());
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
     }
@@ -209,14 +209,14 @@ public class WPNetworkImageView extends AppCompatImageView {
      * The cell containing WPNetworkImageView could be recycled while the image request was still underway,
      * so when the request completed it set the picture to the one requested prior to recycling.
      */
-    private class WPNetworkImageListener implements ImageLoader.ImageListener {
+    private class WPNetworkImageLoaderListener implements ImageLoader.ImageListener {
         private final String mRequestedURL;
         private final ImageLoadListener mImageLoadListener;
         private final boolean mIsInLayoutPass;
 
-        WPNetworkImageListener(final String requestedURL,
-                               final boolean isInLayoutPass,
-                               final ImageLoadListener imageLoadListener) {
+        WPNetworkImageLoaderListener(final String requestedURL,
+                                     final boolean isInLayoutPass,
+                                     final ImageLoadListener imageLoadListener) {
             mRequestedURL = requestedURL;
             mIsInLayoutPass = isInLayoutPass;
             mImageLoadListener = imageLoadListener;
