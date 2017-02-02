@@ -1777,7 +1777,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void startMediaUploadService() {
         if (mUploadService == null) {
             Intent intent = new Intent(this, MediaUploadService.class);
-            intent.putExtra(WordPress.SITE, mSite);
+            intent.putExtra(MediaUploadService.SITE_KEY, mSite);
+            intent.putExtra(MediaUploadService.LISTENER_KEY, this);
+            intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mPendingUploads);
             bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
             startService(intent);
         }
