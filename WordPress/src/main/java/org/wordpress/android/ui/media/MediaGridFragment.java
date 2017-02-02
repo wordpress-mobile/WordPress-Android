@@ -395,6 +395,8 @@ public class MediaGridFragment extends Fragment
 
     public void refreshMediaFromDB() {
         setFilter(mFilter);
+        updateFilterText();
+        updateSpinnerAdapter();
         if (isAdded() && mGridAdapter.getDataCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
