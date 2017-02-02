@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -33,8 +34,15 @@ public class AztecImageLoader implements Html.ImageGetter {
         WordPress.imageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), response.getBitmap());
-                callbacks.onImageLoaded(bitmapDrawable);
+                Bitmap bitmap = response.getBitmap();
+
+                if (bitmap == null) {
+                    // the loader tries to let us know to just use the default image for now
+                    callbacks.onUseDefaultImage();
+                } else {
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), response.getBitmap());
+                    callbacks.onImageLoaded(bitmapDrawable);
+                }
             }
 
             @Override
