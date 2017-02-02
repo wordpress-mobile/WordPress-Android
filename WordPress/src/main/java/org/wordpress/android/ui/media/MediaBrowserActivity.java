@@ -87,7 +87,7 @@ import javax.inject.Inject;
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
-        MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback, MediaUploadService.MediaUploadCallback {
+        MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback, MediaUploadService.MediaUploadListener {
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
