@@ -113,7 +113,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.uploadFile
      */
-    public void uploadMedia(SiteModel site, final MediaModel media) {
+    public void uploadMedia(final SiteModel site, final MediaModel media) {
         URL xmlrpcUrl;
         try {
             xmlrpcUrl = new URL(site.getXmlRpcUrl());
@@ -163,6 +163,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     AppLog.d(T.MEDIA, "media upload successful: " + media.getTitle());
                     MediaModel responseMedia = getMediaFromUploadResponse(response);
+                    responseMedia.setLocalSiteId(site.getId());
                     notifyMediaUploaded(responseMedia, null);
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response.message());
