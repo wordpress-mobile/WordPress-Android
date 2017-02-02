@@ -36,12 +36,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
@@ -99,6 +101,7 @@ public class MediaGridFragment extends Fragment
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
     private boolean mIsMultiSelect;
+    private ActionMode mActionMode;
     private String mSearchTerm;
 
     private View mSpinnerContainer;
@@ -303,6 +306,7 @@ public class MediaGridFragment extends Fragment
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        mActionMode = mode;
         int selectCount = mGridAdapter.getSelectedItems().size();
         mode.setTitle(String.format(getString(R.string.cab_selected), selectCount));
         MenuInflater inflater = mode.getMenuInflater();
@@ -341,6 +345,7 @@ public class MediaGridFragment extends Fragment
         mGridAdapter.clearSelection();
         setSwipeToRefreshEnabled(true);
         mIsMultiSelect = false;
+        mActionMode = null;
         setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
     }
 
@@ -708,6 +713,11 @@ public class MediaGridFragment extends Fragment
                                     ((MediaBrowserActivity) getActivity()).deleteMedia(
                                             mGridAdapter.getSelectedItems());
                                 }
+                                mGridAdapter.clearSelection();
+                                if (mActionMode != null) {
+                                    mActionMode.finish();
+                                }
+                                refreshMediaFromDB();
                                 refreshSpinnerAdapter();
                             }
                         }).setNegativeButton(R.string.cancel, null);
