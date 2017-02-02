@@ -190,11 +190,16 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         // * Jetpack not installed: field "jetpack_client_id" not included in the response
         // * Jetpack installed but not activated: field "jetpack_client_id" not included in the response
         // * Jetpack installed, activated but not connected: field "jetpack_client_id" included
-        //   and is "0"
+        //   and is "0" (boolean)
         // * Jetpack installed, activated and connected: field "jetpack_client_id" included and is correctly
         //   set to wpcom unique id eg. "1234"
 
-        long jetpackClientId = string2Long(getOption(siteOptions, JETPACK_CLIENT_ID_KEY, String.class), -1);
+        String jetpackClientIdStr = getOption(siteOptions, JETPACK_CLIENT_ID_KEY, String.class);
+        long jetpackClientId = 0;
+        // jetpackClientIdStr can be a boolean "0" (false), in that case we keep the default value "0".
+        if (!"false".equals(jetpackClientIdStr)) {
+            jetpackClientId = string2Long(jetpackClientIdStr, -1);
+        }
 
         // Field "jetpack_client_id" not found:
         if (jetpackClientId == -1) {
