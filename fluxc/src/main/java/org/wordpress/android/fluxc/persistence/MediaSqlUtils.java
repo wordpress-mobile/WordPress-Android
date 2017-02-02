@@ -34,7 +34,7 @@ public class MediaSqlUtils {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, site.getSiteId())
-                .equals(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
+                .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
                 .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
