@@ -713,6 +713,12 @@ public class MediaGridFragment extends Fragment
                                     ((MediaBrowserActivity) getActivity()).deleteMedia(
                                             mGridAdapter.getSelectedItems());
                                 }
+                                // update upload state
+                                for (Long itemId : mGridAdapter.getSelectedItems()) {
+                                    MediaModel media = mMediaStore.getSiteMediaWithId(mSite, itemId);
+                                    media.setUploadState(MediaUploadState.DELETE.name());
+                                    mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+                                }
                                 mGridAdapter.clearSelection();
                                 if (mActionMode != null) {
                                     mActionMode.finish();
