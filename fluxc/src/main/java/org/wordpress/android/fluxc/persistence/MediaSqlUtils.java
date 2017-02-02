@@ -25,7 +25,9 @@ public class MediaSqlUtils {
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, site.getSiteId())
                 .notContains(MediaModelTable.UPLOAD_STATE, MediaModel.UploadState.DELETED.toString())
-                .endGroup().endWhere().getAsCursor();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
+                .getAsCursor();
     }
 
     public static WellCursor<MediaModel> getImagesWithStates(SiteModel site, List<String> uploadStates) {
@@ -34,7 +36,9 @@ public class MediaSqlUtils {
                 .equals(MediaModelTable.SITE_ID, site.getSiteId())
                 .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
                 .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
-                .endGroup().endWhere().getAsCursor();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
+                .getAsCursor();
     }
 
     public static WellCursor<MediaModel> getUnattachedMediaWithStates(SiteModel site, List<String> uploadStates) {
@@ -43,19 +47,24 @@ public class MediaSqlUtils {
                 .equals(MediaModelTable.SITE_ID, site.getSiteId())
                 .equals(MediaModelTable.POST_ID, 0)
                 .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
-                .endGroup().endWhere().getAsCursor();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
+                .getAsCursor();
     }
 
     private static SelectQuery<MediaModel> getAllSiteMediaQuery(SiteModel siteModel) {
         return WellSql.select(MediaModel.class)
-                .where().equals(MediaModelTable.SITE_ID, siteModel.getSiteId()).endWhere();
+                .where().equals(MediaModelTable.SITE_ID, siteModel.getSiteId()).endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
     public static List<MediaModel> getSiteMediaWithId(SiteModel siteModel, long mediaId) {
         return WellSql.select(MediaModel.class).where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteModel.getSiteId())
                 .equals(MediaModelTable.MEDIA_ID, mediaId)
-                .endGroup().endWhere().getAsModel();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
+                .getAsModel();
     }
 
     public static List<MediaModel> getSiteMediaWithIds(SiteModel siteModel, List<Long> mediaIds) {
@@ -71,7 +80,8 @@ public class MediaSqlUtils {
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteModel.getSiteId())
                 .isIn(MediaModelTable.MEDIA_ID, mediaIds)
-                .endGroup().endWhere();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
     public static List<MediaModel> searchSiteMedia(SiteModel siteModel, String column, String searchTerm) {
@@ -89,7 +99,8 @@ public class MediaSqlUtils {
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteModel.getSiteId())
                 .contains(column, searchTerm)
-                .endGroup().endWhere();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
     public static List<MediaModel> getSiteImages(SiteModel siteModel) {
@@ -105,7 +116,8 @@ public class MediaSqlUtils {
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteModel.getSiteId())
                 .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
-                .endGroup().endWhere();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
     public static List<MediaModel> getSiteImagesExcluding(SiteModel siteModel, List<Long> filter) {
@@ -122,7 +134,8 @@ public class MediaSqlUtils {
                 .equals(MediaModelTable.SITE_ID, siteModel.getSiteId())
                 .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
                 .isNotIn(MediaModelTable.MEDIA_ID, filter)
-                .endGroup().endWhere();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
     public static SelectQuery<MediaModel> getMediaExcludingQuery(SiteModel site, String column, Object value) {
@@ -130,7 +143,8 @@ public class MediaSqlUtils {
                 .where().beginGroup()
                 .not().equals(column, value)
                 .equals(MediaModelTable.SITE_ID, site.getSiteId())
-                .endGroup().endWhere();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
     public static List<MediaModel> getSiteMediaExcluding(SiteModel site, String column, Object value) {
@@ -150,7 +164,8 @@ public class MediaSqlUtils {
                 .where().beginGroup()
                 .equals(MediaModelTable.SITE_ID, siteModel.getSiteId())
                 .equals(column, value)
-                .endGroup().endWhere();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
     public static List<MediaModel> matchPostMedia(long postId, String column, Object value) {
@@ -158,7 +173,9 @@ public class MediaSqlUtils {
                 .where().beginGroup()
                 .equals(MediaModelTable.POST_ID, postId)
                 .equals(column, value)
-                .endGroup().endWhere().getAsModel();
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
+                .getAsModel();
     }
 
     public static int insertOrUpdateMedia(MediaModel media) {
