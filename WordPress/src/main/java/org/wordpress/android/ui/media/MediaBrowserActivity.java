@@ -282,9 +282,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    mMediaCapturePath = null;
                     if (data != null) {
-                        Uri uri = data.getData();
+                        Uri uri = Uri.parse(mMediaCapturePath);
                         queueFileForUpload(uri, getContentResolver().getType(uri));
                     }
                 }
