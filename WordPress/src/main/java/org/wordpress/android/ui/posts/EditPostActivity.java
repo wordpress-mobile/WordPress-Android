@@ -864,7 +864,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mEditPostSettingsFragment.updatePostSettings(mPost);
         }
 
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis()));
+        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
     }
 
     private void savePostAsync(final AfterSavePostListener listener) {
@@ -1394,7 +1394,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mPost.setIsLocallyChanged(true);
         }
 
-        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis()));
+        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
     }
 
     /**
