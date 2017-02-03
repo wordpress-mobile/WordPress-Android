@@ -1561,7 +1561,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private List<MediaModel> mPendingUploads = new ArrayList<>();
+    private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
 
     private void uploadMedia(Uri uri) {
         MediaModel media = new MediaModel();
