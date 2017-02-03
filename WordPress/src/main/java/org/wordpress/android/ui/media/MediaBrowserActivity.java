@@ -51,6 +51,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -80,6 +81,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -865,7 +868,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return;
         }
 
-        MediaModel media = new MediaModel();
+        MediaModel media = mMediaStore.instantiateMediaModel();
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
         String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
 
@@ -893,6 +896,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         media.setMimeType(mimeType);
         media.setUploadState(MediaUploadState.QUEUED.toString());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);
     }
 

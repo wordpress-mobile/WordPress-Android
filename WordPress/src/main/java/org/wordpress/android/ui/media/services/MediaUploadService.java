@@ -130,23 +130,6 @@ public class MediaUploadService extends Service {
         return START_REDELIVER_INTENT;
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe
-    public void onMediaUploaded(OnMediaUploaded event) {
-        // event for unknown media, ignoring
-        if (event.media == null || !matchesInProgressMedia(event.media)) {
-            AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
-            return;
-        }
-
-        if (event.isError()) {
-            handleOnMediaUploadedError(event);
-        } else {
-            handleOnMediaUploadedSuccess(event);
-        }
-
-        uploadNextInQueue();
-    }
 
     public @NonNull List<MediaModel> getUploadQueue() {
         if (mQueue == null) {
@@ -236,7 +219,6 @@ public class MediaUploadService extends Service {
         AppLog.i(T.MEDIA, "Dispatching upload action: " + media.getTitle());
         media.setUploadState(UploadState.UPLOADING.toString());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-
         MediaPayload payload = new MediaPayload(mSite, media);
         mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
@@ -256,5 +238,26 @@ public class MediaUploadService extends Service {
         // TODO
         return mCurrentUpload != null &&
                 media.getSiteId() == mCurrentUpload.getSiteId();
+    }
+
+    // FluxC events
+
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onMediaUploaded(OnMediaUploaded event) {
+        // event for unknown media, ignoring
+        if (event.media == null || !matchesInProgressMedia(event.media)) {
+            AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
+            return;
+        }
+
+        if (event.isError()) {
+            handleOnMediaUploadedError(event);
+        } else {
+            handleOnMediaUploadedSuccess(event);
+        }
+
+        uploadNextInQueue();
     }
 }
