@@ -8,12 +8,14 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spanned;
 import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -286,7 +288,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
 
                 Bitmap bitmap = BitmapFactory.decodeFile(safeMediaUrl);
-                content.insertMedia(new BitmapDrawable(getResources(), bitmap), attrs);
+
+                Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
+                // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
+                progressDrawable.setBounds(0, 0, 0, 2);
+
+                content.insertMedia(new BitmapDrawable(getResources(), bitmap), progressDrawable,
+                        Gravity.FILL_HORIZONTAL | Gravity.TOP, attrs);
                 mUploadingMedia.put(id, MediaType.IMAGE);
             }
         }
@@ -336,7 +344,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 AttributesImpl attrs = new AttributesImpl();
                 attrs.addAttribute("", "src", "src", "string", remoteUrl);
 
-                content.removeOverlayProgress(new LocalImagePredicate(localMediaId), attrs);
+                // clear overlay
+                content.setOverlay(new LocalImagePredicate(localMediaId), null, 0, attrs);
             } else if (mediaType.equals(MediaType.VIDEO)) {
                 // TODO: update video element
             }
