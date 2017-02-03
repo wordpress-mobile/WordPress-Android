@@ -231,6 +231,7 @@ public class WPNetworkImageView extends AppCompatImageView {
             }
 
             if (!mUrl.equals(mRequestedURL)) {
+                AppLog.w(AppLog.T.UTILS, "WPNetworkImageView > request no longer valid: " + mRequestedURL);
                 return;
             }
             showErrorImage();
@@ -243,6 +244,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         @Override
         public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
             if (!mUrl.equals(mRequestedURL)) {
+                AppLog.w(AppLog.T.UTILS, "WPNetworkImageView > request no longer valid: " + mRequestedURL);
                 return;
             }
             // If this was an immediate response that was delivered inside of a layout
