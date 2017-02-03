@@ -369,23 +369,24 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     public void onMediaUploadProgress(final String mediaId, final float progress) {
         final MediaType mediaType = mUploadingMedia.get(mediaId);
         if (mediaType != null) {
-            content.setProgressOnMedia(mDataWpidPredicate, progress);
+            content.setOverlayLevel(new LocalImagePredicate(mediaId), (int)(progress * 10000));
         }
     }
 
     @Override
-    public void onMediaUploadFailed(final String mediaId, final String errorMessage) {
-        MediaType mediaType = mUploadingMedia.get(mediaId);
+    public void onMediaUploadFailed(final String localMediaId, final String errorMessage) {
+        MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
-                    // TODO: mark media as upload-failed
+                    Drawable alertDrawable = getResources().getDrawable(android.R.drawable.ic_dialog_alert);
+                    content.setOverlay(new LocalImagePredicate(localMediaId), alertDrawable, Gravity.CENTER, null);
                     break;
                 case VIDEO:
                     // TODO: mark media as upload-failed
             }
-            mFailedMediaIds.add(mediaId);
-            mUploadingMedia.remove(mediaId);
+            mFailedMediaIds.add(localMediaId);
+            mUploadingMedia.remove(localMediaId);
         }
     }
 
