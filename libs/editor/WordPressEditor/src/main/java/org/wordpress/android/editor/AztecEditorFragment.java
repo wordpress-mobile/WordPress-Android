@@ -352,13 +352,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
     }
 
-    private AztecText.AttributePredicate mDataWpidPredicate = new AztecText.AttributePredicate() {
-        @Override
-        public boolean matches(@NotNull Attributes attrs) {
-            return attrs.getIndex("data-wpid") > -1;
-        }
-    };
-
     private class LocalImagePredicate implements AztecText.AttributePredicate {
         private String mDataWpid;
 
