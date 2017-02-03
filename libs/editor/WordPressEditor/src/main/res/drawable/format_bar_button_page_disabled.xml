@@ -7,10 +7,10 @@
     android:viewportHeight="44"
     android:viewportWidth="44" >
 
-    <!-- @color/wp_grey_darken_20 -->
+    <!-- @color/wp_grey_lighten_20 -->
     <path
-        android:fillColor="#ff4f748e"
-        android:pathData="M13,15h18v4H13V15z M13,29h18v-4H13V29z M19,23h6v-2h-6V23z M13,23h4v-2h-4V23z M27,23h4v-2h-4V23z" >
+        android:fillColor="#ffc8d7e1"
+        android:pathData="M13,15h18v4H13V15z M13,29h18v-4H13V29z M15,21h-2v2h2V21z M19,21h-2v2h2V21z M27,21h-2v2h2V21z M31,21h-2v2h2V21z M23,21h-2v2h2V21z" >
     </path>
 
 </vector>
