@@ -104,6 +104,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         content = (AztecText)view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
+        // It seems that hardware accel makes the progressbar in MediaSpan to not show that it updates.
+        //  Instead, software rendering works. See: https://github.com/koral--/android-gif-drawable/issues/234#issuecomment-165938445
+        content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         formattingToolbar.setEditor(content, source);
         formattingToolbar.setToolbarListener(this);
