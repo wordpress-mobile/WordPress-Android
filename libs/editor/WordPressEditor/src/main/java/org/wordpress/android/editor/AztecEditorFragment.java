@@ -1,9 +1,13 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,8 +16,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,21 +32,26 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.ccil.cowan.tagsoup.AttributesImpl;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.AztecText;
+import org.wordpress.aztec.AztecText.OnMediaTappedListener;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.AztecToolbarClickListener;
 import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +62,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class AztecEditorFragment extends EditorFragmentAbstract implements OnImeBackListener, EditorMediaUploadListener,
-        AztecToolbarClickListener {
+        OnMediaTappedListener, AztecToolbarClickListener {
 
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
@@ -115,6 +126,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         // initialize the text & HTML
         source.history = content.history;
         content.setImageGetter(imageLoader);
+
+        content.setOnMediaTappedListener(this);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
@@ -347,25 +360,36 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             if (mediaType.equals(MediaType.IMAGE)) {
                 AttributesImpl attrs = new AttributesImpl();
                 attrs.addAttribute("", "src", "src", "string", remoteUrl);
+                attrs.addAttribute("", "id", "id", "string", localMediaId);
 
                 // clear overlay
-                content.setOverlay(new LocalImagePredicate(localMediaId), null, 0, attrs);
+                content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), null, 0, attrs);
             } else if (mediaType.equals(MediaType.VIDEO)) {
                 // TODO: update video element
             }
         }
     }
 
-    private class LocalImagePredicate implements AztecText.AttributePredicate {
-        private String mDataWpid;
+    private static class ImagePredicate implements AztecText.AttributePredicate {
+        private final String mId;
+        private final String mAttributeName;
 
-        LocalImagePredicate(String dataWpid) {
-            mDataWpid = dataWpid;
+        static ImagePredicate localMediaIdPredicate(String id) {
+            return new ImagePredicate(id, "data-wpid");
+        }
+
+        static ImagePredicate idPredicate(String id) {
+            return new ImagePredicate(id, "id");
+        }
+
+        private ImagePredicate(String id, String attributeName) {
+            mId = id;
+            mAttributeName = attributeName;
         }
 
         @Override
         public boolean matches(@NotNull Attributes attrs) {
-            return attrs.getIndex("data-wpid") > -1 && attrs.getValue("data-wpid").equals(mDataWpid);
+            return attrs.getIndex(mAttributeName) > -1 && attrs.getValue("data-wpid").equals(mId);
         }
     };
 
@@ -373,7 +397,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     public void onMediaUploadProgress(final String mediaId, final float progress) {
         final MediaType mediaType = mUploadingMedia.get(mediaId);
         if (mediaType != null) {
-            content.setOverlayLevel(new LocalImagePredicate(mediaId), (int)(progress * 10000));
+            AttributesWithClass attributesWithClass = new AttributesWithClass(
+                    (AttributesImpl) content.getMediaAttributes(
+                            ImagePredicate.localMediaIdPredicate(mediaId)));
+            attributesWithClass.addClass("uploading");
+            content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(mediaId), (int)(progress * 10000),
+                    attributesWithClass.getAttributesIml());
         }
     }
 
@@ -383,14 +412,59 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
+                    AttributesWithClass attributesWithClass = new AttributesWithClass(
+                            (AttributesImpl) content.getMediaAttributes(
+                                    ImagePredicate.localMediaIdPredicate(localMediaId)));
+
+                    attributesWithClass.removeClass("uploading");
+                    attributesWithClass.addClass("failed");
+
                     Drawable alertDrawable = getResources().getDrawable(android.R.drawable.ic_dialog_alert);
-                    content.setOverlay(new LocalImagePredicate(localMediaId), alertDrawable, Gravity.CENTER, null);
+                    content.setOverlay(
+                            ImagePredicate.localMediaIdPredicate(localMediaId), alertDrawable, Gravity.CENTER,
+                            attributesWithClass.getAttributesIml());
                     break;
                 case VIDEO:
                     // TODO: mark media as upload-failed
             }
             mFailedMediaIds.add(localMediaId);
             mUploadingMedia.remove(localMediaId);
+        }
+    }
+
+    private static Set<String> getClassAttribute(Attributes attributes) {
+        if (attributes.getIndex("class") == -1) {
+            return new HashSet<>(new ArrayList<String>());
+        }
+        return new HashSet<>(Arrays.asList(attributes.getValue("class").split(" ")));
+    }
+
+    static class AttributesWithClass {
+        private AttributesImpl mAttributesIml;
+        private Set<String> mClasses;
+
+        AttributesWithClass(AttributesImpl attrs) {
+            mAttributesIml = attrs;
+            mClasses = getClassAttribute(attrs);
+        }
+
+        public void addClass(String c) {
+            mClasses.add(c);
+        }
+
+        public void removeClass(String c) {
+            mClasses.remove(c);
+        }
+
+        AttributesImpl getAttributesIml() {
+            String classesStr = TextUtils.join(" ", mClasses);
+            if (mAttributesIml.getIndex("class") == -1) {
+                mAttributesIml.addAttribute("", "class", "class", "string", classesStr);
+            } else {
+                mAttributesIml.setValue(mAttributesIml.getIndex("class"), classesStr);
+            }
+
+            return mAttributesIml;
         }
     }
 
@@ -575,6 +649,158 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         } else {
             mEditorFragmentListener.onAddMediaClicked();
             getActivity().openContextMenu(formattingToolbar);
+        }
+    }
+
+    @Override
+    public void mediaTapped(@NotNull Attributes attrs) {
+        Set<String> classes = getClassAttribute(attrs);
+
+        String id = "";
+        String uploadStatus = "";
+        JSONObject meta = new JSONObject();
+        if (classes.contains("uploading")) {
+            uploadStatus = "uploading";
+            id = attrs.getValue("data-wpid");
+        } else if (classes.contains("failed")) {
+            uploadStatus = "failed";
+            id = attrs.getValue("data-wpid");
+        } else {
+            id = attrs.getValue("id");
+            try {
+                meta.put("src", attrs.getValue("src"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
+    }
+
+    public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
+        if (mediaType == null || !isAdded()) {
+            return;
+        }
+
+        switch (uploadStatus) {
+            case "uploading":
+                // Display 'cancel upload' dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(getString(R.string.stop_upload_dialog_title));
+                builder.setPositiveButton(R.string.stop_upload_button, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
+
+                        switch (mediaType) {
+                            case IMAGE:
+                                content.removeMedia(ImagePredicate.idPredicate(mediaId));
+                                break;
+                            case VIDEO:
+                                // TODO: remove video
+                        }
+                        mUploadingMedia.remove(mediaId);
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                break;
+            case "failed":
+                // Retry media upload
+                mEditorFragmentListener.onMediaRetryClicked(mediaId);
+
+                switch (mediaType) {
+                    case IMAGE:
+                        AttributesWithClass attributesWithClass = new AttributesWithClass(
+                                (AttributesImpl) content.getMediaAttributes(
+                                        ImagePredicate.localMediaIdPredicate(mediaId)));
+                        attributesWithClass.removeClass("failed");
+                        content.setOverlay(ImagePredicate.localMediaIdPredicate(mediaId), null, 0,
+                                attributesWithClass.getAttributesIml());
+                        break;
+                    case VIDEO:
+                        // TODO: unmark video failed
+                }
+                mFailedMediaIds.remove(mediaId);
+                mUploadingMedia.put(mediaId, mediaType);
+                break;
+            default:
+                if (!mediaType.equals(MediaType.IMAGE)) {
+                    return;
+                }
+
+                // Only show image options fragment for image taps
+                FragmentManager fragmentManager = getFragmentManager();
+
+                if (fragmentManager.findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG) != null) {
+                    return;
+                }
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.IMAGE_EDITED);
+                ImageSettingsDialogFragment imageSettingsDialogFragment = new ImageSettingsDialogFragment();
+                imageSettingsDialogFragment.setTargetFragment(this,
+                        ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE);
+
+                Bundle dialogBundle = new Bundle();
+
+                dialogBundle.putString("maxWidth", mBlogSettingMaxImageWidth);
+                dialogBundle.putBoolean("featuredImageSupported", mFeaturedImageSupported);
+
+                // Request and add an authorization header for HTTPS images
+                // Use https:// when requesting the auth header, in case the image is incorrectly using http://.
+                // If an auth header is returned, force https:// for the actual HTTP request.
+                HashMap<String, String> headerMap = new HashMap<>();
+                if (mCustomHttpHeaders != null) {
+                    headerMap.putAll(mCustomHttpHeaders);
+                }
+
+                try {
+                    final String imageSrc = meta.getString("src");
+                    String authHeader = mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));
+                    if (authHeader.length() > 0) {
+                        meta.put("src", UrlUtils.makeHttps(imageSrc));
+                        headerMap.put("Authorization", authHeader);
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(AppLog.T.EDITOR, "Could not retrieve image url from JSON metadata");
+                }
+                dialogBundle.putSerializable("headerMap", headerMap);
+
+                dialogBundle.putString("imageMeta", meta.toString());
+
+                String imageId = JSONUtils.getString(meta, "attachment_id");
+                if (!imageId.isEmpty()) {
+                    dialogBundle.putBoolean("isFeatured", mFeaturedImageId == Integer.parseInt(imageId));
+                }
+
+                imageSettingsDialogFragment.setArguments(dialogBundle);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+                fragmentTransaction.add(android.R.id.content, imageSettingsDialogFragment,
+                        ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG)
+                        .addToBackStack(null)
+                        .commit();
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if ((requestCode == LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_ADD ||
+                requestCode == LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_UPDATE)) {
+            // TODO: handle link/unlink
+        } else if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
+            // TODO: handle media settings
         }
     }
 }
