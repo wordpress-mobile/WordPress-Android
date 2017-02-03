@@ -230,7 +230,7 @@ public class WPNetworkImageView extends AppCompatImageView {
                 mUrlSkipList.add(mRequestedURL);
             }
 
-            if (!mUrl.equals(mRequestedURL)) {
+            if (mUrl != null && !mUrl.equals(mRequestedURL)) {
                 AppLog.w(AppLog.T.UTILS, "WPNetworkImageView > request no longer valid: " + mRequestedURL);
                 return;
             }
@@ -243,7 +243,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
         @Override
         public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
-            if (!mUrl.equals(mRequestedURL)) {
+            if (mUrl != null && !mUrl.equals(mRequestedURL)) {
                 AppLog.w(AppLog.T.UTILS, "WPNetworkImageView > request no longer valid: " + mRequestedURL);
                 return;
             }
