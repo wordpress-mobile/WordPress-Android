@@ -80,15 +80,50 @@ public class ReaderBlogActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.w(T.READER, "blog " + actionName + " failed with error");
                 AppLog.e(T.READER, volleyError);
-                localRevertFollowBlogId(blogId, isAskingToFollow);
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
+                // check if we get a 403 when unfollowing - this will happen when we attempt
+                // to unfollow a blog that no longer exists - the workaround is to unfollow
+                // by url - note that the v1.2 endpoint will return a 404 in this situation
+                int status = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                if (status == 403 && !isAskingToFollow) {
+                    internalUnfollowBlogByUrl(blogId, actionListener);
+                } else {
+                    localRevertFollowBlogId(blogId, isAskingToFollow);
+                    if (actionListener != null) {
+                        actionListener.onActionResult(false);
+                    }
                 }
             }
         };
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
         return true;
+    }
+
+    private static void internalUnfollowBlogByUrl(long blogId,
+                                                  final ActionListener actionListener) {
+        String blogUrl = ReaderBlogTable.getBlogUrl(blogId);
+        if (TextUtils.isEmpty(blogUrl)) {
+            AppLog.w(T.READER, "URL not found for blogId " + blogId);
+            ReaderActions.callActionListener(actionListener, false);
+            return;
+        }
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                ReaderActions.callActionListener(actionListener, true);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AppLog.e(T.READER, error);
+                ReaderActions.callActionListener(actionListener, false);
+            }
+        };
+
+        String path = "/read/following/mine/delete?url=" + UrlUtils.urlEncode(blogUrl);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
     public static boolean followFeedById(final long feedId,
