@@ -18,6 +18,8 @@ repositories {
 }
 
 android {
+    useLibrary 'org.apache.http.legacy'
+
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
 
