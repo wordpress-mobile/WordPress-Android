@@ -27,11 +27,12 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 /**
+ * Modified version of https://gist.github.com/alashow/c96c09320899e4caa06b
+ *
  * OkHttp backed {@link com.android.volley.toolbox.HttpStack HttpStack} that does not
  * use okhttp-urlconnection
  */
 public class OkHttpStack implements HttpStack {
-
     private final OkHttpClient.Builder mClientBuilder;
 
     public OkHttpStack(OkHttpClient.Builder clientBuilder) {
@@ -41,7 +42,6 @@ public class OkHttpStack implements HttpStack {
     @Override
     public HttpResponse performRequest(com.android.volley.Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
-
         int timeoutMs = request.getTimeoutMs();
         mClientBuilder.connectTimeout(timeoutMs, TimeUnit.MILLISECONDS);
         mClientBuilder.readTimeout(timeoutMs, TimeUnit.MILLISECONDS);
@@ -65,7 +65,8 @@ public class OkHttpStack implements HttpStack {
         Call okHttpCall = client.newCall(okHttpRequest);
         okhttp3.Response okHttpResponse = okHttpCall.execute();
 
-        StatusLine responseStatus = new BasicStatusLine(parseProtocol(okHttpResponse.protocol()), okHttpResponse.code(), okHttpResponse.message());
+        StatusLine responseStatus = new BasicStatusLine(parseProtocol(okHttpResponse.protocol()),
+                okHttpResponse.code(), okHttpResponse.message());
         BasicHttpResponse response = new BasicHttpResponse(responseStatus);
         response.setEntity(entityFromOkHttpResponse(okHttpResponse));
 
