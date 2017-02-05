@@ -439,7 +439,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        if (mShowNewEditor) {
+        if (mShowNewEditor || mShowAztecEditor) {
             inflater.inflate(R.menu.edit_post, menu);
         } else {
             inflater.inflate(R.menu.edit_post_legacy, menu);
