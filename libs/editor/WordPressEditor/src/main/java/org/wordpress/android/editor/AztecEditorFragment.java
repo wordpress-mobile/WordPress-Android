@@ -293,7 +293,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         final String safeMediaUrl = Utils.escapeQuotes(mediaUrl);
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            String mediaId = mediaFile.getMediaId();
             if (mediaFile.isVideo()) {
                 // TODO: insert video
             } else {
@@ -398,15 +397,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         public boolean matches(@NotNull Attributes attrs) {
             return attrs.getIndex(mAttributeName) > -1 && attrs.getValue("data-wpid").equals(mId);
         }
-    };
+    }
 
     @Override
     public void onMediaUploadProgress(final String mediaId, final float progress) {
         final MediaType mediaType = mUploadingMedia.get(mediaId);
         if (mediaType != null) {
             AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    (AttributesImpl) content.getMediaAttributes(
-                            ImagePredicate.localMediaIdPredicate(mediaId)));
+                    content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(mediaId)));
             attributesWithClass.addClass("uploading");
             content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(mediaId), (int)(progress * 10000),
                     attributesWithClass.getAttributesIml());
@@ -419,9 +417,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
-                    AttributesWithClass attributesWithClass = new AttributesWithClass(
-                            (AttributesImpl) content.getMediaAttributes(
-                                    ImagePredicate.localMediaIdPredicate(localMediaId)));
+                    AttributesWithClass attributesWithClass =new AttributesWithClass(
+                            content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
 
                     attributesWithClass.removeClass("uploading");
                     attributesWithClass.addClass("failed");
@@ -455,11 +452,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             mClasses = getClassAttribute(attrs);
         }
 
-        public void addClass(String c) {
+        void addClass(String c) {
             mClasses.add(c);
         }
 
-        public void removeClass(String c) {
+        void removeClass(String c) {
             mClasses.remove(c);
         }
 
@@ -478,7 +475,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             return mAttributesIml;
         }
 
-        public String optValue(String key, String defaultValue) {
+        String optValue(String key, String defaultValue) {
             if (mAttributesIml.getIndex(key) == -1) {
                 return defaultValue;
             } else {
@@ -779,7 +776,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     public void mediaTapped(@NotNull Attributes attrs, int naturalWidth, int naturalHeight) {
         Set<String> classes = getClassAttribute(attrs);
 
-        String id = "";
+        String id;
         String uploadStatus = "";
         JSONObject meta = getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
         if (classes.contains("uploading")) {
@@ -837,8 +834,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 switch (mediaType) {
                     case IMAGE:
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
-                                (AttributesImpl) content.getMediaAttributes(
-                                        ImagePredicate.localMediaIdPredicate(mediaId)));
+                                content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(mediaId)));
                         attributesWithClass.removeClass("failed");
                         content.setOverlay(ImagePredicate.localMediaIdPredicate(mediaId), null, 0,
                                 attributesWithClass.getAttributesIml());
