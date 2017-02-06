@@ -68,6 +68,7 @@ import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -112,7 +113,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     // Services
     private MediaDeleteService.MediaDeleteBinder mDeleteService;
     private MediaUploadService.MediaUploadBinder mUploadService;
-    private ArrayList<MediaModel> mPendingUploads;
+    private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
     private boolean mDeleteServiceBound;
     private boolean mUploadServiceBound;
 
@@ -196,7 +197,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     protected void onResume() {
         super.onResume();
-        startMediaUploadService(mPendingUploads);
+        startMediaUploadService();
         startMediaDeleteService(null);
         ActivityId.trackLastActivity(ActivityId.MEDIA);
     }
@@ -823,22 +824,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void addMediaToUploadService(@NonNull MediaModel media) {
+        // Start the upload service if it's not started and fill the media queue
         if (mUploadService == null) {
-            ArrayList<MediaModel> mediaToUpload = new ArrayList<>();
-            mediaToUpload.add(media);
-            startMediaUploadService(mediaToUpload);
-        }
-
-        if (mUploadService != null) {
-            mUploadService.addMediaToQueue(media);
-        } else {
-            if (mPendingUploads == null) {
-                mPendingUploads = new ArrayList<>();
-            }
-            media.setUploadState(MediaUploadState.QUEUED.name());
-            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-            updateViews();
+            startMediaUploadService();
             mPendingUploads.add(media);
+        } else {
+            mUploadService.addMediaToQueue(media);
         }
     }
 
@@ -856,7 +847,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return;
         }
 
-        MediaModel media = new MediaModel();
+        MediaModel media = mMediaStore.instantiateMediaModel();
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
         String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
 
@@ -883,6 +874,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
         media.setUploadState(MediaUploadState.QUEUED.toString());
+        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);
     }
 
@@ -930,27 +923,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void startMediaUploadService(ArrayList<MediaModel> mediaToUpload) {
+    private void startMediaUploadService() {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             AppLog.v(AppLog.T.MEDIA, "Unable to start MediaUploadService, internet connection required.");
             return;
         }
 
-        if (mUploadService != null) {
-            if (mediaToUpload != null && !mediaToUpload.isEmpty()) {
-                for (MediaModel media : mediaToUpload) {
-                    mUploadService.addMediaToQueue(media);
-                }
-                mediaToUpload.clear();
-            }
-        } else if (NetworkUtils.isNetworkAvailable(this)) {
+        if (mUploadService == null) {
             Intent intent = new Intent(this, MediaUploadService.class);
             intent.putExtra(MediaUploadService.SITE_KEY, mSite);
-            if (mediaToUpload != null) {
-                intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaToUpload);
-                doBindUploadService(intent);
-                mediaToUpload.clear();
-            }
+            doBindUploadService(intent);
             startService(intent);
         }
     }

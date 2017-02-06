@@ -11,6 +11,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
@@ -122,23 +123,6 @@ public class MediaUploadService extends Service {
         return START_REDELIVER_INTENT;
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe
-    public void onMediaUploaded(OnMediaUploaded event) {
-        // event for unknown media, ignoring
-        if (event.media == null || !matchesInProgressMedia(event.media)) {
-            AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
-            return;
-        }
-
-        if (event.isError()) {
-            handleOnMediaUploadedError(event);
-        } else {
-            handleOnMediaUploadedSuccess(event);
-        }
-
-        uploadNextInQueue();
-    }
 
     @NonNull
     public List<MediaModel> getUploadQueue() {
@@ -284,9 +268,13 @@ public class MediaUploadService extends Service {
     }
 
     private void dispatchUploadAction(@NonNull final MediaModel media) {
-        AppLog.i(T.MEDIA, "Dispatching upload action: " + media.getFilePath());
+        AppLog.i(T.MEDIA, "Dispatching upload action: " + media.getTitle());
+        media.setUploadState(UploadState.UPLOADING.toString());
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+
         MediaPayload payload = new MediaPayload(mSite, media);
         mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
+
         if (mListener != null) {
             mListener.onUploadBegin(mCurrentUpload);
         }
@@ -296,5 +284,26 @@ public class MediaUploadService extends Service {
         AppLog.i(T.MEDIA, "Dispatching cancel upload action: " + media.getFilePath());
         MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+    }
+
+    // FluxC events
+
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onMediaUploaded(OnMediaUploaded event) {
+        // event for unknown media, ignoring
+        if (event.media == null || !matchesInProgressMedia(event.media)) {
+            AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
+            return;
+        }
+
+        if (event.isError()) {
+            handleOnMediaUploadedError(event);
+        } else {
+            handleOnMediaUploadedSuccess(event);
+        }
+
+        uploadNextInQueue();
     }
 }
