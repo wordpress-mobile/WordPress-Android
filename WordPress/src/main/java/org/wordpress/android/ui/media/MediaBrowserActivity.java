@@ -492,14 +492,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (media == null) {
             return;
         }
-        if (mUploadService != null) {
-            mUploadService.addMediaToQueue(media);
-            media.setUploadState(MediaUploadState.QUEUED.toString());
-            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-        } else {
-            mPendingUploads.add(media);
-            startMediaUploadService(mPendingUploads);
-        }
+        addMediaToUploadService(media);
     }
 
     @Override
