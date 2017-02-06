@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,11 +44,13 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogList mFollowedBlogs = new ReaderBlogList();
 
-    @SuppressWarnings("UnusedParameters")
-    public ReaderBlogAdapter(Context context, ReaderBlogType blogType) {
+    private String mSearchFilter;
+
+    public ReaderBlogAdapter(ReaderBlogType blogType, String searchFilter) {
         super();
         setHasStableIds(false);
         mBlogType = blogType;
+        mSearchFilter = searchFilter;
     }
 
     public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
@@ -210,7 +212,29 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
 
                 case FOLLOWED:
-                    tmpFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
+                    tmpFollowedBlogs = new ReaderBlogList();
+                    ReaderBlogList allFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
+                    if (hasSearchFilter()) {
+                        String query = mSearchFilter.toLowerCase();
+                        for (ReaderBlog blog: allFollowedBlogs) {
+                            if (blog.getName().toLowerCase().contains(query)) {
+                                tmpFollowedBlogs.add(blog);
+                            } else if (UrlUtils.getHost(blog.getUrl()).toLowerCase().contains(query)) {
+                                tmpFollowedBlogs.add(blog);
+                            }
+                        }
+                    } else {
+                        tmpFollowedBlogs.addAll(allFollowedBlogs);
+                    }
+                    // sort followed blogs by name/domain to match display
+                    Collections.sort(tmpFollowedBlogs, new Comparator<ReaderBlog>() {
+                        @Override
+                        public int compare(ReaderBlog thisBlog, ReaderBlog thatBlog) {
+                            String thisName = getBlogNameForComparison(thisBlog);
+                            String thatName = getBlogNameForComparison(thatBlog);
+                            return thisName.compareToIgnoreCase(thatName);
+                        }
+                    });
                     return !mFollowedBlogs.isSameList(tmpFollowedBlogs);
 
                 default:
@@ -227,15 +251,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         break;
                     case FOLLOWED:
                         mFollowedBlogs = (ReaderBlogList) tmpFollowedBlogs.clone();
-                        // sort followed blogs by name/domain to match display
-                        Collections.sort(mFollowedBlogs, new Comparator<ReaderBlog>() {
-                            @Override
-                            public int compare(ReaderBlog thisBlog, ReaderBlog thatBlog) {
-                                String thisName = getBlogNameForComparison(thisBlog);
-                                String thatName = getBlogNameForComparison(thatBlog);
-                                return thisName.compareToIgnoreCase(thatName);
-                            }
-                        });
                         break;
                 }
                 notifyDataSetChanged();
@@ -260,4 +275,23 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         }
     }
+
+    public String getSearchFilter() {
+        return mSearchFilter;
+    }
+
+    /*
+     * filters the list of followed sites - pass null to show all
+     */
+    public void setSearchFilter(String constraint) {
+        if (!StringUtils.equals(constraint, mSearchFilter)) {
+            mSearchFilter = constraint;
+            refresh();
+        }
+    }
+
+    public boolean hasSearchFilter() {
+        return !TextUtils.isEmpty(mSearchFilter);
+    }
+
 }

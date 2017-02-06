@@ -84,10 +84,6 @@ public class AppPrefs {
         // local time of the last push notification received
         PUSH_NOTIFICATIONS_LAST_NOTE_TIME,
 
-        // list for local drafts that the user has set to ignore notifications on
-        // (i.e. "please don't remind me I've got this in drafts")
-        PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST,
-
         // local IDs of sites recently chosen in the site picker
         RECENTLY_PICKED_SITE_IDS,
 
@@ -512,98 +508,6 @@ public class AppPrefs {
         SharedPreferences.Editor editor = prefs().edit();
         editor.putLong(key, timestamp);
         editor.apply();
-    }
-
-    public static ArrayList<Long> getPendingDraftsIgnorePostIdList() {
-        // builds the list from csv
-        ArrayList<Long> idList = new ArrayList<>();
-        String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
-        if (!TextUtils.isEmpty(idListString)) {
-            List<String> items = Arrays.asList(idListString.split(","));
-            for (String item : items) {
-                Long oneId = Long.valueOf(item);
-                idList.add(oneId);
-            }
-        }
-        return idList;
-    }
-
-    public static void addToPendingDraftsIgnorePostIdList(long postId) {
-        // appends new id to postIdList, unless it's already in the list
-        // also rolls - eliminates first object (i..e oldest object) when MAX_PENDING_DRAFTS_AMOUNT reached
-        boolean isPostIdAlreadyInIgnoreList = isPostIdInPendingDraftsIgnorePostIdList(postId);
-
-        // if this postId wasn't in our list already, append it
-        if (!isPostIdAlreadyInIgnoreList) {
-
-            // before appending, eliminate first one if we have more than MAX_PENDING_DRAFTS_AMOUNT elements
-            rollPendingDraftsIgnorePostIdListIfNeeded();
-
-            String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
-            if (!TextUtils.isEmpty(idListString)) {
-                idListString += "," + String.valueOf(postId);
-            } else {
-                idListString += String.valueOf(postId);
-            }
-            setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, idListString);
-        }
-    }
-
-    public static void addToPendingDraftsIgnorePostIdList(ArrayList<Long> postIds) {
-        if (postIds != null) {
-            for (Long postId : postIds) {
-                addToPendingDraftsIgnorePostIdList(postId);
-            }
-        }
-    }
-
-    public static void deleteIdFromPendingDraftsIgnorePostIdList(long postId) {
-        ArrayList<Long> idList = getPendingDraftsIgnorePostIdList();
-        boolean foundSamePostId = false;
-        for (Long oneId : idList) {
-            if (oneId != null && oneId == postId) {
-                // now delete this from the list and rebuild it
-                idList.remove(oneId);
-                foundSamePostId = true;
-                break;
-            }
-        }
-
-        if (foundSamePostId) {
-            // re-build
-            String idListString = TextUtils.join(",", idList);
-            setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, idListString);
-        }
-    }
-
-    private static boolean rollPendingDraftsIgnorePostIdListIfNeeded(){
-        String idListString = getString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, "");
-        boolean rolled = false;
-        if (!TextUtils.isEmpty(idListString)) {
-            // note wrapping the Arrays.asList call with a new object is needed because otherwise
-            // trying to remove an item from a List returned by Arrays.asList throws an UnsupportedOperationException
-            List<String> items = new ArrayList(Arrays.asList(idListString.split(",")));
-            if (items.size() > MAX_PENDING_DRAFTS_AMOUNT) {
-                // eliminate first one
-                items.remove(0);
-                idListString = TextUtils.join(",", items);
-                setString(DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_IGNORE_LIST, idListString);
-                rolled = true;
-            }
-        }
-        return rolled;
-    }
-
-    public static boolean isPostIdInPendingDraftsIgnorePostIdList(long postId) {
-        ArrayList<Long> idList = getPendingDraftsIgnorePostIdList();
-        boolean foundSamePostId = false;
-        for (Long oneId : idList) {
-            if (oneId != null && oneId == postId) {
-                foundSamePostId = true;
-                break;
-            }
-        }
-        return foundSamePostId;
     }
 
     /*

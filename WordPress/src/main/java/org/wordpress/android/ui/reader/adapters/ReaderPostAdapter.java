@@ -203,17 +203,25 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtVisit.setOnClickListener(visitListener);
             imgVisit.setOnClickListener(visitListener);
 
-            // show blog preview when post header is tapped
-            postHeaderView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    ReaderPost post = getItem(position);
-                    if (post != null) {
-                        ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+            // show author/blog link as disabled if we're previewing a blog, otherwise show
+            // blog preview when the post header is clicked
+            if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
+                int color = itemView.getContext().getResources().getColor(R.color.grey_dark);
+                txtAuthorAndBlogName.setTextColor(color);
+                // remove the ripple background
+                postHeaderView.setBackground(null);
+            } else {
+                postHeaderView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int position = getAdapterPosition();
+                        ReaderPost post = getItem(position);
+                        if (post != null) {
+                            ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                        }
                     }
-                }
-            });
+                });
+            }
 
             // play the featured video when the overlay image is tapped - note that the overlay
             // image only appears when there's a featured video
