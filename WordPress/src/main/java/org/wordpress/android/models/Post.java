@@ -425,6 +425,7 @@ public class Post implements Serializable {
                                       StringUtils.equals(password, otherPost.password) &&
                                       StringUtils.equals(postFormat, otherPost.postFormat) &&
                                       this.dateCreatedGmt == otherPost.dateCreatedGmt &&
+                                      this.featuredImageId == otherPost.featuredImageId &&
                                       PostLocation.equals(this.mPostLocation, otherPost.mPostLocation)
         );
     }
