@@ -406,7 +406,7 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostSelected(PostsListPost post) {
-        onPostButtonClicked(PostListButton.BUTTON_PREVIEW, post);
+        onPostButtonClicked(PostListButton.BUTTON_EDIT, post);
     }
 
     /*
