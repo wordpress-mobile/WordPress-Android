@@ -362,7 +362,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             if (mediaType.equals(MediaType.IMAGE)) {
                 AttributesImpl attrs = new AttributesImpl();
                 attrs.addAttribute("", "src", "src", "string", remoteUrl);
-                attrs.addAttribute("", "id", "id", "string", localMediaId);
 
                 // clear overlay
                 content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), null, 0, attrs);
