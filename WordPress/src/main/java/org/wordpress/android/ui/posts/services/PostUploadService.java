@@ -363,11 +363,17 @@ public class PostUploadService extends Service {
                     contentStruct.put("wp_post_thumbnail", featuredImageID);
                 }
             } else {
-                if (mPost.getFeaturedImageId() < 1 && !mPost.isLocalDraft()) {
-                    // The featured image was removed from a live post
-                    contentStruct.put("wp_post_thumbnail", "");
+                if (mPost.isLocalDraft()) {
+                    if (mPost.getFeaturedImageId() != Post.FEATURED_IMAGE_INIT_VALUE &&
+                            mPost.getFeaturedImageId() != Post.FEATURED_IMAGE_REMOVED_VALUE) {
+                        contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+                    }
                 } else {
-                    contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+                    // Live post
+                    if (mPost.getFeaturedImageId() != Post.FEATURED_IMAGE_INIT_VALUE) {
+                        contentStruct.put("wp_post_thumbnail",
+                                mPost.getFeaturedImageId() == Post.FEATURED_IMAGE_REMOVED_VALUE ? "" : mPost.getFeaturedImageId());
+                    }
                 }
             }
 

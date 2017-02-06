@@ -280,7 +280,7 @@ public class EditPostSettingsFragment extends Fragment
                 launchMediaGalleryActivity();
                 return true;
             case CLEAR_FEATURED_IMAGE_MENU_POSITION:
-                mFeaturedImageId = -1;
+                mFeaturedImageId = Post.FEATURED_IMAGE_REMOVED_VALUE;
                 mFeaturedImageView.setVisibility(View.GONE);
                 mFeaturedImageButton.setVisibility(View.VISIBLE);
                 return true;
