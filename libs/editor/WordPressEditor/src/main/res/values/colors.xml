@@ -15,4 +15,7 @@
     <color name="format_bar_divider">@color/wp_gray_lighten_10</color>
     <color name="sourceview_separator">@color/wp_gray_lighten_30</color>
     <color name="sourceview_placeholder_text">@color/wp_gray</color>
+
+    <color name="media_shade_overlay_color">#50000000</color>
+    <color name="media_shade_overlay_error_color">#50FF0000</color>
 </resources>

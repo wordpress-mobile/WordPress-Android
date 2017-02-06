@@ -12,6 +12,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -311,12 +312,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
                 Bitmap bitmap = BitmapFactory.decodeFile(safeMediaUrl);
 
+                content.insertMedia(new BitmapDrawable(getResources(), bitmap), attrs);
+
+                // set intermediate shade overlay
+                content.setOverlay(ImagePredicate.localMediaIdPredicate(id), 0,
+                        new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
+                        Gravity.FILL, attrs);
+
                 Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
                 // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
-                progressDrawable.setBounds(0, 0, 0, 2);
+                progressDrawable.setBounds(0, 0, 0, 4);
 
-                content.insertMedia(new BitmapDrawable(getResources(), bitmap), progressDrawable,
+                content.setOverlay(ImagePredicate.localMediaIdPredicate(id), 1, progressDrawable,
                         Gravity.FILL_HORIZONTAL | Gravity.TOP, attrs);
+
                 mUploadingMedia.put(id, MediaType.IMAGE);
             }
         }
@@ -367,7 +376,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 attrs.addAttribute("", "src", "src", "string", remoteUrl);
 
                 // clear overlay
-                content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), null, 0, attrs);
+                content.clearOverlays(ImagePredicate.localMediaIdPredicate(localMediaId), attrs);
 
                 mUploadingMedia.remove(localMediaId);
             } else if (mediaType.equals(MediaType.VIDEO)) {
@@ -406,7 +415,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             AttributesWithClass attributesWithClass = new AttributesWithClass(
                     content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(mediaId)));
             attributesWithClass.addClass("uploading");
-            content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(mediaId), (int)(progress * 10000),
+            content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(mediaId), 1, (int)(progress * 10000),
                     attributesWithClass.getAttributesIml());
         }
     }
@@ -423,10 +432,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                     attributesWithClass.removeClass("uploading");
                     attributesWithClass.addClass("failed");
 
-                    Drawable alertDrawable = getResources().getDrawable(android.R.drawable.ic_dialog_alert);
-                    content.setOverlay(
-                            ImagePredicate.localMediaIdPredicate(localMediaId), alertDrawable, Gravity.CENTER,
-                            attributesWithClass.getAttributesIml());
+                    // set intermediate shade overlay
+                    content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,
+                            new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_error_color)),
+                            Gravity.FILL, attributesWithClass.getAttributesIml());
+
+                    Drawable alertDrawable = getResources().getDrawable(R.drawable.media_retry_image);
+                    content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 1, alertDrawable,
+                            Gravity.CENTER, attributesWithClass.getAttributesIml());
                     break;
                 case VIDEO:
                     // TODO: mark media as upload-failed
@@ -836,8 +849,18 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
                                 content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(mediaId)));
                         attributesWithClass.removeClass("failed");
-                        content.setOverlay(ImagePredicate.localMediaIdPredicate(mediaId), null, 0,
-                                attributesWithClass.getAttributesIml());
+
+                        // set intermediate shade overlay
+                        content.setOverlay(ImagePredicate.localMediaIdPredicate(mediaId), 0,
+                                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
+                                Gravity.FILL, attributesWithClass.getAttributesIml());
+
+                        Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
+                        // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
+                        progressDrawable.setBounds(0, 0, 0, 4);
+
+                        content.setOverlay(ImagePredicate.localMediaIdPredicate(mediaId), 1, progressDrawable,
+                                Gravity.FILL_HORIZONTAL | Gravity.TOP, attributesWithClass.getAttributesIml());
                         break;
                     case VIDEO:
                         // TODO: unmark video failed
