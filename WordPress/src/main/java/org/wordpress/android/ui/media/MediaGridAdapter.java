@@ -277,42 +277,36 @@ public class MediaGridAdapter extends CursorAdapter {
 
     private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
         final String filePath = cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_PATH));
+        imageView.setTag(filePath);
 
-        if (MediaUtils.isValidImage(filePath)) {
-            imageView.setTag(filePath);
-
-            Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-            } else {
-                imageView.setImageBitmap(null);
-
-                boolean shouldFetch = false;
-
-                List<BitmapReadyCallback> list;
-                if (mFilePathToCallbackMap.containsKey(filePath)) {
-                    list = mFilePathToCallbackMap.get(filePath);
-                } else {
-                    list = new ArrayList<>();
-                    shouldFetch = true;
-                    mFilePathToCallbackMap.put(filePath, list);
-                }
-                list.add(new BitmapReadyCallback() {
-                    @Override
-                    public void onBitmapReady(Bitmap bitmap) {
-                        if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath))
-                            imageView.setImageBitmap(bitmap);
-                    }
-                });
-
-
-                if (shouldFetch) {
-                    fetchBitmap(filePath);
-                }
-            }
+        Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
         } else {
-            // if not image, for now show no image.
             imageView.setImageBitmap(null);
+
+            boolean shouldFetch = false;
+
+            List<BitmapReadyCallback> list;
+            if (mFilePathToCallbackMap.containsKey(filePath)) {
+                list = mFilePathToCallbackMap.get(filePath);
+            } else {
+                list = new ArrayList<>();
+                shouldFetch = true;
+                mFilePathToCallbackMap.put(filePath, list);
+            }
+            list.add(new BitmapReadyCallback() {
+                @Override
+                public void onBitmapReady(Bitmap bitmap) {
+                    if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath)) {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                }
+            });
+
+            if (shouldFetch) {
+                fetchBitmap(filePath);
+            }
         }
     }
 
