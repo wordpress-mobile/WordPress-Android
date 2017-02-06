@@ -32,6 +32,7 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.ccil.cowan.tagsoup.AttributesImpl;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -60,6 +61,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class AztecEditorFragment extends EditorFragmentAbstract implements OnImeBackListener, EditorMediaUploadListener,
         OnMediaTappedListener, AztecToolbarClickListener {
@@ -443,8 +445,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         private AttributesImpl mAttributesIml;
         private Set<String> mClasses;
 
-        AttributesWithClass(AttributesImpl attrs) {
-            mAttributesIml = attrs;
+        AttributesWithClass(Attributes attrs) {
+            mAttributesIml = new AttributesImpl(attrs);
             mClasses = getClassAttribute(attrs);
         }
 
@@ -456,6 +458,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             mClasses.remove(c);
         }
 
+        public Set<String> getClasses() {
+            return mClasses;
+        }
+
         AttributesImpl getAttributesIml() {
             String classesStr = TextUtils.join(" ", mClasses);
             if (mAttributesIml.getIndex("class") == -1) {
@@ -465,6 +471,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             }
 
             return mAttributesIml;
+        }
+
+        public String optValue(String key, String defaultValue) {
+            if (mAttributesIml.getIndex(key) == -1) {
+                return defaultValue;
+            } else {
+                return mAttributesIml.getValue(key);
+            }
         }
     }
 
@@ -652,13 +666,117 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
     }
 
+    private JSONObject getMetadata(AttributesWithClass attrs, int naturalWidth, int naturalHeight) {
+        JSONObject metadata = new JSONObject();
+        putOpt(metadata, "align", "none");          // Accepted values: center, left, right or empty string.
+        putOpt(metadata, "alt", "");                // Image alt attribute
+        putOpt(metadata, "attachment_id", "");      // Numeric attachment id of the image in the site's media library
+        putOpt(metadata, "caption", "");            // The text of the caption for the image (if any)
+        putOpt(metadata, "captionClassName", "");   // The classes for the caption shortcode (if any).
+        putOpt(metadata, "captionId", "");          // The caption shortcode's ID attribute. The numeric value should match the value of attachment_id
+        putOpt(metadata, "classes", "");            // The class attribute for the image. Does not include editor generated classes
+        putOpt(metadata, "height", "");             // The image height attribute
+        putOpt(metadata, "linkClassName", "");      // The class attribute for the link
+        putOpt(metadata, "linkRel", "");            // The rel attribute for the link (if any)
+        putOpt(metadata, "linkTargetBlank", false); // true if the link should open in a new window.
+        putOpt(metadata, "linkUrl", "");            // The href attribute of the link
+        putOpt(metadata, "size", "custom");         // Accepted values: custom, medium, large, thumbnail, or empty string
+        putOpt(metadata, "src", "");                // The src attribute of the image
+        putOpt(metadata, "title", "");              // The title attribute of the image (if any)
+        putOpt(metadata, "width", "");              // The image width attribute
+        putOpt(metadata, "naturalWidth", "");       // The natural width of the image.
+        putOpt(metadata, "naturalHeight", "");       // The natural height of the image.
+
+        putOpt(metadata, "src", attrs.optValue("src", ""));
+        putOpt(metadata, "alt", attrs.optValue("alt", ""));
+        putOpt(metadata, "title", attrs.optValue("title", ""));
+        putOpt(metadata, "naturalWidth", naturalWidth);
+        putOpt(metadata, "naturalHeight", naturalHeight);
+
+        String width = attrs.optValue("width", "");
+        String height = attrs.optValue("height", "");
+
+        Pattern isIntRegExp = Pattern.compile("^\\d+$");
+
+        if (!isIntRegExp.matcher(width).matches() || NumberUtils.toInt(width) == 0) {
+            putOpt(metadata, "width", naturalWidth);
+        }
+
+        if (!isIntRegExp.matcher(height).matches() || NumberUtils.toInt(height) == 0) {
+            putOpt(metadata, "height", naturalHeight);
+        }
+
+        List<String> extraClasses = new ArrayList<>();
+
+        for (String clazz : attrs.getClasses()) {
+            if (Pattern.matches("^wp-image.*", clazz)) {
+                putOpt(metadata, "attachment_id", Integer.parseInt(clazz.replace("wp-image-", "")));
+            } else if (Pattern.matches("^align.*", clazz)) {
+                putOpt(metadata, "align", clazz.replace("align", ""));
+            } else if (Pattern.matches("^size-.*", clazz)) {
+                putOpt(metadata, "size", clazz.replace("size-", ""));
+            } else {
+                extraClasses.add(clazz);
+            }
+        }
+
+        putOpt(metadata, "classes", TextUtils.join(" ", extraClasses));
+
+//        // Extract caption
+//        var captionMeta = ZSSEditor.captionMetaForImage( imageNode )
+//        if (captionMeta.caption != '') {
+//            metadata = $.extend( metadata, captionMeta );
+//        }
+//
+//        // Extract linkTo
+//        if ( imageNode.parentNode && imageNode.parentNode.nodeName === 'A' ) {
+//            link = imageNode.parentNode;
+//            metadata.linkClassName = link.className;
+//            metadata.linkRel = $( link ).attr( 'rel' ) || '';
+//            metadata.linkTargetBlank = $( link ).attr( 'target' ) === '_blank' ? true : false;
+//            metadata.linkUrl = $( link ).attr( 'href' ) || '';
+//        }
+
+        return metadata;
+    }
+
+    private JSONObject putOpt(JSONObject jsonObject, String key, String value) {
+        try {
+            return jsonObject.put(key, value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject;
+    }
+
+    private JSONObject putOpt(JSONObject jsonObject, String key, int value) {
+        try {
+            return jsonObject.put(key, value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject;
+    }
+
+    private JSONObject putOpt(JSONObject jsonObject, String key, boolean value) {
+        try {
+            return jsonObject.put(key, value);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject;
+    }
+
     @Override
-    public void mediaTapped(@NotNull Attributes attrs) {
+    public void mediaTapped(@NotNull Attributes attrs, int naturalWidth, int naturalHeight) {
         Set<String> classes = getClassAttribute(attrs);
 
         String id = "";
         String uploadStatus = "";
-        JSONObject meta = new JSONObject();
+        JSONObject meta = getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
         if (classes.contains("uploading")) {
             uploadStatus = "uploading";
             id = attrs.getValue("data-wpid");
@@ -667,11 +785,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             id = attrs.getValue("data-wpid");
         } else {
             id = attrs.getValue("id");
-            try {
-                meta.put("src", attrs.getValue("src"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
         }
 
         onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
