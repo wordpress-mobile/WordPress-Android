@@ -1561,7 +1561,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private List<MediaModel> mPendingUploads = new ArrayList<>();
+    private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
 
     private void uploadMedia(Uri uri) {
         MediaModel media = new MediaModel();
@@ -1573,10 +1573,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setTitle(media.getFileName());
         if (mUploadService != null) {
             mUploadService.addMediaToQueue(media);
-        } else {
-            mPendingUploads.add(media);
-            startMediaUploadService();
         }
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+        mPendingUploads.add(media);
+        startMediaUploadService();
     }
 
     private void startMediaGalleryAddActivity() {
