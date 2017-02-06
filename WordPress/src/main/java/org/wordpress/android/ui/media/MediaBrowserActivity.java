@@ -564,13 +564,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
             break;
         }
-
-        // Update Grid view
-        mMediaGridFragment.refreshMediaFromDB();
-
-        // Update Spinner views
-        mMediaGridFragment.updateFilterText();
-        mMediaGridFragment.updateSpinnerAdapter();
+        updateViews();
     }
 
     @SuppressWarnings("unused")
@@ -585,7 +579,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 title = event.media.getTitle();
             }
             AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
-            mMediaGridFragment.refreshMediaFromDB();
+            updateViews();
         }
     }
 
@@ -622,13 +616,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
             }
         }
-
-        // Update Grid view
-        mMediaGridFragment.refreshMediaFromDB();
-
-        // Update Spinner views
-        mMediaGridFragment.updateFilterText();
-        mMediaGridFragment.updateSpinnerAdapter();
+        updateViews();
     }
 
     public void deleteMedia(final ArrayList<Long> ids) {
@@ -648,6 +636,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 mediaToDelete.add(mediaModel);
                 mediaModel.setUploadState(MediaUploadState.DELETE.toString());
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
+                updateViews();
                 sanitizedIds.add(String.valueOf(currentId));
             }
         }
@@ -667,7 +656,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
         if (mMediaGridFragment != null) {
             mMediaGridFragment.clearSelectedItems();
-            mMediaGridFragment.refreshMediaFromDB();
+            updateViews();
         }
     }
 
@@ -848,6 +837,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
             media.setUploadState(MediaUploadState.QUEUED.name());
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+            updateViews();
             mPendingUploads.add(media);
         }
     }
@@ -1010,5 +1000,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         cursor.close();
         return path;
+    }
+
+    private void updateViews() {
+        mMediaGridFragment.refreshMediaFromDB();
+        mMediaGridFragment.updateFilterText();
+        mMediaGridFragment.updateSpinnerAdapter();
     }
 }
