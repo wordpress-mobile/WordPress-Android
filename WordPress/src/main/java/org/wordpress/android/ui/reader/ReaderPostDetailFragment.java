@@ -1053,7 +1053,6 @@ public class ReaderPostDetailFragment extends Fragment
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
 
-
             headerView.setPost(mPost, mAccountStore.hasAccessToken());
             tagStrip.setPost(mPost);
 

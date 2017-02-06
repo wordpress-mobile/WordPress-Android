@@ -194,7 +194,7 @@ public class ReaderPost {
         // if the post still doesn't have a featured image but we have attachment data, check whether
         // we can find a suitable featured image from the attachments
         if (!post.hasFeaturedImage() && post.hasAttachments()) {
-            post.featuredImage = new ImageSizeMap(post.attachmentsJson)
+            post.featuredImage = new ImageSizeMap(post.getText(), post.attachmentsJson)
                     .getLargestImageUrl(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
         // if we *still* don't have a featured image but the text contains an IMG tag, check whether

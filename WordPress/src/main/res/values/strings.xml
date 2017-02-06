@@ -322,8 +322,13 @@
     <string name="comment_q_action_replying">Replying…</string>
 
     <!-- pending draft local notifications -->
-    <string name="pending_draft_one_generic">You drafted \'%s\' but never published it.</string>
-    <string name="pending_draft_one">You drafted \'%1$s\' %2$d days ago but never published it.</string>
+    <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
+    <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
+    <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
+    <string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
+    <string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+    <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+
     <string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
 
     <!-- edit comment view -->
@@ -1139,6 +1144,7 @@
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_hint_post_search">Search WordPress.com</string>
+    <string name="reader_hint_search_followed_sites">Search followed sites</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
@@ -1225,6 +1231,7 @@
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
+    <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>

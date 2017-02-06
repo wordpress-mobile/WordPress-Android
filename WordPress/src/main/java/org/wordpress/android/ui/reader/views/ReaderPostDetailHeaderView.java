@@ -29,6 +29,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
     private ReaderPost mPost;
     private ReaderFollowButton mFollowButton;
+    private boolean mEnableBlogPreview = true;
 
     public ReaderPostDetailHeaderView(Context context) {
         super(context);
@@ -79,9 +80,14 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             txtSubtitle.setVisibility(View.GONE);
         }
 
-        // show blog preview when these views are tapped
-        txtTitle.setOnClickListener(mClickListener);
-        txtSubtitle.setOnClickListener(mClickListener);
+        if (mEnableBlogPreview) {
+            txtTitle.setOnClickListener(mClickListener);
+            txtSubtitle.setOnClickListener(mClickListener);
+        } else {
+            int color = getContext().getResources().getColor(R.color.grey_dark);
+            txtTitle.setTextColor(color);
+            txtSubtitle.setTextColor(color);
+        }
 
         if (isSignedInWPCom) {
             mFollowButton.setVisibility(View.VISIBLE);
@@ -193,8 +199,10 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         // hide the frame if there's neither a blavatar nor an avatar
         avatarFrame.setVisibility(hasAvatar || hasBlavatar ? View.VISIBLE : View.GONE);
 
-        imgBlavatar.setOnClickListener(mClickListener);
-        imgAvatar.setOnClickListener(mClickListener);
+        if (mEnableBlogPreview) {
+            imgBlavatar.setOnClickListener(mClickListener);
+            imgAvatar.setOnClickListener(mClickListener);
+        }
     }
 
     /*

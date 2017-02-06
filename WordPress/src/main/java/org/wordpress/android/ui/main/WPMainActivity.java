@@ -49,9 +49,10 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
-import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
+import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -222,10 +223,9 @@ public class WPMainActivity extends AppCompatActivity {
                         false));
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
-                    if (getIntent().hasExtra(NotificationsPendingDraftsService.POST_ID_EXTRA) ||
-                            getIntent().hasExtra(NotificationsPendingDraftsService.GROUPED_POST_ID_LIST_EXTRA)) {
-                        launchWithPostId(getIntent().getLongExtra(NotificationsPendingDraftsService.POST_ID_EXTRA, 0),
-                                getIntent().getBooleanExtra(NotificationsPendingDraftsService.IS_PAGE_EXTRA, false));
+                    if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
+                        launchWithPostId(getIntent().getIntExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0),
+                                getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA, false));
                     } else {
                         launchWithNoteId();
                     }
@@ -372,11 +372,11 @@ public class WPMainActivity extends AppCompatActivity {
      * called from an internal pending draft notification, so the user can land in the local draft and take action
      * such as finish editing and publish, or delete the post, etc.
      */
-    private void launchWithPostId(long postId, boolean isPage) {
+    private void launchWithPostId(int postId, boolean isPage) {
         if (isFinishing() || getIntent() == null) return;
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
-        NativeNotificationsUtils.dismissNotification(NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID, this);
+        NativeNotificationsUtils.dismissNotification(PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId), this);
 
         // if no specific post id passed, show the list
         if (postId == 0 ) {
@@ -705,12 +705,6 @@ public class WPMainActivity extends AppCompatActivity {
         // Make selected site visible
         selectedSite.setIsVisible(true);
         AppPrefs.setSelectedSite(selectedSite.getId());
-
-        // once the user switches to another blog, clean any pending draft notifications for any other blog,
-        // and check if they have any drafts pending for this new blog
-        NativeNotificationsUtils.dismissNotification(NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID,
-                this);
-        NotificationsPendingDraftsService.checkPrefsAndStartService(this, mSelectedSite);
     }
 
     /**
