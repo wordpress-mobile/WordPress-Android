@@ -28,6 +28,7 @@ import com.wellsql.generated.MediaModelTable;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
@@ -225,18 +226,25 @@ public class MediaGridAdapter extends CursorAdapter {
         if (holder.stateTextView != null) {
             if (state != null && state.length() > 0) {
                 // show the progressbar only when the state is uploading
-                if (state.equals("uploading")) {
+                if (state.equalsIgnoreCase(MediaUploadState.UPLOADING.name()) ||
+                        state.equalsIgnoreCase(MediaUploadState.DELETE.name())) {
                     holder.progressUpload.setVisibility(View.VISIBLE);
+                    holder.stateTextView.setVisibility(View.VISIBLE);
+                    holder.stateTextView.setText(state);
                 } else {
                     holder.progressUpload.setVisibility(View.GONE);
-                    if (state.equals("uploaded")) {
+                    if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
+                        holder.progressUpload.setVisibility(View.GONE);
                         holder.stateTextView.setVisibility(View.GONE);
                     }
                 }
 
                 // add onclick to retry failed uploads
-                if (state.equals("failed")) {
-                    state = "retry";
+                if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
+                    state = MediaUploadState.QUEUED.name();
+                    holder.stateTextView.setVisibility(View.VISIBLE);
+                    holder.uploadStateView.setVisibility(View.VISIBLE);
+                    holder.stateTextView.setText(state);
                     holder.stateTextView.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -246,12 +254,9 @@ public class MediaGridAdapter extends CursorAdapter {
                                 mCallback.onRetryUpload(mediaId);
                             }
                         }
-
                     });
                 }
 
-                holder.stateTextView.setText(state);
-                holder.uploadStateView.setVisibility(View.VISIBLE);
             } else {
                 holder.uploadStateView.setVisibility(View.GONE);
             }
