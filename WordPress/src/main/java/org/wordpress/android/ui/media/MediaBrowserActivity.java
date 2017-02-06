@@ -284,6 +284,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null) {
                         Uri uri = Uri.parse(mMediaCapturePath);
+                        mMediaCapturePath = null;
                         queueFileForUpload(uri, getContentResolver().getType(uri));
                     }
                 }
