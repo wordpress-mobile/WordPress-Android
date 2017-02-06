@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -363,6 +364,7 @@
 
         <activity
             android:name=".ui.ShareIntentReceiverActivity"
+            android:excludeFromRecents="true"
             android:theme="@style/Calypso.FloatingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -495,10 +497,6 @@
             android:name=".push.NotificationsScreenLockWatchService"
             android:exported="false"
             android:label="Notifications Screen Lock watch Service" />
-        <service
-            android:name=".ui.notifications.services.NotificationsPendingDraftsService"
-            android:exported="false"
-            android:label="Notifications Pending Drafts Service" />
 
         <!-- Samsung multiwindow support -->
         <uses-library
@@ -508,6 +506,13 @@
         <meta-data
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
+
+        <receiver android:name=".ui.notifications.receivers.NotificationsPendingDraftsReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
