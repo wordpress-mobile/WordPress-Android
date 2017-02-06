@@ -16,8 +16,10 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public class MediaUploadService extends Service {
         }
 
         public void addMediaToQueue(MediaModel media) {
-            getUploadQueue().add(media);
+            addUniqueMediaToQueue(media);
             uploadNextInQueue();
         }
 
@@ -73,6 +75,7 @@ public class MediaUploadService extends Service {
     private MediaUploadListener mListener;
     private SiteModel mSite;
     private MediaModel mCurrentUpload;
+
     private List<MediaModel> mQueue;
     private List<MediaModel> mCompletedItems;
 
@@ -98,6 +101,10 @@ public class MediaUploadService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        if (intent != null) {
+            unpackIntent(intent);
+            uploadNextInQueue();
+        }
         return mBinder;
     }
 
@@ -109,21 +116,7 @@ public class MediaUploadService extends Service {
             return START_NOT_STICKY;
         }
 
-        mSite = (SiteModel) intent.getSerializableExtra(SITE_KEY);
-        List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
-        if (mediaList != null) {
-            for (MediaModel media : mediaList) {
-                getUploadQueue().add(media);
-            }
-        mListener = (MediaUploadListener) intent.getSerializableExtra(LISTENER_KEY);
-        }
-
-        if (getUploadQueue().isEmpty()) {
-            // stop service if there are no media items in the queue
-            stopSelf();
-            return START_NOT_STICKY;
-        }
-
+        unpackIntent(intent);
         uploadNextInQueue();
 
         return START_REDELIVER_INTENT;
@@ -147,14 +140,16 @@ public class MediaUploadService extends Service {
         uploadNextInQueue();
     }
 
-    public @NonNull List<MediaModel> getUploadQueue() {
+    @NonNull
+    public List<MediaModel> getUploadQueue() {
         if (mQueue == null) {
             mQueue = new ArrayList<>();
         }
         return mQueue;
     }
 
-    public @NonNull List<MediaModel> getCompletedItems() {
+    @NonNull
+    public List<MediaModel> getCompletedItems() {
         if (mCompletedItems == null) {
             mCompletedItems = new ArrayList<>();
         }
@@ -205,7 +200,7 @@ public class MediaUploadService extends Service {
             return;
         }
 
-        mCurrentUpload = nextMediaToUpload();
+        mCurrentUpload = getNextMediaToUpload();
 
         if (mCurrentUpload == null) {
             AppLog.v(T.MEDIA, "No more media items to upload. Stopping MediaUploadService.");
@@ -216,13 +211,6 @@ public class MediaUploadService extends Service {
         dispatchUploadAction(mCurrentUpload);
     }
 
-    private void cancelUpload() {
-        if (mCurrentUpload != null) {
-            MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
-            mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
-        }
-    }
-
     private void completeCurrentUpload() {
         if (mCurrentUpload != null) {
             getCompletedItems().add(mCurrentUpload);
@@ -231,26 +219,81 @@ public class MediaUploadService extends Service {
         }
     }
 
-    private void dispatchUploadAction(final @NonNull MediaModel media) {
-        AppLog.i(T.MEDIA, "Dispatching upload action: " + media.getTitle());
-        MediaPayload payload = new MediaPayload(mSite, media);
-        mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
-
-        if (mListener != null) {
-            mListener.onUploadBegin(mCurrentUpload);
-        }
-    }
-
-    private MediaModel nextMediaToUpload() {
+    private MediaModel getNextMediaToUpload() {
         if (!getUploadQueue().isEmpty()) {
             return getUploadQueue().get(0);
         }
         return null;
     }
 
+    private void addUniqueMediaToQueue(MediaModel media) {
+        for (MediaModel queuedMedia : getUploadQueue()) {
+            if (queuedMedia.getSiteId() == media.getSiteId() &&
+                    StringUtils.equals(queuedMedia.getFilePath(), media.getFilePath())) {
+                return;
+            }
+        }
+
+        // no match found in queue
+        getUploadQueue().add(media);
+    }
+
+    private void unpackIntent(@NonNull Intent intent) {
+        mSite = (SiteModel) intent.getSerializableExtra(SITE_KEY);
+        mListener = (MediaUploadListener) intent.getSerializableExtra(LISTENER_KEY);
+
+        // add local queued media from store
+        List<MediaModel> localMedia = mMediaStore.getLocalSiteMedia(mSite);
+        if (localMedia != null && !localMedia.isEmpty()) {
+            // uploading is updated to queued, queued media added to the queue, failed media added to completed list
+            for (MediaModel mediaItem : localMedia) {
+                if (MediaUploadState.UPLOADING.name().equals(mediaItem.getUploadState())) {
+                    mediaItem.setUploadState(MediaUploadState.QUEUED.name());
+                    mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaItem));
+                }
+
+                if (MediaUploadState.QUEUED.name().equals(mediaItem.getUploadState())) {
+                    addUniqueMediaToQueue(mediaItem);
+                } else if (MediaUploadState.FAILED.name().equals(mediaItem.getUploadState())) {
+                    getCompletedItems().add(mediaItem);
+                }
+            }
+        }
+
+        // add new media
+        @SuppressWarnings("unchecked")
+        List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
+        if (mediaList != null) {
+            for (MediaModel media : mediaList) {
+                addUniqueMediaToQueue(media);
+            }
+        }
+    }
+
     private boolean matchesInProgressMedia(final @NonNull MediaModel media) {
         // TODO
         return mCurrentUpload != null &&
                 media.getSiteId() == mCurrentUpload.getSiteId();
+    }
+
+    private void cancelUpload() {
+        if (mCurrentUpload != null) {
+            dispatchCancelAction(mCurrentUpload);
+        }
+    }
+
+    private void dispatchUploadAction(@NonNull final MediaModel media) {
+        AppLog.i(T.MEDIA, "Dispatching upload action: " + media.getFilePath());
+        MediaPayload payload = new MediaPayload(mSite, media);
+        mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
+        if (mListener != null) {
+            mListener.onUploadBegin(mCurrentUpload);
+        }
+    }
+
+    private void dispatchCancelAction(@NonNull final MediaModel media) {
+        AppLog.i(T.MEDIA, "Dispatching cancel upload action: " + media.getFilePath());
+        MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
+        mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 }
