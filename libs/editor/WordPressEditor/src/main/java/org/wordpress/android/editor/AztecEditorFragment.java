@@ -365,6 +365,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
                 // clear overlay
                 content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), null, 0, attrs);
+
+                mUploadingMedia.remove(localMediaId);
             } else if (mediaType.equals(MediaType.VIDEO)) {
                 // TODO: update video element
             }
