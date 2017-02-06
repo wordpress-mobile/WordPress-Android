@@ -794,6 +794,31 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mEditorMediaUploadListener.onMediaUploadProgress(String.valueOf(media.getId()), progress);
     }
 
+    private void startMediaUploadService(ArrayList<MediaModel> mediaToUpload) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            AppLog.v(AppLog.T.MEDIA, "Unable to start MediaUploadService, internet connection required.");
+            return;
+        }
+
+        if (mUploadService != null) {
+            if (mediaToUpload != null && !mediaToUpload.isEmpty()) {
+                for (MediaModel media : mediaToUpload) {
+                    mUploadService.addMediaToQueue(media);
+                }
+                mediaToUpload.clear();
+            }
+        } else if (NetworkUtils.isNetworkAvailable(this)) {
+            Intent intent = new Intent(this, MediaUploadService.class);
+            intent.putExtra(MediaUploadService.SITE_KEY, mSite);
+            if (mediaToUpload != null) {
+                intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaToUpload);
+                bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+                mediaToUpload.clear();
+            }
+            startService(intent);
+        }
+    }
+
     private void launchPictureLibrary() {
         WordPressMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
