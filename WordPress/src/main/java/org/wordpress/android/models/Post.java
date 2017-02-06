@@ -56,6 +56,7 @@ public class Post implements Serializable {
     private String quickPostType;
     private PostLocation mPostLocation;
 
+    private long lastKnownRemoteFeaturedImageId;
     private long featuredImageId = FEATURED_IMAGE_INIT_VALUE;
 
     public Post() {
@@ -495,7 +496,15 @@ public class Post implements Serializable {
     }
 
     public void setFeaturedImageId(long id) {
+        if (featuredImageId == FEATURED_IMAGE_INIT_VALUE) {
+            lastKnownRemoteFeaturedImageId = id;
+        }
+
         featuredImageId = id;
+    }
+
+    public boolean featuredImageHasChanged() {
+        return (lastKnownRemoteFeaturedImageId != featuredImageId);
     }
 
     public long getDateLastUpdated() {
