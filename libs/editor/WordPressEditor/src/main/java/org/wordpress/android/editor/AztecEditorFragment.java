@@ -72,6 +72,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTENT = "content";
 
+    public static final int MAX_ACTION_TIME_MS = 2000;
+
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_TEXT = Arrays.asList(ClipDescription
             .MIMETYPE_TEXT_PLAIN, ClipDescription.MIMETYPE_TEXT_HTML);
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
@@ -88,6 +90,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     private Map<String, MediaType> mUploadingMedia;
     private Set<String> mFailedMediaIds;
+
+    private long mActionStartedAt = -1;
 
     public static AztecEditorFragment newInstance(String title, String content) {
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -268,7 +272,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public boolean isActionInProgress() {
-        return false;
+        return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
     }
 
     /**
@@ -295,7 +299,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             } else {
                 // TODO: insert image
             }
-//            mActionStartedAt = System.currentTimeMillis();
+            mActionStartedAt = System.currentTimeMillis();
         } else {
             String id = mediaFile.getMediaId();
             if (mediaFile.isVideo()) {
