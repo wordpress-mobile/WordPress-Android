@@ -18,8 +18,7 @@ public class Post implements Serializable {
 
     public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
 
-    public static long FEATURED_IMAGE_INIT_VALUE = 0;
-    public static long FEATURED_IMAGE_REMOVED_VALUE = -1;
+    private static long FEATURED_IMAGE_INIT_VALUE = -2;
 
     private long localTablePostId;
     private int localTableBlogId;
@@ -488,6 +487,10 @@ public class Post implements Serializable {
     }
 
     public long getFeaturedImageId() {
+        if (featuredImageId == FEATURED_IMAGE_INIT_VALUE) {
+            return 0;
+        }
+
         return featuredImageId;
     }
 
