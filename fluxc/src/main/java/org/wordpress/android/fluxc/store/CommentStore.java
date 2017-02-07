@@ -268,6 +268,9 @@ public class CommentStore extends Store {
             case REMOVE_COMMENT:
                 removeComment((CommentModel) action.getPayload());
                 break;
+            case REMOVE_ALL_COMMENTS:
+                removeAllComments();
+                break;
             case DELETE_COMMENT:
                 deleteComment((RemoteCommentPayload) action.getPayload());
                 break;
@@ -347,6 +350,13 @@ public class CommentStore extends Store {
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         // Doesn't make sense to update here event.changedCommentsLocalIds
         event.causeOfChange = CommentAction.REMOVE_COMMENTS;
+        emitChange(event);
+    }
+
+    private void removeAllComments() {
+        int rowsAffected = CommentSqlUtils.deleteAllComments();
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.causeOfChange = CommentAction.REMOVE_ALL_COMMENTS;
         emitChange(event);
     }
 

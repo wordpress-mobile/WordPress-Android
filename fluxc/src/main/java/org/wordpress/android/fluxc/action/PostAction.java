@@ -40,6 +40,8 @@ public enum PostAction implements IAction {
     @Action(payloadType = PostModel.class)
     UPDATE_POST,
     @Action(payloadType = PostModel.class)
-    REMOVE_POST
+    REMOVE_POST,
+    @Action
+    REMOVE_ALL_POSTS
 }
 
