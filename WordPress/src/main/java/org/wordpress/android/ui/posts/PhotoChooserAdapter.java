@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MergeCursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,39 +36,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final String ID_COL = MediaStore.Images.Thumbnails._ID;
     private static final String IMAGE_ID_COL = MediaStore.Images.Thumbnails.IMAGE_ID;
 
-    public void loadGallery() {
-        String[] projection = { ID_COL, IMAGE_ID_COL };
-        String orderBy = IMAGE_ID_COL + " DESC";
-
-        // create cursor containing external (SDCARD) images
-        Cursor external = mContext.getContentResolver().query(
-                MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
-                projection, // Which columns to return
-                null,       // Return all rows
-                null,
-                orderBy);
-
-        // create cursor for internal images
-        Cursor internal = mContext.getContentResolver().query(
-                MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI,
-                projection,
-                null,
-                null,
-                orderBy);
-
-        // merge the two cursors
-        Cursor[] cursorArray =  { external, internal };
-        MergeCursor cursor = new MergeCursor(cursorArray);
-
-        // create array of image Uris
-        mUriList.clear();
-        int index = cursor.getColumnIndexOrThrow(ID_COL);
-        while (cursor.moveToNext()) {
-            int imageID = cursor.getInt(index);
-            Uri imageUri = Uri.withAppendedPath(
-                    MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, "" + imageID);
-            mUriList.add(imageUri);
-        }
+    void loadGallery() {
+        new LoadPhotosTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public boolean isEmpty() {
@@ -115,6 +85,54 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 }
             });
+        }
+    }
+
+    private class LoadPhotosTask extends AsyncTask<Void, Void, Boolean> {
+        private ArrayList<Uri> tmpUriList = new ArrayList<>();
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            String[] projection = { ID_COL, IMAGE_ID_COL };
+            String orderBy = IMAGE_ID_COL + " DESC";
+
+            // create cursor containing external (SDCARD) images
+            Cursor external = mContext.getContentResolver().query(
+                    MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
+                    projection, // Which columns to return
+                    null,       // Return all rows
+                    null,
+                    orderBy);
+
+            // create cursor for internal images
+            Cursor internal = mContext.getContentResolver().query(
+                    MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI,
+                    projection,
+                    null,
+                    null,
+                    orderBy);
+
+            // merge the two cursors
+            Cursor[] cursorArray =  { external, internal };
+            MergeCursor cursor = new MergeCursor(cursorArray);
+
+            // create array of image Uris
+            int index = cursor.getColumnIndexOrThrow(ID_COL);
+            while (cursor.moveToNext()) {
+                int imageID = cursor.getInt(index);
+                Uri imageUri = Uri.withAppendedPath(
+                        MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, "" + imageID);
+                tmpUriList.add(imageUri);
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            mUriList.clear();
+            mUriList.addAll(tmpUriList);
+            notifyDataSetChanged();
         }
     }
 }
