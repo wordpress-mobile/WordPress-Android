@@ -14,18 +14,18 @@ import android.widget.ImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.util.DisplayUtils;
 
+import java.util.ArrayList;
+
 public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Context mContext;
-    private Cursor mCursor;
     private final int mImageSz;
+    private ArrayList<Uri> mUriList;
 
     public PhotoChooserAdapter(Context context) {
         super();
 
         mContext = context;
-        setHasStableIds(true);
-
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
         mImageSz = displayWidth / 4;
     }
@@ -33,7 +33,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final String ID_COL = MediaStore.Images.Thumbnails._ID;
 
     public void loadGallery() {
-        String[] projection = {ID_COL};
+        String[] projection = { ID_COL };
 
         // create cursor containing external (SDCARD) images
         Cursor external = mContext.getContentResolver().query(
@@ -42,6 +42,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 null,       // Return all rows
                 null,
                 ID_COL);
+
         // create cursor for internal images
         Cursor internal = mContext.getContentResolver().query(
                 MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI,
@@ -51,8 +52,18 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ID_COL);
 
         // merge the two cursors
-        Cursor[] cursorArray =  { external, internal};
-        mCursor = new MergeCursor(cursorArray);
+        Cursor[] cursorArray =  { external, internal };
+        MergeCursor cursor = new MergeCursor(cursorArray);
+
+        // create array of image Uris
+        mUriList = new ArrayList<>();
+        int index = cursor.getColumnIndexOrThrow(ID_COL);
+        while (cursor.moveToNext()) {
+            int imageID = cursor.getInt(index);
+            Uri imageUri = Uri.withAppendedPath(
+                    MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, "" + imageID);
+            mUriList.add(imageUri);
+        }
     }
 
     public boolean isEmpty() {
@@ -61,14 +72,12 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return mCursor != null ? mCursor.getCount() : 0;
+        return mUriList != null ? mUriList.size() : 0;
     }
 
     @Override
     public long getItemId(int position) {
-        mCursor.moveToPosition(position);
-        int index = mCursor.getColumnIndexOrThrow(ID_COL);
-        return mCursor.getInt(index);
+        return position;
     }
 
     @Override
@@ -79,14 +88,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        mCursor.moveToPosition(position);
-
-        int index = mCursor.getColumnIndexOrThrow(ID_COL);
-        int imageID = mCursor.getInt(index);
-
         ImageView imageView = ((PhotoViewHolder) holder).imageView;
-        imageView.setImageURI(Uri.withAppendedPath(
-                MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, "" + imageID));
+        imageView.setImageURI(mUriList.get(position));
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
