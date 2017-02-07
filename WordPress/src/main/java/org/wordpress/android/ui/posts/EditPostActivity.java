@@ -360,6 +360,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
 
+    private boolean isPhotoChooserShowing() {
+        View container = findViewById(R.id.photo_fragment_container);
+        return container.getVisibility() == View.VISIBLE;
+    }
+
     void showPhotoChooser() {
         // hide soft keyboard
         View view = this.getCurrentFocus();
@@ -880,6 +885,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (imageSettingsFragment != null && imageSettingsFragment.isVisible()) {
             ((ImageSettingsDialogFragment) imageSettingsFragment).dismissFragment();
+            return;
+        }
+
+        if (isPhotoChooserShowing()) {
+            hidePhotoChooser();
             return;
         }
 
