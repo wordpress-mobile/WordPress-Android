@@ -1,6 +1,19 @@
-<org.wordpress.android.widgets.WPViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pager"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.posts.EditPostActivity" />
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.widgets.WPViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/photo_fragment_container"
+        tools:context=".ui.posts.EditPostActivity" />
+
+    <FrameLayout
+        android:id="@+id/photo_fragment_container"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:context="org.wordpress.android.ui.posts.PhotoChooserFragment" />
+</RelativeLayout>

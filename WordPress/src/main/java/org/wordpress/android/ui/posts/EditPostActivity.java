@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -58,8 +59,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
-import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
@@ -203,6 +204,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
+
+    private PhotoChooserFragment mPhotoChooserFragment;
 
     private Runnable mFetchMediaRunnable = new Runnable() {
         @Override
@@ -352,6 +355,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
         });
+
+        // create photo chooser
+        mPhotoChooserFragment = PhotoChooserFragment.newInstance();
+        FragmentManager fm = getFragmentManager();
+        fm.executePendingTransactions();
+
+        FragmentTransaction ft = fm.beginTransaction();
+        String tagForFragment = "photo_fragment";
+        ft.add(R.id.photo_fragment_container, mPhotoChooserFragment, tagForFragment);
+        ft.commit();
 
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
