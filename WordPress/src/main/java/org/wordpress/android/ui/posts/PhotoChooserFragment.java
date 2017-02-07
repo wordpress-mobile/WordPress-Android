@@ -13,11 +13,12 @@ import org.wordpress.android.R;
 
 public class PhotoChooserFragment extends Fragment {
 
+    private static final int NUM_COLUMNS = 3;
+
     public interface OnPhotoChosenListener {
-        public void onPhotoChosen(Uri imageUri);
+        void onPhotoChosen(Uri imageUri);
     }
 
-    private GridLayoutManager mLayoutManager;
     private RecyclerView mRecycler;
 
     public static PhotoChooserFragment newInstance() {
@@ -28,29 +29,14 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.photo_chooser_fragment, container, false);
 
-        mLayoutManager = new GridLayoutManager(getActivity(), 4);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), NUM_COLUMNS);
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
-        mRecycler.setLayoutManager(mLayoutManager);
+        mRecycler.setLayoutManager(layoutManager);
 
         loadGallery();
 
@@ -58,7 +44,7 @@ public class PhotoChooserFragment extends Fragment {
     }
 
 
-    private OnPhotoChosenListener mListener = new OnPhotoChosenListener() {
+    private final OnPhotoChosenListener mListener = new OnPhotoChosenListener() {
         @Override
         public void onPhotoChosen(Uri imageUri) {
             if (getActivity() instanceof EditPostActivity) {
@@ -68,8 +54,9 @@ public class PhotoChooserFragment extends Fragment {
             }
         }
     };
+
     private void loadGallery() {
-        PhotoChooserAdapter adapter = new PhotoChooserAdapter(getActivity(), mListener);
+        PhotoChooserAdapter adapter = new PhotoChooserAdapter(getActivity(), NUM_COLUMNS, mListener);
         mRecycler.setAdapter(adapter);
         adapter.loadGallery();
     }

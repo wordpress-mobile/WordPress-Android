@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.MergeCursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -22,15 +21,18 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private final Context mContext;
     private final int mImageSz;
-    private OnPhotoChosenListener mListener;
+    private final OnPhotoChosenListener mListener;
     private final ArrayList<Uri> mUriList = new ArrayList<>();
 
-    public PhotoChooserAdapter(Context context, OnPhotoChosenListener listener) {
+    public PhotoChooserAdapter(Context context,
+                               int numColumns,
+                               OnPhotoChosenListener listener) {
         super();
         mListener = listener;
         mContext = context;
+
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
-        mImageSz = displayWidth / 4;
+        mImageSz = displayWidth / numColumns;
     }
 
     private static final String ID_COL = MediaStore.Images.Thumbnails._ID;
@@ -38,10 +40,6 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     void loadGallery() {
         new LoadPhotosTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    public boolean isEmpty() {
-        return (getItemCount() == 0);
     }
 
     @Override
@@ -89,7 +87,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private class LoadPhotosTask extends AsyncTask<Void, Void, Boolean> {
-        private ArrayList<Uri> tmpUriList = new ArrayList<>();
+        private final ArrayList<Uri> tmpUriList = new ArrayList<>();
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -99,8 +97,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             // get external (SDCARD) images
             Cursor external = mContext.getContentResolver().query(
                     MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
-                    projection, // Which columns to return
-                    null,       // Return all rows
+                    projection,
+                    null,
                     null,
                     orderBy);
             addImages(external);
