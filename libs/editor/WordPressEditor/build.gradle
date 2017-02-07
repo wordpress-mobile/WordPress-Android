@@ -50,7 +50,7 @@ dependencies {
     compile 'com.android.support:support-v4:25.0.1'
     compile 'com.android.support:design:25.0.1'
     compile 'org.wordpress:utils:1.11.0'
-    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:issue~218-uploading-images-SNAPSHOT')
+    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:develop-SNAPSHOT')
 }
 
 signing {
