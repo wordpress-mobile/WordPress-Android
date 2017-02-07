@@ -471,7 +471,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
-                    AttributesWithClass attributesWithClass =new AttributesWithClass(
+                    AttributesWithClass attributesWithClass = new AttributesWithClass(
                             content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
 
                     attributesWithClass.removeClass("uploading");
