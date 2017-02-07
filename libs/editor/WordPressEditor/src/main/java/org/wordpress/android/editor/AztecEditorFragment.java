@@ -16,6 +16,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -256,6 +257,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     @Override
     public void setContent(CharSequence text) {
         content.fromHtml(text.toString());
+        updateFailedMediaList();
+        overlayFailedMedia();
     }
 
     /**
@@ -314,11 +317,49 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
 
         formattingToolbar.toggleEditorMode();
+
+        if (source.getVisibility() == View.VISIBLE) {
+            updateFailedMediaList();
+        }
     }
 
     @Override
     public boolean isActionInProgress() {
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
+    }
+
+    private void updateFailedMediaList() {
+        AztecText.AttributePredicate failedPredicate = new AztecText.AttributePredicate() {
+            @Override
+            public boolean matches(@NonNull Attributes attrs) {
+                AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
+                return attributesWithClass.hasClass("failed");
+            }
+        };
+
+        mFailedMediaIds.clear();
+
+        for (Attributes attrs : content.getAllMediaAttributes(failedPredicate)) {
+            mFailedMediaIds.add(attrs.getValue("data-wpid"));
+        }
+    }
+
+    private void overlayFailedMedia() {
+        for (String localMediaId : mFailedMediaIds) {
+            Attributes attributes = content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId));
+            overlayFailedMedia(localMediaId, attributes);
+        }
+    }
+
+    private void overlayFailedMedia(String localMediaId, Attributes attributes) {
+        // set intermediate shade overlay
+        content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,
+                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_error_color)),
+                Gravity.FILL, attributes);
+
+        Drawable alertDrawable = getResources().getDrawable(R.drawable.media_retry_image);
+        content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 1, alertDrawable, Gravity.CENTER,
+                attributes);
     }
 
     /**
@@ -477,14 +518,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                     attributesWithClass.removeClass("uploading");
                     attributesWithClass.addClass("failed");
 
-                    // set intermediate shade overlay
-                    content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,
-                            new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_error_color)),
-                            Gravity.FILL, attributesWithClass.getAttributesIml());
-
-                    Drawable alertDrawable = getResources().getDrawable(R.drawable.media_retry_image);
-                    content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 1, alertDrawable,
-                            Gravity.CENTER, attributesWithClass.getAttributesIml());
+                    overlayFailedMedia(localMediaId, attributesWithClass.getAttributesIml());
                     break;
                 case VIDEO:
                     // TODO: mark media as upload-failed
@@ -516,6 +550,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
         void removeClass(String c) {
             mClasses.remove(c);
+        }
+
+        boolean hasClass(String clazz) {
+            return mClasses.contains(clazz);
         }
 
         public Set<String> getClasses() {
