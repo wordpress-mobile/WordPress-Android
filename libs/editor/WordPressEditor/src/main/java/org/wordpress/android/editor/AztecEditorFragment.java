@@ -215,17 +215,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             } else {
                 source.undo();
             }
-
+            return true;
         } else if (item.getItemId() == R.id.redo) {
             if (content.getVisibility() == View.VISIBLE) {
                 content.redo();
             } else {
                 source.redo();
             }
-
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     private ActionBar getActionBar() {
