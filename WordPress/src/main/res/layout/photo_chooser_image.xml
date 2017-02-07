@@ -3,6 +3,7 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/image_photo"
-    android:padding="2dp"
-    android:layout_width="64dp"
-    android:layout_height="64dp" />
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="1dp"
+    android:scaleType="centerCrop" />

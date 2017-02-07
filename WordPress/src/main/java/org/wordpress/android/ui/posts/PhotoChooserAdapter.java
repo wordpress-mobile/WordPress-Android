@@ -105,7 +105,6 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             imageView = (ImageView) view.findViewById(R.id.image_photo);
             imageView.getLayoutParams().width = mImageSz;
             imageView.getLayoutParams().height = mImageSz;
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
