@@ -123,10 +123,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         content = (AztecText)view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
-        // It seems that hardware accel makes the progressbar in MediaSpan to not show that it updates.
-        //  Instead, software rendering works. See: https://github.com/koral--/android-gif-drawable/issues/234#issuecomment-165938445
-        content.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         formattingToolbar.setEditor(content, source);
         formattingToolbar.setToolbarListener(this);
@@ -414,6 +410,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 content.setOverlay(ImagePredicate.localMediaIdPredicate(id), 1, progressDrawable,
                         Gravity.FILL_HORIZONTAL | Gravity.TOP, attrs);
 
+                content.refreshText();
+
                 mUploadingMedia.put(id, MediaType.IMAGE);
             }
         }
@@ -466,6 +464,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
                 // clear overlay
                 content.clearOverlays(ImagePredicate.localMediaIdPredicate(localMediaId), attrs);
+                content.refreshText();
 
                 mUploadingMedia.remove(localMediaId);
             } else if (mediaType.equals(MediaType.VIDEO)) {
@@ -506,6 +505,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             attributesWithClass.addClass("uploading");
             content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(mediaId), 1, (int)(progress * 10000),
                     attributesWithClass.getAttributesIml());
+            content.refreshText();
         }
     }
 
@@ -522,6 +522,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                     attributesWithClass.addClass("failed");
 
                     overlayFailedMedia(localMediaId, attributesWithClass.getAttributesIml());
+                    content.refreshText();
                     break;
                 case VIDEO:
                     // TODO: mark media as upload-failed
@@ -952,6 +953,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
                         content.setOverlay(ImagePredicate.localMediaIdPredicate(mediaId), 1, progressDrawable,
                                 Gravity.FILL_HORIZONTAL | Gravity.TOP, attributesWithClass.getAttributesIml());
+                        content.refreshText();
                         break;
                     case VIDEO:
                         // TODO: unmark video failed
