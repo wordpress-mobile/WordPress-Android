@@ -55,16 +55,17 @@ public class ReleaseNetworkModule {
     @Singleton
     @Named("regular")
     @Provides
-    public RequestQueue provideRequestQueue(@Named("regular") OkHttpClient.Builder okHttpClient, Context appContext) {
-        return newRequestQueue(okHttpClient, appContext);
+    public RequestQueue provideRequestQueue(@Named("regular") OkHttpClient.Builder okHttpClientBuilder,
+                                            Context appContext) {
+        return newRequestQueue(okHttpClientBuilder, appContext);
     }
 
     @Singleton
     @Named("custom-ssl")
     @Provides
-    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkHttpClient.Builder okHttpClient,
+    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkHttpClient.Builder okHttpClientBuilder,
                                                      Context appContext) {
-        return newRequestQueue(okHttpClient, appContext);
+        return newRequestQueue(okHttpClientBuilder, appContext);
     }
 
     @Singleton
@@ -119,19 +120,19 @@ public class ReleaseNetworkModule {
     @Provides
     public MediaRestClient provideMediaRestClient(Context appContext, Dispatcher dispatcher,
                                                   @Named("regular") RequestQueue requestQueue,
-                                                  @Named("regular") OkHttpClient.Builder okHttpClient,
+                                                  @Named("regular") OkHttpClient.Builder okHttpClientBuilder,
                                                   AccessToken token, UserAgent userAgent) {
-        return new MediaRestClient(appContext, dispatcher, requestQueue, okHttpClient, token, userAgent);
+        return new MediaRestClient(appContext, dispatcher, requestQueue, okHttpClientBuilder, token, userAgent);
     }
 
     @Singleton
     @Provides
     public MediaXMLRPCClient provideMediaXMLRPCClient(Dispatcher dispatcher,
                                                       @Named("custom-ssl") RequestQueue requestQueue,
-                                                      @Named("custom-ssl") OkHttpClient.Builder okClient,
+                                                      @Named("custom-ssl") OkHttpClient.Builder okHttpClientBuilder,
                                                       AccessToken token, UserAgent userAgent,
                                                       HTTPAuthManager httpAuthManager) {
-        return new MediaXMLRPCClient(dispatcher, requestQueue, okClient, token, userAgent, httpAuthManager);
+        return new MediaXMLRPCClient(dispatcher, requestQueue, okHttpClientBuilder, token, userAgent, httpAuthManager);
     }
 
     @Singleton
