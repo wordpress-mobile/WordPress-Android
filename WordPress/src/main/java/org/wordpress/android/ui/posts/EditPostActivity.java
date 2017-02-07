@@ -205,8 +205,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
-    private PhotoChooserFragment mPhotoChooserFragment;
-
     private Runnable mFetchMediaRunnable = new Runnable() {
         @Override
         public void run() {
@@ -356,17 +354,42 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         });
 
-        // create photo chooser
-        mPhotoChooserFragment = PhotoChooserFragment.newInstance();
+        ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    }
+
+    private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
+
+    void showPhotoChooser() {
+        // hide soft keyboard
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        View container = findViewById(R.id.photo_fragment_container);
+        container.setVisibility(View.VISIBLE);
+
         FragmentManager fm = getFragmentManager();
         fm.executePendingTransactions();
 
+        Fragment fragment = PhotoChooserFragment.newInstance();
         FragmentTransaction ft = fm.beginTransaction();
-        String tagForFragment = "photo_fragment";
-        ft.add(R.id.photo_fragment_container, mPhotoChooserFragment, tagForFragment);
+        ft.add(R.id.photo_fragment_container, fragment, PHOTO_CHOOSER_TAG);
         ft.commit();
+    }
 
-        ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    void hidePhotoChooser() {
+        View container = findViewById(R.id.photo_fragment_container);
+        container.setVisibility(View.GONE);
+
+        FragmentManager fm = getFragmentManager();
+        Fragment fragment = fm.findFragmentByTag(PHOTO_CHOOSER_TAG);
+        if (fragment != null) {
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.remove(fragment);
+            ft.commit();
+        }
     }
 
     private Runnable mAutoSave = new Runnable() {
@@ -690,12 +713,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+        showPhotoChooser();
+        /*if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
             super.openContextMenu(view);
         } else {
             AppLockManager.getInstance().setExtendedTimeout();
             mMenuView = view;
-        }
+        }*/
     }
 
     @Override

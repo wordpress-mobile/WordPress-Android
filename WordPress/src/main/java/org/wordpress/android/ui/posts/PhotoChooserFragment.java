@@ -63,6 +63,7 @@ public class PhotoChooserFragment extends Fragment {
         public void onPhotoChosen(Uri imageUri) {
             if (getActivity() instanceof EditPostActivity) {
                 EditPostActivity activity = (EditPostActivity) getActivity();
+                activity.hidePhotoChooser();
                 activity.addMedia(imageUri);
             }
         }
