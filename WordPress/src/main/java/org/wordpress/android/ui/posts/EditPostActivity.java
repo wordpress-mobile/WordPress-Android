@@ -373,6 +373,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
+        if (isPhotoChooserShowing()) {
+            return;
+        }
+
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         int containerHeight = displayHeight / 2;
         View container = findViewById(R.id.photo_fragment_container);

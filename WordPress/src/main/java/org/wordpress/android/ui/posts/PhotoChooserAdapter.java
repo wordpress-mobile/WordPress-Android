@@ -38,8 +38,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapte
     private static final String ID_COL = MediaStore.Images.Thumbnails._ID;
     private static final String IMAGE_ID_COL = MediaStore.Images.Thumbnails.IMAGE_ID;
 
-    void loadGallery() {
-        new LoadPhotosTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    void loadDevicePhotos() {
+        new LoadDevicePhotosTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapte
         }
     }
 
-    private class LoadPhotosTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadDevicePhotosTask extends AsyncTask<Void, Void, Boolean> {
         private final ArrayList<Uri> tmpUriList = new ArrayList<>();
 
         @Override

@@ -38,7 +38,7 @@ public class PhotoChooserFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(layoutManager);
 
-        loadGallery();
+        loadDevicePhotos();
 
         return view;
     }
@@ -55,9 +55,9 @@ public class PhotoChooserFragment extends Fragment {
         }
     };
 
-    private void loadGallery() {
+    private void loadDevicePhotos() {
         PhotoChooserAdapter adapter = new PhotoChooserAdapter(getActivity(), NUM_COLUMNS, mListener);
         mRecycler.setAdapter(adapter);
-        adapter.loadGallery();
+        adapter.loadDevicePhotos();
     }
 }
