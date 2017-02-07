@@ -293,6 +293,10 @@ public class MediaStore extends Store {
     public MediaModel instantiateMediaModel() {
         MediaModel media = new MediaModel();
         WellSql.insert(media).asSingleTransaction(true).execute();
+        // id is set to -1 if insertion fails
+        if (media.getId() == -1) {
+            return null;
+        }
         return media;
     }
 
