@@ -4,6 +4,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
+import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseStoreModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.push.GCMMessageService;
@@ -83,6 +84,7 @@ import dagger.Component;
         AppContextModule.class,
         AppSecretsModule.class,
         ReleaseBaseModule.class,
+        ReleaseOkHttpClientModule.class,
         ReleaseNetworkModule.class,
         ReleaseStoreModule.class,
         LegacyModule.class,
