@@ -127,6 +127,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         formattingToolbar.setEditor(content, source);
         formattingToolbar.setToolbarListener(this);
 
+        title.setOnFocusChangeListener(
+            new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean hasFocus) {
+                    formattingToolbar.enableFormatButtons(!hasFocus);
+                }
+            }
+        );
+
         // initialize the text & HTML
         source.history = content.history;
         content.setImageGetter(imageLoader);
