@@ -402,14 +402,14 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testRemoveAllSites() {
+    public void testRemoveAllSites() throws DuplicateSiteException {
         SiteModel wpComSite = generateWPComSite();
-        SiteModel jetpackSite = generateJetpackSite();
+        SiteModel jetpackXMLRPCSite = generateJetpackSiteOverXMLRPC();
         SiteModel jetpackRestSite = generateJetpackSiteOverRestOnly();
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
 
         SiteSqlUtils.insertOrUpdateSite(wpComSite);
-        SiteSqlUtils.insertOrUpdateSite(jetpackSite);
+        SiteSqlUtils.insertOrUpdateSite(jetpackXMLRPCSite);
         SiteSqlUtils.insertOrUpdateSite(jetpackRestSite);
         SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
