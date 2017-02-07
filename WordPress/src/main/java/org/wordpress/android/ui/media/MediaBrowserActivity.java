@@ -534,12 +534,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         switch (event.cause) {
             case FETCH_ALL_MEDIA:
-//                if (mMediaItemFragment != null) {
-//                    mMediaGridFragment.setRefreshing(false);
-//                    if (mMediaItemFragment.isInLayout()) {
-//                        mMediaItemFragment.loadDefaultMedia();
-//                    }
-//                }
                 break;
             case DELETE_MEDIA:
                 if (event.media == null || event.media.isEmpty()) {
