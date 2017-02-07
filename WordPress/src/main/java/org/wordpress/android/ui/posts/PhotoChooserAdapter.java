@@ -12,16 +12,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.DisplayUtils;
 
 public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Context mContext;
     private Cursor mCursor;
+    private final int mImageSz;
 
     public PhotoChooserAdapter(Context context) {
         super();
+
         mContext = context;
         setHasStableIds(true);
+
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
+        mImageSz = displayWidth / 4;
     }
 
     private static final String ID_COL = MediaStore.Images.Thumbnails._ID;
@@ -90,6 +96,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public PhotoViewHolder(View view) {
             super(view);
             imageView = (ImageView) view.findViewById(R.id.image_photo);
+            imageView.getLayoutParams().width = mImageSz;
+            imageView.getLayoutParams().height = mImageSz;
         }
     }
 }
