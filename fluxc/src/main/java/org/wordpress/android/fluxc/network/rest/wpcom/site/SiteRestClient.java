@@ -337,7 +337,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                 site.setXmlRpcUrl(from.meta.links.xmlrpc);
             }
         }
-        site.setIsWPCom(true);
+        // Only set the isWPCom flag for "pure" WPCom sites
+        if (!from.jetpack) {
+            site.setIsWPCom(true);
+        }
         return site;
     }
 

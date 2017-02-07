@@ -95,9 +95,9 @@ public class SiteSqlUtils {
                     .endWhere().getAsModel();
             if (!siteResult.isEmpty()) {
                 AppLog.d(T.DB, "Site found using xmlrpc url: " + site.getXmlRpcUrl());
-                // If the site already in the DB is a self hosted and the new one is a .com, it means we upgraded from
-                // self hosted to jetpack, we want to update the site with the new informations.
-                if (siteResult.get(0).isWPCom() || !site.isWPCom()) {
+                // If the site already in the DB is a self hosted and the new one is a Jetpack connected site, it means
+                // we upgraded from self hosted to jetpack, we want to update the site with the new informations.
+                if (siteResult.get(0).isJetpackConnected() || !site.isJetpackConnected()) {
                     AppLog.d(T.DB, "Site is a duplicate");
                     // In other cases (examples: adding the same self hosted twice or adding self hosted on top of an
                     // existing jetpack site), we consider it as an error.
