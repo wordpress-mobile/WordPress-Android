@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-21 16:19:58+0000
+Translation-Revision-Date: 2017-01-29 17:44:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Shtojca Jetpack është e lidhur, por moduli Statistika s’është aktiv. Lidhuni me përgjegjësin e sajtit.</string>
+	<string name="jetpack_stats_module_disabled_message">Shtojca Jetpack është e lidhur, por moduli Statistika s’është aktiv. Doni të aktivizohet Statistika?</string>
+	<string name="jetpack_info">Të dhëna mbi Jetpack-un</string>
 	<string name="reader_photo_by">Foto nga %s</string>
 	<string name="all_your_sites">Krejt Sajtet e Mi</string>
 	<string name="pending_draft_more">Keni skicuar %d postime, por s&amp;#8217;i botuat kurrë. Prekeni që të kontrolloni.</string>
@@ -179,7 +182,7 @@ Language: sq_AL
 	<string name="plans_post_purchase_title_themes">Gjeni një temë të përsosur, nga ato me Pagesë</string>
 	<string name="plans_post_purchase_button_video">Nisni një postim të ri</string>
 	<string name="plans_post_purchase_text_video">Video në sajtin tuaj mund të ngarkoni dhe strehoni përmes VideoPress-it dhe depos tuaj të zgjeruar për media.</string>
-	<string name="plans_post_purchase_title_video">Jepuni jetë postimeve, përmes vidoesh</string>
+	<string name="plans_post_purchase_title_video">Jepuni jetë postimeve, përmes videosh</string>
 	<string name="plans_post_purchase_button_customize">Përshtatje e Sajtit tim</string>
 	<string name="plans_post_purchase_text_customize">Tani mund të përdorni shkronja vetjake, ngjyra vetjake, dhe aftësi përpunimi për CSS vetjake.</string>
 	<string name="plans_post_purchase_title_customize">Përshtatni Shkronja &amp; Ngjyra</string>
@@ -352,7 +355,7 @@ Language: sq_AL
 	<string name="site_settings_rp_preview3_site">te "Përmirësojeni"</string>
 	<string name="site_settings_rp_preview3_title">Përmirësoni Focus-in: VideoPress Për Dasma</string>
 	<string name="site_settings_rp_preview2_site">te "Aplikacione"</string>
-	<string name="site_settings_rp_preview2_title">Aplikacioni WordPress për Android i Ndërron Pamjen Goxha</string>
+	<string name="site_settings_rp_preview2_title">Aplikacioni WordPress për Android Ndërron Pamjen Goxha</string>
 	<string name="site_settings_rp_preview1_site">në "Celular"</string>
 	<string name="site_settings_rp_preview1_title">Gati Tani një Përditësim i Madh për iPhone/iPad</string>
 	<string name="site_settings_rp_show_images_title">Shfaqni Figura</string>
@@ -1037,8 +1040,6 @@ Language: sq_AL
 	<string name="connecting_wpcom">Po lidhet te WordPress.com</string>
 	<string name="username_invalid">Emër përdoruesi i pavlefshëm</string>
 	<string name="nux_tutorial_get_started_title">Nisjani!</string>
-	<string name="jetpack_message">Për statistika lypset shtojca Jetpack? Doni të instalohet Jetpack-u?</string>
-	<string name="limit_reached">U mbërrit në kufi. Mund të riprovoni pas 1 minute. Riprovimi para kësaj vetëm sa do të shtojë kohën që ju duhet të prisni para se të hiqet përzënia. Nëse mendoni se ky është një gabim, lidhuni me asistencën.</string>
 	<string name="button_next">Pasuesi</string>
 	<string name="jetpack_not_found">S&amp;#8217;u gjet shtojcë Jetpack</string>
 	<string name="reader_btn_unfollow">Ndjekur prej jush</string>
@@ -1048,6 +1049,8 @@ Language: sq_AL
 	<string name="reader_toast_err_view_image">S&amp;#8217;arrin të shihet figura</string>
 	<string name="reader_toast_err_url_intent">S&amp;#8217;arrin të hapë %s</string>
 	<string name="reader_empty_followed_tags">S&amp;#8217;ndiqni ndonjë etiketë</string>
+	<string name="jetpack_message">Për statistika lypset shtojca Jetpack. Doni të instalohet Jetpack-u?</string>
+	<string name="limit_reached">U mbërrit në kufi. Mund të riprovoni pas 1 minute. Riprovimi para kësaj vetëm sa do të shtojë kohën që ju duhet të prisni para se të hiqet përzënia. Nëse mendoni se bëhet fjalë për një gabim, lidhuni me asistencën.</string>
 	<string name="themes">Tema</string>
 	<string name="all">Krejt</string>
 	<string name="images">Figura</string>

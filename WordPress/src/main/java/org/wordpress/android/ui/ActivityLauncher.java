@@ -184,8 +184,13 @@ public class ActivityLauncher {
         if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
 
         // always add the preview parameter to avoid bumping stats when viewing posts
-        String url = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
-        WPWebViewActivity.openPostOrPage(context, blog, post, url);
+        String urlToLoad = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
+
+        // Add the original post URL to the list of allowed URLs.
+        // This is necessary because links are disabled in the webview, but WP removes "?preview=true" from the passed URL,
+        // and internally redirects to it. EX:Published posts on a site with Plain permalink structure settings.
+        // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
+        WPWebViewActivity.openPostOrPage(context, blog, post, urlToLoad, new String[] {post.getPermaLink()});
     }
 
     public static void addMedia(Activity activity) {

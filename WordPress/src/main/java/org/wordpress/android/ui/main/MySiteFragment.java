@@ -29,7 +29,6 @@ import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
-import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -49,8 +48,6 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import de.greenrobot.event.EventBus;
-
-import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID;
 
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
@@ -91,11 +88,6 @@ public class MySiteFragment extends Fragment
     public void setBlog(@Nullable final Blog blog) {
         mBlogLocalId = BlogUtils.getBlogLocalId(blog);
         refreshBlogDetails(blog);
-
-        // once the user switches to another blog, clean any pending draft notifications for any other blog,
-        // and check if they have any drafts pending for this new blog
-        NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
-        NotificationsPendingDraftsService.checkPrefsAndStartService(getActivity());
     }
 
     @Override

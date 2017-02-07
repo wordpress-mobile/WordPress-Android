@@ -279,6 +279,13 @@ public class ReaderBlogTable {
                 args);
     }
 
+    public static String getBlogUrl(long blogId) {
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT blog_url FROM tbl_blog_info WHERE blog_id=?",
+                args);
+    }
+
     public static String getFeedName(long feedId) {
         String[] args = {Long.toString(feedId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),

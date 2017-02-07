@@ -36,6 +36,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
@@ -429,6 +430,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             @Override
             public void onClick(View v) {
                 Intent newAccountIntent = new Intent(getActivity(), HelpActivity.class);
+                newAccountIntent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.Tag.ORIGIN_SIGNUP_SCREEN);
                 startActivity(newAccountIntent);
             }
         });

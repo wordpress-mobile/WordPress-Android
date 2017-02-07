@@ -46,9 +46,10 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
-import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
+import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -74,8 +75,6 @@ import org.wordpress.android.widgets.WPViewPager;
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
-import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.GROUPED_POST_ID_LIST_EXTRA;
-import static org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -213,10 +212,9 @@ public class WPMainActivity extends AppCompatActivity {
                         false));
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
-                    if (getIntent().hasExtra(NotificationsPendingDraftsService.POST_ID_EXTRA) ||
-                            getIntent().hasExtra(GROUPED_POST_ID_LIST_EXTRA)) {
-                        launchWithPostId(getIntent().getLongExtra(NotificationsPendingDraftsService.POST_ID_EXTRA, 0),
-                                getIntent().getBooleanExtra(NotificationsPendingDraftsService.IS_PAGE_EXTRA, false));
+                    if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
+                        launchWithPostId(getIntent().getLongExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0),
+                                getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA, false));
                     } else {
                         launchWithNoteId();
                     }
@@ -365,7 +363,7 @@ public class WPMainActivity extends AppCompatActivity {
         if (isFinishing() || getIntent() == null) return;
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
-        NativeNotificationsUtils.dismissNotification(PENDING_DRAFTS_NOTIFICATION_ID, this);
+        NativeNotificationsUtils.dismissNotification(PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId), this);
 
         //if no specific post id passed, show the list
         if (postId == 0 ) {
