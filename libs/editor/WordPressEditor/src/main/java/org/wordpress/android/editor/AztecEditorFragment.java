@@ -766,6 +766,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
     };
 
+    /**
+     * Save post content from source HTML.
+     */
+    public void saveContentFromSource() {
+        if (content != null && source != null && source.getVisibility() == View.VISIBLE) {
+            content.fromHtml(source.getPureHtml(false));
+        }
+    }
+
     @Override
     public void onToolbarAddMediaClicked() {
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);

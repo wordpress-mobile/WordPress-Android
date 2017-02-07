@@ -190,6 +190,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private Post mPost;
     private Post mOriginalPost;
 
+    private AztecEditorFragment mAztecEditorFragment;
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
@@ -919,6 +920,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void saveAndFinish() {
+        if (mShowAztecEditor && mAztecEditorFragment != null) {
+            mAztecEditorFragment.saveContentFromSource();
+        }
+
         new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -957,9 +962,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
-                        AztecEditorFragment editor = AztecEditorFragment.newInstance("", "");
-                        editor.setImageLoader(new AztecImageLoader(getBaseContext()));
-                        return editor;
+                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "");
+                        mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
+                        return mAztecEditorFragment;
                     } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
                         return new EditorFragment();
