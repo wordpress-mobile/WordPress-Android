@@ -106,4 +106,6 @@
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
+
+    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
 </resources>

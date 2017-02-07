@@ -26,4 +26,6 @@
     <color name="quote_background">@color/wp_grey_lighten_30</color>
     <color name="text">@color/wp_grey_darken_30</color>
 
+    <color name="media_shade_overlay_color">#50000000</color>
+    <color name="media_shade_overlay_error_color">#50FF0000</color>
 </resources>
