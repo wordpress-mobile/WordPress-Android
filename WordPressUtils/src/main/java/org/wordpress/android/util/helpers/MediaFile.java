@@ -330,8 +330,8 @@ public class MediaFile {
                 fullSizeUrl, mediaTitle, alignmentCSS, resizedPictureURL);
 
         if (!TextUtils.isEmpty(getCaption())) {
-            content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
-                    alignment, getWidth(), TextUtils.htmlEncode(getCaption()), content);
+            content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\"]%s%s[/caption]",
+                    alignment, getWidth(), content, TextUtils.htmlEncode(getCaption()));
         }
 
         return content;
