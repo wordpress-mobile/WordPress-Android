@@ -96,8 +96,8 @@
     <string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
 
     <!-- AZTEC -->
-    <string name="edit_hint">Tenochtitlan is the hint</string>
-    <string name="source_hint">Codex is the source</string>
+    <string name="edit_hint">Share your story here&#8230;</string>
+    <string name="source_hint">&lt;p&gt;Share your story here&#8230;&lt;/p&gt;</string>
 
     <string name="dialog_title">Insert link</string>
     <string name="dialog_edit_hint">http(s)://</string>
