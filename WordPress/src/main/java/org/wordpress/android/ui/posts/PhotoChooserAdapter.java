@@ -33,9 +33,11 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private static final String ID_COL = MediaStore.Images.Thumbnails._ID;
+    private static final String IMAGE_ID_COL = MediaStore.Images.Thumbnails.IMAGE_ID;
 
     public void loadGallery() {
-        String[] projection = { ID_COL };
+        String[] projection = { ID_COL, IMAGE_ID_COL };
+        String orderBy = IMAGE_ID_COL + " DESC";
 
         // create cursor containing external (SDCARD) images
         Cursor external = mContext.getContentResolver().query(
@@ -43,7 +45,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 projection, // Which columns to return
                 null,       // Return all rows
                 null,
-                ID_COL);
+                orderBy);
 
         // create cursor for internal images
         Cursor internal = mContext.getContentResolver().query(
@@ -51,7 +53,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 projection,
                 null,
                 null,
-                ID_COL);
+                orderBy);
 
         // merge the two cursors
         Cursor[] cursorArray =  { external, internal };
