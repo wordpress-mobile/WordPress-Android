@@ -1557,7 +1557,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
         trackAddMediaEvents(isVideo, false);
 
-        if (mShowNewEditor) {
+        if (mShowNewEditor || mShowAztecEditor) {
             // TODO: add video param
             return addMediaVisualEditor(mediaUri);
         } else {
