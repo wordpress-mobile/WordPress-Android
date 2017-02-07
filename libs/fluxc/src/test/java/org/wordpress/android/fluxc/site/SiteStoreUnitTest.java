@@ -29,8 +29,8 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOverXMLRPC;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOverRestOnly;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOverXMLRPC;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generatePostFormats;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedNonJPSite;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedSiteFutureJetpack;
@@ -276,7 +276,7 @@ public class SiteStoreUnitTest {
 
         List<SiteModel> wpComSites = SiteSqlUtils.getAllWPComSites();
 
-        assertEquals(2, wpComSites.size());
+        assertEquals(1, wpComSites.size());
         for (SiteModel site : wpComSites) {
             assertNotEquals(jetpackSiteOverXMLRPC.getId(), site.getId());
         }
@@ -289,6 +289,7 @@ public class SiteStoreUnitTest {
 
         // Insert a self hosted site that will later be converted to Jetpack
         SiteSqlUtils.insertOrUpdateSite(futureJetpack);
+
         // Insert the same site but Jetpack powered this time
         SiteSqlUtils.insertOrUpdateSite(jetpack);
 
@@ -297,10 +298,11 @@ public class SiteStoreUnitTest {
         assertEquals(1, sitesCount);
 
         List<SiteModel> wpComSites  = SiteSqlUtils.getAllWPComSites();
-        assertEquals(1, wpComSites.size());
-        assertEquals(jetpack.getSiteId(), wpComSites.get(0).getSiteId());
-        assertTrue(wpComSites.get(0).isJetpackConnected());
-        assertTrue(wpComSites.get(0).isWPCom());
+        assertEquals(0, wpComSites.size());
+        List<SiteModel> jetpackSites = SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true);
+        assertEquals(jetpack.getSiteId(), jetpackSites.get(0).getSiteId());
+        assertTrue(jetpackSites.get(0).isJetpackConnected());
+        assertFalse(jetpackSites.get(0).isWPCom());
     }
 
     @Test
