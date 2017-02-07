@@ -272,6 +272,51 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     }
 
     @Override
+    public void onToolbarHtmlModeClicked() {
+        if (!isAdded()) {
+            return;
+        }
+
+        checkForFailedUploadAndSwitchToHtmlMode();
+    }
+
+    private void checkForFailedUploadAndSwitchToHtmlMode() {
+        // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
+        if (hasFailedMediaUploads()) {
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.editor_failed_uploads_switch_html)
+                    .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // Clear failed uploads and switch to HTML mode
+                            removeAllFailedMediaUploads();
+                            toggleHtmlMode();
+                        }
+                    }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // nothing special to do
+                        }
+                    })
+                    .create()
+                    .show();
+        } else {
+            toggleHtmlMode();
+        }
+    }
+
+    private void toggleHtmlMode() {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
+
+        // Don't switch to HTML mode if currently uploading media
+        if (!mUploadingMedia.isEmpty() || isActionInProgress()) {
+            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
+            return;
+        }
+
+        formattingToolbar.toggleEditorMode();
+    }
+
+    @Override
     public boolean isActionInProgress() {
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
     }
