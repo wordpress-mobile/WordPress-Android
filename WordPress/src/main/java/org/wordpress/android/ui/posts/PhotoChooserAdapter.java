@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.posts.PhotoChooserFragment.OnPhotoChosenListener;
 import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
@@ -20,11 +21,12 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private final Context mContext;
     private final int mImageSz;
-    private ArrayList<Uri> mUriList;
+    private OnPhotoChosenListener mListener;
+    private final ArrayList<Uri> mUriList = new ArrayList<>();
 
-    public PhotoChooserAdapter(Context context) {
+    public PhotoChooserAdapter(Context context, OnPhotoChosenListener listener) {
         super();
-
+        mListener = listener;
         mContext = context;
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
         mImageSz = displayWidth / 4;
@@ -56,7 +58,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         MergeCursor cursor = new MergeCursor(cursorArray);
 
         // create array of image Uris
-        mUriList = new ArrayList<>();
+        mUriList.clear();
         int index = cursor.getColumnIndexOrThrow(ID_COL);
         while (cursor.moveToNext()) {
             int imageID = cursor.getInt(index);
@@ -72,7 +74,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return mUriList != null ? mUriList.size() : 0;
+        return mUriList.size();
     }
 
     @Override
@@ -90,7 +92,6 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ImageView imageView = ((PhotoViewHolder) holder).imageView;
         imageView.setImageURI(mUriList.get(position));
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
     class PhotoViewHolder extends RecyclerView.ViewHolder {
@@ -98,9 +99,21 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public PhotoViewHolder(View view) {
             super(view);
+
             imageView = (ImageView) view.findViewById(R.id.image_photo);
             imageView.getLayoutParams().width = mImageSz;
             imageView.getLayoutParams().height = mImageSz;
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        mListener.onPhotoChosen(mUriList.get(position));
+                    }
+                }
+            });
         }
     }
 }

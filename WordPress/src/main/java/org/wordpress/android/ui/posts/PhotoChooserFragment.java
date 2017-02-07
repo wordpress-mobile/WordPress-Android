@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Fragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,10 @@ import android.view.ViewGroup;
 import org.wordpress.android.R;
 
 public class PhotoChooserFragment extends Fragment {
+
+    public interface OnPhotoChosenListener {
+        public void onPhotoChosen(Uri imageUri);
+    }
 
     private GridLayoutManager mLayoutManager;
     private RecyclerView mRecycler;
@@ -52,8 +57,18 @@ public class PhotoChooserFragment extends Fragment {
         return view;
     }
 
+
+    private OnPhotoChosenListener mListener = new OnPhotoChosenListener() {
+        @Override
+        public void onPhotoChosen(Uri imageUri) {
+            if (getActivity() instanceof EditPostActivity) {
+                EditPostActivity activity = (EditPostActivity) getActivity();
+                activity.addMedia(imageUri);
+            }
+        }
+    };
     private void loadGallery() {
-        PhotoChooserAdapter adapter = new PhotoChooserAdapter(getActivity());
+        PhotoChooserAdapter adapter = new PhotoChooserAdapter(getActivity(), mListener);
         mRecycler.setAdapter(adapter);
         adapter.loadGallery();
     }

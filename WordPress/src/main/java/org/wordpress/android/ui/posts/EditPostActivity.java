@@ -1552,7 +1552,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private boolean addMedia(Uri mediaUri) {
+    protected boolean addMedia(Uri mediaUri) {
         if (mediaUri != null && !MediaUtils.isInMediaStore(mediaUri) && !mediaUri.toString().startsWith("/")) {
             mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
         }
