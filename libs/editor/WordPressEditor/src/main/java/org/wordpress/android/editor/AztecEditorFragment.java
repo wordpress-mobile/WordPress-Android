@@ -811,7 +811,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
         for (String clazz : attrs.getClasses()) {
             if (Pattern.matches("^wp-image.*", clazz)) {
-                putOpt(metadata, "attachment_id", Integer.parseInt(clazz.replace("wp-image-", "")));
+                String attachmentIdString = clazz.replace("wp-image-", "");
+                if (NumberUtils.toInt(attachmentIdString) != 0) {
+                    putOpt(metadata, "attachment_id", attachmentIdString);
+                } else {
+                    AppLog.d(AppLog.T.EDITOR, "AttachmentId was not an integer! String value: " + attachmentIdString);
+                }
             } else if (Pattern.matches("^align.*", clazz)) {
                 putOpt(metadata, "align", clazz.replace("align", ""));
             } else if (Pattern.matches("^size-.*", clazz)) {
