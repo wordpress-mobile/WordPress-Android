@@ -17,7 +17,7 @@ import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
 
-public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.PhotoViewHolder> {
 
     private final Context mContext;
     private final int mImageSz;
@@ -53,15 +53,14 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_image, parent, false);
         return new PhotoViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ImageView imageView = ((PhotoViewHolder) holder).imageView;
-        imageView.setImageURI(mUriList.get(position));
+    public void onBindViewHolder(PhotoViewHolder holder, int position) {
+        holder.imageView.setImageURI(mUriList.get(position));
     }
 
     class PhotoViewHolder extends RecyclerView.ViewHolder {
