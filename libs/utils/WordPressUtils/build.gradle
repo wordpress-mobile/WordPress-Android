@@ -28,13 +28,22 @@ android {
 
     publishNonDefault true
 
+<<<<<<< HEAD
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+=======
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+>>>>>>> 523998191385a6e3e8332435cf8f914d439c5e4c
 
     defaultConfig {
         versionName "1.14.0"
         minSdkVersion 14
+<<<<<<< HEAD
         targetSdkVersion 25
+=======
+        targetSdkVersion 24
+>>>>>>> 523998191385a6e3e8332435cf8f914d439c5e4c
     }
 }
 
