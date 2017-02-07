@@ -94,6 +94,7 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -367,7 +368,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
+        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+        int containerHeight = displayHeight / 2;
         View container = findViewById(R.id.photo_fragment_container);
+        container.getLayoutParams().height = containerHeight;
         container.setVisibility(View.VISIBLE);
 
         FragmentManager fm = getFragmentManager();
