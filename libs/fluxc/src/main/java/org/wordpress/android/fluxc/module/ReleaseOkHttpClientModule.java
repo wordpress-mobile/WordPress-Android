@@ -20,13 +20,13 @@ import okhttp3.OkHttpClient;
 public class ReleaseOkHttpClientModule {
     @Provides
     @Named("regular")
-    public OkHttpClient.Builder provideOkHttpClient() {
+    public OkHttpClient.Builder provideOkHttpClientBuilder() {
         return new OkHttpClient.Builder();
     }
 
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient.Builder provideOkHttpClientCustomSSL(MemorizingTrustManager memorizingTrustManager) {
+    public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(MemorizingTrustManager memorizingTrustManager) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
