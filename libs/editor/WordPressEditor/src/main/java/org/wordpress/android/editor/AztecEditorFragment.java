@@ -382,15 +382,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             if (mediaFile.isVideo()) {
                 // TODO: insert video
+                ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
                 // TODO: insert image
+                ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             }
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String id = mediaFile.getMediaId();
             if (mediaFile.isVideo()) {
                 // TODO: insert local video
-//                mUploadingMedia.put(id, MediaType.VIDEO);
+                ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
                 AttributesImpl attrs = new AttributesImpl();
                 attrs.addAttribute("", "data-wpid", "data-wpid", "string", id);
@@ -419,6 +421,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
+        ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
     }
 
     @Override
