@@ -217,9 +217,6 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         if (jetpackClientId != 0 && jetpackClientId != -1) {
             oldModel.setIsJetpackInstalled(true);
             oldModel.setIsJetpackConnected(true);
-            // We also set the isWPCom flag, since this site should be available by the WPCOM REST API
-            // TODO: check for jetpack options and turn this off if the REST API is disabled
-            oldModel.setIsWPCom(true);
             oldModel.setSiteId(jetpackClientId);
         } else {
             oldModel.setSiteId(0);
