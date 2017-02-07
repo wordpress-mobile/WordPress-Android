@@ -96,36 +96,36 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             String[] projection = { ID_COL, IMAGE_ID_COL };
             String orderBy = IMAGE_ID_COL + " DESC";
 
-            // create cursor containing external (SDCARD) images
+            // get external (SDCARD) images
             Cursor external = mContext.getContentResolver().query(
                     MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
                     projection, // Which columns to return
                     null,       // Return all rows
                     null,
                     orderBy);
+            addImages(external);
 
-            // create cursor for internal images
+            // get internal images
             Cursor internal = mContext.getContentResolver().query(
                     MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI,
                     projection,
                     null,
                     null,
                     orderBy);
+            addImages(internal);
 
-            // merge the two cursors
-            Cursor[] cursorArray =  { external, internal };
-            MergeCursor cursor = new MergeCursor(cursorArray);
+            return true;
+        }
 
-            // create array of image Uris
+        private void addImages(Cursor cursor) {
             int index = cursor.getColumnIndexOrThrow(ID_COL);
             while (cursor.moveToNext()) {
                 int imageID = cursor.getInt(index);
                 Uri imageUri = Uri.withAppendedPath(
-                        MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, "" + imageID);
+                        MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
+                        "" + imageID);
                 tmpUriList.add(imageUri);
             }
-
-            return true;
         }
 
         @Override
