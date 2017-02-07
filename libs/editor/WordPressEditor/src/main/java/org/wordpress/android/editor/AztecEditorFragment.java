@@ -438,6 +438,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void removeAllFailedMediaUploads() {
+        content.removeMedia(new AztecText.AttributePredicate() {
+            @Override
+            public boolean matches(@NotNull Attributes attrs) {
+                return new AttributesWithClass(attrs).hasClass("failed");
+            }
+        });
     }
 
     @Override
