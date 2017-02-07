@@ -72,6 +72,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -376,7 +377,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setupSuggestionServiceAndAdapter() {
-        if (!isAdded() || !mSite.isWPCom()) {
+        if (!isAdded() || !SiteUtils.isAccessibleViaWPComAPI(mSite)) {
             return;
         }
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mSite.getSiteId());
@@ -714,8 +715,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // the post this comment is on can only be requested if this is a .com blog or a
         // jetpack-enabled self-hosted blog, and we have valid .com credentials
-        boolean isDotComOrJetpack = site.isWPCom();
-        boolean canRequestPost = isDotComOrJetpack && mAccountStore.hasAccessToken();
+        boolean canRequestPost = SiteUtils.isAccessibleViaWPComAPI(site) && mAccountStore.hasAccessToken();
 
         final String title;
         final boolean hasTitle;

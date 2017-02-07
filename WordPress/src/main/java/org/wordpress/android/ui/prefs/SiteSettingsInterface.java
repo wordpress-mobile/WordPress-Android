@@ -10,10 +10,11 @@ import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.SiteSettingsTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
@@ -124,7 +125,7 @@ public abstract class SiteSettingsInterface {
     public static SiteSettingsInterface getInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
         if (host == null || site == null) return null;
 
-        if (site.isWPCom()) {
+        if (SiteUtils.isAccessibleViaWPComAPI(site)) {
             return new DotComSiteSettings(host, site, listener);
         } else {
             return new SelfHostedSiteSettings(host, site, listener);

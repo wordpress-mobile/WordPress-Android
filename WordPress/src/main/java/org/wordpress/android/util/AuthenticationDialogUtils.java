@@ -30,6 +30,8 @@ public class AuthenticationDialogUtils {
             return;
         }
 
+        // TODO: isJetpackConnected - there is probably
+
         // abort if the dialog is already visible
         if (activity.getFragmentManager().findFragmentByTag(ALERT_TAG) != null) {
             return;

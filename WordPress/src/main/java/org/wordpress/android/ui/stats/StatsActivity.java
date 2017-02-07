@@ -43,6 +43,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JetpackUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -271,8 +272,8 @@ public class StatsActivity extends AppCompatActivity
     }
 
     private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
-        // If the site is not connected via wpcom (Jetpack included), then show a dialog to the user.
-        if (!site.isWPCom()) {
+        // If the site is not accessible via wpcom (Jetpack included), then show a dialog to the user.
+        if (!SiteUtils.isAccessibleViaWPComAPI(mSite)) {
             if (!mAccountStore.hasAccessToken()) {
                 // If the user is not connected to WordPress.com, ask him to connect first.
                 startWPComLoginActivity();

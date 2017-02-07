@@ -241,7 +241,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         final String homeURL;
         final String url;
         final String blavatarUrl;
-        final boolean isDotCom;
+        final boolean isDotComOrJetpack;
         final boolean isHidden;
 
         SiteRecord(SiteModel site) {
@@ -251,7 +251,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
             homeURL = SiteUtils.getHomeURLOrHostName(site);
             url = site.getUrl();
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
-            isDotCom = site.isWPCom();
+            isDotComOrJetpack = SiteUtils.isAccessibleViaWPComAPI(site);
             isHidden = !site.isVisible();
         }
 

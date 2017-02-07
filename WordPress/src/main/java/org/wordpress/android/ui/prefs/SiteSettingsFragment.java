@@ -59,6 +59,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -654,7 +655,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         sortLanguages();
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
-        if (mSite.isWPCom()) {
+        if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
             removeSelfHostedOnlyPreferences();
         } else {
             removeDotComOnlyPreferences();

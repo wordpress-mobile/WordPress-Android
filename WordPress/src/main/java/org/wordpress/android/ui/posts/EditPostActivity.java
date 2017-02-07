@@ -1151,7 +1151,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         String imageURL;
-        if (mSite.isWPCom()) {
+        if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
             String photonUrl = mediaFile.getFileURL();
             imageURL = StringUtils.getPhotonUrl(photonUrl, getMaximumThumbnailWidthForEditor());
         } else {
