@@ -100,7 +100,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapte
                     null,
                     null,
                     orderBy);
-            addImages(external);
+            addImages(external, MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI);
 
             // get internal images
             Cursor internal = mContext.getContentResolver().query(
@@ -109,18 +109,16 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapte
                     null,
                     null,
                     orderBy);
-            addImages(internal);
+            addImages(internal, MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI);
 
             return true;
         }
 
-        private void addImages(Cursor cursor) {
+        private void addImages(Cursor cursor, Uri baseUri) {
             int index = cursor.getColumnIndexOrThrow(ID_COL);
             while (cursor.moveToNext()) {
                 int imageID = cursor.getInt(index);
-                Uri imageUri = Uri.withAppendedPath(
-                        MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
-                        "" + imageID);
+                Uri imageUri = Uri.withAppendedPath(baseUri, "" + imageID);
                 tmpUriList.add(imageUri);
             }
         }
