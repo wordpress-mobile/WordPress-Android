@@ -65,14 +65,21 @@ public class PhotoChooserFragment extends Fragment {
         }
     };
 
-    static int getPhotoChooserImageSize(Context context) {
+    static int getPhotoChooserImageWidth(Context context) {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         return displayWidth / NUM_COLUMNS;
     }
 
+    static int getPhotoChooserImageHeight(Context context) {
+        int imageWidth = getPhotoChooserImageWidth(context);
+        return (int) (imageWidth * 0.75f);
+    }
+
     private void loadDevicePhotos() {
-        int imageSize = getPhotoChooserImageSize(getActivity());
-        PhotoChooserAdapter adapter = new PhotoChooserAdapter(getActivity(), imageSize, mListener);
+        int imageWidth = getPhotoChooserImageWidth(getActivity());
+        int imageHeight = getPhotoChooserImageHeight(getActivity());
+        PhotoChooserAdapter adapter = new PhotoChooserAdapter(
+                getActivity(), imageWidth, imageHeight, mListener);
         mRecycler.setAdapter(adapter);
         adapter.loadDevicePhotos();
     }

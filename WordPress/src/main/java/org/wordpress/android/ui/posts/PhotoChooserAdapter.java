@@ -19,7 +19,8 @@ import java.util.ArrayList;
 public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Context mContext;
-    private final int mImageSz;
+    private final int mImageWidth;
+    private final int mImageHeight;
     private final OnPhotoChosenListener mListener;
     private final ArrayList<Uri> mUriList = new ArrayList<>();
 
@@ -27,12 +28,14 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int VT_PHOTO = 2;
 
     public PhotoChooserAdapter(Context context,
-                               int imageSize,
+                               int imageWidth,
+                               int imageHeight,
                                OnPhotoChosenListener listener) {
         super();
         mContext = context;
         mListener = listener;
-        mImageSz = imageSize;
+        mImageWidth = imageWidth;
+        mImageHeight = imageHeight;
     }
 
     private static final String ID_COL = MediaStore.Images.Thumbnails._ID;
@@ -95,8 +98,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(view);
 
             imageView = (ImageView) view.findViewById(R.id.image_photo);
-            imageView.getLayoutParams().width = mImageSz;
-            imageView.getLayoutParams().height = mImageSz;
+            imageView.getLayoutParams().width = mImageWidth;
+            imageView.getLayoutParams().height = mImageHeight;
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -117,8 +120,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(view);
 
             imgCamera = (ImageView) view.findViewById(R.id.image_camera);
-            imgCamera.getLayoutParams().width = mImageSz;
-            imgCamera.getLayoutParams().height = mImageSz;
+            imgCamera.getLayoutParams().width = mImageWidth;
+            imgCamera.getLayoutParams().height = mImageHeight;
 
             imgCamera.setOnClickListener(new View.OnClickListener() {
                 @Override

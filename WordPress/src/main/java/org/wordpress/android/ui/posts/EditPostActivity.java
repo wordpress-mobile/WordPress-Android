@@ -371,8 +371,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     // TODO: if the user doesn't have permission to access device photos, delay this until
     // the user taps the photo icon and then ask permission
     private void initPhotoChooser() {
-        int imageSize = PhotoChooserFragment.getPhotoChooserImageSize(this);
-        int containerHeight = imageSize * 3;
+        int imageHeight = PhotoChooserFragment.getPhotoChooserImageHeight(this);
+        int containerHeight = imageHeight * 3;
         mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
         mPhotoChooserContainer.getLayoutParams().height = containerHeight;
 
