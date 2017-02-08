@@ -295,7 +295,12 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             new Gson().fromJson(jsonBody, MultipleMediaResponse.class);
                     List<MediaModel> responseMedia = getMediaListFromRestResponse(mediaResponse, siteModel.getId());
                     if (responseMedia != null && !responseMedia.isEmpty()) {
-                        notifyMediaUploaded(responseMedia.get(0), null);
+                        MediaModel uploadedMedia = responseMedia.get(0);
+                        uploadedMedia.setId(media.getId());
+                        notifyMediaUploaded(uploadedMedia, null);
+                    } else {
+                        MediaStore.MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        notifyMediaUploaded(media, error);
                     }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
