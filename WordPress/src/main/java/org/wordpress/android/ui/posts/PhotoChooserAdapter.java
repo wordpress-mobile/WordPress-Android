@@ -20,11 +20,20 @@ import java.util.ArrayList;
 
 public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private class PhotoItem {
+        private int _id;
+        private int imageId;
+        private Uri imageUri;
+    }
+    private class PhotoItemList extends ArrayList<PhotoItem> {
+
+    }
+
     private final Context mContext;
     private final int mImageWidth;
     private final int mImageHeight;
     private final OnPhotoChosenListener mListener;
-    private final ArrayList<Uri> mUriList = new ArrayList<>();
+    private final PhotoItemList mPhotoList = new PhotoItemList();
 
     private static final int VT_PHOTO = 0;
     private static final int VT_CAMERA = 1;
@@ -50,7 +59,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return mUriList.size();
+        return mPhotoList.size();
     }
 
     @Override
@@ -86,18 +95,18 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     /*
-     * returns the Uri of the photo in the adapter at the passed position
+     * returns the photo item in the adapter at the passed position
      */
-    private Uri getPhotoAtPosition(int adapterPosition) {
+    private PhotoItem getPhotoAtPosition(int adapterPosition) {
         // -2 to take initial VT_CAMERA and VT_PICKER items into account
         int photoPosition = adapterPosition - 2;
-        return mUriList.get(photoPosition);
+        return mPhotoList.get(photoPosition);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PhotoViewHolder) {
-            ((PhotoViewHolder) holder).imageView.setImageURI(getPhotoAtPosition(position));
+            ((PhotoViewHolder) holder).imageView.setImageURI(getPhotoAtPosition(position).imageUri);
         }
     }
 
@@ -120,7 +129,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         AniUtils.scaleOut(v, View.VISIBLE, AniUtils.Duration.SHORT, new AniUtils.AnimationEndListener() {
                             @Override
                             public void onAnimationEnd() {
-                                mListener.onPhotoChosen(getPhotoAtPosition(position));
+                                mListener.onPhotoChosen(getPhotoAtPosition(position).imageUri);
                             }
                         });
                     }
@@ -166,7 +175,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private class LoadDevicePhotosTask extends AsyncTask<Void, Void, Boolean> {
-        private final ArrayList<Uri> tmpUriList = new ArrayList<>();
+        private final PhotoItemList tmpList = new PhotoItemList();
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -195,18 +204,21 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         private void addImages(Cursor cursor, Uri baseUri) {
-            int index = cursor.getColumnIndexOrThrow(ID_COL);
+            int idIndex = cursor.getColumnIndexOrThrow(ID_COL);
+            int imageIdIndex = cursor.getColumnIndexOrThrow(IMAGE_ID_COL);
             while (cursor.moveToNext()) {
-                int imageID = cursor.getInt(index);
-                Uri imageUri = Uri.withAppendedPath(baseUri, "" + imageID);
-                tmpUriList.add(imageUri);
+                PhotoItem item = new PhotoItem();
+                item._id = cursor.getInt(idIndex);
+                item.imageId = cursor.getInt(imageIdIndex);
+                item.imageUri = Uri.withAppendedPath(baseUri, "" + item._id);
+                tmpList.add(item);
             }
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            mUriList.clear();
-            mUriList.addAll(tmpUriList);
+            mPhotoList.clear();
+            mPhotoList.addAll(tmpList);
             notifyDataSetChanged();
         }
     }
