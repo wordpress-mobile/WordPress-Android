@@ -1961,7 +1961,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         mPendingUploads.add(media);
         startMediaUploadService();
-        addExistingMediaToEditor(media.getMediaId());
 
         return WPStoreUtils.fromMediaModel(media);
     }
