@@ -377,7 +377,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (DisplayUtils.isLandscape(this)) {
             containerHeight = imageHeight;
         } else {
-            containerHeight = imageHeight * 2;
+            containerHeight = imageHeight * 3;
         }
 
         mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
@@ -790,7 +790,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void launchPictureLibrary() {
+    protected void launchPictureLibrary() {
         WordPressMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }

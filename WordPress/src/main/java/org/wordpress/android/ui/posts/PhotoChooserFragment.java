@@ -15,11 +15,14 @@ import org.wordpress.android.util.DisplayUtils;
 
 public class PhotoChooserFragment extends Fragment {
 
-    private static final int NUM_COLUMNS = 3;
+    private static final int NUM_COLUMNS = 4;
 
+    public enum PhotoChooserIcon {
+        ANDROID_CAMERA, ANDROID_PICKER
+    }
     public interface OnPhotoChosenListener {
         void onPhotoChosen(Uri imageUri);
-        void onCameraChosen();
+        void onIconClicked(PhotoChooserIcon icon);
     }
 
     private RecyclerView mRecycler;
@@ -57,10 +60,18 @@ public class PhotoChooserFragment extends Fragment {
             }
         }
         @Override
-        public void onCameraChosen() {
+        public void onIconClicked(PhotoChooserIcon icon) {
             if (getActivity() instanceof EditPostActivity) {
                 EditPostActivity activity = (EditPostActivity) getActivity();
-                activity.launchCamera();
+                switch (icon) {
+                    case ANDROID_CAMERA:
+                        activity.launchCamera();
+                        break;
+                    case ANDROID_PICKER:
+                        activity.launchPictureLibrary();
+                        break;
+                }
+
             }
         }
     };

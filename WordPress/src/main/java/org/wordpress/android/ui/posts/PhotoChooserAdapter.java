@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.PhotoChooserFragment.OnPhotoChosenListener;
+import org.wordpress.android.ui.posts.PhotoChooserFragment.PhotoChooserIcon;
 import org.wordpress.android.util.AniUtils;
 
 import java.util.ArrayList;
@@ -25,8 +26,9 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final OnPhotoChosenListener mListener;
     private final ArrayList<Uri> mUriList = new ArrayList<>();
 
+    private static final int VT_PHOTO = 0;
     private static final int VT_CAMERA = 1;
-    private static final int VT_PHOTO = 2;
+    private static final int VT_PICKER = 2;
 
     public PhotoChooserAdapter(Context context,
                                int imageWidth,
@@ -60,19 +62,26 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemViewType(int position) {
         if (position == 0) {
             return VT_CAMERA;
+        } else if (position == 1) {
+            return VT_PICKER;
+        } else {
+            return VT_PHOTO;
         }
-        return VT_PHOTO;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
         switch (viewType) {
             case VT_CAMERA:
-                View cameraView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_camera, parent, false);
-                return new CameraViewHolder(cameraView);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_camera, parent, false);
+                return new CameraViewHolder(view);
+            case VT_PICKER:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_picker, parent, false);
+                return new PickerViewHolder(view);
             default:
-                View photoView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_image, parent, false);
-                return new PhotoViewHolder(photoView);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_image, parent, false);
+                return new PhotoViewHolder(view);
         }
     }
 
@@ -80,8 +89,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * returns the Uri of the photo in the adapter at the passed position
      */
     private Uri getPhotoAtPosition(int adapterPosition) {
-        // -1 to take initial VT_CAMERA item into account
-        int photoPosition = adapterPosition - 1;
+        // -2 to take initial VT_CAMERA and VT_PICKER items into account
+        int photoPosition = adapterPosition - 2;
         return mUriList.get(photoPosition);
     }
 
@@ -121,20 +130,35 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     class CameraViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView imgCamera;
-
         public CameraViewHolder(View view) {
             super(view);
 
-            imgCamera = (ImageView) view.findViewById(R.id.image_camera);
-            imgCamera.getLayoutParams().width = mImageWidth;
-            imgCamera.getLayoutParams().height = mImageHeight;
+            itemView.getLayoutParams().width = mImageWidth;
+            itemView.getLayoutParams().height = mImageHeight;
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        mListener.onCameraChosen();
+                        mListener.onIconClicked(PhotoChooserIcon.ANDROID_CAMERA);
+                    }
+                }
+            });
+        }
+    }
+
+    class PickerViewHolder extends RecyclerView.ViewHolder {
+        public PickerViewHolder(View view) {
+            super(view);
+
+            itemView.getLayoutParams().width = mImageWidth;
+            itemView.getLayoutParams().height = mImageHeight;
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onIconClicked(PhotoChooserIcon.ANDROID_PICKER);
                     }
                 }
             });
