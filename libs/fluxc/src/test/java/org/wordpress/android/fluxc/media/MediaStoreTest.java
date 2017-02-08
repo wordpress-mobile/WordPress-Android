@@ -97,7 +97,7 @@ public class MediaStoreTest {
         MediaModel testMedia = getBasicMedia();
         testMedia.setSiteId(testSiteId);
         testMedia.setMediaId(testMediaId);
-        assertTrue(insertMediaIntoDatabase(testMedia) == 0);
+        assertTrue(insertMediaIntoDatabase(testMedia) == 1);
 
         // verify store has inserted media
         assertTrue(mMediaStore.getSiteMediaCount(testSite) == 1);
@@ -115,7 +115,7 @@ public class MediaStoreTest {
         MediaModel testMedia = getBasicMedia();
         testMedia.setSiteId(testSiteId);
         testMedia.setMediaId(testMediaId);
-        assertTrue(insertMediaIntoDatabase(testMedia) == 0);
+        assertTrue(insertMediaIntoDatabase(testMedia) == 1);
 
         // cannot get media with incorrect site ID
         final long wrongSiteId = testSiteId + 1;
@@ -189,8 +189,8 @@ public class MediaStoreTest {
         for (int i = 0; i < testListSize; ++i) {
             MediaModel testImage = generateMediaFromPath(testSiteId, i, String.format(testImagePath, i));
             MediaModel testVideo = generateMediaFromPath(testSiteId, i + testListSize, String.format(testVideoPath, i));
-            assertTrue(insertMediaIntoDatabase(testImage) == 0);
-            assertTrue(insertMediaIntoDatabase(testVideo) == 0);
+            assertTrue(insertMediaIntoDatabase(testImage) == 1);
+            assertTrue(insertMediaIntoDatabase(testVideo) == 1);
             testImages.add(testImage);
             testVideos.add(testVideo);
         }
@@ -210,7 +210,7 @@ public class MediaStoreTest {
         final String testImagePath = "/test/test_image%d.png";
         for (int i = 0; i < testListSize; ++i) {
             MediaModel image = generateMediaFromPath(testSiteId, i, String.format(testImagePath, i));
-            assertTrue(insertMediaIntoDatabase(image) == 0);
+            assertTrue(insertMediaIntoDatabase(image) == 1);
             testImages.add(image);
         }
         assertTrue(mMediaStore.getSiteImageCount(testSite) == testListSize);
@@ -314,7 +314,7 @@ public class MediaStoreTest {
         final String testVideoPressGuid = "thisisonlyatest";
         testVideo.setUrl(testUrl);
         testVideo.setVideoPressGuid(testVideoPressGuid);
-        assertTrue(insertMediaIntoDatabase(testVideo) == 0);
+        assertTrue(insertMediaIntoDatabase(testVideo) == 1);
 
         // retrieve video and verify
         final String storeUrl = mMediaStore
@@ -332,7 +332,7 @@ public class MediaStoreTest {
         final String testUrl = "http://notarealurl.testfluxc.org/not/a/real/resource/path.mp4";
         testMedia.setThumbnailUrl(testUrl);
         testMedia.setMediaId(testMediaId);
-        assertTrue(insertMediaIntoDatabase(testMedia) == 0);
+        assertTrue(insertMediaIntoDatabase(testMedia) == 1);
 
         // retrieve media and verify
         final String storeUrl = mMediaStore
@@ -353,7 +353,7 @@ public class MediaStoreTest {
             MediaModel testMedia = generateMedia(baseString, null, null, null);
             testMedia.setSiteId(testSiteId);
             testMedia.setMediaId(i);
-            assertTrue(insertMediaIntoDatabase(testMedia) == 0);
+            assertTrue(insertMediaIntoDatabase(testMedia) == 1);
             baseString += String.valueOf(i);
         }
 
