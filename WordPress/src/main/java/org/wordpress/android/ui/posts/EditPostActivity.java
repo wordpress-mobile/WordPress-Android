@@ -784,7 +784,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onUploadSuccess(MediaModel media) {
-        mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()), WPStoreUtils.fromMediaModel(media));
+        if (mEditorMediaUploadListener != null && media.getFileName() != null) {
+            MediaModel pendingMedia = getPendingUploadWithName(media.getFileName());
+            if (pendingMedia != null) {
+                mEditorMediaUploadListener.onMediaUploadSucceeded(
+                        String.valueOf(pendingMedia.getMediaId()),
+                        WPStoreUtils.fromMediaModel(media));
+                mPendingUploads.remove(pendingMedia);
+            }
+        }
+    }
+
+    private MediaModel getPendingUploadWithName(@NonNull String path) {
+        for (MediaModel media : mPendingUploads) {
+            if (media.getFileName().equals(path)) {
+                return media;
+            }
+        }
+        return new MediaModel();
     }
 
     @Override
