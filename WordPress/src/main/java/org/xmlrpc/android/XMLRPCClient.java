@@ -15,7 +15,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -583,10 +582,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         if (ctx == null) return;
 
         if (isDotComXMLRPCEndpoint(mPostMethod.getURI())) {
-            String token = OAuthAuthenticator.sAccessToken;
-            if (!TextUtils.isEmpty(token)) {
-                setAuthorizationHeader(token);
-            }
+            // TODO: ༼ つ ◕_◕ ༽つ FluxC
         }
     }
 

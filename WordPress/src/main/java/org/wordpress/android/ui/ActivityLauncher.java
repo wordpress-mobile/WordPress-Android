@@ -210,7 +210,12 @@ public class ActivityLauncher {
         if (site.isWPCom()) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
         } else {
-            WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url);
+            // Add the original post URL to the list of allowed URLs.
+            // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
+            // from the passed URL, and internally redirects to it. EX:Published posts on a site with Plain
+            // permalink structure settings.
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
+            WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()});
         }
     }
 

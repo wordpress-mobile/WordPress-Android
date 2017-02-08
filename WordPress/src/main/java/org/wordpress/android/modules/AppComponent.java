@@ -4,7 +4,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
+import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseStoreModule;
+import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -31,10 +33,11 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
+import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
+import org.wordpress.android.ui.posts.AddCategoryActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
@@ -81,8 +84,11 @@ import dagger.Component;
         AppContextModule.class,
         AppSecretsModule.class,
         ReleaseBaseModule.class,
+        ReleaseOkHttpClientModule.class,
         ReleaseNetworkModule.class,
-        ReleaseStoreModule.class
+        ReleaseStoreModule.class,
+        LegacyModule.class,
+        ReleaseToolsModule.class
 })
 public interface AppComponent {
     void inject(WordPress application);
@@ -142,6 +148,7 @@ public interface AppComponent {
     void inject(NotificationsSettingsFragment object);
     void inject(NotificationsDetailActivity object);
     void inject(NotificationsProcessingService object);
+    void inject(NotificationsPendingDraftsReceiver object);
 
     void inject(ReaderCommentListActivity object);
     void inject(ReaderUpdateService object);
@@ -163,7 +170,7 @@ public interface AppComponent {
 
     void inject(MediaDeleteService object);
     void inject(PostMediaService object);
-    void inject(NotificationsPendingDraftsService object);
 
     void inject(SelectCategoriesActivity object);
+    void inject(AddCategoryActivity object);
 }

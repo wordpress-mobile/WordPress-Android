@@ -370,7 +370,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             String requestUrl = (String) niv.getTag();
             if (requestUrl != null) {
                 // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.imageLoader.get(requestUrl, new ImageListener() {
+                ImageContainer container = WordPress.sImageLoader.get(requestUrl, new ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                     }

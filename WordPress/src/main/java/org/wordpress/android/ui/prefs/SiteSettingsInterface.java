@@ -149,23 +149,8 @@ public abstract class SiteSettingsInterface {
     /**
      * Gets the default category value stored in {@link SharedPreferences}, 0 by default.
      */
-    public static String getDefaultCategory(Context context) {
-        int id = siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 0);
-
-        if (id != 0) {
-            CategoryModel category = new CategoryModel();
-            Cursor cursor = SiteSettingsTable.getCategory(id);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    category.deserializeFromDatabase(cursor);
-                    return category.name;
-                }
-            } finally {
-                SqlUtils.closeCursor(cursor);
-            }
-        }
-
-        return "";
+    public static int getDefaultCategory(Context context) {
+        return siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 0);
     }
 
     /**

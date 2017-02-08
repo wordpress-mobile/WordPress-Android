@@ -40,7 +40,6 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
-import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -51,6 +50,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
@@ -394,6 +394,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             @Override
             public void onClick(View v) {
                 Intent newAccountIntent = new Intent(getActivity(), HelpActivity.class);
+                newAccountIntent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.Tag.ORIGIN_SIGNUP_SCREEN);
                 startActivity(newAccountIntent);
             }
         });
@@ -568,9 +569,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             // Account created and user authenticated, now create the site
             updateProgress(getString(R.string.creating_your_site));
             mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
-
-            // Setup legacy access token storage
-            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
 
             // Get reader tags so they're available as soon as the Reader is accessed - done for
             // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this

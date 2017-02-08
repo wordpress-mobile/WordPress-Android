@@ -91,6 +91,7 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -140,9 +141,6 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-
-import static com.android.volley.Request.Method.HEAD;
-import static org.wordpress.android.R.string.post;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
@@ -294,7 +292,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
-                // TODO: Use TaxonomyStore in SiteSettingsInterface and get default category remote id
+                categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
                 String postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
                 InstantiatePostPayload payload = new InstantiatePostPayload(mSite, mIsPage, categories, postFormat);
                 mDispatcher.dispatch(PostActionBuilder.newInstantiatePostAction(payload));
@@ -346,7 +344,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mHasSetPostContent = mEditorFragment != null) {
-            mEditorFragment.setImageLoader(WordPress.imageLoader);
+            mEditorFragment.setImageLoader(WordPress.sImageLoader);
         }
 
         // Ensure we have a valid post
@@ -726,6 +724,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
                 PostUploadService.setLegacyMode(!mShowNewEditor);
                 startService(new Intent(EditPostActivity.this, PostUploadService.class));
+                PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
                 setResult(RESULT_OK);
                 finish();
             }
@@ -855,7 +854,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updatePostSettings();
+            mEditPostSettingsFragment.updatePostSettings(mPost);
         }
 
         mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis()));
@@ -916,6 +915,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private class SaveAndFinishTask extends AsyncTask<Void, Void, Boolean> {
+
         @Override
         protected Boolean doInBackground(Void... params) {
             // Fetch post title and content from editor fields and update the Post object
@@ -953,7 +953,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     }
                     savePostToDb();
                 }
+
+                // now set the pending notification alarm to be triggered in the next day, week, and month
+                PendingDraftsNotificationsUtils.scheduleNextNotifications(EditPostActivity.this, mPost);
             }
+
             return true;
         }
 
@@ -1133,7 +1137,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
         trackAddMediaEvents(mediaFile.isVideo(), true);
-        mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
+        mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.sImageLoader);
     }
 
     /**
@@ -1583,7 +1587,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
         if (mediaFile != null) {
-            mEditorFragment.appendMediaFile(mediaFile, path, WordPress.imageLoader);
+            mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
         }
 
         return true;
@@ -1605,7 +1609,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mediaFile.setVideo(isVideo);
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.sImageLoader);
         return true;
     }
 
