@@ -43,4 +43,6 @@ public enum MediaAction implements IAction {
     UPDATE_MEDIA,
     @Action(payloadType = MediaModel.class)
     REMOVE_MEDIA,
+    @Action
+    REMOVE_ALL_MEDIA
 }
