@@ -493,8 +493,8 @@ public class WordPress extends MultiDexApplication {
 
         // reset default account
         mDispatcher.dispatch(AccountActionBuilder.newSignOutAction());
-        // delete wpcom sites
-        mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomSitesAction());
+        // delete wpcom and jetpack sites
+        mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
 
         // reset all reader-related prefs & data
         AppPrefs.reset();
