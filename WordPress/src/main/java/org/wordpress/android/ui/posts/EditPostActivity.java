@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
@@ -16,7 +15,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -45,9 +43,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
@@ -99,7 +95,6 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -376,8 +371,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     // TODO: if the user doesn't have permission to access device photos, delay this until
     // the user taps the photo icon and then ask permission
     private void initPhotoChooser() {
-        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
-        int containerHeight = displayHeight / 2;
+        int imageSize = PhotoChooserFragment.getPhotoChooserImageSize(this);
+        int containerHeight = imageSize * 3;
         mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
         mPhotoChooserContainer.getLayoutParams().height = containerHeight;
 
@@ -392,38 +387,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     void showPhotoChooser() {
         // hide soft keyboard
-        View view = this.getCurrentFocus();
+        View view = getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
         if (!isPhotoChooserShowing()) {
-            // use a circular reveal on API 21+
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                revealPhotoChooser();
-            } else {
-                AniUtils.animateBottomBar(mPhotoChooserContainer, true);
-            }
+            AniUtils.animateBottomBar(mPhotoChooserContainer, true);
         }
-
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void revealPhotoChooser() {
-        Point pt = DisplayUtils.getDisplayPixelSize(this);
-        float startRadius = 0f;
-        float endRadius = (float) Math.hypot(pt.x, pt.y);
-        int centerX = pt.x;
-        int centerY = 0;
-
-        Animator anim = ViewAnimationUtils.createCircularReveal(
-                mPhotoChooserContainer, centerX, centerY, startRadius, endRadius);
-        anim.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
-        anim.setInterpolator(new AccelerateInterpolator());
-
-        mPhotoChooserContainer.setVisibility(View.VISIBLE);
-        anim.start();
     }
 
     void hidePhotoChooser() {
@@ -751,7 +723,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        showPhotoChooser();
+        if (!isPhotoChooserShowing()) {
+            showPhotoChooser();
+        } else {
+            hidePhotoChooser();
+        }
         /*if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
             super.openContextMenu(view);
         } else {

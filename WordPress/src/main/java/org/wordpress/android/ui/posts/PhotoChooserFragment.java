@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,7 +15,7 @@ import org.wordpress.android.util.DisplayUtils;
 
 public class PhotoChooserFragment extends Fragment {
 
-    private static final int NUM_COLUMNS = 3;
+    private static final int NUM_COLUMNS = 4;
 
     public interface OnPhotoChosenListener {
         void onPhotoChosen(Uri imageUri);
@@ -56,9 +57,13 @@ public class PhotoChooserFragment extends Fragment {
         }
     };
 
+    static int getPhotoChooserImageSize(Context context) {
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+        return displayWidth / NUM_COLUMNS;
+    }
+
     private void loadDevicePhotos() {
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
-        int imageSize = displayWidth / NUM_COLUMNS;
+        int imageSize = getPhotoChooserImageSize(getActivity());
         PhotoChooserAdapter adapter = new PhotoChooserAdapter(getActivity(), imageSize, mListener);
         mRecycler.setAdapter(adapter);
         adapter.loadDevicePhotos();
