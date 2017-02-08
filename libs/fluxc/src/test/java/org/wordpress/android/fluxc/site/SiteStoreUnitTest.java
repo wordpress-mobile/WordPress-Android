@@ -360,10 +360,10 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(wpComSite2);
         SiteSqlUtils.insertOrUpdateSite(wpComSite3);
 
-        List<SiteModel> matchingSites = SiteSqlUtils.getSitesMatchingUrlOrName("eye");
+        List<SiteModel> matchingSites = SiteSqlUtils.getSitesByNameOrUrlMatching("eye");
         assertEquals(2, matchingSites.size());
 
-        matchingSites = SiteSqlUtils.getSitesMatchingUrlOrName("EYE");
+        matchingSites = SiteSqlUtils.getSitesByNameOrUrlMatching("EYE");
         assertEquals(2, matchingSites.size());
     }
 
@@ -380,10 +380,10 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(wpComSite2);
         SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
-        List<SiteModel> matchingSites = SiteSqlUtils.getSitesMatchingUrlOrName("eye");
+        List<SiteModel> matchingSites = SiteSqlUtils.getSitesByNameOrUrlMatching("eye");
         assertEquals(2, matchingSites.size());
 
-        matchingSites = SiteSqlUtils.getSitesMatchingUrlOrName("EYE");
+        matchingSites = SiteSqlUtils.getSitesByNameOrUrlMatching("EYE");
         assertEquals(2, matchingSites.size());
     }
 
@@ -400,12 +400,10 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(wpComSite2);
         SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
-        List<SiteModel> matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(
-                SiteModelTable.IS_WPCOM, true, "eye");
+        List<SiteModel> matchingSites = SiteSqlUtils.getWPComAndJetpackSitesByNameOrUrlMatching("eye");
         assertEquals(1, matchingSites.size());
 
-        matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(
-                SiteModelTable.IS_WPCOM, true, "EYE");
+        matchingSites = SiteSqlUtils.getWPComAndJetpackSitesByNameOrUrlMatching("EYE");
         assertEquals(1, matchingSites.size());
     }
 
