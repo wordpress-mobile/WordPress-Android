@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.DisplayUtils;
 
 public class PhotoChooserFragment extends Fragment {
 
@@ -56,7 +57,9 @@ public class PhotoChooserFragment extends Fragment {
     };
 
     private void loadDevicePhotos() {
-        PhotoChooserAdapter adapter = new PhotoChooserAdapter(getActivity(), NUM_COLUMNS, mListener);
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+        int imageSize = displayWidth / NUM_COLUMNS;
+        PhotoChooserAdapter adapter = new PhotoChooserAdapter(getActivity(), imageSize, mListener);
         mRecycler.setAdapter(adapter);
         adapter.loadDevicePhotos();
     }

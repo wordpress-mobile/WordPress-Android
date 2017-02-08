@@ -25,14 +25,13 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapte
     private final ArrayList<Uri> mUriList = new ArrayList<>();
 
     public PhotoChooserAdapter(Context context,
-                               int numColumns,
+                               int imageSize,
                                OnPhotoChosenListener listener) {
         super();
-        mListener = listener;
         mContext = context;
+        mListener = listener;
+        mImageSz = imageSize;
 
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
-        mImageSz = displayWidth / numColumns;
     }
 
     private static final String ID_COL = MediaStore.Images.Thumbnails._ID;
