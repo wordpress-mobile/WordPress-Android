@@ -18,7 +18,7 @@ public class MediaTestUtils {
     public static List<MediaModel> insertRandomMediaIntoDatabase(long siteId, int count) {
         List<MediaModel> insertedMedia = generateRandomizedMediaList(count, siteId);
         for (MediaModel media : insertedMedia) {
-            assertTrue(MediaSqlUtils.insertOrUpdateMedia(media) == 0);
+            assertTrue(MediaSqlUtils.insertOrUpdateMedia(media) == 1);
         }
         return insertedMedia;
     }

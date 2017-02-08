@@ -163,6 +163,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     AppLog.d(T.MEDIA, "media upload successful: " + media.getTitle());
                     MediaModel responseMedia = getMediaFromUploadResponse(response);
+                    responseMedia.setId(media.getId());
                     notifyMediaUploaded(responseMedia, null);
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response.message());
