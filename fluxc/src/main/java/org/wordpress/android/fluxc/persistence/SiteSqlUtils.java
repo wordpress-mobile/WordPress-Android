@@ -20,16 +20,14 @@ public class SiteSqlUtils {
     public static class DuplicateSiteException extends Exception {
     }
 
-    public static List<SiteModel> getAllSitesWith(String field, Object value) {
+    public static SelectQuery<SiteModel> getSitesWith(String field, Object value) {
         return WellSql.select(SiteModel.class)
-                .where().equals(field, value).endWhere()
-                .getAsModel();
+                .where().equals(field, value).endWhere();
     }
 
-    public static List<SiteModel> getAllSitesWith(String field, boolean value) {
+    public static SelectQuery<SiteModel> getSitesWith(String field, boolean value) {
         return WellSql.select(SiteModel.class)
-                .where().equals(field, value).endWhere()
-                .getAsModel();
+                .where().equals(field, value).endWhere();
     }
 
     public static List<SiteModel> getAllSitesMatchingUrlOrNameWith(String field, boolean value, String searchString) {
@@ -42,23 +40,11 @@ public class SiteSqlUtils {
                 .endGroup().endWhere().getAsModel();
     }
 
-    public static List<SiteModel> getAllSitesMatchingUrlOrName(String searchString) {
+    public static List<SiteModel> getSitesMatchingUrlOrName(String searchString) {
         return WellSql.select(SiteModel.class).where()
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
                 .endWhere().getAsModel();
-    }
-
-    public static int getNumberOfSitesWith(String field, Object value) {
-        return WellSql.select(SiteModel.class)
-                .where().equals(field, value).endWhere()
-                .getAsCursor().getCount();
-    }
-
-    public static int getNumberOfSitesWith(String field, boolean value) {
-        return WellSql.select(SiteModel.class)
-                .where().equals(field, value).endWhere()
-                .getAsCursor().getCount();
     }
 
     public static int insertOrUpdateSite(SiteModel site) throws DuplicateSiteException {
@@ -151,16 +137,15 @@ public class SiteSqlUtils {
                 }).execute();
     }
 
-    public static List<SiteModel> getWPComSites() {
+    public static SelectQuery<SiteModel> getWPComSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
-                .endGroup().endWhere()
-                .getAsModel();
+                .endGroup().endWhere();
     }
 
 
-    public static SelectQuery<SiteModel> getSelfHostedSitesQuery() {
+    public static SelectQuery<SiteModel> getSelfHostedSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, false)
@@ -168,7 +153,7 @@ public class SiteSqlUtils {
                 .endGroup().endWhere();
     }
 
-    public static SelectQuery<SiteModel> getWPComAndJetpackSitesQuery() {
+    public static SelectQuery<SiteModel> getWPComAndJetpackSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
