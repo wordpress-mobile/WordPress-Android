@@ -15,7 +15,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -27,6 +26,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -45,6 +45,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -82,6 +83,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -1557,8 +1559,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
-                    uploadMedia(imageUri);
-                    fetchMedia(Arrays.asList(imageUri));
+                    String mimeType = getContentResolver().getType(imageUri);
+                    fetchMedia(imageUri, mimeType);
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -1595,11 +1597,76 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
 
+    private void fetchMedia(Uri mediaUri, final String mimeType) {
+        if (!MediaUtils.isInMediaStore(mediaUri)) {
+            // Create an AsyncTask to download the file
+            new AsyncTask<Uri, Integer, Uri>() {
+                @Override
+                protected Uri doInBackground(Uri... uris) {
+                    Uri imageUri = uris[0];
+                    return MediaUtils.downloadExternalMedia(EditPostActivity.this, imageUri);
+                }
+
+                protected void onPostExecute(Uri uri) {
+                    if (uri != null) {
+                        queueFileForUpload(uri.getPath(), new ArrayList<Long>());
+                    } else {
+                        Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+        } else {
+            queueFileForUpload(mediaUri.toString(), new ArrayList<Long>());
+        }
+    }
+
+    private String getRealPathFromURI(Uri uri) {
+        String path;
+        if ("content".equals(uri.getScheme())) {
+            path = getRealPathFromContentURI(uri);
+        } else if ("file".equals(uri.getScheme())) {
+            path = uri.getPath();
+        } else {
+            path = uri.toString();
+        }
+        return path;
+    }
+
+    private String getRealPathFromContentURI(Uri contentUri) {
+        if (contentUri == null)
+            return null;
+
+        String[] proj = { android.provider.MediaStore.Images.Media.DATA };
+        CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+
+        if (cursor == null)
+            return null;
+
+        int column_index = cursor.getColumnIndex(proj[0]);
+        if (column_index == -1) {
+            cursor.close();
+            return null;
+        }
+
+        String path;
+        if (cursor.moveToFirst()) {
+            path = cursor.getString(column_index);
+        } else {
+            path = null;
+        }
+
+        cursor.close();
+        return path;
+    }
+
     private void uploadMedia(Uri uri) {
+        String path = getRealPathFromURI(uri);
         MediaModel media = new MediaModel();
-        media.setFilePath(uri.getPath());
-        media.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(media.getFilePath()));
-        media.setFileName(org.wordpress.android.fluxc.utils.MediaUtils.getFileName(media.getFilePath()));
+        media.setFilePath(path);
+        media.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path));
+        media.setFileName(org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path));
         media.setMimeType(org.wordpress.android.fluxc.utils.MediaUtils.getMimeTypeForExtension(media.getFileExtension()));
         media.setSiteId(mSite.getSiteId());
         media.setTitle(media.getFileName());
@@ -1790,6 +1857,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mUploadService = (MediaUploadService.MediaUploadBinder) service;
+            mUploadService.setListener(EditPostActivity.this);
             if (!mPendingUploads.isEmpty()) {
                 for (MediaModel media : mPendingUploads) {
                     mUploadService.addMediaToQueue(media);
@@ -1810,10 +1878,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mUploadService == null) {
             Intent intent = new Intent(this, MediaUploadService.class);
             intent.putExtra(MediaUploadService.SITE_KEY, mSite);
-            intent.putExtra(MediaUploadService.LISTENER_KEY, this);
-            intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mPendingUploads);
             bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
             startService(intent);
+        } else if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
+            for (MediaModel media : mPendingUploads) {
+                mUploadService.addMediaToQueue(media);
+            }
         }
     }
 
@@ -1855,40 +1925,42 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return null;
         }
 
-        long currentTime = System.currentTimeMillis();
+        MediaModel media = mMediaStore.instantiateMediaModel();
         String mimeType = MediaUtils.getMediaFileMimeType(file);
-        String fileName = MediaUtils.getMediaFileName(file, mimeType);
-        MediaFile mediaFile = new MediaFile();
+        String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
+        String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
 
-        mediaFile.setBlogId(String.valueOf(mSite.getId()));
-        mediaFile.setFileName(fileName);
-        mediaFile.setFilePath(path);
-        mediaFile.setUploadState(startingState);
-        mediaFile.setDateCreatedGMT(currentTime);
-        mediaFile.setMediaId(String.valueOf(currentTime));
-        mediaFile.setVideo(MediaUtils.isVideo(path));
-
-        if (mimeType != null && mimeType.startsWith("image")) {
-            // get width and height
-            BitmapFactory.Options bfo = new BitmapFactory.Options();
-            bfo.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, bfo);
-            mediaFile.setWidth(bfo.outWidth);
-            mediaFile.setHeight(bfo.outHeight);
+        // Try to get mimetype if none was passed to this method
+        if (mimeType == null) {
+            mimeType = getContentResolver().getType(Uri.parse(path));
+            if (mimeType == null) {
+                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+            }
+            if (mimeType == null) {
+                // Default to image jpeg
+                mimeType = "image/jpeg";
+            }
+        }
+        // If file extension is null, upload won't work on wordpress.com
+        if (fileExtension == null) {
+            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+            filename += "." + fileExtension;
         }
 
-        if (!TextUtils.isEmpty(mimeType)) {
-            mediaFile.setMimeType(mimeType);
-        }
+        media.setFileName(filename);
+        media.setFilePath(path);
+        media.setSiteId(mSite.getSiteId());
+        media.setFileExtension(fileExtension);
+        media.setMimeType(mimeType);
+        media.setUploadState(MediaUploadState.QUEUED.toString());
+        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
 
-        if (mediaIdOut != null) {
-            mediaIdOut.add(Long.parseLong(mediaFile.getMediaId()));
-        }
-
-        saveMediaFile(mediaFile);
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+        mPendingUploads.add(media);
         startMediaUploadService();
+        addExistingMediaToEditor(media.getMediaId());
 
-        return mediaFile;
+        return WPStoreUtils.fromMediaModel(media);
     }
 
     /**
