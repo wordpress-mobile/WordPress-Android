@@ -135,4 +135,8 @@ public class TaxonomySqlUtils {
                 .endGroup().endWhere()
                 .execute();
     }
+
+    public static int deleteAllTerms() {
+        return WellSql.delete(TermModel.class).execute();
+    }
 }

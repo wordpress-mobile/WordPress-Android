@@ -104,6 +104,10 @@ public class TaxonomyStore extends Store {
             this.rowsAffected = rowsAffected;
             this.taxonomyName = taxonomyName;
         }
+
+        public OnTaxonomyChanged(int rowsAffected) {
+            this.rowsAffected = rowsAffected;
+        }
     }
 
     public class OnTermInstantiated extends OnChanged<TaxonomyError> {
@@ -296,6 +300,9 @@ public class TaxonomyStore extends Store {
             case PUSHED_TERM:
                 handlePushTermCompleted((RemoteTermPayload) action.getPayload());
                 break;
+            case REMOVE_ALL_TERMS:
+                removeAllTerms();
+                break;
         }
     }
 
@@ -424,6 +431,14 @@ public class TaxonomyStore extends Store {
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
         onTaxonomyChanged.causeOfChange = TaxonomyAction.UPDATE_TERM;
+        emitChange(onTaxonomyChanged);
+    }
+
+    private void removeAllTerms() {
+        int rowsAffected = TaxonomySqlUtils.deleteAllTerms();
+
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected);
+        onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_ALL_TERMS;
         emitChange(onTaxonomyChanged);
     }
 }
