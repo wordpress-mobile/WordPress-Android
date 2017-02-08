@@ -1318,7 +1318,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void launchCamera() {
+    protected void launchCamera() {
         WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
                 new WordPressMediaUtils.LaunchCameraCallback() {
                     @Override

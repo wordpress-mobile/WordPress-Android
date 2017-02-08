@@ -13,16 +13,18 @@ import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.PhotoChooserFragment.OnPhotoChosenListener;
-import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
 
-public class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.PhotoViewHolder> {
+public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Context mContext;
     private final int mImageSz;
     private final OnPhotoChosenListener mListener;
     private final ArrayList<Uri> mUriList = new ArrayList<>();
+
+    private static final int VT_CAMERA = 1;
+    private static final int VT_PHOTO = 2;
 
     public PhotoChooserAdapter(Context context,
                                int imageSize,
@@ -31,7 +33,6 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapte
         mContext = context;
         mListener = listener;
         mImageSz = imageSize;
-
     }
 
     private static final String ID_COL = MediaStore.Images.Thumbnails._ID;
@@ -52,14 +53,39 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapte
     }
 
     @Override
-    public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_image, parent, false);
-        return new PhotoViewHolder(itemView);
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return VT_CAMERA;
+        }
+        return VT_PHOTO;
     }
 
     @Override
-    public void onBindViewHolder(PhotoViewHolder holder, int position) {
-        holder.imageView.setImageURI(mUriList.get(position));
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case VT_CAMERA:
+                View cameraView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_camera, parent, false);
+                return new CameraViewHolder(cameraView);
+            default:
+                View photoView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_image, parent, false);
+                return new PhotoViewHolder(photoView);
+        }
+    }
+
+    /*
+     * returns the Uri of the photo in the adapter at the passed position
+     */
+    private Uri getPhotoAtPosition(int adapterPosition) {
+        // -1 to take initial VT_CAMERA item into account
+        int photoPosition = adapterPosition - 1;
+        return mUriList.get(photoPosition);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof PhotoViewHolder) {
+            ((PhotoViewHolder) holder).imageView.setImageURI(getPhotoAtPosition(position));
+        }
     }
 
     class PhotoViewHolder extends RecyclerView.ViewHolder {
@@ -77,7 +103,28 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapte
                 public void onClick(View v) {
                     if (mListener != null) {
                         int position = getAdapterPosition();
-                        mListener.onPhotoChosen(mUriList.get(position));
+                        mListener.onPhotoChosen(getPhotoAtPosition(position));
+                    }
+                }
+            });
+        }
+    }
+
+    class CameraViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView imgCamera;
+
+        public CameraViewHolder(View view) {
+            super(view);
+
+            imgCamera = (ImageView) view.findViewById(R.id.image_camera);
+            imgCamera.getLayoutParams().width = mImageSz;
+            imgCamera.getLayoutParams().height = mImageSz;
+
+            imgCamera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onCameraChosen();
                     }
                 }
             });

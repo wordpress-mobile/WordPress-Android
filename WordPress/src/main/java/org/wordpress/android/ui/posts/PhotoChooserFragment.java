@@ -19,6 +19,7 @@ public class PhotoChooserFragment extends Fragment {
 
     public interface OnPhotoChosenListener {
         void onPhotoChosen(Uri imageUri);
+        void onCameraChosen();
     }
 
     private RecyclerView mRecycler;
@@ -53,6 +54,13 @@ public class PhotoChooserFragment extends Fragment {
                 EditPostActivity activity = (EditPostActivity) getActivity();
                 activity.hidePhotoChooser();
                 activity.addMedia(imageUri);
+            }
+        }
+        @Override
+        public void onCameraChosen() {
+            if (getActivity() instanceof EditPostActivity) {
+                EditPostActivity activity = (EditPostActivity) getActivity();
+                activity.launchCamera();
             }
         }
     };
