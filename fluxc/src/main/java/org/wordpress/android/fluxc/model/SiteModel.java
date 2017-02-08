@@ -33,7 +33,6 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private String mDefaultCommentStatus = "open";
     @Column private String mTimezone;
 
-
     // Self hosted specifics
     // The siteId for self hosted sites. Jetpack sites will also have a mSiteId, which is their id on wpcom
     @Column private long mSelfHostedSiteId;
@@ -42,9 +41,13 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column(name = "XMLRPC_URL") private String mXmlRpcUrl;
     @Column private String mSoftwareVersion;
     @Column private boolean mIsSelfHostedAdmin;
+    // mIsJetpackInstalled is true if Jetpack is installed and activated on the self hosted site, but Jetpack can
+    // be disconnected.
+    @Column private boolean mIsJetpackInstalled;
+    // mIsJetpackConnected is true if Jetpack is installed, activated and connected to a WordPress.com account.
+    @Column private boolean mIsJetpackConnected;
 
     // WPCom specifics
-    @Column private boolean mIsJetpack;
     @Column private boolean mIsVisible;
     @Column private boolean mIsPrivate;
     @Column private boolean mIsVideoPressSupported;
@@ -176,14 +179,6 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
 
     public void setIsSelfHostedAdmin(boolean selfHostedAdmin) {
         mIsSelfHostedAdmin = selfHostedAdmin;
-    }
-
-    public boolean isJetpack() {
-        return mIsJetpack;
-    }
-
-    public void setIsJetpack(boolean jetpack) {
-        mIsJetpack = jetpack;
     }
 
     public boolean isVisible() {
@@ -408,5 +403,21 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
 
     public void setPlanId(long planId) {
         mPlanId = planId;
+    }
+
+    public boolean isJetpackInstalled() {
+        return mIsJetpackInstalled;
+    }
+
+    public void setIsJetpackInstalled(boolean jetpackInstalled) {
+        mIsJetpackInstalled = jetpackInstalled;
+    }
+
+    public boolean isJetpackConnected() {
+        return mIsJetpackConnected;
+    }
+
+    public void setIsJetpackConnected(boolean jetpackConnected) {
+        mIsJetpackConnected = jetpackConnected;
     }
 }

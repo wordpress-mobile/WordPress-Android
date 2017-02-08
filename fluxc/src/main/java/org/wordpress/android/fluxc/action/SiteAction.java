@@ -53,7 +53,7 @@ public enum SiteAction implements IAction {
     @Action
     REMOVE_ALL_SITES,
     @Action
-    REMOVE_WPCOM_SITES,
+    REMOVE_WPCOM_AND_JETPACK_SITES,
     @Action(payloadType = SitesModel.class)
     SHOW_SITES,
     @Action(payloadType = SitesModel.class)
