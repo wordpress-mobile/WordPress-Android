@@ -184,7 +184,9 @@ public class MediaUtils {
             }
             return result;
         } finally {
-            cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
