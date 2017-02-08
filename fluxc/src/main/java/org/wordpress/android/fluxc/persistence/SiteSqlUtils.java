@@ -30,17 +30,21 @@ public class SiteSqlUtils {
                 .where().equals(field, value).endWhere();
     }
 
-    public static List<SiteModel> getAllSitesMatchingUrlOrNameWith(String field, boolean value, String searchString) {
+    public static List<SiteModel> getWPComAndJetpackSitesByNameOrUrlMatching(String searchString) {
         // Note: by default SQLite "LIKE" operator is case insensitive, and that's what we're looking for.
         return WellSql.select(SiteModel.class).where()
-                .equals(field, value)
-                .beginGroup() // AND ( x OR x )
+                // (IS_WPCOM = true or IS_JETPACK_CONNECTED = true) AND (x in url OR x in name)
+                .beginGroup()
+                .equals(SiteModelTable.IS_WPCOM, true)
+                .or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
+                .endGroup()
+                .beginGroup()
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
                 .endGroup().endWhere().getAsModel();
     }
 
-    public static List<SiteModel> getSitesMatchingUrlOrName(String searchString) {
+    public static List<SiteModel> getSitesByNameOrUrlMatching(String searchString) {
         return WellSql.select(SiteModel.class).where()
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
