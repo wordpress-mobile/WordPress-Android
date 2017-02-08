@@ -181,6 +181,7 @@ public class SitePickerActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         mDispatcher.unregister(this);
+        mDebouncer.shutdown();
         super.onStop();
     }
 
