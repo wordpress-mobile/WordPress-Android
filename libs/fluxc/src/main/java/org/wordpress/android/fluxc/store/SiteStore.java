@@ -35,6 +35,8 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static org.wordpress.android.fluxc.persistence.SiteSqlUtils.getWPComAndJetpackSitesQuery;
+
 /**
  * SQLite based only. There is no in memory copy of mapped data, everything is queried from the DB.
  */
@@ -325,6 +327,21 @@ public class SiteStore extends Store {
     }
 
     /**
+     * Returns all .COM and Jetpack sites in the store.
+     */
+    public List<SiteModel> getWPComAndJetpackSites() {
+        return SiteSqlUtils.getWPComAndJetpackSitesQuery().getAsModel();
+    }
+
+    /**
+     * Returns the number of .COM and Jetpack sites in the store.
+     */
+    public int getWPComAndJetpackSitesCount() {
+        return getWPComAndJetpackSitesQuery().getAsCursor().getCount();
+    }
+
+
+    /**
      * Returns the number of .COM sites in the store.
      */
     public int getWPComSitesCount() {
@@ -355,21 +372,21 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Returns all self-hosted sites in the store.
+     * Returns all self-hosted sites (can't be Jetpack) in the store.
      */
     public List<SiteModel> getSelfHostedSites() {
-        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, false);
+        return SiteSqlUtils.getSelfHostedSitesQuery().getAsModel();
     }
 
     /**
-     * Returns the number of self-hosted sites (can be Jetpack) in the store.
+     * Returns the number of self-hosted sites (can't be Jetpack) in the store.
      */
     public int getSelfHostedSitesCount() {
-        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, false);
+        return SiteSqlUtils.getSelfHostedSitesQuery().getAsCursor().getCount();
     }
 
     /**
-     * Checks whether the store contains at least one self-hosted site (can be Jetpack).
+     * Checks whether the store contains at least one self-hosted site (can't be Jetpack).
      */
     public boolean hasSelfHostedSite() {
         return getSelfHostedSitesCount() != 0;
@@ -425,20 +442,22 @@ public class SiteStore extends Store {
     /**
      * Returns all visible .COM sites as {@link SiteModel}s.
      */
-    public List<SiteModel> getVisibleWPComSites() {
+    public List<SiteModel> getVisibleWPComAndJetpackSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
+                .or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
+                .endGroup()
                 .equals(SiteModelTable.IS_VISIBLE, true)
-                .endGroup().endWhere()
+                .endWhere()
                 .getAsModel();
     }
 
     /**
      * Returns the number of visible .COM sites.
      */
-    public int getVisibleWPComSitesCount() {
-        return getVisibleWPComSites().size();
+    public int getVisibleWPComAndJetpackSitesCount() {
+        return getVisibleWPComAndJetpackSites().size();
     }
 
     /**
@@ -657,7 +676,7 @@ public class SiteStore extends Store {
     private void removeWPComSites() {
         // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were fetched over the WP.com
         // REST API only (they don't have a .org site id)
-        List<SiteModel> wpcomSites = SiteSqlUtils.getAllWPComSites();
+        List<SiteModel> wpcomSites = SiteSqlUtils.getWPComSites();
         int rowsAffected = removeSites(wpcomSites);
         // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
         emitChange(new OnSiteRemoved(rowsAffected));
