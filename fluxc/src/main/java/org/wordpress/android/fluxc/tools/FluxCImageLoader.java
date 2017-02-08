@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.HTTPAuthModel;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.utils.WPUrlUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,9 +43,13 @@ public class FluxCImageLoader extends ImageLoader {
     }
 
     @Override
-    protected Request<Bitmap> makeImageRequest(final String requestUrl, int maxWidth, int maxHeight,
+    protected Request<Bitmap> makeImageRequest(String requestUrl, int maxWidth, int maxHeight,
                                                ScaleType scaleType, final String cacheKey) {
-        return new ImageRequest(requestUrl, new Response.Listener<Bitmap>() {
+        if (WPUrlUtils.isWordPressCom(requestUrl) && !UrlUtils.isHttps(requestUrl)) {
+            requestUrl = UrlUtils.makeHttps(requestUrl);
+        }
+        final String url = requestUrl;
+        return new ImageRequest(url, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
                 onGetImageSuccess(cacheKey, response);
@@ -57,13 +62,13 @@ public class FluxCImageLoader extends ImageLoader {
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("User-Agent", mUserAgent.getUserAgent());
-                if (WPUrlUtils.safeToAddWordPressComAuthToken(requestUrl)) {
+                if (WPUrlUtils.safeToAddWordPressComAuthToken(url)) {
                     headers.put("Authorization", "Bearer " + mAccessToken.get());
                 } else {
                     // Check if we had HTTP Auth credentials for the root url
-                    HTTPAuthModel httpAuthModel = mHTTPAuthManager.getHTTPAuthModel(requestUrl);
+                    HTTPAuthModel httpAuthModel = mHTTPAuthManager.getHTTPAuthModel(url);
                     if (httpAuthModel != null) {
                         String creds = String.format("%s:%s", httpAuthModel.getUsername(), httpAuthModel.getPassword());
                         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
