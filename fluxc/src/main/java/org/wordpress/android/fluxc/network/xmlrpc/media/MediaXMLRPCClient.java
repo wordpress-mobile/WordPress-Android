@@ -65,11 +65,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     private int mFetchAllOffset = 0;
     private List<MediaModel> mFetchedMedia = new ArrayList<>();
 
-    public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okClient,
+    public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient.Builder okClientBuilder,
                              AccessToken accessToken, UserAgent userAgent,
                              HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
-        mOkHttpClient = okClient;
+        mOkHttpClient = okClientBuilder.build();
     }
 
     @Override
