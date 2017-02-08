@@ -338,7 +338,6 @@ public class SiteStore extends Store {
         return SiteSqlUtils.getWPComAndJetpackSites().getAsCursor().getCount();
     }
 
-
     /**
      * Returns the number of .COM sites in the store.
      */
@@ -351,15 +350,15 @@ public class SiteStore extends Store {
      */
     @NonNull
     public List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
-        return SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(SiteModelTable.IS_WPCOM, true, searchString);
+        return SiteSqlUtils.getSitesByNameOrUrlMatching(searchString);
     }
 
     /**
-     * Returns .COM sites with a name or url matching the search string.
+     * Returns .COM and Jetpack sites with a name or url matching the search string.
      */
     @NonNull
-    public List<SiteModel> getWPComSiteByNameOrUrlMatching(@NonNull String searchString) {
-        return SiteSqlUtils.getSitesMatchingUrlOrName(searchString);
+    public List<SiteModel> getWPComAndJetpackSitesByNameOrUrlMatching(@NonNull String searchString) {
+        return SiteSqlUtils.getWPComAndJetpackSitesByNameOrUrlMatching(searchString);
     }
 
     /**
