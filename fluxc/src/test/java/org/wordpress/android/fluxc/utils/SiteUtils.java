@@ -19,6 +19,7 @@ public class SiteUtils {
         SiteModel example = new SiteModel();
         example.setSelfHostedSiteId(6);
         example.setIsWPCom(false);
+        example.setIsJetpackInstalled(false);
         example.setIsJetpackConnected(false);
         example.setIsVisible(true);
         example.setXmlRpcUrl("http://some.url/xmlrpc.php");
