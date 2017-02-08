@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
@@ -15,6 +16,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -43,7 +45,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
@@ -88,6 +92,7 @@ import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -199,6 +204,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+
+    private View mPhotoChooserContainer;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -355,33 +362,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         });
 
+        initPhotoChooser();
+
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
     private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
 
     private boolean isPhotoChooserShowing() {
-        View container = findViewById(R.id.photo_fragment_container);
-        return container.getVisibility() == View.VISIBLE;
+        return mPhotoChooserContainer.getVisibility() == View.VISIBLE;
     }
 
-    void showPhotoChooser() {
-        // hide soft keyboard
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-
-        if (isPhotoChooserShowing()) {
-            return;
-        }
-
+    // TODO: if the user doesn't have permission to access device photos, delay this until
+    // the user taps the photo icon and then ask permission
+    private void initPhotoChooser() {
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         int containerHeight = displayHeight / 2;
-        View container = findViewById(R.id.photo_fragment_container);
-        container.getLayoutParams().height = containerHeight;
-        container.setVisibility(View.VISIBLE);
+        mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
+        mPhotoChooserContainer.getLayoutParams().height = containerHeight;
 
         FragmentManager fm = getFragmentManager();
         fm.executePendingTransactions();
@@ -392,17 +390,44 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         ft.commit();
     }
 
-    void hidePhotoChooser() {
-        View container = findViewById(R.id.photo_fragment_container);
-        container.setVisibility(View.GONE);
-
-        FragmentManager fm = getFragmentManager();
-        Fragment fragment = fm.findFragmentByTag(PHOTO_CHOOSER_TAG);
-        if (fragment != null) {
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.remove(fragment);
-            ft.commit();
+    void showPhotoChooser() {
+        // hide soft keyboard
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+
+        if (!isPhotoChooserShowing()) {
+            // use a circular reveal on API 21+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                revealPhotoChooser();
+            } else {
+                AniUtils.animateBottomBar(mPhotoChooserContainer, true);
+            }
+        }
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void revealPhotoChooser() {
+        Point pt = DisplayUtils.getDisplayPixelSize(this);
+        float startRadius = 0f;
+        float endRadius = (float) Math.hypot(pt.x, pt.y);
+        int centerX = pt.x;
+        int centerY = 0;
+
+        Animator anim = ViewAnimationUtils.createCircularReveal(
+                mPhotoChooserContainer, centerX, centerY, startRadius, endRadius);
+        anim.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+        anim.setInterpolator(new AccelerateInterpolator());
+
+        mPhotoChooserContainer.setVisibility(View.VISIBLE);
+        anim.start();
+    }
+
+    void hidePhotoChooser() {
+        mPhotoChooserContainer.setVisibility(View.GONE);
     }
 
     private Runnable mAutoSave = new Runnable() {
