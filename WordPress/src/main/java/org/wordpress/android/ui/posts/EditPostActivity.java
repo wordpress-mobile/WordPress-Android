@@ -1504,7 +1504,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaVisualEditor(Uri imageUri) {
-        String path = "";
+        String path;
         if (imageUri.toString().contains("content:")) {
             path = getPathFromContentUri(imageUri);
         } else {
@@ -1612,7 +1612,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 protected void onPostExecute(Uri uri) {
                     if (uri != null) {
-                        queueFileForUpload(uri.getPath(), new ArrayList<Long>());
+                        addMedia(uri);
                     } else {
                         Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image),
                                 Toast.LENGTH_SHORT).show();
