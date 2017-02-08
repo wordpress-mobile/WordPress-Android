@@ -18,6 +18,8 @@ repositories {
 }
 
 android {
+    useLibrary 'org.apache.http.legacy'
+
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
 
@@ -58,7 +60,7 @@ android.buildTypes.all { buildType ->
 
 dependencies {
     // WordPress libs
-    compile ('org.wordpress:utils:1.14.0') {
+    compile ('org.wordpress:utils:1.14.1') {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley";
     }

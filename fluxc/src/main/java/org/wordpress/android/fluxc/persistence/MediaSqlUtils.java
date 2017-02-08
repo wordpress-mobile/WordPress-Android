@@ -226,4 +226,8 @@ public class MediaSqlUtils {
                 .equals(MediaModelTable.SITE_ID, site.getSiteId())
                 .endGroup().endWhere().execute();
     }
+
+    public static int deleteAllMedia() {
+        return WellSql.delete(MediaModel.class).execute();
+    }
 }

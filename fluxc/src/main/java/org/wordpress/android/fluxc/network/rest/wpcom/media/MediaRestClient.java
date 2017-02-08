@@ -65,9 +65,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     private List<MediaModel> mFetchedMedia = new ArrayList<>();
 
     public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
-                           OkHttpClient okClient, AccessToken accessToken, UserAgent userAgent) {
+                           OkHttpClient.Builder okClientBuilder, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
-        mOkHttpClient = okClient;
+        mOkHttpClient = okClientBuilder.build();
     }
 
     @Override
