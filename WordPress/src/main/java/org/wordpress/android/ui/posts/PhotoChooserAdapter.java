@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.PhotoChooserFragment.OnPhotoChosenListener;
+import org.wordpress.android.util.AniUtils;
 
 import java.util.ArrayList;
 
@@ -105,8 +106,14 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        int position = getAdapterPosition();
-                        mListener.onPhotoChosen(getPhotoAtPosition(position));
+                        // quickly scale out the photo then call the listener
+                        final int position = getAdapterPosition();
+                        AniUtils.scaleOut(v, View.VISIBLE, AniUtils.Duration.SHORT, new AniUtils.AnimationEndListener() {
+                            @Override
+                            public void onAnimationEnd() {
+                                mListener.onPhotoChosen(getPhotoAtPosition(position));
+                            }
+                        });
                     }
                 }
             });
@@ -123,7 +130,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             imgCamera.getLayoutParams().width = mImageWidth;
             imgCamera.getLayoutParams().height = mImageHeight;
 
-            imgCamera.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {

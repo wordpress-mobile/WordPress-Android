@@ -95,6 +95,7 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -372,7 +373,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     // the user taps the photo icon and then ask permission
     private void initPhotoChooser() {
         int imageHeight = PhotoChooserFragment.getPhotoChooserImageHeight(this);
-        int containerHeight = imageHeight * 3;
+        int containerHeight;
+        if (DisplayUtils.isLandscape(this)) {
+            containerHeight = imageHeight;
+        } else {
+            containerHeight = imageHeight * 2;
+        }
+
         mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
         mPhotoChooserContainer.getLayoutParams().height = containerHeight;
 
@@ -399,7 +406,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     void hidePhotoChooser() {
-        mPhotoChooserContainer.setVisibility(View.GONE);
+        if (isPhotoChooserShowing()) {
+            AniUtils.animateBottomBar(mPhotoChooserContainer, false);
+        }
     }
 
     private Runnable mAutoSave = new Runnable() {

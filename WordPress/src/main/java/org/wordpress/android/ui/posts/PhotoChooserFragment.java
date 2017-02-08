@@ -15,7 +15,7 @@ import org.wordpress.android.util.DisplayUtils;
 
 public class PhotoChooserFragment extends Fragment {
 
-    private static final int NUM_COLUMNS = 4;
+    private static final int NUM_COLUMNS = 3;
 
     public interface OnPhotoChosenListener {
         void onPhotoChosen(Uri imageUri);
@@ -52,8 +52,8 @@ public class PhotoChooserFragment extends Fragment {
         public void onPhotoChosen(Uri imageUri) {
             if (getActivity() instanceof EditPostActivity) {
                 EditPostActivity activity = (EditPostActivity) getActivity();
-                activity.hidePhotoChooser();
                 activity.addMedia(imageUri);
+                activity.hidePhotoChooser();
             }
         }
         @Override
