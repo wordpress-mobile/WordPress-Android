@@ -29,85 +29,43 @@ import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 
 import java.io.File;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
 
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
-import okhttp3.OkUrlFactory;
 
 @Module
 public class ReleaseNetworkModule {
     private static final String DEFAULT_CACHE_DIR = "volley-fluxc";
     private static final int NETWORK_THREAD_POOL_SIZE = 10;
 
-    private RequestQueue newRequestQueue(OkUrlFactory okUrlFactory, Context appContext) {
+    private RequestQueue newRequestQueue(OkHttpClient.Builder okHttpClientBuilder, Context appContext) {
         File cacheDir = new File(appContext.getCacheDir(), DEFAULT_CACHE_DIR);
-        Network network = new BasicNetwork(new OkHttpStack(okUrlFactory));
+        Network network = new BasicNetwork(new OkHttpStack(okHttpClientBuilder));
         RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network, NETWORK_THREAD_POOL_SIZE);
         queue.start();
         return queue;
     }
 
-    @Provides
-    @Named("regular")
-    public OkHttpClient provideOkHttpClient() {
-        return new OkHttpClient.Builder().build();
-    }
-
     @Singleton
     @Named("regular")
     @Provides
-    public OkUrlFactory provideOkUrlFactory(@Named("regular") OkHttpClient okHttpClient) {
-        return new OkUrlFactory(okHttpClient);
-    }
-
-    @Singleton
-    @Named("regular")
-    @Provides
-    public RequestQueue provideRequestQueue(@Named("regular") OkUrlFactory okUrlFactory, Context appContext) {
-        return newRequestQueue(okUrlFactory, appContext);
-    }
-
-    @Provides
-    @Named("custom-ssl")
-    public OkHttpClient provideOkHttpClientCustomSSL(MemorizingTrustManager memorizingTrustManager) {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        try {
-            final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, new TrustManager[]{memorizingTrustManager}, new java.security.SecureRandom());
-            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-            builder.sslSocketFactory(sslSocketFactory);
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            AppLog.e(T.API, e);
-        }
-        return builder.build();
+    public RequestQueue provideRequestQueue(@Named("regular") OkHttpClient.Builder okHttpClientBuilder,
+                                            Context appContext) {
+        return newRequestQueue(okHttpClientBuilder, appContext);
     }
 
     @Singleton
     @Named("custom-ssl")
     @Provides
-    public OkUrlFactory provideOkUrlFactoryCustomSSL(@Named("custom-ssl") OkHttpClient okHttpClient) {
-        return new OkUrlFactory(okHttpClient);
-    }
-
-    @Singleton
-    @Named("custom-ssl")
-    @Provides
-    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkUrlFactory okUrlFactory,
+    public RequestQueue provideRequestQueueCustomSSL(@Named("custom-ssl") OkHttpClient.Builder okHttpClientBuilder,
                                                      Context appContext) {
-        return newRequestQueue(okUrlFactory, appContext);
+        return newRequestQueue(okHttpClientBuilder, appContext);
     }
 
     @Singleton
@@ -162,19 +120,19 @@ public class ReleaseNetworkModule {
     @Provides
     public MediaRestClient provideMediaRestClient(Context appContext, Dispatcher dispatcher,
                                                   @Named("regular") RequestQueue requestQueue,
-                                                  @Named("regular") OkHttpClient okHttpClient,
+                                                  @Named("regular") OkHttpClient.Builder okHttpClientBuilder,
                                                   AccessToken token, UserAgent userAgent) {
-        return new MediaRestClient(appContext, dispatcher, requestQueue, okHttpClient, token, userAgent);
+        return new MediaRestClient(appContext, dispatcher, requestQueue, okHttpClientBuilder, token, userAgent);
     }
 
     @Singleton
     @Provides
     public MediaXMLRPCClient provideMediaXMLRPCClient(Dispatcher dispatcher,
                                                       @Named("custom-ssl") RequestQueue requestQueue,
-                                                      @Named("custom-ssl") OkHttpClient okClient,
+                                                      @Named("custom-ssl") OkHttpClient.Builder okHttpClientBuilder,
                                                       AccessToken token, UserAgent userAgent,
                                                       HTTPAuthManager httpAuthManager) {
-        return new MediaXMLRPCClient(dispatcher, requestQueue, okClient, token, userAgent, httpAuthManager);
+        return new MediaXMLRPCClient(dispatcher, requestQueue, okHttpClientBuilder, token, userAgent, httpAuthManager);
     }
 
     @Singleton

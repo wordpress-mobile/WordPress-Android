@@ -286,4 +286,20 @@ public class PostStoreUnitTest {
         assertEquals(23, posts.get(1).getRemotePostId());
         assertEquals(42, posts.get(2).getRemotePostId());
     }
+
+    @Test
+    public void testRemoveAllPosts() {
+        PostModel uploadedPost1 = PostTestUtils.generateSampleUploadedPost();
+        PostSqlUtils.insertPostForResult(uploadedPost1);
+
+        PostModel uploadedPost2 = PostTestUtils.generateSampleUploadedPost();
+        uploadedPost2.setLocalSiteId(8);
+        PostSqlUtils.insertPostForResult(uploadedPost2);
+
+        assertEquals(2, PostTestUtils.getPostsCount());
+
+        PostSqlUtils.deleteAllPosts();
+
+        assertEquals(0, PostTestUtils.getPostsCount());
+    }
 }

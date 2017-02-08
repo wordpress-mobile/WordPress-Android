@@ -164,4 +164,8 @@ public class MediaSqlUtils {
                 .equals(column, value)
                 .endGroup().endWhere().execute();
     }
+
+    public static int deleteAllMedia() {
+        return WellSql.delete(MediaModel.class).execute();
+    }
 }

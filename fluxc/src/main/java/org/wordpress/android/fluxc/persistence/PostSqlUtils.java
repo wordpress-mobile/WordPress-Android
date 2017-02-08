@@ -139,4 +139,8 @@ public class PostSqlUtils {
                 .endWhere()
                 .execute();
     }
+
+    public static int deleteAllPosts() {
+        return WellSql.delete(PostModel.class).execute();
+    }
 }
