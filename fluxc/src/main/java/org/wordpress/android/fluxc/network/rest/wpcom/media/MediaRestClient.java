@@ -94,7 +94,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 MediaModel responseMedia = getMediaFromRestResponse(response);
                 if (responseMedia != null) {
                     AppLog.v(T.MEDIA, "media changes pushed for " + responseMedia.getTitle());
-                    responseMedia.setSiteId(site.getSiteId());
+                    responseMedia.setLocalSiteId(site.getId());
                     notifyMediaPushed(site, responseMedia, null);
                 } else {
                     MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
@@ -115,7 +115,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * Uploads a single media item to a WP.com site.
      */
     public void uploadMedia(final SiteModel site, final MediaModel mediaToUpload) {
-        performUpload(mediaToUpload, site.getSiteId());
+        performUpload(mediaToUpload, site);
     }
 
     /**
@@ -143,7 +143,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 new Listener<MultipleMediaResponse>() {
                     @Override
                     public void onResponse(MultipleMediaResponse response) {
-                        List<MediaModel> responseMedia = getMediaListFromRestResponse(response, site.getSiteId());
+                        List<MediaModel> responseMedia = getMediaListFromRestResponse(response, site.getId());
                         if (responseMedia != null) {
                             mFetchedMedia.addAll(responseMedia);
                             if (responseMedia.size() < MediaFilter.MAX_NUMBER) {
@@ -189,7 +189,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onResponse(MediaWPComRestResponse response) {
                         MediaModel responseMedia = getMediaFromRestResponse(response);
                         if (responseMedia != null) {
-                            responseMedia.setSiteId(site.getSiteId());
+                            responseMedia.setLocalSiteId(site.getId());
                             AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
                             notifyMediaFetched(site, responseMedia, null);
                         } else {
@@ -266,14 +266,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         notifyMediaUploadCanceled(media);
     }
 
-    private void performUpload(final MediaModel media, final long siteId) {
+    private void performUpload(final MediaModel media, final SiteModel siteModel) {
         if (!MediaUtils.canReadFile(media.getFilePath())) {
             MediaStore.MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
             notifyMediaUploaded(media, error);
             return;
         }
 
-        String url = WPCOMREST.sites.site(siteId).media.new_.getUrlV1_1();
+        String url = WPCOMREST.sites.site(siteModel.getSiteId()).media.new_.getUrlV1_1();
         RestUploadRequestBody body = new RestUploadRequestBody(media, getEditRequestParams(media), this);
         String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
 
@@ -293,7 +293,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     String jsonBody = response.body().string();
                     MultipleMediaResponse mediaResponse =
                             new Gson().fromJson(jsonBody, MultipleMediaResponse.class);
-                    List<MediaModel> responseMedia = getMediaListFromRestResponse(mediaResponse, siteId);
+                    List<MediaModel> responseMedia = getMediaListFromRestResponse(mediaResponse, siteModel.getId());
                     if (responseMedia != null && !responseMedia.isEmpty()) {
                         MediaModel uploadedMedia = responseMedia.get(0);
                         uploadedMedia.setId(media.getId());
@@ -366,13 +366,13 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Creates a {@link MediaModel} list from a WP.com REST response to a request for all media.
      */
-    private List<MediaModel> getMediaListFromRestResponse(final MultipleMediaResponse from, long siteId) {
+    private List<MediaModel> getMediaListFromRestResponse(final MultipleMediaResponse from, int localSiteId) {
         if (from == null || from.media == null) return null;
 
         final List<MediaModel> mediaList = new ArrayList<>();
         for (MediaWPComRestResponse mediaItem : from.media) {
             MediaModel mediaModel = getMediaFromRestResponse(mediaItem);
-            mediaModel.setSiteId(siteId);
+            mediaModel.setLocalSiteId(localSiteId);
             mediaList.add(mediaModel);
         }
         return mediaList;

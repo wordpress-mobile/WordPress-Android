@@ -151,9 +151,11 @@ public class OkHttpStack implements HttpStack {
     }
 
     private static RequestBody createRequestBody(Request r) throws AuthFailureError {
-        final byte[] body = r.getBody();
-        if (body == null) return null;
-
+        byte[] body = r.getBody();
+        if (body == null) {
+            // Use the empty body when we get the null body
+            body = "".getBytes();
+        }
         return RequestBody.create(MediaType.parse(r.getBodyContentType()), body);
     }
 }
