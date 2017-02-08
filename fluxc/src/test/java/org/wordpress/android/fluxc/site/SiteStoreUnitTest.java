@@ -426,4 +426,22 @@ public class SiteStoreUnitTest {
 
         assertEquals(0, mSiteStore.getSitesCount());
     }
+
+    @Test
+    public void testWPComAutomatedTransfer() throws DuplicateSiteException {
+        SiteModel wpComSite = generateWPComSite();
+        SiteSqlUtils.insertOrUpdateSite(wpComSite);
+
+        // Turn WP.com site into an Automated Transfer (Jetpack) site
+        SiteModel automatedTransferSite = generateWPComSite();
+        automatedTransferSite.setIsJetpackInstalled(true);
+        automatedTransferSite.setIsJetpackConnected(true);
+        automatedTransferSite.setIsWPCom(false);
+
+        SiteSqlUtils.insertOrUpdateSite(automatedTransferSite);
+
+        assertEquals(1, mSiteStore.getSitesCount());
+        assertEquals(0, mSiteStore.getWPComSitesCount());
+        assertEquals(1, mSiteStore.getJetpackSitesCount());
+    }
 }
