@@ -99,6 +99,7 @@ public class SiteStoreUnitTest {
         assertEquals(2, mSiteStore.getSitesCount());
         assertEquals(1, mSiteStore.getWPComSitesCount());
         assertEquals(1, mSiteStore.getSelfHostedSitesCount());
+        assertEquals(1, mSiteStore.getWPComAndJetpackSitesCount());
 
         // Test counts with one .COM, one self-hosted and one Jetpack site
         SiteModel jetpackSiteOverXMLRPC = generateJetpackSiteOverXMLRPC();
@@ -111,8 +112,9 @@ public class SiteStoreUnitTest {
 
         assertEquals(3, mSiteStore.getSitesCount());
         assertEquals(1, mSiteStore.getWPComSitesCount());
-        assertEquals(2, mSiteStore.getSelfHostedSitesCount());
+        assertEquals(1, mSiteStore.getSelfHostedSitesCount());
         assertEquals(1, mSiteStore.getJetpackSitesCount());
+        assertEquals(2, mSiteStore.getWPComAndJetpackSitesCount());
     }
 
     @Test
@@ -245,6 +247,7 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(wpComSite);
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
+        assertEquals(2, SiteSqlUtils.getWPComAndJetpackSitesQuery().getAsCursor().getCount());
         assertNotNull(mSiteStore.getSiteBySiteId(wpComSite.getSiteId()));
         assertNotNull(mSiteStore.getSiteBySiteId(jetpackSite.getSiteId()));
         assertNull(mSiteStore.getSiteBySiteId(selfHostedSite.getSiteId()));
@@ -274,7 +277,8 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverXMLRPC);
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
 
-        List<SiteModel> wpComSites = SiteSqlUtils.getAllWPComSites();
+        List<SiteModel> wpComSites = SiteSqlUtils.getWPComSites();
+        assertEquals(3, SiteSqlUtils.getWPComAndJetpackSitesQuery().getAsCursor().getCount());
 
         assertEquals(1, wpComSites.size());
         for (SiteModel site : wpComSites) {
@@ -297,8 +301,9 @@ public class SiteStoreUnitTest {
         int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
         assertEquals(1, sitesCount);
 
-        List<SiteModel> wpComSites  = SiteSqlUtils.getAllWPComSites();
+        List<SiteModel> wpComSites  = SiteSqlUtils.getWPComSites();
         assertEquals(0, wpComSites.size());
+        assertEquals(1, SiteSqlUtils.getWPComAndJetpackSitesQuery().getAsCursor().getCount());
         List<SiteModel> jetpackSites = SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true);
         assertEquals(jetpack.getSiteId(), jetpackSites.get(0).getSiteId());
         assertTrue(jetpackSites.get(0).isJetpackConnected());

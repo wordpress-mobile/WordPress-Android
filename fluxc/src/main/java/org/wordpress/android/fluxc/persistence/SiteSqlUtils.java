@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.wellsql.generated.PostFormatModelTable;
 import com.wellsql.generated.SiteModelTable;
+import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
 
@@ -150,12 +151,29 @@ public class SiteSqlUtils {
                 }).execute();
     }
 
-    public static List<SiteModel> getAllWPComSites() {
+    public static List<SiteModel> getWPComSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
                 .endGroup().endWhere()
                 .getAsModel();
+    }
+
+
+    public static SelectQuery<SiteModel> getSelfHostedSitesQuery() {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.IS_WPCOM, false)
+                .equals(SiteModelTable.IS_JETPACK_CONNECTED, false)
+                .endGroup().endWhere();
+    }
+
+    public static SelectQuery<SiteModel> getWPComAndJetpackSitesQuery() {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.IS_WPCOM, true)
+                .or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
+                .endGroup().endWhere();
     }
 
     public static List<PostFormatModel> getPostFormats(@NonNull SiteModel site) {
