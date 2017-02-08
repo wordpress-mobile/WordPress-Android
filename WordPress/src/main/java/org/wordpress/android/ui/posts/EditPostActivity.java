@@ -1936,10 +1936,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setFileName(filename);
         media.setFilePath(path);
         media.setSiteId(mSite.getSiteId());
+        media.setMediaId(System.currentTimeMillis());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
         media.setUploadState(MediaUploadState.QUEUED.toString());
-        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(media.getMediaId() / 1000));
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         mPendingUploads.add(media);
