@@ -264,4 +264,40 @@ public class TaxonomyStoreUnitTest {
 
         assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteNameList(nameList, site, DEFAULT_TAXONOMY_TAG).size());
     }
+
+    @Test
+    public void testRemoveAllTaxonomy() {
+        SiteModel site1 = new SiteModel();
+        site1.setId(6);
+
+        SiteModel site2 = new SiteModel();
+        site2.setId(7);
+
+        TermModel category1 = TaxonomyTestUtils.generateSampleCategory();
+        TaxonomySqlUtils.insertOrUpdateTerm(category1);
+
+        TermModel category2 = TaxonomyTestUtils.generateSampleCategory();
+        category2.setLocalSiteId(7);
+        TaxonomySqlUtils.insertOrUpdateTerm(category2);
+
+        TermModel tag1 = TaxonomyTestUtils.generateSampleTag();
+        TaxonomySqlUtils.insertOrUpdateTerm(tag1);
+
+        TermModel tag2 = TaxonomyTestUtils.generateSampleTag();
+        tag2.setLocalSiteId(7);
+        TaxonomySqlUtils.insertOrUpdateTerm(tag2);
+
+        TermModel author1 = TaxonomyTestUtils.generateSampleAuthor();
+        TaxonomySqlUtils.insertOrUpdateTerm(author1);
+
+        TermModel author2 = TaxonomyTestUtils.generateSampleAuthor();
+        author2.setLocalSiteId(7);
+        TaxonomySqlUtils.insertOrUpdateTerm(author2);
+
+        assertEquals(6, TaxonomyTestUtils.getTermsCount());
+
+        TaxonomySqlUtils.deleteAllTerms();
+
+        assertEquals(0, TaxonomyTestUtils.getTermsCount());
+    }
 }

@@ -476,6 +476,22 @@ public class MediaStoreTest {
         assertFalse(mMediaStore.hasSiteMediaToDelete(testSite));
     }
 
+    @Test
+    public void testRemoveAllMedia() {
+        SiteModel testSite1 = getTestSiteWithId(1);
+        insertRandomMediaIntoDatabase(testSite1.getSiteId(), 5);
+        assertTrue(mMediaStore.getSiteMediaCount(testSite1) == 5);
+
+        SiteModel testSite2 = getTestSiteWithId(2);
+        insertRandomMediaIntoDatabase(testSite2.getSiteId(), 7);
+        assertTrue(mMediaStore.getSiteMediaCount(testSite2) == 7);
+
+        MediaSqlUtils.deleteAllMedia();
+
+        assertTrue(mMediaStore.getSiteMediaCount(testSite1) == 0);
+        assertTrue(mMediaStore.getSiteMediaCount(testSite2) == 0);
+    }
+
     private MediaModel getBasicMedia() {
         return generateMedia("Test Title", "Test Description", "Test Caption", "Test Alt");
     }

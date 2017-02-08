@@ -134,6 +134,13 @@ public class SiteStore extends Store {
         }
     }
 
+    public class OnAllSitesRemoved extends OnChanged<SiteError> {
+        public int mRowsAffected;
+        public OnAllSitesRemoved(int rowsAffected) {
+            mRowsAffected = rowsAffected;
+        }
+    }
+
     public class OnNewSiteCreated extends OnChanged<NewSiteError> {
         public boolean dryRun;
     }
@@ -594,6 +601,9 @@ public class SiteStore extends Store {
             case REMOVE_SITE:
                 removeSite((SiteModel) action.getPayload());
                 break;
+            case REMOVE_ALL_SITES:
+                removeAllSites();
+                break;
             case REMOVE_WPCOM_SITES:
                 removeWPComSites();
                 break;
@@ -636,6 +646,12 @@ public class SiteStore extends Store {
         // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
         // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int siteId)
         emitChange(new OnSiteRemoved(rowsAffected));
+    }
+
+    private void removeAllSites() {
+        int rowsAffected = SiteSqlUtils.deleteAllSites();
+        OnAllSitesRemoved event = new OnAllSitesRemoved(rowsAffected);
+        emitChange(event);
     }
 
     private void removeWPComSites() {
