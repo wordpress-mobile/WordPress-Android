@@ -621,8 +621,8 @@ public class SiteStore extends Store {
             case REMOVE_ALL_SITES:
                 removeAllSites();
                 break;
-            case REMOVE_WPCOM_SITES:
-                removeWPComSites();
+            case REMOVE_WPCOM_AND_JETPACK_SITES:
+                removeWPComAndJetpackSites();
                 break;
             case SHOW_SITES:
                 toggleSitesVisibility((SitesModel) action.getPayload(), true);
@@ -668,11 +668,11 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void removeWPComSites() {
+    private void removeWPComAndJetpackSites() {
         // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were fetched over the WP.com
         // REST API only (they don't have a .org site id)
-        List<SiteModel> wpcomSites = SiteSqlUtils.getWPComAndJetpackSites().getAsModel();
-        int rowsAffected = removeSites(wpcomSites);
+        List<SiteModel> wpcomAndJetpackSites = SiteSqlUtils.getWPComAndJetpackSites().getAsModel();
+        int rowsAffected = removeSites(wpcomAndJetpackSites);
         emitChange(new OnSiteRemoved(rowsAffected));
     }
 
