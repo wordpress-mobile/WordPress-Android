@@ -335,6 +335,9 @@ public class PostStore extends Store {
             case REMOVE_POST:
                 removePost((PostModel) action.getPayload());
                 break;
+            case REMOVE_ALL_POSTS:
+                removeAllPosts();
+                break;
         }
     }
 
@@ -499,5 +502,12 @@ public class PostStore extends Store {
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.REMOVE_POST;
         emitChange(onPostChanged);
+    }
+
+    private void removeAllPosts() {
+        int rowsAffected = PostSqlUtils.deleteAllPosts();
+        OnPostChanged event = new OnPostChanged(rowsAffected);
+        event.causeOfChange = PostAction.REMOVE_ALL_POSTS;
+        emitChange(event);
     }
 }
