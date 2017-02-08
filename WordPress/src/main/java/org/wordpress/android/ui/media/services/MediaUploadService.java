@@ -150,11 +150,11 @@ public class MediaUploadService extends Service {
             }
         } else if (event.completed) {
             AppLog.i(T.MEDIA, event.media.getTitle() + " uploaded!");
-            mCurrentUpload.setMediaId(event.media.getMediaId());
-            completeCurrentUpload();
             if (mListener != null) {
                 mListener.onUploadSuccess(event.media);
             }
+            mCurrentUpload.setMediaId(event.media.getMediaId());
+            completeCurrentUpload();
         } else {
             if (mListener != null) {
                 mListener.onUploadProgress(event.media, event.progress);
