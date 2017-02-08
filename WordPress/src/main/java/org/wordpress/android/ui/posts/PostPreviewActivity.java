@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
@@ -52,6 +53,7 @@ public class PostPreviewActivity extends AppCompatActivity {
     private SiteModel mSite;
 
     @Inject Dispatcher mDispatcher;
+    @Inject PostStore mPostStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -141,6 +143,7 @@ public class PostPreviewActivity extends AppCompatActivity {
         if (!isFinishing()) {
             PostPreviewFragment fragment = getPreviewFragment();
             if (fragment != null) {
+                fragment.setPost(mPost);
                 fragment.refreshPreview();
             }
         }
@@ -321,6 +324,7 @@ public class PostPreviewActivity extends AppCompatActivity {
                     // TODO: Report error to user
                     AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
                 } else {
+                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
                     refreshPreview();
                 }
         }
