@@ -468,18 +468,18 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
                     // all self-hosted sites and all wp.com sites
                     return mSiteStore.getSites();
                 } else {
-                    // only wp.com sites
-                    return mSiteStore.getWPComSites();
+                    // only wp.com and jetpack sites
+                    return mSiteStore.getWPComAndJetpackSites();
                 }
             } else {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted sites plus visible wp.com sites
-                    List<SiteModel> out = mSiteStore.getVisibleWPComSites();
+                    // all self-hosted sites plus visible wp.com and jetpack sites
+                    List<SiteModel> out = mSiteStore.getVisibleWPComAndJetpackSites();
                     out.addAll(mSiteStore.getSelfHostedSites());
                     return out;
                 } else {
-                    // only visible wp.com blogs
-                    return mSiteStore.getVisibleWPComSites();
+                    // only visible wp.com and jetpack blogs
+                    return mSiteStore.getVisibleWPComAndJetpackSites();
                 }
             }
         }
