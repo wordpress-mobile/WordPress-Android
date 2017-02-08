@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.wellsql.generated.PostFormatModelTable;
 import com.wellsql.generated.SiteModelTable;
+import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
 
@@ -19,45 +20,35 @@ public class SiteSqlUtils {
     public static class DuplicateSiteException extends Exception {
     }
 
-    public static List<SiteModel> getAllSitesWith(String field, Object value) {
+    public static SelectQuery<SiteModel> getSitesWith(String field, Object value) {
         return WellSql.select(SiteModel.class)
-                .where().equals(field, value).endWhere()
-                .getAsModel();
+                .where().equals(field, value).endWhere();
     }
 
-    public static List<SiteModel> getAllSitesWith(String field, boolean value) {
+    public static SelectQuery<SiteModel> getSitesWith(String field, boolean value) {
         return WellSql.select(SiteModel.class)
-                .where().equals(field, value).endWhere()
-                .getAsModel();
+                .where().equals(field, value).endWhere();
     }
 
-    public static List<SiteModel> getAllSitesMatchingUrlOrNameWith(String field, boolean value, String searchString) {
+    public static List<SiteModel> getWPComAndJetpackSitesByNameOrUrlMatching(String searchString) {
         // Note: by default SQLite "LIKE" operator is case insensitive, and that's what we're looking for.
         return WellSql.select(SiteModel.class).where()
-                .equals(field, value)
-                .beginGroup() // AND ( x OR x )
+                // (IS_WPCOM = true or IS_JETPACK_CONNECTED = true) AND (x in url OR x in name)
+                .beginGroup()
+                .equals(SiteModelTable.IS_WPCOM, true)
+                .or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
+                .endGroup()
+                .beginGroup()
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
                 .endGroup().endWhere().getAsModel();
     }
 
-    public static List<SiteModel> getAllSitesMatchingUrlOrName(String searchString) {
+    public static List<SiteModel> getSitesByNameOrUrlMatching(String searchString) {
         return WellSql.select(SiteModel.class).where()
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
                 .endWhere().getAsModel();
-    }
-
-    public static int getNumberOfSitesWith(String field, Object value) {
-        return WellSql.select(SiteModel.class)
-                .where().equals(field, value).endWhere()
-                .getAsCursor().getCount();
-    }
-
-    public static int getNumberOfSitesWith(String field, boolean value) {
-        return WellSql.select(SiteModel.class)
-                .where().equals(field, value).endWhere()
-                .getAsCursor().getCount();
     }
 
     public static int insertOrUpdateSite(SiteModel site) throws DuplicateSiteException {
@@ -95,9 +86,9 @@ public class SiteSqlUtils {
                     .endWhere().getAsModel();
             if (!siteResult.isEmpty()) {
                 AppLog.d(T.DB, "Site found using xmlrpc url: " + site.getXmlRpcUrl());
-                // If the site already in the DB is a self hosted and the new one is a .com, it means we upgraded from
-                // self hosted to jetpack, we want to update the site with the new informations.
-                if (siteResult.get(0).isWPCom() || !site.isWPCom()) {
+                // If the site already in the DB is a self hosted and the new one is a Jetpack connected site, it means
+                // we upgraded from self hosted to jetpack, we want to update the site with the new informations.
+                if (siteResult.get(0).isJetpackConnected() || !site.isJetpackConnected()) {
                     AppLog.d(T.DB, "Site is a duplicate");
                     // In other cases (examples: adding the same self hosted twice or adding self hosted on top of an
                     // existing jetpack site), we consider it as an error.
@@ -150,17 +141,28 @@ public class SiteSqlUtils {
                 }).execute();
     }
 
-    public static List<SiteModel> getAllWPComSites() {
+    public static SelectQuery<SiteModel> getWPComSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
-                .or()
-                .beginGroup()
-                .equals(SiteModelTable.IS_JETPACK, true)
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, false)
-                .endGroup()
-                .endGroup().endWhere()
-                .getAsModel();
+                .endGroup().endWhere();
+    }
+
+
+    public static SelectQuery<SiteModel> getSelfHostedSites() {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.IS_WPCOM, false)
+                .equals(SiteModelTable.IS_JETPACK_CONNECTED, false)
+                .endGroup().endWhere();
+    }
+
+    public static SelectQuery<SiteModel> getWPComAndJetpackSites() {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.IS_WPCOM, true)
+                .or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
+                .endGroup().endWhere();
     }
 
     public static List<PostFormatModel> getPostFormats(@NonNull SiteModel site) {
