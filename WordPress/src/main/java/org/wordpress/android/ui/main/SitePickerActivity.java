@@ -41,8 +41,10 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.helpers.Debouncer;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -64,6 +66,7 @@ public class SitePickerActivity extends AppCompatActivity
     private SearchView mSearchView;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
+    private Debouncer mDebouncer = new Debouncer();
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -177,20 +180,26 @@ public class SitePickerActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
+        mDispatcher.unregister(this);
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        mDispatcher.register(this);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (!isFinishing()) {
-            getAdapter().loadSites();
-        }
+        mDebouncer.debounce(Void.class, new Runnable() {
+            @Override public void run() {
+                if (!isFinishing()) {
+                    getAdapter().loadSites();
+                }
+            }
+        }, 200, TimeUnit.MILLISECONDS);
     }
 
     private void setupRecycleView() {

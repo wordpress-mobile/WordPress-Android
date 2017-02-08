@@ -236,7 +236,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         mIsMultiSelectEnabled = enable;
         mSelectedPositions.clear();
 
-        loadSites();
+        if (enable) {
+            loadSites();
+        }
     }
 
     int getNumSelected() {
@@ -342,21 +344,17 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         SiteList sites = getSelectedSites();
         if (sites != null && sites.size() > 0) {
             for (SiteRecord site: sites) {
-                int index = mSites.indexOfSite(site);
+                int index = mAllSites.indexOfSite(site);
                 if (index > -1) {
-                    mSites.get(index).isHidden = !makeVisible;
+                    mAllSites.get(index).isHidden = !makeVisible;
                 }
             }
         }
+        notifyDataSetChanged();
     }
 
     void loadSites() {
-        // TODO: STORES: Use the site store instead here
-        if (mIsTaskRunning) {
-            AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
-        } else {
-            new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
+        new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private SiteList filteredSitesByTextIfInSearchMode(SiteList sites) {
