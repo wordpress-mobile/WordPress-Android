@@ -113,7 +113,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.uploadFile
      */
-    public void uploadMedia(SiteModel site, final MediaModel media) {
+    public void uploadMedia(final SiteModel site, final MediaModel media) {
         URL xmlrpcUrl;
         try {
             xmlrpcUrl = new URL(site.getXmlRpcUrl());
@@ -163,6 +163,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     AppLog.d(T.MEDIA, "media upload successful: " + media.getTitle());
                     MediaModel responseMedia = getMediaFromUploadResponse(response);
+                    responseMedia.setLocalSiteId(site.getId());
                     responseMedia.setId(media.getId());
                     notifyMediaUploaded(responseMedia, null);
                 } else {
@@ -204,7 +205,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params, new Listener() {
             @Override
             public void onResponse(Object response) {
-                List<MediaModel> responseMedia = getMediaListFromXmlrpcResponse(response, site.getSelfHostedSiteId());
+                List<MediaModel> responseMedia = getMediaListFromXmlrpcResponse(response, site.getId());
                 if (responseMedia != null) {
                     mFetchedMedia.addAll(responseMedia);
                     if (responseMedia.size() < MediaFilter.MAX_NUMBER) {
@@ -251,7 +252,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 MediaModel responseMedia = getMediaFromXmlrpcResponse((HashMap) response);
                 if (responseMedia != null) {
                     AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
-                    responseMedia.setSiteId(site.getSelfHostedSiteId());
+                    responseMedia.setLocalSiteId(site.getId());
                     notifyMediaFetched(site, responseMedia, null);
                 } else {
                     AppLog.w(T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
@@ -356,7 +357,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     //
 
     // media list responses should be of type Object[] with each media item in the array represented by a HashMap
-    private List<MediaModel> getMediaListFromXmlrpcResponse(Object response, long selfHostedSiteId) {
+    private List<MediaModel> getMediaListFromXmlrpcResponse(Object response, int localSiteId) {
         if (response == null || !(response instanceof Object[])) return null;
 
         Object[] responseArray = (Object[]) response;
@@ -365,7 +366,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             if (!(mediaObject instanceof HashMap)) continue;
             MediaModel media = getMediaFromXmlrpcResponse((HashMap) mediaObject);
             if (media != null) {
-                media.setSiteId(selfHostedSiteId);
+                media.setLocalSiteId(localSiteId);
                 responseMedia.add(media);
             }
         }

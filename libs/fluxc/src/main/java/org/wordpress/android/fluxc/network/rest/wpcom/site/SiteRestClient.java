@@ -296,7 +296,8 @@ public class SiteRestClient extends BaseWPComRestClient {
         site.setUrl(from.URL);
         site.setName(from.name);
         site.setDescription(from.description);
-        site.setIsJetpack(from.jetpack);
+        site.setIsJetpackConnected(from.jetpack);
+        site.setIsJetpackInstalled(from.jetpack);
         site.setIsVisible(from.visible);
         site.setIsPrivate(from.is_private);
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read site options.
@@ -336,7 +337,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                 site.setXmlRpcUrl(from.meta.links.xmlrpc);
             }
         }
-        site.setIsWPCom(true);
+        // Only set the isWPCom flag for "pure" WPCom sites
+        if (!from.jetpack) {
+            site.setIsWPCom(true);
+        }
         return site;
     }
 
