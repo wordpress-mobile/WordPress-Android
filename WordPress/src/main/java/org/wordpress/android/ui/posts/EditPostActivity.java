@@ -1664,23 +1664,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return path;
     }
 
-    private void uploadMedia(Uri uri) {
-        String path = getRealPathFromURI(uri);
-        MediaModel media = new MediaModel();
-        media.setFilePath(path);
-        media.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path));
-        media.setFileName(org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path));
-        media.setMimeType(org.wordpress.android.fluxc.utils.MediaUtils.getMimeTypeForExtension(media.getFileExtension()));
-        media.setSiteId(mSite.getSiteId());
-        media.setTitle(media.getFileName());
-        if (mUploadService != null) {
-            mUploadService.addMediaToQueue(media);
-        }
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-        mPendingUploads.add(media);
-        startMediaUploadService();
-    }
-
     private void startMediaGalleryAddActivity() {
         ActivityLauncher.viewMediaGalleryPickerForSite(this, mSite);
     }
