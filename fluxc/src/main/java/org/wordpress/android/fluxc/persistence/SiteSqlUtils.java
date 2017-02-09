@@ -68,13 +68,20 @@ public class SiteSqlUtils {
         // Looks like a new site, make sure we don't already have it.
         if (siteResult.isEmpty()) {
             AppLog.d(T.DB, "Site not found using local id");
-            siteResult = WellSql.select(SiteModel.class)
-                    .where().beginGroup()
-                    .equals(SiteModelTable.SITE_ID, site.getSiteId())
-                    .equals(SiteModelTable.URL, site.getUrl())
-                    .endGroup().endWhere().getAsModel();
+            if (site.getSiteId() > 0) {
+                // For WordPress.com and Jetpack sites, the WP.com ID is a unique enough identifier
+                siteResult = WellSql.select(SiteModel.class)
+                        .where().beginGroup()
+                        .equals(SiteModelTable.SITE_ID, site.getSiteId())
+                        .endGroup().endWhere().getAsModel();
+            } else {
+                siteResult = WellSql.select(SiteModel.class)
+                        .where().beginGroup()
+                        .equals(SiteModelTable.SITE_ID, site.getSiteId())
+                        .equals(SiteModelTable.URL, site.getUrl())
+                        .endGroup().endWhere().getAsModel();
+            }
         }
-
 
         // If the site is a self hosted, maybe it's already in the DB as a Jetpack site, and we don't want to create
         // a duplicate.
