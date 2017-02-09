@@ -353,8 +353,10 @@ public class SiteStoreUnitTest {
         wpComSite1.setName("Doctor Emmet Brown Homepage");
         SiteModel wpComSite2 = generateWPComSite();
         wpComSite2.setName("Shield Eyes from light");
+        wpComSite2.setSiteId(557);
         SiteModel wpComSite3 = generateWPComSite();
         wpComSite3.setName("I remember when this was all farmland as far as the eye could see");
+        wpComSite2.setSiteId(558);
 
         SiteSqlUtils.insertOrUpdateSite(wpComSite1);
         SiteSqlUtils.insertOrUpdateSite(wpComSite2);
