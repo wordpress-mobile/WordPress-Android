@@ -31,9 +31,10 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final PhotoChooserFragment.OnPhotoChosenListener mListener;
     private final ArrayList<PhotoChooserItem> mPhotoList = new ArrayList<>();
 
-    private static final int VT_PHOTO = 0;
+    private static final int VT_PHOTO  = 0;
     private static final int VT_CAMERA = 1;
     private static final int VT_PICKER = 2;
+    private static final int VT_EMPTY  = 3;
 
     private static final int NUM_NON_PHOTO_ITEMS = 2;
 
@@ -57,7 +58,11 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return mPhotoList.size() + NUM_NON_PHOTO_ITEMS;
+        if (hasPhotos()) {
+            return mPhotoList.size() + NUM_NON_PHOTO_ITEMS;
+        } else {
+            return NUM_NON_PHOTO_ITEMS + 1;
+        }
     }
 
     @Override
@@ -71,23 +76,33 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return VT_CAMERA;
         } else if (position == 1) {
             return VT_PICKER;
-        } else {
+        } else if (hasPhotos()) {
             return VT_PHOTO;
+        } else {
+            return VT_EMPTY;
         }
+    }
+
+    private boolean hasPhotos() {
+        return mPhotoList.size() > 0;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case VT_CAMERA:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_camera, parent, false);
+                view = inflater.inflate(R.layout.photo_chooser_camera, parent, false);
                 return new CameraViewHolder(view);
             case VT_PICKER:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_picker, parent, false);
+                view = inflater.inflate(R.layout.photo_chooser_picker, parent, false);
                 return new PickerViewHolder(view);
+            case VT_EMPTY:
+                view = inflater.inflate(R.layout.photo_chooser_empty, parent, false);
+                return new EmptyViewHolder(view);
             default:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_chooser_image, parent, false);
+                view = inflater.inflate(R.layout.photo_chooser_image, parent, false);
                 return new PhotoViewHolder(view);
         }
     }
@@ -175,6 +190,17 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 }
             });
+        }
+    }
+
+    /*
+     * ViewHolder containing the message that appears when there are no device photos
+     */
+    class EmptyViewHolder extends RecyclerView.ViewHolder {
+        public EmptyViewHolder(View view) {
+            super(view);
+            itemView.getLayoutParams().width = mImageWidth;
+            itemView.getLayoutParams().height = mImageHeight;
         }
     }
 
