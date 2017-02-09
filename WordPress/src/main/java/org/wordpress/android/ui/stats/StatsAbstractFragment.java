@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SiteUtils;
 
 import javax.inject.Inject;
 
@@ -92,8 +93,8 @@ public abstract class StatsAbstractFragment extends Fragment {
         }
 
         // Check credentials for jetpack blogs first
-        if (!site.isWPCom() && !mAccountStore.hasAccessToken()) {
-            AppLog.w(AppLog.T.STATS, "Current blog is a Jetpack site without valid .com credentials stored");
+        if (!SiteUtils.isAccessibleViaWPComAPI(site) && !mAccountStore.hasAccessToken()) {
+            AppLog.w(AppLog.T.STATS, "Current blog is accessible via .com API without valid .com credentials");
             return;
         }
 

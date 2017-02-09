@@ -10,6 +10,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
@@ -119,7 +120,7 @@ public class PostMediaService extends Service {
             Map<?, ?> results = (Map<?, ?>) client.call(Method.GET_MEDIA_ITEM, apiParams);
             if (results != null) {
                 String strBlogId = Integer.toString(mSite.getId());
-                MediaFile mediaFile = new MediaFile(strBlogId, results, mSite.isWPCom());
+                MediaFile mediaFile = new MediaFile(strBlogId, results, SiteUtils.isAccessibleViaWPComAPI(mSite));
                 WordPress.wpDB.saveMediaFile(mediaFile);
                 AppLog.d(AppLog.T.POSTS, "PostMediaService > downloaded " + mediaFile.getFileURL());
                 EventBus.getDefault().post(new PostEvents.PostMediaInfoUpdated(mediaId, mediaFile.getFileURL()));

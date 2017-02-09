@@ -22,12 +22,11 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPStoreUtils;
 
 import javax.inject.Inject;
-
-import static com.android.volley.Request.Method.HEAD;
 
 public class StatsWidgetConfigureActivity extends AppCompatActivity
         implements StatsWidgetConfigureAdapter.OnSiteClickListener {
@@ -145,7 +144,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
             return;
         }
 
-        if (!site.isWPCom()) {
+        if (!SiteUtils.isAccessibleViaWPComAPI(site)) {
             // The blog could be a self-hosted blog with NO Jetpack installed on it
             // Or a Jetpack blog whose options are not yet synched in the app
             // In both of these cases show a generic message that encourages the user to refresh
