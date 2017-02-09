@@ -801,7 +801,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 return media;
             }
         }
-        return new MediaModel();
+        return null;
     }
 
     @Override
