@@ -1,9 +1,8 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android.ui.posts.photochooser;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -14,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.posts.PhotoChooserFragment.OnPhotoChosenListener;
-import org.wordpress.android.ui.posts.PhotoChooserFragment.PhotoChooserIcon;
 import org.wordpress.android.util.AniUtils;
 
 import java.lang.ref.WeakReference;
@@ -23,20 +20,17 @@ import java.util.ArrayList;
 
 public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private class PhotoItem {
+    private class PhotoChooserItem {
         private long _id;
         private long imageId;
         private Uri imageUri;
-    }
-    private class PhotoItemList extends ArrayList<PhotoItem> {
-
     }
 
     private final Context mContext;
     private final int mImageWidth;
     private final int mImageHeight;
-    private final OnPhotoChosenListener mListener;
-    private final PhotoItemList mPhotoList = new PhotoItemList();
+    private final PhotoChooserFragment.OnPhotoChosenListener mListener;
+    private final ArrayList<PhotoChooserItem> mPhotoList = new ArrayList<>();
 
     private static final int VT_PHOTO = 0;
     private static final int VT_CAMERA = 1;
@@ -47,7 +41,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public PhotoChooserAdapter(Context context,
                                int imageWidth,
                                int imageHeight,
-                               OnPhotoChosenListener listener) {
+                               PhotoChooserFragment.OnPhotoChosenListener listener) {
         super();
         mContext = context;
         mListener = listener;
@@ -102,7 +96,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     /*
      * returns the photo item in the adapter at the passed position
      */
-    private PhotoItem getPhotoAtPosition(int adapterPosition) {
+    private PhotoChooserItem getPhotoItemAtPosition(int adapterPosition) {
         // take initial VT_CAMERA and VT_PICKER items into account
         int photoPosition = adapterPosition - NUM_NON_PHOTO_ITEMS;
         return mPhotoList.get(photoPosition);
@@ -111,11 +105,9 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PhotoViewHolder) {
-            // TODO: setImageURI() is called on the main thread which makes scrolling janky - need
-            // a different solution here
-            //((PhotoViewHolder) holder).imageView.setImageURI(getPhotoAtPosition(position).imageUri);
             ImageView imageView = ((PhotoViewHolder) holder).imageView;
-            new ImageLoaderTask(imageView, getPhotoAtPosition(position))
+            PhotoChooserItem item = getPhotoItemAtPosition(position);
+            new ImageLoaderTask(imageView, item.imageId, item.imageUri)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -139,7 +131,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         AniUtils.scaleOut(v, View.VISIBLE, AniUtils.Duration.SHORT, new AniUtils.AnimationEndListener() {
                             @Override
                             public void onAnimationEnd() {
-                                mListener.onPhotoChosen(getPhotoAtPosition(position).imageUri);
+                                mListener.onPhotoChosen(getPhotoItemAtPosition(position).imageUri);
                             }
                         });
                     }
@@ -159,7 +151,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        mListener.onIconClicked(PhotoChooserIcon.ANDROID_CAMERA);
+                        mListener.onIconClicked(PhotoChooserFragment.PhotoChooserIcon.ANDROID_CAMERA);
                     }
                 }
             });
@@ -177,7 +169,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        mListener.onIconClicked(PhotoChooserIcon.ANDROID_PICKER);
+                        mListener.onIconClicked(PhotoChooserFragment.PhotoChooserIcon.ANDROID_PICKER);
                     }
                 }
             });
@@ -186,32 +178,32 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private class ImageLoaderTask extends AsyncTask<Void, Void, Boolean> {
         private final WeakReference<ImageView> mWeakImageView;
-        private final PhotoItem mItem;
+        private final Uri mImageUri;
+        private final long mImageId;
         private Bitmap mBitmap;
 
-        ImageLoaderTask(ImageView imageView, PhotoItem item) {
+        ImageLoaderTask(ImageView imageView, long imageId, Uri imageUri) {
             imageView.setImageResource(R.drawable.photo_chooser_item_background);
             mWeakImageView = new WeakReference<>(imageView);
-            mItem = item;
-            imageView.setTag(item.imageUri.toString());
+            mImageId = imageId;
+            mImageUri = imageUri;
+            imageView.setTag(imageUri.toString());
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            BitmapFactory.Options options = null;
             mBitmap = MediaStore.Images.Thumbnails.getThumbnail(
                     mContext.getContentResolver(),
-                    mItem.imageId,
+                    mImageId,
                     MediaStore.Images.Thumbnails.MINI_KIND,
-                    options
-                    );
+                    null);
             return mBitmap != null;
         }
 
         private boolean isImageViewValid() {
             ImageView imageView = mWeakImageView.get();
             if (imageView != null && imageView.getTag() instanceof String) {
-                String requestedUri = mItem.imageUri.toString();
+                String requestedUri = mImageUri.toString();
                 String taggedUri = (String) imageView.getTag();
                 return taggedUri.equals(requestedUri);
             } else {
@@ -227,8 +219,11 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    /*
+     * builds the list of PhotoChooserItems from the device
+     */
     private class LoadDevicePhotosTask extends AsyncTask<Void, Void, Boolean> {
-        private final PhotoItemList tmpList = new PhotoItemList();
+        private final ArrayList<PhotoChooserItem> tmpList = new ArrayList<>();
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -260,7 +255,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int idIndex = cursor.getColumnIndexOrThrow(ID_COL);
             int imageIdIndex = cursor.getColumnIndexOrThrow(IMAGE_ID_COL);
             while (cursor.moveToNext()) {
-                PhotoItem item = new PhotoItem();
+                PhotoChooserItem item = new PhotoChooserItem();
                 item._id = cursor.getLong(idIndex);
                 item.imageId = cursor.getLong(imageIdIndex);
                 item.imageUri = Uri.withAppendedPath(baseUri, "" + item._id);

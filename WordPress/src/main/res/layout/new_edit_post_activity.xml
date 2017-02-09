@@ -16,6 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
-        tools:context="org.wordpress.android.ui.posts.PhotoChooserFragment"
+        tools:context="org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment"
         tools:visibility="visible" />
 </RelativeLayout>

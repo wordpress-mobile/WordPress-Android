@@ -84,6 +84,7 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -405,7 +406,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    void hidePhotoChooser() {
+    public void hidePhotoChooser() {
         if (isPhotoChooserShowing()) {
             AniUtils.animateBottomBar(mPhotoChooserContainer, false);
         }
@@ -790,7 +791,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    protected void launchPictureLibrary() {
+    public void launchPictureLibrary() {
         WordPressMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
@@ -1327,7 +1328,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    protected void launchCamera() {
+    public void launchCamera() {
         WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
                 new WordPressMediaUtils.LaunchCameraCallback() {
                     @Override
@@ -1604,7 +1605,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    protected boolean addMedia(Uri mediaUri) {
+    public boolean addMedia(Uri mediaUri) {
         if (mediaUri != null && !MediaUtils.isInMediaStore(mediaUri) && !mediaUri.toString().startsWith("/")) {
             mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
         }

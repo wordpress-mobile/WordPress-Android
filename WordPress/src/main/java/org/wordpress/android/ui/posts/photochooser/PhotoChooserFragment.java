@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android.ui.posts.photochooser;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.DisplayUtils;
 
 public class PhotoChooserFragment extends Fragment {
@@ -76,12 +77,12 @@ public class PhotoChooserFragment extends Fragment {
         }
     };
 
-    static int getPhotoChooserImageWidth(Context context) {
+    public static int getPhotoChooserImageWidth(Context context) {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         return displayWidth / NUM_COLUMNS;
     }
 
-    static int getPhotoChooserImageHeight(Context context) {
+    public static int getPhotoChooserImageHeight(Context context) {
         int imageWidth = getPhotoChooserImageWidth(context);
         return (int) (imageWidth * 0.75f);
     }
