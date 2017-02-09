@@ -21,6 +21,7 @@ public class PhotoChooserFragment extends Fragment {
     public enum PhotoChooserIcon {
         ANDROID_CAMERA, ANDROID_PICKER
     }
+
     public interface OnPhotoChosenListener {
         void onPhotoChosen(Uri imageUri);
         void onIconClicked(PhotoChooserIcon icon);

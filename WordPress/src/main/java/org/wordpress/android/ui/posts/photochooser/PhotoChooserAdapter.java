@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.AniUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final String IMAGE_ID_COL = MediaStore.Images.Thumbnails.IMAGE_ID;
 
     void loadDevicePhotos() {
-        new LoadDevicePhotosTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new BuildDevicePhotoListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -112,6 +111,9 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    /*
+     * ViewHolder containing a device photo
+     */
     class PhotoViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageView;
 
@@ -126,20 +128,17 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        // quickly scale out the photo then call the listener
-                        final int position = getAdapterPosition();
-                        AniUtils.scaleOut(v, View.VISIBLE, AniUtils.Duration.SHORT, new AniUtils.AnimationEndListener() {
-                            @Override
-                            public void onAnimationEnd() {
-                                mListener.onPhotoChosen(getPhotoItemAtPosition(position).imageUri);
-                            }
-                        });
+                        Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
+                        mListener.onPhotoChosen(imageUri);
                     }
                 }
             });
         }
     }
 
+    /*
+     * ViewHolder containing the camera icon
+     */
     class CameraViewHolder extends RecyclerView.ViewHolder {
         public CameraViewHolder(View view) {
             super(view);
@@ -158,6 +157,9 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    /*
+     * ViewHolder containing the stock picker icon
+     */
     class PickerViewHolder extends RecyclerView.ViewHolder {
         public PickerViewHolder(View view) {
             super(view);
@@ -176,6 +178,9 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    /*
+     * task to load a device thumbnail and display it in an ImageView
+     */
     private class ImageLoaderTask extends AsyncTask<Void, Void, Boolean> {
         private final WeakReference<ImageView> mWeakImageView;
         private final Uri mImageUri;
@@ -203,6 +208,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private boolean isImageViewValid() {
             ImageView imageView = mWeakImageView.get();
             if (imageView != null && imageView.getTag() instanceof String) {
+                // make sure this imageView is still tagged with it's initial image Uri - it may
+                // be different if the view was recycled
                 String requestedUri = mImageUri.toString();
                 String taggedUri = (String) imageView.getTag();
                 return taggedUri.equals(requestedUri);
@@ -222,7 +229,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     /*
      * builds the list of PhotoChooserItems from the device
      */
-    private class LoadDevicePhotosTask extends AsyncTask<Void, Void, Boolean> {
+    private class BuildDevicePhotoListTask extends AsyncTask<Void, Void, Boolean> {
         private final ArrayList<PhotoChooserItem> tmpList = new ArrayList<>();
 
         @Override
