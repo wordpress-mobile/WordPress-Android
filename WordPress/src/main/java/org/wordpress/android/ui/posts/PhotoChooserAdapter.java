@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -39,6 +40,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int VT_CAMERA = 1;
     private static final int VT_PICKER = 2;
 
+    private static final int NUM_NON_PHOTO_ITEMS = 2;
+
     public PhotoChooserAdapter(Context context,
                                int imageWidth,
                                int imageHeight,
@@ -59,7 +62,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return mPhotoList.size();
+        return mPhotoList.size() + NUM_NON_PHOTO_ITEMS;
     }
 
     @Override
@@ -98,14 +101,16 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * returns the photo item in the adapter at the passed position
      */
     private PhotoItem getPhotoAtPosition(int adapterPosition) {
-        // -2 to take initial VT_CAMERA and VT_PICKER items into account
-        int photoPosition = adapterPosition - 2;
+        // take initial VT_CAMERA and VT_PICKER items into account
+        int photoPosition = adapterPosition - NUM_NON_PHOTO_ITEMS;
         return mPhotoList.get(photoPosition);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PhotoViewHolder) {
+            // TODO: setImageURI() is called on the main thread which makes scrolling janky - need
+            // a different solution here
             ((PhotoViewHolder) holder).imageView.setImageURI(getPhotoAtPosition(position).imageUri);
         }
     }
@@ -171,6 +176,26 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 }
             });
+        }
+    }
+
+    private class ImageLoaderTask extends AsyncTask<Void, Void, Boolean> {
+        private final ImageView mImageView;
+        private final PhotoItem mItem;
+        private Bitmap mBitmap;
+
+        ImageLoaderTask(ImageView imageView, PhotoItem item) {
+            mImageView = imageView;
+            mItem = item;
+            imageView.setTag(item.imageUri);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            MediaStore.Images.Thumbnails.getThumbnail(
+                    mContext.getContentResolver(),
+                    );
+            return true;
         }
     }
 
