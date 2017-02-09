@@ -66,9 +66,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
         blogsListCreatorExecutor.submit(new Thread() {
             @Override
             public void run() {
-                // Read all the dotcomBlog blogs and get the list of home URLs.
+                // Read all the .com and jetpack sites and get the list of home URLs.
                 // This will be used later to check if the user is a member of followers blog marked as private.
-                List<SiteModel> sites = mSiteStore.getWPComSites();
+                List<SiteModel> sites = mSiteStore.getWPComAndJetpackSites();
                 for (SiteModel site : sites) {
                     if (site.getUrl() != null && site.getSiteId() != 0) {
                         String normURL = normalizeAndRemoveScheme(site.getUrl());

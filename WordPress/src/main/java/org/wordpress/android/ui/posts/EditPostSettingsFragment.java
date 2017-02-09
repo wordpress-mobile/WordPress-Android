@@ -76,6 +76,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -269,14 +270,14 @@ public class EditPostSettingsFragment extends Fragment
             List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
             if (postFormatModels.size() > 0) {
                 int maxElements = postFormatModels.size();
-                if (mSite.isWPCom()) {
+                if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
                     maxElements += 1;
                 }
                 mPostFormats = new String[maxElements];
                 mPostFormatTitles = new String[maxElements];
                 int i = 0;
                 // Inject the "Standard" post format here since .com response doesn't include it
-                if (mSite.isWPCom()) {
+                if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
                     mPostFormats[i] = "standard";
                     mPostFormatTitles[i] = getResources().getString(R.string.post_format_standard);
                     i += 1;

@@ -172,7 +172,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             }
 
             // Check if Jetpack or .com
-            if (site.isWPCom()) {
+            if (SiteUtils.isAccessibleViaWPComAPI(site)) {
                 // User cannot access stats for this .com blog
                 showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_no_permissions),
                         siteStore);

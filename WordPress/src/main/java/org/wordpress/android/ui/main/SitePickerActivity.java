@@ -38,16 +38,15 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.helpers.Debouncer;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-
-import static com.android.volley.Request.Method.HEAD;
 
 public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
@@ -67,6 +66,7 @@ public class SitePickerActivity extends AppCompatActivity
     private SearchView mSearchView;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
+    private Debouncer mDebouncer = new Debouncer();
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -133,8 +133,8 @@ public class SitePickerActivity extends AppCompatActivity
             mMenuEdit.setVisible(false);
             mMenuAdd.setVisible(false);
         } else {
-            // don't allow editing visibility unless there are multiple wp.com blogs
-            mMenuEdit.setVisible(mSiteStore.getWPComSitesCount() > 1);
+            // don't allow editing visibility unless there are multiple wp.com and jetpack sites
+            mMenuEdit.setVisible(mSiteStore.getWPComAndJetpackSitesCount() > 1);
             mMenuAdd.setVisible(true);
         }
 
@@ -180,20 +180,27 @@ public class SitePickerActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
+        mDispatcher.unregister(this);
+        mDebouncer.shutdown();
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        mDispatcher.register(this);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (!isFinishing()) {
-            getAdapter().loadSites();
-        }
+        mDebouncer.debounce(Void.class, new Runnable() {
+            @Override public void run() {
+                if (!isFinishing()) {
+                    getAdapter().loadSites();
+                }
+            }
+        }, 200, TimeUnit.MILLISECONDS);
     }
 
     private void setupRecycleView() {
@@ -264,9 +271,9 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void saveHiddenSites() {
-        // TODO: STORES: This is super inefficient
+        // TODO: FluxC: This is inefficient
         // Mark all sites visible
-        List<SiteModel> sites = mSiteStore.getWPComSites();
+        List<SiteModel> sites = mSiteStore.getWPComAndJetpackSites();
         for (SiteModel site : sites) {
             site.setIsVisible(true);
             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));

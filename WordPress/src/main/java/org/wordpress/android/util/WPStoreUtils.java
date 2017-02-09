@@ -30,7 +30,7 @@ public class WPStoreUtils {
         mediaModel.setCaption(file.getCaption());
         mediaModel.setMediaId(Long.valueOf(file.getMediaId()));
         mediaModel.setUploadState(file.getUploadState());
-        mediaModel.setSiteId(Long.valueOf(file.getBlogId()));
+        mediaModel.setLocalSiteId(Integer.valueOf(file.getBlogId()));
         return mediaModel;
     }
 
@@ -40,7 +40,7 @@ public class WPStoreUtils {
         }
 
         MediaFile mediaFile = new MediaFile();
-        mediaFile.setBlogId(String.valueOf(media.getSiteId()));
+        mediaFile.setBlogId(String.valueOf(media.getLocalSiteId()));
         mediaFile.setMediaId(String.valueOf(media.getMediaId()));
         mediaFile.setFileName(media.getFileName());
         mediaFile.setFilePath(media.getFilePath());

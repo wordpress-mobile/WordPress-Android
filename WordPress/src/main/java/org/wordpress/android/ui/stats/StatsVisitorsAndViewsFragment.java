@@ -29,6 +29,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.text.ParseException;
@@ -808,7 +809,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mListener!= null) {
             // Should never be null
             SiteModel site = mSiteStore.getSiteByLocalId(getLocalTableBlogID());
-            if (site != null && site.isWPCom()) {
+            if (site != null && SiteUtils.isAccessibleViaWPComAPI(site)) {
                 mListener.onDateChanged(site.getSiteId(), getTimeframe(), calculatedDate);
             }
         }

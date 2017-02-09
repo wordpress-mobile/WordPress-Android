@@ -214,18 +214,18 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
                     // all self-hosted sites and all wp.com sites
                     return mSiteStore.getSites();
                 } else {
-                    // only wp.com sites
-                    return mSiteStore.getWPComSites();
+                    // only wp.com and jetpack sites
+                    return mSiteStore.getWPComAndJetpackSites();
                 }
             } else {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted sites plus visible wp.com sites
-                    List<SiteModel> out = mSiteStore.getVisibleWPComSites();
+                    // all self-hosted sites plus visible wp.com and jetpack sites
+                    List<SiteModel> out = mSiteStore.getVisibleWPComAndJetpackSites();
                     out.addAll(mSiteStore.getSelfHostedSites());
                     return out;
                 } else {
-                    // only visible wp.com blogs
-                    return mSiteStore.getVisibleWPComSites();
+                    // only visible wp.com and jetpack sites
+                    return mSiteStore.getVisibleWPComAndJetpackSites();
                 }
             }
         }
@@ -241,7 +241,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         final String homeURL;
         final String url;
         final String blavatarUrl;
-        final boolean isDotCom;
+        final boolean isDotComOrJetpack;
         final boolean isHidden;
 
         SiteRecord(SiteModel site) {
@@ -251,7 +251,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
             homeURL = SiteUtils.getHomeURLOrHostName(site);
             url = site.getUrl();
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
-            isDotCom = site.isWPCom();
+            isDotComOrJetpack = SiteUtils.isAccessibleViaWPComAPI(site);
             isHidden = !site.isVisible();
         }
 

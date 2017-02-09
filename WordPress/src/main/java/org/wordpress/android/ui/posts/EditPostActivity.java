@@ -1952,7 +1952,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         media.setFileName(filename);
         media.setFilePath(path);
-        media.setSiteId(mSite.getSiteId());
+        media.setLocalSiteId(mSite.getId());
         media.setMediaId(System.currentTimeMillis());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
