@@ -555,7 +555,7 @@ public class StatsActivity extends AppCompatActivity
         }
         if (requestCode == RequestCodes.REQUEST_JETPACK) {
             // Refresh the site in case we're back from Jetpack install Webview
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
         }
     }
 
