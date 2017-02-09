@@ -688,7 +688,7 @@ public class SiteStore extends Store {
     }
 
     private void fetchSite(SiteModel site) {
-        if (site.isWPCom()) {
+        if (site.isWPCom() || site.isJetpackConnected()) {
             mSiteRestClient.fetchSite(site);
         } else {
             mSiteXMLRPCClient.fetchSite(site);
@@ -700,7 +700,7 @@ public class SiteStore extends Store {
     }
 
     private void fetchPostFormats(SiteModel site) {
-        if (site.isWPCom()) {
+        if (site.isWPCom() || site.isJetpackConnected()) {
             mSiteRestClient.fetchPostFormats(site);
         } else {
             mSiteXMLRPCClient.fetchPostFormats(site);
@@ -708,6 +708,7 @@ public class SiteStore extends Store {
     }
 
     private void deleteSite(SiteModel site) {
+        // Not available for Jetpack sites
         if (!site.isWPCom()) {
             OnSiteDeleted event = new OnSiteDeleted(new DeleteSiteError(DeleteSiteErrorType.INVALID_SITE));
             emitChange(event);
@@ -717,6 +718,7 @@ public class SiteStore extends Store {
     }
 
     private void exportSite(SiteModel site) {
+        // Not available for Jetpack sites
         if (!site.isWPCom()) {
             OnSiteExported event = new OnSiteExported();
             event.error = new ExportSiteError(ExportSiteErrorType.INVALID_SITE);
