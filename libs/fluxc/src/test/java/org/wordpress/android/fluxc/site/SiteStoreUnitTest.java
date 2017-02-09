@@ -439,6 +439,7 @@ public class SiteStoreUnitTest {
         automatedTransferSite.setIsJetpackInstalled(true);
         automatedTransferSite.setIsJetpackConnected(true);
         automatedTransferSite.setIsWPCom(false);
+        automatedTransferSite.setIsAutomatedTransfer(true);
 
         SiteSqlUtils.insertOrUpdateSite(automatedTransferSite);
 
