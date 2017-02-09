@@ -68,9 +68,11 @@ public class PhotoChooserFragment extends Fragment {
                 switch (icon) {
                     case ANDROID_CAMERA:
                         activity.launchCamera();
+                        activity.hidePhotoChooser();
                         break;
                     case ANDROID_PICKER:
                         activity.launchPictureLibrary();
+                        activity.hidePhotoChooser();
                         break;
                 }
 
