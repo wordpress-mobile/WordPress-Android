@@ -21,7 +21,6 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private class PhotoChooserItem {
         private long _id;
-        private long imageId;
         private Uri imageUri;
     }
 
@@ -48,9 +47,6 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mImageWidth = imageWidth;
         mImageHeight = imageHeight;
     }
-
-    private static final String ID_COL = MediaStore.Images.Thumbnails._ID;
-    private static final String IMAGE_ID_COL = MediaStore.Images.Thumbnails.IMAGE_ID;
 
     void loadDevicePhotos() {
         new BuildDevicePhotoListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -121,7 +117,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (holder instanceof PhotoViewHolder) {
             ImageView imageView = ((PhotoViewHolder) holder).imageView;
             PhotoChooserItem item = getPhotoItemAtPosition(position);
-            new ImageLoaderTask(imageView, item.imageId, item.imageUri)
+            new ImageLoaderTask(imageView, item._id, item.imageUri)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -257,40 +253,39 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      */
     private class BuildDevicePhotoListTask extends AsyncTask<Void, Void, Boolean> {
         private final ArrayList<PhotoChooserItem> tmpList = new ArrayList<>();
+        private static final String ID_COL = MediaStore.Images.Media._ID;
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            String[] projection = { ID_COL, IMAGE_ID_COL };
-            String orderBy = IMAGE_ID_COL + " DESC";
+            String[] projection = { ID_COL };
+            String orderBy = ID_COL + " DESC";
 
             // get external (SDCARD) images
             Cursor external = mContext.getContentResolver().query(
-                    MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     projection,
                     null,
                     null,
                     orderBy);
-            addImages(external, MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI);
+            addImages(external, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
             // get internal images
             Cursor internal = mContext.getContentResolver().query(
-                    MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI,
+                    MediaStore.Images.Media.INTERNAL_CONTENT_URI,
                     projection,
                     null,
                     null,
                     orderBy);
-            addImages(internal, MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI);
+            addImages(internal, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 
             return true;
         }
 
         private void addImages(Cursor cursor, Uri baseUri) {
             int idIndex = cursor.getColumnIndexOrThrow(ID_COL);
-            int imageIdIndex = cursor.getColumnIndexOrThrow(IMAGE_ID_COL);
             while (cursor.moveToNext()) {
                 PhotoChooserItem item = new PhotoChooserItem();
                 item._id = cursor.getLong(idIndex);
-                item.imageId = cursor.getLong(imageIdIndex);
                 item.imageUri = Uri.withAppendedPath(baseUri, "" + item._id);
                 tmpList.add(item);
             }
