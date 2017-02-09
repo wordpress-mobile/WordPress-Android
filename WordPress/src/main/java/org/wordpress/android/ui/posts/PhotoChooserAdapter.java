@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -17,13 +18,14 @@ import org.wordpress.android.ui.posts.PhotoChooserFragment.OnPhotoChosenListener
 import org.wordpress.android.ui.posts.PhotoChooserFragment.PhotoChooserIcon;
 import org.wordpress.android.util.AniUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class PhotoItem {
-        private int _id;
-        private int imageId;
+        private long _id;
+        private long imageId;
         private Uri imageUri;
     }
     private class PhotoItemList extends ArrayList<PhotoItem> {
@@ -111,7 +113,10 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (holder instanceof PhotoViewHolder) {
             // TODO: setImageURI() is called on the main thread which makes scrolling janky - need
             // a different solution here
-            ((PhotoViewHolder) holder).imageView.setImageURI(getPhotoAtPosition(position).imageUri);
+            //((PhotoViewHolder) holder).imageView.setImageURI(getPhotoAtPosition(position).imageUri);
+            ImageView imageView = ((PhotoViewHolder) holder).imageView;
+            new ImageLoaderTask(imageView, getPhotoAtPosition(position))
+                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -180,22 +185,44 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private class ImageLoaderTask extends AsyncTask<Void, Void, Boolean> {
-        private final ImageView mImageView;
+        private final WeakReference<ImageView> mWeakImageView;
         private final PhotoItem mItem;
         private Bitmap mBitmap;
 
         ImageLoaderTask(ImageView imageView, PhotoItem item) {
-            mImageView = imageView;
+            mWeakImageView = new WeakReference<>(imageView);
             mItem = item;
-            imageView.setTag(item.imageUri);
+            imageView.setTag(item.imageUri.toString());
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            MediaStore.Images.Thumbnails.getThumbnail(
+            BitmapFactory.Options options = null;
+            mBitmap = MediaStore.Images.Thumbnails.getThumbnail(
                     mContext.getContentResolver(),
+                    mItem.imageId,
+                    MediaStore.Images.Thumbnails.MINI_KIND,
+                    options
                     );
-            return true;
+            return mBitmap != null;
+        }
+
+        private boolean isImageViewValid() {
+            ImageView imageView = mWeakImageView.get();
+            if (imageView != null && imageView.getTag() instanceof String) {
+                String requestedUri = mItem.imageUri.toString();
+                String taggedUri = (String) imageView.getTag();
+                return taggedUri.equals(requestedUri);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result && isImageViewValid()) {
+                mWeakImageView.get().setImageBitmap(mBitmap);
+            }
         }
     }
 
@@ -233,8 +260,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int imageIdIndex = cursor.getColumnIndexOrThrow(IMAGE_ID_COL);
             while (cursor.moveToNext()) {
                 PhotoItem item = new PhotoItem();
-                item._id = cursor.getInt(idIndex);
-                item.imageId = cursor.getInt(imageIdIndex);
+                item._id = cursor.getLong(idIndex);
+                item.imageId = cursor.getLong(imageIdIndex);
                 item.imageUri = Uri.withAppendedPath(baseUri, "" + item._id);
                 tmpList.add(item);
             }
