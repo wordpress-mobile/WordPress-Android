@@ -799,6 +799,9 @@ public class StatsActivity extends AppCompatActivity
             mSite = site;
         }
 
+        // Make sure the update site is accessible
+        checkIfSiteHasAccessibleStats(mSite);
+
         // Refresh Stats
         refreshStatsFromCurrentDate();
     }
