@@ -186,7 +186,11 @@ public class StatsActivity extends AppCompatActivity
             return;
         }
 
-        // If the site is not connected via wpcom (Jetpack included), then show a dialog to the user.
+        if (!mAccountStore.hasAccessToken()) {
+            // If the user is not connected to WordPress.com, ask him to connect first.
+            startWPComLoginActivity();
+            return;
+        }
         checkIfSiteHasAccessibleStats(mSite);
 
         // create the fragments without forcing the re-creation. If the activity is restarted fragments can already
@@ -274,12 +278,6 @@ public class StatsActivity extends AppCompatActivity
     private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
         // If the site is not accessible via wpcom (Jetpack included), then show a dialog to the user.
         if (!SiteUtils.isAccessibleViaWPComAPI(mSite)) {
-            if (!mAccountStore.hasAccessToken()) {
-                // If the user is not connected to WordPress.com, ask him to connect first.
-                startWPComLoginActivity();
-                return false;
-            }
-
             if (!site.isJetpackInstalled()) {
                 JetpackUtils.showInstallJetpackAlert(this, site);
                 return false;
