@@ -12,7 +12,7 @@
         android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/photo_chooser_item_background">
+        android:background="@drawable/photo_chooser_icon_background">
 
         <ImageView
             android:layout_width="wrap_content"

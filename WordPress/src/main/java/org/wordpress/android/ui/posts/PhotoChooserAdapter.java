@@ -190,6 +190,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private Bitmap mBitmap;
 
         ImageLoaderTask(ImageView imageView, PhotoItem item) {
+            imageView.setImageResource(R.drawable.photo_chooser_item_background);
             mWeakImageView = new WeakReference<>(imageView);
             mItem = item;
             imageView.setTag(item.imageUri.toString());
