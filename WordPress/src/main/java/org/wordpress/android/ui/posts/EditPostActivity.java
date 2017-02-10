@@ -383,8 +383,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
+                    hidePhotoChooser();
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
+                    hidePhotoChooser();
                     savePostAsync(new AfterSavePostListener() {
                         @Override
                         public void onPostSave() {
@@ -404,7 +406,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         });
 
-        initPhotoChooser();
+        // TODO: if the user doesn't have permission to access device photos, delay this until
+        // the user taps the photo icon and then ask permission
+        if (enablePhotoChooser()) {
+            initPhotoChooser();
+        }
 
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
@@ -412,11 +418,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
 
     private boolean isPhotoChooserShowing() {
-        return mPhotoChooserContainer.getVisibility() == View.VISIBLE;
+        return mPhotoChooserContainer != null
+                && mPhotoChooserContainer.getVisibility() == View.VISIBLE;
     }
 
-    // TODO: if the user doesn't have permission to access device photos, delay this until
-    // the user taps the photo icon and then ask permission
+    // TODO: this is a placeholder for now - return False to switch back to the old seven-item menu
+    private boolean enablePhotoChooser() {
+        return true;
+    }
+
     private void initPhotoChooser() {
         int imageHeight = PhotoChooserFragment.getPhotoChooserImageHeight(this);
         int containerHeight;
@@ -790,17 +800,23 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        if (!isPhotoChooserShowing()) {
-            showPhotoChooser();
+        // TODO: right not we intercept the editor's request for a context menu to display the
+        // photo chooser instead - at some point this should be rewritten so the editor requests
+        // the photo chooser to be shown directly
+        if (enablePhotoChooser()) {
+            if (!isPhotoChooserShowing()) {
+                showPhotoChooser();
+            } else {
+                hidePhotoChooser();
+            }
         } else {
-            hidePhotoChooser();
+            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+                super.openContextMenu(view);
+            } else {
+                AppLockManager.getInstance().setExtendedTimeout();
+                mMenuView = view;
+            }
         }
-        /*if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-            super.openContextMenu(view);
-        } else {
-            AppLockManager.getInstance().setExtendedTimeout();
-            mMenuView = view;
-        }*/
     }
 
     @Override
