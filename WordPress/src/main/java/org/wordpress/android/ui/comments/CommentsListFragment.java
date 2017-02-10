@@ -111,7 +111,7 @@ public class CommentsListFragment extends Fragment {
     @Override
     public void onDestroy() {
         mDispatcher.unregister(this);
-        super.onStop();
+        super.onDestroy();
     }
 
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
