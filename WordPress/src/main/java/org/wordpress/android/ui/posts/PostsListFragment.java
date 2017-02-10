@@ -528,11 +528,12 @@ public class PostsListFragment extends Fragment
                 if (post.isLocalDraft()) {
                     mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(post));
 
-                    mShouldCancelPendingDraftNotification = false;
-
                     // delete the pending draft notification if available
+                    mShouldCancelPendingDraftNotification = false;
                     int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.getId());
                     NativeNotificationsUtils.dismissNotification(pushId, getActivity());
+                } else {
+                    mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(new RemotePostPayload(post, mSite)));
                 }
             }
         });
