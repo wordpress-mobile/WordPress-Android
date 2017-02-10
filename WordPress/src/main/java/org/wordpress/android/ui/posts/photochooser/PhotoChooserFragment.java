@@ -19,7 +19,9 @@ public class PhotoChooserFragment extends Fragment {
     private static final int NUM_COLUMNS = 4;
 
     public enum PhotoChooserIcon {
-        ANDROID_CAMERA, ANDROID_PICKER
+        ANDROID_CAMERA,
+        ANDROID_PICKER,
+        WP_MEDIA
     }
 
     public interface OnPhotoChosenListener {
@@ -65,17 +67,18 @@ public class PhotoChooserFragment extends Fragment {
         public void onIconClicked(PhotoChooserIcon icon) {
             if (getActivity() instanceof EditPostActivity) {
                 EditPostActivity activity = (EditPostActivity) getActivity();
+                activity.hidePhotoChooser();
                 switch (icon) {
                     case ANDROID_CAMERA:
                         activity.launchCamera();
-                        activity.hidePhotoChooser();
                         break;
                     case ANDROID_PICKER:
                         activity.launchPictureLibrary();
-                        activity.hidePhotoChooser();
+                        break;
+                    case WP_MEDIA:
+                        activity.startMediaGalleryAddActivity();
                         break;
                 }
-
             }
         }
     };

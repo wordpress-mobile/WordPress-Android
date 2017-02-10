@@ -800,7 +800,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        // TODO: right not we intercept the editor's request for a context menu to display the
+        // TODO: right now we intercept the editor's request for a context menu to display the
         // photo chooser instead - at some point this should be rewritten so the editor requests
         // the photo chooser to be shown directly
         if (enablePhotoChooser()) {
@@ -1756,7 +1756,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void startMediaGalleryAddActivity() {
+    public void startMediaGalleryAddActivity() {
         ActivityLauncher.viewMediaGalleryPickerForSite(this, mSite);
     }
 

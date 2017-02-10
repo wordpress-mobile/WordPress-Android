@@ -22,7 +22,8 @@ class ThumbnailLoader {
     ThumbnailLoader(Context context) {
         mContext = context;
         int numCores = Runtime.getRuntime().availableProcessors();
-        mExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numCores);
+        int maxThreads = numCores > 1 ? (int) (numCores / 2) : 1;
+        mExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(maxThreads);
         mExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
         mHandler = new Handler(Looper.getMainLooper());
     }

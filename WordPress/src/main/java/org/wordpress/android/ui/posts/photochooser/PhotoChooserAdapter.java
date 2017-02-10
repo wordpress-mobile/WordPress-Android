@@ -29,12 +29,13 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final PhotoChooserFragment.OnPhotoChosenListener mListener;
     private final ArrayList<PhotoChooserItem> mPhotoList = new ArrayList<>();
 
-    private static final int VT_PHOTO  = 0;
-    private static final int VT_CAMERA = 1;
-    private static final int VT_PICKER = 2;
-    private static final int VT_EMPTY  = 3;
+    private static final int VT_PHOTO   = 0;
+    private static final int VT_CAMERA  = 1;
+    private static final int VT_PICKER  = 2;
+    private static final int VT_WPMEDIA = 3;
+    private static final int VT_EMPTY   = 4;
 
-    private static final int NUM_NON_PHOTO_ITEMS = 2;
+    private static final int NUM_NON_PHOTO_ITEMS = 3;
 
     public PhotoChooserAdapter(Context context,
                                int imageWidth,
@@ -73,6 +74,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return VT_CAMERA;
         } else if (position == 1) {
             return VT_PICKER;
+        } else if (position == 2) {
+            return VT_WPMEDIA;
         } else if (hasPhotos()) {
             return VT_PHOTO;
         } else {
@@ -95,6 +98,9 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case VT_PICKER:
                 view = inflater.inflate(R.layout.photo_chooser_picker, parent, false);
                 return new PickerViewHolder(view);
+            case VT_WPMEDIA:
+                view = inflater.inflate(R.layout.photo_chooser_wpmedia, parent, false);
+                return new WPMediaViewHolder(view);
             case VT_EMPTY:
                 view = inflater.inflate(R.layout.photo_chooser_empty, parent, false);
                 return new EmptyViewHolder(view);
@@ -190,6 +196,27 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     /*
+     * ViewHolder containing the WP media icon
+     */
+    class WPMediaViewHolder extends RecyclerView.ViewHolder {
+        public WPMediaViewHolder(View view) {
+            super(view);
+
+            itemView.getLayoutParams().width = mImageWidth;
+            itemView.getLayoutParams().height = mImageHeight;
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onIconClicked(PhotoChooserFragment.PhotoChooserIcon.WP_MEDIA);
+                    }
+                }
+            });
+        }
+    }
+
+    /*
      * ViewHolder containing the message that appears when there are no device photos
      */
     class EmptyViewHolder extends RecyclerView.ViewHolder {
@@ -199,8 +226,6 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             itemView.getLayoutParams().height = mImageHeight;
         }
     }
-
-
 
     /*
      * builds the list of PhotoChooserItems from the device
