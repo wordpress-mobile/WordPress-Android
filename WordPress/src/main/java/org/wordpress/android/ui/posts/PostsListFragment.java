@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
