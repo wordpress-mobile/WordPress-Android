@@ -102,6 +102,9 @@ public class PostsListFragment extends Fragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
+        EventBus.getDefault().register(this);
+        mDispatcher.register(this);
+
         updateSiteOrFinishActivity(savedInstanceState);
 
         if (isAdded()) {
@@ -110,6 +113,14 @@ public class PostsListFragment extends Fragment
                 mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
+
+        super.onDestroy();
     }
 
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
@@ -352,20 +363,6 @@ public class PostsListFragment extends Fragment
         if (isAdded() && mEmptyView != null) {
             mEmptyView.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        mDispatcher.unregister(this);
-        super.onStop();
     }
 
     @Override
