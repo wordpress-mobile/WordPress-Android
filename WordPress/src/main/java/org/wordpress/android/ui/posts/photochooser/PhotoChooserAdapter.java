@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts.photochooser;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -14,7 +13,6 @@ import android.widget.ImageView;
 
 import org.wordpress.android.R;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -27,6 +25,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final Context mContext;
     private final int mImageWidth;
     private final int mImageHeight;
+    private final ThumbnailLoader mThumbnailLoader;
     private final PhotoChooserFragment.OnPhotoChosenListener mListener;
     private final ArrayList<PhotoChooserItem> mPhotoList = new ArrayList<>();
 
@@ -46,6 +45,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mListener = listener;
         mImageWidth = imageWidth;
         mImageHeight = imageHeight;
+        mThumbnailLoader = new ThumbnailLoader(context);
+
     }
 
     void loadDevicePhotos() {
@@ -57,7 +58,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (hasPhotos()) {
             return mPhotoList.size() + NUM_NON_PHOTO_ITEMS;
         } else {
-            return NUM_NON_PHOTO_ITEMS + 1;
+            return NUM_NON_PHOTO_ITEMS + 1; // +1 for VT_EMPTY
         }
     }
 
@@ -117,8 +118,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (holder instanceof PhotoViewHolder) {
             ImageView imageView = ((PhotoViewHolder) holder).imageView;
             PhotoChooserItem item = getPhotoItemAtPosition(position);
-            new ImageLoaderTask(imageView, item._id, item.imageUri)
-                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mThumbnailLoader.loadThumbnail(imageView, item._id);
         }
     }
 
@@ -200,53 +200,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    /*
-     * task to load a device thumbnail and display it in an ImageView
-     */
-    private class ImageLoaderTask extends AsyncTask<Void, Void, Boolean> {
-        private final WeakReference<ImageView> mWeakImageView;
-        private final Uri mImageUri;
-        private final long mImageId;
-        private Bitmap mBitmap;
 
-        ImageLoaderTask(ImageView imageView, long imageId, Uri imageUri) {
-            imageView.setImageResource(R.drawable.photo_chooser_item_background);
-            mWeakImageView = new WeakReference<>(imageView);
-            mImageId = imageId;
-            mImageUri = imageUri;
-            imageView.setTag(imageUri.toString());
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            mBitmap = MediaStore.Images.Thumbnails.getThumbnail(
-                    mContext.getContentResolver(),
-                    mImageId,
-                    MediaStore.Images.Thumbnails.MINI_KIND,
-                    null);
-            return mBitmap != null;
-        }
-
-        private boolean isImageViewValid() {
-            ImageView imageView = mWeakImageView.get();
-            if (imageView != null && imageView.getTag() instanceof String) {
-                // make sure this imageView is still tagged with it's initial image Uri - it may
-                // be different if the view was recycled
-                String requestedUri = mImageUri.toString();
-                String taggedUri = (String) imageView.getTag();
-                return taggedUri.equals(requestedUri);
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (result && isImageViewValid()) {
-                mWeakImageView.get().setImageBitmap(mBitmap);
-            }
-        }
-    }
 
     /*
      * builds the list of PhotoChooserItems from the device
