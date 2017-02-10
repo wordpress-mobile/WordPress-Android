@@ -42,7 +42,6 @@ import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -535,11 +534,12 @@ public class PostsListFragment extends Fragment
                 if (post.isLocalDraft()) {
                     mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(post));
 
-                    mShouldCancelPendingDraftNotification = false;
-
                     // delete the pending draft notification if available
+                    mShouldCancelPendingDraftNotification = false;
                     int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.getId());
                     NativeNotificationsUtils.dismissNotification(pushId, getActivity());
+                } else {
+                    mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(new RemotePostPayload(post, mSite)));
                 }
             }
         });
