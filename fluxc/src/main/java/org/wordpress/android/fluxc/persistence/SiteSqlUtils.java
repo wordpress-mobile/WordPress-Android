@@ -67,43 +67,47 @@ public class SiteSqlUtils {
             return 0;
         }
 
-        AppLog.d(T.DB, "insertOrUpdateSite: " + site.getUrl());
-
         // If the site already exist and has an id, we want to update it.
         List<SiteModel> siteResult = WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.ID, site.getId())
                 .endGroup().endWhere().getAsModel();
-
+        if (!siteResult.isEmpty()) {
+            AppLog.d(T.DB, "Site found by (local) ID: " + site.getId());
+        }
 
         // Looks like a new site, make sure we don't already have it.
         if (siteResult.isEmpty()) {
-            AppLog.d(T.DB, "Site not found using local id");
             if (site.getSiteId() > 0) {
                 // For WordPress.com and Jetpack sites, the WP.com ID is a unique enough identifier
                 siteResult = WellSql.select(SiteModel.class)
                         .where().beginGroup()
                         .equals(SiteModelTable.SITE_ID, site.getSiteId())
                         .endGroup().endWhere().getAsModel();
+                if (!siteResult.isEmpty()) {
+                    AppLog.d(T.DB, "Site found by SITE_ID: " + site.getSiteId());
+                }
             } else {
                 siteResult = WellSql.select(SiteModel.class)
                         .where().beginGroup()
                         .equals(SiteModelTable.SITE_ID, site.getSiteId())
                         .equals(SiteModelTable.URL, site.getUrl())
                         .endGroup().endWhere().getAsModel();
+                if (!siteResult.isEmpty()) {
+                    AppLog.d(T.DB, "Site found by SITE_ID: " + site.getSiteId() + " and URL: " + site.getUrl());
+                }
             }
         }
 
         // If the site is a self hosted, maybe it's already in the DB as a Jetpack site, and we don't want to create
         // a duplicate.
         if (siteResult.isEmpty()) {
-            AppLog.d(T.DB, "Site not found using remote id + url");
             siteResult = WellSql.select(SiteModel.class)
                     .where()
                     .equals(SiteModelTable.XMLRPC_URL, site.getXmlRpcUrl())
                     .endWhere().getAsModel();
             if (!siteResult.isEmpty()) {
-                AppLog.d(T.DB, "Site found using xmlrpc url: " + site.getXmlRpcUrl());
+                AppLog.d(T.DB, "Site found using XML-RPC url: " + site.getXmlRpcUrl());
                 // If the site already in the DB is a self hosted and the new one is a Jetpack connected site, it means
                 // we upgraded from self hosted to jetpack, we want to update the site with the new informations.
                 if (siteResult.get(0).isJetpackConnected() || !site.isJetpackConnected()) {
