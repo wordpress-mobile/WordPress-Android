@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.PhotoChooserIcon;
 
 import java.util.ArrayList;
 
@@ -89,23 +90,23 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view;
         switch (viewType) {
             case VT_CAMERA:
-                view = inflater.inflate(R.layout.photo_chooser_camera, parent, false);
-                return new CameraViewHolder(view);
+                view = inflater.inflate(R.layout.photo_chooser_icon, parent, false);
+                return new IconViewHolder(view, PhotoChooserIcon.ANDROID_CAMERA);
             case VT_PICKER:
-                view = inflater.inflate(R.layout.photo_chooser_picker, parent, false);
-                return new PickerViewHolder(view);
+                view = inflater.inflate(R.layout.photo_chooser_icon, parent, false);
+                return new IconViewHolder(view, PhotoChooserIcon.ANDROID_PICKER);
             case VT_WPMEDIA:
-                view = inflater.inflate(R.layout.photo_chooser_wpmedia, parent, false);
-                return new WPMediaViewHolder(view);
+                view = inflater.inflate(R.layout.photo_chooser_icon, parent, false);
+                return new IconViewHolder(view, PhotoChooserIcon.WP_MEDIA);
             case VT_EMPTY:
                 view = inflater.inflate(R.layout.photo_chooser_empty, parent, false);
                 return new EmptyViewHolder(view);
             default:
-                view = inflater.inflate(R.layout.photo_chooser_image, parent, false);
+                view = inflater.inflate(R.layout.photo_chooser_thumbnail, parent, false);
                 return new PhotoViewHolder(view);
         }
     }
@@ -154,62 +155,34 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     /*
-     * ViewHolder containing the camera icon
+     * ViewHolder containing the camera, picker, or wp media icon
      */
-    class CameraViewHolder extends RecyclerView.ViewHolder {
-        public CameraViewHolder(View view) {
+    class IconViewHolder extends RecyclerView.ViewHolder {
+        public IconViewHolder(View view, final PhotoChooserFragment.PhotoChooserIcon icon) {
             super(view);
 
             itemView.getLayoutParams().width = mImageWidth;
             itemView.getLayoutParams().height = mImageHeight;
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onIconClicked(PhotoChooserFragment.PhotoChooserIcon.ANDROID_CAMERA);
-                    }
-                }
-            });
-        }
-    }
-
-    /*
-     * ViewHolder containing the stock picker icon
-     */
-    class PickerViewHolder extends RecyclerView.ViewHolder {
-        public PickerViewHolder(View view) {
-            super(view);
-
-            itemView.getLayoutParams().width = mImageWidth;
-            itemView.getLayoutParams().height = mImageHeight;
+            ImageView imgIcon = (ImageView) view.findViewById(R.id.image_icon);
+            switch (icon) {
+                case ANDROID_CAMERA:
+                    imgIcon.setImageResource(R.drawable.camera);
+                    break;
+                case ANDROID_PICKER:
+                    imgIcon.setImageResource(R.drawable.ic_collections_48px);
+                    break;
+                case WP_MEDIA:
+                    // TODO: need small black WP media icon
+                    imgIcon.setImageResource(R.drawable.nux_icon_wp);
+                    break;
+            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        mListener.onIconClicked(PhotoChooserFragment.PhotoChooserIcon.ANDROID_PICKER);
-                    }
-                }
-            });
-        }
-    }
-
-    /*
-     * ViewHolder containing the WP media icon
-     */
-    class WPMediaViewHolder extends RecyclerView.ViewHolder {
-        public WPMediaViewHolder(View view) {
-            super(view);
-
-            itemView.getLayoutParams().width = mImageWidth;
-            itemView.getLayoutParams().height = mImageHeight;
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onIconClicked(PhotoChooserFragment.PhotoChooserIcon.WP_MEDIA);
+                        mListener.onIconClicked(icon);
                     }
                 }
             });
