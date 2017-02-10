@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -92,10 +93,12 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -103,6 +106,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -212,6 +216,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsPage;
     private boolean mHasSetPostContent;
     private CountDownLatch mNewPostLatch;
+
+    private View mPhotoChooserContainer;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -398,7 +404,57 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         });
 
+        initPhotoChooser();
+
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    }
+
+    private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
+
+    private boolean isPhotoChooserShowing() {
+        return mPhotoChooserContainer.getVisibility() == View.VISIBLE;
+    }
+
+    // TODO: if the user doesn't have permission to access device photos, delay this until
+    // the user taps the photo icon and then ask permission
+    private void initPhotoChooser() {
+        int imageHeight = PhotoChooserFragment.getPhotoChooserImageHeight(this);
+        int containerHeight;
+        if (DisplayUtils.isLandscape(this)) {
+            containerHeight = imageHeight;
+        } else {
+            containerHeight = imageHeight * 3;
+        }
+
+        mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
+        mPhotoChooserContainer.getLayoutParams().height = containerHeight;
+
+        FragmentManager fm = getFragmentManager();
+        fm.executePendingTransactions();
+
+        Fragment fragment = PhotoChooserFragment.newInstance();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.photo_fragment_container, fragment, PHOTO_CHOOSER_TAG);
+        ft.commit();
+    }
+
+    void showPhotoChooser() {
+        // hide soft keyboard
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        if (!isPhotoChooserShowing()) {
+            AniUtils.animateBottomBar(mPhotoChooserContainer, true);
+        }
+    }
+
+    public void hidePhotoChooser() {
+        if (isPhotoChooserShowing()) {
+            AniUtils.animateBottomBar(mPhotoChooserContainer, false);
+        }
     }
 
     private Runnable mAutoSave = new Runnable() {
@@ -734,12 +790,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+        if (!isPhotoChooserShowing()) {
+            showPhotoChooser();
+        } else {
+            hidePhotoChooser();
+        }
+        /*if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
             super.openContextMenu(view);
         } else {
             AppLockManager.getInstance().setExtendedTimeout();
             mMenuView = view;
-        }
+        }*/
     }
 
     @Override
@@ -787,7 +848,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void launchPictureLibrary() {
+    public void launchPictureLibrary() {
         WordPressMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
@@ -892,6 +953,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (imageSettingsFragment != null && imageSettingsFragment.isVisible()) {
             ((ImageSettingsDialogFragment) imageSettingsFragment).dismissFragment();
+            return;
+        }
+
+        if (isPhotoChooserShowing()) {
+            hidePhotoChooser();
             return;
         }
 
@@ -1297,7 +1363,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void launchCamera() {
+    public void launchCamera() {
         WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
                 new WordPressMediaUtils.LaunchCameraCallback() {
                     @Override
@@ -1539,7 +1605,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private boolean addMedia(Uri mediaUri) {
+    public boolean addMedia(Uri mediaUri) {
         if (mediaUri != null && !MediaUtils.isInMediaStore(mediaUri) && !mediaUri.toString().startsWith("/")) {
             mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
         }
