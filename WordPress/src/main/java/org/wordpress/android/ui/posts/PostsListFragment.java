@@ -106,8 +106,6 @@ public class PostsListFragment extends Fragment
 
         updateSiteOrFinishActivity(savedInstanceState);
 
-        setRetainInstance(true);
-
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
