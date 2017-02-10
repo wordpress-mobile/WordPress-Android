@@ -104,19 +104,14 @@ public class CommentsListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+        mDispatcher.register(this);
         updateSiteOrFinishActivity(savedInstanceState);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
+    public void onDestroy() {
         mDispatcher.unregister(this);
-        super.onStop();
+        super.onDestroy();
     }
 
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
