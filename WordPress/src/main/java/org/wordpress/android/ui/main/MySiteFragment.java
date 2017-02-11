@@ -349,7 +349,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer.setVisibility(themesVisibility);
 
         // show settings for all self-hosted to expose Delete Site
-        boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !site.isWPCom();
+        boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !SiteUtils.isAccessibleViaWPComAPI(site);
         mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
         mPeopleView.setVisibility(site.getHasCapabilityListUsers() ? View.VISIBLE : View.GONE);
 

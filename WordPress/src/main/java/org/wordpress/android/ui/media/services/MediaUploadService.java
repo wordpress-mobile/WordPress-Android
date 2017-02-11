@@ -213,7 +213,7 @@ public class MediaUploadService extends Service {
 
     private void addUniqueMediaToQueue(MediaModel media) {
         for (MediaModel queuedMedia : getUploadQueue()) {
-            if (queuedMedia.getSiteId() == media.getSiteId() &&
+            if (queuedMedia.getLocalSiteId() == media.getLocalSiteId() &&
                     StringUtils.equals(queuedMedia.getFilePath(), media.getFilePath())) {
                 return;
             }
@@ -257,8 +257,7 @@ public class MediaUploadService extends Service {
 
     private boolean matchesInProgressMedia(final @NonNull MediaModel media) {
         // TODO
-        return mCurrentUpload != null &&
-                media.getSiteId() == mCurrentUpload.getSiteId();
+        return mCurrentUpload != null && media.getLocalSiteId() == mCurrentUpload.getLocalSiteId();
     }
 
     private void cancelUpload() {

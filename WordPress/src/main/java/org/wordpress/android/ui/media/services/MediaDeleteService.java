@@ -220,7 +220,7 @@ public class MediaDeleteService extends Service {
      */
     private boolean matchesInProgressMedia(final @NonNull MediaModel media) {
         return mCurrentDelete != null &&
-               media.getSiteId() == mCurrentDelete.getSiteId() &&
+               media.getLocalSiteId() == mCurrentDelete.getLocalSiteId() &&
                media.getMediaId() == mCurrentDelete.getMediaId();
     }
 

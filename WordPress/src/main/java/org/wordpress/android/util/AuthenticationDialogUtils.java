@@ -21,6 +21,10 @@ public class AuthenticationDialogUtils {
             return;
         }
 
+        // TODO: check isJetpackConnected - there is probably something to do here for Jetpack sites connected to
+        // a wpcom account different than the main account in the app. We could at least show a different message
+        // like: "This configuration is not supported in the app, blablabla".
+
         // WP.com errors will show the sign in activity
         if (site.isWPCom()) {
             Intent signInIntent = new Intent(activity, SignInActivity.class);

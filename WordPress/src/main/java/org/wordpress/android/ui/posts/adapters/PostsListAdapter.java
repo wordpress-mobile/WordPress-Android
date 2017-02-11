@@ -41,6 +41,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -104,7 +105,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mLayoutInflater = LayoutInflater.from(context);
 
         mSite = site;
-        mIsStatsSupported = site.isWPCom() || site.isJetpack();
+        mIsStatsSupported = SiteUtils.isAccessibleViaWPComAPI(site) && site.getHasCapabilityViewStats();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int contentSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
@@ -746,7 +747,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     for (Long mediaId : mediaIdsToUpdate) {
                         MediaModel mediaToDownload = new MediaModel();
                         mediaToDownload.setMediaId(mediaId);
-                        mediaToDownload.setSiteId(mSite.getSiteId());
+                        mediaToDownload.setLocalSiteId(mSite.getId());
                         MediaPayload payload = new MediaPayload(mSite, mediaToDownload);
                         mDispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload));
                     }

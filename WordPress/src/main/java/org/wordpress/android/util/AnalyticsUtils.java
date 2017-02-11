@@ -103,18 +103,18 @@ public class AnalyticsUtils {
      */
     public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site,
                                             Map<String, Object> properties) {
-        if (site == null || (!site.isWPCom() && !site.isJetpack())) {
+        if (site == null || !SiteUtils.isAccessibleViaWPComAPI(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack. Tracking analytics without blog info");
             AnalyticsTracker.track(stat, properties);
             return;
         }
 
-        if (site.isWPCom()) {
+        if (SiteUtils.isAccessibleViaWPComAPI(site)) {
             if (properties == null) {
                 properties = new HashMap<>();
             }
             properties.put(BLOG_ID_KEY, site.getSiteId());
-            properties.put(IS_JETPACK_KEY, site.isJetpack());
+            properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
         }
 
         if (properties == null) {

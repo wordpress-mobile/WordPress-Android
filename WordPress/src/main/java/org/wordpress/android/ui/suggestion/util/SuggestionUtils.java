@@ -3,11 +3,12 @@ package org.wordpress.android.ui.suggestion.util;
 import android.content.Context;
 
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.models.Tag;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
+import org.wordpress.android.util.SiteUtils;
 
 import java.util.List;
 
@@ -15,7 +16,8 @@ public class SuggestionUtils {
 
     public static SuggestionAdapter setupSuggestions(SiteModel site, Context context,
                                                      SuggestionServiceConnectionManager serviceConnectionManager) {
-        return SuggestionUtils.setupSuggestions(site.getSiteId(), context, serviceConnectionManager, site.isWPCom());
+        return SuggestionUtils.setupSuggestions(site.getSiteId(), context, serviceConnectionManager,
+                SiteUtils.isAccessibleViaWPComAPI(site));
     }
 
     public static SuggestionAdapter setupSuggestions(final long siteId, Context context,
@@ -38,7 +40,8 @@ public class SuggestionUtils {
 
     public static TagSuggestionAdapter setupTagSuggestions(SiteModel site, Context context,
                                                            SuggestionServiceConnectionManager serviceConnectionManager) {
-        return SuggestionUtils.setupTagSuggestions(site.getSiteId(), context, serviceConnectionManager, site.isWPCom());
+        return SuggestionUtils.setupTagSuggestions(site.getSiteId(), context, serviceConnectionManager,
+                SiteUtils.isAccessibleViaWPComAPI(site));
     }
 
     public static TagSuggestionAdapter setupTagSuggestions(final long siteId, Context context,

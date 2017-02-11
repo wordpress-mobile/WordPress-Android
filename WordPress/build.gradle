@@ -126,7 +126,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~update-original-media-after-upload-SNAPSHOT') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~missing-integration-functionality-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 
@@ -138,6 +138,9 @@ dependencies {
     debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
     releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
+
+    // Debug
+    debugCompile 'com.facebook.stetho:stetho:1.4.2'
 }
 
 configurations.all {

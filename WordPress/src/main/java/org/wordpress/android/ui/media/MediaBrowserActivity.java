@@ -549,7 +549,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     mMediaGridFragment.removeFromMultiSelect(mediaId);
                     if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
                             && mediaId == mMediaEditFragment.getMediaId()) {
-                        updateOnMediaChanged(String.valueOf(mediaModel.getSiteId()), mediaId);
+                        updateOnMediaChanged(String.valueOf(mediaModel.getLocalSiteId()), mediaId);
                         if (mMediaEditFragment.isInLayout()) {
                             mMediaEditFragment.loadMedia(MediaEditFragment.MISSING_MEDIA_ID);
                         } else {
@@ -864,7 +864,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         media.setFileName(filename);
         media.setFilePath(path);
-        media.setSiteId(mSite.getSiteId());
+        media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
         media.setUploadState(MediaUploadState.QUEUED.toString());
