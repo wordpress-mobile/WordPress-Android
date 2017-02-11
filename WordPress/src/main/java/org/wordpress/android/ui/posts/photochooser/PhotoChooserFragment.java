@@ -27,8 +27,9 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     public interface OnPhotoChosenListener {
-        void onPhotoClicked(Uri imageUri);
-        void onPhotoLongClicked(Uri imageUri);
+        void onPhotoTapped(Uri imageUri);
+        void onPhotoDoubleTapped(Uri imageUri);
+        void onPhotoLongPressed(Uri imageUri);
         void onIconClicked(PhotoChooserIcon icon);
     }
 
@@ -59,9 +60,14 @@ public class PhotoChooserFragment extends Fragment {
         return view;
     }
 
+    /*
+     *   - single tap adds the photo to post
+     *   - double tap previews the photo
+     *   - long press enables multi-select
+     */
     private final OnPhotoChosenListener mListener = new OnPhotoChosenListener() {
         @Override
-        public void onPhotoClicked(Uri imageUri) {
+        public void onPhotoTapped(Uri imageUri) {
             if (getActivity() instanceof EditPostActivity) {
                 EditPostActivity activity = (EditPostActivity) getActivity();
                 activity.addMedia(imageUri);
@@ -70,7 +76,12 @@ public class PhotoChooserFragment extends Fragment {
         }
 
         @Override
-        public void onPhotoLongClicked(Uri imageUri) {
+        public void onPhotoLongPressed(Uri imageUri) {
+            // TODO: enable multi-select
+        }
+
+        @Override
+        public void onPhotoDoubleTapped(Uri imageUri) {
             ImageView imgPreview = (ImageView) mPreviewFrame.findViewById(R.id.image_preview);
             imgPreview.setImageURI(imageUri);
 
@@ -104,12 +115,12 @@ public class PhotoChooserFragment extends Fragment {
         }
     };
 
-    public static int getPhotoChooserImageWidth(Context context) {
+    private static int getPhotoChooserImageWidth(Context context) {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         return displayWidth / NUM_COLUMNS;
     }
 
-    public static int getPhotoChooserImageHeight(Context context) {
+    private static int getPhotoChooserImageHeight(Context context) {
         int imageWidth = getPhotoChooserImageWidth(context);
         return (int) (imageWidth * 0.75f);
     }

@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -48,7 +50,6 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mImageWidth = imageWidth;
         mImageHeight = imageHeight;
         mThumbnailLoader = new ThumbnailLoader(context);
-
     }
 
     void loadDevicePhotos() {
@@ -134,6 +135,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      */
     class PhotoViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageView;
+        private final GestureDetector detector;
 
         public PhotoViewHolder(View view) {
             super(view);
@@ -142,23 +144,36 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             imageView.getLayoutParams().width = mImageWidth;
             imageView.getLayoutParams().height = mImageHeight;
 
-            imageView.setOnClickListener(new View.OnClickListener() {
+            detector = new GestureDetector(view.getContext(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
-                public void onClick(View v) {
+                public boolean onSingleTapConfirmed(MotionEvent e) {
                     if (mListener != null) {
                         Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
-                        mListener.onPhotoClicked(imageUri);
+                        mListener.onPhotoTapped(imageUri);
+                    }
+                    return true;
+                }
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    if (mListener != null) {
+                        Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
+                        mListener.onPhotoDoubleTapped(imageUri);
+                    }
+                    return true;
+                }
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    if (mListener != null) {
+                        Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
+                        mListener.onPhotoLongPressed(imageUri);
                     }
                 }
             });
 
-            imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            imageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public boolean onLongClick(View v) {
-                    if (mListener != null) {
-                        Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
-                        mListener.onPhotoLongClicked(imageUri);
-                    }
+                public boolean onTouch(View v, MotionEvent event) {
+                    detector.onTouchEvent(event);
                     return true;
                 }
             });
