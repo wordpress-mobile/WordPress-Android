@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -115,6 +116,9 @@ public class AppPrefs {
 
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
+
+        // aztec editor available
+        AZTEC_EDITOR_AVAILABLE,
     }
 
     private static SharedPreferences prefs() {
@@ -372,7 +376,18 @@ public class AppPrefs {
     }
 
     public static boolean isAztecEditorEnabled() {
-        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, true);
+        return isAztecEditorAvailable() && getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
+    }
+
+    public static void setAztecEditorAvailable(boolean aztecEditorAvailable) {
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, aztecEditorAvailable);
+        if (aztecEditorAvailable) {
+            AnalyticsTracker.track(Stat.EDITOR_AZTEC_ENABLED);
+        }
+    }
+
+    public static boolean isAztecEditorAvailable() {
+        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, BuildConfig.AZTEC_EDITOR_AVAILABLE);
     }
 
     // Visual Editor

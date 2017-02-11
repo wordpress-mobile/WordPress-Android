@@ -59,7 +59,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        updateVisualEditorSettings();
+        updateEditorSettings();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateVisualEditorSettings() {
+    private void updateEditorSettings() {
         if (!AppPrefs.isVisualEditorAvailable()) {
             PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity()
                     .getString(R.string.pref_key_account_settings_root));
@@ -115,6 +115,13 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             }
         } else {
             final ListPreference editorTypePreference = (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
+
+            // if Aztec unavailable, only show the old list old of editors
+            if (!AppPrefs.isAztecEditorAvailable()) {
+                editorTypePreference.setEntries(R.array.editor_entries_without_aztec);
+                editorTypePreference.setEntryValues(R.array.editor_values_without_aztec);
+            }
+
             editorTypePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(final Preference preference, final Object value) {
@@ -125,12 +132,12 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
                         switch (index) {
                             case 0:
-                                AppPrefs.setAztecEditorEnabled(true);
-                                AppPrefs.setVisualEditorEnabled(false);
-                                break;
-                            case 1:
                                 AppPrefs.setAztecEditorEnabled(false);
                                 AppPrefs.setVisualEditorEnabled(true);
+                                break;
+                            case 2:
+                                AppPrefs.setAztecEditorEnabled(true);
+                                AppPrefs.setVisualEditorEnabled(false);
                                 break;
                             default:
                                 AppPrefs.setAztecEditorEnabled(false);
