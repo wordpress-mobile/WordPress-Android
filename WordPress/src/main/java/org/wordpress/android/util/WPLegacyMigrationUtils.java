@@ -111,7 +111,7 @@ public class WPLegacyMigrationUtils {
         List<SiteModel> siteList = new ArrayList<>();
         try {
             SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
-            String[] fields = new String[]{"username", "password", "url", "api_blogid"};
+            String[] fields = new String[]{"username", "password", "url", "blogId", "api_blogid"};
 
             // To exclude the jetpack sites we need to check for empty password
             String byString = String.format("dotcomFlag=0 AND NOT(dotcomFlag=0 AND password='%s')",
@@ -122,7 +122,7 @@ public class WPLegacyMigrationUtils {
             for (int i = 0; i < numRows; i++) {
                 // If the api_blogid field is set, that's probably a Jetpack site that is not connected to the main
                 // account, so we want to skip it.
-                if (!TextUtils.isEmpty(c.getString(3))) {
+                if (!TextUtils.isEmpty(c.getString(4))) {
                     continue;
                 }
                 SiteModel siteModel = new SiteModel();
@@ -133,6 +133,7 @@ public class WPLegacyMigrationUtils {
                 String url = c.getString(2);
                 siteModel.setUrl(url);
                 siteModel.setXmlRpcUrl(url);
+                siteModel.setSelfHostedSiteId(c.getLong(3));
                 siteList.add(siteModel);
                 c.moveToNext();
             }
