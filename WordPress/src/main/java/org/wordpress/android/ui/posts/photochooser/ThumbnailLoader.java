@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.posts.photochooser;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
@@ -18,6 +20,8 @@ class ThumbnailLoader {
     private final Context mContext;
     private final ThreadPoolExecutor mExecutor;
     private final Handler mHandler;
+
+    private static final int FADE_TRANSITION = 250;
 
     ThumbnailLoader(Context context) {
         mContext = context;
@@ -73,7 +77,12 @@ class ThumbnailLoader {
                 @Override
                 public void run() {
                     if (mBitmap != null && isImageViewValid()) {
+                        // load the image then quickly fade it in
                         mWeakImageView.get().setImageBitmap(mBitmap);
+                        ObjectAnimator alpha = ObjectAnimator.ofFloat(
+                                mWeakImageView.get(), View.ALPHA, 0.25f, 1f);
+                        alpha.setDuration(FADE_TRANSITION);
+                        alpha.start();
                     }
                 }
             });
