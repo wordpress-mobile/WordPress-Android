@@ -54,11 +54,11 @@ public class UrlUtils {
     public static String convertUrlToPunycodeIfNeeded(String url) {
         if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
             if (url.toLowerCase().startsWith("http://")) {
-                url = "http://" + IDN.toASCII(url.substring(7));
+                url = "http://" + IDN.toASCII(url.substring(7), IDN.ALLOW_UNASSIGNED);
             } else if (url.toLowerCase().startsWith("https://")) {
-                url = "https://" + IDN.toASCII(url.substring(8));
+                url = "https://" + IDN.toASCII(url.substring(8), IDN.ALLOW_UNASSIGNED);
             } else {
-                url = IDN.toASCII(url);
+                url = IDN.toASCII(url, IDN.ALLOW_UNASSIGNED);
             }
         }
         return url;

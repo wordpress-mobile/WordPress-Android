@@ -129,6 +129,9 @@ dependencies {
     debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
     releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
+
+    // Debug
+    debugCompile 'com.facebook.stetho:stetho:1.4.2'
 }
 
 configurations.all {
