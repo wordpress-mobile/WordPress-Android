@@ -147,8 +147,19 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public void onClick(View v) {
                     if (mListener != null) {
                         Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
-                        mListener.onPhotoChosen(imageUri);
+                        mListener.onPhotoClicked(imageUri);
                     }
+                }
+            });
+
+            imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (mListener != null) {
+                        Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
+                        mListener.onPhotoLongClicked(imageUri);
+                    }
+                    return true;
                 }
             });
         }
@@ -158,7 +169,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * ViewHolder containing the camera, picker, or wp media icon
      */
     class IconViewHolder extends RecyclerView.ViewHolder {
-        public IconViewHolder(View view, final PhotoChooserFragment.PhotoChooserIcon icon) {
+        public IconViewHolder(View view, final PhotoChooserIcon icon) {
             super(view);
 
             itemView.getLayoutParams().width = mImageWidth;

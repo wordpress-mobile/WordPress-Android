@@ -428,12 +428,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void initPhotoChooser() {
-        int imageHeight = PhotoChooserFragment.getPhotoChooserImageHeight(this);
         int containerHeight;
+        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         if (DisplayUtils.isLandscape(this)) {
-            containerHeight = imageHeight;
+            containerHeight = (int) (displayHeight * 0.2f);
         } else {
-            containerHeight = imageHeight * 3;
+            containerHeight = (int) (displayHeight * 0.4f);
         }
 
         mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);

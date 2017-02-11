@@ -9,14 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
 
 public class PhotoChooserFragment extends Fragment {
 
-    private static final int NUM_COLUMNS = 4;
+    private static final int NUM_COLUMNS = 5;
 
     public enum PhotoChooserIcon {
         ANDROID_CAMERA,
@@ -25,11 +27,13 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     public interface OnPhotoChosenListener {
-        void onPhotoChosen(Uri imageUri);
+        void onPhotoClicked(Uri imageUri);
+        void onPhotoLongClicked(Uri imageUri);
         void onIconClicked(PhotoChooserIcon icon);
     }
 
     private RecyclerView mRecycler;
+    private View mPreviewFrame;
 
     public static PhotoChooserFragment newInstance() {
         Bundle args = new Bundle();
@@ -42,6 +46,8 @@ public class PhotoChooserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.photo_chooser_fragment, container, false);
 
+        mPreviewFrame = view.findViewById(R.id.frame_preview);
+
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), NUM_COLUMNS);
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
@@ -53,16 +59,31 @@ public class PhotoChooserFragment extends Fragment {
         return view;
     }
 
-
     private final OnPhotoChosenListener mListener = new OnPhotoChosenListener() {
         @Override
-        public void onPhotoChosen(Uri imageUri) {
+        public void onPhotoClicked(Uri imageUri) {
             if (getActivity() instanceof EditPostActivity) {
                 EditPostActivity activity = (EditPostActivity) getActivity();
                 activity.addMedia(imageUri);
                 activity.hidePhotoChooser();
             }
         }
+
+        @Override
+        public void onPhotoLongClicked(Uri imageUri) {
+            ImageView imgPreview = (ImageView) mPreviewFrame.findViewById(R.id.image_preview);
+            imgPreview.setImageURI(imageUri);
+
+            AniUtils.scaleIn(mPreviewFrame, AniUtils.Duration.SHORT);
+
+            imgPreview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AniUtils.scaleOut(mPreviewFrame, AniUtils.Duration.SHORT);
+                }
+            });
+        }
+
         @Override
         public void onIconClicked(PhotoChooserIcon icon) {
             if (getActivity() instanceof EditPostActivity) {
