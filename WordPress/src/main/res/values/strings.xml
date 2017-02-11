@@ -646,10 +646,16 @@
     <string name="preference_editor_type">Set editor type</string>
 
     <string-array name="editor_entries">
+        <item>Visual</item>
+        <item>Legacy</item>
         <item>Aztec</item>
+    </string-array>
+
+    <string-array name="editor_entries_without_aztec">
         <item>Visual</item>
         <item>Legacy</item>
     </string-array>
+
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -948,6 +954,7 @@
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
+    <string name="aztec_editor_enabled">Aztec Editor enabled</string>
     <string name="new_editor_promo_button_label">Great, thanks!</string>
     <string name="new_editor_promo_title">Brand new editor</string>
     <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual
