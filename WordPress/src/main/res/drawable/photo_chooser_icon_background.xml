@@ -4,6 +4,5 @@
     android:shape="rectangle">
 
     <solid android:color="@color/blue_light" />
-    <corners android:radius="@dimen/photo_chooser_corner_radius" />
 
 </shape>
