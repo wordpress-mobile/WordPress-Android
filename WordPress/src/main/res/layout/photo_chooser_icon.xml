@@ -16,9 +16,10 @@
 
         <ImageView
             android:id="@+id/image_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="center"
+            android:tint="@color/black"
             tools:src="@drawable/camera" />
     </FrameLayout>
 </FrameLayout>

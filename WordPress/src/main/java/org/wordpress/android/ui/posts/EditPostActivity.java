@@ -218,6 +218,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private CountDownLatch mNewPostLatch;
 
     private View mPhotoChooserContainer;
+    private PhotoChooserFragment mPhotoChooserFragment;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -442,9 +443,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         FragmentManager fm = getFragmentManager();
         fm.executePendingTransactions();
 
-        Fragment fragment = PhotoChooserFragment.newInstance();
+        mPhotoChooserFragment = PhotoChooserFragment.newInstance();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.photo_fragment_container, fragment, PHOTO_CHOOSER_TAG);
+        ft.add(R.id.photo_fragment_container, mPhotoChooserFragment, PHOTO_CHOOSER_TAG);
         ft.commit();
     }
 
@@ -973,7 +974,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (isPhotoChooserShowing()) {
-            hidePhotoChooser();
+            if (mPhotoChooserFragment != null && mPhotoChooserFragment.isPreviewShowing()) {
+                mPhotoChooserFragment.hidePreview();
+            } else {
+                hidePhotoChooser();
+            }
             return;
         }
 

@@ -20,7 +20,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class PhotoChooserFragment extends Fragment {
 
-    private static final int NUM_COLUMNS = 5;
+    private static final int NUM_COLUMNS = 3;
 
     public enum PhotoChooserIcon {
         ANDROID_CAMERA,
@@ -130,14 +130,14 @@ public class PhotoChooserFragment extends Fragment {
         });
     }
 
-    private void hidePreview() {
+    public void hidePreview() {
         mRecycler.setEnabled(true);
         if (isPreviewShowing()) {
             AniUtils.scaleOut(mPreviewFrame, AniUtils.Duration.SHORT);
         }
     }
 
-    private boolean isPreviewShowing() {
+    public boolean isPreviewShowing() {
         return mPreviewFrame.getVisibility() == View.VISIBLE;
     }
 
