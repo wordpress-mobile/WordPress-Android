@@ -312,6 +312,7 @@ public class PhotoChooserFragment extends Fragment {
             mActionMode = actionMode;
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.photo_chooser_action_mode, menu);
+            hideBottomBar();
             return true;
         }
 
@@ -334,6 +335,7 @@ public class PhotoChooserFragment extends Fragment {
         public void onDestroyActionMode(ActionMode mode) {
             getAdapter().setMultiSelectEnabled(false);
             mActionMode = null;
+            showBottomBar();
         }
     }
 }
