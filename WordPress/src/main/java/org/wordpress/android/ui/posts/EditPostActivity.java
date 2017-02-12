@@ -434,7 +434,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (DisplayUtils.isLandscape(this)) {
             containerHeight = (int) (displayHeight * 0.2f);
         } else {
-            containerHeight = (int) (displayHeight * 0.4f);
+            containerHeight = (int) (displayHeight * 0.5f);
         }
 
         mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);

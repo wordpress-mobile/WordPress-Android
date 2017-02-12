@@ -309,4 +309,5 @@
 
     <!-- photo chooser (post editor) -->
     <dimen name="photo_chooser_item_padding">2dp</dimen>
+    <dimen name="photo_chooser_icon">48dp</dimen>
 </resources>

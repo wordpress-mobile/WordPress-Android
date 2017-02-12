@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.PhotoChooserIcon;
 import org.wordpress.android.util.AniUtils;
 
 import java.util.ArrayList;
@@ -38,12 +37,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final ArrayList<PhotoChooserItem> mPhotoList = new ArrayList<>();
 
     private static final int VT_PHOTO   = 0;
-    private static final int VT_CAMERA  = 1;
-    private static final int VT_PICKER  = 2;
-    private static final int VT_WPMEDIA = 3;
-    private static final int VT_EMPTY   = 4;
-
-    private static final int NUM_NON_PHOTO_ITEMS = 3;
+    private static final int VT_EMPTY   = 1;
 
     public PhotoChooserAdapter(Context context,
                                int imageWidth,
@@ -65,9 +59,9 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemCount() {
         if (hasPhotos()) {
-            return mPhotoList.size() + NUM_NON_PHOTO_ITEMS;
+            return mPhotoList.size();
         } else {
-            return NUM_NON_PHOTO_ITEMS + 1; // +1 for VT_EMPTY
+            return 1; // single VT_EMPTY cell
         }
     }
 
@@ -83,13 +77,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
-            return VT_CAMERA;
-        } else if (position == 1) {
-            return VT_PICKER;
-        } else if (position == 2) {
-            return VT_WPMEDIA;
-        } else if (hasPhotos()) {
+        if (hasPhotos()) {
             return VT_PHOTO;
         } else {
             return VT_EMPTY;
@@ -105,15 +93,6 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
         switch (viewType) {
-            case VT_CAMERA:
-                view = inflater.inflate(R.layout.photo_chooser_icon, parent, false);
-                return new IconViewHolder(view, PhotoChooserIcon.ANDROID_CAMERA);
-            case VT_PICKER:
-                view = inflater.inflate(R.layout.photo_chooser_icon, parent, false);
-                return new IconViewHolder(view, PhotoChooserIcon.ANDROID_PICKER);
-            case VT_WPMEDIA:
-                view = inflater.inflate(R.layout.photo_chooser_icon, parent, false);
-                return new IconViewHolder(view, PhotoChooserIcon.WP_MEDIA);
             case VT_EMPTY:
                 view = inflater.inflate(R.layout.photo_chooser_empty, parent, false);
                 return new EmptyViewHolder(view);
@@ -126,16 +105,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     /*
      * returns the photo item in the adapter at the passed position
      */
-    private PhotoChooserItem getPhotoItemAtPosition(int adapterPosition) {
-        return mPhotoList.get(photoPositionFromAdapterPosition(adapterPosition));
-    }
-
-    private int photoPositionFromAdapterPosition(int adapterPosition) {
-        return adapterPosition - NUM_NON_PHOTO_ITEMS;
-    }
-
-    private int adapterPositionFromPhotoPosition(int photoPosition) {
-        return photoPosition + NUM_NON_PHOTO_ITEMS;
+    private PhotoChooserItem getPhotoItemAtPosition(int position) {
+        return mPhotoList.get(position);
     }
 
     @Override
@@ -177,13 +148,12 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         int photoIndex = indexOfImageUri(imageUri);
         if (photoIndex > -1) {
             mPhotoList.get(photoIndex).isSelected = !mPhotoList.get(photoIndex).isSelected;
-            notifyItemChanged(adapterPositionFromPhotoPosition(photoIndex));
+            notifyItemChanged(photoIndex);
         }
     }
 
-    private void toggleCheckmark(PhotoViewHolder holder, int adapterPosition) {
-        int photoIndex = photoPositionFromAdapterPosition(adapterPosition);
-        boolean isSelected = mPhotoList.get(photoIndex).isSelected;
+    private void toggleCheckmark(PhotoViewHolder holder, int position) {
+        boolean isSelected = mPhotoList.get(position).isSelected;
         AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
         holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
     }
@@ -299,42 +269,6 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public boolean onTouch(View v, MotionEvent event) {
                     detector.onTouchEvent(event);
                     return true;
-                }
-            });
-        }
-    }
-
-    /*
-     * ViewHolder containing the camera, picker, or wp media icon
-     */
-    class IconViewHolder extends RecyclerView.ViewHolder {
-        public IconViewHolder(View view, final PhotoChooserIcon icon) {
-            super(view);
-
-            itemView.getLayoutParams().width = mImageWidth;
-            itemView.getLayoutParams().height = mImageHeight;
-
-            ImageView imgIcon = (ImageView) view.findViewById(R.id.image_icon);
-            switch (icon) {
-                case ANDROID_CAMERA:
-                    imgIcon.setImageResource(R.drawable.camera);
-                    break;
-                case ANDROID_PICKER:
-                    imgIcon.setImageResource(R.drawable.ic_collections_48px);
-                    break;
-                case WP_MEDIA:
-                    // TODO: need small black WP media icon - right now we're tinting the imageView
-                    // and making it a fixed size to achieve this
-                    imgIcon.setImageResource(R.drawable.nux_icon_wp);
-                    break;
-            }
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onIconClicked(icon);
-                    }
                 }
             });
         }

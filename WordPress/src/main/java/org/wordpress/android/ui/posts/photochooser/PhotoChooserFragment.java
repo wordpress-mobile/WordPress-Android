@@ -26,11 +26,11 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class PhotoChooserFragment extends Fragment {
 
-    private static final int NUM_COLUMNS = 3;
+    private static final int NUM_COLUMNS = 4;
     private static final String KEY_MULTI_SELECT_ENABLED = "multi_select_enabled";
     private static final String KEY_SELECTED_IMAGE_LIST = "selected_image_list";
 
-    public enum PhotoChooserIcon {
+    enum PhotoChooserIcon {
         ANDROID_CAMERA,
         ANDROID_PICKER,
         WP_MEDIA
@@ -40,12 +40,12 @@ public class PhotoChooserFragment extends Fragment {
         void onPhotoTapped(Uri imageUri);
         void onPhotoDoubleTapped(Uri imageUri);
         void onPhotoLongPressed(Uri imageUri);
-        void onIconClicked(PhotoChooserIcon icon);
     }
 
     private RecyclerView mRecycler;
     private PhotoChooserAdapter mAdapter;
     private View mPreviewFrame;
+    private View mBottomBar;
     private ActionMode mActionMode;
 
     public static PhotoChooserFragment newInstance() {
@@ -104,6 +104,7 @@ public class PhotoChooserFragment extends Fragment {
         View view = inflater.inflate(R.layout.photo_chooser_fragment, container, false);
 
         mPreviewFrame = view.findViewById(R.id.frame_preview);
+        mBottomBar = view.findViewById(R.id.bottom_bar);
 
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), NUM_COLUMNS);
 
@@ -111,9 +112,64 @@ public class PhotoChooserFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(layoutManager);
 
+        mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleIconClicked(PhotoChooserIcon.ANDROID_CAMERA);
+            }
+        });
+
+        mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleIconClicked(PhotoChooserIcon.ANDROID_PICKER);
+            }
+        });
+
+        mBottomBar.findViewById(R.id.icon_wpmedia).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleIconClicked(PhotoChooserIcon.WP_MEDIA);
+            }
+        });
+
         loadDevicePhotos();
 
         return view;
+    }
+
+    private void handleIconClicked(PhotoChooserIcon icon) {
+        if (getActivity() instanceof EditPostActivity) {
+            EditPostActivity activity = (EditPostActivity) getActivity();
+            activity.hidePhotoChooser();
+            switch (icon) {
+                case ANDROID_CAMERA:
+                    activity.launchCamera();
+                    break;
+                case ANDROID_PICKER:
+                    activity.launchPictureLibrary();
+                    break;
+                case WP_MEDIA:
+                    activity.startMediaGalleryAddActivity();
+                    break;
+            }
+        }
+    }
+
+    void hideBottomBar() {
+        if (!isBottomBarShowing()) {
+            AniUtils.animateBottomBar(mBottomBar, false);
+        }
+    }
+
+    void showBottomBar() {
+        if (isBottomBarShowing()) {
+            AniUtils.animateBottomBar(mBottomBar, true);
+        }
+    }
+
+    boolean isBottomBarShowing() {
+        return mBottomBar.getVisibility() == View.VISIBLE;
     }
 
     /*
@@ -146,29 +202,11 @@ public class PhotoChooserFragment extends Fragment {
         public void onPhotoDoubleTapped(Uri imageUri) {
             showPreview(imageUri);
         }
-
-        @Override
-        public void onIconClicked(PhotoChooserIcon icon) {
-            if (getActivity() instanceof EditPostActivity) {
-                EditPostActivity activity = (EditPostActivity) getActivity();
-                activity.hidePhotoChooser();
-                switch (icon) {
-                    case ANDROID_CAMERA:
-                        activity.launchCamera();
-                        break;
-                    case ANDROID_PICKER:
-                        activity.launchPictureLibrary();
-                        break;
-                    case WP_MEDIA:
-                        activity.startMediaGalleryAddActivity();
-                        break;
-                }
-            }
-        }
     };
 
     private void showPreview(Uri imageUri) {
         mRecycler.setEnabled(false);
+        hideBottomBar();
 
         ImageView imgPreview = (ImageView) mPreviewFrame.findViewById(R.id.image_preview);
         imgPreview.setImageURI(imageUri);
@@ -192,6 +230,7 @@ public class PhotoChooserFragment extends Fragment {
 
     public void hidePreview() {
         mRecycler.setEnabled(true);
+        showBottomBar();
         if (isPreviewShowing()) {
             AniUtils.scaleOut(mPreviewFrame, AniUtils.Duration.SHORT);
         }
