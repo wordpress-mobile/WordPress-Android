@@ -23,11 +23,15 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private class PhotoChooserItem {
         private long _id;
         private Uri imageUri;
+        private boolean isSelected;
     }
 
     private final Context mContext;
     private final int mImageWidth;
     private final int mImageHeight;
+
+    private boolean mIsMultiSelectEnabled;
+
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoChooserFragment.OnPhotoChosenListener mListener;
     private final ArrayList<PhotoChooserItem> mPhotoList = new ArrayList<>();
@@ -124,10 +128,53 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PhotoViewHolder) {
-            ImageView imageView = ((PhotoViewHolder) holder).imageView;
             PhotoChooserItem item = getPhotoItemAtPosition(position);
-            mThumbnailLoader.loadThumbnail(imageView, item._id);
+            PhotoViewHolder photoHolder = (PhotoViewHolder) holder;
+            photoHolder.selectedFrame.setVisibility(item.isSelected ? View.VISIBLE : View.GONE);
+            mThumbnailLoader.loadThumbnail(photoHolder.imageView, item._id);
         }
+    }
+
+    void setMultiSelectEnabled(boolean enabled) {
+        if (mIsMultiSelectEnabled == enabled) return;
+
+        mIsMultiSelectEnabled = enabled;
+
+        // clear existing selection when multi-select is disabled
+        if (!enabled) {
+            boolean anyChanged = false;
+            for (PhotoChooserItem item : mPhotoList) {
+                if (item.isSelected) {
+                    item.isSelected = false;
+                    anyChanged = true;
+                }
+            }
+            if (anyChanged) {
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    boolean isMultiSelectEnabled() {
+        return mIsMultiSelectEnabled;
+    }
+
+    void togglePhotoSelection(Uri imageUri) {
+        int photoIndex = indexOfImageUri(imageUri);
+        if (photoIndex > -1) {
+            mPhotoList.get(photoIndex).isSelected = !mPhotoList.get(photoIndex).isSelected;
+            int adapterIndex = photoIndex + NUM_NON_PHOTO_ITEMS;
+            notifyItemChanged(adapterIndex);
+        }
+    }
+
+    private int indexOfImageUri(Uri imageUri) {
+        for (int i = 0; i < mPhotoList.size(); i++) {
+            if (mPhotoList.get(i).imageUri.equals(imageUri)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /*
@@ -135,10 +182,15 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      */
     class PhotoViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageView;
+        private final View selectedFrame;
         private final GestureDetector detector;
 
         public PhotoViewHolder(View view) {
             super(view);
+
+            selectedFrame = view.findViewById(R.id.selected_frame);
+            selectedFrame.getLayoutParams().width = mImageWidth;
+            selectedFrame.getLayoutParams().height = mImageHeight;
 
             imageView = (ImageView) view.findViewById(R.id.image_photo);
             imageView.getLayoutParams().width = mImageWidth;

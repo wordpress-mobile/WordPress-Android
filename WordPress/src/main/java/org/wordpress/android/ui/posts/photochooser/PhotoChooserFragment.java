@@ -21,6 +21,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class PhotoChooserFragment extends Fragment {
 
     private static final int NUM_COLUMNS = 3;
+    private static final String KEY_MULTI_SELECT_ENABLED = "multi_select_enabled";
 
     public enum PhotoChooserIcon {
         ANDROID_CAMERA,
@@ -46,6 +47,22 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getBoolean(KEY_MULTI_SELECT_ENABLED)) {
+                getAdapter().setMultiSelectEnabled(true);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_MULTI_SELECT_ENABLED, isMultiSelectEnabled());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.photo_chooser_fragment, container, false);
 
@@ -63,14 +80,16 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     /*
-     *   - single tap adds the photo to post
+     *   - single tap adds the photo to post or selects it if multi-select is enabled
      *   - double tap previews the photo
      *   - long press enables multi-select
      */
     private final OnPhotoChosenListener mListener = new OnPhotoChosenListener() {
         @Override
         public void onPhotoTapped(Uri imageUri) {
-            if (getActivity() instanceof EditPostActivity) {
+            if (isMultiSelectEnabled()) {
+                getAdapter().togglePhotoSelection(imageUri);
+            } else if (getActivity() instanceof EditPostActivity) {
                 EditPostActivity activity = (EditPostActivity) getActivity();
                 activity.addMedia(imageUri);
                 activity.hidePhotoChooser();
@@ -79,7 +98,10 @@ public class PhotoChooserFragment extends Fragment {
 
         @Override
         public void onPhotoLongPressed(Uri imageUri) {
-            // TODO: enable multi-select
+            if (!isMultiSelectEnabled()) {
+                getAdapter().setMultiSelectEnabled(true);
+                getAdapter().togglePhotoSelection(imageUri);
+            }
         }
 
         @Override
@@ -141,6 +163,10 @@ public class PhotoChooserFragment extends Fragment {
         return mPreviewFrame.getVisibility() == View.VISIBLE;
     }
 
+    private boolean isMultiSelectEnabled() {
+        return mAdapter != null && mAdapter.isMultiSelectEnabled();
+    }
+
     private static int getPhotoChooserImageWidth(Context context) {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         return displayWidth / NUM_COLUMNS;
@@ -151,12 +177,19 @@ public class PhotoChooserFragment extends Fragment {
         return (int) (imageWidth * 0.75f);
     }
 
+    private PhotoChooserAdapter mAdapter;
+    private PhotoChooserAdapter getAdapter() {
+        if (mAdapter == null) {
+            int imageWidth = getPhotoChooserImageWidth(getActivity());
+            int imageHeight = getPhotoChooserImageHeight(getActivity());
+            mAdapter = new PhotoChooserAdapter(
+                    getActivity(), imageWidth, imageHeight, mListener);
+        }
+        return mAdapter;
+    }
+
     private void loadDevicePhotos() {
-        int imageWidth = getPhotoChooserImageWidth(getActivity());
-        int imageHeight = getPhotoChooserImageHeight(getActivity());
-        PhotoChooserAdapter adapter = new PhotoChooserAdapter(
-                getActivity(), imageWidth, imageHeight, mListener);
-        mRecycler.setAdapter(adapter);
-        adapter.loadDevicePhotos();
+        mRecycler.setAdapter(getAdapter());
+        getAdapter().loadDevicePhotos();
     }
 }

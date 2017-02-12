@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_margin="2dp"
     android:padding="@dimen/photo_chooser_item_padding">
 
     <ImageView
@@ -12,4 +13,13 @@
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         tools:src="@drawable/gravatar_placeholder" />
-</FrameLayout>
+
+    <View
+        android:id="@+id/selected_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/photo_chooser_selected_background"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>
