@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#C0000000"
+        android:background="#A0000000"
         android:orientation="horizontal">
 
         <ImageView

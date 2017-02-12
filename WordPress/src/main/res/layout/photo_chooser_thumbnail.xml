@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
-    android:padding="@dimen/photo_chooser_item_padding">
+    android:layout_margin="@dimen/photo_chooser_item_padding">
 
     <ImageView
         android:id="@+id/image_photo"

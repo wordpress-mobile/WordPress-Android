@@ -26,7 +26,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class PhotoChooserFragment extends Fragment {
 
-    private static final int NUM_COLUMNS = 4;
+    private static final int NUM_COLUMNS = 3;
     private static final String KEY_MULTI_SELECT_ENABLED = "multi_select_enabled";
     private static final String KEY_SELECTED_IMAGE_LIST = "selected_image_list";
 
@@ -156,19 +156,19 @@ public class PhotoChooserFragment extends Fragment {
         }
     }
 
-    void hideBottomBar() {
+    private void showBottomBar() {
         if (!isBottomBarShowing()) {
-            AniUtils.animateBottomBar(mBottomBar, false);
-        }
-    }
-
-    void showBottomBar() {
-        if (isBottomBarShowing()) {
             AniUtils.animateBottomBar(mBottomBar, true);
         }
     }
 
-    boolean isBottomBarShowing() {
+    private void hideBottomBar() {
+        if (isBottomBarShowing()) {
+            AniUtils.animateBottomBar(mBottomBar, false);
+        }
+    }
+
+    private boolean isBottomBarShowing() {
         return mBottomBar.getVisibility() == View.VISIBLE;
     }
 
@@ -206,7 +206,6 @@ public class PhotoChooserFragment extends Fragment {
 
     private void showPreview(Uri imageUri) {
         mRecycler.setEnabled(false);
-        hideBottomBar();
 
         ImageView imgPreview = (ImageView) mPreviewFrame.findViewById(R.id.image_preview);
         imgPreview.setImageURI(imageUri);
@@ -230,7 +229,6 @@ public class PhotoChooserFragment extends Fragment {
 
     public void hidePreview() {
         mRecycler.setEnabled(true);
-        showBottomBar();
         if (isPreviewShowing()) {
             AniUtils.scaleOut(mPreviewFrame, AniUtils.Duration.SHORT);
         }
