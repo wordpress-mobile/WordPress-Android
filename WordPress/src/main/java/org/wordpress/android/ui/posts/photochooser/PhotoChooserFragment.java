@@ -16,12 +16,15 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
 
+import java.util.ArrayList;
+
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class PhotoChooserFragment extends Fragment {
 
     private static final int NUM_COLUMNS = 3;
     private static final String KEY_MULTI_SELECT_ENABLED = "multi_select_enabled";
+    private static final String KEY_SELECTED_IMAGE_LIST = "selected_image_list";
 
     public enum PhotoChooserIcon {
         ANDROID_CAMERA,
@@ -52,6 +55,7 @@ public class PhotoChooserFragment extends Fragment {
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(KEY_MULTI_SELECT_ENABLED)) {
                 getAdapter().setMultiSelectEnabled(true);
+                restoreSelectedImages(savedInstanceState);
             }
         }
     }
@@ -59,7 +63,34 @@ public class PhotoChooserFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_MULTI_SELECT_ENABLED, isMultiSelectEnabled());
+        if (isMultiSelectEnabled()) {
+            outState.putBoolean(KEY_MULTI_SELECT_ENABLED, true);
+            saveSelectedImages(outState);
+        }
+    }
+
+    private void restoreSelectedImages(Bundle savedInstanceState) {
+        if (!savedInstanceState.containsKey(KEY_SELECTED_IMAGE_LIST)) return;
+
+        ArrayList<String> strings = savedInstanceState.getStringArrayList(KEY_SELECTED_IMAGE_LIST);
+        if (strings == null || strings.size() == 0) return;
+
+        ArrayList<Uri> uriList = new ArrayList<>();
+        for (String stringUri: strings) {
+            uriList.add(Uri.parse(stringUri));
+        }
+        getAdapter().setSelectedImageURIs(uriList);
+    }
+
+    private void saveSelectedImages(Bundle outState) {
+        ArrayList<Uri> uriList = getAdapter().getSelectedImageURIs();
+        if (uriList.size() == 0) return;
+
+        ArrayList<String> stringUris = new ArrayList<>();
+        for (Uri uri: uriList) {
+            stringUris.add(uri.toString());
+        }
+        outState.putStringArrayList(KEY_SELECTED_IMAGE_LIST, stringUris);
     }
 
     @Override

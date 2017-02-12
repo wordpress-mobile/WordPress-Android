@@ -168,6 +168,40 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    ArrayList<Uri> getSelectedImageURIs() {
+        ArrayList<Uri> uriList = new ArrayList<>();
+        for (PhotoChooserItem item: mPhotoList) {
+            if (item.isSelected) {
+                uriList.add(item.imageUri);
+            }
+        }
+        return uriList;
+    }
+
+    void setSelectedImageURIs(ArrayList<Uri> uriList) {
+        boolean anyChanged = false;
+
+        // first clear any existing selection
+        for (PhotoChooserItem item: mPhotoList) {
+            if (item.isSelected) {
+                item.isSelected = false;
+                anyChanged = true;
+            }
+        }
+
+        // then select the passed images
+        for (Uri imageUri: uriList) {
+            int photoIndex = indexOfImageUri(imageUri);
+            if (photoIndex > -1) {
+                mPhotoList.get(photoIndex).isSelected = true;
+                anyChanged = true;
+            }
+        }
+        if (anyChanged) {
+            notifyDataSetChanged();
+        }
+    }
+
     private int indexOfImageUri(Uri imageUri) {
         for (int i = 0; i < mPhotoList.size(); i++) {
             if (mPhotoList.get(i).imageUri.equals(imageUri)) {
