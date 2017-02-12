@@ -16,6 +16,8 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 public class PhotoChooserFragment extends Fragment {
 
     private static final int NUM_COLUMNS = 5;
@@ -82,17 +84,7 @@ public class PhotoChooserFragment extends Fragment {
 
         @Override
         public void onPhotoDoubleTapped(Uri imageUri) {
-            ImageView imgPreview = (ImageView) mPreviewFrame.findViewById(R.id.image_preview);
-            imgPreview.setImageURI(imageUri);
-
-            AniUtils.scaleIn(mPreviewFrame, AniUtils.Duration.SHORT);
-
-            imgPreview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AniUtils.scaleOut(mPreviewFrame, AniUtils.Duration.SHORT);
-                }
-            });
+            showPreview(imageUri);
         }
 
         @Override
@@ -114,6 +106,40 @@ public class PhotoChooserFragment extends Fragment {
             }
         }
     };
+
+    private void showPreview(Uri imageUri) {
+        mRecycler.setEnabled(false);
+
+        ImageView imgPreview = (ImageView) mPreviewFrame.findViewById(R.id.image_preview);
+        imgPreview.setImageURI(imageUri);
+
+        AniUtils.scaleIn(mPreviewFrame, AniUtils.Duration.SHORT);
+
+        PhotoViewAttacher attacher = new PhotoViewAttacher(imgPreview);
+        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float v, float v2) {
+                hidePreview();
+            }
+        });
+        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                hidePreview();
+            }
+        });
+    }
+
+    private void hidePreview() {
+        mRecycler.setEnabled(true);
+        if (isPreviewShowing()) {
+            AniUtils.scaleOut(mPreviewFrame, AniUtils.Duration.SHORT);
+        }
+    }
+
+    private boolean isPreviewShowing() {
+        return mPreviewFrame.getVisibility() == View.VISIBLE;
+    }
 
     private static int getPhotoChooserImageWidth(Context context) {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
