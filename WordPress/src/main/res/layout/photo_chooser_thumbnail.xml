@@ -19,7 +19,9 @@
         android:id="@+id/image_checkmark"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
         android:background="@drawable/shape_oval_blue"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_check_white_24dp"
@@ -31,6 +33,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/photo_chooser_selected_background"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

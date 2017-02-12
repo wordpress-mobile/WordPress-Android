@@ -7,6 +7,4 @@
         android:width="2dp"
         android:color="@color/blue_medium" />
 
-    <solid android:color="@color/translucent_grey_lighten_30" />
-
 </shape>

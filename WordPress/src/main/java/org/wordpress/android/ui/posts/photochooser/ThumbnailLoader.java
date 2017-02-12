@@ -26,7 +26,7 @@ class ThumbnailLoader {
     ThumbnailLoader(Context context) {
         mContext = context;
         int numCores = Runtime.getRuntime().availableProcessors();
-        int maxThreads = numCores > 1 ? (int) (numCores / 2) : 1;
+        int maxThreads = numCores > 1 ? numCores / 2 : 1;
         mExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(maxThreads);
         mExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
         mHandler = new Handler(Looper.getMainLooper());
@@ -47,11 +47,11 @@ class ThumbnailLoader {
         private Bitmap mBitmap;
 
         PhotoLoaderRunnable(ImageView imageView, long imageId) {
-            imageView.setImageResource(R.drawable.photo_chooser_item_background);
             mWeakImageView = new WeakReference<>(imageView);
             mImageId = imageId;
             mTag = Long.toString(mImageId);
             imageView.setTag(mTag);
+            imageView.setImageResource(R.drawable.photo_chooser_item_background);
         }
 
         private boolean isImageViewValid() {
@@ -79,10 +79,10 @@ class ThumbnailLoader {
                     if (mBitmap != null && isImageViewValid()) {
                         // load the image then quickly fade it in
                         mWeakImageView.get().setImageBitmap(mBitmap);
-                        ObjectAnimator alpha = ObjectAnimator.ofFloat(
-                                mWeakImageView.get(), View.ALPHA, 0.25f, 1f);
-                        alpha.setDuration(FADE_TRANSITION);
-                        alpha.start();
+                            ObjectAnimator alpha = ObjectAnimator.ofFloat(
+                                    mWeakImageView.get(), View.ALPHA, 0.25f, 1f);
+                            alpha.setDuration(FADE_TRANSITION);
+                            alpha.start();
                     }
                 }
             });
