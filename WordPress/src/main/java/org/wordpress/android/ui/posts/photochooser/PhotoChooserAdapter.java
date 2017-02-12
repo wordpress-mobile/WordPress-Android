@@ -33,7 +33,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private boolean mIsMultiSelectEnabled;
 
     private final ThumbnailLoader mThumbnailLoader;
-    private final PhotoChooserFragment.OnPhotoChosenListener mListener;
+    private final PhotoChooserFragment.OnPhotoChooserListener mListener;
     private final ArrayList<PhotoChooserItem> mPhotoList = new ArrayList<>();
 
     private static final int VT_PHOTO   = 0;
@@ -47,7 +47,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public PhotoChooserAdapter(Context context,
                                int imageWidth,
                                int imageHeight,
-                               PhotoChooserFragment.OnPhotoChosenListener listener) {
+                               PhotoChooserFragment.OnPhotoChooserListener listener) {
         super();
         mContext = context;
         mListener = listener;
@@ -200,6 +200,16 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (anyChanged) {
             notifyDataSetChanged();
         }
+    }
+
+    int getNumSelected() {
+        int count = 0;
+        for (PhotoChooserItem item: mPhotoList) {
+            if (item.isSelected) {
+                count++;
+            }
+        }
+        return count;
     }
 
     private int indexOfImageUri(Uri imageUri) {

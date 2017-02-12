@@ -4,9 +4,14 @@ import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,7 +37,7 @@ public class PhotoChooserFragment extends Fragment {
         WP_MEDIA
     }
 
-    public interface OnPhotoChosenListener {
+    public interface OnPhotoChooserListener {
         void onPhotoTapped(Uri imageUri);
         void onPhotoDoubleTapped(Uri imageUri);
         void onPhotoLongPressed(Uri imageUri);
@@ -41,6 +46,7 @@ public class PhotoChooserFragment extends Fragment {
 
     private RecyclerView mRecycler;
     private View mPreviewFrame;
+    private ActionMode mActionMode;
 
     public static PhotoChooserFragment newInstance() {
         Bundle args = new Bundle();
@@ -115,11 +121,12 @@ public class PhotoChooserFragment extends Fragment {
      *   - double tap previews the photo
      *   - long press enables multi-select
      */
-    private final OnPhotoChosenListener mListener = new OnPhotoChosenListener() {
+    private final OnPhotoChooserListener mListener = new OnPhotoChooserListener() {
         @Override
         public void onPhotoTapped(Uri imageUri) {
             if (isMultiSelectEnabled()) {
                 getAdapter().togglePhotoSelection(imageUri);
+                updateActionModeTitle();
             } else if (getActivity() instanceof EditPostActivity) {
                 EditPostActivity activity = (EditPostActivity) getActivity();
                 activity.addMedia(imageUri);
@@ -130,8 +137,7 @@ public class PhotoChooserFragment extends Fragment {
         @Override
         public void onPhotoLongPressed(Uri imageUri) {
             if (!isMultiSelectEnabled()) {
-                getAdapter().setMultiSelectEnabled(true);
-                getAdapter().togglePhotoSelection(imageUri);
+                enableMultiSelect(imageUri);
             }
         }
 
@@ -198,6 +204,13 @@ public class PhotoChooserFragment extends Fragment {
         return mAdapter != null && mAdapter.isMultiSelectEnabled();
     }
 
+    private void enableMultiSelect(Uri imageUri) {
+        getAdapter().setMultiSelectEnabled(true);
+        getAdapter().togglePhotoSelection(imageUri);
+        ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
+        updateActionModeTitle();
+    }
+
     private static int getPhotoChooserImageWidth(Context context) {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         return displayWidth / NUM_COLUMNS;
@@ -222,5 +235,66 @@ public class PhotoChooserFragment extends Fragment {
     private void loadDevicePhotos() {
         mRecycler.setAdapter(getAdapter());
         getAdapter().loadDevicePhotos();
+    }
+
+    /*
+     * inserts the passed list of images into the post and closes the photo chooser
+     */
+    private void insertPhotos(ArrayList<Uri> uriList) {
+        if (!(getActivity() instanceof EditPostActivity)) return;
+
+        EditPostActivity activity = (EditPostActivity) getActivity();
+        for (Uri uri: uriList) {
+            activity.addMedia(uri);
+        }
+
+        activity.hidePhotoChooser();
+        finishActionMode();
+    }
+
+    private void finishActionMode() {
+        if (mActionMode != null) {
+            mActionMode.finish();
+        }
+    }
+
+    private void updateActionModeTitle() {
+        if (mActionMode == null) return;
+
+        int numSelected = getAdapter().getNumSelected();
+        String title = String.format(getString(R.string.cab_selected), numSelected);
+        mActionMode.setTitle(title);
+    }
+
+    private final class ActionModeCallback implements ActionMode.Callback {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            mActionMode = actionMode;
+            MenuInflater inflater = actionMode.getMenuInflater();
+            inflater.inflate(R.menu.photo_chooser_action_mode, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.mnu_confirm_selection) {
+                ArrayList<Uri> uriList = getAdapter().getSelectedImageURIs();
+                insertPhotos(uriList);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            getAdapter().setMultiSelectEnabled(false);
+            mActionMode = null;
+        }
     }
 }
