@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.PhotoChooserIcon;
+import org.wordpress.android.util.AniUtils;
 
 import java.util.ArrayList;
 
@@ -131,7 +132,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             PhotoChooserItem item = getPhotoItemAtPosition(position);
             PhotoViewHolder photoHolder = (PhotoViewHolder) holder;
             photoHolder.selectedFrame.setVisibility(item.isSelected ? View.VISIBLE : View.GONE);
-            mThumbnailLoader.loadThumbnail(photoHolder.imageView, item._id);
+            photoHolder.imgCheckmark.setVisibility(item.isSelected ? View.VISIBLE : View.GONE);
+            mThumbnailLoader.loadThumbnail(photoHolder.imgPhoto, item._id);
         }
     }
 
@@ -166,6 +168,13 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int adapterIndex = photoIndex + NUM_NON_PHOTO_ITEMS;
             notifyItemChanged(adapterIndex);
         }
+    }
+
+    private void toggleCheckmark(PhotoViewHolder holder, int adapterPosition) {
+        int photoIndex = adapterPosition - NUM_NON_PHOTO_ITEMS;
+        boolean isSelected = mPhotoList.get(photoIndex).isSelected;
+        AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
+        holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
     }
 
     ArrayList<Uri> getSelectedImageURIs() {
@@ -225,20 +234,23 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * ViewHolder containing a device photo
      */
     class PhotoViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView imageView;
+        private final ImageView imgPhoto;
         private final View selectedFrame;
+        private final ImageView imgCheckmark;
         private final GestureDetector detector;
 
         public PhotoViewHolder(View view) {
             super(view);
 
+            imgPhoto = (ImageView) view.findViewById(R.id.image_photo);
             selectedFrame = view.findViewById(R.id.selected_frame);
+            imgCheckmark = (ImageView) view.findViewById(R.id.image_checkmark);
+
             selectedFrame.getLayoutParams().width = mImageWidth;
             selectedFrame.getLayoutParams().height = mImageHeight;
 
-            imageView = (ImageView) view.findViewById(R.id.image_photo);
-            imageView.getLayoutParams().width = mImageWidth;
-            imageView.getLayoutParams().height = mImageHeight;
+            imgPhoto.getLayoutParams().width = mImageWidth;
+            imgPhoto.getLayoutParams().height = mImageHeight;
 
             detector = new GestureDetector(view.getContext(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
@@ -246,6 +258,9 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     if (mListener != null) {
                         Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
                         mListener.onPhotoTapped(imageUri);
+                    }
+                    if (isMultiSelectEnabled()) {
+                        toggleCheckmark(PhotoViewHolder.this, getAdapterPosition());
                     }
                     return true;
                 }
@@ -266,7 +281,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
 
-            imageView.setOnTouchListener(new View.OnTouchListener() {
+            imgPhoto.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     detector.onTouchEvent(event);

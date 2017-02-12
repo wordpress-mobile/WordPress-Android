@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.photochooser;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +44,7 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     private RecyclerView mRecycler;
+    private PhotoChooserAdapter mAdapter;
     private View mPreviewFrame;
     private ActionMode mActionMode;
 
@@ -211,27 +211,20 @@ public class PhotoChooserFragment extends Fragment {
         updateActionModeTitle();
     }
 
-    private static int getPhotoChooserImageWidth(Context context) {
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        return displayWidth / NUM_COLUMNS;
-    }
-
-    private static int getPhotoChooserImageHeight(Context context) {
-        int imageWidth = getPhotoChooserImageWidth(context);
-        return (int) (imageWidth * 0.75f);
-    }
-
-    private PhotoChooserAdapter mAdapter;
     private PhotoChooserAdapter getAdapter() {
         if (mAdapter == null) {
-            int imageWidth = getPhotoChooserImageWidth(getActivity());
-            int imageHeight = getPhotoChooserImageHeight(getActivity());
+            int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+            int imageWidth = displayWidth / NUM_COLUMNS;
+            int imageHeight = (int) (imageWidth * 0.75f);
             mAdapter = new PhotoChooserAdapter(
                     getActivity(), imageWidth, imageHeight, mListener);
         }
         return mAdapter;
     }
 
+    /*
+     * populates the adapter with photos stored on the device
+     */
     private void loadDevicePhotos() {
         mRecycler.setAdapter(getAdapter());
         getAdapter().loadDevicePhotos();
