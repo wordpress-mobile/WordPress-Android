@@ -54,6 +54,7 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mListener = listener;
         mImageWidth = imageWidth;
         mImageHeight = imageHeight;
+        setHasStableIds(true);
         mThumbnailLoader = new ThumbnailLoader(context);
     }
 
@@ -72,7 +73,12 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public long getItemId(int position) {
-        return position;
+        int type = getItemViewType(position);
+        if (type == VT_PHOTO) {
+            return getPhotoItemAtPosition(position)._id;
+        } else {
+            return type;
+        }
     }
 
     @Override
