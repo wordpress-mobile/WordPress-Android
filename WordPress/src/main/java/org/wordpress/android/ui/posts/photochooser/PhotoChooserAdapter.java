@@ -127,9 +127,15 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * returns the photo item in the adapter at the passed position
      */
     private PhotoChooserItem getPhotoItemAtPosition(int adapterPosition) {
-        // take initial VT_CAMERA and VT_PICKER items into account
-        int photoPosition = adapterPosition - NUM_NON_PHOTO_ITEMS;
-        return mPhotoList.get(photoPosition);
+        return mPhotoList.get(photoPositionFromAdapterPosition(adapterPosition));
+    }
+
+    private int photoPositionFromAdapterPosition(int adapterPosition) {
+        return adapterPosition - NUM_NON_PHOTO_ITEMS;
+    }
+
+    private int adapterPositionFromPhotoPosition(int photoPosition) {
+        return photoPosition + NUM_NON_PHOTO_ITEMS;
     }
 
     @Override
@@ -171,13 +177,12 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         int photoIndex = indexOfImageUri(imageUri);
         if (photoIndex > -1) {
             mPhotoList.get(photoIndex).isSelected = !mPhotoList.get(photoIndex).isSelected;
-            int adapterIndex = photoIndex + NUM_NON_PHOTO_ITEMS;
-            notifyItemChanged(adapterIndex);
+            notifyItemChanged(adapterPositionFromPhotoPosition(photoIndex));
         }
     }
 
     private void toggleCheckmark(PhotoViewHolder holder, int adapterPosition) {
-        int photoIndex = adapterPosition - NUM_NON_PHOTO_ITEMS;
+        int photoIndex = photoPositionFromAdapterPosition(adapterPosition);
         boolean isSelected = mPhotoList.get(photoIndex).isSelected;
         AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
         holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
@@ -219,9 +224,11 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     int getNumSelected() {
         int count = 0;
-        for (PhotoChooserItem item: mPhotoList) {
-            if (item.isSelected) {
-                count++;
+        if (mIsMultiSelectEnabled) {
+            for (PhotoChooserItem item : mPhotoList) {
+                if (item.isSelected) {
+                    count++;
+                }
             }
         }
         return count;
@@ -316,7 +323,8 @@ public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     imgIcon.setImageResource(R.drawable.ic_collections_48px);
                     break;
                 case WP_MEDIA:
-                    // TODO: need small black WP media icon
+                    // TODO: need small black WP media icon - right now we're tinting the imageView
+                    // and making it a fixed size to achieve this
                     imgIcon.setImageResource(R.drawable.nux_icon_wp);
                     break;
             }

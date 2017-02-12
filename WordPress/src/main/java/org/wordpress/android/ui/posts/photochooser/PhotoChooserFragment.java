@@ -125,8 +125,7 @@ public class PhotoChooserFragment extends Fragment {
         @Override
         public void onPhotoTapped(Uri imageUri) {
             if (isMultiSelectEnabled()) {
-                getAdapter().togglePhotoSelection(imageUri);
-                updateActionModeTitle();
+                togglePhotoSelection(imageUri);
             } else if (getActivity() instanceof EditPostActivity) {
                 EditPostActivity activity = (EditPostActivity) getActivity();
                 activity.addMedia(imageUri);
@@ -136,7 +135,9 @@ public class PhotoChooserFragment extends Fragment {
 
         @Override
         public void onPhotoLongPressed(Uri imageUri) {
-            if (!isMultiSelectEnabled()) {
+            if (isMultiSelectEnabled()) {
+                togglePhotoSelection(imageUri);
+            } else {
                 enableMultiSelect(imageUri);
             }
         }
@@ -209,6 +210,14 @@ public class PhotoChooserFragment extends Fragment {
         getAdapter().togglePhotoSelection(imageUri);
         ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
         updateActionModeTitle();
+    }
+
+    private void togglePhotoSelection(Uri imageUri) {
+        getAdapter().togglePhotoSelection(imageUri);
+        updateActionModeTitle();
+        if (getAdapter().getNumSelected() == 0) {
+            finishActionMode();
+        }
     }
 
     private PhotoChooserAdapter getAdapter() {
