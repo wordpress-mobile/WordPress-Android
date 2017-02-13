@@ -376,7 +376,7 @@ public class AppPrefs {
     }
 
     public static boolean isAztecEditorEnabled() {
-        return isAztecEditorAvailable() && getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
+        return isAztecEditorAvailable() && getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, true);
     }
 
     public static void setAztecEditorAvailable(boolean aztecEditorAvailable) {
@@ -387,7 +387,7 @@ public class AppPrefs {
     }
 
     public static boolean isAztecEditorAvailable() {
-        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, BuildConfig.AZTEC_EDITOR_AVAILABLE);
+        return BuildConfig.AZTEC_EDITOR_AVAILABLE || getBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, false);
     }
 
     // Visual Editor
@@ -404,11 +404,11 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorAvailable() {
-        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
+        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, true);
     }
 
     public static boolean isVisualEditorEnabled() {
-        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, true);
+        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
 
     public static boolean isVisualEditorPromoRequired() {
