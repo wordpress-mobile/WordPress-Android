@@ -4,7 +4,7 @@
     android:shape="rectangle">
 
     <stroke
-        android:width="@dimen/photo_chooser_item_padding"
+        android:width="@dimen/photo_chooser_selected_item_padding"
         android:color="@color/white" />
     <solid android:color="@color/translucent_grey_dark" />
 

@@ -18,7 +18,7 @@ import org.wordpress.android.util.AniUtils;
 
 import java.util.ArrayList;
 
-public class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class PhotoChooserItem {
         private long _id;
