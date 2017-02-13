@@ -86,7 +86,6 @@
                 <org.wordpress.aztec.source.SourceViewEditText
                     android:id="@+id/source"
                     android:gravity="top|start"
-                    android:hint="@string/source_hint"
                     android:inputType="textNoSuggestions|textMultiLine"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"

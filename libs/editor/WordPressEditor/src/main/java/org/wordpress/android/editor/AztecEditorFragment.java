@@ -123,6 +123,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         content = (AztecText)view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
+        source.setHint("<p>" + getString(R.string.edit_hint) + "</p>");
+
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         formattingToolbar.setEditor(content, source);
         formattingToolbar.setToolbarListener(this);
