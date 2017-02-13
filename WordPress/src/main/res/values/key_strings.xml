@@ -166,13 +166,13 @@
     </string-array>
 
     <!-- App Settings - Editor -->
-    <string-array name="editor_values">
+    <string-array name="editor_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>
 
-    <string-array name="editor_values_without_aztec">
+    <string-array name="editor_values_without_aztec" translatable="false">
         <item>0</item>
         <item>1</item>
     </string-array>
