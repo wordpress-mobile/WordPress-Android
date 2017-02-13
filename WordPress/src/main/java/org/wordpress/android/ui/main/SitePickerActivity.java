@@ -50,6 +50,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.Debouncer;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -283,6 +284,7 @@ public class SitePickerActivity extends AppCompatActivity
         boolean skippedCurrentSite = false;
         String currentSiteName = null;
         SiteList hiddenSites = getAdapter().getHiddenSites();
+        List<SiteModel> siteList = new ArrayList<>();
         for (SiteRecord siteRecord : changeSet) {
             SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.localId);
             if (hiddenSites.contains(siteRecord)) {
@@ -299,7 +301,10 @@ public class SitePickerActivity extends AppCompatActivity
             }
             // Save the site
             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
+            siteList.add(siteModel);
         }
+
+        updateVisibilityOfSitesOnRemote(siteList);
 
         // let user know the current site wasn't hidden
         if (skippedCurrentSite) {
