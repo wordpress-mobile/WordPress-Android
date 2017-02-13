@@ -5,7 +5,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -432,7 +431,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         int containerHeight;
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         if (DisplayUtils.isLandscape(this)) {
-            containerHeight = (int) (displayHeight * 0.2f);
+            containerHeight = (int) (displayHeight * 0.25f);
         } else {
             containerHeight = (int) (displayHeight * 0.5f);
         }
@@ -440,13 +439,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
         mPhotoChooserContainer.getLayoutParams().height = containerHeight;
 
-        FragmentManager fm = getFragmentManager();
-        fm.executePendingTransactions();
-
         mPhotoChooserFragment = PhotoChooserFragment.newInstance();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.photo_fragment_container, mPhotoChooserFragment, PHOTO_CHOOSER_TAG);
-        ft.commit();
+
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.photo_fragment_container, mPhotoChooserFragment, PHOTO_CHOOSER_TAG)
+                .commit();
     }
 
     void showPhotoChooser() {
@@ -464,6 +462,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     public void hidePhotoChooser() {
         if (isPhotoChooserShowing()) {
+            mPhotoChooserFragment.hidePreview();
+            mPhotoChooserFragment.finishActionMode();
             AniUtils.animateBottomBar(mPhotoChooserContainer, false);
         }
     }

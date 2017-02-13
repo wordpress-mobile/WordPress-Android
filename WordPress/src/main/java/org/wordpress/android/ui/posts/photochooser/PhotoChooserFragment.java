@@ -138,21 +138,28 @@ public class PhotoChooserFragment extends Fragment {
         return view;
     }
 
+    /*
+     * returns the EditPostActivity that hosts this fragment - obviously we're assuming
+     * this fragment will always be hosted in an EditPostActivity, if this assumption
+     * changes then we'll need to change this fragment accordingly
+     */
+    private EditPostActivity getEditPostActivity() {
+        return (EditPostActivity) getActivity();
+    }
+
     private void handleIconClicked(PhotoChooserIcon icon) {
-        if (getActivity() instanceof EditPostActivity) {
-            EditPostActivity activity = (EditPostActivity) getActivity();
-            activity.hidePhotoChooser();
-            switch (icon) {
-                case ANDROID_CAMERA:
-                    activity.launchCamera();
-                    break;
-                case ANDROID_PICKER:
-                    activity.launchPictureLibrary();
-                    break;
-                case WP_MEDIA:
-                    activity.startMediaGalleryAddActivity();
-                    break;
-            }
+        EditPostActivity activity = getEditPostActivity();
+        activity.hidePhotoChooser();
+        switch (icon) {
+            case ANDROID_CAMERA:
+                activity.launchCamera();
+                break;
+            case ANDROID_PICKER:
+                activity.launchPictureLibrary();
+                break;
+            case WP_MEDIA:
+                activity.startMediaGalleryAddActivity();
+                break;
         }
     }
 
@@ -182,8 +189,8 @@ public class PhotoChooserFragment extends Fragment {
         public void onPhotoTapped(Uri imageUri) {
             if (isMultiSelectEnabled()) {
                 togglePhotoSelection(imageUri);
-            } else if (getActivity() instanceof EditPostActivity) {
-                EditPostActivity activity = (EditPostActivity) getActivity();
+            } else {
+                EditPostActivity activity = getEditPostActivity();
                 activity.addMedia(imageUri);
                 activity.hidePhotoChooser();
             }
@@ -280,18 +287,15 @@ public class PhotoChooserFragment extends Fragment {
      * inserts the passed list of images into the post and closes the photo chooser
      */
     private void insertPhotos(ArrayList<Uri> uriList) {
-        if (!(getActivity() instanceof EditPostActivity)) return;
-
-        EditPostActivity activity = (EditPostActivity) getActivity();
+        EditPostActivity activity = getEditPostActivity();
         for (Uri uri: uriList) {
             activity.addMedia(uri);
         }
 
         activity.hidePhotoChooser();
-        finishActionMode();
     }
 
-    private void finishActionMode() {
+    public void finishActionMode() {
         if (mActionMode != null) {
             mActionMode.finish();
         }

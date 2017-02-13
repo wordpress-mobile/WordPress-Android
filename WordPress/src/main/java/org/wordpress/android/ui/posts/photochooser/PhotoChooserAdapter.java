@@ -197,6 +197,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             AppLog.w(AppLog.T.POSTS, "photo chooser > invalid position in animateSelectionCount");
             return;
         }
+
         boolean isSelected = mSelectedUris.contains(mPhotoList.get(position).imageUri);
         AniUtils.startAnimation(holder.txtSelectionCount,
                 isSelected ? R.anim.cab_select : R.anim.cab_deselect);
@@ -264,16 +265,18 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
+                    int position = getAdapterPosition();
                     if (mListener != null) {
-                        Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
+                        Uri imageUri = getPhotoItemAtPosition(position).imageUri;
                         mListener.onPhotoDoubleTapped(imageUri);
                     }
                     return true;
                 }
                 @Override
                 public void onLongPress(MotionEvent e) {
+                    int position = getAdapterPosition();
                     if (mListener != null) {
-                        Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
+                        Uri imageUri = getPhotoItemAtPosition(position).imageUri;
                         mListener.onPhotoLongPressed(imageUri);
                     }
                 }
