@@ -29,23 +29,28 @@ public class AztecEditorOptionsReceiver extends AppCompatActivity {
             if ("1".equals(available)) {
                 AppLog.i(T.EDITOR, "Aztec Editor is now Available");
                 AppPrefs.setAztecEditorAvailable(true);
-                ToastUtils.showToast(this, R.string.aztec_editor_enabled);
             }
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
             if ("1".equals(enabled)) {
                 AppLog.i(T.EDITOR, "Aztec Editor Enabled");
+                ToastUtils.showToast(this, R.string.aztec_editor_enabled);
+
                 AppPrefs.setAztecEditorEnabled(true);
                 AppPrefs.setVisualEditorEnabled(false);
 
                 prefs.edit().putString(getString(R.string.pref_key_editor_type), "2").apply();
             } else if ("0".equals(enabled)) {
                 AppLog.i(T.EDITOR, "Aztec Editor Disabled");
+                ToastUtils.showToast(this, R.string.aztec_editor_disabled);
+
                 AppPrefs.setAztecEditorEnabled(false);
                 AppPrefs.setVisualEditorEnabled(true);
 
-                prefs.edit().putString(getString(R.string.pref_key_editor_type), "0").apply();
+                prefs.edit().putString(getString(R.string.pref_key_editor_type), "1").apply();
+            } else {
+                ToastUtils.showToast(this, R.string.aztec_editor_available);
             }
         }
 
