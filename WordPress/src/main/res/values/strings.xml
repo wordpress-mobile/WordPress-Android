@@ -645,11 +645,21 @@
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
 
-    <string-array name="editor_entries">
-        <item>Aztec</item>
-        <item>Visual</item>
-        <item>Legacy</item>
+    <string name="preference_editor_legacy">Legacy</string>
+    <string name="preference_editor_visual">Visual</string>
+    <string name="preference_editor_aztec" translatable="false">Aztec</string>
+
+    <string-array name="editor_entries" translatable="false">
+        <item>@string/preference_editor_legacy</item>
+        <item>@string/preference_editor_visual</item>
+        <item>@string/preference_editor_aztec</item>
     </string-array>
+
+    <string-array name="editor_entries_without_aztec" translatable="false">
+        <item>@string/preference_editor_legacy</item>
+        <item>@string/preference_editor_visual</item>
+    </string-array>
+
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -948,6 +958,10 @@
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
+    <string name="visual_editor_disabled">Visual Editor disabled</string>
+    <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
+    <string name="aztec_editor_disabled" translatable="false">Aztec Editor disabled</string>
+    <string name="aztec_editor_available" translatable="false">Aztec Editor available</string>
     <string name="new_editor_promo_button_label">Great, thanks!</string>
     <string name="new_editor_promo_title">Brand new editor</string>
     <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual

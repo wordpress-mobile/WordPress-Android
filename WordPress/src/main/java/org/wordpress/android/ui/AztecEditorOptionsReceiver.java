@@ -1,8 +1,10 @@
 package org.wordpress.android.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.R;
@@ -11,7 +13,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
-public class VisualEditorOptionsReceiver extends AppCompatActivity {
+public class AztecEditorOptionsReceiver extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,20 +24,33 @@ public class VisualEditorOptionsReceiver extends AppCompatActivity {
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
             String available = uri.getQueryParameter("available");
             String enabled = uri.getQueryParameter("enabled");
+
             // Note: doesn't allow to deactivate visual editor
             if ("1".equals(available)) {
-                AppLog.i(T.EDITOR, "Visual Editor is now Available");
-                AppPrefs.setVisualEditorAvailable(true);
+                AppLog.i(T.EDITOR, "Aztec Editor is now Available");
+                AppPrefs.setAztecEditorAvailable(true);
             }
 
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
             if ("1".equals(enabled)) {
-                AppLog.i(T.EDITOR, "Visual Editor Enabled");
-                AppPrefs.setVisualEditorEnabled(true);
-                ToastUtils.showToast(this, R.string.visual_editor_enabled);
-            } else if ("0".equals(enabled)) {
-                AppLog.i(T.EDITOR, "Visual Editor Disabled");
+                AppLog.i(T.EDITOR, "Aztec Editor Enabled");
+                ToastUtils.showToast(this, R.string.aztec_editor_enabled);
+
+                AppPrefs.setAztecEditorEnabled(true);
                 AppPrefs.setVisualEditorEnabled(false);
-                ToastUtils.showToast(this, R.string.visual_editor_disabled);
+
+                prefs.edit().putString(getString(R.string.pref_key_editor_type), "2").apply();
+            } else if ("0".equals(enabled)) {
+                AppLog.i(T.EDITOR, "Aztec Editor Disabled");
+                ToastUtils.showToast(this, R.string.aztec_editor_disabled);
+
+                AppPrefs.setAztecEditorEnabled(false);
+                AppPrefs.setVisualEditorEnabled(true);
+
+                prefs.edit().putString(getString(R.string.pref_key_editor_type), "1").apply();
+            } else {
+                ToastUtils.showToast(this, R.string.aztec_editor_available);
             }
         }
 

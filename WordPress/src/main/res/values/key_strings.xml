@@ -172,6 +172,11 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="editor_values_without_aztec">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
     <!-- Used as values to a preference in Site Settings -->
     <string-array name="language_codes" translatable="false">
         <item>en_US</item>
