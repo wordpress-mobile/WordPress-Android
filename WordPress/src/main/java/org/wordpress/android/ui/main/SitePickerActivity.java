@@ -23,8 +23,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -40,6 +46,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.Debouncer;
@@ -305,6 +312,37 @@ public class SitePickerActivity extends AppCompatActivity
                     String.format(cantHideCurrentSite, currentSiteName),
                     ToastUtils.Duration.LONG);
         }
+    }
+
+    private void updateVisibilityOfSitesOnRemote(List<SiteModel> siteList) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONObject sites = new JSONObject();
+            for (SiteModel siteModel : siteList) {
+                JSONObject visible = new JSONObject();
+                visible.put("visible", siteModel.isVisible());
+                sites.put(Long.toString(siteModel.getSiteId()), visible);
+            }
+            jsonObject.put("sites", sites);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.API, "Could not build me/sites json object");
+        }
+
+        if (jsonObject.length() == 0) {
+            return;
+        }
+
+        WordPress.getRestClientUtilsV1_1().post("me/sites", jsonObject, null, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                AppLog.v(AppLog.T.API, "Site visibility successfully updated");
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.API, "An error occurred while updating site visibility: " + volleyError);
+            }
+        });
     }
 
     private void updateActionModeTitle() {
