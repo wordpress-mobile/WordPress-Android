@@ -280,30 +280,25 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void saveHiddenSites(Set<SiteRecord> changeSet) {
-        // TODO: FluxC: This is inefficient
-        // Mark all sites visible
-        List<SiteModel> sites = mSiteStore.getWPComAndJetpackSites();
-        for (SiteModel site : sites) {
-            site.setIsVisible(true);
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
-        }
-
-        // Update sites marked hidden in the adapter, but don't hide the current site
         boolean skippedCurrentSite = false;
         String currentSiteName = null;
         SiteList hiddenSites = getAdapter().getHiddenSites();
-        for (SiteRecord site : hiddenSites) {
-            if (site.localId == mCurrentLocalId) {
-                skippedCurrentSite = true;
-                currentSiteName = site.getBlogNameOrHomeURL();
-            } else {
-                SiteModel siteModel = mSiteStore.getSiteByLocalId(site.localId);
+        for (SiteRecord siteRecord : changeSet) {
+            SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.localId);
+            if (hiddenSites.contains(siteRecord)) {
+                if (siteRecord.localId == mCurrentLocalId) {
+                    skippedCurrentSite = true;
+                    currentSiteName = siteRecord.getBlogNameOrHomeURL();
+                    continue;
+                }
                 siteModel.setIsVisible(false);
-                // Save the site
-                mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
                 // Remove stats data for hidden sites
-                StatsTable.deleteStatsForBlog(this, site.localId);
+                StatsTable.deleteStatsForBlog(this, siteRecord.localId);
+            } else {
+                siteModel.setIsVisible(true);
             }
+            // Save the site
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
         }
 
         // let user know the current site wasn't hidden
