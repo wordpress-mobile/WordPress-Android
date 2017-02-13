@@ -315,6 +315,7 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void updateVisibilityOfSitesOnRemote(List<SiteModel> siteList) {
+        // Example json format for the request: {"sites":{"100001":{"visible":false}}}
         JSONObject jsonObject = new JSONObject();
         try {
             JSONObject sites = new JSONObject();
