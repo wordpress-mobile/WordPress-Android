@@ -20,6 +20,7 @@ class ThumbnailLoader {
     private final Context mContext;
     private final ThreadPoolExecutor mExecutor;
     private final Handler mHandler;
+    private boolean mIsFadeEnabled = true;
 
     private static final int FADE_TRANSITION = 250;
 
@@ -38,6 +39,19 @@ class ThumbnailLoader {
     }
 
     /*
+     * temporarily disables the fade animation - called when multiple items are changed
+     * to prevent unnecessary fade/flicker
+     */
+    void temporarilyDisableFade() {
+        mIsFadeEnabled = false;
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mIsFadeEnabled = true;
+            }
+        }, 500);
+    }
+    /*
      * task to load a device thumbnail and display it in an ImageView
      */
     class PhotoLoaderRunnable implements Runnable {
@@ -51,7 +65,9 @@ class ThumbnailLoader {
             mImageId = imageId;
             mTag = Long.toString(mImageId);
             imageView.setTag(mTag);
-            imageView.setImageResource(R.drawable.photo_chooser_item_background);
+            if (mIsFadeEnabled) {
+                imageView.setImageResource(R.drawable.photo_chooser_item_background);
+            }
         }
 
         private boolean isImageViewValid() {
@@ -77,12 +93,13 @@ class ThumbnailLoader {
                 @Override
                 public void run() {
                     if (mBitmap != null && isImageViewValid()) {
-                        // load the image then quickly fade it in
                         mWeakImageView.get().setImageBitmap(mBitmap);
+                        if (mIsFadeEnabled) {
                             ObjectAnimator alpha = ObjectAnimator.ofFloat(
                                     mWeakImageView.get(), View.ALPHA, 0.25f, 1f);
                             alpha.setDuration(FADE_TRANSITION);
                             alpha.start();
+                        }
                     }
                 }
             });

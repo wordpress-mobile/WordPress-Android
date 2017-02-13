@@ -12,9 +12,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.AniUtils;
 
 import java.util.ArrayList;
 
@@ -23,8 +23,20 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private class PhotoChooserItem {
         private long _id;
         private Uri imageUri;
-        private boolean isSelected;
     }
+
+    private class UriList extends ArrayList<Uri> {
+        private int indexOfUri(Uri imageUri) {
+            for (int i = 0; i < size(); i++) {
+                if (get(i).equals(imageUri)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+    }
+
+    private final UriList mSelectedUris = new UriList();
 
     private final Context mContext;
     private final int mImageWidth;
@@ -114,8 +126,17 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (holder instanceof PhotoViewHolder) {
             PhotoChooserItem item = getPhotoItemAtPosition(position);
             PhotoViewHolder photoHolder = (PhotoViewHolder) holder;
-            photoHolder.selectedFrame.setVisibility(item.isSelected ? View.VISIBLE : View.GONE);
-            photoHolder.imgCheckmark.setVisibility(item.isSelected ? View.VISIBLE : View.GONE);
+
+            int selectedIndex = mSelectedUris.indexOfUri(item.imageUri);
+            if (selectedIndex > -1) {
+                photoHolder.selectedFrame.setVisibility(View.VISIBLE);
+                photoHolder.txtSelectionCount.setVisibility(View.VISIBLE);
+                photoHolder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
+            } else {
+                photoHolder.selectedFrame.setVisibility(View.GONE);
+                photoHolder.txtSelectionCount.setVisibility(View.GONE);
+            }
+
             mThumbnailLoader.loadThumbnail(photoHolder.imgPhoto, item._id);
         }
     }
@@ -125,18 +146,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         mIsMultiSelectEnabled = enabled;
 
-        // clear existing selection when multi-select is disabled
-        if (!enabled) {
-            boolean anyChanged = false;
-            for (PhotoChooserItem item : mPhotoList) {
-                if (item.isSelected) {
-                    item.isSelected = false;
-                    anyChanged = true;
-                }
-            }
-            if (anyChanged) {
-                notifyDataSetChanged();
-            }
+        if (!enabled && getNumSelected() > 0) {
+            mSelectedUris.clear();
+            notifyDataSetChangedNoFade();
         }
     }
 
@@ -144,64 +156,40 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return mIsMultiSelectEnabled;
     }
 
-    void togglePhotoSelection(Uri imageUri) {
-        int photoIndex = indexOfImageUri(imageUri);
-        if (photoIndex > -1) {
-            mPhotoList.get(photoIndex).isSelected = !mPhotoList.get(photoIndex).isSelected;
-            notifyItemChanged(photoIndex);
-        }
+    /*
+     * calls notifyDataSetChanged() with the ThumbnailLoader image fade-in disabled - used to
+     * prevent unnecessary re-fade-in when changing existing items
+     */
+    private void notifyDataSetChangedNoFade() {
+        mThumbnailLoader.temporarilyDisableFade();
+        notifyDataSetChanged();
     }
 
-    private void toggleCheckmark(PhotoViewHolder holder, int position) {
-        boolean isSelected = mPhotoList.get(position).isSelected;
-        AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
-        holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+    void togglePhotoSelection(Uri imageUri) {
+        if (indexOfImageUri(imageUri) == -1) return;
+
+        int selectedIndex = mSelectedUris.indexOfUri(imageUri);
+        if (selectedIndex > -1) {
+            mSelectedUris.remove(selectedIndex);
+        } else {
+            mSelectedUris.add(imageUri);
+        }
+
+        notifyDataSetChangedNoFade();
     }
 
     ArrayList<Uri> getSelectedImageURIs() {
-        ArrayList<Uri> uriList = new ArrayList<>();
-        for (PhotoChooserItem item: mPhotoList) {
-            if (item.isSelected) {
-                uriList.add(item.imageUri);
-            }
-        }
-        return uriList;
+        return mSelectedUris;
     }
 
     void setSelectedImageURIs(ArrayList<Uri> uriList) {
-        boolean anyChanged = false;
-
-        // first clear any existing selection
-        for (PhotoChooserItem item: mPhotoList) {
-            if (item.isSelected) {
-                item.isSelected = false;
-                anyChanged = true;
-            }
-        }
-
-        // then select the passed images
-        for (Uri imageUri: uriList) {
-            int photoIndex = indexOfImageUri(imageUri);
-            if (photoIndex > -1) {
-                mPhotoList.get(photoIndex).isSelected = true;
-                anyChanged = true;
-            }
-        }
-        if (anyChanged) {
-            notifyDataSetChanged();
-        }
+        mSelectedUris.clear();
+        mSelectedUris.addAll(uriList);
+        notifyDataSetChangedNoFade();
     }
 
     int getNumSelected() {
-        int count = 0;
-        if (mIsMultiSelectEnabled) {
-            for (PhotoChooserItem item : mPhotoList) {
-                if (item.isSelected) {
-                    count++;
-                }
-            }
-        }
-        return count;
+        return mIsMultiSelectEnabled ? mSelectedUris.size() : 0;
     }
 
     private int indexOfImageUri(Uri imageUri) {
@@ -219,7 +207,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     class PhotoViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imgPhoto;
         private final View selectedFrame;
-        private final ImageView imgCheckmark;
+        private final TextView txtSelectionCount;
         private final GestureDetector detector;
 
         public PhotoViewHolder(View view) {
@@ -227,7 +215,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             imgPhoto = (ImageView) view.findViewById(R.id.image_photo);
             selectedFrame = view.findViewById(R.id.selected_frame);
-            imgCheckmark = (ImageView) view.findViewById(R.id.image_checkmark);
+            txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
 
             selectedFrame.getLayoutParams().width = mImageWidth;
             selectedFrame.getLayoutParams().height = mImageHeight;
@@ -241,9 +229,6 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     if (mListener != null) {
                         Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
                         mListener.onPhotoTapped(imageUri);
-                    }
-                    if (isMultiSelectEnabled()) {
-                        toggleCheckmark(PhotoViewHolder.this, getAdapterPosition());
                     }
                     return true;
                 }

@@ -25,16 +25,18 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/image_checkmark"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_selection_count"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_large"
         android:background="@drawable/shape_oval_blue"
+        android:gravity="center"
+        android:textColor="@color/white"
         android:visibility="gone"
-        app:srcCompat="@drawable/ic_check_white_24dp"
+        tools:text="5"
         tools:visibility="visible" />
 
 </RelativeLayout>
