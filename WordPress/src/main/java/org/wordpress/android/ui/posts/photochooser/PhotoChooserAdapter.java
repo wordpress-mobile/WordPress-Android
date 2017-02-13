@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
 
@@ -118,6 +120,10 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      * returns the photo item in the adapter at the passed position
      */
     private PhotoChooserItem getPhotoItemAtPosition(int position) {
+        if (!isValidPosition(position)) {
+            AppLog.w(AppLog.T.POSTS, "photo chooser > invalid position in getPhotoItemAtPosition");
+            return null;
+        }
         return mPhotoList.get(position);
     }
 
@@ -157,14 +163,15 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     /*
-     * calls notifyDataSetChanged() with the ThumbnailLoader image fade-in disabled - used to
-     * prevent unnecessary re-fade-in when changing existing items
+     * calls notifyDataSetChanged() with the ThumbnailLoader image fade disabled - used to
+     * prevent unnecessary flicker when changing existing items
      */
     private void notifyDataSetChangedNoFade() {
         mThumbnailLoader.temporarilyDisableFade();
         notifyDataSetChanged();
     }
 
+    // TODO: should there be a limit to the number of photos the user can select?
     void togglePhotoSelection(Uri imageUri) {
         if (indexOfImageUri(imageUri) == -1) return;
 
@@ -177,6 +184,25 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         notifyDataSetChangedNoFade();
     }
+
+    private boolean isValidPosition(int position) {
+        return position >= 0 && position < mPhotoList.size();
+    }
+
+    /*
+     * scales in/out the selection count depending on whether the item is selected
+     */
+    private void animateSelectionCount(PhotoViewHolder holder, int position) {
+        if (!isValidPosition(position)) {
+            AppLog.w(AppLog.T.POSTS, "photo chooser > invalid position in animateSelectionCount");
+            return;
+        }
+        boolean isSelected = mSelectedUris.contains(mPhotoList.get(position).imageUri);
+        AniUtils.startAnimation(holder.txtSelectionCount,
+                isSelected ? R.anim.cab_select : R.anim.cab_deselect);
+        holder.txtSelectionCount.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+    }
+
 
     ArrayList<Uri> getSelectedImageURIs() {
         return mSelectedUris;
@@ -226,9 +252,13 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             detector = new GestureDetector(view.getContext(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
+                    int position = getAdapterPosition();
                     if (mListener != null) {
-                        Uri imageUri = getPhotoItemAtPosition(getAdapterPosition()).imageUri;
+                        Uri imageUri = getPhotoItemAtPosition(position).imageUri;
                         mListener.onPhotoTapped(imageUri);
+                    }
+                    if (isMultiSelectEnabled()) {
+                        animateSelectionCount(PhotoViewHolder.this, position);
                     }
                     return true;
                 }
