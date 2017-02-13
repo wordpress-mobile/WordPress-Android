@@ -28,7 +28,6 @@ import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
@@ -51,7 +50,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.Debouncer;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -278,7 +279,7 @@ public class SitePickerActivity extends AppCompatActivity
         mAdapter.setOnSelectedCountChangedListener(this);
     }
 
-    private void saveHiddenSites() {
+    private void saveHiddenSites(Set<SiteRecord> changeSet) {
         // TODO: FluxC: This is inefficient
         // Mark all sites visible
         List<SiteModel> sites = mSiteStore.getWPComAndJetpackSites();
@@ -451,11 +452,13 @@ public class SitePickerActivity extends AppCompatActivity
 
     private final class ActionModeCallback implements ActionMode.Callback {
         private boolean mHasChanges;
+        private Set<SiteRecord> mChangeSet;
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
             mHasChanges = false;
+            mChangeSet = new HashSet<>();
             updateActionModeTitle();
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
@@ -482,11 +485,13 @@ public class SitePickerActivity extends AppCompatActivity
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             int itemId = menuItem.getItemId();
             if (itemId == R.id.menu_show) {
-                getAdapter().setVisibilityForSelectedSites(true);
+                Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(true);
+                mChangeSet.addAll(changeSet);
                 mHasChanges = true;
                 mActionMode.finish();
             } else if (itemId == R.id.menu_hide) {
-                getAdapter().setVisibilityForSelectedSites(false);
+                Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(false);
+                mChangeSet.addAll(changeSet);
                 mHasChanges = true;
                 mActionMode.finish();
             } else if (itemId == R.id.menu_select_all) {
@@ -500,7 +505,7 @@ public class SitePickerActivity extends AppCompatActivity
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
             if (mHasChanges) {
-                saveHiddenSites();
+                saveHiddenSites(mChangeSet);
             }
             getAdapter().setEnableEditMode(false);
             mActionMode = null;
