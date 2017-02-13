@@ -646,14 +646,14 @@
     <string name="preference_editor_type">Set editor type</string>
 
     <string-array name="editor_entries">
-        <item>Visual</item>
         <item>Legacy</item>
+        <item>Visual</item>
         <item>Aztec</item>
     </string-array>
 
     <string-array name="editor_entries_without_aztec">
-        <item>Visual</item>
         <item>Legacy</item>
+        <item>Visual</item>
     </string-array>
 
 
