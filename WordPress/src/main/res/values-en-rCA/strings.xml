@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-02 16:55:03+0000
+Translation-Revision-Date: 2017-02-08 16:26:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: en_CA
 -->
 <resources>
+	<string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
+	<string name="jetpack_stats_module_disabled_message">The Jetpack plugin is connected, but the Stats module is not active. Do you want to activate Stats?</string>
+	<string name="jetpack_info">Jetpack info</string>
 	<string name="reader_photo_by">Photo by %s</string>
 	<string name="reader_label_visit">Visit</string>
 	<string name="all_your_sites">All My Sites</string>
@@ -291,7 +294,7 @@ Language: en_CA
 	<string name="editor_page_title_placeholder">Page Title</string>
 	<string name="editor_post_title_placeholder">Post Title</string>
 	<string name="email_address">Email address</string>
-	<string name="preference_show_visual_editor">Show visual editor</string>
+	<string name="preference_editor_type">Show visual editor</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
 	<string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>

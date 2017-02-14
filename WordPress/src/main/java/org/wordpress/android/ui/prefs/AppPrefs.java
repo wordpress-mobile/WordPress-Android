@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -59,6 +60,9 @@ public class AppPrefs {
 
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
+
+        // aztec editor enabled
+        AZTEC_EDITOR_ENABLED,
 
         // visual editor enabled
         VISUAL_EDITOR_ENABLED,
@@ -125,6 +129,9 @@ public class AppPrefs {
 
         // Self-hosted sites migration to FluxC
         SELF_HOSTED_SITES_MIGRATED_TO_FLUXC,
+
+        // aztec editor available
+        AZTEC_EDITOR_AVAILABLE,
     }
 
     private static SharedPreferences prefs() {
@@ -383,6 +390,27 @@ public class AppPrefs {
         }
     }
 
+    // Aztec Editor
+    public static void setAztecEditorEnabled(boolean isEnabled) {
+        setBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
+        AnalyticsTracker.track(isEnabled ? Stat.EDITOR_AZTEC_TOGGLED_ON : Stat.EDITOR_AZTEC_TOGGLED_OFF);
+    }
+
+    public static boolean isAztecEditorEnabled() {
+        return isAztecEditorAvailable() && getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, true);
+    }
+
+    public static void setAztecEditorAvailable(boolean aztecEditorAvailable) {
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, aztecEditorAvailable);
+        if (aztecEditorAvailable) {
+            AnalyticsTracker.track(Stat.EDITOR_AZTEC_ENABLED);
+        }
+    }
+
+    public static boolean isAztecEditorAvailable() {
+        return BuildConfig.AZTEC_EDITOR_AVAILABLE || getBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, false);
+    }
+
     // Visual Editor
     public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
         setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
@@ -397,11 +425,11 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorAvailable() {
-        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
+        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, true);
     }
 
     public static boolean isVisualEditorEnabled() {
-        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, true);
+        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
 
     public static boolean isVisualEditorPromoRequired() {

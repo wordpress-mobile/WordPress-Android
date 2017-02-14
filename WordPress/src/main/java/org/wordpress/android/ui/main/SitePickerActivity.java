@@ -23,8 +23,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -40,11 +45,15 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.Debouncer;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -271,32 +280,31 @@ public class SitePickerActivity extends AppCompatActivity
         mAdapter.setOnSelectedCountChangedListener(this);
     }
 
-    private void saveHiddenSites() {
-        // TODO: FluxC: This is inefficient
-        // Mark all sites visible
-        List<SiteModel> sites = mSiteStore.getWPComAndJetpackSites();
-        for (SiteModel site : sites) {
-            site.setIsVisible(true);
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
-        }
-
-        // Update sites marked hidden in the adapter, but don't hide the current site
+    private void saveHiddenSites(Set<SiteRecord> changeSet) {
         boolean skippedCurrentSite = false;
         String currentSiteName = null;
         SiteList hiddenSites = getAdapter().getHiddenSites();
-        for (SiteRecord site : hiddenSites) {
-            if (site.localId == mCurrentLocalId) {
-                skippedCurrentSite = true;
-                currentSiteName = site.getBlogNameOrHomeURL();
-            } else {
-                SiteModel siteModel = mSiteStore.getSiteByLocalId(site.localId);
+        List<SiteModel> siteList = new ArrayList<>();
+        for (SiteRecord siteRecord : changeSet) {
+            SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.localId);
+            if (hiddenSites.contains(siteRecord)) {
+                if (siteRecord.localId == mCurrentLocalId) {
+                    skippedCurrentSite = true;
+                    currentSiteName = siteRecord.getBlogNameOrHomeURL();
+                    continue;
+                }
                 siteModel.setIsVisible(false);
-                // Save the site
-                mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
                 // Remove stats data for hidden sites
-                StatsTable.deleteStatsForBlog(this, site.localId);
+                StatsTable.deleteStatsForBlog(this, siteRecord.localId);
+            } else {
+                siteModel.setIsVisible(true);
             }
+            // Save the site
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
+            siteList.add(siteModel);
         }
+
+        updateVisibilityOfSitesOnRemote(siteList);
 
         // let user know the current site wasn't hidden
         if (skippedCurrentSite) {
@@ -305,6 +313,38 @@ public class SitePickerActivity extends AppCompatActivity
                     String.format(cantHideCurrentSite, currentSiteName),
                     ToastUtils.Duration.LONG);
         }
+    }
+
+    private void updateVisibilityOfSitesOnRemote(List<SiteModel> siteList) {
+        // Example json format for the request: {"sites":{"100001":{"visible":false}}}
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONObject sites = new JSONObject();
+            for (SiteModel siteModel : siteList) {
+                JSONObject visible = new JSONObject();
+                visible.put("visible", siteModel.isVisible());
+                sites.put(Long.toString(siteModel.getSiteId()), visible);
+            }
+            jsonObject.put("sites", sites);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.API, "Could not build me/sites json object");
+        }
+
+        if (jsonObject.length() == 0) {
+            return;
+        }
+
+        WordPress.getRestClientUtilsV1_1().post("me/sites", jsonObject, null, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                AppLog.v(AppLog.T.API, "Site visibility successfully updated");
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.API, "An error occurred while updating site visibility: " + volleyError);
+            }
+        });
     }
 
     private void updateActionModeTitle() {
@@ -412,11 +452,13 @@ public class SitePickerActivity extends AppCompatActivity
 
     private final class ActionModeCallback implements ActionMode.Callback {
         private boolean mHasChanges;
+        private Set<SiteRecord> mChangeSet;
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
             mHasChanges = false;
+            mChangeSet = new HashSet<>();
             updateActionModeTitle();
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
@@ -443,11 +485,13 @@ public class SitePickerActivity extends AppCompatActivity
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             int itemId = menuItem.getItemId();
             if (itemId == R.id.menu_show) {
-                getAdapter().setVisibilityForSelectedSites(true);
+                Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(true);
+                mChangeSet.addAll(changeSet);
                 mHasChanges = true;
                 mActionMode.finish();
             } else if (itemId == R.id.menu_hide) {
-                getAdapter().setVisibilityForSelectedSites(false);
+                Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(false);
+                mChangeSet.addAll(changeSet);
                 mHasChanges = true;
                 mActionMode.finish();
             } else if (itemId == R.id.menu_select_all) {
@@ -461,7 +505,7 @@ public class SitePickerActivity extends AppCompatActivity
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
             if (mHasChanges) {
-                saveHiddenSites();
+                saveHiddenSites(mChangeSet);
             }
             getAdapter().setEnableEditMode(false);
             mActionMode = null;
