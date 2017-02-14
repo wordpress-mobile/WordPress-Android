@@ -28,7 +28,7 @@ public class PhotoChooserFragment extends Fragment {
 
     private static final int NUM_COLUMNS = 3;
     private static final String KEY_MULTI_SELECT_ENABLED = "multi_select_enabled";
-    private static final String KEY_SELECTED_IMAGE_LIST = "selected_image_list";
+    private static final String KEY_SELECTED_ITEMS = "selected_items";
 
     enum PhotoChooserIcon {
         ANDROID_CAMERA,
@@ -37,9 +37,9 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     public interface OnPhotoChooserListener {
-        void onPhotoTapped(View view, Uri imageUri);
-        void onPhotoDoubleTapped(View view, Uri imageUri);
-        void onPhotoLongPressed(View view, Uri imageUri);
+        void onPhotoTapped(View view, Uri mediaUri);
+        void onPhotoDoubleTapped(View view, Uri mediaUri);
+        void onPhotoLongPressed(View view, Uri mediaUri);
     }
 
     private RecyclerView mRecycler;
@@ -60,7 +60,7 @@ public class PhotoChooserFragment extends Fragment {
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(KEY_MULTI_SELECT_ENABLED)) {
                 getAdapter().setMultiSelectEnabled(true);
-                restoreSelectedImages(savedInstanceState);
+                restoreSelection(savedInstanceState);
             }
         }
     }
@@ -70,32 +70,32 @@ public class PhotoChooserFragment extends Fragment {
         super.onSaveInstanceState(outState);
         if (isMultiSelectEnabled()) {
             outState.putBoolean(KEY_MULTI_SELECT_ENABLED, true);
-            saveSelectedImages(outState);
+            saveSelection(outState);
         }
     }
 
-    private void restoreSelectedImages(Bundle savedInstanceState) {
-        if (!savedInstanceState.containsKey(KEY_SELECTED_IMAGE_LIST)) return;
+    private void restoreSelection(Bundle savedInstanceState) {
+        if (!savedInstanceState.containsKey(KEY_SELECTED_ITEMS)) return;
 
-        ArrayList<String> strings = savedInstanceState.getStringArrayList(KEY_SELECTED_IMAGE_LIST);
+        ArrayList<String> strings = savedInstanceState.getStringArrayList(KEY_SELECTED_ITEMS);
         if (strings == null || strings.size() == 0) return;
 
         ArrayList<Uri> uriList = new ArrayList<>();
         for (String stringUri: strings) {
             uriList.add(Uri.parse(stringUri));
         }
-        getAdapter().setSelectedImageURIs(uriList);
+        getAdapter().setSelectedURIs(uriList);
     }
 
-    private void saveSelectedImages(Bundle outState) {
-        ArrayList<Uri> uriList = getAdapter().getSelectedImageURIs();
+    private void saveSelection(Bundle outState) {
+        ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
         if (uriList.size() == 0) return;
 
         ArrayList<String> stringUris = new ArrayList<>();
         for (Uri uri: uriList) {
             stringUris.add(uri.toString());
         }
-        outState.putStringArrayList(KEY_SELECTED_IMAGE_LIST, stringUris);
+        outState.putStringArrayList(KEY_SELECTED_ITEMS, stringUris);
     }
 
     @Override
@@ -184,37 +184,39 @@ public class PhotoChooserFragment extends Fragment {
      */
     private final OnPhotoChooserListener mListener = new OnPhotoChooserListener() {
         @Override
-        public void onPhotoTapped(View view, Uri imageUri) {
+        public void onPhotoTapped(View view, Uri mediaUri) {
             if (isMultiSelectEnabled()) {
-                togglePhotoSelection(imageUri);
+                togglePhotoSelection(mediaUri);
             } else {
                 EditPostActivity activity = getEditPostActivity();
-                activity.addMedia(imageUri);
+                activity.addMedia(mediaUri);
                 activity.hidePhotoChooser();
             }
         }
 
         @Override
-        public void onPhotoLongPressed(View view, Uri imageUri) {
+        public void onPhotoLongPressed(View view, Uri mediaUri) {
             if (isMultiSelectEnabled()) {
-                togglePhotoSelection(imageUri);
+                togglePhotoSelection(mediaUri);
             } else {
-                enableMultiSelect(imageUri);
+                enableMultiSelect(mediaUri);
             }
         }
 
         @Override
-        public void onPhotoDoubleTapped(View view, Uri imageUri) {
-            showPreview(view, imageUri);
+        public void onPhotoDoubleTapped(View view, Uri mediaUri) {
+            showPreview(view, mediaUri);
         }
     };
 
     /*
      * shows full-screen preview of the passed media
      */
-    private void showPreview(View sourceView, Uri imageUri) {
+    private void showPreview(View sourceView, Uri mediaUri) {
+        boolean isVideo = getAdapter().isVideoUri(mediaUri);
         Intent intent = new Intent(getActivity(), PhotoChooserPreviewActivity.class);
-        intent.putExtra(PhotoChooserPreviewActivity.ARG_MEDIA_URI, imageUri.toString());
+        intent.putExtra(PhotoChooserPreviewActivity.ARG_MEDIA_URI, mediaUri.toString());
+        intent.putExtra(PhotoChooserPreviewActivity.ARG_IS_VIDEO, isVideo);
 
         int startWidth = sourceView.getWidth();
         int startHeight = sourceView.getHeight();
@@ -234,15 +236,15 @@ public class PhotoChooserFragment extends Fragment {
         return mAdapter != null && mAdapter.isMultiSelectEnabled();
     }
 
-    private void enableMultiSelect(Uri imageUri) {
+    private void enableMultiSelect(Uri mediaUri) {
         getAdapter().setMultiSelectEnabled(true);
-        getAdapter().togglePhotoSelection(imageUri);
+        getAdapter().toggleSelection(mediaUri);
         ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
         updateActionModeTitle();
     }
 
-    private void togglePhotoSelection(Uri imageUri) {
-        getAdapter().togglePhotoSelection(imageUri);
+    private void togglePhotoSelection(Uri mediaUri) {
+        getAdapter().toggleSelection(mediaUri);
         updateActionModeTitle();
         if (getAdapter().getNumSelected() == 0) {
             finishActionMode();
@@ -265,13 +267,13 @@ public class PhotoChooserFragment extends Fragment {
      */
     private void loadDevicePhotos() {
         mRecycler.setAdapter(getAdapter());
-        getAdapter().loadDevicePhotos();
+        getAdapter().loadDeviceMedia();
     }
 
     /*
-     * inserts the passed list of images into the post and closes the photo chooser
+     * inserts the passed list of media URIs into the post and closes the photo chooser
      */
-    private void insertPhotos(ArrayList<Uri> uriList) {
+    private void addMediaList(ArrayList<Uri> uriList) {
         EditPostActivity activity = getEditPostActivity();
         for (Uri uri: uriList) {
             activity.addMedia(uri);
@@ -313,8 +315,8 @@ public class PhotoChooserFragment extends Fragment {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.mnu_confirm_selection) {
-                ArrayList<Uri> uriList = getAdapter().getSelectedImageURIs();
-                insertPhotos(uriList);
+                ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
+                addMediaList(uriList);
                 return true;
             }
             return false;

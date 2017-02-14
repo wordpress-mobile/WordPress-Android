@@ -26,7 +26,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private class PhotoChooserItem {
         private long _id;
-        private Uri imageUri;
+        private Uri uri;
         private boolean isVideo;
     }
 
@@ -44,39 +44,39 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private final UriList mSelectedUris = new UriList();
 
     private final Context mContext;
-    private final int mImageWidth;
-    private final int mImageHeight;
+    private final int mThumbWidth;
+    private final int mThumbHeight;
 
     private boolean mIsMultiSelectEnabled;
 
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoChooserFragment.OnPhotoChooserListener mListener;
-    private final ArrayList<PhotoChooserItem> mPhotoList = new ArrayList<>();
+    private final ArrayList<PhotoChooserItem> mMediaList = new ArrayList<>();
 
     private static final int VT_PHOTO   = 0;
     private static final int VT_EMPTY   = 1;
 
     public PhotoChooserAdapter(Context context,
-                               int imageWidth,
-                               int imageHeight,
+                               int thumbWidth,
+                               int thumbHeight,
                                PhotoChooserFragment.OnPhotoChooserListener listener) {
         super();
         mContext = context;
         mListener = listener;
-        mImageWidth = imageWidth;
-        mImageHeight = imageHeight;
+        mThumbWidth = thumbWidth;
+        mThumbHeight = thumbHeight;
         setHasStableIds(true);
         mThumbnailLoader = new ThumbnailLoader(context);
     }
 
-    void loadDevicePhotos() {
-        new BuildDevicePhotoListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    void loadDeviceMedia() {
+        new BuildDeviceMediaListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public int getItemCount() {
         if (hasPhotos()) {
-            return mPhotoList.size();
+            return mMediaList.size();
         } else {
             return 1; // single VT_EMPTY cell
         }
@@ -86,7 +86,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public long getItemId(int position) {
         int type = getItemViewType(position);
         if (type == VT_PHOTO) {
-            return getPhotoItemAtPosition(position)._id;
+            return getItemAtPosition(position)._id;
         } else {
             return type;
         }
@@ -102,7 +102,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private boolean hasPhotos() {
-        return mPhotoList.size() > 0;
+        return mMediaList.size() > 0;
     }
 
     @Override
@@ -115,40 +115,42 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 return new EmptyViewHolder(view);
             default:
                 view = inflater.inflate(R.layout.photo_chooser_thumbnail, parent, false);
-                return new PhotoViewHolder(view);
+                return new ThumbnailViewHolder(view);
         }
-    }
-
-    /*
-     * returns the photo item in the adapter at the passed position
-     */
-    private PhotoChooserItem getPhotoItemAtPosition(int position) {
-        if (!isValidPosition(position)) {
-            AppLog.w(AppLog.T.POSTS, "photo chooser > invalid position in getPhotoItemAtPosition");
-            return null;
-        }
-        return mPhotoList.get(position);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof PhotoViewHolder) {
-            PhotoChooserItem item = getPhotoItemAtPosition(position);
-            PhotoViewHolder photoHolder = (PhotoViewHolder) holder;
+        if (holder instanceof ThumbnailViewHolder) {
+            PhotoChooserItem item = getItemAtPosition(position);
+            ThumbnailViewHolder thumbHolder = (ThumbnailViewHolder) holder;
 
-            int selectedIndex = mSelectedUris.indexOfUri(item.imageUri);
+            int selectedIndex = mSelectedUris.indexOfUri(item.uri);
             if (selectedIndex > -1) {
-                photoHolder.selectedFrame.setVisibility(View.VISIBLE);
-                photoHolder.txtSelectionCount.setVisibility(View.VISIBLE);
-                photoHolder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
+                thumbHolder.selectedFrame.setVisibility(View.VISIBLE);
+                thumbHolder.txtSelectionCount.setVisibility(View.VISIBLE);
+                thumbHolder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
             } else {
-                photoHolder.selectedFrame.setVisibility(View.GONE);
-                photoHolder.txtSelectionCount.setVisibility(View.GONE);
+                thumbHolder.selectedFrame.setVisibility(View.GONE);
+                thumbHolder.txtSelectionCount.setVisibility(View.GONE);
             }
 
-            photoHolder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
-            mThumbnailLoader.loadThumbnail(photoHolder.imgPhoto, item._id, item.isVideo);
+            thumbHolder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
+            mThumbnailLoader.loadThumbnail(thumbHolder.imgThumbnail, item._id, item.isVideo);
         }
+    }
+
+    private PhotoChooserItem getItemAtPosition(int position) {
+        if (!isValidPosition(position)) {
+            AppLog.w(AppLog.T.POSTS, "photo chooser > invalid position in getItemAtPosition");
+            return null;
+        }
+        return mMediaList.get(position);
+    }
+
+    boolean isVideoUri(Uri uri) {
+        int index = indexOfUri(uri);
+        return index > -1 ? getItemAtPosition(index).isVideo : false;
     }
 
     void setMultiSelectEnabled(boolean enabled) {
@@ -175,45 +177,45 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    // TODO: should there be a limit to the number of photos the user can select?
-    void togglePhotoSelection(Uri imageUri) {
-        if (indexOfImageUri(imageUri) == -1) return;
+    // TODO: should there be a limit to the number of items the user can select?
+    void toggleSelection(Uri uri) {
+        if (indexOfUri(uri) == -1) return;
 
-        int selectedIndex = mSelectedUris.indexOfUri(imageUri);
+        int selectedIndex = mSelectedUris.indexOfUri(uri);
         if (selectedIndex > -1) {
             mSelectedUris.remove(selectedIndex);
         } else {
-            mSelectedUris.add(imageUri);
+            mSelectedUris.add(uri);
         }
 
         notifyDataSetChangedNoFade();
     }
 
     private boolean isValidPosition(int position) {
-        return position >= 0 && position < mPhotoList.size();
+        return position >= 0 && position < mMediaList.size();
     }
 
     /*
      * scales in/out the selection count depending on whether the item is selected
      */
-    private void animateSelectionCount(PhotoViewHolder holder, int position) {
+    private void animateSelectionCount(ThumbnailViewHolder holder, int position) {
         if (!isValidPosition(position)) {
             AppLog.w(AppLog.T.POSTS, "photo chooser > invalid position in animateSelectionCount");
             return;
         }
 
-        boolean isSelected = mSelectedUris.contains(mPhotoList.get(position).imageUri);
+        boolean isSelected = mSelectedUris.contains(mMediaList.get(position).uri);
         AniUtils.startAnimation(holder.txtSelectionCount,
                 isSelected ? R.anim.cab_select : R.anim.cab_deselect);
         holder.txtSelectionCount.setVisibility(isSelected ? View.VISIBLE : View.GONE);
     }
 
 
-    ArrayList<Uri> getSelectedImageURIs() {
+    ArrayList<Uri> getSelectedURIs() {
         return mSelectedUris;
     }
 
-    void setSelectedImageURIs(ArrayList<Uri> uriList) {
+    void setSelectedURIs(ArrayList<Uri> uriList) {
         mSelectedUris.clear();
         mSelectedUris.addAll(uriList);
         notifyDataSetChangedNoFade();
@@ -223,9 +225,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return mIsMultiSelectEnabled ? mSelectedUris.size() : 0;
     }
 
-    private int indexOfImageUri(Uri imageUri) {
-        for (int i = 0; i < mPhotoList.size(); i++) {
-            if (mPhotoList.get(i).imageUri.equals(imageUri)) {
+    private int indexOfUri(Uri uri) {
+        for (int i = 0; i < mMediaList.size(); i++) {
+            if (mMediaList.get(i).uri.equals(uri)) {
                 return i;
             }
         }
@@ -233,39 +235,39 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     /*
-     * ViewHolder containing a device photo
+     * ViewHolder containing a device thumbnail
      */
-    class PhotoViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView imgPhoto;
+    class ThumbnailViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView imgThumbnail;
         private final View selectedFrame;
         private final TextView txtSelectionCount;
         private final View videoOverlay;
         private final GestureDetector detector;
 
-        public PhotoViewHolder(View view) {
+        public ThumbnailViewHolder(View view) {
             super(view);
 
-            imgPhoto = (ImageView) view.findViewById(R.id.image_photo);
+            imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
             selectedFrame = view.findViewById(R.id.selected_frame);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
             videoOverlay = view.findViewById(R.id.image_video_overlay);
 
-            selectedFrame.getLayoutParams().width = mImageWidth;
-            selectedFrame.getLayoutParams().height = mImageHeight;
+            selectedFrame.getLayoutParams().width = mThumbWidth;
+            selectedFrame.getLayoutParams().height = mThumbHeight;
 
-            imgPhoto.getLayoutParams().width = mImageWidth;
-            imgPhoto.getLayoutParams().height = mImageHeight;
+            imgThumbnail.getLayoutParams().width = mThumbWidth;
+            imgThumbnail.getLayoutParams().height = mThumbHeight;
 
             detector = new GestureDetector(view.getContext(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
                     int position = getAdapterPosition();
                     if (mListener != null) {
-                        Uri imageUri = getPhotoItemAtPosition(position).imageUri;
+                        Uri imageUri = getItemAtPosition(position).uri;
                         mListener.onPhotoTapped(itemView, imageUri);
                     }
                     if (isMultiSelectEnabled()) {
-                        animateSelectionCount(PhotoViewHolder.this, position);
+                        animateSelectionCount(ThumbnailViewHolder.this, position);
                     }
                     return true;
                 }
@@ -273,7 +275,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 public boolean onDoubleTap(MotionEvent e) {
                     int position = getAdapterPosition();
                     if (mListener != null) {
-                        Uri imageUri = getPhotoItemAtPosition(position).imageUri;
+                        Uri imageUri = getItemAtPosition(position).uri;
                         mListener.onPhotoDoubleTapped(itemView, imageUri);
                     }
                     return true;
@@ -282,13 +284,13 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 public void onLongPress(MotionEvent e) {
                     int position = getAdapterPosition();
                     if (mListener != null) {
-                        Uri imageUri = getPhotoItemAtPosition(position).imageUri;
+                        Uri imageUri = getItemAtPosition(position).uri;
                         mListener.onPhotoLongPressed(itemView, imageUri);
                     }
                 }
             });
 
-            imgPhoto.setOnTouchListener(new View.OnTouchListener() {
+            imgThumbnail.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     detector.onTouchEvent(event);
@@ -304,15 +306,15 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     class EmptyViewHolder extends RecyclerView.ViewHolder {
         public EmptyViewHolder(View view) {
             super(view);
-            itemView.getLayoutParams().width = mImageWidth;
-            itemView.getLayoutParams().height = mImageHeight;
+            itemView.getLayoutParams().width = mThumbWidth;
+            itemView.getLayoutParams().height = mThumbHeight;
         }
     }
 
     /*
      * builds the list of PhotoChooserItems from the device
      */
-    private class BuildDevicePhotoListTask extends AsyncTask<Void, Void, Boolean> {
+    private class BuildDeviceMediaListTask extends AsyncTask<Void, Void, Boolean> {
         private final ArrayList<PhotoChooserItem> tmpList = new ArrayList<>();
         private static final String ID_COL = MediaStore.Images.Media._ID;
 
@@ -359,7 +361,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             while (cursor.moveToNext()) {
                 PhotoChooserItem item = new PhotoChooserItem();
                 item._id = cursor.getLong(idIndex);
-                item.imageUri = Uri.withAppendedPath(baseUri, "" + item._id);
+                item.uri = Uri.withAppendedPath(baseUri, "" + item._id);
                 item.isVideo = isVideo;
                 tmpList.add(item);
             }
@@ -367,8 +369,8 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            mPhotoList.clear();
-            mPhotoList.addAll(tmpList);
+            mMediaList.clear();
+            mMediaList.addAll(tmpList);
             notifyDataSetChanged();
         }
     }
