@@ -33,8 +33,8 @@ class ThumbnailLoader {
         mHandler = new Handler(Looper.getMainLooper());
     }
 
-    void loadThumbnail(ImageView imageView, long imageId) {
-        Runnable task = new PhotoLoaderRunnable(imageView, imageId);
+    void loadThumbnail(ImageView imageView, long imageId, boolean isVideo) {
+        Runnable task = new ThumbnailLoaderRunnable(imageView, imageId, isVideo);
         mExecutor.submit(task);
     }
 
@@ -54,15 +54,18 @@ class ThumbnailLoader {
     /*
      * task to load a device thumbnail and display it in an ImageView
      */
-    class PhotoLoaderRunnable implements Runnable {
+    class ThumbnailLoaderRunnable implements Runnable {
         private final WeakReference<ImageView> mWeakImageView;
         private final long mImageId;
         private final String mTag;
-        private Bitmap mBitmap;
+        private final boolean mIsVideo;
+        private Bitmap mThumbnail;
 
-        PhotoLoaderRunnable(ImageView imageView, long imageId) {
+        ThumbnailLoaderRunnable(ImageView imageView, long imageId, boolean isVideo) {
             mWeakImageView = new WeakReference<>(imageView);
             mImageId = imageId;
+            mIsVideo = isVideo;
+
             mTag = Long.toString(mImageId);
             imageView.setTag(mTag);
             if (mIsFadeEnabled) {
@@ -84,16 +87,25 @@ class ThumbnailLoader {
 
         @Override
         public void run() {
-            mBitmap = MediaStore.Images.Thumbnails.getThumbnail(
-                    mContext.getContentResolver(),
-                    mImageId,
-                    MediaStore.Images.Thumbnails.MINI_KIND,
-                    null);
+            if (mIsVideo) {
+                // TODO: add player overlay
+                mThumbnail = MediaStore.Video.Thumbnails.getThumbnail(
+                        mContext.getContentResolver(),
+                        mImageId,
+                        MediaStore.Video.Thumbnails.MINI_KIND,
+                        null);
+            } else {
+                mThumbnail = MediaStore.Images.Thumbnails.getThumbnail(
+                        mContext.getContentResolver(),
+                        mImageId,
+                        MediaStore.Images.Thumbnails.MINI_KIND,
+                        null);
+            }
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (mBitmap != null && isImageViewValid()) {
-                        mWeakImageView.get().setImageBitmap(mBitmap);
+                    if (mThumbnail != null && isImageViewValid()) {
+                        mWeakImageView.get().setImageBitmap(mThumbnail);
                         if (mIsFadeEnabled) {
                             ObjectAnimator alpha = ObjectAnimator.ofFloat(
                                     mWeakImageView.get(), View.ALPHA, 0.25f, 1f);

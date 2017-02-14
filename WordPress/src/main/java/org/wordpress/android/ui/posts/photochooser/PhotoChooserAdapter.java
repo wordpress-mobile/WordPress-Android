@@ -19,12 +19,15 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class PhotoChooserItem {
         private long _id;
         private Uri imageUri;
+        private boolean isVideo;
     }
 
     private class UriList extends ArrayList<Uri> {
@@ -143,7 +146,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 photoHolder.txtSelectionCount.setVisibility(View.GONE);
             }
 
-            mThumbnailLoader.loadThumbnail(photoHolder.imgPhoto, item._id);
+            mThumbnailLoader.loadThumbnail(photoHolder.imgPhoto, item._id, item.isVideo);
         }
     }
 
@@ -313,35 +316,52 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @Override
         protected Boolean doInBackground(Void... params) {
             String[] projection = { ID_COL };
-            String orderBy = ID_COL + " DESC";
 
             // get external (SDCARD) images
-            Cursor external = mContext.getContentResolver().query(
+            Cursor extImages = mContext.getContentResolver().query(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     projection,
                     null,
                     null,
-                    orderBy);
-            addImages(external, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    null);
+            addMedia(extImages, false, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
             // get internal images
-            Cursor internal = mContext.getContentResolver().query(
+            Cursor intImages = mContext.getContentResolver().query(
                     MediaStore.Images.Media.INTERNAL_CONTENT_URI,
                     projection,
                     null,
                     null,
-                    orderBy);
-            addImages(internal, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                    null);
+            addMedia(intImages, false, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+
+            // get external videos
+            Cursor intVideos = mContext.getContentResolver().query(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    null,
+                    null,
+                    null);
+            addMedia(intVideos, true, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+
+            // sort by id in reverse (newest first)
+            Collections.sort(tmpList, new Comparator<PhotoChooserItem>() {
+                @Override
+                public int compare(PhotoChooserItem o1, PhotoChooserItem o2) {
+                    return Long.compare(o2._id, o1._id);
+                }
+            });
 
             return true;
         }
 
-        private void addImages(Cursor cursor, Uri baseUri) {
+        private void addMedia(Cursor cursor, boolean isVideo, Uri baseUri) {
             int idIndex = cursor.getColumnIndexOrThrow(ID_COL);
             while (cursor.moveToNext()) {
                 PhotoChooserItem item = new PhotoChooserItem();
                 item._id = cursor.getLong(idIndex);
                 item.imageUri = Uri.withAppendedPath(baseUri, "" + item._id);
+                item.isVideo = isVideo;
                 tmpList.add(item);
             }
         }
