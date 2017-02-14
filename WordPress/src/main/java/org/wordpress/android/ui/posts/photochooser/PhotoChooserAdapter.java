@@ -334,7 +334,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Collections.sort(tmpList, new Comparator<PhotoChooserItem>() {
                 @Override
                 public int compare(PhotoChooserItem o1, PhotoChooserItem o2) {
-                    return Long.compare(o2._id, o1._id);
+                    long id1 = o1._id;
+                    long id2 = o2._id;
+                    return (id2 < id1) ? -1 : ((id1 == id2) ? 0 : 1);
                 }
             });
 
