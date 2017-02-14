@@ -46,6 +46,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private boolean mIsJetpackInstalled;
     // mIsJetpackConnected is true if Jetpack is installed, activated and connected to a WordPress.com account.
     @Column private boolean mIsJetpackConnected;
+    @Column private boolean mIsAutomatedTransfer;
 
     // WPCom specifics
     @Column private boolean mIsVisible;
@@ -419,5 +420,13 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
 
     public void setIsJetpackConnected(boolean jetpackConnected) {
         mIsJetpackConnected = jetpackConnected;
+    }
+
+    public boolean isAutomatedTransfer() {
+        return mIsAutomatedTransfer;
+    }
+
+    public void setIsAutomatedTransfer(boolean automatedTransfer) {
+        mIsAutomatedTransfer = automatedTransfer;
     }
 }
