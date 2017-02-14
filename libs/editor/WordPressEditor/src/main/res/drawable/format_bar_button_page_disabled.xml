@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="44dp"
+    android:width="44dp"
+    android:viewportHeight="44"
+    android:viewportWidth="44" >
+
+    <!-- @color/wp_grey_lighten_20 -->
+    <path
+        android:fillColor="#ffc8d7e1"
+        android:pathData="M13,15h18v4H13V15z M13,29h18v-4H13V29z M15,21h-2v2h2V21z M19,21h-2v2h2V21z M27,21h-2v2h2V21z M31,21h-2v2h2V21z M23,21h-2v2h2V21z" >
+    </path>
+
+</vector>

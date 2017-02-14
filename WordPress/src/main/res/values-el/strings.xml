@@ -276,7 +276,7 @@ Language: el_GR
 	<string name="editor_page_title_placeholder">Τίτλος Σελίδας</string>
 	<string name="editor_post_title_placeholder">Τίτλος Άρθρου</string>
 	<string name="email_address">Διεύθυνση email</string>
-	<string name="preference_show_visual_editor">Προβολή οπτικοποιημένου επεξεργαστή</string>
+	<string name="preference_editor_type">Προβολή οπτικοποιημένου επεξεργαστή</string>
 	<string name="preference_editor">Επεξεργαστής</string>
 	<string name="dlg_sure_to_delete_comments">Να διαγραφούν οριστικά αυτά τα σχόλια;</string>
 	<string name="dlg_sure_to_delete_comment">Οριστική διαγραφή αυτού του σχολίου;</string>

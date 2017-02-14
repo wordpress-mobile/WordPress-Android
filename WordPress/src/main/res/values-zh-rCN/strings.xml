@@ -232,9 +232,9 @@ Language: zh_CN
 	<string name="editor_page_title_placeholder">页面标题</string>
 	<string name="editor_post_title_placeholder">文章标题</string>
 	<string name="email_address">电子邮件地址</string>
-	<string name="preference_show_visual_editor">显示可视化编辑器</string>
-	<string name="dlg_sure_to_delete_comments">是否永久删除这些评论？</string>
+	<string name="preference_editor_type">显示可视化编辑器</string>
 	<string name="preference_editor">编辑器</string>
+	<string name="dlg_sure_to_delete_comments">是否永久删除这些评论？</string>
 	<string name="dlg_sure_to_delete_comment">是否永久删除该评论？</string>
 	<string name="mnu_comment_delete_permanently">删除</string>
 	<string name="comment_deleted_permanently">已删除评论</string>
