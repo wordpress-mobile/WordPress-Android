@@ -239,9 +239,9 @@ Language: ar
 	<string name="editor_page_title_placeholder">عنوان الصفحة</string>
 	<string name="editor_post_title_placeholder">عنوان المقالة</string>
 	<string name="email_address">عنوان البريد الإلكتروني</string>
-	<string name="preference_show_visual_editor">إظهار محرر مرئي</string>
-	<string name="dlg_sure_to_delete_comments">هل ترغب في إزالة هذه التعليقات نهائيًا؟</string>
+	<string name="preference_editor_type">إظهار محرر مرئي</string>
 	<string name="preference_editor">المحرر</string>
+	<string name="dlg_sure_to_delete_comments">هل ترغب في إزالة هذه التعليقات نهائيًا؟</string>
 	<string name="dlg_sure_to_delete_comment">هل ترغب في إزالة هذا التعليق نهائيًا؟</string>
 	<string name="mnu_comment_delete_permanently">حذف</string>
 	<string name="comment_deleted_permanently">تم حذف تعليق</string>

@@ -218,9 +218,9 @@ Language: zh_TW
 	<string name="editor_page_title_placeholder">頁面標題</string>
 	<string name="editor_post_title_placeholder">文章標題</string>
 	<string name="email_address">電子郵件地址</string>
-	<string name="preference_show_visual_editor">顯示視覺化編輯器</string>
-	<string name="dlg_sure_to_delete_comments">永久刪除這些留言？</string>
+	<string name="preference_editor_type">顯示視覺化編輯器</string>
 	<string name="preference_editor">編輯者</string>
+	<string name="dlg_sure_to_delete_comments">永久刪除這些留言？</string>
 	<string name="dlg_sure_to_delete_comment">永久刪除此回應？</string>
 	<string name="mnu_comment_delete_permanently">刪除</string>
 	<string name="comment_deleted_permanently">留言已刪除</string>

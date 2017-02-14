@@ -13,6 +13,7 @@ apply plugin: 'signing'
 
 repositories {
     jcenter()
+    maven { url "https://jitpack.io" }
 }
 
 android {
@@ -49,6 +50,7 @@ dependencies {
     compile 'com.android.support:support-v4:25.1.1'
     compile 'com.android.support:design:25.1.1'
     compile 'org.wordpress:utils:1.11.0'
+    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:v0.5.0-alpha.2')
 }
 
 signing {

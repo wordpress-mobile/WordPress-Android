@@ -175,7 +175,7 @@ Language: sk
 	<string name="editor_page_title_placeholder">Nadpis stránky</string>
 	<string name="editor_post_title_placeholder">Nadpis článku</string>
 	<string name="email_address">Emailová adresa</string>
-	<string name="preference_show_visual_editor">Zobraziť vizuálny editor</string>
+	<string name="preference_editor_type">Zobraziť vizuálny editor</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Trvale odstrániť tieto komentáre?</string>
 	<string name="dlg_sure_to_delete_comment">Trvale odstrániť tento komentár?</string>
