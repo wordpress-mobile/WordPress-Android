@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.posts.photochooser;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -21,8 +23,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
-
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class PhotoChooserFragment extends Fragment {
 
@@ -37,14 +37,13 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     public interface OnPhotoChooserListener {
-        void onPhotoTapped(Uri imageUri);
-        void onPhotoDoubleTapped(Uri imageUri);
-        void onPhotoLongPressed(Uri imageUri);
+        void onPhotoTapped(View view, Uri imageUri);
+        void onPhotoDoubleTapped(View view, Uri imageUri);
+        void onPhotoLongPressed(View view, Uri imageUri);
     }
 
     private RecyclerView mRecycler;
     private PhotoChooserAdapter mAdapter;
-    private View mPreviewFrame;
     private View mBottomBar;
     private ActionMode mActionMode;
 
@@ -103,7 +102,6 @@ public class PhotoChooserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.photo_chooser_fragment, container, false);
 
-        mPreviewFrame = view.findViewById(R.id.frame_preview);
         mBottomBar = view.findViewById(R.id.bottom_bar);
 
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), NUM_COLUMNS);
@@ -186,7 +184,7 @@ public class PhotoChooserFragment extends Fragment {
      */
     private final OnPhotoChooserListener mListener = new OnPhotoChooserListener() {
         @Override
-        public void onPhotoTapped(Uri imageUri) {
+        public void onPhotoTapped(View view, Uri imageUri) {
             if (isMultiSelectEnabled()) {
                 togglePhotoSelection(imageUri);
             } else {
@@ -197,7 +195,7 @@ public class PhotoChooserFragment extends Fragment {
         }
 
         @Override
-        public void onPhotoLongPressed(Uri imageUri) {
+        public void onPhotoLongPressed(View view, Uri imageUri) {
             if (isMultiSelectEnabled()) {
                 togglePhotoSelection(imageUri);
             } else {
@@ -206,43 +204,30 @@ public class PhotoChooserFragment extends Fragment {
         }
 
         @Override
-        public void onPhotoDoubleTapped(Uri imageUri) {
-            showPreview(imageUri);
+        public void onPhotoDoubleTapped(View view, Uri imageUri) {
+            showPreview(view, imageUri);
         }
     };
 
-    private void showPreview(Uri imageUri) {
-        mRecycler.setEnabled(false);
+    /*
+     * shows full-screen preview of the passed media
+     */
+    private void showPreview(View sourceView, Uri imageUri) {
+        Intent intent = new Intent(getActivity(), PhotoChooserPreviewActivity.class);
+        intent.putExtra(PhotoChooserPreviewActivity.ARG_MEDIA_URI, imageUri.toString());
 
-        ImageView imgPreview = (ImageView) mPreviewFrame.findViewById(R.id.image_preview);
-        imgPreview.setImageURI(imageUri);
+        int startWidth = sourceView.getWidth();
+        int startHeight = sourceView.getHeight();
+        int startX = startWidth / 2;
+        int startY = startHeight / 2;
 
-        AniUtils.scaleIn(mPreviewFrame, AniUtils.Duration.SHORT);
-
-        PhotoViewAttacher attacher = new PhotoViewAttacher(imgPreview);
-        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float v, float v2) {
-                hidePreview();
-            }
-        });
-        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float x, float y) {
-                hidePreview();
-            }
-        });
-    }
-
-    public void hidePreview() {
-        mRecycler.setEnabled(true);
-        if (isPreviewShowing()) {
-            AniUtils.scaleOut(mPreviewFrame, AniUtils.Duration.SHORT);
-        }
-    }
-
-    public boolean isPreviewShowing() {
-        return mPreviewFrame.getVisibility() == View.VISIBLE;
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(
+                sourceView,
+                startX,
+                startY,
+                startWidth,
+                startHeight);
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
     private boolean isMultiSelectEnabled() {

@@ -51,18 +51,4 @@
             app:srcCompat="@drawable/nux_icon_wp" />
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/frame_preview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/grey_dark"
-        android:visibility="gone"
-        tools:visibility="gone">
-
-        <ImageView
-            android:id="@+id/image_preview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
-
 </RelativeLayout>

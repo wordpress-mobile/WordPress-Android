@@ -92,9 +92,9 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
-import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment;
+import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -467,7 +467,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     public void hidePhotoChooser() {
         if (isPhotoChooserShowing()) {
-            mPhotoChooserFragment.hidePreview();
             mPhotoChooserFragment.finishActionMode();
             AniUtils.animateBottomBar(mPhotoChooserContainer, false);
         }
@@ -979,11 +978,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (isPhotoChooserShowing()) {
-            if (mPhotoChooserFragment != null && mPhotoChooserFragment.isPreviewShowing()) {
-                mPhotoChooserFragment.hidePreview();
-            } else {
-                hidePhotoChooser();
-            }
+            hidePhotoChooser();
             return;
         }
 

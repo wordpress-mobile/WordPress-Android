@@ -262,7 +262,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     int position = getAdapterPosition();
                     if (mListener != null) {
                         Uri imageUri = getPhotoItemAtPosition(position).imageUri;
-                        mListener.onPhotoTapped(imageUri);
+                        mListener.onPhotoTapped(itemView, imageUri);
                     }
                     if (isMultiSelectEnabled()) {
                         animateSelectionCount(PhotoViewHolder.this, position);
@@ -274,7 +274,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     int position = getAdapterPosition();
                     if (mListener != null) {
                         Uri imageUri = getPhotoItemAtPosition(position).imageUri;
-                        mListener.onPhotoDoubleTapped(imageUri);
+                        mListener.onPhotoDoubleTapped(itemView, imageUri);
                     }
                     return true;
                 }
@@ -283,7 +283,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     int position = getAdapterPosition();
                     if (mListener != null) {
                         Uri imageUri = getPhotoItemAtPosition(position).imageUri;
-                        mListener.onPhotoLongPressed(imageUri);
+                        mListener.onPhotoLongPressed(itemView, imageUri);
                     }
                 }
             });
