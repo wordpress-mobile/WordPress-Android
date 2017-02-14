@@ -215,8 +215,7 @@ public class WPMainActivity extends AppCompatActivity {
 
 
         if (savedInstanceState == null) {
-            if (!AppPrefs.wasAccessTokenMigrated()
-                && WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,

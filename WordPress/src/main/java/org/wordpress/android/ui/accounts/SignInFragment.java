@@ -360,12 +360,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mTwoStepEditText.setText(getAuthCodeFromClipboard());
         }
 
-        // show progress indicator while waiting for network response when migrating access token
-        if (AppPrefs.wasAccessTokenMigrated() && checkNetworkConnectivity()) {
-            startProgress(getString(R.string.access_token_migration_message));
-            return;
-        }
-
         if (!mToken.isEmpty() && !mInhibitMagicLogin) {
             mSmartLockEnabled = false;
             attemptLoginWithMagicLink();
@@ -1229,7 +1223,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mAccountFetched |= event.causeOfChange == AccountAction.FETCH_ACCOUNT;
         // Finish activity if sites have been fetched
         if (mSitesFetched && mAccountSettingsFetched && mAccountFetched) {
-            updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
     }
@@ -1241,7 +1234,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (event.isError()) {
             AnalyticsTracker.track(Stat.LOGIN_FAILED);
             showAuthError(event.error.type, event.error.message);
-            updateMigrationStatusIfNeeded();
             endProgress();
             return;
         }
@@ -1258,7 +1250,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSitesFetched = true;
         // Finish activity if account settings have been fetched or if it's a wporg site
         if (((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) && !event.isError()) {
-            updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
     }
@@ -1350,13 +1341,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             default:
                 showGenericErrorDialog(getResources().getString(R.string.nux_cannot_log_in));
                 break;
-        }
-    }
-
-    private void updateMigrationStatusIfNeeded() {
-        if (AppPrefs.wasAccessTokenMigrated()) {
-            AppPrefs.setAccessTokenMigrated(false);
-            endProgress();
         }
     }
 }
