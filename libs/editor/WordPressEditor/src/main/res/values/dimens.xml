@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
     <dimen name="format_bar_height">44dp</dimen>
     <dimen name="format_bar_height_tablet">49dp</dimen>
     <dimen name="format_bar_left_margin">5dp</dimen>
@@ -52,4 +54,10 @@
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
+
+    <dimen name="spacing_extra_body">1.3dp</dimen>
+    <dimen name="spacing_extra_title">0.9dp</dimen>
+
+    <item name="spacing_multiplier_body" format="float" type="dimen">1.2</item>
+
 </resources>

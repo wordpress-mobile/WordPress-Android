@@ -190,7 +190,7 @@ Language: eu_ES
 	<string name="editor_page_title_placeholder">Orrialdearen izenburua</string>
 	<string name="editor_post_title_placeholder">Bidalketaren izenburua</string>
 	<string name="email_address">E-posta helbidea</string>
-	<string name="preference_show_visual_editor">Erakutsi editore bisuala</string>
+	<string name="preference_editor_type">Erakutsi editore bisuala</string>
 	<string name="preference_editor">Editorea</string>
 	<string name="dlg_sure_to_delete_comments">Behin betiko ezabatu iruzkin hauek?</string>
 	<string name="dlg_sure_to_delete_comment">Behin betiko ezabatu iruzkin hau?</string>

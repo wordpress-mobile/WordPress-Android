@@ -55,11 +55,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
-import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
@@ -82,6 +83,7 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -160,6 +162,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
     private Handler mHandler;
+    private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
 
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
@@ -188,6 +191,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private Post mPost;
     private Post mOriginalPost;
 
+    private AztecEditorFragment mAztecEditorFragment;
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
@@ -223,6 +227,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
+        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // Set up the action bar.
@@ -436,7 +441,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        if (mShowNewEditor) {
+        if (mShowNewEditor || mShowAztecEditor) {
             inflater.inflate(R.menu.edit_post, menu);
         } else {
             inflater.inflate(R.menu.edit_post_legacy, menu);
@@ -922,6 +927,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void saveAndFinish() {
+        if (mShowAztecEditor && mAztecEditorFragment != null) {
+            mAztecEditorFragment.saveContentFromSource();
+        }
+
         new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -958,8 +967,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    // TODO: switch between legacy and new editor here (AB test?)
-                    if (mShowNewEditor) {
+                    // TODO: Remove editor options after testing.
+                    if (mShowAztecEditor) {
+                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "");
+                        mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
+                        return mAztecEditorFragment;
+                    } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
                         return new EditorFragment();
                     } else {
@@ -1218,7 +1231,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (post.isLocalDraft() && !mShowNewEditor) {
+                if (post.isLocalDraft() && !mShowNewEditor && !mShowAztecEditor) {
                     // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -1551,7 +1564,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
         trackAddMediaEvents(isVideo, false);
 
-        if (mShowNewEditor) {
+        if (mShowNewEditor || mShowAztecEditor) {
             // TODO: add video param
             return addMediaVisualEditor(mediaUri);
         } else {

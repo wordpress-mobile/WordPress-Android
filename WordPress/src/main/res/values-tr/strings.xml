@@ -294,7 +294,7 @@ Language: tr
 	<string name="editor_page_title_placeholder">Sayfa Başlığı</string>
 	<string name="editor_post_title_placeholder">Yazı Başlığı</string>
 	<string name="email_address">E-posta adresi</string>
-	<string name="preference_show_visual_editor">Görsel düzenleyiciyi göster</string>
+	<string name="preference_editor_type">Görsel düzenleyiciyi göster</string>
 	<string name="dlg_sure_to_delete_comments">Bu yorumlar kalıcı olarak silinsin mi?</string>
 	<string name="preference_editor">Düzenleyici</string>
 	<string name="dlg_sure_to_delete_comment">Bu yorum kalıcı olarak silinsin mi?</string>

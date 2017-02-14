@@ -283,7 +283,7 @@ Language: bg
 	<string name="editor_page_title_placeholder">Заглавие на страницата</string>
 	<string name="editor_post_title_placeholder">Заглавие на публикация</string>
 	<string name="email_address">Имейл адрес</string>
-	<string name="preference_show_visual_editor">Показване на визуалния редактор</string>
+	<string name="preference_editor_type">Показване на визуалния редактор</string>
 	<string name="preference_editor">Редактор</string>
 	<string name="dlg_sure_to_delete_comments">Изтриване на коментарите завинаги?</string>
 	<string name="dlg_sure_to_delete_comment">Изтриване на коментара завинаги?</string>
