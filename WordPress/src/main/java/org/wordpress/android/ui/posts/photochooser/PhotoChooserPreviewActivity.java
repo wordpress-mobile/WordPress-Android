@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.posts.photochooser;
 
-import android.database.Cursor;
+import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -50,6 +49,7 @@ public class PhotoChooserPreviewActivity extends AppCompatActivity {
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         if (mIsVideo) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo();
         } else {
             mImageView.setImageURI(mMediaUri);
@@ -78,12 +78,9 @@ public class PhotoChooserPreviewActivity extends AppCompatActivity {
     }
 
     private void playVideo() {
-        MediaController controls = new MediaController(this);
+        final MediaController controls = new MediaController(this);
         mVideoView.setMediaController(controls);
 
-        String videoPath = getRealPathFromVideoURI();
-        mVideoView.setVideoPath(videoPath);
-        mVideoView.requestFocus();
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -96,30 +93,16 @@ public class PhotoChooserPreviewActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+                controls.show();
                 mp.start();
             }
         });
-    }
 
-    public String getRealPathFromVideoURI() {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = getContentResolver().query(mMediaUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-            if (cursor.moveToFirst()) {
-                return cursor.getString(column_index);
-            } else {
-                return null;
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
+        mVideoView.setVideoURI(mMediaUri);
+        mVideoView.requestFocus();
     }
-
 }
