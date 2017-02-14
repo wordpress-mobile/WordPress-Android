@@ -272,10 +272,12 @@ public class WordPress extends MultiDexApplication {
     private void performFluxCMigration() {
         // Migrate access token AccountStore
         if (!mAccountStore.hasAccessToken()) {
+            AppLog.i(T.DB, "No access token found in FluxC - attempting to migrate existing one");
             // It will take some time to update the access token in the AccountStore if it was migrated
             // so it will be set to the migrated token
             String migratedToken = WPLegacyMigrationUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
             if (!TextUtils.isEmpty(migratedToken)) {
+                AppLog.i(T.DB, "Access token successfully migrated to FluxC - fetching accounts and sites");
                 AppPrefs.setAccessTokenMigrated(true);
                 mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
@@ -287,12 +289,13 @@ public class WordPress extends MultiDexApplication {
         if (!AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
             List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
             if (siteList != null && !siteList.isEmpty()) {
-                AppLog.i(T.DB, "Fetching the site info for migrated self-hosted sites");
+                AppLog.i(T.DB, "Finished migrating " + siteList.size() + " self-hosted sites - fetching site info");
                 mRemainingSelfHostedSitesToFetch = siteList.size();
                 for (SiteModel siteModel : siteList) {
                     mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel));
                 }
             } else {
+                AppLog.i(T.DB, "No self-hosted sites to migrate");
                 endMigration();
             }
             AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
@@ -300,6 +303,7 @@ public class WordPress extends MultiDexApplication {
     }
 
     private void endMigration() {
+        AppLog.i(T.DB, "Ending migration to FluxC");
         sIsMigrationInProgress = false;
         if (sMigrationListener != null) {
             sMigrationListener.onCompletion();
@@ -492,13 +496,16 @@ public class WordPress extends MultiDexApplication {
             if (AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
                 // Token has been migrated, any WP.com sites have been fetched, and there aren't any self-hosted sites
                 // to migrate
+                AppLog.i(T.DB, "Access token migrated and WP.com sites fetched - migration complete");
                 endMigration();
             }
             // It's unlikely, but otherwise, we're currently extracting self-hosted sites from the deprecated db,
             // and ending the migration is up to the site migration step
         } else if (mRemainingSelfHostedSitesToFetch > 1) {
             mRemainingSelfHostedSitesToFetch--;
+            AppLog.i(T.DB, "Self-hosted sites remaining to fetch for migration: " + mRemainingSelfHostedSitesToFetch);
         } else {
+            AppLog.i(T.DB, "The last self-hosted site has been fetched - migration complete");
             endMigration();
         }
     }
