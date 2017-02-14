@@ -142,6 +142,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static android.R.attr.path;
+
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
         MediaUploadService.MediaUploadListener {
@@ -1194,18 +1196,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             Matcher matcher = pattern.matcher(content);
             StringBuffer stringBuffer = new StringBuffer();
             while (matcher.find()) {
-                String path = null;
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
-                if (uri != null && stringUri.contains("content:")) {
-                    path = getPathFromContentUri(uri);
-                    if (path == null) {
-                        continue;
-                    }
-                } else {
-                    path = stringUri.replace("file://", "");
-                }
-                MediaFile mediaFile = queueFileForUpload(path, null, "failed");
+                MediaFile mediaFile = queueFileForUpload(uri, getContentResolver().getType(uri), null, "failed");
                 if (mediaFile == null) {
                     continue;
                 }
@@ -1502,7 +1495,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMedia(Uri mediaUri) {
-        if (mediaUri != null && !MediaUtils.isInMediaStore(mediaUri) && !mediaUri.toString().startsWith("/")) {
+        if (mediaUri != null && !MediaUtils.isInMediaStore(mediaUri) && !mediaUri.toString().startsWith("/")
+            && !mediaUri.toString().startsWith("file://") ) {
             mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
         }
 
@@ -1533,13 +1527,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return path;
     }
 
-    private boolean addMediaVisualEditor(Uri imageUri) {
+    private boolean addMediaVisualEditor(Uri uri) {
         String path;
-        if (imageUri.toString().contains("content:")) {
-            path = getPathFromContentUri(imageUri);
+        if (uri.toString().contains("content:")) {
+            path = getPathFromContentUri(uri);
         } else {
             // File is not in media library
-            path = imageUri.toString().replace("file://", "");
+            path = uri.toString().replace("file://", "");
         }
 
         if (path == null) {
@@ -1547,7 +1541,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        MediaFile mediaFile = queueFileForUpload(path, new ArrayList<Long>());
+        MediaFile mediaFile = queueFileForUpload(uri, getContentResolver().getType(uri), null);
         if (mediaFile != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
         }
@@ -1650,7 +1644,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
-            queueFileForUpload(mediaUri.toString(), new ArrayList<Long>());
+            queueFileForUpload(mediaUri, getContentResolver().getType(mediaUri), null);
         }
     }
 
@@ -1918,11 +1912,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * @param mediaIdOut
      *  the new {@link org.wordpress.android.util.helpers.MediaFile} ID is added if non-null
      */
-    private MediaFile queueFileForUpload(String path, ArrayList<Long> mediaIdOut) {
-        return queueFileForUpload(path, mediaIdOut, "queued");
+    private MediaFile queueFileForUpload(Uri uri, String mimeType, ArrayList<Long> mediaIdOut) {
+        return queueFileForUpload(uri, mimeType, mediaIdOut, "queued");
     }
 
-    private MediaFile queueFileForUpload(String path, ArrayList<Long> mediaIdOut, String startingState) {
+    private MediaFile queueFileForUpload(Uri uri, String mimeType, ArrayList<Long> mediaIdOut, String startingState) {
+        String path = getRealPathFromURI(uri);
+
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
             Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
@@ -1937,13 +1933,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         MediaModel media = mMediaStore.instantiateMediaModel();
-        String mimeType = MediaUtils.getMediaFileMimeType(file);
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
         String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
 
         // Try to get mimetype if none was passed to this method
         if (mimeType == null) {
-            mimeType = getContentResolver().getType(Uri.parse(path));
+            mimeType = getContentResolver().getType(uri);
             if (mimeType == null) {
                 mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
             }
@@ -1961,11 +1956,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setFileName(filename);
         media.setFilePath(path);
         media.setLocalSiteId(mSite.getId());
-        media.setMediaId(System.currentTimeMillis());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
         media.setUploadState(MediaUploadState.QUEUED.toString());
-        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(media.getMediaId() / 1000));
+        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         mPendingUploads.add(media);
