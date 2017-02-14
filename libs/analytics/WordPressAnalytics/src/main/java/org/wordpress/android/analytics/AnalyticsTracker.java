@@ -98,6 +98,9 @@ public final class AnalyticsTracker {
         EDITOR_TAPPED_ORDERED_LIST, // Visual editor only
         EDITOR_TAPPED_UNLINK, // Visual editor only
         EDITOR_TAPPED_UNORDERED_LIST, // Visual editor only
+        EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
+        EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
+        EDITOR_AZTEC_ENABLED, // Aztec editor only
         ME_ACCESSED,
         ME_GRAVATAR_TAPPED,
         ME_GRAVATAR_TOOLTIP_TAPPED,

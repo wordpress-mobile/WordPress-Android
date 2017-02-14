@@ -320,7 +320,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         mMenu = menu;
-        getMenuInflater().inflate(R.menu.media, menu);
+        getMenuInflater().inflate(R.menu.media_browser, menu);
         return true;
     }
 

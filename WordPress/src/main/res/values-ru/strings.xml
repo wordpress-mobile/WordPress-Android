@@ -243,7 +243,7 @@ Language: ru
 	<string name="editor_page_title_placeholder">Заголовок страницы</string>
 	<string name="editor_post_title_placeholder">Заголовок записи</string>
 	<string name="email_address">Адрес электронной почты</string>
-	<string name="preference_show_visual_editor">Показать визуальный редактор</string>
+	<string name="preference_editor_type">Показать визуальный редактор</string>
 	<string name="preference_editor">Редактор</string>
 	<string name="dlg_sure_to_delete_comments">Удалить эти комментарии без возможности восстановления?</string>
 	<string name="dlg_sure_to_delete_comment">Удалить этот комментарий без возможности восстановления?</string>

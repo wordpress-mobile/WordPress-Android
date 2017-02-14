@@ -294,7 +294,7 @@ Language: sq_AL
 	<string name="editor_page_title_placeholder">Titull Faqeje</string>
 	<string name="editor_post_title_placeholder">Titull Postimi</string>
 	<string name="email_address">Adresë email</string>
-	<string name="preference_show_visual_editor">Shfaq përpunuesin pamor</string>
+	<string name="preference_editor_type">Shfaq përpunuesin pamor</string>
 	<string name="dlg_sure_to_delete_comments">Të fshihen përgjithmonë këto komente?</string>
 	<string name="preference_editor">Përpunues</string>
 	<string name="dlg_sure_to_delete_comment">Të fshihet përgjithmonë ky koment?</string>

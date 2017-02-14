@@ -291,9 +291,9 @@ Language: id
 	<string name="editor_page_title_placeholder">Judul Halaman</string>
 	<string name="editor_post_title_placeholder">Judul Kiriman</string>
 	<string name="email_address">Alamat email</string>
-	<string name="preference_show_visual_editor">Tampilkan editor visual</string>
-	<string name="dlg_sure_to_delete_comments">Hapus komentar ini secara permanen?</string>
+	<string name="preference_editor_type">Tampilkan editor visual</string>
 	<string name="preference_editor">Penyunting</string>
+	<string name="dlg_sure_to_delete_comments">Hapus komentar ini secara permanen?</string>
 	<string name="dlg_sure_to_delete_comment">Hapus komentar ini secara permanen?</string>
 	<string name="mnu_comment_delete_permanently">Hapus</string>
 	<string name="comment_deleted_permanently">Komentar dihapus</string>

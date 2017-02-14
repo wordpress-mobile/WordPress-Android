@@ -258,9 +258,9 @@ Language: ko_KR
 	<string name="editor_page_title_placeholder">페이지 제목</string>
 	<string name="editor_post_title_placeholder">글 제목</string>
 	<string name="email_address">이메일 주소</string>
-	<string name="preference_show_visual_editor">비주얼 편집기 표시</string>
-	<string name="dlg_sure_to_delete_comments">이 댓글을 영구 삭제하시겠습니까?</string>
+	<string name="preference_editor_type">비주얼 편집기 표시</string>
 	<string name="preference_editor">편집자</string>
+	<string name="dlg_sure_to_delete_comments">이 댓글을 영구 삭제하시겠습니까?</string>
 	<string name="dlg_sure_to_delete_comment">이 댓글을 영구 삭제하시겠습니까?</string>
 	<string name="mnu_comment_delete_permanently">삭제</string>
 	<string name="comment_deleted_permanently">댓글 삭제됨</string>

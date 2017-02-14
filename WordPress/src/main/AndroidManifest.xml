@@ -430,6 +430,19 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.AztecEditorOptionsReceiver">
+            <intent-filter>
+                <data android:host="aztec"
+                    android:scheme="wordpress" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+            </intent-filter>
+        </activity>
+
         <!-- Lib activities-->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

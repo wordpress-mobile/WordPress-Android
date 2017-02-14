@@ -294,7 +294,7 @@ Language: cs_CZ
 	<string name="editor_page_title_placeholder">Název stránky</string>
 	<string name="editor_post_title_placeholder">Název příspěvku</string>
 	<string name="email_address">Emailová adresa</string>
-	<string name="preference_show_visual_editor">Zobrazit vizuální editor</string>
+	<string name="preference_editor_type">Zobrazit vizuální editor</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Smazat trvale tyto komentáře?</string>
 	<string name="dlg_sure_to_delete_comment">Smazat trvale tento komentář?</string>

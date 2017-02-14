@@ -7,13 +7,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -67,7 +67,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        updateVisualEditorSettings();
+        updateEditorSettings();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateVisualEditorSettings() {
+    private void updateEditorSettings() {
         if (!AppPrefs.isVisualEditorAvailable()) {
             PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity()
                     .getString(R.string.pref_key_account_settings_root));
@@ -122,18 +122,57 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final SwitchPreference visualEditorSwitch = (SwitchPreference) findPreference(getActivity()
-                    .getString(R.string.pref_key_visual_editor_enabled));
-            visualEditorSwitch.setChecked(AppPrefs.isVisualEditorEnabled());
-            visualEditorSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            final ListPreference editorTypePreference = (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
+
+            // If user has Aztec preference from previous installation and it's not available anymore, don't use it
+            if (!AppPrefs.isAztecEditorAvailable() && "2".equals(editorTypePreference.getValue())) {
+                editorTypePreference.setValue("0");
+            }
+
+
+            // if Aztec unavailable, only show the old list old of editors
+            if (!AppPrefs.isAztecEditorAvailable()) {
+                editorTypePreference.setEntries(R.array.editor_entries_without_aztec);
+                editorTypePreference.setEntryValues(R.array.editor_values_without_aztec);
+            }
+
+            editorTypePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
-                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                    if (newValue == null) return false;
-                    visualEditorSwitch.setChecked((Boolean) newValue);
-                    AppPrefs.setVisualEditorEnabled((Boolean) newValue);
-                    return true;
+                public boolean onPreferenceChange(final Preference preference, final Object value) {
+                    if (value != null) {
+                        int index = Integer.parseInt(value.toString());
+                        CharSequence[] entries = editorTypePreference.getEntries();
+                        editorTypePreference.setSummary(entries[index]);
+
+                        switch (index) {
+                            case 1:
+                                AppPrefs.setAztecEditorEnabled(false);
+                                AppPrefs.setVisualEditorEnabled(true);
+                                break;
+                            case 2:
+                                AppPrefs.setAztecEditorEnabled(true);
+                                AppPrefs.setVisualEditorEnabled(false);
+                                break;
+                            default:
+                                AppPrefs.setAztecEditorEnabled(false);
+                                AppPrefs.setVisualEditorEnabled(false);
+                                break;
+                        }
+
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             });
+
+            String editorTypeKey = getString(R.string.pref_key_editor_type);
+            String editorTypeSetting = mSettings.getString(editorTypeKey, "");
+
+            if (!editorTypeSetting.equalsIgnoreCase("")) {
+                CharSequence[] entries = editorTypePreference.getEntries();
+                editorTypePreference.setSummary(entries[Integer.parseInt(editorTypeSetting)]);
+            }
         }
     }
 
