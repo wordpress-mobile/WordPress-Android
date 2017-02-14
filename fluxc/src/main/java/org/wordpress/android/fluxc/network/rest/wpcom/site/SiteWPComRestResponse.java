@@ -13,6 +13,7 @@ public class SiteWPComRestResponse extends Payload implements Response {
     public class Options {
         public boolean videopress_enabled;
         public boolean featured_images_enabled;
+        public boolean is_automated_transfer;
         public String admin_url;
         public String login_url;
         public String timezone;
