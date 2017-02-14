@@ -213,7 +213,7 @@ public class WordPress extends MultiDexApplication {
 
         if (!mAccountStore.hasAccessToken() || !AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
             sIsMigrationInProgress = true;
-            performFluxCMigration();
+            migrateAccessToken();
         }
 
         ProfilingUtils.start("App Startup");
@@ -269,7 +269,7 @@ public class WordPress extends MultiDexApplication {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    private void performFluxCMigration() {
+    private void migrateAccessToken() {
         // Migrate access token AccountStore
         if (!mAccountStore.hasAccessToken()) {
             AppLog.i(T.DB, "No access token found in FluxC - attempting to migrate existing one");
