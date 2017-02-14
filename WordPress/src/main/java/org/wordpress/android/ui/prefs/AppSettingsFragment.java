@@ -126,9 +126,12 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
             // If user has Aztec preference from previous installation and it's not available anymore, don't use it
             if (!AppPrefs.isAztecEditorAvailable() && "2".equals(editorTypePreference.getValue())) {
-                editorTypePreference.setValue("0");
+                if (AppPrefs.isVisualEditorEnabled()) {
+                    editorTypePreference.setValue("1");
+                } else {
+                    editorTypePreference.setValue("0");
+                }
             }
-
 
             // if Aztec unavailable, only show the old list old of editors
             if (!AppPrefs.isAztecEditorAvailable()) {

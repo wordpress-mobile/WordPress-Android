@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -340,17 +341,24 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         return hiddenSites;
     }
 
-    void setVisibilityForSelectedSites(boolean makeVisible) {
+    Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
         SiteList sites = getSelectedSites();
+        Set<SiteRecord> siteRecordSet = new HashSet<>();
         if (sites != null && sites.size() > 0) {
             for (SiteRecord site: sites) {
                 int index = mAllSites.indexOfSite(site);
                 if (index > -1) {
-                    mAllSites.get(index).isHidden = !makeVisible;
+                    SiteRecord siteRecord = mAllSites.get(index);
+                    if (siteRecord.isHidden == makeVisible) {
+                        // add it to change set
+                        siteRecordSet.add(siteRecord);
+                    }
+                    siteRecord.isHidden = !makeVisible;
                 }
             }
         }
         notifyDataSetChanged();
+        return siteRecordSet;
     }
 
     void loadSites() {
