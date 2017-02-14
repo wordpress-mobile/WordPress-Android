@@ -279,13 +279,18 @@ public class WordPress extends MultiDexApplication {
             if (!TextUtils.isEmpty(migratedToken)) {
                 AppLog.i(T.DB, "Access token successfully migrated to FluxC - fetching accounts and sites");
                 AppPrefs.setAccessTokenMigrated(true);
+
                 mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                return;
             }
         }
 
-        // Migrate self-hosted sites to FluxC
+        migrateSelfHostedSites();
+    }
+
+    private void migrateSelfHostedSites() {
         if (!AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
             List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
             if (siteList != null && !siteList.isEmpty()) {
@@ -299,6 +304,9 @@ public class WordPress extends MultiDexApplication {
                 endMigration();
             }
             AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
+        } else {
+            AppLog.i(T.DB, "Self-hosted sites have already been migrated");
+            endMigration();
         }
     }
 
@@ -493,14 +501,10 @@ public class WordPress extends MultiDexApplication {
         }
 
         if (mRemainingSelfHostedSitesToFetch == 0) {
-            if (AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
-                // Token has been migrated, any WP.com sites have been fetched, and there aren't any self-hosted sites
-                // to migrate
-                AppLog.i(T.DB, "Access token migrated and WP.com sites fetched - migration complete");
-                endMigration();
-            }
-            // It's unlikely, but otherwise, we're currently extracting self-hosted sites from the deprecated db,
-            // and ending the migration is up to the site migration step
+            // Token has been migrated, and any WP.com sites have been fetched
+            // Attempt to migrate self-hosted sites
+            AppLog.i(T.DB, "Access token migrated and WP.com sites fetched - attempting to migrate self-hosted sites");
+            migrateSelfHostedSites();
         } else if (mRemainingSelfHostedSitesToFetch > 1) {
             mRemainingSelfHostedSitesToFetch--;
             AppLog.i(T.DB, "Self-hosted sites remaining to fetch for migration: " + mRemainingSelfHostedSitesToFetch);
