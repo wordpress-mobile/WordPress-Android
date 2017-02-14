@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-17 21:40:18+0000
+Translation-Revision-Date: 2017-01-30 12:22:21+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.3.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Jetpack eklentisi bağlı fakat istatistik modülü etkin değil. Site yöneticisi ile iletişime geçin.</string>
+	<string name="jetpack_stats_module_disabled_message">Jetpack eklentisi bağlı fakat istatistik modülü etkin değil. İstatistikleri etkinleştirmek ister misiniz?</string>
 	<string name="jetpack_info">Jetpack bilgisi</string>
+	<string name="reader_photo_by">%s tarafından çekilmiş fotoğraf</string>
 	<string name="reader_label_visit">Ziyaret et</string>
+	<string name="all_your_sites">Tüm sitelerim</string>
+	<string name="pending_draft_more">%d yazı taslağı hazırladınız, ancak yayımlamadınız. Kontrol etmek için dokunun.</string>
+	<string name="pending_draft_one">\'%1$s\' yazısını %2$d gün önce taslak oluşturdunuz ancak yayımlamadınız.</string>
+	<string name="pending_draft_one_generic">\'%s\' yazısını taslak olarak oluşturdunuz ancak yayımlamadınız.</string>
 	<string name="no_default_app_available_to_open_link">Bağlantı açılamıyor</string>
-	<string name="notification_pending_drafts">Bekleyen taslak olursa beni bilgilendir</string>
+	<string name="notification_pending_drafts">Bekleyen taslaklar hakkında beni bilgilendir</string>
 	<string name="invalid_verification_code_format">Altı haneli numara olmalı</string>
 	<string name="confirm_discard_changes">Kaydedilmemiş verilerden vazgeçilsin mi?</string>
 	<string name="swipe_for_more">Daha fazlası için parmağınızı kaydırın</string>

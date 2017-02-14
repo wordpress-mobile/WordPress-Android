@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-06-29 10:53:40+0000
+Translation-Revision-Date: 2017-02-02 00:38:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: da_DK
 -->
 <resources>
+	<string name="signout">Log ud</string>
+	<string name="reader_label_image_count_one">1 billede</string>
+	<string name="role_contributor">Bidragsyder</string>
+	<string name="role_editor">Redaktør</string>
+	<string name="role_admin">Administrator</string>
+	<string name="alignment_left">Venstre</string>
+	<string name="error_fetch_users_list">Kunne ikke hente sidens brugere</string>
+	<string name="people_dropdown_item_team">Gruppe</string>
 	<string name="plans_post_purchase_button_themes">Gennemse temaer</string>
 	<string name="plans_post_purchase_title_themes">Find et perfekt, premium tema</string>
 	<string name="plans_post_purchase_button_video">Start på nyt indlæg</string>
