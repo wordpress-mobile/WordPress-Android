@@ -602,7 +602,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     }
 
     @Override
-    public void onGalleryMediaUploadSucceeded(final long galleryId, String remoteMediaId, int remaining) {
+    public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
     }
 
     /**

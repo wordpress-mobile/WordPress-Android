@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
@@ -289,7 +290,7 @@ public class MediaUploadService extends Service {
 
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
         // event for unknown media, ignoring
         if (event.media == null || !matchesInProgressMedia(event.media)) {

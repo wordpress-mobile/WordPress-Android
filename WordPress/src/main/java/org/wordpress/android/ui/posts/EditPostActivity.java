@@ -1817,7 +1817,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
         if (event.isError()) {
             final String errorMessage;
@@ -1846,24 +1846,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 ToastUtils.showToast(EditPostActivity.this, errorMessage, ToastUtils.Duration.SHORT);
             }
         } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests.isEmpty()) {
-                        // If there are pending requests for video URLs from VideoPress ids, query the DB for
-                        // them again and notify the editor
-                        for (String videoId : mPendingVideoPressInfoRequests) {
-                            String videoUrl = mMediaStore.
-                                    getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
-                            String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
+            if (mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests.isEmpty()) {
+                // If there are pending requests for video URLs from VideoPress ids, query the DB for
+                // them again and notify the editor
+                for (String videoId : mPendingVideoPressInfoRequests) {
+                    String videoUrl = mMediaStore.
+                            getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
+                    String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
 
-                            mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
-                        }
-
-                        mPendingVideoPressInfoRequests.clear();
-                    }
+                    mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
                 }
-            });
+
+                mPendingVideoPressInfoRequests.clear();
+            }
         }
     }
 

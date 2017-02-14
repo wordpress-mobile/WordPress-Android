@@ -7,14 +7,15 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -100,7 +101,7 @@ public class MediaDeleteService extends Service {
     }
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(OnMediaChanged event) {
         // event for unknown media, ignoring
         if (event.media == null || event.media.isEmpty() || !matchesInProgressMedia(event.media.get(0))) {
