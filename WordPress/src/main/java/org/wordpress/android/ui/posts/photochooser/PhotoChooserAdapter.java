@@ -318,34 +318,17 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            String[] projection = { ID_COL };
+            // external (SDCARD) images
+            addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
 
-            // get external (SDCARD) images
-            Cursor extImages = mContext.getContentResolver().query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    null);
-            addMedia(extImages, false, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            // internal images
+            addMedia(MediaStore.Images.Media.INTERNAL_CONTENT_URI, false);
 
-            // get internal images
-            Cursor intImages = mContext.getContentResolver().query(
-                    MediaStore.Images.Media.INTERNAL_CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    null);
-            addMedia(intImages, false, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            // external videos
+            addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
 
-            // get external videos
-            Cursor intVideos = mContext.getContentResolver().query(
-                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    null);
-            addMedia(intVideos, true, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+            // internal videos
+            addMedia(MediaStore.Video.Media.INTERNAL_CONTENT_URI, true);
 
             // sort by id in reverse (newest first)
             Collections.sort(tmpList, new Comparator<PhotoChooserItem>() {
@@ -358,7 +341,18 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return true;
         }
 
-        private void addMedia(Cursor cursor, boolean isVideo, Uri baseUri) {
+        private void addMedia(Uri baseUri, boolean isVideo) {
+            String[] projection = { ID_COL };
+            Cursor cursor = mContext.getContentResolver().query(
+                    baseUri,
+                    projection,
+                    null,
+                    null,
+                    null);
+            if (cursor == null) {
+                return;
+            }
+
             int idIndex = cursor.getColumnIndexOrThrow(ID_COL);
             while (cursor.moveToNext()) {
                 PhotoChooserItem item = new PhotoChooserItem();
