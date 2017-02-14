@@ -311,4 +311,5 @@
     <dimen name="photo_chooser_item_padding">2dp</dimen>
     <dimen name="photo_chooser_selected_item_padding">4dp</dimen>
     <dimen name="photo_chooser_icon">48dp</dimen>
+    <dimen name="photo_chooser_video_overlay">36dp</dimen>
 </resources>

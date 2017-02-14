@@ -146,6 +146,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 photoHolder.txtSelectionCount.setVisibility(View.GONE);
             }
 
+            photoHolder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
             mThumbnailLoader.loadThumbnail(photoHolder.imgPhoto, item._id, item.isVideo);
         }
     }
@@ -238,6 +239,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private final ImageView imgPhoto;
         private final View selectedFrame;
         private final TextView txtSelectionCount;
+        private final View videoOverlay;
         private final GestureDetector detector;
 
         public PhotoViewHolder(View view) {
@@ -246,6 +248,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             imgPhoto = (ImageView) view.findViewById(R.id.image_photo);
             selectedFrame = view.findViewById(R.id.selected_frame);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
+            videoOverlay = view.findViewById(R.id.image_video_overlay);
 
             selectedFrame.getLayoutParams().width = mImageWidth;
             selectedFrame.getLayoutParams().height = mImageHeight;

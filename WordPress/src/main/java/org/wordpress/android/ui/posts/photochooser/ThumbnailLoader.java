@@ -88,7 +88,6 @@ class ThumbnailLoader {
         @Override
         public void run() {
             if (mIsVideo) {
-                // TODO: add player overlay
                 mThumbnail = MediaStore.Video.Thumbnails.getThumbnail(
                         mContext.getContentResolver(),
                         mImageId,
@@ -104,6 +103,7 @@ class ThumbnailLoader {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
+                    // TODO: handle null thumbnail - show error image, maybe?
                     if (mThumbnail != null && isImageViewValid()) {
                         mWeakImageView.get().setImageBitmap(mThumbnail);
                         if (mIsFadeEnabled) {
