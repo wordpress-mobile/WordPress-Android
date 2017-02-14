@@ -158,7 +158,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         mIsMultiSelectEnabled = enabled;
 
-        if (!enabled && getNumSelected() > 0) {
+        if (!enabled && mSelectedUris.size() > 0) {
             mSelectedUris.clear();
             notifyDataSetChangedNoFade();
         }
