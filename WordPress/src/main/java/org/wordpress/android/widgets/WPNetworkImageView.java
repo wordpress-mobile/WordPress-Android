@@ -100,17 +100,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
 
         // The URL has potentially changed. See if we need to load it.
-        loadImageIfNecessary(imageLoadListener);
-    }
-
-    /*
-     * determine whether we can show a thumbnail image for the passed video - currently
-     * we support YouTube, Vimeo & standard images
-     */
-    public static boolean canShowVideoThumbnail(String videoUrl) {
-        return ReaderVideoUtils.isVimeoLink(videoUrl)
-                || ReaderVideoUtils.isYouTubeVideoLink(videoUrl)
-                || MediaUtils.isValidImage(videoUrl);
+        loadImageIfNecessary(false, imageLoadListener);
     }
 
     /*
@@ -159,8 +149,10 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     /**
      * Loads the image for the view if it isn't already loaded.
+     * @param isInLayoutPass True if this was invoked from a layout pass, false otherwise.
      */
-    private void loadImageIfNecessary(final ImageLoadListener imageLoadListener) {
+    private void loadImageIfNecessary(final boolean isInLayoutPass,
+                                      final ImageLoadListener imageLoadListener) {
         // do nothing if image type hasn't been set yet
         if (mImageType == ImageType.NONE) {
             return;
@@ -203,29 +195,73 @@ public class WPNetworkImageView extends AppCompatImageView {
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
         ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
-                new ImageLoader.ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        showErrorImage();
-                        // keep track of URLs that 404 so we can skip them the next time
-                        int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
-                        if (statusCode == 404) {
-                            mUrlSkipList.add(mUrl);
-                        }
-
-                        if (imageLoadListener != null) {
-                            imageLoadListener.onError();
-                        }
-                    }
-
-                    @Override
-                    public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
-                        handleResponse(response, isImmediate, imageLoadListener);
-                    }
-                }, 0, 0, getScaleType());
-
+                new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener), 0, 0, getScaleType());
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
+    }
+
+    /**
+     * Our implementation of ImageLoader.ImageListener that keeps a reference to the requested URL
+     * and makes sure we're setting the correct requested picture on response.
+     *
+     * Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5100
+     * This is a fix for those cases when WPNetworkImageView instances are used in UI items that can be recycled.
+     * The cell containing WPNetworkImageView could be recycled while the image request was still underway,
+     * so when the request completed it set the picture to the one requested prior to recycling.
+     */
+    private class WPNetworkImageLoaderListener implements ImageLoader.ImageListener {
+        private final String mRequestedURL;
+        private final ImageLoadListener mImageLoadListener;
+        private final boolean mIsInLayoutPass;
+
+        WPNetworkImageLoaderListener(final String requestedURL,
+                                     final boolean isInLayoutPass,
+                                     final ImageLoadListener imageLoadListener) {
+            mRequestedURL = requestedURL;
+            mIsInLayoutPass = isInLayoutPass;
+            mImageLoadListener = imageLoadListener;
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            // keep track of URLs that 404 so we can skip them the next time
+            int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
+            if (statusCode == 404) {
+                mUrlSkipList.add(mRequestedURL);
+            }
+
+            if (mUrl == null || !mUrl.equals(mRequestedURL)) {
+                AppLog.w(AppLog.T.UTILS, "WPNetworkImageView > request no longer valid: " + mRequestedURL);
+                return;
+            }
+            showErrorImage();
+
+            if (mImageLoadListener != null) {
+                mImageLoadListener.onError();
+            }
+        }
+
+        @Override
+        public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
+            if (mUrl == null || !mUrl.equals(mRequestedURL)) {
+                AppLog.w(AppLog.T.UTILS, "WPNetworkImageView > request no longer valid: " + mRequestedURL);
+                return;
+            }
+            // If this was an immediate response that was delivered inside of a layout
+            // pass do not set the image immediately as it will trigger a requestLayout
+            // inside of a layout. Instead, defer setting the image by posting back to
+            // the main thread.
+            if (isImmediate && mIsInLayoutPass) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onResponse(response, false);
+                    }
+                });
+                return;
+            }
+            handleResponse(response, isImmediate, mImageLoadListener);
+        }
     }
 
     private static boolean canFadeInImageType(ImageType imageType) {
@@ -272,10 +308,10 @@ public class WPNetworkImageView extends AppCompatImageView {
             // If the view was bound to an image request, cancel it and clear
             // out the image from the view.
             mImageContainer.cancelRequest();
-            setImageBitmap(null);
             // also clear out the container so we can reload the image if necessary.
             mImageContainer = null;
         }
+        setImageBitmap(null);
     }
 
     public void removeCurrentUrlFromSkiplist() {
@@ -285,9 +321,21 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        resetImage();
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        loadImageIfNecessary(true, null);
+    }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        if (mImageContainer != null) {
+            // If the view was bound to an image request, cancel it and clear
+            // out the image from the view.
+            mImageContainer.cancelRequest();
+            setImageBitmap(null);
+            // also clear out the container so we can reload the image if necessary.
+            mImageContainer = null;
+        }
         super.onDetachedFromWindow();
     }
 

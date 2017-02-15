@@ -10,10 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -31,6 +29,7 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
@@ -49,7 +48,10 @@ public class MediaEditFragment extends Fragment {
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mDescriptionView;
-    private Button mSaveButton;
+
+    private String mTitleOriginal;
+    private String mDescriptionOriginal;
+    private String mCaptionOriginal;
 
     private MediaEditFragmentCallback mCallback;
 
@@ -62,6 +64,7 @@ public class MediaEditFragment extends Fragment {
 
     public interface MediaEditFragmentCallback {
         void onResume(Fragment fragment);
+        void setLookClosable();
         void onPause(Fragment fragment);
         void onSavedEdit(String mediaId, boolean result);
     }
@@ -115,6 +118,7 @@ public class MediaEditFragment extends Fragment {
         super.onResume();
         if (hasCallback()) {
             mCallback.onResume(this);
+            mCallback.setLookClosable();
         }
     }
 
@@ -147,13 +151,6 @@ public class MediaEditFragment extends Fragment {
         mDescriptionView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_description);
         mLocalImageView = (ImageView) mScrollView.findViewById(R.id.media_edit_fragment_image_local);
         mNetworkImageView = (NetworkImageView) mScrollView.findViewById(R.id.media_edit_fragment_image_network);
-        mSaveButton = (Button) mScrollView.findViewById(R.id.media_edit_save_button);
-        mSaveButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editMedia();
-            }
-        });
 
         disableEditingOnOldVersion();
 
@@ -167,7 +164,6 @@ public class MediaEditFragment extends Fragment {
             return;
         }
 
-        mSaveButton.setEnabled(false);
         mTitleView.setEnabled(false);
         mCaptionView.setEnabled(false);
         mDescriptionView.setEnabled(false);
@@ -212,7 +208,7 @@ public class MediaEditFragment extends Fragment {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
                         }
-                        setMediaUpdating(false);
+                        mIsMediaUpdating = false;
                         if (hasCallback()) {
                             mCallback.onSavedEdit(mediaId, true);
                         }
@@ -224,7 +220,7 @@ public class MediaEditFragment extends Fragment {
                             Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
                             getActivity().invalidateOptionsMenu();
                         }
-                        setMediaUpdating(false);
+                        mIsMediaUpdating = false;
                         if (hasCallback()) {
                             mCallback.onSavedEdit(mediaId, false);
                         }
@@ -236,19 +232,8 @@ public class MediaEditFragment extends Fragment {
         apiArgs.add(currentBlog);
 
         if (!isMediaUpdating()) {
-            setMediaUpdating(true);
+            mIsMediaUpdating = true;
             task.execute(apiArgs);
-        }
-    }
-
-    private void setMediaUpdating(boolean isUpdating) {
-        mIsMediaUpdating = isUpdating;
-        mSaveButton.setEnabled(!isUpdating);
-
-        if (isUpdating) {
-            mSaveButton.setText(R.string.saving);
-        } else {
-            mSaveButton.setText(R.string.save);
         }
     }
 
@@ -316,17 +301,22 @@ public class MediaEditFragment extends Fragment {
         }
 
         // user can't edit local files
-        mSaveButton.setEnabled(!isLocal);
         mTitleView.setEnabled(!isLocal);
         mCaptionView.setEnabled(!isLocal);
         mDescriptionView.setEnabled(!isLocal);
 
         mMediaId = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID));
-        mTitleView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE)));
+
+        mTitleOriginal = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE));
+        mTitleView.setText(mTitleOriginal);
         mTitleView.requestFocus();
         mTitleView.setSelection(mTitleView.getText().length());
-        mCaptionView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION)));
-        mDescriptionView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION)));
+
+        mCaptionOriginal = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION));
+        mCaptionView.setText(mCaptionOriginal);
+
+        mDescriptionOriginal = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION));
+        mDescriptionView.setText(mDescriptionOriginal);
 
         refreshImageView(cursor, isLocal);
         disableEditingOnOldVersion();
@@ -381,5 +371,12 @@ public class MediaEditFragment extends Fragment {
                 task.execute(filePath);
             }
         }
+    }
+
+    public boolean isDirty() {
+        return mMediaId != null &&
+                (!StringUtils.equals(mTitleOriginal, mTitleView.getText().toString())
+                || !StringUtils.equals(mCaptionOriginal, mCaptionView.getText().toString())
+                || !StringUtils.equals(mDescriptionOriginal, mDescriptionView.getText().toString()));
     }
 }

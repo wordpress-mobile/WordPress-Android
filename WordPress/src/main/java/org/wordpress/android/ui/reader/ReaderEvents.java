@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.util.StringUtils;
 
@@ -33,6 +33,8 @@ public class ReaderEvents {
 
     public static class FollowedBlogsChanged {}
     public static class RecommendedBlogsChanged {}
+
+    public static class SinglePostDownloaded {};
 
     public static class UpdatePostsStarted {
         private final ReaderPostService.UpdateAction mAction;
@@ -120,11 +122,11 @@ public class ReaderEvents {
     public static class RelatedPostsUpdated {
         private final long mSourcePostId;
         private final long mSourceSiteId;
-        private final ReaderRelatedPostList mLocalRelatedPosts;
-        private final ReaderRelatedPostList mGlobalRelatedPosts;
+        private final ReaderSimplePostList mLocalRelatedPosts;
+        private final ReaderSimplePostList mGlobalRelatedPosts;
         public RelatedPostsUpdated(@NonNull ReaderPost sourcePost,
-                                   @NonNull ReaderRelatedPostList localRelatedPosts,
-                                   @NonNull ReaderRelatedPostList globalRelatedPosts) {
+                                   @NonNull ReaderSimplePostList localRelatedPosts,
+                                   @NonNull ReaderSimplePostList globalRelatedPosts) {
             mSourcePostId = sourcePost.postId;
             mSourceSiteId = sourcePost.blogId;
             mLocalRelatedPosts = localRelatedPosts;
@@ -136,10 +138,10 @@ public class ReaderEvents {
         public long getSourceSiteId() {
             return mSourceSiteId;
         }
-        public ReaderRelatedPostList getLocalRelatedPosts() {
+        public ReaderSimplePostList getLocalRelatedPosts() {
             return mLocalRelatedPosts;
         }
-        public ReaderRelatedPostList getGlobalRelatedPosts() {
+        public ReaderSimplePostList getGlobalRelatedPosts() {
             return mGlobalRelatedPosts;
         }
         public boolean hasLocalRelatedPosts() {

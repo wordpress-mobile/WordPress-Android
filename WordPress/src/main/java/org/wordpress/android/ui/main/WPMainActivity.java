@@ -4,6 +4,9 @@ import android.animation.ObjectAnimator;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +36,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.push.NotificationsScreenLockWatchService;
 import org.wordpress.android.ui.ActivityId;
@@ -41,8 +45,11 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
+import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -205,7 +212,12 @@ public class WPMainActivity extends AppCompatActivity {
                         false));
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
-                    launchWithNoteId();
+                    if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
+                        launchWithPostId(getIntent().getLongExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0),
+                                getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA, false));
+                    } else {
+                        launchWithNoteId();
+                    }
                 } else {
                     int position = AppPrefs.getMainTabIndex();
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
@@ -218,6 +230,12 @@ public class WPMainActivity extends AppCompatActivity {
             }
         }
         startService(new Intent(this, NotificationsScreenLockWatchService.class));
+
+        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
+        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
+
+        // monitor whether we're not the default app
+        trackDefaultApp();
     }
 
     @Override
@@ -323,12 +341,12 @@ public class WPMainActivity extends AppCompatActivity {
                     // we processed the voice reply, so we exit this function immediately
                 } else {
                     boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
+                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply, NotesAdapter.FILTERS.FILTER_ALL);
                 }
 
             } else {
                 AppLog.e(T.NOTIFS, "app launched from a PN that doesn't have a note_id in it!!");
-               return;
+                return;
             }
         } else {
           // mark all tapped here
@@ -336,6 +354,28 @@ public class WPMainActivity extends AppCompatActivity {
         }
 
         GCMMessageService.removeAllNotifications(this);
+    }
+
+    /*
+    * called from an internal pending draft notification, so the user can land in the local draft and take action
+    * such as finish editing and publish, or delete the post, etc. */
+    private void launchWithPostId(long postId, boolean isPage) {
+        if (isFinishing() || getIntent() == null) return;
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
+        NativeNotificationsUtils.dismissNotification(PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId), this);
+
+        //if no specific post id passed, show the list
+        if (postId == 0 ) {
+            //show list
+            if (isPage) {
+                ActivityLauncher.viewCurrentBlogPages(this);
+            } else {
+                ActivityLauncher.viewCurrentBlogPosts(this);
+            }
+        } else {
+            ActivityLauncher.editBlogPostOrPageForResult(this, postId, isPage);
+        }
     }
 
     @Override
@@ -356,7 +396,7 @@ public class WPMainActivity extends AppCompatActivity {
 
         new CheckUnseenNotesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
+        // ensure the deep linking activity is enabled. We might be returning from the external-browser viewing of a post
         WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
 
         // We need to track the current item on the screen when this activity is resumed.
@@ -437,6 +477,16 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
+    private void trackDefaultApp() {
+        Intent wpcomIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.wordpresscom_sample_post)));
+        ResolveInfo resolveInfo = getPackageManager().resolveActivity(wpcomIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (resolveInfo != null && !getPackageName().equals(resolveInfo.activityInfo.name)) {
+            // not set as default handler so, track this to evaluate. Note, a resolver/chooser might be the default.
+            AnalyticsUtils.trackWithDefaultInterceptor(AnalyticsTracker.Stat.DEEP_LINK_NOT_DEFAULT_HANDER,
+                    resolveInfo.activityInfo.name);
+        }
+    }
+
     public void setReaderTabActive() {
         if (isFinishing() || mTabLayout == null) return;
 
@@ -466,10 +516,20 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void moderateCommentOnActivityResult(Intent data) {
+
         Note note = NotificationsTable.getNoteById(StringUtils.notNullStr(data.getStringExtra
                 (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
+
+        if (note == null) {
+            // sometimes it could be that a note is set to be moderated but a refresh in the DB will
+            // make the note disappear, meaning it doesn't exist on the server anymore. So, it' ok
+            // to fail silently here.
+            return;
+        }
+
         CommentStatus status = CommentStatus.fromString(data.getStringExtra(
                 NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
+
         NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
     }
 

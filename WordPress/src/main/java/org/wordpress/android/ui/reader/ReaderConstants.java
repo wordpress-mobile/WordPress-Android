@@ -38,6 +38,7 @@ public class ReaderConstants {
     static final String ARG_IS_SINGLE_POST    = "is_single_post";
     static final String ARG_IS_RELATED_POST   = "is_related_post";
     static final String ARG_SEARCH_QUERY      = "search_query";
+    static final String ARG_VIDEO_URL         = "video_url";
 
     static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";
     static final String KEY_ALREADY_UPDATED   = "already_updated";
@@ -46,6 +47,8 @@ public class ReaderConstants {
     static final String KEY_WAS_PAUSED        = "was_paused";
     static final String KEY_ERROR_MESSAGE     = "error_message";
     static final String KEY_FIRST_LOAD        = "first_load";
+    static final String KEY_ACTIVITY_TITLE    = "activity_title";
+    static final String KEY_TRACKED_POSITIONS = "tracked_positions";
 
     static final String KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS = "already_tracked_global_related_posts";
     static final String KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS  = "already_tracked_local_related_posts";

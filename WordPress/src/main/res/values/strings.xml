@@ -48,6 +48,7 @@
     <string name="deselect_all">Deselect all</string>
     <string name="notification_sound">Notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
+    <string name="notification_pending_drafts">Notify me on pending drafts</string>
     <string name="notification_blink">Blink notification light</string>
     <string name="sure_to_remove_account">Remove this site?</string>
     <string name="yes">Yes</string>
@@ -84,6 +85,8 @@
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
     <string name="send">Send</string>
+    <string name="swipe_for_more">Swipe for more</string>
+    <string name="no_default_app_available_to_open_link">Unable to open the link</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -173,6 +176,7 @@
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
+    <string name="confirm_discard_changes">Discard unsaved changes?</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Delete selected item?</string>
@@ -335,6 +339,16 @@
     <string name="comment_q_action_liking">Liking…</string>
     <string name="comment_q_action_approving">Approving…</string>
     <string name="comment_q_action_replying">Replying…</string>
+
+    <!-- pending draft local notifications -->
+    <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
+    <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
+    <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
+    <string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
+    <string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+    <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+
+    <string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -629,7 +643,23 @@
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
-    <string name="preference_show_visual_editor">Show visual editor</string>
+    <string name="preference_editor_type">Set editor type</string>
+
+    <string name="preference_editor_legacy">Legacy</string>
+    <string name="preference_editor_visual">Visual</string>
+    <string name="preference_editor_aztec" translatable="false">Aztec</string>
+
+    <string-array name="editor_entries" translatable="false">
+        <item>@string/preference_editor_legacy</item>
+        <item>@string/preference_editor_visual</item>
+        <item>@string/preference_editor_aztec</item>
+    </string-array>
+
+    <string-array name="editor_entries_without_aztec" translatable="false">
+        <item>@string/preference_editor_legacy</item>
+        <item>@string/preference_editor_visual</item>
+    </string-array>
+
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -860,6 +890,7 @@
     <string name="notification_settings">Notification Settings</string>
     <string name="notifications_sights_and_sounds">Sights and Sounds</string>
     <string name="your_sites">Your Sites</string>
+    <string name="all_your_sites">All My Sites</string>
     <string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
     <string name="notifications_account_emails">Email from WordPress.com</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
@@ -927,6 +958,10 @@
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
+    <string name="visual_editor_disabled">Visual Editor disabled</string>
+    <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
+    <string name="aztec_editor_disabled" translatable="false">Aztec Editor disabled</string>
+    <string name="aztec_editor_available" translatable="false">Aztec Editor available</string>
     <string name="new_editor_promo_button_label">Great, thanks!</string>
     <string name="new_editor_promo_title">Brand new editor</string>
     <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual
@@ -1018,6 +1053,7 @@
     <string name="blogusername">blogusername</string>
     <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
     <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
+    <string name="wordpress_dot_com_capitalized" translatable="false">WordPress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -1087,11 +1123,14 @@
     <!--
       Jetpack strings
     -->
+    <string name="jetpack_info">Jetpack info</string>
     <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
     <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_not_connected">Jetpack plugin not connected</string>
     <string name="jetpack_not_connected_message">The Jetpack plugin is installed, but not connected to WordPress.com. Do you want to connect Jetpack?</string>
+    <string name="jetpack_stats_module_disabled_message">The Jetpack plugin is connected, but the Stats module is not active. Do you want to activate Stats?</string>
+    <string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
 
     <!--
       reader strings
@@ -1140,6 +1179,7 @@
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_hint_post_search">Search WordPress.com</string>
+    <string name="reader_hint_search_followed_sites">Search followed sites</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
@@ -1164,6 +1204,8 @@
     <string name="reader_label_view_gallery">View Gallery</string>
     <string name="reader_label_image_count_one">1 image</string>
     <string name="reader_label_image_count_multi">%d images</string>
+    <string name="reader_label_visit">Visit</string>
+    <string name="reader_photo_by">Photo by %s</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -1189,7 +1231,6 @@
     <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
-    <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
     <string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
     <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
@@ -1203,6 +1244,7 @@
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
     <string name="reader_toast_err_already_liked">You have already liked that comment</string>
+    <string name="reader_toast_err_url_intent">Unable to open %s</string>
 
     <!-- snackbar messages -->
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
@@ -1224,6 +1266,7 @@
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
+    <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
@@ -1307,6 +1350,7 @@
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
     <string name="verification_code">Verification code</string>
     <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="invalid_verification_code_format">Must be six-digit number</string>
     <string name="verify">Verify</string>
     <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
     <string name="two_step_footer_button">Send code via text message</string>

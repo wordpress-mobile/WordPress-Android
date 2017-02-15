@@ -16,6 +16,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
@@ -48,7 +49,16 @@ public class ThemeWebActivity extends WPWebViewActivity {
         }
 
         String url = getUrl(currentTheme, type, currentTheme.isPremium());
-        openWPCOMURL(activity, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
+
+        if (type == ThemeWebActivityType.PREVIEW) {
+            // Do not open the Customizer with the in-app browser.
+            // Customizer may need to access local files (mostly pictures) on the device storage,
+            // and our internal webview doesn't handle this feature yet.
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4934
+            ActivityLauncher.openUrlExternal(activity, url);
+        } else {
+            openWPCOMURL(activity, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
+        }
     }
 
     /*
@@ -89,7 +99,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
         });
     }
 
-    private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, Blog blog, Boolean isCurrentTheme) {
+    private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, Blog blog,
+                                     boolean isCurrentTheme) {
         if (activity == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -104,11 +115,10 @@ public class ThemeWebActivity extends WPWebViewActivity {
 
         String authURL = ThemeWebActivity.getBlogLoginUrl(blog);
         Intent intent = new Intent(activity, ThemeWebActivity.class);
-        intent.putExtra(ThemeWebActivity.AUTHENTICATION_USER, blog.getUsername());
-        intent.putExtra(ThemeWebActivity.AUTHENTICATION_PASSWD, blog.getPassword());
         intent.putExtra(ThemeWebActivity.URL_TO_LOAD, url);
         intent.putExtra(ThemeWebActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(ThemeWebActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
         intent.putExtra(IS_PREMIUM_THEME, currentTheme.isPremium());
         intent.putExtra(IS_CURRENT_THEME, isCurrentTheme);
         intent.putExtra(THEME_NAME, currentTheme.getName());

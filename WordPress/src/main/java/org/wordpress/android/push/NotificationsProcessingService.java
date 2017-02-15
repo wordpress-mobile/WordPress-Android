@@ -7,8 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.text.TextUtils;
 
@@ -27,18 +25,13 @@ import org.wordpress.android.ui.comments.CommentActionResult;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
-
-import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
-import static org.wordpress.android.push.GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID;
-import static org.wordpress.android.push.GCMMessageService.AUTH_PUSH_NOTIFICATION_ID;
-import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
-import static org.wordpress.android.push.GCMMessageService.GROUP_NOTIFICATION_ID;
-import static org.wordpress.android.push.GCMMessageService.PUSH_ARG_NOTE_FULL_DATA;
-import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
 
 /**
  * service which makes it possible to process Notifications quick actions in the background,
@@ -47,6 +40,7 @@ import static org.wordpress.android.ui.notifications.NotificationsListFragment.N
  * - reply-to-comment
  * - approve
  * - 2fa approve & ignore
+ * - pending draft notification ignore & dismissal
  */
 
 public class NotificationsProcessingService extends Service {
@@ -57,6 +51,8 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_APPROVE = "action_approve";
     public static final String ARG_ACTION_AUTH_APPROVE = "action_auth_aprove";
     public static final String ARG_ACTION_AUTH_IGNORE = "action_auth_ignore";
+    public static final String ARG_ACTION_DRAFT_PENDING_DISMISS = "action_draft_pending_dismiss";
+    public static final String ARG_ACTION_DRAFT_PENDING_IGNORE = "action_draft_pending_ignore";
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
     public static final String ARG_NOTE_ID = "note_id";
 
@@ -159,12 +155,35 @@ public class NotificationsProcessingService extends Service {
                 // check special cases for authorization push
                 if (mActionType.equals(ARG_ACTION_AUTH_IGNORE)) {
                     //dismiss notifs
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
-                    dismissNotification(AUTH_PUSH_NOTIFICATION_ID);
-                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
-                    GCMMessageService.removeNotification(AUTH_PUSH_NOTIFICATION_ID);
+                    NativeNotificationsUtils.dismissNotification(
+                            GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
+                    NativeNotificationsUtils.dismissNotification(
+                            GCMMessageService.AUTH_PUSH_NOTIFICATION_ID, mContext);
+                    NativeNotificationsUtils.dismissNotification(
+                            GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
+                    GCMMessageService.removeNotification(GCMMessageService.AUTH_PUSH_NOTIFICATION_ID);
 
                     AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
+                    return;
+                }
+
+                // check special cases for pending draft notifications - ignore
+                if (mActionType.equals(ARG_ACTION_DRAFT_PENDING_IGNORE)) {
+                    //dismiss notif
+                    long postId = mIntent.getLongExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0);
+                    if (postId != 0) {
+                        NativeNotificationsUtils.dismissNotification(
+                                PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
+                                mContext
+                        );
+                    }
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_IGNORED);
+                    return;
+                }
+
+                // check special cases for pending draft notifications - dismiss
+                if (mActionType.equals(ARG_ACTION_DRAFT_PENDING_DISMISS)) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_DISMISSED);
                     return;
                 }
 
@@ -173,7 +192,8 @@ public class NotificationsProcessingService extends Service {
                     //because we've got inline-reply there with its own spinner to show progress
                     // no op
                 } else {
-                    showIntermediateMessageToUser(getProcessingTitleForAction(mActionType));
+                    NativeNotificationsUtils.showIntermediateMessageToUser(
+                            getProcessingTitleForAction(mActionType), mContext);
                 }
 
                 //if we still don't have a Note, go get it from the REST API
@@ -222,7 +242,7 @@ public class NotificationsProcessingService extends Service {
             mActionType = mIntent.getStringExtra(ARG_ACTION_TYPE);
             //default value for push notification ID is likely GROUP_NOTIFICATION_ID for the only
             // notif in active notifs map (there is only one notif if quick actions are available)
-            mPushId = GROUP_NOTIFICATION_ID;
+            mPushId = GCMMessageService.GROUP_NOTIFICATION_ID;
             if (mIntent.hasExtra(ARG_ACTION_REPLY_TEXT)) {
                 mReplyText = mIntent.getStringExtra(ARG_ACTION_REPLY_TEXT);
             }
@@ -262,7 +282,7 @@ public class NotificationsProcessingService extends Service {
         }
 
         private void obtainReplyTextFromRemoteInputBundle(Bundle bundle) {
-            CharSequence replyText = bundle.getCharSequence(EXTRA_VOICE_OR_INLINE_REPLY);
+            CharSequence replyText = bundle.getCharSequence(GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY);
             if (replyText != null) {
                 mReplyText = replyText.toString();
             }
@@ -332,10 +352,14 @@ public class NotificationsProcessingService extends Service {
                 successMessage = getString(R.string.comment_q_action_done_generic);
             }
 
+            NotificationsActions.markNoteAsRead(mNote);
+
             //dismiss any other pending result notification
-            dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+            NativeNotificationsUtils.dismissNotification(
+                    GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
             //update notification indicating the operation succeeded
-            showFinalMessageToUser(successMessage, ACTIONS_PROGRESS_NOTIFICATION_ID);
+            NativeNotificationsUtils.showFinalMessageToUser(successMessage,
+                    GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
             //remove the original notification from the system bar
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(mContext, mNoteId);
 
@@ -343,7 +367,8 @@ public class NotificationsProcessingService extends Service {
             Handler handler = new Handler(getMainLooper());
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
+                    NativeNotificationsUtils.dismissNotification(
+                            GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
                 }}, 3000); // show the success message for 3 seconds, then dismiss
 
             stopSelf(mTaskId);
@@ -367,15 +392,18 @@ public class NotificationsProcessingService extends Service {
                 errorMessage = getString(R.string.error_generic);
             }
             resetOriginalNotification();
-            dismissNotification(ACTIONS_PROGRESS_NOTIFICATION_ID);
-            showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
+            NativeNotificationsUtils.dismissNotification(
+                    GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
+            NativeNotificationsUtils.showFinalMessageToUser(errorMessage,
+                    GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
 
             //after 3 seconds, dismiss the error message notification
             Handler handler = new Handler(getMainLooper());
             handler.postDelayed(new Runnable() {
                 public void run() {
                     //remove the error notification from the system bar
-                    dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                    NativeNotificationsUtils.dismissNotification(
+                            GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
                 }}, 3000); // show the success message for 3 seconds, then dismiss
 
             stopSelf(mTaskId);
@@ -387,7 +415,8 @@ public class NotificationsProcessingService extends Service {
                 errorMessage = getString(R.string.error_generic);
             }
             resetOriginalNotification();
-            showFinalMessageToUser(errorMessage, ACTIONS_RESULT_NOTIFICATION_ID);
+            NativeNotificationsUtils.showFinalMessageToUser(errorMessage,
+                    GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
 
             if (autoDismiss) {
                 //after 3 seconds, dismiss the error message notification
@@ -395,41 +424,16 @@ public class NotificationsProcessingService extends Service {
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         //remove the error notification from the system bar
-                        dismissNotification(ACTIONS_RESULT_NOTIFICATION_ID);
+                        NativeNotificationsUtils.dismissNotification(
+                                GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
                     }}, 3000); // show the success message for 3 seconds, then dismiss
             }
 
             stopSelf(mTaskId);
         }
 
-        private void showIntermediateMessageToUser(String message) {
-            showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID);
-        }
-
-        private void showFinalMessageToUser(String message, int pushId) {
-            showMessageToUser(message, false, pushId);
-        }
-
-        private void showMessageToUser(String message, boolean intermediateMessage, int pushId) {
-            NotificationCompat.Builder builder = getBuilder().setContentText(message).setTicker(message);
-            if (!intermediateMessage) {
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-            }
-            builder.setProgress(0, 0, intermediateMessage);
-
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-            notificationManager.notify(pushId, builder.build());
-        }
-
-        private NotificationCompat.Builder getBuilder() {
-            return new NotificationCompat.Builder(mContext)
-                    .setSmallIcon(R.drawable.notification_icon)
-                    .setColor(getResources().getColor(R.color.blue_wordpress))
-                    .setContentTitle(getString(R.string.app_name))
-                    .setAutoCancel(true);
-        }
-
-        private void getNoteFromNoteId(String noteId, RestRequest.Listener listener, RestRequest.ErrorListener errorListener) {
+        private void getNoteFromNoteId(String noteId, RestRequest.Listener listener,
+                                       RestRequest.ErrorListener errorListener) {
             if (noteId == null) return;
 
             HashMap<String, String> params = new HashMap<>();
@@ -443,7 +447,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_LIKED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED);
 
             WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
                     String.valueOf(mNote.getCommentId()),
@@ -467,7 +471,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED);
 
             CommentActions.moderateCommentForNote(mNote, CommentStatus.APPROVED, new CommentActions.CommentActionListener() {
                 @Override
@@ -486,7 +490,7 @@ public class NotificationsProcessingService extends Service {
             if (mNote == null) return;
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO);
 
 
             if (!TextUtils.isEmpty(mReplyText)) {
@@ -506,16 +510,11 @@ public class NotificationsProcessingService extends Service {
                 });
             } else {
                 //cancel the current notification
-                dismissNotification(mPushId);
-                hideStatusBar();
+                NativeNotificationsUtils.dismissNotification(mPushId, mContext);
+                NativeNotificationsUtils.hideStatusBar(mContext);
                 //and just trigger the Activity to allow the user to write a reply
                 startReplyToCommentActivity();
             }
-        }
-
-        private void dismissNotification(int pushId) {
-            final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-            notificationManager.cancel(pushId);
         }
 
         private void startReplyToCommentActivity() {
@@ -526,13 +525,8 @@ public class NotificationsProcessingService extends Service {
             intent.setAction("android.intent.action.MAIN");
             intent.addCategory("android.intent.category.LAUNCHER");
             intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
-            intent.putExtra(NOTE_INSTANT_REPLY_EXTRA, true);
+            intent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
             startActivity(intent);
-        }
-
-        private void hideStatusBar() {
-            Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-            sendBroadcast(closeIntent);
         }
 
         private void resetOriginalNotification(){

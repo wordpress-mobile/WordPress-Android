@@ -82,8 +82,7 @@ public class StatsViewHolder {
                                 // Still empty. Do not eat the event, but let's open the default Web Browser.
 
                             }
-                            WPWebViewActivity.openUrlByUsingWPCOMCredentials(view.getContext(),
-                                    url, statsAuthenticatedUser);
+                            WPWebViewActivity.openUrlByUsingWPCOMCredentials(view.getContext(), url);
 
                         } else if (url.startsWith("https") || url.startsWith("http")) {
                             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);

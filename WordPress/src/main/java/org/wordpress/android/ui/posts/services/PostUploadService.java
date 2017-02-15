@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.posts.services;
 
 import android.app.Notification;
-import android.app.Notification.Builder;
-import android.app.NotificationManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -233,7 +233,15 @@ public class PostUploadService extends Service {
                 mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
             }
 
-            String descriptionContent = processPostMedia(mPost.getDescription());
+            String descriptionContent = mPost.getDescription();
+            // Get rid of ZERO WIDTH SPACE character that the Visual editor can insert
+            // at the beginning of the content.
+            // http://www.fileformat.info/info/unicode/char/200b/index.htm
+            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/5009
+            if (descriptionContent.length() > 0 && descriptionContent.charAt(0) == '\u200B') {
+                descriptionContent = descriptionContent.substring(1, descriptionContent.length());
+            }
+            descriptionContent = processPostMedia(descriptionContent);
 
             String moreContent = "";
             if (!TextUtils.isEmpty(mPost.getMoreText())) {
@@ -354,12 +362,20 @@ public class PostUploadService extends Service {
                 if (featuredImageID != -1) {
                     contentStruct.put("wp_post_thumbnail", featuredImageID);
                 }
-            } else if (mPost.featuredImageHasChanged()) {
-                if (mPost.getFeaturedImageId() < 1 && !mPost.isLocalDraft()) {
-                    // The featured image was removed from a live post
-                    contentStruct.put("wp_post_thumbnail", "");
-                } else {
-                    contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+            } else {
+                if (mPost.isLocalDraft()) {
+                    // publishing a new post.
+                    if (mPost.getFeaturedImageId() > 1) {
+                        contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+                    }
+                } else if (mPost.featuredImageHasChanged()) {
+                    // Live post
+                    if (mPost.getFeaturedImageId() < 1) {
+                        // The featured image was removed from a live post
+                        contentStruct.put("wp_post_thumbnail", "");
+                    } else {
+                        contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+                    }
                 }
             }
 
@@ -766,7 +782,7 @@ public class PostUploadService extends Service {
         private void setUploadPostErrorMessage(Exception e) {
             mErrorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(),
                     mPost.isPage() ? mContext.getResources().getText(R.string.page).toString() :
-                            mContext.getResources().getText(R.string.post).toString()) + " " + e.getMessage();
+                            mContext.getResources().getText(R.string.post).toString()) + " - " + e.getMessage();
             mIsMediaError = false;
             AppLog.e(T.EDITOR, mErrorMessage, e);
         }
@@ -855,8 +871,8 @@ public class PostUploadService extends Service {
     }
 
     private class PostUploadNotifier {
-        private final NotificationManager mNotificationManager;
-        private final Builder mNotificationBuilder;
+        private final NotificationManagerCompat mNotificationManager;
+        private final NotificationCompat.Builder mNotificationBuilder;
         private final int mNotificationId;
         private int mNotificationErrorId = 0;
         private int mTotalMediaItems;
@@ -865,9 +881,9 @@ public class PostUploadService extends Service {
 
         public PostUploadNotifier(Post post, String title, String message) {
             // add the uploader to the notification bar
-            mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
-                    Context.NOTIFICATION_SERVICE);
-            mNotificationBuilder = new Notification.Builder(getApplicationContext());
+            mNotificationManager = NotificationManagerCompat.from(PostUploadService.this);
+
+            mNotificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
             if (title != null) {
                 mNotificationBuilder.setContentTitle(title);
@@ -900,7 +916,7 @@ public class PostUploadService extends Service {
             }
 
             // Notification builder
-            Builder notificationBuilder = new Notification.Builder(getApplicationContext());
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
                     .page_published) : mContext.getResources().getText(R.string.post_published));
             if (!isFirstPublishing) {
@@ -909,13 +925,16 @@ public class PostUploadService extends Service {
             }
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
             if (largeIcon == null) {
-                notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                        R.mipmap.app_icon));
-            } else {
+                // Try to decode the default app icon. This call can potentially return null.
+                largeIcon = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.app_icon);
+            }
+
+            if (largeIcon != null) {
                 notificationBuilder.setLargeIcon(largeIcon);
             }
             notificationBuilder.setContentTitle(notificationTitle);
             notificationBuilder.setContentText(post.getTitle());
+            notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(post.getTitle()));
             notificationBuilder.setAutoCancel(true);
 
             // Tap notification intent (open the post list)
@@ -953,7 +972,7 @@ public class PostUploadService extends Service {
         public void updateNotificationError(String mErrorMessage, boolean isMediaError, boolean isPage) {
             AppLog.d(T.POSTS, "updateNotificationError: " + mErrorMessage);
 
-            Builder notificationBuilder = new Notification.Builder(getApplicationContext());
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
             String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
                     : mContext.getResources().getText(R.string.post_id));
             Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
@@ -970,11 +989,13 @@ public class PostUploadService extends Service {
                         + mContext.getResources().getText(R.string.error);
             }
 
+            String message = (isMediaError) ? mErrorMessage : postOrPage + " " + errorText
+                    + ": " + mErrorMessage;
             notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
             notificationBuilder.setContentTitle((isMediaError) ? errorText :
                     mContext.getResources().getText(R.string.upload_failed));
-            notificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText
-                    + ": " + mErrorMessage);
+            notificationBuilder.setContentText(message);
+            notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             notificationBuilder.setContentIntent(pendingIntent);
             notificationBuilder.setAutoCancel(true);
             if (mNotificationErrorId == 0) {

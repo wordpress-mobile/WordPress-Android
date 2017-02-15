@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -23,6 +22,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
@@ -36,6 +36,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
@@ -202,12 +203,22 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         switch (getErrorType(messageId)) {
             case USERNAME:
                 showUsernameError(messageId);
+
+                if (messageId == R.string.username_exists) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_USERNAME_EXISTS);
+                }
+
                 return true;
             case PASSWORD:
                 showPasswordError(messageId);
                 return true;
             case EMAIL:
                 showEmailError(messageId);
+
+                if (messageId == R.string.email_exists) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_EMAIL_EXISTS);
+                }
+
                 return true;
             case SITE_URL:
                 showSiteUrlError(messageId);
@@ -419,6 +430,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             @Override
             public void onClick(View v) {
                 Intent newAccountIntent = new Intent(getActivity(), HelpActivity.class);
+                newAccountIntent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.Tag.ORIGIN_SIGNUP_SCREEN);
                 startActivity(newAccountIntent);
             }
         });
@@ -436,8 +448,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         termsOfServiceTextView.setOnClickListener(new OnClickListener() {
                                                       @Override
                                                       public void onClick(View v) {
-                                                          Uri uri = Uri.parse(Constants.URL_TOS);
-                                                          startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                                                          ActivityLauncher.openUrlExternal(getContext(), Constants.URL_TOS);
                                                       }
                                                   }
         );

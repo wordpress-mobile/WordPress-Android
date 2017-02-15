@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
+import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -15,6 +16,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
 import java.util.Iterator;
@@ -34,6 +36,7 @@ public class ReaderPost {
     private String authorFirstName;
     private String blogName;
     private String blogUrl;
+    private String blogImageUrl;
     private String postAvatar;
 
     private String primaryTag;    // most popular tag on this post based on usage in blog
@@ -68,6 +71,7 @@ public class ReaderPost {
     public long xpostBlogId;
 
     private String railcarJson;
+    private ReaderCardType cardType = ReaderCardType.DEFAULT;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -152,6 +156,10 @@ public class ReaderPost {
             post.blogName = JSONUtils.getString(jsonSite, "name");
             post.setBlogUrl(JSONUtils.getString(jsonSite, "URL"));
             post.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
+            JSONObject jsonSiteIcon = jsonSite.optJSONObject("icon");
+            if (jsonSiteIcon != null) {
+                post.blogImageUrl = JSONUtils.getString(jsonSiteIcon, "img");
+            }
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
         }
@@ -186,14 +194,22 @@ public class ReaderPost {
         // if the post still doesn't have a featured image but we have attachment data, check whether
         // we can find a suitable featured image from the attachments
         if (!post.hasFeaturedImage() && post.hasAttachments()) {
-            post.featuredImage = new ImageSizeMap(post.attachmentsJson)
+            post.featuredImage = new ImageSizeMap(post.getText(), post.attachmentsJson)
                     .getLargestImageUrl(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
         // if we *still* don't have a featured image but the text contains an IMG tag, check whether
         // we can find a suitable image from the text
-        if (!post.hasFeaturedImage() && post.hasText() && post.text.contains("<img")) {
+        if (!post.hasFeaturedImage() && post.hasImages()) {
             post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
                     .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+        }
+
+        // if there's no featured image or featured video and the post contains an iframe, scan
+        // the content for a suitable featured video
+        if (!post.hasFeaturedImage()
+                && !post.hasFeaturedVideo()
+                && post.getText().contains("<iframe")) {
+            post.setFeaturedVideo(new ReaderIframeScanner(post.getText()).getFirstUsableVideo());
         }
 
         // "railcar" data - currently used in search streams, used by TrainTracks
@@ -202,7 +218,15 @@ public class ReaderPost {
             post.setRailcarJson(jsonRailcar.toString());
         }
 
+        // set the card type last since it depends on information contained in the post - note
+        // that this is stored in the post table rather than calculated on-the-fly
+        post.setCardType(ReaderCardType.fromReaderPost(post));
+
         return post;
+    }
+
+    public boolean hasImages() {
+        return hasText() && text.contains("<img ");
     }
 
     /*
@@ -284,7 +308,7 @@ public class ReaderPost {
 
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
-            String thisTagName = JSONUtils.getStringDecoded(jsonThisTag, "slug");
+            String thisTagName = UrlUtils.urlDecode(JSONUtils.getString(jsonThisTag, "slug"));
 
             // if the number of posts on this blog that use this tag is higher than previous,
             // set this as the most popular tag, and set the second most popular tag to
@@ -432,6 +456,13 @@ public class ReaderPost {
         this.blogUrl = StringUtils.notNullStr(blogUrl);
     }
 
+    public String getBlogImageUrl() {
+        return StringUtils.notNullStr(blogImageUrl);
+    }
+    public void setBlogImageUrl(String imageUrl) {
+        this.blogImageUrl = StringUtils.notNullStr(imageUrl);
+    }
+
     public String getPostAvatar() {
         return StringUtils.notNullStr(postAvatar);
     }
@@ -575,6 +606,10 @@ public class ReaderPost {
         return !TextUtils.isEmpty(blogUrl);
     }
 
+    public boolean hasBlogImageUrl() {
+        return !TextUtils.isEmpty(blogImageUrl);
+    }
+
     /*
      * returns true if this post is from a WordPress blog
      */
@@ -631,6 +666,13 @@ public class ReaderPost {
     }
     public boolean hasRailcar() {
         return !TextUtils.isEmpty(railcarJson);
+    }
+
+    public ReaderCardType getCardType() {
+        return cardType != null ? cardType : ReaderCardType.DEFAULT;
+    }
+    public void setCardType(ReaderCardType cardType) {
+        this.cardType = cardType;
     }
 
     /****
@@ -691,28 +733,6 @@ public class ReaderPost {
             dtDisplay = DateTimeUtils.dateFromIso8601(this.datePublished);
         }
         return dtDisplay;
-    }
-
-    /*
-     * determine which tag to display for this post
-     *  - no tag if this is a private blog or there is no primary tag for this post
-     *  - primary tag, unless it's the same as the currently selected tag
-     *  - secondary tag if primary tag is the same as the currently selected tag
-     */
-    private transient String tagForDisplay;
-    public String getTagForDisplay(final String currentTagName) {
-        if (tagForDisplay == null) {
-            if (!isPrivate && hasPrimaryTag()) {
-                if (getPrimaryTag().equalsIgnoreCase(currentTagName)) {
-                    tagForDisplay = getSecondaryTag();
-                } else {
-                    tagForDisplay = getPrimaryTag();
-                }
-            } else {
-                tagForDisplay = "";
-            }
-        }
-        return tagForDisplay;
     }
 
     /*

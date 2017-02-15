@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-07 14:32:13+0000
+Translation-Revision-Date: 2017-02-12 06:30:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: eu_ES
 -->
 <resources>
+	<string name="reader_label_visit">Bisitatu</string>
+	<string name="all_your_sites">Nire gune guztiak</string>
+	<string name="reader_toast_err_comment_not_found">Ez da iruzkina aurkitu!</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com postontzia</string>
+	<string name="reader_title_deeplink">WordPress Irakurtzailea</string>
+	<string name="error_notif_q_action_reply">Ezin izan da iruzkina erantzun. Mesedez saiatu berriro beranduago.</string>
+	<string name="error_notif_q_action_approve">Ezin izan da iruzkina onartu. Mesedez saiatu berriro beranduago.</string>
+	<string name="notifications_label_new_notifications_subtitle">Egin tap berauok ikusteko</string>
+	<string name="notifications_label_new_notifications">Jakinarazpen berriak</string>
+	<string name="comment_q_action_replying">Erantzuten...</string>
+	<string name="comment_q_action_approving">Onartzen...</string>
+	<string name="comment_q_action_liking">Estekatzen...</string>
+	<string name="comment_q_action_processing">Prozesatzen...</string>
+	<string name="comment_q_action_done_generic">Ekintza eginda!</string>
+	<string name="signout">Itxi saioa</string>
+	<string name="sign_in_wpcom">Hasi saioa WordPress.com-en</string>
 	<string name="reader_label_image_count_one">Irudi 1</string>
 	<string name="timespan_now">orain</string>
 	<string name="role_viewer">Ikuslea</string>
@@ -78,7 +94,7 @@ Language: eu_ES
 	<string name="invite_people">Gonbidatu jendea</string>
 	<string name="my_site_header_external">Kanpokoak</string>
 	<string name="send_link">Bidali esteka</string>
-	<string name="signup_succeed_signin_failed">Zure kontua sortu da baina errore bat gertatu da zu sartzean. Saia zaitez berriro zure erabiltzaile eta pasahitz berriarekin sartzen.</string>
+	<string name="signup_succeed_signin_failed">Zure kontua sortu da baina errore bat gertatu da zu sartzean. Saia zaitez saioa hasten sortu berri dituzun erabiltzaile-izen eta pasahitzarekin.</string>
 	<string name="label_clear_search_history">Garbitu bilaketen historia</string>
 	<string name="dlg_confirm_clear_search_history">Bilaketen historia garbitu?</string>
 	<string name="reader_label_post_search_running">Bilatzen...</string>
@@ -133,7 +149,11 @@ Language: eu_ES
 	<string name="me_btn_app_settings">App-aren ezarpenak</string>
 	<string name="editor_remove_failed_uploads">Ezabatu huts egin duten kargak</string>
 	<string name="site_settings_advanced_header">Aurreratua</string>
+	<string name="comments_empty_list_filtered_trashed">Ez dago iruzkinik zakarrontzian</string>
+	<string name="comments_empty_list_filtered_pending">Ez dago iruzkinik itxaroten</string>
+	<string name="comments_empty_list_filtered_approved">Ez dago iruzkinik onartuta</string>
 	<string name="button_done">Eginda</string>
+	<string name="button_skip">Saltatu</string>
 	<string name="theme_premium">Ordainpekoak</string>
 	<string name="theme_all">Guztiak</string>
 	<string name="theme_free">Doakoak</string>
@@ -146,7 +166,11 @@ Language: eu_ES
 	<string name="post_format_image">Irudia</string>
 	<string name="post_format_gallery">Galeria</string>
 	<string name="post_format_chat">Txata</string>
+	<string name="notif_community">Komunitatea</string>
+	<string name="notif_research">Ikerketa</string>
 	<string name="notif_suggestions">Iradokizunak</string>
+	<string name="replies_to_my_comments">Erantzunak nire iruzkinei</string>
+	<string name="username_mentions">Aipuak erabiltzaile-izenari</string>
 	<string name="site_settings_list_editor_summary_other">%d item</string>
 	<string name="site_settings_list_editor_summary_one">Item 1</string>
 	<string name="approve_auto">Erabiltzaile guztiek</string>
@@ -166,8 +190,10 @@ Language: eu_ES
 	<string name="editor_page_title_placeholder">Orrialdearen izenburua</string>
 	<string name="editor_post_title_placeholder">Bidalketaren izenburua</string>
 	<string name="email_address">E-posta helbidea</string>
-	<string name="preference_show_visual_editor">Erakutsi editore bisuala</string>
+	<string name="preference_editor_type">Erakutsi editore bisuala</string>
 	<string name="preference_editor">Editorea</string>
+	<string name="dlg_sure_to_delete_comments">Behin betiko ezabatu iruzkin hauek?</string>
+	<string name="dlg_sure_to_delete_comment">Behin betiko ezabatu iruzkin hau?</string>
 	<string name="mnu_comment_delete_permanently">Ezabatu</string>
 	<string name="mnu_comment_untrash">Berreskuratu</string>
 	<string name="comment_deleted_permanently">Iruzkina ezabatu da</string>
@@ -199,6 +225,7 @@ Language: eu_ES
 	<string name="site_settings_rp_show_header_title">Erakutsi goiburua</string>
 	<string name="site_settings_password_hint">Aldatu zure pasahitza</string>
 	<string name="site_settings_username_hint">Oraingo erabiltzaile kontua</string>
+	<string name="site_settings_language_hint">Blog honen hizkuntza nagusia</string>
 	<string name="site_settings_tagline_hint">Deskripzio labur bat edo esaldi burutsu bat zure bloga deskribatzeko</string>
 	<string name="site_settings_title_hint">Azaldu hitz gutxitan gune hau zertaz doan</string>
 	<string name="site_settings_whitelist_known_summary">Erabiltzaile ezagunen iruzkinak</string>
@@ -262,6 +289,8 @@ Language: eu_ES
 	<string name="media_file_name">Fitxategi izena: %s</string>
 	<string name="notifications_empty_followers">Ez dago jarraitzaile berririk... oraindik.</string>
 	<string name="notifications_empty_comments">Ez dago iruzkin berririk... oraindik.</string>
+	<string name="stats_widget_error_no_account">Mesedez hasi saioa WordPress-en</string>
+	<string name="stats_widget_error_generic">Ezin izan dira estatistikak kargatu</string>
 	<string name="stats_widget_loading_data">Datuak kargatzen...</string>
 	<string name="stats_widget_name_for_blog">Gaurko estatistikak %1$s blogerako</string>
 	<string name="stats_widget_name">WordPress-eko gaurko estatistikak</string>
@@ -270,6 +299,7 @@ Language: eu_ES
 	<string name="reader_label_submit_comment">BIDALI</string>
 	<string name="reader_hint_comment_on_post">Bidalketari erantzun...</string>
 	<string name="reader_discover_visit_blog">Bisitatu %s</string>
+	<string name="reader_title_post_detail">Irakurlearen postontzia</string>
 	<string name="notification_types">Jakinarazpen motak</string>
 	<string name="replies_to_your_comments">Zure iruzkinen erantzunak</string>
 	<string name="email">E-posta</string>
@@ -308,11 +338,11 @@ Language: eu_ES
 	<string name="stats_insights_popular">Egun eta ordu jendetsuena</string>
 	<string name="stats_insights_all_time">Inoizko bidalketa, ikustaldi eta bisitari guztiak</string>
 	<string name="stats_insights">Ezagutzak</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Zure estatistikak ikusteko, hasi saioa Jetpack-era konektatzeko erabili zenuen WordPress.com kontuarekin.</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Zure estatistikak ikusteko, hasi saioa Jetpack konektatzeko erabili zenuen WordPress.com kontuarekin.</string>
 	<string name="stats_other_recent_stats_moved_label">\'Bestelako estatistika berrien\' bila zabiltza? Ezagutzak orrialdera mugitu dugu.</string>
-	<string name="me_disconnect_from_wordpress_com">WordPress.com-etik deskonektatu</string>
+	<string name="me_disconnect_from_wordpress_com">Itxi saioa WordPress.com-en</string>
 	<string name="me_btn_login_logout">Hasi/itxi saioa</string>
-	<string name="me_connect_to_wordpress_com">WordPress.com-era konektatu</string>
+	<string name="me_connect_to_wordpress_com">Hasi saioa WordPress.com-en</string>
 	<string name="me_btn_support">Laguntza eta euskarria</string>
 	<string name="account_settings">Kontuaren ezarpenak</string>
 	<string name="site_picker_create_dotcom">Sortu WordPress.com gunea</string>
@@ -331,7 +361,6 @@ Language: eu_ES
 	<string name="my_site_header_configuration">Konfigurazioa</string>
 	<string name="notifications_account_required">Hasi saioa WordPress.com-en jakinarazpenentzako</string>
 	<string name="stats_unknown_author">Egile ezezaguna</string>
-	<string name="signout">Deskonektatu</string>
 	<string name="image_added">Irudia gehitua</string>
 	<string name="select_all">Aukeratu denak</string>
 	<string name="hide">Ezkutatu</string>
@@ -349,7 +378,7 @@ Language: eu_ES
 	<string name="no_device_videos">Bideorik ez</string>
 	<string name="no_media">Mediarik ez</string>
 	<string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
-	<string name="sign_in_jetpack">Hasi saioa WordPress.com-eko zure kontuan Jetpack-era konektatzeko.</string>
+	<string name="sign_in_jetpack">Hasi saioa WordPress.com-eko zure kontuan Jetpack konektatzeko.</string>
 	<string name="verify">Egiaztatu</string>
 	<string name="invalid_verification_code">Egiaztaketa kode okerra</string>
 	<string name="verification_code">Egiaztaketa kodea</string>
@@ -465,7 +494,7 @@ Language: eu_ES
 	<string name="forums">Foroak</string>
 	<string name="forgot_password">Pasahitza galdu duzu?</string>
 	<string name="help">Laguntza</string>
-	<string name="nux_cannot_log_in">Ezin zaitugu sartu</string>
+	<string name="nux_cannot_log_in">Ezin zara sartu</string>
 	<string name="username_or_password_incorrect">Sartutako erabiltzaile-izena edo pasahitza ez dira zuzenak</string>
 	<string name="blog_name_reserved_but_may_be_available">Gune hori momentu honetan erreserbatuta dago baina egun batzuk barru eskuragarri egon liteke</string>
 	<string name="blog_name_reserved">Gune hori erreserbatuta dago</string>
@@ -666,7 +695,7 @@ Language: eu_ES
 	<string name="nux_tutorial_get_started_title">Hasi!</string>
 	<string name="limit_reached">Mugara iritsi zara. Minutu bat barru berriz proba dezakezu. Lehenago saiatuz gero debekua luzatzea besterik ez duzu lortuko. Hau errore bat dela baderitzozu, kontaktatu laguntza zerbitzua. </string>
 	<string name="username_invalid">Erabiltzaile-izen okerra</string>
-	<string name="connecting_wpcom">WordPress.com-era konektatzen</string>
+	<string name="connecting_wpcom">WordPress.com-en saioa hasten</string>
 	<string name="button_next">Hurrengoa</string>
 	<string name="create_account_wpcom">Sortu kontu bat WordPress.com-en</string>
 	<string name="reader_empty_followed_tags">Ez duzu etiketatik jarraitzen</string>

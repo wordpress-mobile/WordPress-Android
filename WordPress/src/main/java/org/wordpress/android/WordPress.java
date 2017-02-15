@@ -11,9 +11,9 @@ import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.os.SystemClock;
 import android.support.multidex.MultiDexApplication;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
@@ -49,6 +49,7 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
+import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -105,7 +106,7 @@ public class WordPress extends MultiDexApplication {
     private static RestClientUtils mRestClientUtilsVersion0;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
-    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
+    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 15 * 60;
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
@@ -222,6 +223,12 @@ public class WordPress extends MultiDexApplication {
 
         // If users uses a custom locale set it on start of application
         WPActivityUtils.applyLocale(getContext());
+
+        // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
+        // with memory usage and the use of Configuration). More informations:
+        // https://developer.android.com/reference/android/support/v7/app/AppCompatDelegate.html#setCompatVectorFromResourcesEnabled(boolean)
+        // Note: if removed, this will cause crashes on Android < 21
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -356,35 +363,6 @@ public class WordPress extends MultiDexApplication {
             mRestClientUtilsVersion0 = new RestClientUtils(mContext, requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V0);
         }
         return mRestClientUtilsVersion0;
-    }
-
-    /**
-     * enables "strict mode" for testing - should NEVER be used in release builds
-     */
-    private static void enableStrictMode() {
-        // return if the build is not a debug build
-        if (!BuildConfig.DEBUG) {
-            AppLog.e(T.UTILS, "You should not call enableStrictMode() on a non debug build");
-            return;
-        }
-
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork()
-                .penaltyLog()
-                .penaltyFlashScreen()
-                .build());
-
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectActivityLeaks()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .detectLeakedRegistrationObjects() // <-- requires Jelly Bean
-                .penaltyLog()
-                .build());
-
-        AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
     public boolean isGooglePlayServicesAvailable(Activity activity) {
@@ -834,7 +812,7 @@ public class WordPress extends MultiDexApplication {
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
-        private void onAppComesFromBackground() {
+        private void onAppComesFromBackground(Activity activity) {
             AppLog.i(T.UTILS, "App comes from background");
             ConnectionChangeReceiver.setEnabled(WordPress.this, true);
             AnalyticsUtils.refreshMetadata();
@@ -844,7 +822,13 @@ public class WordPress extends MultiDexApplication {
                 // Refresh account informations and Notifications
 
                 if (AccountHelper.isSignedInWordPressDotCom()) {
-                    NotificationsUpdateService.startService(getContext());
+                    Intent intent = activity.getIntent();
+                    if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
+                        NotificationsUpdateService.startService(getContext(),
+                                getNoteIdFromNoteDetailActivityIntent(activity.getIntent()));
+                    } else {
+                        NotificationsUpdateService.startService(getContext());
+                    }
                 }
 
                 // Rate limited PN Token Update
@@ -859,11 +843,21 @@ public class WordPress extends MultiDexApplication {
             sDeleteExpiredStats.runIfNotLimited();
         }
 
+        // gets the note id from the extras that started this activity, so
+        // we can remember to re-set that to unread once the note fetch update takes place
+        private String getNoteIdFromNoteDetailActivityIntent(Intent intent) {
+            String noteId = "";
+            if (intent != null) {
+                noteId = intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+            }
+            return noteId;
+        }
+
         @Override
         public void onActivityResumed(Activity activity) {
             if (mIsInBackground) {
                 // was in background before
-                onAppComesFromBackground();
+                onAppComesFromBackground(activity);
             }
             stopActivityTransitionTimer();
 

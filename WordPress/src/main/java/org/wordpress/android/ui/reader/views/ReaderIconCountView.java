@@ -65,6 +65,13 @@ public class ReaderIconCountView extends LinearLayout {
             }
         }
 
+        // move the comment icon down a bit so it aligns with the text baseline
+        if (mIconType == ICON_COMMENT) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mImageView.getLayoutParams();
+            int margin = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+            params.topMargin = margin;
+        }
+
         ReaderUtils.setBackgroundToRoundRipple(mImageView);
     }
 
@@ -85,13 +92,6 @@ public class ReaderIconCountView extends LinearLayout {
     }
 
     public void setCount(int count) {
-        switch (mIconType) {
-            case ICON_LIKE:
-                mTextCount.setText(ReaderUtils.getShortLikeLabelText(getContext(), count));
-                break;
-            case ICON_COMMENT:
-                mTextCount.setText(ReaderUtils.getShortCommentLabelText(getContext(), count));
-                break;
-        }
+        mTextCount.setText(count != 0 ? String.valueOf(count) : "");
     }
 }

@@ -38,13 +38,14 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderRelatedPostsView;
+import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
+import org.wordpress.android.ui.reader.views.ReaderSimplePostView;
 import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
@@ -64,6 +65,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPTextView;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.EnumSet;
 
@@ -96,8 +98,8 @@ public class ReaderPostDetailFragment extends Fragment
     private View mLikingUsersLabel;
     private WPTextView mSignInButton;
 
-    private ReaderRelatedPostsView mGlobalRelatedPostsView;
-    private ReaderRelatedPostsView mLocalRelatedPostsView;
+    private ReaderSimplePostContainerView mGlobalRelatedPostsView;
+    private ReaderSimplePostContainerView mLocalRelatedPostsView;
 
     private boolean mPostSlugsResolutionUnderway;
     private boolean mHasAlreadyUpdatedPost;
@@ -228,8 +230,8 @@ public class ReaderPostDetailFragment extends Fragment
         mScrollView.setVisibility(View.INVISIBLE);
 
         View relatedPostsContainer = view.findViewById(R.id.container_related_posts);
-        mGlobalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainer.findViewById(R.id.related_posts_view_global);
-        mLocalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainer.findViewById(R.id.related_posts_view_local);
+        mGlobalRelatedPostsView = (ReaderSimplePostContainerView) relatedPostsContainer.findViewById(R.id.related_posts_view_global);
+        mLocalRelatedPostsView = (ReaderSimplePostContainerView) relatedPostsContainer.findViewById(R.id.related_posts_view_local);
 
         mSignInButton = (WPTextView) view.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
@@ -539,18 +541,18 @@ public class ReaderPostDetailFragment extends Fragment
      * show the passed list of related posts - can be either global (related posts from
      * across wp.com) or local (related posts from the same site as the current post)
      */
-    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, final boolean isGlobal) {
-        // different container views for global/local related posts
-        ReaderRelatedPostsView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
-        relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
-
-        // tapping a related posts should open the related post detail
-        relatedPostsView.setOnRelatedPostClickListener(new ReaderRelatedPostsView.OnRelatedPostClickListener() {
+    private void showRelatedPosts(@NonNull ReaderSimplePostList relatedPosts, final boolean isGlobal) {
+        // tapping a related post should open the related post detail
+        ReaderSimplePostView.OnSimplePostClickListener listener = new ReaderSimplePostView.OnSimplePostClickListener() {
             @Override
-            public void onRelatedPostClick(View v, long siteId, long postId) {
+            public void onSimplePostClick(View v, long siteId, long postId) {
                 showRelatedPostDetail(siteId, postId, isGlobal);
             }
-        });
+        };
+
+        // different container views for global/local related posts
+        ReaderSimplePostContainerView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
+        relatedPostsView.showPosts(relatedPosts, mPost.getBlogName(), isGlobal, listener);
 
         // fade in this related posts view
         if (relatedPostsView.getVisibility() != View.VISIBLE) {
@@ -808,14 +810,17 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.OnRequestListener listener = new ReaderActions.OnRequestListener() {
             @Override
             public void onSuccess() {
+                mHasAlreadyRequestedPost = true;
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     showPost();
+                    EventBus.getDefault().post(new ReaderEvents.SinglePostDownloaded());
                 }
             }
 
             @Override
             public void onFailure(int statusCode) {
+                mHasAlreadyRequestedPost = true;
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     onRequestFailure(statusCode);
@@ -973,7 +978,6 @@ public class ReaderPostDetailFragment extends Fragment
                 // post couldn't be loaded which means it doesn't exist in db, so request it from
                 // the server if it hasn't already been requested
                 if (!mHasAlreadyRequestedPost) {
-                    mHasAlreadyRequestedPost = true;
                     AppLog.i(T.READER, "reader post detail > post not found, requesting it");
                     requestPost();
                 } else if (!TextUtils.isEmpty(mErrorMessage)) {
@@ -988,6 +992,12 @@ public class ReaderPostDetailFragment extends Fragment
                     case COMMENT_JUMP:
                     case COMMENT_REPLY:
                     case COMMENT_LIKE:
+                        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+                            // passcode screen was launched already (when ReaderPostPagerActivity got resumed) so reset
+                            // the timeout to let the passcode screen come up for the ReaderCommentListActivity.
+                            // See https://github.com/wordpress-mobile/WordPress-Android/issues/4887
+                            AppLockManager.getInstance().getAppLock().forcePasswordLock();
+                        }
                         ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId,
                                 mDirectOperation, mCommentId, mInterceptedUri);
                         getActivity().finish();
@@ -1032,6 +1042,9 @@ public class ReaderPostDetailFragment extends Fragment
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
 
+            // only enable showing blog preview from the header if we're not already
+            // previewing a blog
+            headerView.setEnableBlogPreview(getPostListType() != ReaderPostListType.BLOG_PREVIEW);
 
             headerView.setPost(mPost);
             tagStrip.setPost(mPost);
@@ -1139,16 +1152,30 @@ public class ReaderPostDetailFragment extends Fragment
             return true;
         }
 
-        // open YouTube videos in external app so they launch the YouTube player, open all other
-        // urls using an AuthenticatedWebViewActivity
-        final OpenUrlType openUrlType;
-        if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
-            openUrlType = OpenUrlType.EXTERNAL;
-        } else {
-            openUrlType = OpenUrlType.INTERNAL;
-        }
+        OpenUrlType openUrlType = shouldOpenExternal(url) ? OpenUrlType.EXTERNAL : OpenUrlType.INTERNAL;
         ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType);
         return true;
+    }
+
+    /*
+     * returns True if the passed URL should be opened in the external browser app
+     */
+    private boolean shouldOpenExternal(String url) {
+        // open YouTube videos in external app so they launch the YouTube player
+        if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
+            return true;
+        }
+
+        // if the mime type starts with "application" open it externally - this will either
+        // open it in the associated app or the default browser (which will enable the user
+        // to download it)
+        String mimeType = UrlUtils.getUrlMimeType(url);
+        if (mimeType != null && mimeType.startsWith("application")) {
+            return true;
+        }
+
+        // open all other urls using an AuthenticatedWebViewActivity
+        return false;
     }
 
     @Override

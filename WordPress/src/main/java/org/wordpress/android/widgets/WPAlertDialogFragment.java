@@ -4,13 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.StringUtils;
 
 public class WPAlertDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
@@ -123,8 +122,9 @@ public class WPAlertDialogFragment extends DialogFragment implements DialogInter
                 builder.setPositiveButton(infoTitle, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (!TextUtils.isEmpty(infoURL))
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(infoURL)));
+                            if (!TextUtils.isEmpty(infoURL)) {
+                                ActivityLauncher.openUrlExternal(getActivity(), infoURL);
+                            }
                         }
                 });
                 break;

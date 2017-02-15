@@ -24,8 +24,8 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
+import org.wordpress.android.ui.reader.models.ReaderSimplePost;
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -373,7 +373,7 @@ public class ReaderPostActions {
                 + "/related"
                 + "?size_local=" + NUM_RELATED_POSTS_TO_REQUEST
                 + "&size_global=" + NUM_RELATED_POSTS_TO_REQUEST
-                + "&fields=" + ReaderRelatedPost.RELATED_POST_FIELDS;
+                + "&fields=" + ReaderSimplePost.SIMPLE_POST_FIELDS;
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
@@ -386,11 +386,11 @@ public class ReaderPostActions {
             public void run() {
                 JSONArray jsonPosts = jsonObject.optJSONArray("posts");
                 if (jsonPosts != null) {
-                    ReaderRelatedPostList allRelatedPosts = ReaderRelatedPostList.fromJsonPosts(jsonPosts);
+                    ReaderSimplePostList allRelatedPosts = ReaderSimplePostList.fromJsonPosts(jsonPosts);
                     // split into posts from the passed site (local) and from across wp.com (global)
-                    ReaderRelatedPostList localRelatedPosts = new ReaderRelatedPostList();
-                    ReaderRelatedPostList globalRelatedPosts = new ReaderRelatedPostList();
-                    for (ReaderRelatedPost relatedPost : allRelatedPosts) {
+                    ReaderSimplePostList localRelatedPosts = new ReaderSimplePostList();
+                    ReaderSimplePostList globalRelatedPosts = new ReaderSimplePostList();
+                    for (ReaderSimplePost relatedPost : allRelatedPosts) {
                         if (relatedPost.getSiteId() == sourcePost.blogId) {
                             localRelatedPosts.add(relatedPost);
                         } else {
