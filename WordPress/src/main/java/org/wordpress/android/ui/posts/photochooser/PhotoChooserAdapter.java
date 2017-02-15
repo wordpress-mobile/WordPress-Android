@@ -125,7 +125,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             PhotoChooserItem item = getItemAtPosition(position);
             ThumbnailViewHolder thumbHolder = (ThumbnailViewHolder) holder;
 
-            int selectedIndex = mSelectedUris.indexOfUri(item.uri);
+            int selectedIndex = isMultiSelectEnabled() ? mSelectedUris.indexOfUri(item.uri) : -1;
             if (selectedIndex > -1) {
                 thumbHolder.selectedFrame.setVisibility(View.VISIBLE);
                 thumbHolder.txtSelectionCount.setVisibility(View.VISIBLE);

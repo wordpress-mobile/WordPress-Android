@@ -5,6 +5,7 @@
         android:id="@+id/mnu_confirm_selection"
         android:enabled="true"
         android:icon="@drawable/ic_check_white_24dp"
+        android:title="@string/confirm"
         android:visible="true" />
 
 </menu>
