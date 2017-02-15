@@ -56,13 +56,25 @@ public class PermissionUtils {
         return true;
     }
 
-    public static boolean checkCameraAndStoragePermissions(Activity activity) {
-        int cameraPermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
-        if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
-            return false;
+    /**
+     * Check for permissions without requesting them
+     *
+     * @return true if all permissions are granted
+     */
+    public static boolean checkPermissions(Activity activity, String[] permissionList) {
+        for (String permission : permissionList) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
         }
-        int storagePermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        return storagePermission == PackageManager.PERMISSION_GRANTED;
+        return true;
+    }
+
+    public static boolean checkCameraAndStoragePermissions(Activity activity) {
+        return checkPermissions(activity,
+                new String[]{
+                        permission.WRITE_EXTERNAL_STORAGE,
+                        permission.CAMERA});
     }
 
     public static boolean checkAndRequestCameraAndStoragePermissions(Fragment fragment, int requestCode) {
