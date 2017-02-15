@@ -61,7 +61,7 @@ public class MediaStore extends Store {
     //
 
     /**
-     * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOAD_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
+     * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOAD(ED)_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
      */
     public static class MediaPayload extends Payload {
         public SiteModel site;
@@ -83,7 +83,7 @@ public class MediaStore extends Store {
     }
 
     /**
-     * Actions: FETCH(ED)_ALL_MEDIA, PUSH(ED)_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
+     * Actions: FETCH(ED)_ALL_MEDIA, PUSH(ED)_MEDIA, DELETE(D)_MEDIA, and REMOVE_MEDIA
      */
     public static class MediaListPayload extends Payload {
         public SiteModel site;
@@ -107,7 +107,7 @@ public class MediaStore extends Store {
     }
 
     /**
-     * Actions: UPLOADED_MEDIA
+     * Actions: UPLOADED_MEDIA, CANCELED_MEDIA_UPLOAD
      */
     public static class ProgressPayload extends Payload {
         public MediaModel media;
