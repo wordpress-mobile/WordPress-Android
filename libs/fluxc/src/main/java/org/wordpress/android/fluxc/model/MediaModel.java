@@ -5,37 +5,23 @@ import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
+import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 
 @Table
-public class MediaModel implements Identifiable, Serializable {
+public class MediaModel extends Payload implements Identifiable, Serializable {
     public enum UploadState {
-        QUEUED("queued"),
-        UPLOADING("uploading"),
-        DELETE("delete"),
-        DELETED("deleted"),
-        FAILED("failed"),
-        UPLOADED("uploaded");
-
-        private String mDescriptor;
-        UploadState(String descriptor) {
-            mDescriptor = descriptor;
-        }
-
-        @Override
-        public String toString() {
-            return mDescriptor;
-        }
+        QUEUED, UPLOADING, DELETE, DELETED, FAILED, CANCELED, UPLOADED
     }
 
     @PrimaryKey
     @Column private int mId;
 
     // Associated IDs
-    @Column private long mSiteId;
+    @Column private int mLocalSiteId;
     @Column private long mMediaId;
     @Column private long mPostId;
     @Column private long mAuthorId;
@@ -92,7 +78,7 @@ public class MediaModel implements Identifiable, Serializable {
 
         MediaModel otherMedia = (MediaModel) other;
 
-        return getId() == otherMedia.getId() && getSiteId() == otherMedia.getSiteId()
+        return getId() == otherMedia.getId() && getLocalSiteId() == otherMedia.getLocalSiteId()
                 && getMediaId() == otherMedia.getMediaId() && getPostId() == otherMedia.getPostId()
                 && getAuthorId() == otherMedia.getAuthorId() && getWidth() == otherMedia.getWidth()
                 && getHeight() == otherMedia.getHeight() && getLength() == otherMedia.getLength()
@@ -127,12 +113,12 @@ public class MediaModel implements Identifiable, Serializable {
         return mId;
     }
 
-    public void setSiteId(long siteId) {
-        mSiteId = siteId;
+    public void setLocalSiteId(int localSiteId) {
+        mLocalSiteId = localSiteId;
     }
 
-    public long getSiteId() {
-        return mSiteId;
+    public int getLocalSiteId() {
+        return mLocalSiteId;
     }
 
     public void setMediaId(long mediaId) {
