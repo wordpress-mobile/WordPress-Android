@@ -469,7 +469,7 @@ public class MediaStore extends Store {
             // null or empty media list -or- list contains a null value
             notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.PUSH_MEDIA, null);
             return;
-        } else if (payload.media.getMediaId() < 0) {
+        } else if (payload.media.getMediaId() <= 0) {
             // need media ID to push changes
             notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, MediaAction.PUSH_MEDIA, payload.media);
             return;
