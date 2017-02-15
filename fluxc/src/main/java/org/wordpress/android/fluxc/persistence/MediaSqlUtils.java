@@ -139,7 +139,7 @@ public class MediaSqlUtils {
     }
 
     public static List<MediaModel> getSiteMediaExcluding(SiteModel site, String column, Object value) {
-        return getMediaExcludingQuery(site, column, value).getAsModel();
+        return getSiteMediaExcludingQuery(site, column, value).getAsModel();
     }
 
     public static List<MediaModel> matchSiteMedia(SiteModel siteModel, String column, Object value) {
@@ -236,7 +236,7 @@ public class MediaSqlUtils {
         return WellSql.delete(MediaModel.class).execute();
     }
 
-    private static SelectQuery<MediaModel> getMediaExcludingQuery(SiteModel site, String column, Object value) {
+    private static SelectQuery<MediaModel> getSiteMediaExcludingQuery(SiteModel site, String column, Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .not().equals(column, value)
