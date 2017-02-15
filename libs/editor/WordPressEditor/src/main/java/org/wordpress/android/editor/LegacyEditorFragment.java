@@ -19,7 +19,6 @@ import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.AlignmentSpan;
@@ -343,10 +342,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             String linkText = extras.getString("linkText");
             createLinkFromSelection(linkURL, linkText);
         }
-    }
-
-    public boolean hasEmptyContentFields() {
-        return TextUtils.isEmpty(mTitleEditText.getText()) && TextUtils.isEmpty(mContentEditText.getText());
     }
 
     @Override
@@ -1112,8 +1107,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         }
     }
 
-    public void addMediaFile(final MediaFile mediaFile, final String imageUrl, final ImageLoader imageLoader,
-                             final int start, final int end) {
+    public void addMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader, int start, int end) {
         AddMediaFileTask addMediaFileTask = new AddMediaFileTask(mediaFile, imageUrl, imageLoader, start, end);
         addMediaFileTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

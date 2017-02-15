@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.location.Address;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -48,6 +47,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -55,6 +55,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
@@ -73,6 +74,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -127,6 +129,7 @@ public class EditPostSettingsFragment extends Fragment
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Inject SiteStore mSiteStore;
+    @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
 
@@ -435,24 +438,21 @@ public class EditPostSettingsFragment extends Fragment
         if (mFeaturedImageId != id) {
             mFeaturedImageId = id;
             if (mFeaturedImageId > 0) {
-                Cursor cursor = WordPress.wpDB.getMediaFile(String.valueOf(mSite.getId()),
-                        String.valueOf(mFeaturedImageId));
-                if (cursor != null && cursor.moveToFirst()) {
-                    mFeaturedImageView.setVisibility(View.VISIBLE);
-                    mFeaturedImageButton.setVisibility(View.GONE);
+                MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mFeaturedImageId);
 
-                    // Get max width for photon thumbnail
-                    int maxWidth = getResources().getDisplayMetrics().widthPixels;
-                    int padding = DisplayUtils.dpToPx(getActivity(), 16);
-                    int imageWidth = (maxWidth - padding);
-
-                    String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, mSite, imageWidth);
-                    WordPressMediaUtils.loadNetworkImage(thumbUrl, mFeaturedImageView);
+                if (media == null) {
+                    return;
                 }
 
-                if (cursor != null) {
-                    cursor.close();
-                }
+                mFeaturedImageView.setVisibility(View.VISIBLE);
+                mFeaturedImageButton.setVisibility(View.GONE);
+
+                // Get max width for photon thumbnail
+                int maxWidth = getResources().getDisplayMetrics().widthPixels;
+                int padding = DisplayUtils.dpToPx(getActivity(), 16);
+                int imageWidth = (maxWidth - padding);
+
+                WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl() + "?w=" + imageWidth, mFeaturedImageView);
             } else {
                 mFeaturedImageView.setVisibility(View.GONE);
                 mFeaturedImageButton.setVisibility(View.VISIBLE);
@@ -499,12 +499,13 @@ public class EditPostSettingsFragment extends Fragment
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
-                        ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
+                        ArrayList<Long> ids = ListUtils.
+                                fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
                         if (ids == null || ids.size() == 0) {
                             return;
                         }
 
-                        updateFeaturedImage(Long.parseLong(ids.get(0)));
+                        updateFeaturedImage(ids.get(0));
                     }
             }
         }

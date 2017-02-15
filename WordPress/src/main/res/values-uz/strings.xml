@@ -6,8 +6,6 @@ Generator: GlotPress/2.3.0-alpha
 Language: uz
 -->
 <resources>
-	<string name="loading_videos">Videolarni yuklash</string>
-	<string name="loading_images">Rasmlarni yuklash</string>
 	<string name="device">Qurilma</string>
 	<string name="creating_your_account">Akkauntingiz yaratilmoqda</string>
 	<string name="creating_your_site">Saytingiz yaratilmoqda</string>

@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.MediaGallerySettingsFragment.MediaGallerySettingsCallback;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaGallery;
 
@@ -144,9 +145,15 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MediaGalleryPickerActivity.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
+                ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
+                if (ids == null || ids.isEmpty()) {
+                    finish();
+                    return;
+                }
                 mMediaGalleryEditFragment.setMediaIds(ids);
             }
+        } else {
+            finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -159,13 +166,13 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
 
     private void handleAddMedia() {
         // need to make MediaGalleryAdd into an activity rather than a fragment because I can't add this fragment
-        // on top of the slidingpanel layout (since it needs to be the root layout)
+        // on top of the sliding panel layout (since it needs to be the root layout)
         ActivityLauncher.viewMediaGalleryPickerForSiteAndMediaIds(this, mSite, mMediaGalleryEditFragment.getMediaIds());
     }
 
     private void handleSaveMedia() {
         Intent intent = new Intent();
-        ArrayList<String> ids = mMediaGalleryEditFragment.getMediaIds();
+        ArrayList<Long> ids = mMediaGalleryEditFragment.getMediaIds();
         boolean isRandom = mMediaGallerySettingsFragment.isRandom();
         int numColumns = mMediaGallerySettingsFragment.getNumColumns();
         String type = mMediaGallerySettingsFragment.getType();

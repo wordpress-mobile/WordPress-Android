@@ -84,9 +84,6 @@ dependencies {
     }
 
     // Provided by maven central
-    compile ('org.wordpress:mediapicker:1.2.4') {
-        exclude group:'com.android.support'
-    }
     compile 'com.google.code.gson:gson:2.6.+'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
@@ -110,8 +107,11 @@ dependencies {
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.2'
     compile 'org.wordpress:emailchecker2:1.1.0'
+    compile 'com.squareup.okio:okio:1.9.0'
 
-    compile 'com.yalantis:ucrop:2.2.0'
+    compile ('com.yalantis:ucrop:2.2.0') {
+        exclude group: 'com.squareup.okhttp3'
+    }
     compile 'com.github.xizzhu:simple-tool-tip:0.5.0'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
@@ -130,7 +130,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:develop-SNAPSHOT') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~missing-integration-functionality-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 

@@ -30,7 +30,14 @@ import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.MediaEditFragment;
+import org.wordpress.android.ui.media.MediaGalleryEditFragment;
+import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaGridFragment;
+import org.wordpress.android.ui.media.MediaItemFragment;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
@@ -46,7 +53,6 @@ import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -133,6 +139,12 @@ public interface AppComponent {
     void inject(PeopleManagementActivity object);
     void inject(PersonDetailFragment object);
     void inject(PlansActivity object);
+    void inject(MediaBrowserActivity object);
+    void inject(MediaGridFragment object);
+    void inject(MediaItemFragment object);
+    void inject(MediaEditFragment object);
+    void inject(MediaGalleryEditFragment object);
+    void inject(MediaGalleryPickerActivity object);
 
     void inject(EditPostActivity object);
     void inject(EditPostSettingsFragment object);
@@ -168,8 +180,8 @@ public interface AppComponent {
 
     void inject(ThemeWebActivity object);
 
+    void inject(MediaUploadService object);
     void inject(MediaDeleteService object);
-    void inject(PostMediaService object);
 
     void inject(SelectCategoriesActivity object);
     void inject(AddCategoryActivity object);
