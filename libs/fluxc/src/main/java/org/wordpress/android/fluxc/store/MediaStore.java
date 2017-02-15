@@ -182,6 +182,7 @@ public class MediaStore extends Store {
         FS_READ_PERMISSION_DENIED,
         NULL_MEDIA_ARG,
         MALFORMED_MEDIA_ARG,
+        DB_QUERY_FAILURE,
 
         // network errors, occur in response to network requests
         MEDIA_NOT_FOUND,
@@ -432,17 +433,16 @@ public class MediaStore extends Store {
         OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA, new ArrayList<MediaModel>());
 
         if (media == null) {
-            if (emit) {
-                event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-                emitChange(event);
-            }
-            return;
+            event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+        } else if (MediaSqlUtils.insertOrUpdateMedia(media) > 0) {
+            event.media.add(media);
+        } else {
+            event.error = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
         }
 
-        if (MediaSqlUtils.insertOrUpdateMedia(media) > 0) {
-            event.media.add(media);
+        if (emit) {
+            emitChange(event);
         }
-        if (emit) emitChange(event);
     }
 
     private void removeMedia(MediaModel media) {
@@ -450,12 +450,10 @@ public class MediaStore extends Store {
 
         if (media == null) {
             event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            emitChange(event);
-            return;
-        }
-
-        if (MediaSqlUtils.deleteMedia(media) > 0) {
+        } else if (MediaSqlUtils.deleteMedia(media) > 0) {
             event.media.add(media);
+        } else {
+            event.error = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
         }
         emitChange(event);
     }
