@@ -28,15 +28,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
-/**
- * {@link #migrateAccessTokenToAccountStore(Context, Dispatcher)} moves an existing access token from a previous version
- * of WPAndroid into {@link AccountStore}. The access token has historically existed in preferences and two DB tables.
- * The existing access token is deleted if found.
- */
 public class WPLegacyMigrationUtils {
-    //
-    // WPStores Access Token migration
-    //
     private static final String DEPRECATED_DATABASE_NAME = "wordpress";
     private static final String DEPRECATED_ACCOUNT_TABLE = "tbl_accounts";
     private static final String DEPRECATED_ACCESS_TOKEN_COLUMN = "access_token";
@@ -46,6 +38,11 @@ public class WPLegacyMigrationUtils {
 
     private static final String DEPRECATED_DB_PASSWORD_SECRET = BuildConfig.DB_SECRET;
 
+    /**
+     * Moves an existing access token from a previous version of WPAndroid into FluxC's AccountStore.
+     * The access token has historically existed in preferences and two DB tables.
+     * The existing access token is deleted if found.
+     */
     public static String migrateAccessTokenToAccountStore(Context context, Dispatcher dispatcher) {
         String token = getLatestDeprecatedAccessToken(context);
 
@@ -57,6 +54,12 @@ public class WPLegacyMigrationUtils {
         return token;
     }
 
+    /**
+     * Copies existing self-hosted sites from a previous version of WPAndroid into FluxC's SiteStore.
+     * Any Jetpack sites are ignored - those connected to the logged-in WP.com account will be pulled through the
+     * REST API after migration. Other Jetpack sites will not be migrated.
+     * Existing sites are retained in the deprecated accounts table after migration.
+     */
     public static List<SiteModel> migrateSelfHostedSitesFromDeprecatedDB(Context context, Dispatcher dispatcher) {
         List<SiteModel> siteList = getSelfHostedSitesFromDeprecatedDB(context);
         if (siteList != null) {
@@ -70,6 +73,10 @@ public class WPLegacyMigrationUtils {
         return siteList;
     }
 
+    /**
+     * Copies existing drafts and locally changed posts from a previous version of WPAndroid into FluxC's PostStore.
+     * Existing posts are retained in the deprecated posts table after migration.
+     */
     public static void migrateDraftsFromDeprecatedDB(Context context, Dispatcher dispatcher, SiteStore siteStore) {
         List<PostModel> postList = getDraftsFromDeprecatedDB(context, siteStore);
         if (postList != null) {
