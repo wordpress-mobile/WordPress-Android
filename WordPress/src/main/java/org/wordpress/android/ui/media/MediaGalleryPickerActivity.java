@@ -178,7 +178,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             }
         } else {
             MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-            mHasRetrievedAllMedia = event.media.size() == 0;
+            mHasRetrievedAllMedia = event.mediaList.size() == 0;
             adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
             if (mMediaStore.getSiteMediaCount(mSite) == 0 && mHasRetrievedAllMedia) {
                 // There is no media at all

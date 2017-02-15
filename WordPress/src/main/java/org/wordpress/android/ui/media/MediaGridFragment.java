@@ -385,7 +385,7 @@ public class MediaGridFragment extends Fragment
 
         switch (event.cause) {
             case FETCH_ALL_MEDIA:
-                if (event.media != null) {
+                if (event.mediaList != null) {
                     handleFetchAllMediaSuccess(event);
                 }
                 break;
@@ -821,7 +821,7 @@ public class MediaGridFragment extends Fragment
         Cursor mediaCursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
         adapter.swapCursor(mediaCursor);
 
-        mHasRetrievedAllMedia = event.media.size() < NUM_PER_FETCH;
+        mHasRetrievedAllMedia = event.mediaList.size() < NUM_PER_FETCH;
         adapter.setHasRetrievedAll(true);
 
         mIsRefreshing = false;

@@ -104,8 +104,8 @@ public class MediaDeleteService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(OnMediaChanged event) {
         // event for unknown media, ignoring
-        if (event.media == null || event.media.isEmpty() || !matchesInProgressMedia(event.media.get(0))) {
-            AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
+        if (event.mediaList == null || event.mediaList.isEmpty() || !matchesInProgressMedia(event.mediaList.get(0))) {
+            AppLog.w(T.MEDIA, "Media event not recognized: " + event.mediaList);
             return;
         }
 
@@ -150,7 +150,7 @@ public class MediaDeleteService extends Service {
     }
 
     private void handleOnMediaChangedError(@NonNull OnMediaChanged event) {
-        MediaModel media = event.media.get(0);
+        MediaModel media = event.mediaList.get(0);
 
         switch (event.error.type) {
             case UNAUTHORIZED:
