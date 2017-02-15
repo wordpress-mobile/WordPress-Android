@@ -224,7 +224,7 @@ public class WordPress extends MultiDexApplication {
         sOAuthAuthenticator = mOAuthAuthenticator;
 
         // If the migration was not done and if we have something to migrate
-        if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.isSelfHostedSitesMigratedToFluxC())
+        if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.wereSelfHostedSitesMigratedToFluxC())
             && (WPLegacyMigrationUtils.hasSelfHostedSiteToMigrate(this)
                 || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null)) {
             sIsMigrationInProgress = true;
@@ -318,7 +318,7 @@ public class WordPress extends MultiDexApplication {
     }
 
     private void migrateSelfHostedSites() {
-        if (!AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
+        if (!AppPrefs.wereSelfHostedSitesMigratedToFluxC()) {
             List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
             if (siteList != null && !siteList.isEmpty()) {
                 AppLog.i(T.DB, "Finished migrating " + siteList.size() + " self-hosted sites - fetching site info");
