@@ -15,10 +15,10 @@ public class MediaTestUtils {
         return MediaSqlUtils.insertOrUpdateMedia(media);
     }
 
-    public static List<MediaModel> insertRandomMediaIntoDatabase(long siteId, int count) {
-        List<MediaModel> insertedMedia = generateRandomizedMediaList(count, siteId);
+    public static List<MediaModel> insertRandomMediaIntoDatabase(int localSiteId, int count) {
+        List<MediaModel> insertedMedia = generateRandomizedMediaList(count, localSiteId);
         for (MediaModel media : insertedMedia) {
-            assertTrue(MediaSqlUtils.insertOrUpdateMedia(media) == 0);
+            assertTrue(MediaSqlUtils.insertOrUpdateMedia(media) == 1);
         }
         return insertedMedia;
     }
@@ -32,9 +32,9 @@ public class MediaTestUtils {
         return media;
     }
 
-    public static MediaModel generateMediaFromPath(long siteId, long mediaId, String filePath) {
+    public static MediaModel generateMediaFromPath(int localSiteId, long mediaId, String filePath) {
         MediaModel media = new MediaModel();
-        media.setSiteId(siteId);
+        media.setLocalSiteId(localSiteId);
         media.setMediaId(mediaId);
         media.setFilePath(filePath);
         media.setFileName(MediaUtils.getFileName(filePath));
@@ -44,16 +44,16 @@ public class MediaTestUtils {
         return media;
     }
 
-    public static MediaModel generateRandomizedMedia(long siteId) {
+    public static MediaModel generateRandomizedMedia(int localSiteId) {
         MediaModel media = generateMedia(randomStr(5), randomStr(5), randomStr(5), randomStr(5));
-        media.setSiteId(siteId);
+        media.setLocalSiteId(localSiteId);
         return media;
     }
 
-    public static List<MediaModel> generateRandomizedMediaList(int size, long siteId) {
+    public static List<MediaModel> generateRandomizedMediaList(int size, int localSiteId) {
         List<MediaModel> mediaList = new ArrayList<>();
         for (int i = 0; i < size; ++i) {
-            MediaModel newMedia = generateRandomizedMedia(siteId);
+            MediaModel newMedia = generateRandomizedMedia(localSiteId);
             newMedia.setMediaId(i);
             mediaList.add(newMedia);
         }
