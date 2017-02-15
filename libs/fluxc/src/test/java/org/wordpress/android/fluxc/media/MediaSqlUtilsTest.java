@@ -368,7 +368,7 @@ public class MediaSqlUtilsTest {
         image.setUploadState(UploadState.DELETED.toString());
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(image));
 
-        Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils.getImagesWithStates(site, NOT_DELETED_STATES).getCount());
+        Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils.getImagesWithStatesAsCursor(site, NOT_DELETED_STATES).getCount());
         Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils.getMediaWithStates(site, NOT_DELETED_STATES).getCount());
     }
 
