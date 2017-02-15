@@ -20,7 +20,7 @@ public class MediaSqlUtils {
         return getAllSiteMediaQuery(siteModel).getAsCursor();
     }
 
-    public static WellCursor<MediaModel> getMediaWithStates(SiteModel site, List<String> uploadStates) {
+    public static WellCursor<MediaModel> getMediaWithStatesAsCursor(SiteModel site, List<String> uploadStates) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
