@@ -28,7 +28,7 @@
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_medium"
             android:tint="@color/white"
-            app:srcCompat="@drawable/camera" />
+            app:srcCompat="@drawable/ic_camera_alt_48px" />
 
         <ImageView
             android:id="@+id/icon_picker"

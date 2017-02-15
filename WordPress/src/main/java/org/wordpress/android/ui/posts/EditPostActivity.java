@@ -93,12 +93,14 @@ import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -106,6 +108,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -213,6 +216,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsPage;
     private boolean mHasSetPostContent;
     private CountDownLatch mNewPostLatch;
+
+    private View mPhotoChooserContainer;
+    private PhotoChooserFragment mPhotoChooserFragment;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -379,8 +385,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
+                    hidePhotoChooser();
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
+                    hidePhotoChooser();
                     savePostAsync(new AfterSavePostListener() {
                         @Override
                         public void onPostSave() {
@@ -400,7 +408,65 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         });
 
+        // TODO: if the user doesn't have permission to access device photos, delay this until
+        // the user taps the photo icon and then ask permission
+        if (enablePhotoChooser()) {
+            initPhotoChooser();
+        }
+
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    }
+
+    private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
+
+    private boolean isPhotoChooserShowing() {
+        return mPhotoChooserContainer != null
+                && mPhotoChooserContainer.getVisibility() == View.VISIBLE;
+    }
+
+    // TODO: this is a placeholder for now - return False to switch back to the old seven-item menu
+    private boolean enablePhotoChooser() {
+        return true;
+    }
+
+    private void initPhotoChooser() {
+        int containerHeight;
+        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+        if (DisplayUtils.isLandscape(this)) {
+            containerHeight = (int) (displayHeight * 0.25f);
+        } else {
+            containerHeight = (int) (displayHeight * 0.5f);
+        }
+
+        mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
+        mPhotoChooserContainer.getLayoutParams().height = containerHeight;
+
+        mPhotoChooserFragment = PhotoChooserFragment.newInstance();
+
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.photo_fragment_container, mPhotoChooserFragment, PHOTO_CHOOSER_TAG)
+                .commit();
+    }
+
+    void showPhotoChooser() {
+        // hide soft keyboard
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        if (!isPhotoChooserShowing()) {
+            AniUtils.animateBottomBar(mPhotoChooserContainer, true);
+        }
+    }
+
+    public void hidePhotoChooser() {
+        if (isPhotoChooserShowing()) {
+            mPhotoChooserFragment.finishActionMode();
+            AniUtils.animateBottomBar(mPhotoChooserContainer, false);
+        }
     }
 
     private Runnable mAutoSave = new Runnable() {
@@ -736,12 +802,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-            super.openContextMenu(view);
+        // TODO: right now we intercept the editor's request for a context menu to display the
+        // photo chooser instead - at some point this should be rewritten so the editor requests
+        // the photo chooser to be shown directly
+        if (enablePhotoChooser()) {
+            if (!isPhotoChooserShowing()) {
+                showPhotoChooser();
+            } else {
+                hidePhotoChooser();
+            }
         } else {
-            AppLockManager.getInstance().setExtendedTimeout();
-            mMenuView = view;
+            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+                super.openContextMenu(view);
+            } else {
+                AppLockManager.getInstance().setExtendedTimeout();
+                mMenuView = view;
+            }
         }
+
     }
 
     @Override
@@ -850,7 +928,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void launchPictureLibrary() {
+    public void launchPictureLibrary() {
         WordPressMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
@@ -951,6 +1029,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onBackPressed() {
+        if (isPhotoChooserShowing()) {
+            hidePhotoChooser();
+            return;
+        }
+
         Fragment imageSettingsFragment = getFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (imageSettingsFragment != null && imageSettingsFragment.isVisible()) {
@@ -1269,7 +1352,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void launchCamera() {
+    public void launchCamera() {
         WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
                 new WordPressMediaUtils.LaunchCameraCallback() {
                     @Override
@@ -1494,7 +1577,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private boolean addMedia(Uri mediaUri) {
+    public boolean addMedia(Uri mediaUri) {
         if (mediaUri != null && !MediaUtils.isInMediaStore(mediaUri) && !mediaUri.toString().startsWith("/")
             && !mediaUri.toString().startsWith("file://") ) {
             mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
@@ -1688,7 +1771,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return path;
     }
 
-    private void startMediaGalleryAddActivity() {
+    public void startMediaGalleryAddActivity() {
         ActivityLauncher.viewMediaGalleryPickerForSite(this, mSite);
     }
 

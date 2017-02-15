@@ -4,8 +4,7 @@
     <item
         android:id="@+id/mnu_confirm_selection"
         android:enabled="true"
-        android:icon="@drawable/action_mode_confirm_checkmark"
-        android:title="@string/confirm"
+        android:icon="@drawable/ic_check_white_24dp"
         android:visible="true" />
 
 </menu>
