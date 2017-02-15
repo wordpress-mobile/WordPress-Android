@@ -590,14 +590,12 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaFetched(@NonNull MediaPayload payload) {
-        List<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(payload.media);
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_MEDIA, mediaList);
+        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_MEDIA, null, payload.error);
 
-        if (payload.isError()) {
-            onMediaChanged.error = payload.error;
-        } else if (payload.media != null) {
+        if (!payload.isError() && payload.media != null) {
             MediaSqlUtils.insertOrUpdateMedia(payload.media);
+            onMediaChanged.media = new ArrayList<>();
+            onMediaChanged.media.add(payload.media);
         }
 
         emitChange(onMediaChanged);
