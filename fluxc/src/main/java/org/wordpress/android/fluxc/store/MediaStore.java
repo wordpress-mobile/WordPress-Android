@@ -501,11 +501,6 @@ public class MediaStore extends Store {
     }
 
     private void performFetchAllMedia(MediaListPayload payload) {
-        if (payload.site == null) {
-            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.FETCH_ALL_MEDIA, null);
-            return;
-        }
-
         if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mMediaRestClient.fetchAllMedia(payload.site);
         } else {
