@@ -241,10 +241,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
                         if (mediaError == MediaErrorType.MEDIA_NOT_FOUND) {
                             AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
-                            notifyMediaDeleted(site, media, null);
-                        } else {
-                            notifyMediaDeleted(site, media, new MediaError(mediaError));
                         }
+                        notifyMediaDeleted(site, media, new MediaError(mediaError));
                     }
         }));
     }
