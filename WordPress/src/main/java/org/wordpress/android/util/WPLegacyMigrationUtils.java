@@ -190,7 +190,8 @@ public class WPLegacyMigrationUtils {
             for (int i = 0; i < numRows; i++) {
                 PostModel postModel = new PostModel();
 
-                Cursor siteCursor = db.query(DEPRECATED_BLOGS_TABLE, new String[]{"dotcomFlag","blogId","url"},
+                Cursor siteCursor = db.query(DEPRECATED_BLOGS_TABLE,
+                        new String[]{"dotcomFlag","blogId","url","api_blogid"},
                         String.format("id=%s", c.getInt(c.getColumnIndex("blogID"))), null, null, null, null);
 
                 if (siteCursor.getCount() > 0) {
@@ -199,11 +200,15 @@ public class WPLegacyMigrationUtils {
                     boolean dotcomFlag = siteCursor.getInt(0) == 1;
                     int blogId = siteCursor.getInt(1);
                     String xmlrpcUrl = siteCursor.getString(2);
+                    String apiBlogId = siteCursor.getString(3);
 
                     int migratedSiteLocalId;
                     if (dotcomFlag) {
                         // WP.com site - identify it by WP.com site ID
                         migratedSiteLocalId = siteStore.getLocalIdForRemoteSiteId(blogId);
+                    } else if (!TextUtils.isEmpty(apiBlogId)) {
+                        // Jetpack site - identify it by WP.com site ID
+                        migratedSiteLocalId = siteStore.getLocalIdForRemoteSiteId(Long.valueOf(apiBlogId));
                     } else {
                         // Self-hosted site - identify it by its self-hosted site ID and XML-RPC URL
                         migratedSiteLocalId = siteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(blogId,
