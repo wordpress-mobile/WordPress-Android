@@ -88,14 +88,14 @@ public class MediaStore extends Store {
     public static class MediaListPayload extends Payload {
         public SiteModel site;
         public MediaError error;
-        public List<MediaModel> media;
+        public List<MediaModel> mediaList;
         public MediaFilter filter;
-        public MediaListPayload(SiteModel site, List<MediaModel> media, MediaFilter filter) {
-            this(site, media, null, filter);
+        public MediaListPayload(SiteModel site, List<MediaModel> mediaList, MediaFilter filter) {
+            this(site, mediaList, null, filter);
         }
-        public MediaListPayload(SiteModel site, List<MediaModel> media, MediaError error, MediaFilter filter) {
+        public MediaListPayload(SiteModel site, List<MediaModel> mediaList, MediaError error, MediaFilter filter) {
             this.site = site;
-            this.media = media;
+            this.mediaList = mediaList;
             this.error = error;
             this.filter = filter;
         }
@@ -576,12 +576,12 @@ public class MediaStore extends Store {
     }
 
     private void handleAllMediaFetched(@NonNull MediaListPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_ALL_MEDIA, payload.media);
+        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_ALL_MEDIA, payload.mediaList);
 
         if (!payload.isError()) {
             MediaSqlUtils.deleteAllSiteMedia(payload.site);
-            if (!payload.media.isEmpty()) {
-                for (MediaModel media : payload.media) {
+            if (!payload.mediaList.isEmpty()) {
+                for (MediaModel media : payload.mediaList) {
                     updateMedia(media, false);
                 }
             }
