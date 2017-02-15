@@ -208,6 +208,11 @@ public class MediaSqlUtils {
         }
     }
 
+    public static MediaModel insertMediaForResult(MediaModel media) {
+        WellSql.insert(media).asSingleTransaction(true).execute();
+        return media;
+    }
+
     public static int deleteMedia(MediaModel media) {
         if (media == null) return 0;
         return WellSql.delete(MediaModel.class)
