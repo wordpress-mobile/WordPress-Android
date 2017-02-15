@@ -10,10 +10,10 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
+import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -24,7 +24,7 @@ import org.wordpress.android.util.StringUtils;
 class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
     private ImageLoader mImageLoader;
 
-    public MediaGalleryAdapter(Context context, int layout, Cursor c, boolean autoRequery, ImageLoader imageLoader) {
+    MediaGalleryAdapter(Context context, int layout, Cursor c, boolean autoRequery, ImageLoader imageLoader) {
         super(context, layout, c, autoRequery);
         setImageLoader(imageLoader);
     }
@@ -64,38 +64,35 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
             view.setTag(holder);
         }
 
-        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
-        boolean isLocalFile = MediaUtils.isLocalFile(state);
-
         // file name
-        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
+        String fileName = cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_NAME));
         if (holder.filenameView != null) {
             holder.filenameView.setText(String.format(context.getString(R.string.media_file_name), fileName));
         }
 
         // title of media
-        String title = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE));
+        String title = cursor.getString(cursor.getColumnIndex(MediaModelTable.TITLE));
         if (title == null || title.equals(""))
             title = fileName;
         holder.titleView.setText(title);
 
         // upload date
         if (holder.uploadDateView != null) {
-            String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
+            String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(MediaModelTable.UPLOAD_DATE)));
             holder.uploadDateView.setText(String.format(context.getString(R.string.media_uploaded_on), date));
         }
 
         // load image
-        if (isLocalFile) {
-            // should not be local file
-        } else {
+        String uploadState = cursor.getString(cursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
+        if (!MediaUtils.isLocalFile(uploadState)) {
             loadNetworkImage(cursor, (NetworkImageView) holder.imageView);
         }
 
         // get the file extension from the fileURL
-        String filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH)));
-        if (filePath.isEmpty())
-            filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL)));
+        String filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_PATH)));
+        if (filePath.isEmpty()) {
+            filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(MediaModelTable.URL)));
+        }
 
         // file type
         String fileExtension = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
@@ -106,8 +103,8 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         // dimensions
         if (holder.dimensionView != null) {
             if( MediaUtils.isValidImage(filePath)) {
-                int width = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
-                int height = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
+                int width = cursor.getInt(cursor.getColumnIndex(MediaModelTable.WIDTH));
+                int height = cursor.getInt(cursor.getColumnIndex(MediaModelTable.HEIGHT));
 
                 if (width > 0 && height > 0) {
                     String dimensions = width + "x" + height;
@@ -123,7 +120,7 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
     }
 
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
-        String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
+        String thumbnailURL = cursor.getString(cursor.getColumnIndex(MediaModelTable.THUMBNAIL_URL));
         if (thumbnailURL == null) {
             imageView.setImageUrl(null, null);
             return;

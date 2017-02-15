@@ -9,7 +9,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -25,10 +24,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
@@ -37,7 +40,6 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -45,14 +47,21 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * A fragment display a media item's details.
  */
 public class MediaItemFragment extends Fragment {
     private static final String ARGS_MEDIA_ID = "media_id";
+    private static final int MISSING_MEDIA_ID = -1;
 
     public static final String TAG = MediaItemFragment.class.getName();
+
+    @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
 
     private WPNetworkImageView mImageView;
     private TextView mCaptionView;
@@ -72,10 +81,10 @@ public class MediaItemFragment extends Fragment {
         void onPause(Fragment fragment);
     }
 
-    public static MediaItemFragment newInstance(SiteModel site, String mediaId) {
+    public static MediaItemFragment newInstance(SiteModel site, long mediaId) {
         MediaItemFragment fragment = new MediaItemFragment();
         Bundle args = new Bundle();
-        args.putString(ARGS_MEDIA_ID, mediaId);
+        args.putLong(ARGS_MEDIA_ID, mediaId);
         args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
         return fragment;
@@ -85,6 +94,7 @@ public class MediaItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState == null) {
             if (getArguments() != null) {
@@ -100,6 +110,18 @@ public class MediaItemFragment extends Fragment {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -132,11 +154,11 @@ public class MediaItemFragment extends Fragment {
         mCallback.onPause(this);
     }
 
-    public String getMediaId() {
+    public long getMediaId() {
         if (getArguments() != null) {
-            return getArguments().getString(ARGS_MEDIA_ID);
+            return getArguments().getLong(ARGS_MEDIA_ID);
         } else {
-            return null;
+            return MISSING_MEDIA_ID;
         }
     }
 
@@ -156,41 +178,41 @@ public class MediaItemFragment extends Fragment {
 
     /** Loads the first media item for the current blog from the database **/
     public void loadDefaultMedia() {
-        loadMedia(null);
+        loadMedia(MISSING_MEDIA_ID);
     }
 
-    public void loadMedia(String mediaId) {
+    public void loadMedia(long mediaId) {
         if (mSite == null)
             return;
-        String blogId = String.valueOf(mSite.getId());
 
-        Cursor cursor = null;
-        try {
-            // if the id is null, get the first media item in the database
-            if (mediaId == null) {
-                cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
-            } else {
-                cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
-            }
-            refreshViews(cursor);
-        } finally {
-            SqlUtils.closeCursor(cursor);
+        MediaModel mediaModel = null;
+        if (mediaId != MISSING_MEDIA_ID) {
+            mediaModel = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         }
+
+        // if the id is null, get the first media item in the database
+        if (mediaModel == null) {
+            List<MediaModel> list = mMediaStore.getAllSiteMedia(mSite);
+            if (list != null && list.size() > 0) {
+                mediaModel = list.get(0);
+            }
+        }
+        refreshViews(mediaModel);
     }
 
-    private void refreshViews(Cursor cursor) {
-        if (!isAdded() || !cursor.moveToFirst()) {
+    private void refreshViews(MediaModel mediaModel) {
+        if (!isAdded() || mediaModel == null) {
             return;
         }
 
         // check whether or not to show the edit button
-        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
+        String state = mediaModel.getUploadState();
         mIsLocal = MediaUtils.isLocalFile(state);
         if (mIsLocal && getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }
 
-        String caption = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION));
+        String caption = mediaModel.getCaption();
         if (TextUtils.isEmpty(caption)) {
             mCaptionView.setVisibility(View.GONE);
         } else {
@@ -198,7 +220,7 @@ public class MediaItemFragment extends Fragment {
             mCaptionView.setVisibility(View.VISIBLE);
         }
 
-        String desc = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION));
+        String desc = mediaModel.getDescription();
         if (TextUtils.isEmpty(desc)) {
             mDescriptionView.setVisibility(View.GONE);
         } else {
@@ -206,23 +228,24 @@ public class MediaItemFragment extends Fragment {
             mDescriptionView.setVisibility(View.VISIBLE);
         }
 
-        String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
-        mDateView.setText(date);
-        TextView txtDateLabel = (TextView) getView().findViewById(R.id.media_listitem_details_date_label);
-        txtDateLabel.setText(
-                mIsLocal ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
+        mDateView.setText(mediaModel.getUploadDate());
+        if (getView() != null) {
+            TextView txtDateLabel = (TextView) getView().findViewById(R.id.media_listitem_details_date_label);
+            txtDateLabel.setText(
+                    mIsLocal ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
+        }
 
-        String fileURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
+        String fileURL = mediaModel.getUrl();
+        String fileName = mediaModel.getFileName();
         mImageUri = TextUtils.isEmpty(fileURL)
-                ? cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH))
+                ? mediaModel.getFilePath()
                 : fileURL;
         boolean isValidImage = MediaUtils.isValidImage(mImageUri);
 
         mFileNameView.setText(fileName);
 
-        float mediaWidth = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
-        float mediaHeight = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
+        float mediaWidth = mediaModel.getWidth();
+        float mediaHeight = mediaModel.getHeight();
 
         // image and dimensions
         if (isValidImage) {
@@ -263,7 +286,7 @@ public class MediaItemFragment extends Fragment {
             }
 
             if (mIsLocal) {
-                final String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
+                final String filePath = mediaModel.getFilePath();
                 loadLocalImage(mImageView, filePath, imageWidth, imageHeight);
             } else {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
@@ -353,8 +376,8 @@ public class MediaItemFragment extends Fragment {
         int itemId = item.getItemId();
 
         if (itemId == R.id.menu_delete) {
-            String blogId = String.valueOf(mSite.getId());
-            boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(blogId, getMediaId());
+            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, getMediaId());
+            boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(mediaModel);
             if (!canDeleteMedia) {
                 Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
                 return true;
@@ -365,7 +388,7 @@ public class MediaItemFragment extends Fragment {
                             R.string.delete, new OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ArrayList<String> ids = new ArrayList<>(1);
+                                    ArrayList<Long> ids = new ArrayList<>(1);
                                     ids.add(getMediaId());
                                     if (getActivity() instanceof MediaBrowserActivity) {
                                         ((MediaBrowserActivity) getActivity()).deleteMedia(ids);
@@ -392,5 +415,10 @@ public class MediaItemFragment extends Fragment {
             AppLog.e(AppLog.T.UTILS, e);
             ToastUtils.showToast(getActivity(), R.string.error_copy_to_clipboard);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        // no-op
     }
 }

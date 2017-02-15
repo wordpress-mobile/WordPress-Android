@@ -102,16 +102,6 @@
     <string name="yesterday">Yesterday</string>
     <string name="days_ago">%d days ago</string>
 
-    <!-- MediaPicker -->
-    <string name="add_to_post">Add to Post</string>
-    <string name="media_picker_title">Select media</string>
-    <string name="take_photo">Take a photo</string>
-    <string name="take_video">Take a video</string>
-    <string name="tab_title_device_images">Device Images</string>
-    <string name="tab_title_device_videos">Device Videos</string>
-    <string name="tab_title_site_images">Site Images</string>
-    <string name="tab_title_site_videos">Site Videos</string>
-
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
     <string name="media_add_popup_capture_photo">Capture photo</string>
@@ -148,20 +138,6 @@
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
-    <string name="loading_videos">Loading videos</string>
-    <string name="loading_images">Loading images</string>
-    <string name="loading_blog_images">Fetching images</string>
-    <string name="loading_blog_videos">Fetching videos</string>
-    <string name="no_media">No media</string>
-    <string name="no_media_sources">Couldn\'t fetch media</string>
-    <string name="error_loading_images">Error loading images</string>
-    <string name="error_loading_videos">Error loading videos</string>
-    <string name="error_loading_blog_images">Unable to fetch images</string>
-    <string name="error_loading_blog_videos">Unable to fetch videos</string>
-    <string name="no_device_images">No images</string>
-    <string name="no_device_videos">No videos</string>
-    <string name="no_blog_images">No images</string>
-    <string name="no_blog_videos">No videos</string>
     <string name="upload_queued">Queued</string>
     <string name="media_file_type">File type: %s</string>
     <string name="media_file_name">File name: %s</string>
@@ -408,7 +384,6 @@
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
-    <string name="select_from_new_picker">Multi-select with the new picker</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -1085,8 +1060,13 @@
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
+    <string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
+    <string name="error_media_not_found">Media could not be found</string>
+    <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
+    <string name="error_media_parse_format">Could not parse response to %s media</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_upload_connection">A connection error occurred while uploading media</string>
+    <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
