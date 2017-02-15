@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
@@ -70,6 +71,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPLegacyMigrationUtils;
@@ -179,6 +181,16 @@ public class WordPress extends MultiDexApplication {
         }
     };
 
+    /**
+     * Shutdown task used if migration to FluxC can't be performed due to lack of network connectivity.
+     */
+    private static final Runnable sShutdown = new Runnable() {
+        @Override
+        public void run() {
+            System.exit(0);
+        }
+    };
+
     public static BitmapLruCache getBitmapCache() {
         if (mBitmapCache == null) {
             // The cache size will be measured in kilobytes rather than
@@ -212,6 +224,14 @@ public class WordPress extends MultiDexApplication {
         sOAuthAuthenticator = mOAuthAuthenticator;
 
         if (!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
+            if (!NetworkUtils.isNetworkAvailable(this)) {
+                AppLog.i(T.DB, "No connection - aborting migration");
+                ToastUtils.showToast(this, getResources().getString(R.string.migration_error_not_connected),
+                        ToastUtils.Duration.LONG);
+                new Handler().postDelayed(sShutdown, 1000);
+                return;
+            }
+
             sIsMigrationInProgress = true;
             migrateAccessToken();
         }
