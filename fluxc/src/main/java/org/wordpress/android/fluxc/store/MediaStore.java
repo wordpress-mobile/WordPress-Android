@@ -149,13 +149,13 @@ public class MediaStore extends Store {
 
     public class OnMediaChanged extends OnChanged<MediaError> {
         public MediaAction cause;
-        public List<MediaModel> media;
-        public OnMediaChanged(MediaAction cause, List<MediaModel> media) {
-            this(cause, media, null);
+        public List<MediaModel> mediaList;
+        public OnMediaChanged(MediaAction cause, List<MediaModel> mediaList) {
+            this(cause, mediaList, null);
         }
-        public OnMediaChanged(MediaAction cause, List<MediaModel> media, MediaError error) {
+        public OnMediaChanged(MediaAction cause, List<MediaModel> mediaList, MediaError error) {
             this.cause = cause;
-            this.media = media;
+            this.mediaList = mediaList;
             this.error = error;
         }
     }
@@ -435,7 +435,7 @@ public class MediaStore extends Store {
         if (media == null) {
             event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
         } else if (MediaSqlUtils.insertOrUpdateMedia(media) > 0) {
-            event.media.add(media);
+            event.mediaList.add(media);
         } else {
             event.error = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
         }
@@ -451,7 +451,7 @@ public class MediaStore extends Store {
         if (media == null) {
             event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
         } else if (MediaSqlUtils.deleteMedia(media) > 0) {
-            event.media.add(media);
+            event.mediaList.add(media);
         } else {
             event.error = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
         }
@@ -554,8 +554,8 @@ public class MediaStore extends Store {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.PUSH_MEDIA, null, payload.error);
         if (payload.media != null) {
             updateMedia(payload.media, false);
-            onMediaChanged.media = new ArrayList<>();
-            onMediaChanged.media.add(payload.media);
+            onMediaChanged.mediaList = new ArrayList<>();
+            onMediaChanged.mediaList.add(payload.media);
         }
         emitChange(onMediaChanged);
     }
@@ -589,8 +589,8 @@ public class MediaStore extends Store {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_MEDIA, null, payload.error);
         if (payload.media != null) {
             MediaSqlUtils.insertOrUpdateMedia(payload.media);
-            onMediaChanged.media = new ArrayList<>();
-            onMediaChanged.media.add(payload.media);
+            onMediaChanged.mediaList = new ArrayList<>();
+            onMediaChanged.mediaList.add(payload.media);
         }
         emitChange(onMediaChanged);
     }
@@ -599,8 +599,8 @@ public class MediaStore extends Store {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETE_MEDIA, null, payload.error);
         if (payload.media != null) {
             MediaSqlUtils.deleteMedia(payload.media);
-            onMediaChanged.media = new ArrayList<>();
-            onMediaChanged.media.add(payload.media);
+            onMediaChanged.mediaList = new ArrayList<>();
+            onMediaChanged.mediaList.add(payload.media);
         }
         emitChange(onMediaChanged);
     }
