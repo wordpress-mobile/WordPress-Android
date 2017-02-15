@@ -24,7 +24,7 @@ public class MediaSqlUtils {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
-                .notContains(MediaModelTable.UPLOAD_STATE, MediaModel.UploadState.DELETED.toString())
+                .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
                 .getAsCursor();
