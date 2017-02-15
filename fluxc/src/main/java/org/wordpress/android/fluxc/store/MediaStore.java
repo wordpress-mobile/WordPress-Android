@@ -320,7 +320,7 @@ public class MediaStore extends Store {
     }
 
     public WellCursor<MediaModel> getNotDeletedSiteImagesAsCursor(SiteModel site) {
-        return MediaSqlUtils.getImagesWithStates(site, NOT_DELETED_STATES);
+        return MediaSqlUtils.getImagesWithStatesAsCursor(site, NOT_DELETED_STATES);
     }
 
     public WellCursor<MediaModel> getNotDeletedUnattachedMediaAsCursor(SiteModel site) {
