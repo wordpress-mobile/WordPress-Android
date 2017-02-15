@@ -78,8 +78,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
@@ -93,9 +93,9 @@ import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
-import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -145,8 +145,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static android.R.attr.path;
-
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
         MediaUploadService.MediaUploadListener {
@@ -171,6 +169,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
     public static final int DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE = 3;
+    public static final int PHOTO_CHOOSER_PERMISSION_REQUEST_CODE = 4;
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -408,9 +407,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         });
 
-        // TODO: if the user doesn't have permission to access device photos, delay this until
-        // the user taps the photo icon and then ask permission
-        if (enablePhotoChooser()) {
+        // initialize the photo chooser if we already have the required permissions - if we
+        // don't, the permission request and initialization is deferred until the user
+        // explictly shows the chooser
+        if (enablePhotoChooser() && PermissionUtils.checkCameraAndStoragePermissions(this)) {
             initPhotoChooser();
         }
 
@@ -450,6 +450,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     void showPhotoChooser() {
+        // request permission if we don't already have them
+        if (!PermissionUtils.checkCameraAndStoragePermissions(this)) {
+            PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_CHOOSER_PERMISSION_REQUEST_CODE);
+            return;
+        }
+
+        // make sure we initialized the photo chooser
+        if (mPhotoChooserFragment == null) {
+            initPhotoChooser();
+        }
+
         // hide soft keyboard
         View view = getCurrentFocus();
         if (view != null) {
@@ -661,6 +672,28 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         super.openContextMenu(mMenuView);
                         mMenuView = null;
                     }
+                } else {
+                    ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
+                }
+                break;
+            case PHOTO_CHOOSER_PERMISSION_REQUEST_CODE:
+                boolean canShowPhotoChooser = true;
+                for (int i = 0; i < grantResults.length; ++i) {
+                    switch (permissions[i]) {
+                        case Manifest.permission.CAMERA:
+                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                                canShowPhotoChooser = false;
+                            }
+                            break;
+                        case Manifest.permission.WRITE_EXTERNAL_STORAGE:
+                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                                canShowPhotoChooser = false;
+                            }
+                            break;
+                    }
+                }
+                if (canShowPhotoChooser) {
+                    showPhotoChooser();
                 } else {
                     ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
                 }
