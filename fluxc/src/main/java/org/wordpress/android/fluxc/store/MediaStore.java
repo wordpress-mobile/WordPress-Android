@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.wellsql.generated.MediaModelTable;
 import com.yarolegovich.wellsql.WellCursor;
-import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -295,12 +294,7 @@ public class MediaStore extends Store {
 
     public MediaModel instantiateMediaModel() {
         MediaModel media = new MediaModel();
-        WellSql.insert(media).asSingleTransaction(true).execute();
-        // id is set to -1 if insertion fails
-        if (media.getId() == -1) {
-            return null;
-        }
-        return media;
+        return MediaSqlUtils.insertMediaForResult(media);
     }
 
     public List<MediaModel> getAllSiteMedia(SiteModel siteModel) {
