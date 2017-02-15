@@ -43,8 +43,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
         ((WordPress) context.getApplicationContext()).component().inject(this);
+        super.onReceive(context, intent);
     }
 
     private static void showMessage(Context context, int[] allWidgets, String message, SiteStore siteStore) {
