@@ -211,7 +211,7 @@ public class WordPress extends MultiDexApplication {
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        if (!mAccountStore.hasAccessToken() || !AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
+        if (!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
             sIsMigrationInProgress = true;
             migrateAccessToken();
         }
@@ -271,7 +271,7 @@ public class WordPress extends MultiDexApplication {
 
     private void migrateAccessToken() {
         // Migrate access token AccountStore
-        if (!mAccountStore.hasAccessToken()) {
+        if (!AppPrefs.wasAccessTokenMigrated() && !mAccountStore.hasAccessToken()) {
             AppLog.i(T.DB, "No access token found in FluxC - attempting to migrate existing one");
             // It will take some time to update the access token in the AccountStore if it was migrated
             // so it will be set to the migrated token
@@ -285,6 +285,8 @@ public class WordPress extends MultiDexApplication {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                 return;
             }
+            // Even if there was no token to migrate, turn this flag on so we don't attempt to migrate again
+            AppPrefs.setAccessTokenMigrated(true);
         }
 
         migrateSelfHostedSites();
