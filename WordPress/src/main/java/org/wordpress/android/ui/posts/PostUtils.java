@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.wordpress.android.util.StringUtils.notNullStr;
-
 public class PostUtils {
     private static final int MAX_EXCERPT_LEN = 150;
 
@@ -231,15 +229,7 @@ public class PostUtils {
             PostModel newPost = rhs.get(i);
             PostModel currentPost = lhs.get(i);
 
-            boolean postsAreEqual = newPost.getRemotePostId() == currentPost.getRemotePostId()
-                    && newPost.isLocalDraft() == currentPost.isLocalDraft()
-                    && newPost.isLocallyChanged() == currentPost.isLocallyChanged()
-                    && notNullStr(newPost.getTitle()).equals(notNullStr(currentPost.getTitle()))
-                    && notNullStr(newPost.getContent()).equals(notNullStr(currentPost.getContent()))
-                    && notNullStr(newPost.getDateCreated()).equals(notNullStr(currentPost.getDateCreated()))
-                    && notNullStr(newPost.getStatus()).equals(notNullStr(currentPost.getStatus()));
-
-            if (!postsAreEqual) {
+            if (!newPost.equals(currentPost)) {
                 return false;
             }
         }
