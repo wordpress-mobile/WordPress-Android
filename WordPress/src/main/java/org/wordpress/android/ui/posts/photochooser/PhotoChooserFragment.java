@@ -24,8 +24,6 @@ import org.wordpress.android.util.AniUtils;
 
 import java.util.ArrayList;
 
-import static org.wordpress.android.ui.posts.photochooser.PhotoChooserAdapter.NUM_COLUMNS;
-
 public class PhotoChooserFragment extends Fragment {
 
     private static final String KEY_MULTI_SELECT_ENABLED = "multi_select_enabled";
@@ -48,7 +46,8 @@ public class PhotoChooserFragment extends Fragment {
     private PhotoChooserAdapter mAdapter;
     private View mBottomBar;
     private ActionMode mActionMode;
-    private int mRestorePosition;
+
+    private Bundle mRestoreState;
 
     public static PhotoChooserFragment newInstance() {
         Bundle args = new Bundle();
@@ -61,22 +60,14 @@ public class PhotoChooserFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            mRestorePosition = savedInstanceState.getInt(KEY_RESTORE_POSITION);
-            if (savedInstanceState.getBoolean(KEY_MULTI_SELECT_ENABLED)) {
-                getAdapter().setMultiSelectEnabled(true);
-                restoreSelection(savedInstanceState);
-            }
+            restoreState(savedInstanceState);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_RESTORE_POSITION, getRecyclerPosition());
-        if (isMultiSelectEnabled()) {
-            outState.putBoolean(KEY_MULTI_SELECT_ENABLED, true);
-            saveSelection(outState);
-        }
+        saveState(outState);
     }
 
     private int getRecyclerPosition() {
@@ -92,28 +83,41 @@ public class PhotoChooserFragment extends Fragment {
         }
     }
 
-    private void restoreSelection(Bundle savedInstanceState) {
-        if (!savedInstanceState.containsKey(KEY_SELECTED_ITEMS)) return;
+    private void saveState(Bundle bundle) {
+        bundle.putInt(KEY_RESTORE_POSITION, getRecyclerPosition());
+        if (isMultiSelectEnabled()) {
+            bundle.putBoolean(KEY_MULTI_SELECT_ENABLED, true);
+            ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
+            if (uriList.size() == 0) return;
 
-        ArrayList<String> strings = savedInstanceState.getStringArrayList(KEY_SELECTED_ITEMS);
-        if (strings == null || strings.size() == 0) return;
-
-        ArrayList<Uri> uriList = new ArrayList<>();
-        for (String stringUri: strings) {
-            uriList.add(Uri.parse(stringUri));
+            ArrayList<String> stringUris = new ArrayList<>();
+            for (Uri uri: uriList) {
+                stringUris.add(uri.toString());
+            }
+            bundle.putStringArrayList(KEY_SELECTED_ITEMS, stringUris);
         }
-        getAdapter().setSelectedURIs(uriList);
     }
 
-    private void saveSelection(Bundle outState) {
-        ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
-        if (uriList.size() == 0) return;
-
-        ArrayList<String> stringUris = new ArrayList<>();
-        for (Uri uri: uriList) {
-            stringUris.add(uri.toString());
+    private void restoreState(Bundle bundle) {
+        int position = bundle.getInt(KEY_RESTORE_POSITION);
+        if (position > 0) {
+            setRecyclerPosition(position);
         }
-        outState.putStringArrayList(KEY_SELECTED_ITEMS, stringUris);
+
+        if (bundle.getBoolean(KEY_MULTI_SELECT_ENABLED)) {
+            getAdapter().setMultiSelectEnabled(true);
+        }
+
+        if (bundle.containsKey(KEY_SELECTED_ITEMS)) {
+            ArrayList<String> strings = bundle.getStringArrayList(KEY_SELECTED_ITEMS);
+            if (strings != null && strings.size() > 0) {
+                ArrayList<Uri> uriList = new ArrayList<>();
+                for (String stringUri : strings) {
+                    uriList.add(Uri.parse(stringUri));
+                }
+                getAdapter().setSelectedURIs(uriList);
+            }
+        }
     }
 
     @Override
@@ -225,18 +229,17 @@ public class PhotoChooserFragment extends Fragment {
         @Override
         public void onAdapterLoaded(boolean isEmpty) {
             showEmptyView(isEmpty);
-            if (mRestorePosition > 0) {
-                setRecyclerPosition(mRestorePosition);
-                mRestorePosition = 0;
+            if (mRestoreState != null) {
+                restoreState(mRestoreState);
+                mRestoreState = null;
             }
         }
     };
 
     private void showEmptyView(boolean show) {
-        if (!isAdded()) return;
-
-        View emptyView = getView().findViewById(R.id.text_empty);
-        emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (isAdded()) {
+            getView().findViewById(R.id.text_empty).setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 
     /*
@@ -295,19 +298,20 @@ public class PhotoChooserFragment extends Fragment {
      * populates the adapter with media stored on the device
      */
     public void loadDeviceMedia() {
+        // save the current recycler/adapter state so we can restore it after loading
         if (mAdapter != null) {
-            mRestorePosition = getRecyclerPosition();
-            mRecycler.setAdapter(null);
-            mAdapter = null;
+            mRestoreState = new Bundle();
+            saveState(mRestoreState);
         }
 
-        mRecycler.setLayoutManager(new GridLayoutManager(getActivity(), NUM_COLUMNS));
+        int numColumns = PhotoChooserAdapter.getNumColumns(getActivity());
         mRecycler.setAdapter(getAdapter());
+        mRecycler.setLayoutManager(new GridLayoutManager(getActivity(), numColumns));
         getAdapter().loadDeviceMedia();
     }
 
     /*
-     * inserts the passed list of media URIs into the post and closes the photo chooser
+     * inserts the passed list of media URIs into the post and closes the chooser
      */
     private void addMediaList(ArrayList<Uri> uriList) {
         EditPostActivity activity = getEditPostActivity();

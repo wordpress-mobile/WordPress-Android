@@ -36,9 +36,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         private boolean isVideo;
     }
 
-    static final int NUM_COLUMNS = 3;
-
-    private class UriList extends ArrayList<Uri> {
+    class UriList extends ArrayList<Uri> {
         private int indexOfUri(Uri imageUri) {
             for (int i = 0; i < size(); i++) {
                 if (get(i).equals(imageUri)) {
@@ -71,14 +69,18 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         mLoadedListener = loadedListener;
         mThumbnailLoader = new ThumbnailLoader(context);
         setHasStableIds(true);
-
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
-        mThumbWidth = displayWidth / NUM_COLUMNS;
-        mThumbHeight = (int) (mThumbWidth * 0.75f);
     }
 
     void loadDeviceMedia() {
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
+        mThumbWidth = displayWidth / getNumColumns(mContext);
+        mThumbHeight = (int) (mThumbWidth * 0.75f);
         new BuildDeviceMediaListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    static int getNumColumns(Context context) {
+        boolean isLandscape = DisplayUtils.isLandscape(context);
+        return isLandscape ? 4 : 3;
     }
 
     @Override
@@ -130,7 +132,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
 
     boolean isVideoUri(Uri uri) {
         int index = indexOfUri(uri);
-        return index > -1 ? getItemAtPosition(index).isVideo : false;
+        return index > -1 && getItemAtPosition(index).isVideo;
     }
 
     void setMultiSelectEnabled(boolean enabled) {
@@ -277,17 +279,6 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                     return true;
                 }
             });
-        }
-    }
-
-    /*
-     * ViewHolder containing the message that appears when there are no device photos
-     */
-    class EmptyViewHolder extends RecyclerView.ViewHolder {
-        public EmptyViewHolder(View view) {
-            super(view);
-            itemView.getLayoutParams().width = mThumbWidth;
-            itemView.getLayoutParams().height = mThumbHeight;
         }
     }
 
