@@ -41,7 +41,6 @@ public class WPLegacyMigrationUtils {
     /**
      * Moves an existing access token from a previous version of WPAndroid into FluxC's AccountStore.
      * The access token has historically existed in preferences and two DB tables.
-     * The existing access token is deleted if found.
      */
     public static String migrateAccessTokenToAccountStore(Context context, Dispatcher dispatcher) {
         String token = getLatestDeprecatedAccessToken(context);
