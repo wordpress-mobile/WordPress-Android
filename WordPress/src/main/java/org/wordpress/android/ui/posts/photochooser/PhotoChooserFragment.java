@@ -30,6 +30,8 @@ public class PhotoChooserFragment extends Fragment {
     private static final String KEY_SELECTED_ITEMS = "selected_items";
     private static final String KEY_RESTORE_POSITION = "restore_position";
 
+    static final int NUM_COLUMNS = 3;
+
     enum PhotoChooserIcon {
         ANDROID_CAMERA,
         ANDROID_PICKER,
@@ -37,9 +39,9 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     public interface OnPhotoChooserListener {
-        void onPhotoTapped(View view, Uri mediaUri);
+        void onPhotoTapped(Uri mediaUri);
         void onPhotoDoubleTapped(View view, Uri mediaUri);
-        void onPhotoLongPressed(View view, Uri mediaUri);
+        void onSelectedCountChanged(int count);
     }
 
     private RecyclerView mRecycler;
@@ -79,7 +81,8 @@ public class PhotoChooserFragment extends Fragment {
 
     private void setRecyclerPosition(int position) {
         if (mRecycler != null) {
-            mRecycler.getLayoutManager().scrollToPosition(position);
+            GridLayoutManager manager = (GridLayoutManager)mRecycler.getLayoutManager();
+            manager.scrollToPosition(position);
         }
     }
 
@@ -200,28 +203,27 @@ public class PhotoChooserFragment extends Fragment {
      */
     private final OnPhotoChooserListener mPhotoListener = new OnPhotoChooserListener() {
         @Override
-        public void onPhotoTapped(View view, Uri mediaUri) {
-            if (isMultiSelectEnabled()) {
-                togglePhotoSelection(mediaUri);
-            } else {
-                EditPostActivity activity = getEditPostActivity();
-                activity.addMedia(mediaUri);
-                activity.hidePhotoChooser();
-            }
-        }
-
-        @Override
-        public void onPhotoLongPressed(View view, Uri mediaUri) {
-            if (isMultiSelectEnabled()) {
-                togglePhotoSelection(mediaUri);
-            } else {
-                enableMultiSelect(mediaUri);
-            }
+        public void onPhotoTapped(Uri mediaUri) {
+            EditPostActivity activity = getEditPostActivity();
+            activity.addMedia(mediaUri);
+            activity.hidePhotoChooser();
         }
 
         @Override
         public void onPhotoDoubleTapped(View view, Uri mediaUri) {
             showPreview(view, mediaUri);
+        }
+
+        @Override
+        public void onSelectedCountChanged(int count) {
+            if (count == 0) {
+                finishActionMode();
+            } else {
+                if (mActionMode == null) {
+                    ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
+                }
+                updateActionModeTitle();
+            }
         }
     };
 
@@ -269,21 +271,6 @@ public class PhotoChooserFragment extends Fragment {
         return mAdapter != null && mAdapter.isMultiSelectEnabled();
     }
 
-    private void enableMultiSelect(Uri mediaUri) {
-        getAdapter().setMultiSelectEnabled(true);
-        getAdapter().toggleSelection(mediaUri);
-        ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
-        updateActionModeTitle();
-    }
-
-    private void togglePhotoSelection(Uri mediaUri) {
-        getAdapter().toggleSelection(mediaUri);
-        updateActionModeTitle();
-        if (getAdapter().getNumSelected() == 0) {
-            finishActionMode();
-        }
-    }
-
     private PhotoChooserAdapter getAdapter() {
         if (mAdapter == null) {
             mAdapter = new PhotoChooserAdapter(
@@ -304,9 +291,8 @@ public class PhotoChooserFragment extends Fragment {
             saveState(mRestoreState);
         }
 
-        int numColumns = PhotoChooserAdapter.getNumColumns(getActivity());
         mRecycler.setAdapter(getAdapter());
-        mRecycler.setLayoutManager(new GridLayoutManager(getActivity(), numColumns));
+        mRecycler.setLayoutManager(new GridLayoutManager(getActivity(), NUM_COLUMNS));
         getAdapter().loadDeviceMedia();
     }
 

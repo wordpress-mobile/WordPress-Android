@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import static org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.NUM_COLUMNS;
+
 class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.ThumbnailViewHolder> {
 
     interface OnAdapterLoadedListener {
@@ -73,14 +75,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
 
     void loadDeviceMedia() {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
-        mThumbWidth = displayWidth / getNumColumns(mContext);
+        mThumbWidth = displayWidth / NUM_COLUMNS;
         mThumbHeight = (int) (mThumbWidth * 0.75f);
         new BuildDeviceMediaListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    static int getNumColumns(Context context) {
-        boolean isLandscape = DisplayUtils.isLandscape(context);
-        return isLandscape ? 4 : 3;
     }
 
     @Override
@@ -160,38 +157,34 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     }
 
     // TODO: should there be a limit to the number of items the user can select?
-    void toggleSelection(Uri uri) {
-        if (indexOfUri(uri) == -1) return;
+    private void toggleSelection(ThumbnailViewHolder holder, int position) {
+        if (!isValidPosition(position)) {
+            AppLog.w(AppLog.T.POSTS, "photo chooser > invalid position in toggleSelection");
+            return;
+        }
 
+        Uri uri = getItemAtPosition(position).uri;
         int selectedIndex = mSelectedUris.indexOfUri(uri);
         if (selectedIndex > -1) {
             mSelectedUris.remove(selectedIndex);
         } else {
             mSelectedUris.add(uri);
         }
-
         notifyDataSetChangedNoFade();
-    }
-
-    private boolean isValidPosition(int position) {
-        return position >= 0 && position < mMediaList.size();
-    }
-
-    /*
-     * scales in/out the selection count depending on whether the item is selected
-     */
-    private void animateSelectionCount(ThumbnailViewHolder holder, int position) {
-        if (!isValidPosition(position)) {
-            AppLog.w(AppLog.T.POSTS, "photo chooser > invalid position in animateSelectionCount");
-            return;
-        }
 
         boolean isSelected = mSelectedUris.contains(mMediaList.get(position).uri);
         AniUtils.startAnimation(holder.txtSelectionCount,
                 isSelected ? R.anim.cab_select : R.anim.cab_deselect);
         holder.txtSelectionCount.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+
+        if (mPhotoListener != null) {
+            mPhotoListener.onSelectedCountChanged(getNumSelected());
+        }
     }
 
+    private boolean isValidPosition(int position) {
+        return position >= 0 && position < mMediaList.size();
+    }
 
     ArrayList<Uri> getSelectedURIs() {
         return mSelectedUris;
@@ -244,12 +237,11 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (mPhotoListener != null) {
-                        Uri imageUri = getItemAtPosition(position).uri;
-                        mPhotoListener.onPhotoTapped(itemView, imageUri);
-                    }
                     if (isMultiSelectEnabled()) {
-                        animateSelectionCount(ThumbnailViewHolder.this, position);
+                        toggleSelection(ThumbnailViewHolder.this, position);
+                    } else if (mPhotoListener != null) {
+                        Uri uri = getItemAtPosition(position).uri;
+                        mPhotoListener.onPhotoTapped(uri);
                     }
                     return true;
                 }
@@ -257,18 +249,18 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 public boolean onDoubleTap(MotionEvent e) {
                     int position = getAdapterPosition();
                     if (mPhotoListener != null) {
-                        Uri imageUri = getItemAtPosition(position).uri;
-                        mPhotoListener.onPhotoDoubleTapped(itemView, imageUri);
+                        Uri uri = getItemAtPosition(position).uri;
+                        mPhotoListener.onPhotoDoubleTapped(itemView, uri);
                     }
                     return true;
                 }
                 @Override
                 public void onLongPress(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (mPhotoListener != null) {
-                        Uri imageUri = getItemAtPosition(position).uri;
-                        mPhotoListener.onPhotoLongPressed(itemView, imageUri);
+                    if (!isMultiSelectEnabled()) {
+                        setMultiSelectEnabled(true);
                     }
+                    toggleSelection(ThumbnailViewHolder.this, position);
                 }
             });
 
