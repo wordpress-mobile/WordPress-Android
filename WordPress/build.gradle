@@ -15,6 +15,7 @@ repositories {
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
+
 }
 
 apply plugin: 'com.android.application'
@@ -34,19 +35,22 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-34"
-        versionCode 347
+        versionName "alpha-35"
+        versionCode 350
         minSdkVersion 16
         targetSdkVersion 25
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+
+        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
     }
 
     productFlavors {
         vanilla {} // used for release and beta
 
         zalpha { // alpha version - enable experimental features
+            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
             applicationId "org.wordpress.android"
         }
 

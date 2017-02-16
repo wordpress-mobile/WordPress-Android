@@ -294,7 +294,7 @@ Language: en_GB
 	<string name="editor_page_title_placeholder">Page Title</string>
 	<string name="editor_post_title_placeholder">Post Title</string>
 	<string name="email_address">Email address</string>
-	<string name="preference_show_visual_editor">Show visual editor</string>
+	<string name="preference_editor_type">Show visual editor</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
 	<string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
