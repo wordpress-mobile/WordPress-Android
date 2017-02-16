@@ -61,10 +61,10 @@ import org.wordpress.android.fluxc.store.AccountStore.OnDiscoveryResponse;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -358,12 +358,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Insert authentication code if copied to clipboard
         } else if (TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.VISIBLE) {
             mTwoStepEditText.setText(getAuthCodeFromClipboard());
-        }
-
-        // show progress indicator while waiting for network response when migrating access token
-        if (AppPrefs.wasAccessTokenMigrated() && checkNetworkConnectivity()) {
-            startProgress(getString(R.string.access_token_migration_message));
-            return;
         }
 
         if (!mToken.isEmpty() && !mInhibitMagicLogin) {
@@ -1229,7 +1223,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mAccountFetched |= event.causeOfChange == AccountAction.FETCH_ACCOUNT;
         // Finish activity if sites have been fetched
         if (mSitesFetched && mAccountSettingsFetched && mAccountFetched) {
-            updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
     }
@@ -1241,7 +1234,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (event.isError()) {
             AnalyticsTracker.track(Stat.LOGIN_FAILED);
             showAuthError(event.error.type, event.error.message);
-            updateMigrationStatusIfNeeded();
             endProgress();
             return;
         }
@@ -1253,12 +1245,22 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
 
+        if (event.isError()) {
+            endProgress();
+            if (!isAdded()) {
+                return;
+            }
+            if (event.error.type == SiteErrorType.DUPLICATE_SITE) {
+                ToastUtils.showToast(getContext(), R.string.cannot_add_duplicate_site);
+            }
+            return;
+        }
+
         // Login Successful
         trackAnalyticsSignIn();
         mSitesFetched = true;
         // Finish activity if account settings have been fetched or if it's a wporg site
         if (((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) && !event.isError()) {
-            updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
     }
@@ -1350,13 +1352,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             default:
                 showGenericErrorDialog(getResources().getString(R.string.nux_cannot_log_in));
                 break;
-        }
-    }
-
-    private void updateMigrationStatusIfNeeded() {
-        if (AppPrefs.wasAccessTokenMigrated()) {
-            AppPrefs.setAccessTokenMigrated(false);
-            endProgress();
         }
     }
 }

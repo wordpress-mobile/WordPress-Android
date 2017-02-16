@@ -234,7 +234,7 @@ public class EditPostSettingsFragment extends Fragment
         mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.featuredImage);
         mFeaturedImageButton = (Button) rootView.findViewById(R.id.addFeaturedImage);
 
-        if (AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
             mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -425,7 +425,7 @@ public class EditPostSettingsFragment extends Fragment
             mTagsEditText.setText(tags);
         }
 
-        if (AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
         }
     }
@@ -461,7 +461,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void launchMediaGalleryActivity() {
-        ActivityLauncher.viewMediaGalleryPickerForSite(getActivity(), mSite);
+        Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
+        intent.putExtra(WordPress.SITE, mSite);
+        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
+        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
     private PostStatus getPostStatusForSpinnerPosition(int position) {
@@ -697,7 +700,7 @@ public class EditPostSettingsFragment extends Fragment
             post.setCategoryIdList(categoryIds);
         }
 
-        if (AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             post.setFeaturedImageId(mFeaturedImageId);
         }
 

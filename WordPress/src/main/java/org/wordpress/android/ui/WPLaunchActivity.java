@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,6 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 
 public class WPLaunchActivity extends AppCompatActivity {
-
     /*
      * this the main (default) activity, which does nothing more than launch the
      * previously active activity on startup - note that it's defined in the
@@ -24,6 +24,24 @@ public class WPLaunchActivity extends AppCompatActivity {
 
         ProfilingUtils.split("WPLaunchActivity.onCreate");
 
+        if (WordPress.sIsMigrationInProgress) {
+            final ProgressDialog migrationProgressDialog = new ProgressDialog(this);
+            migrationProgressDialog.setMessage(this.getResources().getString(R.string.migration_message));
+            migrationProgressDialog.setCancelable(false);
+            migrationProgressDialog.show();
+            WordPress.registerMigrationListener(new WordPress.MigrationListener() {
+                @Override
+                public void onCompletion() {
+                    migrationProgressDialog.dismiss();
+                    launchWPMainActivity();
+                }
+            });
+        } else {
+            launchWPMainActivity();
+        }
+    }
+
+    private void launchWPMainActivity() {
         if (WordPress.wpDB == null) {
             ToastUtils.showToast(this, R.string.fatal_db_error, ToastUtils.Duration.LONG);
             finish();
