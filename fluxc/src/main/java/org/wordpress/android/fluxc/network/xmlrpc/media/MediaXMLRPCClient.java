@@ -244,7 +244,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaItem
      */
-    public void fetchMedia(final SiteModel site, final MediaModel media, final boolean isFreshUpload) {
+    private void fetchMedia(final SiteModel site, final MediaModel media, final boolean isFreshUpload) {
         if (site == null || media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
