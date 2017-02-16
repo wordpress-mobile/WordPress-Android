@@ -61,10 +61,10 @@ import org.wordpress.android.fluxc.store.AccountStore.OnDiscoveryResponse;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -1244,6 +1244,17 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
+
+        if (event.isError()) {
+            endProgress();
+            if (!isAdded()) {
+                return;
+            }
+            if (event.error.type == SiteErrorType.DUPLICATE_SITE) {
+                ToastUtils.showToast(getContext(), R.string.cannot_add_duplicate_site);
+            }
+            return;
+        }
 
         // Login Successful
         trackAnalyticsSignIn();
