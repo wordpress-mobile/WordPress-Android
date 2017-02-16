@@ -332,6 +332,53 @@ public class SiteStoreUnitTest {
     }
 
     @Test
+    public void testInsertDuplicateSitesDifferentSchemesError1() throws DuplicateSiteException {
+        SiteModel futureJetpack = generateSelfHostedSiteFutureJetpack();
+        SiteModel jetpack = generateJetpackSiteOverRestOnly();
+
+        futureJetpack.setXmlRpcUrl("https://pony.com/xmlrpc.php");
+        jetpack.setXmlRpcUrl("http://pony.com/xmlrpc.php");
+
+        // Insert a Jetpack powered site
+        SiteSqlUtils.insertOrUpdateSite(jetpack);
+        boolean duplicate = false;
+        try {
+            // Insert the same site but via self hosted this time (this should fail)
+            SiteSqlUtils.insertOrUpdateSite(futureJetpack);
+        } catch (DuplicateSiteException e) {
+            // Caught !
+            duplicate = true;
+        }
+        assertTrue(duplicate);
+        int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
+        assertEquals(1, sitesCount);
+    }
+
+    @Test
+    public void testInsertDuplicateSitesDifferentSchemesError2() throws DuplicateSiteException {
+        SiteModel futureJetpack = generateSelfHostedSiteFutureJetpack();
+        SiteModel jetpack = generateJetpackSiteOverRestOnly();
+
+        futureJetpack.setXmlRpcUrl("http://pony.com/xmlrpc.php");
+        jetpack.setXmlRpcUrl("https://pony.com/xmlrpc.php");
+
+        // Insert a Jetpack powered site
+        SiteSqlUtils.insertOrUpdateSite(jetpack);
+        boolean duplicate = false;
+        try {
+            // Insert the same site but via self hosted this time (this should fail)
+            SiteSqlUtils.insertOrUpdateSite(futureJetpack);
+        } catch (DuplicateSiteException e) {
+            // Caught !
+            duplicate = true;
+        }
+        assertTrue(duplicate);
+        int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
+        assertEquals(1, sitesCount);
+    }
+
+
+    @Test
     public void testGetPostFormats() throws DuplicateSiteException {
         SiteModel site = generateWPComSite();
         SiteSqlUtils.insertOrUpdateSite(site);
