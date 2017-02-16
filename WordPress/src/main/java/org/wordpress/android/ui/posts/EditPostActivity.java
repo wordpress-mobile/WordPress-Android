@@ -5,7 +5,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -31,7 +30,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -78,8 +76,9 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
@@ -91,10 +90,9 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
-import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
-import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -780,24 +778,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onUploadSuccess(MediaModel media) {
-        if (mEditorMediaUploadListener != null && media.getFileName() != null) {
-            MediaModel pendingMedia = getPendingUploadWithName(media.getFileName());
-            if (pendingMedia != null) {
-                mEditorMediaUploadListener.onMediaUploadSucceeded(
-                        String.valueOf(pendingMedia.getMediaId()),
-                        WPStoreUtils.fromMediaModel(media));
-                mPendingUploads.remove(pendingMedia);
-            }
+        if (mEditorMediaUploadListener != null && media != null) {
+            mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
+                    WPStoreUtils.fromMediaModel(media));
         }
-    }
-
-    private MediaModel getPendingUploadWithName(@NonNull String path) {
-        for (MediaModel media : mPendingUploads) {
-            if (media.getFileName().equals(path)) {
-                return media;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -806,12 +790,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onUploadError(MediaModel media, MediaStore.MediaError error) {
-        mEditorMediaUploadListener.onMediaUploadFailed(String.valueOf(media.getId()), error.message);
+        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
+        String localMediaId = String.valueOf(media.getId());
+        if (error.type == MediaErrorType.GENERIC_ERROR) {
+            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, getString(R.string.tap_to_try_again));
+        } else {
+            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, error.message);
+        }
     }
 
     @Override
     public void onUploadProgress(MediaModel media, float progress) {
-        mEditorMediaUploadListener.onMediaUploadProgress(String.valueOf(media.getId()), progress);
+        String localMediaId = String.valueOf(media.getId());
+        mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
     }
 
     private void startMediaUploadService(ArrayList<MediaModel> mediaToUpload) {
@@ -1187,7 +1178,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             while (matcher.find()) {
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
-                MediaFile mediaFile = queueFileForUpload(uri, getContentResolver().getType(uri), null, "failed");
+                MediaFile mediaFile = WPStoreUtils.fromMediaModel(queueFileForUpload(uri,
+                        getContentResolver().getType(uri), null, "failed"));
                 if (mediaFile == null) {
                     continue;
                 }
@@ -1530,8 +1522,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        MediaFile mediaFile = queueFileForUpload(uri, getContentResolver().getType(uri), null);
-        if (mediaFile != null) {
+        MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri), null);
+        MediaFile mediaFile = WPStoreUtils.fromMediaModel(media);
+        if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
         }
 
