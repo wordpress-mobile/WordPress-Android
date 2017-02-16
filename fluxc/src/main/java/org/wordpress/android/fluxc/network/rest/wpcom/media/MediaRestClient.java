@@ -241,10 +241,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
                         if (mediaError == MediaErrorType.MEDIA_NOT_FOUND) {
                             AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
-                            notifyMediaDeleted(site, media, null);
-                        } else {
-                            notifyMediaDeleted(site, media, new MediaError(mediaError));
                         }
+                        notifyMediaDeleted(site, media, new MediaError(mediaError));
                     }
         }));
     }
@@ -355,7 +353,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     private void notifyMediaUploadCanceled(MediaModel media) {
-        ProgressPayload payload = new ProgressPayload(media, -1.f, false, true);
+        ProgressPayload payload = new ProgressPayload(media, 0.f, false, true);
         mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload));
     }
 

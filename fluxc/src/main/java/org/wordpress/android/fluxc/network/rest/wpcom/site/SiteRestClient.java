@@ -304,6 +304,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
             site.setIsVideoPressSupported(from.options.videopress_enabled);
+            site.setIsAutomatedTransfer(from.options.is_automated_transfer);
             site.setAdminUrl(from.options.admin_url);
             site.setLoginUrl(from.options.login_url);
             site.setTimezone(from.options.timezone);

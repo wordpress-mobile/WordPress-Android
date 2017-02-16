@@ -312,7 +312,8 @@ public class MediaSqlUtilsTest {
             Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(getTestMedia(i, testTitle, "", "")));
         }
         Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils
-                .deleteMatchingSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), MediaModelTable.TITLE, testTitle));
+                .deleteMatchingSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID),
+                        MediaModelTable.TITLE, testTitle));
         List<MediaModel> media = MediaSqlUtils.getAllSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID));
         Assert.assertEquals(1, media.size());
         Assert.assertEquals(SMALL_TEST_POOL + 1, media.get(0).getMediaId());
@@ -330,7 +331,8 @@ public class MediaSqlUtilsTest {
         image.setUploadState(UploadState.DELETED.toString());
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(image));
 
-        Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils.getMediaWithStates(site, NOT_DELETED_STATES).getCount());
+        Assert.assertEquals(SMALL_TEST_POOL,
+                MediaSqlUtils.getMediaWithStatesAsCursor(site, NOT_DELETED_STATES).getCount());
     }
 
     @Test
@@ -368,8 +370,10 @@ public class MediaSqlUtilsTest {
         image.setUploadState(UploadState.DELETED.toString());
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(image));
 
-        Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils.getImagesWithStates(site, NOT_DELETED_STATES).getCount());
-        Assert.assertEquals(SMALL_TEST_POOL, MediaSqlUtils.getMediaWithStates(site, NOT_DELETED_STATES).getCount());
+        Assert.assertEquals(SMALL_TEST_POOL,
+                MediaSqlUtils.getImagesWithStatesAsCursor(site, NOT_DELETED_STATES).getCount());
+        Assert.assertEquals(SMALL_TEST_POOL,
+                MediaSqlUtils.getMediaWithStatesAsCursor(site, NOT_DELETED_STATES).getCount());
     }
 
     // Utilities

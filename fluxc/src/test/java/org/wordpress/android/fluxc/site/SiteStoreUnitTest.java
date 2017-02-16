@@ -353,8 +353,10 @@ public class SiteStoreUnitTest {
         wpComSite1.setName("Doctor Emmet Brown Homepage");
         SiteModel wpComSite2 = generateWPComSite();
         wpComSite2.setName("Shield Eyes from light");
+        wpComSite2.setSiteId(557);
         SiteModel wpComSite3 = generateWPComSite();
         wpComSite3.setName("I remember when this was all farmland as far as the eye could see");
+        wpComSite2.setSiteId(558);
 
         SiteSqlUtils.insertOrUpdateSite(wpComSite1);
         SiteSqlUtils.insertOrUpdateSite(wpComSite2);
@@ -425,5 +427,24 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.deleteAllSites();
 
         assertEquals(0, mSiteStore.getSitesCount());
+    }
+
+    @Test
+    public void testWPComAutomatedTransfer() throws DuplicateSiteException {
+        SiteModel wpComSite = generateWPComSite();
+        SiteSqlUtils.insertOrUpdateSite(wpComSite);
+
+        // Turn WP.com site into an Automated Transfer (Jetpack) site
+        SiteModel automatedTransferSite = generateWPComSite();
+        automatedTransferSite.setIsJetpackInstalled(true);
+        automatedTransferSite.setIsJetpackConnected(true);
+        automatedTransferSite.setIsWPCom(false);
+        automatedTransferSite.setIsAutomatedTransfer(true);
+
+        SiteSqlUtils.insertOrUpdateSite(automatedTransferSite);
+
+        assertEquals(1, mSiteStore.getSitesCount());
+        assertEquals(0, mSiteStore.getWPComSitesCount());
+        assertEquals(1, mSiteStore.getJetpackSitesCount());
     }
 }
