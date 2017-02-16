@@ -186,6 +186,43 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         }
     }
 
+    private void setJetpackStatus(Map<?, ?> siteOptions, SiteModel oldModel) {
+        // * Jetpack not installed: field "jetpack_client_id" not included in the response
+        // * Jetpack installed but not activated: field "jetpack_client_id" not included in the response
+        // * Jetpack installed, activated but not connected: field "jetpack_client_id" included
+        //   and is "0" (boolean)
+        // * Jetpack installed, activated and connected: field "jetpack_client_id" included and is correctly
+        //   set to wpcom unique id eg. "1234"
+
+        String jetpackClientIdStr = getOption(siteOptions, JETPACK_CLIENT_ID_KEY, String.class);
+        long jetpackClientId = 0;
+        // jetpackClientIdStr can be a boolean "0" (false), in that case we keep the default value "0".
+        if (!"false".equals(jetpackClientIdStr)) {
+            jetpackClientId = string2Long(jetpackClientIdStr, -1);
+        }
+
+        // Field "jetpack_client_id" not found:
+        if (jetpackClientId == -1) {
+            oldModel.setIsJetpackInstalled(false);
+            oldModel.setIsJetpackConnected(false);
+        }
+
+        // Field "jetpack_client_id" is "0"
+        if (jetpackClientId == 0) {
+            oldModel.setIsJetpackInstalled(true);
+            oldModel.setIsJetpackConnected(false);
+        }
+
+        // jetpack_client_id is set then it's a Jetpack connected site
+        if (jetpackClientId != 0 && jetpackClientId != -1) {
+            oldModel.setIsJetpackInstalled(true);
+            oldModel.setIsJetpackConnected(true);
+            oldModel.setSiteId(jetpackClientId);
+        } else {
+            oldModel.setSiteId(0);
+        }
+    }
+
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
         Map<?, ?> siteOptions = (Map<?, ?>) response;
         oldModel.setName(getOption(siteOptions, SITE_TITLE_KEY, String.class));
@@ -198,8 +235,8 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         oldModel.setTimezone(getOption(siteOptions, TIME_ZONE_KEY, String.class));
         oldModel.setLoginUrl(getOption(siteOptions, LOGIN_URL_KEY, String.class));
         oldModel.setAdminUrl(getOption(siteOptions, ADMIN_URL_KEY, String.class));
-        long wpComIdForJetpack = string2Long(getOption(siteOptions, JETPACK_CLIENT_ID_KEY, String.class), -1);
-        oldModel.setSiteId(wpComIdForJetpack);
+
+        setJetpackStatus(siteOptions, oldModel);
         // If the site is not public, it's private. Note: this field doesn't always exist.
         oldModel.setIsPrivate(false);
         if (siteOptions.containsKey(SITE_PUBLIC_KEY)) {
@@ -207,9 +244,6 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             if (isPublic != null) {
                 oldModel.setIsPrivate(!isPublic);
             }
-        }
-        if (wpComIdForJetpack != 0) {
-            oldModel.setIsJetpack(true);
         }
         return oldModel;
     }

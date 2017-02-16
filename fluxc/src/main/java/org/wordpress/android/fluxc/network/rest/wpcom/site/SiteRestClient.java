@@ -21,10 +21,12 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.NewAccountResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
@@ -60,6 +62,25 @@ public class SiteRestClient extends BaseWPComRestClient {
         public boolean dryRun;
     }
 
+    public static class DeleteSiteResponsePayload extends Payload {
+        public DeleteSiteResponsePayload() {
+        }
+        public SiteModel site;
+        public DeleteSiteError error;
+    }
+
+    public static class ExportSiteResponsePayload extends Payload {
+        public ExportSiteResponsePayload() {
+        }
+    }
+
+    public static class IsWPComResponsePayload extends Payload {
+        public IsWPComResponsePayload() {
+        }
+        public String url;
+        public boolean isWPCom;
+    }
+
     @Inject
     public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
                           AccessToken accessToken, UserAgent userAgent) {
@@ -88,6 +109,40 @@ public class SiteRestClient extends BaseWPComRestClient {
                         SitesModel payload = new SitesModel(new ArrayList<SiteModel>());
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void checkUrlIsWPCom(@NonNull final String testedUrl) {
+        String url = WPCOMREST.sites.getUrlV1_1() + testedUrl;
+        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                SiteWPComRestResponse.class,
+                new Listener<SiteWPComRestResponse>() {
+                    @Override
+                    public void onResponse(SiteWPComRestResponse response) {
+                        IsWPComResponsePayload payload = new IsWPComResponsePayload();
+                        payload.url = testedUrl;
+                        payload.isWPCom = true;
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        IsWPComResponsePayload payload = new IsWPComResponsePayload();
+                        payload.url = testedUrl;
+                        // "unauthorized" and "unknown_blog" errors expected if the site is not accessible via
+                        // the WPCom REST API.
+                        if (error instanceof WPComGsonNetworkError
+                            && ("unauthorized".equals(((WPComGsonNetworkError) error).apiError)
+                                || "unknown_blog".equals(((WPComGsonNetworkError) error).apiError))) {
+                            payload.isWPCom = false;
+                        } else {
+                            payload.error = error;
+                        }
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
                     }
                 }
         );
@@ -186,19 +241,70 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void deleteSite(final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).delete.getUrlV1_1();
+        WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                SiteWPComRestResponse.class,
+                new Listener<SiteWPComRestResponse>() {
+                    @Override
+                    public void onResponse(SiteWPComRestResponse response) {
+                        DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
+                        payload.site = site;
+                        mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        DeleteSiteResponsePayload payload = new DeleteSiteResponsePayload();
+                        WPComGsonNetworkError networkError = ((WPComGsonNetworkError) error);
+                        payload.error = new DeleteSiteError(networkError.apiError, networkError.message);
+                        payload.site = site;
+                        mDispatcher.dispatch(SiteActionBuilder.newDeletedSiteAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void exportSite(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).exports.start.getUrlV1_1();
+        final WPComGsonRequest<ExportSiteResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                ExportSiteResponse.class,
+                new Listener<ExportSiteResponse>() {
+                    @Override
+                    public void onResponse(ExportSiteResponse response) {
+                        ExportSiteResponsePayload payload = new ExportSiteResponsePayload();
+                        mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        ExportSiteResponsePayload payload = new ExportSiteResponsePayload();
+                        payload.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
         SiteModel site = new SiteModel();
         site.setSiteId(from.ID);
         site.setUrl(from.URL);
         site.setName(from.name);
         site.setDescription(from.description);
-        site.setIsJetpack(from.jetpack);
+        site.setIsJetpackConnected(from.jetpack);
+        site.setIsJetpackInstalled(from.jetpack);
         site.setIsVisible(from.visible);
         site.setIsPrivate(from.is_private);
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read site options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
             site.setIsVideoPressSupported(from.options.videopress_enabled);
+            site.setIsAutomatedTransfer(from.options.is_automated_transfer);
             site.setAdminUrl(from.options.admin_url);
             site.setLoginUrl(from.options.login_url);
             site.setTimezone(from.options.timezone);
@@ -232,7 +338,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                 site.setXmlRpcUrl(from.meta.links.xmlrpc);
             }
         }
-        site.setIsWPCom(true);
+        // Only set the isWPCom flag for "pure" WPCom sites
+        if (!from.jetpack) {
+            site.setIsWPCom(true);
+        }
         return site;
     }
 

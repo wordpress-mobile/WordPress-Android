@@ -19,9 +19,13 @@ import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -94,6 +98,27 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DeleteSiteError implements OnChangedError {
+        public DeleteSiteErrorType type;
+        public String message;
+        public DeleteSiteError(String errorType, @NonNull String message) {
+            this.type = DeleteSiteErrorType.fromString(errorType);
+            this.message = message;
+        }
+        public DeleteSiteError(DeleteSiteErrorType errorType) {
+            this.type = errorType;
+            this.message = "";
+        }
+    }
+
+    public static class ExportSiteError implements OnChangedError {
+        public ExportSiteErrorType type;
+
+        public ExportSiteError(ExportSiteErrorType type) {
+            this.type = type;
+        }
+    }
+
     // OnChanged Events
     public class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
@@ -109,8 +134,26 @@ public class SiteStore extends Store {
         }
     }
 
+    public class OnAllSitesRemoved extends OnChanged<SiteError> {
+        public int mRowsAffected;
+        public OnAllSitesRemoved(int rowsAffected) {
+            mRowsAffected = rowsAffected;
+        }
+    }
+
     public class OnNewSiteCreated extends OnChanged<NewSiteError> {
         public boolean dryRun;
+    }
+
+    public class OnSiteDeleted extends OnChanged<DeleteSiteError> {
+        public OnSiteDeleted(DeleteSiteError error) {
+            this.error = error;
+        }
+    }
+
+    public class OnSiteExported extends OnChanged<ExportSiteError> {
+        public OnSiteExported() {
+        }
     }
 
     public class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
@@ -120,12 +163,44 @@ public class SiteStore extends Store {
         }
     }
 
+    public class OnURLChecked extends OnChanged<SiteError> {
+        public String url;
+        public boolean isWPCom;
+        public OnURLChecked(@NonNull String url) {
+            this.url = url;
+        }
+    }
+
     public enum SiteErrorType {
         INVALID_SITE,
+        DUPLICATE_SITE,
         GENERIC_ERROR
     }
 
     public enum PostFormatsErrorType {
+        INVALID_SITE,
+        GENERIC_ERROR
+    }
+
+    public enum DeleteSiteErrorType {
+        INVALID_SITE,
+        UNAUTHORIZED, // user don't have permission to delete
+        AUTHORIZATION_REQUIRED, // missing access token
+        GENERIC_ERROR;
+
+        public static DeleteSiteErrorType fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                if (string.equals("unauthorized")) {
+                    return UNAUTHORIZED;
+                } else if (string.equals("authorization_required")) {
+                    return AUTHORIZATION_REQUIRED;
+                }
+            }
+            return GENERIC_ERROR;
+        }
+    }
+
+    public enum ExportSiteErrorType {
         INVALID_SITE,
         GENERIC_ERROR
     }
@@ -228,7 +303,7 @@ public class SiteStore extends Store {
      * Obtains the site with the given (local) id and returns it as a {@link SiteModel}.
      */
     public SiteModel getSiteByLocalId(int id) {
-        List<SiteModel> result = SiteSqlUtils.getAllSitesWith(SiteModelTable.ID, id);
+        List<SiteModel> result = SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).getAsModel();
         if (result.size() > 0) {
             return result.get(0);
         }
@@ -239,21 +314,35 @@ public class SiteStore extends Store {
      * Checks whether the store contains a site matching the given (local) id.
      */
     public boolean hasSiteWithLocalId(int id) {
-        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.ID, id) > 0;
+        return SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).getAsCursor().getCount() > 0;
     }
 
     /**
      * Returns all .COM sites in the store.
      */
     public List<SiteModel> getWPComSites() {
-        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, true);
+        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).getAsModel();
+    }
+
+    /**
+     * Returns all .COM and Jetpack sites in the store.
+     */
+    public List<SiteModel> getWPComAndJetpackSites() {
+        return SiteSqlUtils.getWPComAndJetpackSites().getAsModel();
+    }
+
+    /**
+     * Returns the number of .COM and Jetpack sites in the store.
+     */
+    public int getWPComAndJetpackSitesCount() {
+        return SiteSqlUtils.getWPComAndJetpackSites().getAsCursor().getCount();
     }
 
     /**
      * Returns the number of .COM sites in the store.
      */
     public int getWPComSitesCount() {
-        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, true);
+        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).getAsCursor().getCount();
     }
 
     /**
@@ -261,15 +350,15 @@ public class SiteStore extends Store {
      */
     @NonNull
     public List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
-        return SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(SiteModelTable.IS_WPCOM, true, searchString);
+        return SiteSqlUtils.getSitesByNameOrUrlMatching(searchString);
     }
 
     /**
-     * Returns .COM sites with a name or url matching the search string.
+     * Returns .COM and Jetpack sites with a name or url matching the search string.
      */
     @NonNull
-    public List<SiteModel> getWPComSiteByNameOrUrlMatching(@NonNull String searchString) {
-        return SiteSqlUtils.getAllSitesMatchingUrlOrName(searchString);
+    public List<SiteModel> getWPComAndJetpackSitesByNameOrUrlMatching(@NonNull String searchString) {
+        return SiteSqlUtils.getWPComAndJetpackSitesByNameOrUrlMatching(searchString);
     }
 
     /**
@@ -280,21 +369,21 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Returns all self-hosted sites in the store.
+     * Returns all self-hosted sites (can't be Jetpack) in the store.
      */
     public List<SiteModel> getSelfHostedSites() {
-        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, false);
+        return SiteSqlUtils.getSelfHostedSites().getAsModel();
     }
 
     /**
-     * Returns the number of self-hosted sites (can be Jetpack) in the store.
+     * Returns the number of self-hosted sites (can't be Jetpack) in the store.
      */
     public int getSelfHostedSitesCount() {
-        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, false);
+        return SiteSqlUtils.getSelfHostedSites().getAsCursor().getCount();
     }
 
     /**
-     * Checks whether the store contains at least one self-hosted site (can be Jetpack).
+     * Checks whether the store contains at least one self-hosted site (can't be Jetpack).
      */
     public boolean hasSelfHostedSite() {
         return getSelfHostedSitesCount() != 0;
@@ -304,14 +393,14 @@ public class SiteStore extends Store {
      * Returns all Jetpack sites in the store.
      */
     public List<SiteModel> getJetpackSites() {
-        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_JETPACK, true);
+        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true).getAsModel();
     }
 
     /**
      * Returns the number of Jetpack sites in the store.
      */
     public int getJetpackSitesCount() {
-        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_JETPACK, true);
+        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true).getAsCursor().getCount();
     }
 
     /**
@@ -337,33 +426,35 @@ public class SiteStore extends Store {
      * Returns all visible sites as {@link SiteModel}s. All self-hosted sites over XML-RPC are visible by default.
      */
     public List<SiteModel> getVisibleSites() {
-        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_VISIBLE, true);
+        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).getAsModel();
     }
 
     /**
      * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
      */
     public int getVisibleSitesCount() {
-        return getVisibleSites().size();
+        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).getAsCursor().getCount();
     }
 
     /**
      * Returns all visible .COM sites as {@link SiteModel}s.
      */
-    public List<SiteModel> getVisibleWPComSites() {
+    public List<SiteModel> getVisibleWPComAndJetpackSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.IS_WPCOM, true)
+                .or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
+                .endGroup()
                 .equals(SiteModelTable.IS_VISIBLE, true)
-                .endGroup().endWhere()
+                .endWhere()
                 .getAsModel();
     }
 
     /**
      * Returns the number of visible .COM sites.
      */
-    public int getVisibleWPComSitesCount() {
-        return getVisibleWPComSites().size();
+    public int getVisibleWPComAndJetpackSitesCount() {
+        return getVisibleWPComAndJetpackSites().size();
     }
 
     /**
@@ -466,7 +557,7 @@ public class SiteStore extends Store {
                 .where().beginGroup()
                 .equals(SiteModelTable.ID, localId)
                 .beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, true).or().equals(SiteModelTable.IS_JETPACK, true)
+                .equals(SiteModelTable.IS_WPCOM, true).or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
                 .endGroup().endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
     }
@@ -480,7 +571,7 @@ public class SiteStore extends Store {
             return null;
         }
 
-        List<SiteModel> sites = SiteSqlUtils.getAllSitesWith(SiteModelTable.SITE_ID, siteId);
+        List<SiteModel> sites = SiteSqlUtils.getSitesWith(SiteModelTable.SITE_ID, siteId).getAsModel();
 
         if (sites.isEmpty()) {
             return null;
@@ -517,11 +608,20 @@ public class SiteStore extends Store {
             case UPDATE_SITES:
                 updateSites((SitesModel) action.getPayload());
                 break;
+            case DELETE_SITE:
+                deleteSite((SiteModel) action.getPayload());
+                break;
+            case EXPORT_SITE:
+                exportSite((SiteModel) action.getPayload());
+                break;
             case REMOVE_SITE:
                 removeSite((SiteModel) action.getPayload());
                 break;
-            case REMOVE_WPCOM_SITES:
-                removeWPComSites();
+            case REMOVE_ALL_SITES:
+                removeAllSites();
+                break;
+            case REMOVE_WPCOM_AND_JETPACK_SITES:
+                removeWPComAndJetpackSites();
                 break;
             case SHOW_SITES:
                 toggleSitesVisibility((SitesModel) action.getPayload(), true);
@@ -532,6 +632,9 @@ public class SiteStore extends Store {
             case CREATE_NEW_SITE:
                 createNewSite((NewSitePayload) action.getPayload());
                 break;
+            case IS_WPCOM_URL:
+                checkUrlIsWPCom((String) action.getPayload());
+                break;
             case CREATED_NEW_SITE:
                 handleCreateNewSiteCompleted((NewSiteResponsePayload) action.getPayload());
                 break;
@@ -541,23 +644,34 @@ public class SiteStore extends Store {
             case FETCHED_POST_FORMATS:
                 updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
                 break;
+            case DELETED_SITE:
+                handleDeletedSite((DeleteSiteResponsePayload) action.getPayload());
+                break;
+            case EXPORTED_SITE:
+                handleExportedSite((ExportSiteResponsePayload) action.getPayload());
+                break;
+            case CHECKED_IS_WPCOM_URL:
+                handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
+                break;
         }
     }
 
     private void removeSite(SiteModel site) {
         int rowsAffected = SiteSqlUtils.deleteSite(site);
-        // TODO: This should be captured by 'QuickPressShortcutsStore' so it can handle deleting any QP shortcuts
-        // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
-        // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int siteId)
         emitChange(new OnSiteRemoved(rowsAffected));
     }
 
-    private void removeWPComSites() {
+    private void removeAllSites() {
+        int rowsAffected = SiteSqlUtils.deleteAllSites();
+        OnAllSitesRemoved event = new OnAllSitesRemoved(rowsAffected);
+        emitChange(event);
+    }
+
+    private void removeWPComAndJetpackSites() {
         // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were fetched over the WP.com
         // REST API only (they don't have a .org site id)
-        List<SiteModel> wpcomSites = SiteSqlUtils.getAllWPComSites();
-        int rowsAffected = removeSites(wpcomSites);
-        // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
+        List<SiteModel> wpcomAndJetpackSites = SiteSqlUtils.getWPComAndJetpackSites().getAsModel();
+        int rowsAffected = removeSites(wpcomAndJetpackSites);
         emitChange(new OnSiteRemoved(rowsAffected));
     }
 
@@ -574,7 +688,7 @@ public class SiteStore extends Store {
     }
 
     private void fetchSite(SiteModel site) {
-        if (site.isWPCom()) {
+        if (site.isWPCom() || site.isJetpackConnected()) {
             mSiteRestClient.fetchSite(site);
         } else {
             mSiteXMLRPCClient.fetchSite(site);
@@ -586,35 +700,60 @@ public class SiteStore extends Store {
     }
 
     private void fetchPostFormats(SiteModel site) {
-        if (site.isWPCom()) {
+        if (site.isWPCom() || site.isJetpackConnected()) {
             mSiteRestClient.fetchPostFormats(site);
         } else {
             mSiteXMLRPCClient.fetchPostFormats(site);
         }
     }
 
+    private void deleteSite(SiteModel site) {
+        // Not available for Jetpack sites
+        if (!site.isWPCom()) {
+            OnSiteDeleted event = new OnSiteDeleted(new DeleteSiteError(DeleteSiteErrorType.INVALID_SITE));
+            emitChange(event);
+            return;
+        }
+        mSiteRestClient.deleteSite(site);
+    }
+
+    private void exportSite(SiteModel site) {
+        // Not available for Jetpack sites
+        if (!site.isWPCom()) {
+            OnSiteExported event = new OnSiteExported();
+            event.error = new ExportSiteError(ExportSiteErrorType.INVALID_SITE);
+            emitChange(event);
+            return;
+        }
+        mSiteRestClient.exportSite(site);
+    }
+
     private void updateSite(SiteModel siteModel) {
-        OnSiteChanged event;
+        OnSiteChanged event = new OnSiteChanged(0);
         if (siteModel.isError()) {
-            event = new OnSiteChanged(0);
             // TODO: what kind of error could we get here?
             event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
         } else {
-            int rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
-            event = new OnSiteChanged(rowsAffected);
+            try {
+                event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
+            } catch (DuplicateSiteException e) {
+                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
         }
         emitChange(event);
     }
 
     private void updateSites(SitesModel sitesModel) {
-        OnSiteChanged event;
+        OnSiteChanged event = new OnSiteChanged(0);
         if (sitesModel.isError()) {
-            event = new OnSiteChanged(0);
             // TODO: what kind of error could we get here?
             event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
         } else {
-            int rowsAffected = createOrUpdateSites(sitesModel);
-            event = new OnSiteChanged(rowsAffected);
+            try {
+                event.rowsAffected = createOrUpdateSites(sitesModel);
+            } catch (DuplicateSiteException e) {
+                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
         }
         emitChange(event);
     }
@@ -630,7 +769,39 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private int createOrUpdateSites(SitesModel sites) {
+    private void handleDeletedSite(DeleteSiteResponsePayload payload) {
+        OnSiteDeleted event = new OnSiteDeleted(payload.error);
+        if (!payload.isError()) {
+            SiteSqlUtils.deleteSite(payload.site);
+        }
+        emitChange(event);
+    }
+
+    private void handleExportedSite(ExportSiteResponsePayload payload) {
+        OnSiteExported event = new OnSiteExported();
+        if (payload.isError()) {
+            // TODO: what kind of error could we get here?
+            event.error = new ExportSiteError(ExportSiteErrorType.GENERIC_ERROR);
+        }
+        emitChange(event);
+    }
+
+    private void checkUrlIsWPCom(String payload) {
+        mSiteRestClient.checkUrlIsWPCom(payload);
+    }
+
+    private void handleCheckedIsWPComUrl(IsWPComResponsePayload payload) {
+        OnURLChecked event = new OnURLChecked(payload.url);
+        if (payload.isError()) {
+            // Return invalid site for all errors (this endpoint seems a bit drunk).
+            // Client likely needs to know if there was an error or not.
+            event.error = new SiteError(SiteErrorType.INVALID_SITE);
+        }
+        event.isWPCom = payload.isWPCom;
+        emitChange(event);
+    }
+
+    private int createOrUpdateSites(SitesModel sites) throws DuplicateSiteException {
         int rowsAffected = 0;
         for (SiteModel site : sites.getSites()) {
             rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);

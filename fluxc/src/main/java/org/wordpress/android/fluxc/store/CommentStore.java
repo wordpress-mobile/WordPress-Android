@@ -268,6 +268,9 @@ public class CommentStore extends Store {
             case REMOVE_COMMENT:
                 removeComment((CommentModel) action.getPayload());
                 break;
+            case REMOVE_ALL_COMMENTS:
+                removeAllComments();
+                break;
             case DELETE_COMMENT:
                 deleteComment((RemoteCommentPayload) action.getPayload());
                 break;
@@ -293,14 +296,14 @@ public class CommentStore extends Store {
     private void createNewComment(RemoteCreateCommentPayload payload) {
         if (payload.reply == null) {
             // Create a new comment on a specific Post
-            if (payload.site.isWPCom()) {
+            if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
                 mCommentRestClient.createNewComment(payload.site, payload.post, payload.comment);
             } else {
                 mCommentXMLRPCClient.createNewComment(payload.site, payload.post, payload.comment);
             }
         } else {
             // Create a new reply to a specific Comment
-            if (payload.site.isWPCom()) {
+            if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
                 mCommentRestClient.createNewReply(payload.site, payload.comment, payload.reply);
             } else {
                 mCommentXMLRPCClient.createNewReply(payload.site, payload.comment, payload.reply);
@@ -350,6 +353,13 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
+    private void removeAllComments() {
+        int rowsAffected = CommentSqlUtils.deleteAllComments();
+        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        event.causeOfChange = CommentAction.REMOVE_ALL_COMMENTS;
+        emitChange(event);
+    }
+
     private void instantiateComment(InstantiateCommentPayload payload) {
         CommentModel comment = new CommentModel();
         comment.setLocalSiteId(payload.site.getId());
@@ -372,7 +382,7 @@ public class CommentStore extends Store {
         if (payload.comment == null) {
             getCommentBySiteAndRemoteId(payload.site, payload.remoteCommentId);
         }
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mCommentRestClient.deleteComment(payload.site, payload.remoteCommentId, comment);
         } else {
             mCommentXMLRPCClient.deleteComment(payload.site, payload.remoteCommentId, comment);
@@ -401,7 +411,7 @@ public class CommentStore extends Store {
     }
 
     private void fetchComments(FetchCommentsPayload payload) {
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mCommentRestClient.fetchComments(payload.site, payload.number, payload.offset, payload.status);
         } else {
             mCommentXMLRPCClient.fetchComments(payload.site, payload.number, payload.offset, payload.status);
@@ -436,7 +446,7 @@ public class CommentStore extends Store {
             emitChange(event);
             return;
         }
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mCommentRestClient.pushComment(payload.site, payload.comment);
         } else {
             mCommentXMLRPCClient.pushComment(payload.site, payload.comment);
@@ -458,7 +468,7 @@ public class CommentStore extends Store {
     }
 
     private void fetchComment(RemoteCommentPayload payload) {
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mCommentRestClient.fetchComment(payload.site, payload.remoteCommentId, payload.comment);
         } else {
             mCommentXMLRPCClient.fetchComment(payload.site, payload.remoteCommentId, payload.comment);
@@ -486,7 +496,7 @@ public class CommentStore extends Store {
         if (payload.comment == null) {
             getCommentBySiteAndRemoteId(payload.site, payload.remoteCommentId);
         }
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mCommentRestClient.likeComment(payload.site, payload.remoteCommentId, comment, payload.like);
         } else {
             OnCommentChanged event = new OnCommentChanged(0);

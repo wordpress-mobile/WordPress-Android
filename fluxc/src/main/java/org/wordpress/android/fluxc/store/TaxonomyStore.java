@@ -104,6 +104,10 @@ public class TaxonomyStore extends Store {
             this.rowsAffected = rowsAffected;
             this.taxonomyName = taxonomyName;
         }
+
+        public OnTaxonomyChanged(int rowsAffected) {
+            this.rowsAffected = rowsAffected;
+        }
     }
 
     public class OnTermInstantiated extends OnChanged<TaxonomyError> {
@@ -205,31 +209,52 @@ public class TaxonomyStore extends Store {
     }
 
     /**
-     * Returns a category as a {@link TermModel} given its remote id.
+     * Returns a tag as a {@link TermModel} given its remote id.
      */
     public TermModel getTagByRemoteId(SiteModel site, long remoteId) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, DEFAULT_TAXONOMY_TAG);
     }
 
     /**
-     * Returns a category as a {@link TermModel} given its remote id.
+     * Returns a term as a {@link TermModel} given its remote id.
      */
     public TermModel getTermByRemoteId(SiteModel site, long remoteId, String taxonomyName) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, taxonomyName);
     }
 
     /**
+     * Returns a category as a {@link TermModel} given its name.
+     */
+    public TermModel getCategoryByName(SiteModel site, String categoryName) {
+        return TaxonomySqlUtils.getTermByName(site, categoryName, DEFAULT_TAXONOMY_CATEGORY);
+    }
+
+    /**
+     * Returns a tag as a {@link TermModel} given its name.
+     */
+    public TermModel getTagByName(SiteModel site, String tagName) {
+        return TaxonomySqlUtils.getTermByName(site, tagName, DEFAULT_TAXONOMY_TAG);
+    }
+
+    /**
+     * Returns a term as a {@link TermModel} given its name.
+     */
+    public TermModel getTermByName(SiteModel site, String termName, String taxonomyName) {
+        return TaxonomySqlUtils.getTermByName(site, termName, taxonomyName);
+    }
+
+    /**
      * Returns all the categories for the given post as a {@link TermModel} list.
      */
-    public List<TermModel> getCategoriesForPost(PostModel post) {
-        return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getCategoryIdList(), DEFAULT_TAXONOMY_CATEGORY);
+    public List<TermModel> getCategoriesForPost(PostModel post, SiteModel site) {
+        return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getCategoryIdList(), site, DEFAULT_TAXONOMY_CATEGORY);
     }
 
     /**
      * Returns all the tags for the given post as a {@link TermModel} list.
      */
-    public List<TermModel> getTagsForPost(PostModel post) {
-        return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getTagIdList(), DEFAULT_TAXONOMY_TAG);
+    public List<TermModel> getTagsForPost(PostModel post, SiteModel site) {
+        return TaxonomySqlUtils.getTermsFromRemoteNameList(post.getTagNameList(), site, DEFAULT_TAXONOMY_TAG);
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -275,11 +300,14 @@ public class TaxonomyStore extends Store {
             case PUSHED_TERM:
                 handlePushTermCompleted((RemoteTermPayload) action.getPayload());
                 break;
+            case REMOVE_ALL_TERMS:
+                removeAllTerms();
+                break;
         }
     }
 
     private void fetchTerm(RemoteTermPayload payload) {
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mTaxonomyRestClient.fetchTerm(payload.term, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
@@ -289,7 +317,7 @@ public class TaxonomyStore extends Store {
 
     private void fetchTerms(SiteModel site, String taxonomyName) {
         // TODO: Support large number of terms (currently pulling 100 from REST, and ? from XML-RPC) - pagination?
-        if (site.isWPCom()) {
+        if (site.isWPCom() || site.isJetpackConnected()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
@@ -364,7 +392,7 @@ public class TaxonomyStore extends Store {
             onTermUploaded.error = payload.error;
             emitChange(onTermUploaded);
         } else {
-            if (payload.site.isWPCom()) {
+            if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
                 // The WP.COM REST API response contains the modified term, so we're already in sync with the server
                 // All we need to do is store it and emit OnTaxonomyChanged
                 updateTerm(payload.term);
@@ -390,7 +418,7 @@ public class TaxonomyStore extends Store {
     }
 
     private void pushTerm(RemoteTermPayload payload) {
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
@@ -403,6 +431,14 @@ public class TaxonomyStore extends Store {
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
         onTaxonomyChanged.causeOfChange = TaxonomyAction.UPDATE_TERM;
+        emitChange(onTaxonomyChanged);
+    }
+
+    private void removeAllTerms() {
+        int rowsAffected = TaxonomySqlUtils.deleteAllTerms();
+
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected);
+        onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_ALL_TERMS;
         emitChange(onTaxonomyChanged);
     }
 }

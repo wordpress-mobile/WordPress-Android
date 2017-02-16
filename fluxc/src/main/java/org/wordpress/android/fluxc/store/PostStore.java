@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -323,7 +324,7 @@ public class PostStore extends Store {
                 handlePushPostCompleted((RemotePostPayload) action.getPayload());
                 break;
             case UPDATE_POST:
-                updatePost((PostModel) action.getPayload());
+                updatePost((PostModel) action.getPayload(), true);
                 break;
             case DELETE_POST:
                 deletePost((RemotePostPayload) action.getPayload());
@@ -334,11 +335,14 @@ public class PostStore extends Store {
             case REMOVE_POST:
                 removePost((PostModel) action.getPayload());
                 break;
+            case REMOVE_ALL_POSTS:
+                removeAllPosts();
+                break;
         }
     }
 
     private void deletePost(RemotePostPayload payload) {
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mPostRestClient.deletePost(payload.post, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
@@ -347,7 +351,7 @@ public class PostStore extends Store {
     }
 
     private void fetchPost(RemotePostPayload payload) {
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mPostRestClient.fetchPost(payload.post, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
@@ -361,7 +365,7 @@ public class PostStore extends Store {
             offset = getUploadedPostsCountForSite(payload.site);
         }
 
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mPostRestClient.fetchPosts(payload.site, pages, DEFAULT_POST_STATUS_LIST, offset);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
@@ -419,7 +423,7 @@ public class PostStore extends Store {
             if (payload.isError()) {
                 onPostUploaded.error = payload.error;
             } else {
-                updatePost(payload.post);
+                updatePost(payload.post, false);
             }
             emitChange(onPostUploaded);
             return;
@@ -431,7 +435,7 @@ public class PostStore extends Store {
             event.causeOfChange = PostAction.UPDATE_POST;
             emitChange(event);
         } else {
-            updatePost(payload.post);
+            updatePost(payload.post, false);
         }
     }
 
@@ -441,10 +445,10 @@ public class PostStore extends Store {
             onPostUploaded.error = payload.error;
             emitChange(onPostUploaded);
         } else {
-            if (payload.site.isWPCom()) {
+            if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
                 // The WP.COM REST API response contains the modified post, so we're already in sync with the server
                 // All we need to do is store it and emit OnPostChanged
-                updatePost(payload.post);
+                updatePost(payload.post, false);
                 emitChange(new OnPostUploaded(payload.post));
             } else {
                 // XML-RPC does not respond to new/edit post calls with the modified post
@@ -461,6 +465,7 @@ public class PostStore extends Store {
         newPost.setLocalSiteId(payload.site.getId());
         newPost.setIsLocalDraft(true);
         newPost.setIsPage(payload.isPage);
+        newPost.setDateLocallyChanged((DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC())));
         if (payload.categoryIds != null && !payload.categoryIds.isEmpty()) {
             newPost.setCategoryIdList(payload.categoryIds);
         }
@@ -473,7 +478,7 @@ public class PostStore extends Store {
     }
 
     private void pushPost(RemotePostPayload payload) {
-        if (payload.site.isWPCom()) {
+        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mPostRestClient.pushPost(payload.post, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
@@ -481,9 +486,11 @@ public class PostStore extends Store {
         }
     }
 
-    private void updatePost(PostModel post) {
+    private void updatePost(PostModel post, boolean changeLocalDate) {
+        if (changeLocalDate) {
+            post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(DateTimeUtils.nowUTC())));
+        }
         int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
-
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.UPDATE_POST;
         emitChange(onPostChanged);
@@ -495,5 +502,12 @@ public class PostStore extends Store {
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.REMOVE_POST;
         emitChange(onPostChanged);
+    }
+
+    private void removeAllPosts() {
+        int rowsAffected = PostSqlUtils.deleteAllPosts();
+        OnPostChanged event = new OnPostChanged(rowsAffected);
+        event.causeOfChange = PostAction.REMOVE_ALL_POSTS;
+        emitChange(event);
     }
 }

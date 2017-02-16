@@ -130,6 +130,24 @@ public class TaxonomyStoreUnitTest {
         TaxonomySqlUtils.insertOrUpdateTerm(category);
 
         assertEquals(category, mTaxonomyStore.getCategoryByRemoteId(site, category.getRemoteTermId()));
+
+        // An identical category on a different site should be ignored in the match
+        TermModel otherSiteIdenticalCategory = TaxonomyTestUtils.generateSampleCategory();
+        otherSiteIdenticalCategory.setLocalSiteId(7);
+        TaxonomySqlUtils.insertOrUpdateTerm(otherSiteIdenticalCategory);
+
+        assertEquals(category, mTaxonomyStore.getCategoryByRemoteId(site, category.getRemoteTermId()));
+    }
+
+    @Test
+    public void testGetTermByName() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        TermModel category = TaxonomyTestUtils.generateSampleCategory();
+        TaxonomySqlUtils.insertOrUpdateTerm(category);
+
+        assertEquals(category, mTaxonomyStore.getCategoryByName(site, category.getName()));
     }
 
     @Test
@@ -177,7 +195,7 @@ public class TaxonomyStoreUnitTest {
         idList.add(category.getRemoteTermId());
         idList.add(category2.getRemoteTermId());
 
-        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
 
         // Unsynced category ID should be ignored in the final list
         TermModel unsyncedCategory = TaxonomyTestUtils.generateSampleCategory();
@@ -185,16 +203,101 @@ public class TaxonomyStoreUnitTest {
         unsyncedCategory.setName("More");
         idList.add(unsyncedCategory.getRemoteTermId());
 
-        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
 
         // Empty list should return empty category list
         idList.clear();
 
-        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
 
         // List with only unsynced categories should return empty category list
         idList.add(unsyncedCategory.getRemoteTermId());
 
-        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, DEFAULT_TAXONOMY_CATEGORY).size());
+        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
+
+        // An identical category on a different site should be ignored in the match
+        TermModel otherSiteIdenticalCategory = TaxonomyTestUtils.generateSampleCategory();
+        otherSiteIdenticalCategory.setLocalSiteId(7);
+        TaxonomySqlUtils.insertOrUpdateTerm(otherSiteIdenticalCategory);
+
+        idList.clear();
+        idList.add(category.getRemoteTermId());
+        idList.add(category2.getRemoteTermId());
+
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteIdList(idList, site, DEFAULT_TAXONOMY_CATEGORY).size());
+    }
+
+    @Test
+    public void testGetTagsFromPost() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        TermModel tag = TaxonomyTestUtils.generateSampleTag();
+        TaxonomySqlUtils.insertOrUpdateTerm(tag);
+
+        TermModel tag2 = TaxonomyTestUtils.generateSampleTag();
+        tag2.setRemoteTermId(6);
+        tag2.setName("Something");
+        TaxonomySqlUtils.insertOrUpdateTerm(tag2);
+
+        List<String> nameList = new ArrayList<>();
+        nameList.add(tag.getName());
+        nameList.add(tag2.getName());
+
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteNameList(nameList, site, DEFAULT_TAXONOMY_TAG).size());
+
+        // Unsynced tag ID should be ignored in the final list
+        TermModel unsyncedTag = TaxonomyTestUtils.generateSampleTag();
+        unsyncedTag.setRemoteTermId(66);
+        unsyncedTag.setName("More");
+        nameList.add(unsyncedTag.getName());
+
+        assertEquals(2, TaxonomySqlUtils.getTermsFromRemoteNameList(nameList, site, DEFAULT_TAXONOMY_TAG).size());
+
+        // Empty list should return empty tag list
+        nameList.clear();
+
+        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteNameList(nameList, site, DEFAULT_TAXONOMY_TAG).size());
+
+        // List with only unsynced tags should return empty tag list
+        nameList.add(unsyncedTag.getName());
+
+        assertEquals(0, TaxonomySqlUtils.getTermsFromRemoteNameList(nameList, site, DEFAULT_TAXONOMY_TAG).size());
+    }
+
+    @Test
+    public void testRemoveAllTaxonomy() {
+        SiteModel site1 = new SiteModel();
+        site1.setId(6);
+
+        SiteModel site2 = new SiteModel();
+        site2.setId(7);
+
+        TermModel category1 = TaxonomyTestUtils.generateSampleCategory();
+        TaxonomySqlUtils.insertOrUpdateTerm(category1);
+
+        TermModel category2 = TaxonomyTestUtils.generateSampleCategory();
+        category2.setLocalSiteId(7);
+        TaxonomySqlUtils.insertOrUpdateTerm(category2);
+
+        TermModel tag1 = TaxonomyTestUtils.generateSampleTag();
+        TaxonomySqlUtils.insertOrUpdateTerm(tag1);
+
+        TermModel tag2 = TaxonomyTestUtils.generateSampleTag();
+        tag2.setLocalSiteId(7);
+        TaxonomySqlUtils.insertOrUpdateTerm(tag2);
+
+        TermModel author1 = TaxonomyTestUtils.generateSampleAuthor();
+        TaxonomySqlUtils.insertOrUpdateTerm(author1);
+
+        TermModel author2 = TaxonomyTestUtils.generateSampleAuthor();
+        author2.setLocalSiteId(7);
+        TaxonomySqlUtils.insertOrUpdateTerm(author2);
+
+        assertEquals(6, TaxonomyTestUtils.getTermsCount());
+
+        TaxonomySqlUtils.deleteAllTerms();
+
+        assertEquals(0, TaxonomyTestUtils.getTermsCount());
     }
 }
