@@ -229,7 +229,8 @@ public class WordPress extends MultiDexApplication {
         if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.wereSelfHostedSitesMigratedToFluxC()
             || !AppPrefs.wereDraftsMigratedToFluxC())
             && (WPLegacyMigrationUtils.hasSelfHostedSiteToMigrate(this)
-                || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null)) {
+                || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null
+                || WPLegacyMigrationUtils.hasDraftsToMigrate(this))) {
             sIsMigrationInProgress = true;
 
             // No connection? Then exit and ask the user to come back.

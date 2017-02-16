@@ -185,6 +185,23 @@ public class WPLegacyMigrationUtils {
         return siteList;
     }
 
+    public static boolean hasDraftsToMigrate(Context context) {
+        try {
+            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+
+            String byString = "localDraft=1 OR isLocalChange=1";
+            Cursor c = db.query(DEPRECATED_POSTS_TABLE, null, byString, null, null, null, null);
+            if (c.getCount() > 0) {
+                c.close();
+                return true;
+            }
+            c.close();
+            return false;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
     private static List<PostModel> getDraftsFromDeprecatedDB(Context context, SiteStore siteStore) {
         List<PostModel> postList = new ArrayList<>();
         try {
