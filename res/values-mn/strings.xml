@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- account setup -->
+  <string name="required_fields">Шаардлагатай талбарууд</string>
+  <string name="required_field">Шаардлагатай талбар</string>
+  <string name="url_username_password_required">Please fill in all of the fields before submitting.</string>
+  <string name="xmlrpc_error">Холбогдож чадсангүй. Please enter the full path to xmlrpc.php on your site and try again.</string>
+  <string name="no_blogs_found">Блог олдсонгүй</string>
+  <string name="no_blogs_message">No %s blogs were found for that account.</string>
+  <string name="additional">additional</string>
+  <string name="add_all">Add All</string>
+  <string name="add_selected">Сонгосонг нэмэх</string>
+  <string name="select_blogs">Select Blogs</string>
+  <string name="enable_blogs">Enable blogs</string>
+  <string name="no_network_title">No network available</string>
+  <string name="no_network_message">There is no network available. Please connect to a network and try again.</string>
+  <string name="sure_sign_out">Are you sure you want to sign out from WordPress.com?</string>
+  <string name="sign_out_confirm">Are you sure you want to sign out?</string>
+  <string name="please_sign_in">Please sign in again.</string>
+  <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Please open WordPress.com in your browser, and generate an application-specific passwords to use with this app.\n(Log in to WordPress, and go to Settings->security).</string>
+  
+  <!-- form labels -->
+  <string name="select_categories">Select Categories</string>
+  <string name="tags_and_categories">Tags &amp; Categories</string>
+  <string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
+  <string name="post_content">Content (tap to add text and media)</string>
+  <string name="dont_yet_have_a_blog">Don\'t yet have a blog?</string>
+  <string name="max_thumbnail_px_width">Default image width</string>
+  <string name="password">Password</string>
+  <string name="get_free_blog">Get a free blog at WordPress.com</string>
+  <string name="tagline">Start blogging in seconds.</string>
+  <string name="i_have_wp_blog">Add blog hosted at WordPress.com</string>
+  <string name="i_have_blog">Add self-hosted WordPress blog</string>
+  <string name="new_to_wp">Start a new blog at WordPress.com</string>
+  <string name="blogs">Blogs</string>
+  <string name="account_details">Account Details</string>
+  <string name="status">Status</string>
+  
+  <!-- comment form labels -->
+  <string name="comment_content">Comment Content</string>
+  <string name="anonymous">Anonymous</string>
+  
+  <!-- general strings -->
+  <string name="post">Нийтлэл</string>
+  <string name="page">Хуудас</string>
+  <string name="posts">Нийтлэлүүд</string>
+  <string name="pages">Хуудсууд</string>
+  <string name="about">About</string>
+  <string name="username">Хэрэглэгчийн нэр</string>
+  <string name="cancel">Болих</string>
+  <string name="save">Хадгалах</string>
+  <string name="add">Нэмэх</string>
+  <string name="selected_categories">Selected categories:</string>
+  <string name="publish">Publish? </string>
+  <string name="add_account">Add Blog</string>
+  <string name="notification_sound">Play notification sound</string>
+  <string name="notification_vibrate">Vibrate</string>
+  <string name="notification_blink">Blink notification light</string>
+  <string name="sure_to_remove_account">Are you sure you want to remove this blog?</string>
+  <string name="yes">Тийм</string>
+  <string name="no">Үгүй</string>
+  <string name="error">Алдаа</string>
+  <string name="could_not_remove_account">Could not remove blog.</string>
+  <string name="edit_page">Edit Page</string>
+  <string name="edit_post">Edit Post</string>
+  <string name="add_comment">Add Comment</string>
+  <string name="refreshing_categories">Refreshing Categories</string>
+  <string name="attempting_categories_refresh">Attempting to refresh categories</string>
+  <string name="connection_error">Connection Error</string>
+  <string name="connection_error_occured">A connection error has occurred. Please try again later.</string>
+  <string name="categories_refreshed">Categories refreshed</string>
+  <string name="category_refresh_error">Category refresh error</string>
+  <string name="incorrect_credentials">Incorrect username or password.</string>
+  <string name="empty_fields">No Content Found</string>
+  <string name="title_post_required">Please enter some post content or attach a media item.</string>
+  <string name="cancel_edit">Cancel Edit</string>
+  <string name="sure_to_cancel_edit">Are you sure you want to cancel editing this post?</string>
+  <string name="new_account">New Account</string>
+  <string name="upload_full_size_image">Upload and link to full image</string>
+  <string name="upload_scaled_image">Upload and link to scaled image</string>
+  <string name="scaled_image_error">Please enter a valid scaled width value</string>
+  <string name="scaled_image">Scaled image width</string>
+  <string name="load_more">Load More</string>
+  <string name="load_settings">Load settings now?</string>
+  <string name="immediately">Immediately</string>
+  <string name="uploading">Uploading</string>
+  <string name="uploading_media_item">Uploading media item #</string>
+  <string name="gallery_error">Sorry, the media item could not be retrieved.</string>
+  <string name="refresh">Refresh</string>
+  <string name="home">Home</string>
+  <string name="more_tag">More</string>
+  <string name="blog_not_found">Sorry, an error occurred when attempting to access this blog.</string>
+  <string name="post_not_found">Sorry, an error occurred when attempting to load the post. Please refresh your posts and try again.</string>
+  <string name="wpcom">WordPress.com</string>
+  <string name="sign_in">Sign in</string>
+  <string name="sign_out">Sign out</string>
+  <string name="upload">Upload</string>
+  <string name="please_wait_refresh_done">Please wait, loading items.</string>
+  <string name="info">Info</string>
+  
+  <!-- tab titles -->
+  <string name="tab_comments">Сэтгэгдлүүд</string>
+  <string name="tab_posts">Нийтлэлүүд</string>
+  <string name="tab_pages">Хуудсууд</string>
+  <string name="tab_stats">Stats</string>
+
+
+  <!-- link view -->
+  <string name="link_enter_url">URL</string>
+  <string name="link_enter_url_text">Link Text (optional)</string>
+  <string name="create_a_link">Create a Link</string>
+
+  <!-- page view -->
+  <string name="title">Гарчиг</string>
+  <string name="content">Tap to add text and media</string>
+  <string name="sure_to_cancel_edit_page">Are you sure you want to cancel editing this page?</string>
+
+  <!-- posts tab -->
+  <string name="untitled">Гарчиггүй</string>
+  <string name="local_draft">Local Draft</string>
+  <string name="local_drafts">Local Drafts</string>
+
+  <!-- post view -->
+  <string name="post_id">Нийтлэл</string>
+  <string name="upload_failed">Upload Failed</string>
+  <string name="post_password">Нууц үг (optional)</string>
+  <string name="caption">Caption (optional)</string>
+  <string name="horizontal_alignment">Horizontal Alignment</string>
+  <string name="width">Width</string>
+  <string name="featured">Use as featured image</string>
+  <string name="featured_in_post">Include image in post content</string>
+  <string name="out_of_memory">Device out of memory.</string>
+  <string name="file_not_found">Could not find the media file for upload. Was it deleted or moved?</string>
+  <string name="post_excerpt">Excerpt</string>
+    <string name="download">Downloading Image</string>
+
+  <!-- page view -->
+  <string name="page_id">Хуудас</string>
+
+  <!-- add comment view -->
+  <string name="add_comment_enter">Enter comment:</string>
+  <string name="add_comment_send">Send Comment</string>
+  <string name="write_comment">Write Comment</string>
+  <string name="add_comment_required">Required Field</string>
+  <string name="add_comment_please_enter">Please enter something in the comment field.</string>
+  <string name="reply_enter">Enter a reply:</string>
+  <string name="reply_send">Send Reply</string>
+  <string name="reply_to_comment">Reply to Comment</string>
+  <string name="reply_please_enter">Please enter something in the reply field.</string>
+
+  <!-- reload drop down -->
+  <string name="loading">Loading&#8230;</string>
+
+  <!-- comment view -->
+  <string name="on">on</string>
+  <string name="approved">Approved</string>
+  <string name="unapproved">Unapproved</string>
+  <string name="spam">Спам</string>
+  <string name="moderating_comment">Moderating comment</string>
+  <string name="moderating_comments">Moderating comments</string>
+  <string name="replying_comment">Replying to comment</string>
+  <string name="deleting_comment">Deleting comment</string>
+  <string name="deleting_comments">Deleting comments</string>
+  <string name="comment_moderated">Comment Moderated Successfully</string>
+  <string name="comments_moderated">Comments Moderated Successfully</string>
+  <string name="reply_added">Reply Added Successfully</string>
+  <string name="view_comment_from">Comment from</string>
+  <string name="edit_comment">Edit Comment</string>
+
+  <!-- edit comment view -->
+  <string name="author_name">Name</string>
+  <string name="author_email">E-mail</string>
+  <string name="author_url">URL</string>
+  <string name="comment_update">Update Comment</string>
+  <string name="saving_changes">Saving Changes</string>
+  <string name="sure_to_cancel_edit_comment">Are you sure you want to cancel editing this comment?</string>
+  <string name="content_required">The comment body is required.</string>
+  
+  <!-- context menu -->
+  <string name="remove_account">Remove Blog</string>
+  <string name="blog_removed_successfully">Blog Removed Successfully</string>
+
+  <!-- draft actions -->
+  <string name="draft_actions">Draft Actions</string>
+  <string name="edit_draft">Edit Draft</string>
+  <string name="delete_draft">Delete Draft</string>
+  <string name="delete_sure">Are you sure you want to delete the draft</string>
+
+  <!-- page actions -->
+  <string name="page_actions">Page Actions</string>
+  <string name="preview_page">View Page</string>
+  <string name="delete_page">Delete Page</string>
+  <string name="page_deleted">Page Deleted Successfully</string>
+  <string name="delete_sure_page">Are you sure you want to delete the page</string>
+  <string name="attempt_delete_page">Attempting to delete page</string>
+
+  <!-- post actions -->
+  <string name="post_actions">Post Actions</string>
+  <string name="preview_post">View Post</string>
+  <string name="delete_post">Delete Post</string>
+  <string name="post_deleted">Post Deleted Successfully</string>
+  <string name="comment_added">Comment Added Successfully</string>
+  <string name="attempting_add_comment">Attempting to post comment</string>
+  <string name="delete_sure_post">Are you sure you want to delete the post</string>
+  <string name="attempt_delete_post">Attempting to delete post</string>
+  <string name="share_url">Share Post</string>
+  <string name="share_url_page">Share Page</string>
+  <string name="share_link">Share Link</string>
+  <string name="attempting_fetch_url">Attempting to fetch URL</string>
+  <string name="post_not_published">Post status is not published</string>
+  <string name="page_not_published">Page status is not published</string>
+  <string name="view_in_browser">View in Browser</string>
+  <string name="post_signature">Post signature</string>
+  <string name="add_tagline">Add a signature to new posts</string>
+  <string name="posted_from">Posted from WordPress for Android</string>
+  <string name="posted_from_blackberry">Posted from WordPress for BlackBerry</string>
+  <string name="preview">Preview</string>
+
+  <!-- comment actions -->
+  <string name="comment_actions">Comment Actions</string>
+  <string name="mark_approved">Mark Approved</string>
+  <string name="mark_unapproved">Mark Unapproved</string>
+  <string name="mark_spam">Spam</string>
+  <string name="reply">Reply</string>
+  <string name="delete">Delete</string>
+  <string name="approve">Approve</string>
+  <string name="unapprove">Unapprove</string>
+  <string name="confirm_delete">Confirm Deletion</string>
+  <string name="confirm_delete_data">Are you sure you want to delete this comment?</string>
+
+  <!-- new account view -->
+  <string name="account_setup">Account Setup</string>
+  <string name="attempting_configure">Signing in&#8230;</string>
+  <string name="no_site_error">Sorry, could not connect to the WordPress site. Please try again later.</string>
+
+  <!-- drafts -->
+  <string name="cancel_draft">Cancel Draft</string>
+
+  <!-- media selection -->
+  <string name="select_photo">Select a photo from gallery</string>
+  <string name="take_photo">Take a new photo</string>
+  <string name="select_video">Select a video from gallery</string>
+  <string name="take_video">Take a new video</string>
+  <string name="media">Media</string>
+
+  <!-- category management -->
+  <string name="categories">Categories</string>
+  <string name="category">Category</string>
+  <string name="add_new_category">Add New Category</string>
+  <string name="category_name">Category Name</string>
+  <string name="category_slug">Category Slug (optional)</string>
+  <string name="category_desc">Category Description (optional)</string>
+  <string name="category_parent">Category Parent (optional):</string>
+  <string name="none">None</string>
+  <string name="adding_cat_failed">Adding category failed.</string>
+  <string name="adding_cat_failed_check">Please check your settings and try again.</string>
+  <string name="adding_cat_success">Category added successfully.</string>
+  <string name="cat_name_required">The Category Name field is required.</string>
+  <string name="cat_adding_category">Adding Category</string>
+  <string name="cat_attempt_add_category">Attempting to add category</string>
+
+  <!-- action from share intents -->
+  <string name="select_a_blog">Select a Blog</string>
+  <string name="no_account">No WordPress account found, please add an account and try again.</string>
+
+  <!-- file errors -->
+  <string name="file_error_encountered">An error occurred while setting up the captured media.</string>
+  <string name="file_error_create">Could not create temp file for media upload. Please make sure there is enough free space on your device.</string>
+
+  <!-- SD Card errors -->
+  <string name="sdcard_title">SD Card Required</string>
+  <string name="sdcard_message">A mounted SD card is required to upload media.</string>
+
+  <!-- location -->
+  <string name="location">Location</string>
+  <string name="geotag">Geotag Posts</string>
+  <string name="location_toast">Location data not yet available, please wait.</string>
+  <string name="view_map">View Map</string>
+  <string name="update_location">Update</string>
+  <string name="location_not_found">Unknown Location</string>
+  <string name="remove_location">Remove</string>
+
+  <!-- preferences -->
+  <string name="preferences">Preferences</string>
+  <string name="open_source_licenses">Open Source Licenses</string>
+
+  <!-- stats -->
+  <string name="username_password_required">Username and Password are required fields.</string>
+  <string name="help_stats">Need help?</string>
+  <string name="stats_username">Username</string>
+  <string name="stats_password">Password</string>
+  <string name="invalid_login">Incorrect Login</string>
+  <string name="invalid_jp_login">Incorrect login, or blog is not linked to this WordPress.com account.</string>
+  <string name="site_not_found">or site not found.</string>
+  <string name="stats_service_error">Sorry. There was an error trying to connect to your stats. Please try again.</string>
+
+  <!-- editor button -->
+  <string name="strike"><strike>ABC</strike></string>
+  <string name="link"><u>link</u></string>
+  <string name="underline"><u>U</u></string>
+
+  <!-- invalid_url -->
+  <string name="invalid_url">Invalid blog URL</string>
+  <string name="invalid_url_message">Please check that the blog URL entered is valid.
+  </string>
+
+  <!-- post status -->
+  <string name="publish_post">Publish</string>
+  <string name="pending_review">Pending Review</string>
+  <string name="draft">Draft</string>
+  <string name="post_private">Private</string>
+  <string name="published">Published</string>
+  <string name="scheduled">Scheduled</string>
+
+  <!-- QuickPress -->
+  <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
+  <string name="quickpress_add_error">Shortcut name can\'t be empty</string>
+  <string name="quickpress_add_alert_title">Set shortcut name</string>
+
+  <!-- HTTP Authentication -->
+  <string name="httpuser">HTTP хэрэглэгчийн нэр</string>
+  <string name="httppassword">HTTP нууц үг</string>
+  <string name="settings">Тохиргоо</string>
+  <string name="optional_settings">Optional Settings</string>
+  <string name="http_credentials">HTTP Credentials (optional)</string>
+
+  <!-- post scheduling and password -->
+  <string name="publish_date">Publish</string>
+  <string name="edit">Засварлах</string>
+  <string name="post_format">Post Format</string>
+  <string name="log_in">Нэвтрэх</string>
+
+  <!-- notifications -->
+  <string name="notifications">Notifications</string>
+  <string name="manage_notifications">Manage notifications</string>
+  <string name="enable_notifications">Enable notifications</string>
+  <string name="types">Types</string>
+  <string name="options">Options</string>
+  <string name="notifications_turn_off">Turn off</string>
+  <string name="notifications_turn_off_1hr">Turn off for 1 hour</string>
+  <string name="notifications_turn_off_8hr">Turn off for 8 hours</string>
+  <string name="tap_to_reply">Tap to Reply</string>
+  <string name="notification_replying">Publishing reply</string>
+  <string name="note_reply_successful">Reply published</string>
+  <string name="follow">Follow</string>
+  <string name="unfollow">Unfollow</string>
+  <string name="new_notifications">%d new notifications</string>
+  <string name="more_notifications">and %d more.</string>
+  <string name="tap_to_view">Tap to view.</string>
+  <string name="moderate_comment">Moderate comment</string>
+  <string name="tooltip_follow">Follow or unfollow this blog</string>
+  <string name="retry_reply">Reply failed. Tap to retry.</string>
+  <string name="reply_failed">Reply failed.</string>
+  <string name="tap_retry">Tap to retry.</string>
+  
+  <!-- reader -->
+  <string name="reader">Reader</string>
+  <string name="topics">Topics</string>
+
+  <!-- Post Formats -->
+  <string-array name="post_formats_array">
+    <item>Aside</item>
+    <item>Audio</item>
+    <item>Чат</item>
+    <item>Цомог</item>
+    <item>Зураг</item>
+    <item>Холбоос</item>
+    <item>Ишлэл</item>
+    <item>Стандарт</item>
+    <item>Статус</item>
+    <item>Видео</item>
+  </string-array>
+  
+  <!--  Menu Buttons -->
+  <string name="new_post">New Post</string>
+  <string name="new_page">New Page</string>
+  <string name="quick_photo">Quick Photo</string>
+  <string name="quick_video">Quick Video</string>
+  <string name="wp_admin">Dashboard</string>
+  <string name="view_site">View Site</string>
+  <string name="view_admin">View Admin</string>
+  
+  <!-- Image Alignment -->
+  <string name="image_alignment">Alignment</string>
+    <string-array name="alignment_array">
+        <item>None</item>
+        <item>Left</item>
+        <item>Center</item>
+        <item>Right</item>
+    </string-array>
+    
+  <!-- About View -->
+  <string name="app_title">WordPress for Android</string>
+  <string name="app_title_blackberry">WordPress for BlackBerry</string>
+  <string name="publisher">Publisher: Automattic, Inc</string>
+  <string name="copyright">©2013 Automattic, Inc</string>
+  <string name="version">Version</string>
+  <string name="tos">Terms of Service</string>
+  <string name="privacy_policy">Privacy Policy</string>
+  <string name="automattic_url"><u>www.automattic.com</u></string>
+  
+  <!-- Remote Post Changes -->
+  <string name="local_changes">Local Changes</string>
+  <string name="remote_changes">You\'ve made changes to a post that haven\'t been uploaded yet. Proceed with the refresh and overwrite local changes?</string>
+  
+  <string name="ok">OK</string>
+  <string name="image_settings">Image Settings</string>
+  <string name="add_account_blog_url">Blog URL</string>
+  <string name="wordpress_blog">WordPress Blog</string>
+  <string name="blogusername">blogusername</string>
+  <string name="column_1">Column 1</string>
+  <string name="column_2">Column 2</string>
+  
+  <!--  Error Messages -->
+  <string name="error_delete_post">Sorry, an error occurred while attempting to delete the %s.</string>
+  <string name="error_refresh">Sorry, %s could not be refreshed at this time. Please try again later.</string>
+  <string name="error_generic">Sorry, an error occurred. Please try again later.</string>
+   <string name="error_parsing_response">Sorry, an error occurred while fetching data. Please try again later.</string>
+  <string name="error_moderate_comment">Sorry, an error occurred while attempting to moderate. Please try again later.</string>
+  <string name="error_edit_comment">Sorry, an error occurred while editing the comment. Please try again later.</string>
+  <string name="error_following_blog">Sorry, an error occurred while attempting to follow the blog. Please try again later.</string>
+  <string name="error_upload">Sorry, an error occurred while uploading the %s.</string>
+  <string name="error_media_upload">An error occurred while uploading media</string>
+  <string name="login_limit">You have exceeded the login limit. Please ensure your login credentials are correct and try again in a few minutes.</string>
+  <string name="fatal_db_error">So sorry, but an error occurred while attempting to create the app database. Please try reinstalling the app.</string>
+  
+  <!--  Image Descriptions for Accessibility -->
+  <string name="content_description_add_media">Add media</string>
+    <string name="error_load_comment">Sorry, could not load the comment. Please try again.</string>
+    <string name="manage">Manage</string>
+    <string name="dashboard_tip">Tap the back key to return to the app.</string>
+    <string name="discard">Discard</string>
+    <string name="prompt_save_changes">Would you like to save your changes?</string>
+    <string name="error_downloading_image">Error downloading image. Please try again.</string>
+
+  
+   <!--  Application PassLock Messages -->
+   <string name="passcode_manage">Manage passcode</string>
+  <string name="passcode_enter_passcode">Enter your passcode</string>
+  <string name="passcode_enter_old_passcode">Enter your old passcode</string>
+  <string name="passcode_re_enter_passcode">Re-enter your passcode</string>
+  <string name="passcode_change_passcode">Change passcode</string>
+  <string name="passcode_set">Passcode set</string>
+  <string name="passcode_wrong_passcode">Wrong passcode, please try again.</string>
+  <string name="passcode_preference_title">Passcode lock</string>
+  <string name="passcode_turn_off">Turn passcode off</string>
+  <string name="passcode_turn_on">Turn passcode on</string>
+    
+</resources>
