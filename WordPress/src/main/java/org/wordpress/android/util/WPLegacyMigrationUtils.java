@@ -36,7 +36,6 @@ public class WPLegacyMigrationUtils {
     //
     private static final String DEPRECATED_DATABASE_NAME = "wordpress";
     private static final String DEPRECATED_ACCOUNT_TABLE = "tbl_accounts";
-    private static final String DEPRECATED_ACCOUNTS_TABLE = "accounts";
     private static final String DEPRECATED_ACCESS_TOKEN_COLUMN = "access_token";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
     private static final String DEPRECATED_BLOGS_TABLE = "accounts";
@@ -67,27 +66,21 @@ public class WPLegacyMigrationUtils {
         return siteList;
     }
 
-    private static String getDeprecatedPreferencesAccessTokenThenDelete(Context context) {
+    private static String getDeprecatedPreferencesAccessToken(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String token = prefs.getString(DEPRECATED_ACCESS_TOKEN_PREFERENCE, null);
-        if (!TextUtils.isEmpty(token)) {
-            prefs.edit().remove(DEPRECATED_ACCESS_TOKEN_PREFERENCE).apply();
-        }
         return token;
     }
 
-    private static String getLatestDeprecatedAccessToken(Context context) {
-        String latestToken = getAccessTokenFromTableThenDelete(context, DEPRECATED_ACCOUNT_TABLE);
+    public static String getLatestDeprecatedAccessToken(Context context) {
+        String latestToken = getAccessTokenFromTable(context, DEPRECATED_ACCOUNT_TABLE);
         if (TextUtils.isEmpty(latestToken)) {
-            latestToken = getAccessTokenFromTableThenDelete(context, DEPRECATED_ACCOUNTS_TABLE);
-        }
-        if (TextUtils.isEmpty(latestToken)) {
-            latestToken = getDeprecatedPreferencesAccessTokenThenDelete(context);
+            latestToken = getDeprecatedPreferencesAccessToken(context);
         }
         return latestToken;
     }
 
-    private static String getAccessTokenFromTableThenDelete(Context context, String tableName) {
+    private static String getAccessTokenFromTable(Context context, String tableName) {
         String token = null;
         try {
             SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
@@ -97,14 +90,36 @@ public class WPLegacyMigrationUtils {
                 token = c.getString(c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN));
             }
             c.close();
-            if (!TextUtils.isEmpty(token)) {
-                db.delete(tableName, "local_id=0", null);
-            }
             db.close();
         } catch (SQLException e) {
             // DB doesn't exist
         }
         return token;
+    }
+
+    public static boolean hasSelfHostedSiteToMigrate(Context context) {
+        try {
+            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            String[] fields = new String[]{"username", "password", "url", "homeURL", "blogId", "api_blogid"};
+
+            // To exclude the jetpack sites we need to check for empty password
+            String byString = String.format("dotcomFlag=0 AND NOT(dotcomFlag=0 AND password='%s')",
+                    encryptPassword(""));
+            Cursor c = db.query(DEPRECATED_BLOGS_TABLE, fields, byString, null, null, null, null);
+            int numRows = c.getCount();
+            c.moveToFirst();
+            for (int i = 0; i < numRows; i++) {
+                if (!TextUtils.isEmpty(c.getString(5))) {
+                    continue;
+                }
+                c.close();
+                return true;
+            }
+            c.close();
+            return false;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     private static List<SiteModel> getSelfHostedSitesFromDeprecatedDB(Context context) {

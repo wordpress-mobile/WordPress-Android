@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
@@ -44,6 +45,7 @@ import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.modules.AppComponent;
 import org.wordpress.android.modules.DaggerAppComponent;
@@ -69,6 +71,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPLegacyMigrationUtils;
@@ -97,7 +100,6 @@ public class WordPress extends MultiDexApplication {
     public static String versionName;
     public static WordPressDB wpDB;
 
-
     private static RestClientUtils sRestClientUtils;
     private static RestClientUtils sRestClientUtilsVersion1_1;
     private static RestClientUtils sRestClientUtilsVersion1_2;
@@ -125,6 +127,15 @@ public class WordPress extends MultiDexApplication {
     private AppComponent mAppComponent;
     public AppComponent component() {
         return mAppComponent;
+    }
+
+    // FluxC migration
+    public static boolean sIsMigrationInProgress;
+    private static MigrationListener sMigrationListener;
+    private int mRemainingSelfHostedSitesToFetch;
+
+    public interface MigrationListener {
+        void onCompletion();
     }
 
     /**
@@ -170,6 +181,16 @@ public class WordPress extends MultiDexApplication {
         }
     };
 
+    /**
+     * Shutdown task used if migration to FluxC can't be performed due to lack of network connectivity.
+     */
+    private static final Runnable sShutdown = new Runnable() {
+        @Override
+        public void run() {
+            System.exit(0);
+        }
+    };
+
     public static BitmapLruCache getBitmapCache() {
         if (mBitmapCache == null) {
             // The cache size will be measured in kilobytes rather than
@@ -195,35 +216,29 @@ public class WordPress extends MultiDexApplication {
                 .appContextModule(new AppContextModule(getApplicationContext()))
                 .build();
         component().inject(this);
+        mDispatcher.register(this);
 
         // Init static fields from dagger injected singletons, for legacy Actions/Utils
         sRequestQueue = mRequestQueue;
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        // Migrate access token AccountStore
-        if (!mAccountStore.hasAccessToken()) {
-            // it will take some time to update the access token in the AccountStore if it was migrated
-            // so it will be set to the migrated token
-            String migratedToken = WPLegacyMigrationUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
-            if (!TextUtils.isEmpty(migratedToken)) {
-                AppPrefs.setAccessTokenMigrated(true);
-                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-                mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
-            }
-        }
+        // If the migration was not done and if we have something to migrate
+        if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.isSelfHostedSitesMigratedToFluxC())
+            && (WPLegacyMigrationUtils.hasSelfHostedSiteToMigrate(this)
+                || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null)) {
+            sIsMigrationInProgress = true;
 
-        // Migrate self-hosted sites to FluxC
-        if (!AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
-            List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
-            if (siteList != null) {
-                AppLog.i(T.DB, "Fetching the site info for migrated self-hosted sites");
-                for (SiteModel siteModel : siteList) {
-                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel));
-                }
+            // Not connection? Then exit and ask the user to come back.
+            if (!NetworkUtils.isNetworkAvailable(this)) {
+                AppLog.i(T.DB, "No connection - aborting migration");
+                ToastUtils.showToast(this, getResources().getString(R.string.migration_error_not_connected),
+                        ToastUtils.Duration.LONG);
+                new Handler().postDelayed(sShutdown, 3500);
+                return;
             }
-            AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
+
+            migrateAccessToken();
         }
 
         ProfilingUtils.start("App Startup");
@@ -247,7 +262,6 @@ public class WordPress extends MultiDexApplication {
                 .throwSubscriberException(true)
                 .installDefaultEventBus();
 
-        mDispatcher.register(this);
 
         RestClientUtils.setUserAgent(getUserAgent());
 
@@ -278,6 +292,62 @@ public class WordPress extends MultiDexApplication {
         // https://developer.android.com/reference/android/support/v7/app/AppCompatDelegate.html#setCompatVectorFromResourcesEnabled(boolean)
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
+    private void migrateAccessToken() {
+        // Migrate access token AccountStore
+        if (!AppPrefs.wasAccessTokenMigrated() && !mAccountStore.hasAccessToken()) {
+            AppLog.i(T.DB, "No access token found in FluxC - attempting to migrate existing one");
+            // It will take some time to update the access token in the AccountStore if it was migrated
+            // so it will be set to the migrated token
+            String migratedToken = WPLegacyMigrationUtils.migrateAccessTokenToAccountStore(this, mDispatcher);
+            if (!TextUtils.isEmpty(migratedToken)) {
+                AppLog.i(T.DB, "Access token successfully migrated to FluxC - fetching accounts and sites");
+                AppPrefs.setAccessTokenMigrated(true);
+
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+                mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                return;
+            }
+            // Even if there was no token to migrate, turn this flag on so we don't attempt to migrate again
+            AppPrefs.setAccessTokenMigrated(true);
+        }
+
+        migrateSelfHostedSites();
+    }
+
+    private void migrateSelfHostedSites() {
+        if (!AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
+            List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
+            if (siteList != null && !siteList.isEmpty()) {
+                AppLog.i(T.DB, "Finished migrating " + siteList.size() + " self-hosted sites - fetching site info");
+                mRemainingSelfHostedSitesToFetch = siteList.size();
+                for (SiteModel siteModel : siteList) {
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel));
+                }
+            } else {
+                AppLog.i(T.DB, "No self-hosted sites to migrate");
+                endMigration();
+            }
+            AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
+        } else {
+            AppLog.i(T.DB, "Self-hosted sites have already been migrated");
+            endMigration();
+        }
+    }
+
+    private void endMigration() {
+        AppLog.i(T.DB, "Ending migration to FluxC");
+        sIsMigrationInProgress = false;
+        if (sMigrationListener != null) {
+            sMigrationListener.onCompletion();
+            sMigrationListener = null;
+        }
+    }
+
+    public static void registerMigrationListener(MigrationListener listener) {
+        sMigrationListener = listener;
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -443,6 +513,27 @@ public class WordPress extends MultiDexApplication {
 
             // dangerously delete all content!
             wpDB.dangerouslyDeleteAllContent();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        if (!sIsMigrationInProgress || sMigrationListener == null) {
+            return;
+        }
+
+        if (mRemainingSelfHostedSitesToFetch == 0) {
+            // Token has been migrated, and any WP.com sites have been fetched
+            // Attempt to migrate self-hosted sites
+            AppLog.i(T.DB, "Access token migrated and WP.com sites fetched - attempting to migrate self-hosted sites");
+            migrateSelfHostedSites();
+        } else if (mRemainingSelfHostedSitesToFetch > 1) {
+            mRemainingSelfHostedSitesToFetch--;
+            AppLog.i(T.DB, "Self-hosted sites remaining to fetch for migration: " + mRemainingSelfHostedSitesToFetch);
+        } else {
+            AppLog.i(T.DB, "The last self-hosted site has been fetched - migration complete");
+            endMigration();
         }
     }
 
