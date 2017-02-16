@@ -177,6 +177,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static int PAGE_PREVIEW = 2;
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
+    private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
 
     private Handler mHandler;
     private boolean mShowAztecEditor;
@@ -219,6 +220,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private View mPhotoChooserContainer;
     private PhotoChooserFragment mPhotoChooserFragment;
+    private int mPhotoChooserOrientation = Configuration.ORIENTATION_UNDEFINED;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -421,27 +423,36 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        resizePhotoChooser();
-    }
 
-    private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
+        // resize the photo chooser if the user rotated the device
+        int orientation = newConfig.orientation;
+        if (orientation != mPhotoChooserOrientation) {
+            resizePhotoChooser();
+        }
+    }
 
     private boolean isPhotoChooserShowing() {
         return mPhotoChooserContainer != null
                 && mPhotoChooserContainer.getVisibility() == View.VISIBLE;
     }
 
-    // TODO: this is a placeholder for now - return False to switch back to the old seven-item menu
+    // TODO: this is a placeholder for now so we can return False to switch back to the old seven-item menu
     private boolean enablePhotoChooser() {
         return true;
     }
 
+    /*
+     * resizes the photo chooser based on device orientation - full height in landscape, half
+     * height in portrait
+     */
     private void resizePhotoChooser() {
         if (mPhotoChooserContainer == null) return;
 
         if (DisplayUtils.isLandscape(this)) {
+            mPhotoChooserOrientation = Configuration.ORIENTATION_LANDSCAPE;
             mPhotoChooserContainer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
         } else {
+            mPhotoChooserOrientation = Configuration.ORIENTATION_PORTRAIT;
             int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
             int containerHeight = (int) (displayHeight * 0.5f);
             mPhotoChooserContainer.getLayoutParams().height = containerHeight;
@@ -452,8 +463,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    /*
+     * loads the photo chooser fragment, which is hidden until the user taps the media icon
+     */
     private void initPhotoChooser() {
         mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
+
+        // size the chooser before creating the fragment to avoid having it load media now
         resizePhotoChooser();
 
         mPhotoChooserFragment = PhotoChooserFragment.newInstance();
@@ -464,6 +480,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 .commit();
     }
 
+    /*
+     * user has requested to show the photo chooser
+     */
     void showPhotoChooser() {
         // request permission if we don't already have them
         if (!PermissionUtils.checkCameraAndStoragePermissions(this)) {
