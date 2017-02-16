@@ -97,6 +97,31 @@ public class WPLegacyMigrationUtils {
         return token;
     }
 
+    public static boolean hasSelfHostedSiteToMigrate(Context context) {
+        try {
+            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            String[] fields = new String[]{"username", "password", "url", "homeURL", "blogId", "api_blogid"};
+
+            // To exclude the jetpack sites we need to check for empty password
+            String byString = String.format("dotcomFlag=0 AND NOT(dotcomFlag=0 AND password='%s')",
+                    encryptPassword(""));
+            Cursor c = db.query(DEPRECATED_BLOGS_TABLE, fields, byString, null, null, null, null);
+            int numRows = c.getCount();
+            c.moveToFirst();
+            for (int i = 0; i < numRows; i++) {
+                if (!TextUtils.isEmpty(c.getString(5))) {
+                    continue;
+                }
+                c.close();
+                return true;
+            }
+            c.close();
+            return false;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
     private static List<SiteModel> getSelfHostedSitesFromDeprecatedDB(Context context) {
         List<SiteModel> siteList = new ArrayList<>();
         try {
