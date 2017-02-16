@@ -163,9 +163,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     AppLog.d(T.MEDIA, "media upload successful: " + media.getTitle());
                     MediaModel responseMedia = getMediaFromUploadResponse(response);
-                    responseMedia.setLocalSiteId(site.getId());
-                    responseMedia.setId(media.getId());
-                    notifyMediaUploaded(responseMedia, null);
+                    if (responseMedia != null) {
+                        responseMedia.setLocalSiteId(site.getId());
+                        responseMedia.setId(media.getId());
+                        notifyMediaUploaded(responseMedia, null);
+                    } else {
+                        notifyMediaUploaded(null, new MediaError(MediaErrorType.PARSE_ERROR));
+                    }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response.message());
                     MediaError error = new MediaError(fromHttpStatusCode(response.code()));
@@ -323,7 +327,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private void notifyMediaProgress(MediaModel media, float progress, MediaError error) {
-        ProgressPayload payload = new ProgressPayload(media, progress, false, error);
+        ProgressPayload payload = new ProgressPayload(media, progress, progress == 1.f, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
@@ -348,7 +352,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private void notifyMediaUploadCanceled(MediaModel media) {
-        ProgressPayload payload = new ProgressPayload(media, -1.f, false, true);
+        ProgressPayload payload = new ProgressPayload(media, 0.f, false, true);
         mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload));
     }
 
