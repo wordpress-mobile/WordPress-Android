@@ -326,6 +326,7 @@ public class WordPress extends MultiDexApplication {
             List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
             if (siteList != null && !siteList.isEmpty()) {
                 AppLog.i(T.DB, "Finished migrating " + siteList.size() + " self-hosted sites - fetching site info");
+                AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
                 mRemainingSelfHostedSitesToFetch = siteList.size();
                 for (SiteModel siteModel : siteList) {
                     mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel));
@@ -333,8 +334,8 @@ public class WordPress extends MultiDexApplication {
                 return;
             } else {
                 AppLog.i(T.DB, "No self-hosted sites to migrate");
+                AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
             }
-            AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
         } else {
             AppLog.i(T.DB, "Self-hosted sites have already been migrated");
         }
