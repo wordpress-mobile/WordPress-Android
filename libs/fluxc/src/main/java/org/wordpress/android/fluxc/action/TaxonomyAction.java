@@ -41,6 +41,8 @@ public enum TaxonomyAction implements IAction {
     @Action(payloadType = InstantiateTermPayload.class)
     INSTANTIATE_TERM,
     @Action(payloadType = TermModel.class)
-    UPDATE_TERM
+    UPDATE_TERM,
+    @Action
+    REMOVE_ALL_TERMS
 }
 

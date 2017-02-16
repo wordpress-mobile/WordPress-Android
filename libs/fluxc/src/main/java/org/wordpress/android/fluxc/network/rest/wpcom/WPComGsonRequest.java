@@ -10,10 +10,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.network.rest.GsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class WPComGsonRequest<T> extends GsonRequest<T> {
@@ -60,6 +61,10 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
      */
     public static <T> WPComGsonRequest<T> buildPostRequest(String url, Map<String, Object> body, Class<T> clazz,
                                                            Listener<T> listener, BaseErrorListener errorListener) {
+        // HTTP RFC requires a body (even empty) for all POST requests.
+        if (body == null) {
+            body = new HashMap<>();
+        }
         return new WPComGsonRequest<>(Method.POST, url, null, body, clazz, listener, errorListener);
     }
 

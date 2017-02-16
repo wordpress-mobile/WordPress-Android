@@ -74,7 +74,27 @@ public class TaxonomySqlUtils {
         return null;
     }
 
-    public static List<TermModel> getTermsFromRemoteIdList(List<Long> remoteTermIds, String taxonomyName) {
+    public static TermModel getTermByName(SiteModel site, String termName, String taxonomyName) {
+        if (site == null || taxonomyName == null) {
+            return null;
+        }
+
+        List<TermModel> termResult = WellSql.select(TermModel.class)
+                .where().beginGroup()
+                .equals(TermModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(TermModelTable.NAME, termName)
+                .equals(TermModelTable.TAXONOMY, taxonomyName)
+                .endGroup().endWhere()
+                .getAsModel();
+
+        if (!termResult.isEmpty()) {
+            return termResult.get(0);
+        }
+        return null;
+    }
+
+    public static List<TermModel> getTermsFromRemoteIdList(List<Long> remoteTermIds, SiteModel site,
+                                                           String taxonomyName) {
         if (taxonomyName == null || remoteTermIds == null || remoteTermIds.isEmpty()) {
             return Collections.emptyList();
         }
@@ -82,7 +102,23 @@ public class TaxonomySqlUtils {
         return WellSql.select(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.TAXONOMY, taxonomyName)
+                .equals(TermModelTable.LOCAL_SITE_ID, site.getId())
                 .isIn(TermModelTable.REMOTE_TERM_ID, remoteTermIds)
+                .endGroup().endWhere()
+                .getAsModel();
+    }
+
+    public static List<TermModel> getTermsFromRemoteNameList(List<String> remoteTermNames, SiteModel site,
+                                                             String taxonomyName) {
+        if (taxonomyName == null || remoteTermNames == null || remoteTermNames.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return WellSql.select(TermModel.class)
+                .where().beginGroup()
+                .equals(TermModelTable.TAXONOMY, taxonomyName)
+                .equals(TermModelTable.LOCAL_SITE_ID, site.getId())
+                .isIn(TermModelTable.NAME, remoteTermNames)
                 .endGroup().endWhere()
                 .getAsModel();
     }
@@ -98,5 +134,9 @@ public class TaxonomySqlUtils {
                 .equals(TermModelTable.TAXONOMY, taxonomyName)
                 .endGroup().endWhere()
                 .execute();
+    }
+
+    public static int deleteAllTerms() {
+        return WellSql.delete(TermModel.class).execute();
     }
 }
