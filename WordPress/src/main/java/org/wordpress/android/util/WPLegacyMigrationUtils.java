@@ -72,7 +72,7 @@ public class WPLegacyMigrationUtils {
         return token;
     }
 
-    private static String getLatestDeprecatedAccessToken(Context context) {
+    public static String getLatestDeprecatedAccessToken(Context context) {
         String latestToken = getAccessTokenFromTable(context, DEPRECATED_ACCOUNT_TABLE);
         if (TextUtils.isEmpty(latestToken)) {
             latestToken = getDeprecatedPreferencesAccessToken(context);

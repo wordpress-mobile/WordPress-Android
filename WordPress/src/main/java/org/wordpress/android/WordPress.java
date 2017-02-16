@@ -223,8 +223,13 @@ public class WordPress extends MultiDexApplication {
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        if (!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
+        // If the migration was not done and if we have something to migrate
+        if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.isSelfHostedSitesMigratedToFluxC())
+            && (WPLegacyMigrationUtils.hasSelfHostedSiteToMigrate(this)
+                || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null)) {
             sIsMigrationInProgress = true;
+
+            // Not connection? Then exit and ask the user to come back.
             if (!NetworkUtils.isNetworkAvailable(this)) {
                 AppLog.i(T.DB, "No connection - aborting migration");
                 ToastUtils.showToast(this, getResources().getString(R.string.migration_error_not_connected),
