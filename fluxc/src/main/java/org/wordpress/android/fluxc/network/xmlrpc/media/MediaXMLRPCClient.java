@@ -277,7 +277,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                 AppLog.v(T.MEDIA, "XMLRPC.GET_MEDIA_ITEM error response: " + error);
                 MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                notifyMediaFetched(site, media, mediaError);
+                if (isFreshUpload) {
+                    // we tried to fetch a media that's just uploaded but failed, so we should
+                    // return an upload error and not a fetch error as initially parsing the upload response failed
+                    notifyMediaUploaded(media, new MediaError(MediaErrorType.PARSE_ERROR));
+                } else {
+                    notifyMediaFetched(site, media, mediaError);
+                }
             }
         }));
     }
