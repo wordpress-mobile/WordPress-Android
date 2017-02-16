@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.ThumbnailViewHolder> {
 
     interface OnMediaLoadedListener {
         void onMediaLoaded(boolean isEmpty);
@@ -93,31 +93,28 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ThumbnailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.photo_chooser_thumbnail, parent, false);
         return new ThumbnailViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof ThumbnailViewHolder) {
-            PhotoChooserItem item = getItemAtPosition(position);
-            ThumbnailViewHolder thumbHolder = (ThumbnailViewHolder) holder;
+    public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
+        PhotoChooserItem item = getItemAtPosition(position);
 
-            int selectedIndex = isMultiSelectEnabled() ? mSelectedUris.indexOfUri(item.uri) : -1;
-            if (selectedIndex > -1) {
-                thumbHolder.selectedFrame.setVisibility(View.VISIBLE);
-                thumbHolder.txtSelectionCount.setVisibility(View.VISIBLE);
-                thumbHolder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
-            } else {
-                thumbHolder.selectedFrame.setVisibility(View.GONE);
-                thumbHolder.txtSelectionCount.setVisibility(View.GONE);
-            }
-
-            thumbHolder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
-            mThumbnailLoader.loadThumbnail(thumbHolder.imgThumbnail, item._id, item.isVideo);
+        int selectedIndex = isMultiSelectEnabled() ? mSelectedUris.indexOfUri(item.uri) : -1;
+        if (selectedIndex > -1) {
+            holder.selectedFrame.setVisibility(View.VISIBLE);
+            holder.txtSelectionCount.setVisibility(View.VISIBLE);
+            holder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
+        } else {
+            holder.selectedFrame.setVisibility(View.GONE);
+            holder.txtSelectionCount.setVisibility(View.GONE);
         }
+
+        holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
+        mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo);
     }
 
     private PhotoChooserItem getItemAtPosition(int position) {
