@@ -12,6 +12,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="@dimen/margin_large"
+        android:drawableTop="@drawable/media_image_placeholder"
+        android:gravity="center"
+        android:text="@string/media_empty_list"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <LinearLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"

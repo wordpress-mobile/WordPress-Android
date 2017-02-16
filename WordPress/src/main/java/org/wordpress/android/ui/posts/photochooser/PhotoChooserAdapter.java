@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.OnPhotoChooserListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 
@@ -23,6 +24,10 @@ import java.util.Collections;
 import java.util.Comparator;
 
 class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    interface OnMediaLoadedListener {
+        void onMediaLoaded(boolean isEmpty);
+    }
 
     private class PhotoChooserItem {
         private long _id;
@@ -50,19 +55,19 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private boolean mIsMultiSelectEnabled;
 
     private final ThumbnailLoader mThumbnailLoader;
-    private final PhotoChooserFragment.OnPhotoChooserListener mListener;
+    private final OnPhotoChooserListener mPhotoListener;
+    private final OnMediaLoadedListener mLoadedListener;
     private final ArrayList<PhotoChooserItem> mMediaList = new ArrayList<>();
-
-    private static final int VT_PHOTO   = 0;
-    private static final int VT_EMPTY   = 1;
 
     public PhotoChooserAdapter(Context context,
                                int thumbWidth,
                                int thumbHeight,
-                               PhotoChooserFragment.OnPhotoChooserListener listener) {
+                               OnPhotoChooserListener photoListener,
+                               OnMediaLoadedListener loadedListener) {
         super();
         mContext = context;
-        mListener = listener;
+        mPhotoListener = photoListener;
+        mLoadedListener = loadedListener;
         mThumbWidth = thumbWidth;
         mThumbHeight = thumbHeight;
         setHasStableIds(true);
@@ -75,48 +80,23 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        if (hasPhotos()) {
-            return mMediaList.size();
-        } else {
-            return 1; // single VT_EMPTY cell
-        }
+        return mMediaList.size();
     }
 
     @Override
     public long getItemId(int position) {
-        int type = getItemViewType(position);
-        if (type == VT_PHOTO) {
-            return getItemAtPosition(position)._id;
-        } else {
-            return type;
-        }
+        return getItemAtPosition(position)._id;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (hasPhotos()) {
-            return VT_PHOTO;
-        } else {
-            return VT_EMPTY;
-        }
-    }
-
-    private boolean hasPhotos() {
-        return mMediaList.size() > 0;
+    private boolean isEmpty() {
+        return mMediaList.size() == 0;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view;
-        switch (viewType) {
-            case VT_EMPTY:
-                view = inflater.inflate(R.layout.photo_chooser_empty, parent, false);
-                return new EmptyViewHolder(view);
-            default:
-                view = inflater.inflate(R.layout.photo_chooser_thumbnail, parent, false);
-                return new ThumbnailViewHolder(view);
-        }
+        View view = inflater.inflate(R.layout.photo_chooser_thumbnail, parent, false);
+        return new ThumbnailViewHolder(view);
     }
 
     @Override
@@ -262,9 +242,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (mListener != null) {
+                    if (mPhotoListener != null) {
                         Uri imageUri = getItemAtPosition(position).uri;
-                        mListener.onPhotoTapped(itemView, imageUri);
+                        mPhotoListener.onPhotoTapped(itemView, imageUri);
                     }
                     if (isMultiSelectEnabled()) {
                         animateSelectionCount(ThumbnailViewHolder.this, position);
@@ -274,18 +254,18 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (mListener != null) {
+                    if (mPhotoListener != null) {
                         Uri imageUri = getItemAtPosition(position).uri;
-                        mListener.onPhotoDoubleTapped(itemView, imageUri);
+                        mPhotoListener.onPhotoDoubleTapped(itemView, imageUri);
                     }
                     return true;
                 }
                 @Override
                 public void onLongPress(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (mListener != null) {
+                    if (mPhotoListener != null) {
                         Uri imageUri = getItemAtPosition(position).uri;
-                        mListener.onPhotoLongPressed(itemView, imageUri);
+                        mPhotoListener.onPhotoLongPressed(itemView, imageUri);
                     }
                 }
             });
@@ -372,6 +352,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mMediaList.clear();
             mMediaList.addAll(tmpList);
             notifyDataSetChanged();
+            if (mLoadedListener != null) {
+                mLoadedListener.onMediaLoaded(isEmpty());
+            }
         }
     }
 }

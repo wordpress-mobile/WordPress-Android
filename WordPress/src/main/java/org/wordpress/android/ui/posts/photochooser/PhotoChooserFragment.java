@@ -21,6 +21,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserAdapter.OnMediaLoadedListener;
 
 import java.util.ArrayList;
 
@@ -182,7 +183,7 @@ public class PhotoChooserFragment extends Fragment {
      *   - double tap previews the photo
      *   - long press enables multi-select
      */
-    private final OnPhotoChooserListener mListener = new OnPhotoChooserListener() {
+    private final OnPhotoChooserListener mPhotoListener = new OnPhotoChooserListener() {
         @Override
         public void onPhotoTapped(View view, Uri mediaUri) {
             if (isMultiSelectEnabled()) {
@@ -208,6 +209,20 @@ public class PhotoChooserFragment extends Fragment {
             showPreview(view, mediaUri);
         }
     };
+
+    private final OnMediaLoadedListener mLoadedListener = new OnMediaLoadedListener() {
+        @Override
+        public void onMediaLoaded(boolean isEmpty) {
+            showEmptyView(isEmpty);
+        }
+    };
+
+    private void showEmptyView(boolean show) {
+        if (!isAdded()) return;
+
+        View emptyView = getView().findViewById(R.id.text_empty);
+        emptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
 
     /*
      * shows full-screen preview of the passed media
@@ -257,7 +272,11 @@ public class PhotoChooserFragment extends Fragment {
             int imageWidth = displayWidth / NUM_COLUMNS;
             int imageHeight = (int) (imageWidth * 0.75f);
             mAdapter = new PhotoChooserAdapter(
-                    getActivity(), imageWidth, imageHeight, mListener);
+                    getActivity(),
+                    imageWidth,
+                    imageHeight,
+                    mPhotoListener,
+                    mLoadedListener);
         }
         return mAdapter;
     }
