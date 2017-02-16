@@ -130,7 +130,7 @@ public class WordPress extends MultiDexApplication {
     }
 
     // FluxC migration
-    private static boolean sIsMigrationInProgress;
+    public static boolean sIsMigrationInProgress;
     private static MigrationListener sMigrationListener;
     private int mRemainingSelfHostedSitesToFetch;
 
@@ -223,16 +223,21 @@ public class WordPress extends MultiDexApplication {
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        if (!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
+        // If the migration was not done and if we have something to migrate
+        if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.isSelfHostedSitesMigratedToFluxC())
+            && (WPLegacyMigrationUtils.hasSelfHostedSiteToMigrate(this)
+                || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null)) {
+            sIsMigrationInProgress = true;
+
+            // Not connection? Then exit and ask the user to come back.
             if (!NetworkUtils.isNetworkAvailable(this)) {
                 AppLog.i(T.DB, "No connection - aborting migration");
                 ToastUtils.showToast(this, getResources().getString(R.string.migration_error_not_connected),
                         ToastUtils.Duration.LONG);
-                new Handler().postDelayed(sShutdown, 1000);
+                new Handler().postDelayed(sShutdown, 3500);
                 return;
             }
 
-            sIsMigrationInProgress = true;
             migrateAccessToken();
         }
 
@@ -342,11 +347,7 @@ public class WordPress extends MultiDexApplication {
     }
 
     public static void registerMigrationListener(MigrationListener listener) {
-        if (!sIsMigrationInProgress) {
-            listener.onCompletion();
-        } else {
-            sMigrationListener = listener;
-        }
+        sMigrationListener = listener;
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
