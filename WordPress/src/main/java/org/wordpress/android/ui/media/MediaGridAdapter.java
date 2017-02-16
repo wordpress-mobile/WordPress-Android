@@ -225,18 +225,20 @@ public class MediaGridAdapter extends CursorAdapter {
         // show upload state
         if (holder.stateTextView != null) {
             if (state != null && state.length() > 0) {
-                // show the progressbar only when the state is uploading
-                if (state.equalsIgnoreCase(MediaUploadState.UPLOADING.name()) ||
-                        state.equalsIgnoreCase(MediaUploadState.DELETE.name())) {
-                    holder.progressUpload.setVisibility(View.VISIBLE);
-                    holder.stateTextView.setVisibility(View.VISIBLE);
-                    holder.stateTextView.setText(state);
-                } else {
+                holder.stateTextView.setVisibility(View.VISIBLE);
+                holder.stateTextView.setText(state);
+
+                // hide the progressbar only if the state is Uploaded or failed
+                if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name()) ||
+                        state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
                     holder.progressUpload.setVisibility(View.GONE);
-                    if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
-                        holder.progressUpload.setVisibility(View.GONE);
-                        holder.stateTextView.setVisibility(View.GONE);
-                    }
+                } else {
+                    holder.progressUpload.setVisibility(View.VISIBLE);
+                }
+
+                // Hide the state text only if the it's Uploaded
+                if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
+                    holder.stateTextView.setVisibility(View.GONE);
                 }
 
                 // add onclick to retry failed uploads
