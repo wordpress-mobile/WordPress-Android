@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.List;
 
@@ -102,9 +103,13 @@ public class SiteSqlUtils {
         // If the site is a self hosted, maybe it's already in the DB as a Jetpack site, and we don't want to create
         // a duplicate.
         if (siteResult.isEmpty()) {
+            String forcedHttpXmlRpcUrl = "http://" + UrlUtils.removeScheme(site.getXmlRpcUrl());
+            String forcedHttpsXmlRpcUrl = "https://" + UrlUtils.removeScheme(site.getXmlRpcUrl());
+
             siteResult = WellSql.select(SiteModel.class)
                     .where()
-                    .equals(SiteModelTable.XMLRPC_URL, site.getXmlRpcUrl())
+                    .equals(SiteModelTable.XMLRPC_URL, forcedHttpXmlRpcUrl)
+                    .or().equals(SiteModelTable.XMLRPC_URL, forcedHttpsXmlRpcUrl)
                     .endWhere().getAsModel();
             if (!siteResult.isEmpty()) {
                 AppLog.d(T.DB, "Site found using XML-RPC url: " + site.getXmlRpcUrl());
