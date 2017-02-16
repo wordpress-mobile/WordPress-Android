@@ -461,7 +461,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void launchMediaGalleryActivity() {
-        ActivityLauncher.viewMediaGalleryPickerForSite(getActivity(), mSite);
+        Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
+        intent.putExtra(WordPress.SITE, mSite);
+        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
+        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
     private PostStatus getPostStatusForSpinnerPosition(int position) {
