@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
@@ -53,6 +52,16 @@ public class AccountStore extends Store {
         public AuthenticatePayload(@NonNull String username, @NonNull String password) {
             this.username = username;
             this.password = password;
+        }
+    }
+
+    public static class AuthenticateErrorPayload extends Payload {
+        public AuthenticationError error;
+        public AuthenticateErrorPayload(@NonNull AuthenticationError error) {
+            this.error = error;
+        }
+        public AuthenticateErrorPayload(@NonNull AuthenticationErrorType errorType) {
+            this.error = new AuthenticationError(errorType, "");
         }
     }
 

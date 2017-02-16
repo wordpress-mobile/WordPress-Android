@@ -51,4 +51,6 @@ public enum CommentAction implements IAction {
     REMOVE_COMMENTS,
     @Action(payloadType = CommentModel.class)
     REMOVE_COMMENT,
+    @Action
+    REMOVE_ALL_COMMENTS,
 }
