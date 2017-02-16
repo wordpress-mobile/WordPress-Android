@@ -30,6 +30,7 @@ public class PhotoChooserFragment extends Fragment {
 
     private static final String KEY_MULTI_SELECT_ENABLED = "multi_select_enabled";
     private static final String KEY_SELECTED_ITEMS = "selected_items";
+    private static final String KEY_RESTORE_POSITION = "restore_position";
 
     enum PhotoChooserIcon {
         ANDROID_CAMERA,
@@ -47,6 +48,7 @@ public class PhotoChooserFragment extends Fragment {
     private PhotoChooserAdapter mAdapter;
     private View mBottomBar;
     private ActionMode mActionMode;
+    private int mRestorePosition;
 
     public static PhotoChooserFragment newInstance() {
         Bundle args = new Bundle();
@@ -59,6 +61,7 @@ public class PhotoChooserFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
+            mRestorePosition = savedInstanceState.getInt(KEY_RESTORE_POSITION);
             if (savedInstanceState.getBoolean(KEY_MULTI_SELECT_ENABLED)) {
                 getAdapter().setMultiSelectEnabled(true);
                 restoreSelection(savedInstanceState);
@@ -69,9 +72,23 @@ public class PhotoChooserFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt(KEY_RESTORE_POSITION, getRecyclerPosition());
         if (isMultiSelectEnabled()) {
             outState.putBoolean(KEY_MULTI_SELECT_ENABLED, true);
             saveSelection(outState);
+        }
+    }
+
+    private int getRecyclerPosition() {
+        if (mRecycler == null) {
+            return 0;
+        }
+        return ((GridLayoutManager)mRecycler.getLayoutManager()).findFirstVisibleItemPosition();
+    }
+
+    private void setRecyclerPosition(int position) {
+        if (mRecycler != null) {
+            mRecycler.getLayoutManager().scrollToPosition(position);
         }
     }
 
@@ -103,27 +120,22 @@ public class PhotoChooserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.photo_chooser_fragment, container, false);
 
-        mBottomBar = view.findViewById(R.id.bottom_bar);
-
-
-
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
 
+        mBottomBar = view.findViewById(R.id.bottom_bar);
         mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 handleIconClicked(PhotoChooserIcon.ANDROID_CAMERA);
             }
         });
-
         mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 handleIconClicked(PhotoChooserIcon.ANDROID_PICKER);
             }
         });
-
         mBottomBar.findViewById(R.id.icon_wpmedia).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,6 +225,10 @@ public class PhotoChooserFragment extends Fragment {
         @Override
         public void onAdapterLoaded(boolean isEmpty) {
             showEmptyView(isEmpty);
+            if (mRestorePosition > 0) {
+                setRecyclerPosition(mRestorePosition);
+                mRestorePosition = 0;
+            }
         }
     };
 
@@ -280,6 +296,7 @@ public class PhotoChooserFragment extends Fragment {
      */
     public void loadDeviceMedia() {
         if (mAdapter != null) {
+            mRestorePosition = getRecyclerPosition();
             mRecycler.setAdapter(null);
             mAdapter = null;
         }
