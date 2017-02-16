@@ -79,9 +79,6 @@ public class AppPrefs {
         // selected site in the main activity
         SELECTED_SITE_LOCAL_ID,
 
-        // access token migrated to AccountStore, must wait for network calls to return before app access
-        ACCESS_TOKEN_MIGRATED,
-
         // wpcom ID of the last push notification received
         PUSH_NOTIFICATIONS_LAST_NOTE_ID,
 
@@ -126,6 +123,9 @@ public class AppPrefs {
 
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
+
+        // access token migrated to AccountStore, must wait for network calls to return before app access
+        ACCESS_TOKEN_MIGRATED,
 
         // Self-hosted sites migration to FluxC
         SELF_HOSTED_SITES_MIGRATED_TO_FLUXC,
@@ -486,14 +486,6 @@ public class AppPrefs {
         setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, selectedSite);
     }
 
-    public static boolean wasAccessTokenMigrated() {
-        return getBoolean(DeletablePrefKey.ACCESS_TOKEN_MIGRATED, false);
-    }
-
-    public static void setAccessTokenMigrated(boolean migrated) {
-        setBoolean(DeletablePrefKey.ACCESS_TOKEN_MIGRATED, migrated);
-    }
-
     public static String getLastPushNotificationWpcomNoteId() {
         return getString(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID);
     }
@@ -578,6 +570,14 @@ public class AppPrefs {
         // store in prefs
         String idsAsString = TextUtils.join(",", currentIds);
         setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
+    }
+
+    public static boolean wasAccessTokenMigrated() {
+        return getBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, false);
+    }
+
+    public static void setAccessTokenMigrated(boolean migrated) {
+        setBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, migrated);
     }
 
     public static boolean isSelfHostedSitesMigratedToFluxC() {
