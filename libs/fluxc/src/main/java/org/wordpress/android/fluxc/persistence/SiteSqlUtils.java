@@ -108,8 +108,10 @@ public class SiteSqlUtils {
 
             siteResult = WellSql.select(SiteModel.class)
                     .where()
+                    .beginGroup()
                     .equals(SiteModelTable.XMLRPC_URL, forcedHttpXmlRpcUrl)
                     .or().equals(SiteModelTable.XMLRPC_URL, forcedHttpsXmlRpcUrl)
+                    .endGroup()
                     .endWhere().getAsModel();
             if (!siteResult.isEmpty()) {
                 AppLog.d(T.DB, "Site found using XML-RPC url: " + site.getXmlRpcUrl());
