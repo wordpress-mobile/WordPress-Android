@@ -20,6 +20,7 @@ import org.wordpress.android.widgets.WPTextView;
 public class SignInDialogFragment extends DialogFragment {
     private static String ARG_TITLE = "title";
     private static String ARG_DESCRIPTION = "message";
+    private static String ARG_SELFHOSTED = "selfhosted";
     private static String ARG_FOOTER = "footer";
     private static String ARG_IMAGE = "image";
     private static String ARG_NUMBER_OF_BUTTONS = "number-of-buttons";
@@ -33,6 +34,7 @@ public class SignInDialogFragment extends DialogFragment {
     private ImageView mImageView;
     private WPTextView mTitleTextView;
     private WPTextView mDescriptionTextView;
+    private WPTextView mDescriptionSelfHostedTextView;
     private WPTextView mFooterBottomButton;
     private WPTextView mFooterCenterButton;
     private WPTextView mFooterTopButton;
@@ -47,17 +49,25 @@ public class SignInDialogFragment extends DialogFragment {
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, String buttonLabel) {
-        return newInstance(title, message, imageSource, 1, buttonLabel, "", "", 0, 0);
+        return newInstance(title, message, "", imageSource, 1, buttonLabel, "", "", 0, 0);
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
-                                                String firstButtonLabel, String secondButtonLabel,
-                                                String thirdButtonLabel, int secondButtonAction,
-                                                int thirdButtonAction) {
+                                                   String firstButtonLabel, String secondButtonLabel,
+                                                   String thirdButtonLabel, int secondButtonAction,
+                                                   int thirdButtonAction) {
+        return newInstance(title, message, "", imageSource, numberOfButtons, firstButtonLabel, secondButtonLabel, thirdButtonLabel, secondButtonAction, thirdButtonAction);
+    }
+
+    public static SignInDialogFragment newInstance(String title, String message, String messageSelfhosted, int imageSource, int numberOfButtons,
+                                                   String firstButtonLabel, String secondButtonLabel,
+                                                   String thirdButtonLabel, int secondButtonAction,
+                                                   int thirdButtonAction) {
         SignInDialogFragment adf = new SignInDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_TITLE, title);
         bundle.putString(ARG_DESCRIPTION, message);
+        bundle.putString(ARG_SELFHOSTED, messageSelfhosted);
         bundle.putInt(ARG_IMAGE, imageSource);
         bundle.putInt(ARG_NUMBER_OF_BUTTONS, numberOfButtons);
         bundle.putString(ARG_FIRST_BUTTON_LABEL, firstButtonLabel);
@@ -80,6 +90,7 @@ public class SignInDialogFragment extends DialogFragment {
         mImageView = (ImageView) v.findViewById(R.id.nux_dialog_image);
         mTitleTextView = (WPTextView) v.findViewById(R.id.nux_dialog_title);
         mDescriptionTextView = (WPTextView) v.findViewById(R.id.nux_dialog_description);
+        mDescriptionSelfHostedTextView = (WPTextView) v.findViewById(R.id.nux_dialog_description_selfhosted);
         mFooterBottomButton = (WPTextView) v.findViewById(R.id.nux_dialog_left_button);
         mFooterCenterButton = (WPTextView) v.findViewById(R.id.nux_dialog_center_button);
         mFooterTopButton = (WPTextView) v.findViewById(R.id.nux_dialog_right_button);
@@ -87,6 +98,8 @@ public class SignInDialogFragment extends DialogFragment {
 
         mTitleTextView.setText(arguments.getString(ARG_TITLE));
         mDescriptionTextView.setText(arguments.getString(ARG_DESCRIPTION));
+        if (!TextUtils.isEmpty(arguments.getString(ARG_SELFHOSTED)))
+            mDescriptionSelfHostedTextView.setText(arguments.getString(ARG_SELFHOSTED));
         mImageView.setImageResource(arguments.getInt(ARG_IMAGE));
 
         View.OnClickListener clickListenerDismiss = new View.OnClickListener() {
