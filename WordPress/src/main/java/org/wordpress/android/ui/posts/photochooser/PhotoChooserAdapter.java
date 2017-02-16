@@ -18,6 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.OnPhotoChooserListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,8 +26,8 @@ import java.util.Comparator;
 
 class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.ThumbnailViewHolder> {
 
-    interface OnMediaLoadedListener {
-        void onMediaLoaded(boolean isEmpty);
+    interface OnAdapterLoadedListener {
+        void onAdapterLoaded(boolean isEmpty);
     }
 
     private class PhotoChooserItem {
@@ -34,6 +35,8 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         private Uri uri;
         private boolean isVideo;
     }
+
+    static final int NUM_COLUMNS = 3;
 
     private class UriList extends ArrayList<Uri> {
         private int indexOfUri(Uri imageUri) {
@@ -49,29 +52,29 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     private final UriList mSelectedUris = new UriList();
 
     private final Context mContext;
-    private final int mThumbWidth;
-    private final int mThumbHeight;
+    private int mThumbWidth;
+    private int mThumbHeight;
 
     private boolean mIsMultiSelectEnabled;
 
     private final ThumbnailLoader mThumbnailLoader;
     private final OnPhotoChooserListener mPhotoListener;
-    private final OnMediaLoadedListener mLoadedListener;
+    private final OnAdapterLoadedListener mLoadedListener;
     private final ArrayList<PhotoChooserItem> mMediaList = new ArrayList<>();
 
     public PhotoChooserAdapter(Context context,
-                               int thumbWidth,
-                               int thumbHeight,
                                OnPhotoChooserListener photoListener,
-                               OnMediaLoadedListener loadedListener) {
+                               OnAdapterLoadedListener loadedListener) {
         super();
         mContext = context;
         mPhotoListener = photoListener;
         mLoadedListener = loadedListener;
-        mThumbWidth = thumbWidth;
-        mThumbHeight = thumbHeight;
-        setHasStableIds(true);
         mThumbnailLoader = new ThumbnailLoader(context);
+        setHasStableIds(true);
+
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
+        mThumbWidth = displayWidth / NUM_COLUMNS;
+        mThumbHeight = (int) (mThumbWidth * 0.75f);
     }
 
     void loadDeviceMedia() {
@@ -350,7 +353,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             mMediaList.addAll(tmpList);
             notifyDataSetChanged();
             if (mLoadedListener != null) {
-                mLoadedListener.onMediaLoaded(isEmpty());
+                mLoadedListener.onAdapterLoaded(isEmpty());
             }
         }
     }

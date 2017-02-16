@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -417,6 +418,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        resizePhotoChooser();
+    }
+
     private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
 
     private boolean isPhotoChooserShowing() {
@@ -429,17 +436,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return true;
     }
 
-    private void initPhotoChooser() {
-        int containerHeight;
-        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+    private void resizePhotoChooser() {
+        if (mPhotoChooserContainer == null) return;
+
         if (DisplayUtils.isLandscape(this)) {
-            containerHeight = (int) (displayHeight * 0.25f);
+            mPhotoChooserContainer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
         } else {
-            containerHeight = (int) (displayHeight * 0.5f);
+            int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+            int containerHeight = (int) (displayHeight * 0.5f);
+            mPhotoChooserContainer.getLayoutParams().height = containerHeight;
         }
 
+        if (mPhotoChooserFragment != null) {
+            mPhotoChooserFragment.loadDeviceMedia();
+        }
+    }
+
+    private void initPhotoChooser() {
         mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
-        mPhotoChooserContainer.getLayoutParams().height = containerHeight;
+        resizePhotoChooser();
 
         mPhotoChooserFragment = PhotoChooserFragment.newInstance();
 

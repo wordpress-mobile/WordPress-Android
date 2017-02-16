@@ -19,15 +19,15 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.ui.posts.photochooser.PhotoChooserAdapter.OnMediaLoadedListener;
 
 import java.util.ArrayList;
 
+import static org.wordpress.android.ui.posts.photochooser.PhotoChooserAdapter.NUM_COLUMNS;
+
 public class PhotoChooserFragment extends Fragment {
 
-    private static final int NUM_COLUMNS = 3;
     private static final String KEY_MULTI_SELECT_ENABLED = "multi_select_enabled";
     private static final String KEY_SELECTED_ITEMS = "selected_items";
 
@@ -105,11 +105,10 @@ public class PhotoChooserFragment extends Fragment {
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), NUM_COLUMNS);
+
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
-        mRecycler.setLayoutManager(layoutManager);
 
         mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +131,7 @@ public class PhotoChooserFragment extends Fragment {
             }
         });
 
-        loadDevicePhotos();
+        loadDeviceMedia();
 
         return view;
     }
@@ -210,9 +209,9 @@ public class PhotoChooserFragment extends Fragment {
         }
     };
 
-    private final OnMediaLoadedListener mLoadedListener = new OnMediaLoadedListener() {
+    private final OnAdapterLoadedListener mLoadedListener = new OnAdapterLoadedListener() {
         @Override
-        public void onMediaLoaded(boolean isEmpty) {
+        public void onAdapterLoaded(boolean isEmpty) {
             showEmptyView(isEmpty);
         }
     };
@@ -268,13 +267,8 @@ public class PhotoChooserFragment extends Fragment {
 
     private PhotoChooserAdapter getAdapter() {
         if (mAdapter == null) {
-            int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
-            int imageWidth = displayWidth / NUM_COLUMNS;
-            int imageHeight = (int) (imageWidth * 0.75f);
             mAdapter = new PhotoChooserAdapter(
                     getActivity(),
-                    imageWidth,
-                    imageHeight,
                     mPhotoListener,
                     mLoadedListener);
         }
@@ -282,9 +276,15 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     /*
-     * populates the adapter with photos stored on the device
+     * populates the adapter with media stored on the device
      */
-    private void loadDevicePhotos() {
+    public void loadDeviceMedia() {
+        if (mAdapter != null) {
+            mRecycler.setAdapter(null);
+            mAdapter = null;
+        }
+
+        mRecycler.setLayoutManager(new GridLayoutManager(getActivity(), NUM_COLUMNS));
         mRecycler.setAdapter(getAdapter());
         getAdapter().loadDeviceMedia();
     }
