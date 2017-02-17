@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.FetchedMediaListPayload;
 
 @ActionEnum
 public enum MediaAction implements IAction {
@@ -30,8 +30,8 @@ public enum MediaAction implements IAction {
     PUSHED_MEDIA,
     @Action(payloadType = ProgressPayload.class)
     UPLOADED_MEDIA,
-    @Action(payloadType = MediaListPayload.class)
-    FETCHED_ALL_MEDIA,
+    @Action(payloadType = FetchedMediaListPayload.class)
+    FETCHED_MEDIA_LIST,
     @Action(payloadType = MediaPayload.class)
     FETCHED_MEDIA,
     @Action(payloadType = MediaPayload.class)

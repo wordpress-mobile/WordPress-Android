@@ -102,15 +102,15 @@ public class MediaStore extends Store {
     /**
      * Actions: FETCH(ED)_ALL_MEDIA, PUSH(ED)_MEDIA, DELETE(D)_MEDIA, and REMOVE_MEDIA
      */
-    public static class MediaListPayload extends Payload {
+    public static class FetchedMediaListPayload extends Payload {
         public SiteModel site;
         public MediaError error;
         public List<MediaModel> mediaList;
         public MediaFilter filter;
-        public MediaListPayload(SiteModel site, List<MediaModel> mediaList, MediaFilter filter) {
+        public FetchedMediaListPayload(SiteModel site, List<MediaModel> mediaList, MediaFilter filter) {
             this(site, mediaList, null, filter);
         }
-        public MediaListPayload(SiteModel site, List<MediaModel> mediaList, MediaError error, MediaFilter filter) {
+        public FetchedMediaListPayload(SiteModel site, List<MediaModel> mediaList, MediaError error, MediaFilter filter) {
             this.site = site;
             this.mediaList = mediaList;
             this.error = error;
@@ -278,8 +278,8 @@ public class MediaStore extends Store {
             case UPLOADED_MEDIA:
                 handleMediaUploaded((ProgressPayload) action.getPayload());
                 break;
-            case FETCHED_ALL_MEDIA:
-                handleAllMediaFetched((MediaListPayload) action.getPayload());
+            case FETCHED_MEDIA_LIST:
+                handleAllMediaFetched((FetchedMediaListPayload) action.getPayload());
                 break;
             case FETCHED_MEDIA:
                 handleMediaFetched((MediaPayload) action.getPayload());
@@ -587,8 +587,8 @@ public class MediaStore extends Store {
         emitChange(onMediaUploaded);
     }
 
-    private void handleAllMediaFetched(@NonNull MediaListPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_ALL_MEDIA, payload.mediaList);
+    private void handleAllMediaFetched(@NonNull FetchedMediaListPayload payload) {
+        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCHED_MEDIA_LIST, payload.mediaList);
 
         if (!payload.isError()) {
             MediaSqlUtils.deleteAllSiteMedia(payload.site);
