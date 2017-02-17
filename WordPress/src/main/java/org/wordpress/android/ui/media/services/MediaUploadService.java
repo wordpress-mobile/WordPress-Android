@@ -273,7 +273,8 @@ public class MediaUploadService extends Service {
     }
 
     private void dispatchUploadAction(@NonNull final MediaModel media) {
-        AppLog.i(T.MEDIA, "Dispatching upload action: " + media.getTitle());
+        AppLog.i(T.MEDIA, "Dispatching upload action for media with id: " + media.getId() +
+                " and path: " + media.getFilePath());
         media.setUploadState(UploadState.UPLOADING.name());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
@@ -286,7 +287,8 @@ public class MediaUploadService extends Service {
     }
 
     private void dispatchCancelAction(@NonNull final MediaModel media) {
-        AppLog.i(T.MEDIA, "Dispatching cancel upload action: " + media.getFilePath());
+        AppLog.i(T.MEDIA, "Dispatching cancel upload action for media with id: " + media.getId() +
+                " and path: " + media.getFilePath());
         MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
