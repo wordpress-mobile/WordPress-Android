@@ -28,6 +28,9 @@ import static org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.N
 
 class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.ThumbnailViewHolder> {
 
+    private static final float SCALE_NORMAL = 1.0f;
+    private static final float SCALE_SELECTED = .85f;
+
     interface OnAdapterLoadedListener {
         void onAdapterLoaded(boolean isEmpty);
     }
@@ -113,11 +116,10 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             holder.txtSelectionCount.setVisibility(View.GONE);
         }
 
-        // reset thumbnail scale if it's still set when multiselect isn't enabled - this is
-        // due to the scale animation run when the item was selection
-        if (!mIsMultiSelectEnabled && holder.imgThumbnail.getScaleX() < 1.0f) {
-            holder.imgThumbnail.setScaleX(1.0f);
-            holder.imgThumbnail.setScaleY(1.0f);
+        // ensure thumbnail scale is reset when not selected
+        if (!mIsMultiSelectEnabled && holder.imgThumbnail.getScaleX() != SCALE_NORMAL) {
+            holder.imgThumbnail.setScaleX(SCALE_NORMAL);
+            holder.imgThumbnail.setScaleY(SCALE_NORMAL);
         }
 
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
@@ -187,9 +189,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
 
         // scale the thumbnail
         if (isSelected) {
-            AniUtils.scale(holder.imgThumbnail, 1.0f, .8f, AniUtils.Duration.SHORT);
+            AniUtils.scale(holder.imgThumbnail, SCALE_NORMAL, SCALE_SELECTED, AniUtils.Duration.SHORT);
         } else {
-            AniUtils.scale(holder.imgThumbnail, .8f, 1.0f, AniUtils.Duration.SHORT);
+            AniUtils.scale(holder.imgThumbnail, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
         }
 
         if (mPhotoListener != null) {
