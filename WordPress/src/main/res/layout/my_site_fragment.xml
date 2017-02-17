@@ -404,6 +404,7 @@
             app:srcCompat="@drawable/my_site_no_sites_drake" />
 
         <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/my_site_no_site_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
@@ -414,6 +415,7 @@
             android:fontFamily="sans-serif-light" />
 
         <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/my_site_no_site_prompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"

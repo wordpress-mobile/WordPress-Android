@@ -78,6 +78,7 @@ public class MySiteFragment extends Fragment
     private ScrollView mScrollView;
     private ImageView mNoSiteDrakeImageView;
     private WPTextView mCurrentPlanNameTextView;
+    private WPTextView mAddSiteButtonView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -157,6 +158,7 @@ public class MySiteFragment extends Fragment
         mFabView = rootView.findViewById(R.id.fab_button);
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = (RelativeLayout) rootView.findViewById(R.id.row_pages);
+        mAddSiteButtonView = (WPTextView) rootView.findViewById(R.id.my_site_add_site_btn);
 
         // hide the FAB the first time the fragment is created in order to animate it in onResume()
         if (savedInstanceState == null) {
@@ -254,7 +256,7 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
+        mAddSiteButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SitePickerActivity.addSite(getActivity());
@@ -333,17 +335,27 @@ public class MySiteFragment extends Fragment
         }
 
         if (blog == null) {
-            mScrollView.setVisibility(View.GONE);
-            mFabView.setVisibility(View.GONE);
-            mNoSiteView.setVisibility(View.VISIBLE);
+            showNoSitesView();
 
-            // if the screen height is too short, we can just hide the drake illustration
-            Activity activity = getActivity();
-            boolean drakeVisibility = DisplayUtils.getDisplayPixelHeight(activity) >= 500;
-            if (drakeVisibility) {
-                mNoSiteDrakeImageView.setVisibility(View.VISIBLE);
+            return;
+        } else if (blog.getAutomatedTransfer()) {
+            showNoSitesView();
+
+            int numBlogs = WordPress.wpDB.getNumBlogs();
+            WPTextView title = (WPTextView) getView().findViewById(R.id.my_site_no_site_title);
+            WPTextView prompt = (WPTextView) getView().findViewById(R.id.my_site_no_site_prompt);
+            title.setText("Your site is not supported in this version of the app. Please update your app in the Play Store");
+
+            if (numBlogs == 1) {
+                prompt.setText("Or you can add a new site below");
             } else {
-                mNoSiteDrakeImageView.setVisibility(View.GONE);
+                prompt.setText("Click below to select another site");
+                mAddSiteButtonView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showSitePicker();
+                    }
+                });
             }
 
             return;
@@ -395,6 +407,21 @@ public class MySiteFragment extends Fragment
         // Do not show pages menu item to Collaborators.
         int pageVisibility = (isAdminOrSelfHosted || blog.hasCapability(Capability.EDIT_PAGES)) ? View.VISIBLE : View.GONE;
         mPageView.setVisibility(pageVisibility);
+    }
+
+    private void showNoSitesView() {
+        mScrollView.setVisibility(View.GONE);
+        mFabView.setVisibility(View.GONE);
+        mNoSiteView.setVisibility(View.VISIBLE);
+
+        // if the screen height is too short, we can just hide the drake illustration
+        Activity activity = getActivity();
+        boolean drakeVisibility = DisplayUtils.getDisplayPixelHeight(activity) >= 500;
+        if (drakeVisibility) {
+            mNoSiteDrakeImageView.setVisibility(View.VISIBLE);
+        } else {
+            mNoSiteDrakeImageView.setVisibility(View.GONE);
+        }
     }
 
     private void toggleAdminVisibility(@Nullable final Blog blog) {
