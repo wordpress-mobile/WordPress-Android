@@ -5,7 +5,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -31,7 +30,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -78,8 +76,9 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
@@ -91,10 +90,9 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
-import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
-import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -139,10 +137,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
-
-import static android.R.attr.path;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
@@ -436,14 +430,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+        if (mUploadService != null) {
+            unbindService(mUploadConnection);
+        }
         super.onStop();
     }
 
@@ -793,24 +783,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onUploadSuccess(MediaModel media) {
-        if (mEditorMediaUploadListener != null && media.getFileName() != null) {
-            MediaModel pendingMedia = getPendingUploadWithName(media.getFileName());
-            if (pendingMedia != null) {
-                mEditorMediaUploadListener.onMediaUploadSucceeded(
-                        String.valueOf(pendingMedia.getMediaId()),
-                        WPStoreUtils.fromMediaModel(media));
-                mPendingUploads.remove(pendingMedia);
-            }
+        if (mEditorMediaUploadListener != null && media != null) {
+            mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
+                    WPStoreUtils.fromMediaModel(media));
         }
-    }
-
-    private MediaModel getPendingUploadWithName(@NonNull String path) {
-        for (MediaModel media : mPendingUploads) {
-            if (media.getFileName().equals(path)) {
-                return media;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -819,12 +795,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onUploadError(MediaModel media, MediaStore.MediaError error) {
-        mEditorMediaUploadListener.onMediaUploadFailed(String.valueOf(media.getId()), error.message);
+        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
+        String localMediaId = String.valueOf(media.getId());
+        if (error.type == MediaErrorType.GENERIC_ERROR) {
+            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, getString(R.string.tap_to_try_again));
+        } else {
+            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, error.message);
+        }
     }
 
     @Override
     public void onUploadProgress(MediaModel media, float progress) {
-        mEditorMediaUploadListener.onMediaUploadProgress(String.valueOf(media.getId()), progress);
+        String localMediaId = String.valueOf(media.getId());
+        mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
     }
 
     private void launchPictureLibrary() {
@@ -1175,7 +1158,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             while (matcher.find()) {
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
-                MediaFile mediaFile = queueFileForUpload(uri, getContentResolver().getType(uri), null, "failed");
+                MediaFile mediaFile = WPStoreUtils.fromMediaModel(queueFileForUpload(uri,
+                        getContentResolver().getType(uri), null, "failed"));
                 if (mediaFile == null) {
                     continue;
                 }
@@ -1518,8 +1502,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        MediaFile mediaFile = queueFileForUpload(uri, getContentResolver().getType(uri), null);
-        if (mediaFile != null) {
+        MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri), null);
+        MediaFile mediaFile = WPStoreUtils.fromMediaModel(media);
+        if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
         }
 
@@ -1698,86 +1683,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     };
 
-    /**
-     * Handles media upload notifications. Used by the visual editor when uploading local media, and for both
-     * the visual and the legacy editor to create a gallery after media selection from local media.
-     */
-    @SuppressWarnings("unused")
-    public void onEventMainThread(MediaEvents.MediaUploadSucceeded event) {
-        for (Long galleryId : mPendingGalleryUploads.keySet()) {
-            if (mPendingGalleryUploads.get(galleryId).contains(event.mLocalMediaId)) {
-                if (mEditorMediaUploadListener != null) {
-                    // Notify the visual editor of gallery image upload
-                    int remaining = mPendingGalleryUploads.get(galleryId).size() - 1;
-                    mEditorMediaUploadListener.onGalleryMediaUploadSucceeded(galleryId, Long.parseLong(event.mRemoteMediaId), remaining);
-                } else {
-                    handleGalleryImageUploadedLegacyEditor(galleryId, Long.parseLong(event.mRemoteMediaId));
-                }
-
-                mPendingGalleryUploads.get(galleryId).remove(event.mLocalMediaId);
-                if (mPendingGalleryUploads.get(galleryId).size() == 0) {
-                    mPendingGalleryUploads.remove(galleryId);
-                }
-
-                if (mPendingGalleryUploads.size() == 0) {
-                    stopMediaUploadService();
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(
-                            Context.NOTIFICATION_SERVICE);
-                    notificationManager.cancel(10);
-                }
-
-                return;
-            }
-        }
-
-        // Notify visual editor that a normal media item has finished uploading (not part of a gallery)
-        if (mEditorMediaUploadListener != null) {
-            MediaFile mediaFile = new MediaFile();
-            mediaFile.setPostID(mPost.getId());
-            mediaFile.setMediaId(event.mRemoteMediaId);
-            mediaFile.setFileURL(event.mRemoteMediaUrl);
-            mediaFile.setVideoPressShortCode(event.mSecondaryRemoteMediaId);
-            mediaFile.setThumbnailURL(WordPressMediaUtils.getVideoPressVideoPosterFromURL(event.mRemoteMediaUrl));
-
-            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalMediaId, mediaFile);
-        }
-    }
-
-    private void handleGalleryImageUploadedLegacyEditor(Long galleryId, long remoteId) {
-        SpannableStringBuilder postContent;
-        if (mEditorFragment.getSpannedContent() != null) {
-            // needed by the legacy editor to save local drafts
-            postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
-        } else {
-            try {
-                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
-            } catch (IllegalEditorStateException e) {
-                AppLog.e(T.EDITOR, "Impossible to handle gallery upload, we weren't able to get content from the post");
-                return;
-            }
-        }
-        int selectionStart = 0;
-        int selectionEnd = postContent.length();
-
-        MediaGalleryImageSpan[] gallerySpans = postContent.getSpans(selectionStart, selectionEnd,
-                MediaGalleryImageSpan.class);
-        if (gallerySpans.length != 0) {
-            for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
-                MediaGallery gallery = gallerySpan.getMediaGallery();
-                if (gallery.getUniqueId() == galleryId) {
-                    ArrayList<Long> galleryIds = gallery.getIds();
-                    galleryIds.add(remoteId);
-                    gallery.setIds(galleryIds);
-                    gallerySpan.setMediaGallery(gallery);
-                    int spanStart = postContent.getSpanStart(gallerySpan);
-                    int spanEnd = postContent.getSpanEnd(gallerySpan);
-                    postContent.setSpan(gallerySpan, spanStart, spanEnd,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-            }
-        }
-    }
-
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {
             MediaListPayload payload = new MediaListPayload(mSite, null, null);
@@ -1853,13 +1758,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
 
     private void doBindUploadService(Intent intent) {
-        bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
-        mUploadServiceBound = true;
+        mUploadServiceBound = bindService(intent, mUploadConnection,
+                Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
     }
 
     private void doUnbindUploadService() {
         if (mUploadServiceBound) {
             unbindService(mUploadConnection);
+            mUploadServiceBound = false;
         }
     }
 
@@ -1899,11 +1805,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * @param mediaIdOut
      *  the new {@link org.wordpress.android.util.helpers.MediaFile} ID is added if non-null
      */
-    private MediaFile queueFileForUpload(Uri uri, String mimeType, ArrayList<Long> mediaIdOut) {
+    private MediaModel queueFileForUpload(Uri uri, String mimeType, ArrayList<Long> mediaIdOut) {
         return queueFileForUpload(uri, mimeType, mediaIdOut, "queued");
     }
 
-    private MediaFile queueFileForUpload(Uri uri, String mimeType, ArrayList<Long> mediaIdOut, String startingState) {
+    private MediaModel queueFileForUpload(Uri uri, String mimeType, ArrayList<Long> mediaIdOut, String startingState) {
         String path = getRealPathFromURI(uri);
 
         // Invalid file path
@@ -1952,7 +1858,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mPendingUploads.add(media);
         startMediaUploadService();
 
-        return WPStoreUtils.fromMediaModel(media);
+        return media;
     }
 
     /**
