@@ -791,10 +791,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onUploadError(MediaModel media, MediaStore.MediaError error) {
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
         String localMediaId = String.valueOf(media.getId());
-        if (error.type == MediaErrorType.GENERIC_ERROR) {
-            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, getString(R.string.tap_to_try_again));
-        } else {
+        if (!TextUtils.isEmpty(error.message)) {
             mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, error.message);
+        } else {
+            switch (error.type) {
+                default:
+                    mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, getString(R.string.tap_to_try_again));
+            }
         }
         removeMediaFromPendingList(media);
     }
