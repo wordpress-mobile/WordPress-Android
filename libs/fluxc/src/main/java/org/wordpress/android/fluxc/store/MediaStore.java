@@ -565,8 +565,14 @@ public class MediaStore extends Store {
     private void handleMediaListFetched(@NonNull FetchMediaListResponsePayload payload) {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCHED_MEDIA_LIST, payload.mediaList);
 
-        if (!payload.isError()) {
-            MediaSqlUtils.deleteAllSiteMedia(payload.site);
+        if (payload.isError()) {
+            onMediaChanged.error = payload.error;
+        } else {
+            // Clear existing media if this is a fresh fetch (loadMore = false in the original request)
+            // This is the simplest way of keeping our local media in sync with remote media (in case of deletions)
+            if (!payload.loadedMore) {
+                MediaSqlUtils.deleteAllSiteMedia(payload.site);
+            }
             if (!payload.mediaList.isEmpty()) {
                 for (MediaModel media : payload.mediaList) {
                     updateMedia(media, false);
