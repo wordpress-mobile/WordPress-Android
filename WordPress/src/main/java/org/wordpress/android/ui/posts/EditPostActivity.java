@@ -1744,7 +1744,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mMediaUploadService.setListener(EditPostActivity.this);
             if (!mPendingUploads.isEmpty()) {
                 for (MediaModel media : mPendingUploads) {
-                    mMediaUploadService.addMediaToQueue(media);
+                    if (media.getUploadState().equals(UploadState.QUEUED.name())) {
+                        mMediaUploadService.addMediaToQueue(media);
+                    }
                 }
             }
         }
@@ -1779,7 +1781,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             startService(intent);
         } else if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             for (MediaModel media : mPendingUploads) {
-                mMediaUploadService.addMediaToQueue(media);
+                if (media.getUploadState().equals(UploadState.QUEUED.name())) {
+                    mMediaUploadService.addMediaToQueue(media);
+                }
             }
         }
     }
