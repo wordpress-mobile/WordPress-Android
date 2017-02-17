@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPStoreUtils;
+import org.wordpress.android.util.FluxCUtils;
 
 import javax.inject.Inject;
 
@@ -62,7 +62,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
         }
 
         // If not signed into WordPress inform the user
-        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_account, ToastUtils.Duration.LONG);
             finish();
             return;

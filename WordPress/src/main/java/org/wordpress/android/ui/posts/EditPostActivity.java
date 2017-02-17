@@ -115,7 +115,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.WPStoreUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -218,8 +218,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Inject MediaStore mMediaStore;
 
     // Upload service
-    private MediaUploadService.MediaUploadBinder mUploadService;
-    private boolean mUploadServiceBound;
+    private MediaUploadService.MediaUploadBinder mMediaUploadService;
+    private boolean mMediaUploadServiceBound;
 
     private SiteModel mSite;
 
@@ -777,7 +777,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onUploadSuccess(MediaModel media) {
         if (mEditorMediaUploadListener != null && media != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                    WPStoreUtils.fromMediaModel(media));
+                    FluxCUtils.fromMediaModel(media));
         }
     }
 
@@ -1096,7 +1096,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         if (media != null) {
             trackAddMediaEvents(media.isVideo(), true);
-            mEditorFragment.appendMediaFile(WPStoreUtils.fromMediaModel(media), media.getUrl(), WordPress.sImageLoader);
+            mEditorFragment.appendMediaFile(FluxCUtils.fromMediaModel(media), media.getUrl(), WordPress.sImageLoader);
         }
     }
 
@@ -1150,7 +1150,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             while (matcher.find()) {
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
-                MediaFile mediaFile = WPStoreUtils.fromMediaModel(queueFileForUpload(uri,
+                MediaFile mediaFile = FluxCUtils.fromMediaModel(queueFileForUpload(uri,
                         getContentResolver().getType(uri), null, "failed"));
                 if (mediaFile == null) {
                     continue;
@@ -1433,7 +1433,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        MediaPayload payload = new MediaPayload(mSite, WPStoreUtils.fromMediaFile(mediaFile));
+        MediaPayload payload = new MediaPayload(mSite, FluxCUtils.fromMediaFile(mediaFile));
         mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(payload));
     }
 
@@ -1495,7 +1495,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri), null);
-        MediaFile mediaFile = WPStoreUtils.fromMediaModel(media);
+        MediaFile mediaFile = FluxCUtils.fromMediaModel(media);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
         }
@@ -1730,34 +1730,34 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private ServiceConnection mUploadConnection = new ServiceConnection() {
+    private ServiceConnection mMediaUploadConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mUploadService = (MediaUploadService.MediaUploadBinder) service;
-            mUploadService.setListener(EditPostActivity.this);
+            mMediaUploadService = (MediaUploadService.MediaUploadBinder) service;
+            mMediaUploadService.setListener(EditPostActivity.this);
             if (!mPendingUploads.isEmpty()) {
                 for (MediaModel media : mPendingUploads) {
-                    mUploadService.addMediaToQueue(media);
+                    mMediaUploadService.addMediaToQueue(media);
                 }
             }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mUploadService = null;
+            mMediaUploadService = null;
         }
     };
 
 
     private void doBindUploadService(Intent intent) {
-        mUploadServiceBound = bindService(intent, mUploadConnection,
+        mMediaUploadServiceBound = bindService(intent, mMediaUploadConnection,
                 Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
     }
 
     private void doUnbindUploadService() {
-        if (mUploadServiceBound) {
-            unbindService(mUploadConnection);
-            mUploadServiceBound = false;
+        if (mMediaUploadServiceBound) {
+            unbindService(mMediaUploadConnection);
+            mMediaUploadServiceBound = false;
         }
     }
 
@@ -1765,26 +1765,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Starts the upload service to upload selected media.
      */
     private void startMediaUploadService() {
-        if (mUploadService == null) {
+        if (mMediaUploadService == null) {
             Intent intent = new Intent(this, MediaUploadService.class);
             intent.putExtra(MediaUploadService.SITE_KEY, mSite);
             doBindUploadService(intent);
             startService(intent);
         } else if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             for (MediaModel media : mPendingUploads) {
-                mUploadService.addMediaToQueue(media);
+                mMediaUploadService.addMediaToQueue(media);
             }
-        }
-    }
-
-    /**
-     * Stops the upload service.
-     */
-    private void stopMediaUploadService() {
-        if (mUploadService != null) {
-            stopService(new Intent(this, MediaUploadService.class));
-            unbindService(mUploadConnection);
-            mUploadService = null;
         }
     }
 
@@ -1890,7 +1879,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        if (mUploadService == null) {
+        if (mMediaUploadService == null) {
             startMediaUploadService();
         } else {
             // TODO: FluxC integration on retry?

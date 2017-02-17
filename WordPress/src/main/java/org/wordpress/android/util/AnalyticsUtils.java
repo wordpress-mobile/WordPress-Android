@@ -54,7 +54,7 @@ public class AnalyticsUtils {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
 
         metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
-        metadata.setUserConnected(WPStoreUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore));
+        metadata.setUserConnected(FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore));
         metadata.setWordPressComUser(accountStore.hasAccessToken());
         metadata.setJetpackUser(siteStore.hasJetpackSite());
         metadata.setNumBlogs(siteStore.getSitesCount());
