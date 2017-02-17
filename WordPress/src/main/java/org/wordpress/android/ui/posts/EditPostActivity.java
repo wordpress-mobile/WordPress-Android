@@ -223,6 +223,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
 
+    // Upload service
+    private MediaUploadService.MediaUploadBinder mUploadService;
+    private boolean mUploadServiceBound;
+
     private SiteModel mSite;
 
     // for keeping the media uri while asking for permissions
@@ -439,9 +443,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onStop() {
-        if (mUploadService != null) {
-            unbindService(mUploadConnection);
-        }
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -464,6 +465,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onDestroy() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
+        doUnbindUploadService();
         super.onDestroy();
     }
 
@@ -823,31 +825,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onUploadProgress(MediaModel media, float progress) {
         mEditorMediaUploadListener.onMediaUploadProgress(String.valueOf(media.getId()), progress);
-    }
-
-    private void startMediaUploadService(ArrayList<MediaModel> mediaToUpload) {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            AppLog.v(AppLog.T.MEDIA, "Unable to start MediaUploadService, internet connection required.");
-            return;
-        }
-
-        if (mUploadService != null) {
-            if (mediaToUpload != null && !mediaToUpload.isEmpty()) {
-                for (MediaModel media : mediaToUpload) {
-                    mUploadService.addMediaToQueue(media);
-                }
-                mediaToUpload.clear();
-            }
-        } else if (NetworkUtils.isNetworkAvailable(this)) {
-            Intent intent = new Intent(this, MediaUploadService.class);
-            intent.putExtra(MediaUploadService.SITE_KEY, mSite);
-            if (mediaToUpload != null) {
-                intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaToUpload);
-                bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
-                mediaToUpload.clear();
-            }
-            startService(intent);
-        }
     }
 
     private void launchPictureLibrary() {
@@ -1856,8 +1833,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private MediaUploadService.MediaUploadBinder mUploadService;
-
     private ServiceConnection mUploadConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -1876,6 +1851,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     };
 
+
+    private void doBindUploadService(Intent intent) {
+        bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+        mUploadServiceBound = true;
+    }
+
+    private void doUnbindUploadService() {
+        if (mUploadServiceBound) {
+            unbindService(mUploadConnection);
+        }
+    }
+
     /**
      * Starts the upload service to upload selected media.
      */
@@ -1883,7 +1870,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mUploadService == null) {
             Intent intent = new Intent(this, MediaUploadService.class);
             intent.putExtra(MediaUploadService.SITE_KEY, mSite);
-            bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
+            doBindUploadService(intent);
             startService(intent);
         } else if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             for (MediaModel media : mPendingUploads) {
@@ -2008,6 +1995,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mUploadService == null) {
             startMediaUploadService();
         } else {
+            // TODO: FluxC integration on retry?
         }
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
     }
