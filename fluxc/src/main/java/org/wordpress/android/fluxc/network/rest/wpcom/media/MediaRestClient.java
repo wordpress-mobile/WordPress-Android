@@ -46,7 +46,7 @@ import okhttp3.OkHttpClient;
  *
  * <ul>
  *     <li>Fetch existing media from a WP.com site
- *     (via {@link #fetchAllMedia(SiteModel, int)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
+ *     (via {@link #fetchMediaList(SiteModel, int)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
  *     <li>Push new media to a WP.com site
  *     (via {@link #uploadMedia(SiteModel, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
@@ -121,10 +121,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      */
     public void fetchMediaList(final SiteModel site, final int offset) {
         if (site == null) {
-            AppLog.w(T.MEDIA, "No site given with FETCH_ALL_MEDIA request, dispatching error.");
+            AppLog.w(T.MEDIA, "No site given with FETCH_MEDIA_LIST request, dispatching error.");
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyMediaListFetched(site, error);
+            notifyMediaListFetched(null, error);
             return;
         }
 
@@ -140,7 +140,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onResponse(MultipleMediaResponse response) {
                         List<MediaModel> mediaList = getMediaListFromRestResponse(response, site.getId());
                         if (mediaList != null) {
-                            AppLog.v(T.MEDIA, "Fetched all media for site. count=" + mediaList.size());
+                            AppLog.v(T.MEDIA, "Fetched media list for site with size: " + mediaList.size());
                             boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
                             notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore);
                         } else {
