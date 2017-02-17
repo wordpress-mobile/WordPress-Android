@@ -169,7 +169,7 @@ public class MediaUploadService extends Service {
 
     private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
         AppLog.w(T.MEDIA, "Error uploading media: " + event.error.message);
-        mCurrentUpload.setUploadState(MediaModel.UploadState.FAILED.toString());
+        mCurrentUpload.setUploadState(UploadState.FAILED.name());
         completeCurrentUpload();
         if (mListener != null) {
             mListener.onUploadError(event.media, event.error);
@@ -274,7 +274,7 @@ public class MediaUploadService extends Service {
 
     private void dispatchUploadAction(@NonNull final MediaModel media) {
         AppLog.i(T.MEDIA, "Dispatching upload action: " + media.getTitle());
-        media.setUploadState(UploadState.UPLOADING.toString());
+        media.setUploadState(UploadState.UPLOADING.name());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
         MediaPayload payload = new MediaPayload(mSite, media);
