@@ -186,7 +186,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
      */
-    public void fetchAllMedia(final SiteModel site, final int offset) {
+    public void fetchMediaList(final SiteModel site, final int offset) {
         if (site == null) {
             AppLog.w(T.MEDIA, "No site given with FETCH_ALL_MEDIA request, dispatching error.");
             // caller may be expecting a notification
