@@ -31,6 +31,7 @@ import javax.inject.Singleton;
 @Singleton
 public class MediaStore extends Store {
     public static class MediaFilter {
+        public static final int NUMBER = 20;
         public static final int ALL_NUMBER = -1;
         public static final int MAX_NUMBER = 100;
 
@@ -501,8 +502,9 @@ public class MediaStore extends Store {
     }
 
     private void performFetchAllMedia(MediaListPayload payload) {
+        List<MediaModel> mediaList = getAllSiteMedia(payload.site);
         if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
-            mMediaRestClient.fetchAllMedia(payload.site);
+            mMediaRestClient.fetchAllMedia(payload.site, mediaList.size());
         } else {
             mMediaXmlrpcClient.fetchAllMedia(payload.site);
         }
