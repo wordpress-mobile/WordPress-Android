@@ -161,15 +161,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                    AppLog.d(T.MEDIA, "media upload successful: " + media.getTitle());
                     MediaModel responseMedia = getMediaFromUploadResponse(response);
+                    AppLog.d(T.MEDIA, "media upload successful, local id=" + media.getId());
                     if (responseMedia != null) {
-                        responseMedia.setLocalSiteId(site.getId());
-                        responseMedia.setId(media.getId());
-                        notifyMediaUploaded(responseMedia, null);
-                    } else {
-                        notifyMediaUploaded(null, new MediaError(MediaErrorType.PARSE_ERROR));
+                        // We only get the media Id from the response
+                        media.setMediaId(responseMedia.getMediaId());
                     }
+                    fetchMedia(site, media, true);
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response.message());
                     MediaError error = new MediaError(fromHttpStatusCode(response.code()));
@@ -229,10 +227,14 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }));
     }
 
+    public void fetchMedia(final SiteModel site, final MediaModel media) {
+        fetchMedia(site, media, false);
+    }
+
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaItem
      */
-    public void fetchMedia(final SiteModel site, final MediaModel media) {
+    private void fetchMedia(final SiteModel site, final MediaModel media, final boolean isFreshUpload) {
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
@@ -247,9 +249,16 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 AppLog.v(T.MEDIA, "Fetched media for site via XMLRPC.GET_MEDIA_ITEM");
                 MediaModel responseMedia = getMediaFromXmlrpcResponse((HashMap) response);
                 if (responseMedia != null) {
-                    AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
+                    AppLog.v(T.MEDIA, "Fetched media with remoteId= " + media.getMediaId()
+                                      + " localId=" + media.getId());
                     responseMedia.setLocalSiteId(site.getId());
-                    notifyMediaFetched(site, responseMedia, null);
+                    // Keep the same local id after a fetch
+                    responseMedia.setId(media.getId());
+                    if (isFreshUpload) {
+                        notifyMediaUploaded(responseMedia, null);
+                    } else {
+                        notifyMediaFetched(site, responseMedia, null);
+                    }
                 } else {
                     AppLog.w(T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
                     MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
@@ -261,7 +270,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                 AppLog.v(T.MEDIA, "XMLRPC.GET_MEDIA_ITEM error response: " + error);
                 MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                notifyMediaFetched(site, media, mediaError);
+                if (isFreshUpload) {
+                    // we tried to fetch a media that's just uploaded but failed, so we should
+                    // return an upload error and not a fetch error as initially parsing the upload response failed
+                    notifyMediaUploaded(media, new MediaError(MediaErrorType.PARSE_ERROR));
+                } else {
+                    notifyMediaFetched(site, media, mediaError);
+                }
             }
         }));
     }
@@ -323,7 +338,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaUploaded(MediaModel media, MediaError error) {
+    private void notifyMediaUploaded(@NonNull MediaModel media, MediaError error) {
         ProgressPayload payload = new ProgressPayload(media, 1.f, error == null, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
