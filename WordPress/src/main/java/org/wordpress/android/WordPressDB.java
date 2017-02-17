@@ -912,6 +912,7 @@ public class WordPressDB {
                     blog.setBlogOptions(c.getString(c.getColumnIndex("blog_options")));
                 }
                 blog.setAdmin(c.getInt(c.getColumnIndex("isAdmin")) > 0);
+                blog.setAutomatedTransfer(c.getInt(c.getColumnIndex("isAutomatedTransfer")) > 0);
                 blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
                 blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
                 blog.setPlanShortName(c.getString(c.getColumnIndex("plan_product_name_short")));
