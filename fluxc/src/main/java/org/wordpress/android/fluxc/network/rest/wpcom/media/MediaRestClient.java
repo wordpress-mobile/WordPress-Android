@@ -73,7 +73,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      */
     public void pushMedia(final SiteModel site, final MediaModel media) {
-        if (site == null || media == null) {
+        if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             notifyMediaPushed(site, media, error);
@@ -120,14 +120,6 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
     public void fetchMediaList(final SiteModel site, final int offset) {
-        if (site == null) {
-            AppLog.w(T.MEDIA, "No site given with FETCH_MEDIA_LIST request, dispatching error.");
-            // caller may be expecting a notification
-            MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyMediaListFetched(null, error);
-            return;
-        }
-
         final Map<String, String> params = new HashMap<>();
         params.put("number", String.valueOf(MediaStore.NUM_MEDIA_PER_FETCH));
         if (offset > 0) {
@@ -163,7 +155,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * Gets a list of media items whose media IDs match the provided list.
      */
     public void fetchMedia(final SiteModel site, final MediaModel media) {
-        if (site == null || media == null) {
+        if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             notifyMediaFetched(site, media, error);
@@ -200,7 +192,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * Deletes media from a WP.com site whose media ID is in the provided list.
      */
     public void deleteMedia(final SiteModel site, final MediaModel media) {
-        if (site == null || media == null) {
+        if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             notifyMediaDeleted(site, media, error);
