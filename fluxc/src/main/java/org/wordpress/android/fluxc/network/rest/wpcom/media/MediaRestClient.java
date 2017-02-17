@@ -317,8 +317,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, List<MediaModel> media, boolean loadedMore, boolean canLoadMore) {
-        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media, loadedMore, canLoadMore);
+    private void notifyMediaListFetched(SiteModel site, List<MediaModel> media,
+                                        boolean loadedMore, boolean canLoadMore) {
+        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
+                loadedMore, canLoadMore);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
