@@ -119,7 +119,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchAllMedia(final SiteModel site, final int offset) {
+    public void fetchMediaList(final SiteModel site, final int offset) {
         if (site == null) {
             AppLog.w(T.MEDIA, "No site given with FETCH_ALL_MEDIA request, dispatching error.");
             // caller may be expecting a notification
