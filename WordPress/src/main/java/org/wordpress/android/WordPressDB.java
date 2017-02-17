@@ -647,6 +647,10 @@ public class WordPressDB {
         return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 0 LIMIT 1", null);
     }
 
+    public int getFirstVisibleAndNonAutomatedTransferBlogId() {
+        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 0 AND isAutomatedTransfer = 0 LIMIT 1", null);
+    }
+
     public int getFirstHiddenBlogId() {
         return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 1 LIMIT 1", null);
     }

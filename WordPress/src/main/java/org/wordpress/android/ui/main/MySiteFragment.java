@@ -109,7 +109,14 @@ public class MySiteFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        final Blog blog = WordPress.getBlog(mBlogLocalId);
+        Blog currentBlog = WordPress.getBlog(mBlogLocalId);
+        if (currentBlog.getAutomatedTransfer()) {
+            mBlogLocalId = WordPress.wpDB.getFirstVisibleAndNonAutomatedTransferBlogId();
+            currentBlog = WordPress.getBlog(mBlogLocalId);
+        }
+
+        final Blog blog = currentBlog;
+
 
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshBlogDetails(blog);
