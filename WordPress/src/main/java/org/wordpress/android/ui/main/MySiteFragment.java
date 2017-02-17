@@ -350,6 +350,7 @@ public class MySiteFragment extends Fragment
                 prompt.setText("Or you can add a new site below");
             } else {
                 prompt.setText("Click below to select another site");
+                mAddSiteButtonView.setText("select another site");
                 mAddSiteButtonView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
