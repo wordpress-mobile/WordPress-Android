@@ -569,7 +569,7 @@ public class ImageUtils {
             return null;
         }
 
-        bmpRotated.compress(fmt, 100, stream);
+        bmpRotated.compress(fmt, 90, stream);
         bmpResized.recycle();
         bmpRotated.recycle();
 
