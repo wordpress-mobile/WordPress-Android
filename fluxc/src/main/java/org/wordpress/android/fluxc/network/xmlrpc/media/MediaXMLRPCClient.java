@@ -188,7 +188,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
      */
     public void fetchMediaList(final SiteModel site, final int offset) {
         if (site == null) {
-            AppLog.w(T.MEDIA, "No site given with FETCH_ALL_MEDIA request, dispatching error.");
+            AppLog.w(T.MEDIA, "No site given with FETCH_MEDIA_LIST request, dispatching error.");
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             notifyMediaListFetched(null, error);
@@ -208,7 +208,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             public void onResponse(Object response) {
                 List<MediaModel> mediaList = getMediaListFromXmlrpcResponse(response, site.getId());
                 if (mediaList != null) {
-                    AppLog.v(T.MEDIA, "Fetched all media for site via XMLRPC.GET_MEDIA_LIBRARY");
+                    AppLog.v(T.MEDIA, "Fetched media list for site via XMLRPC.GET_MEDIA_LIBRARY");
                     boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
                     notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore);
                 } else {
