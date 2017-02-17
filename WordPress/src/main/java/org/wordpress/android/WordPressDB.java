@@ -756,7 +756,6 @@ public class WordPressDB {
         values.put("isHidden", blog.isHidden());
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
-        values.put("isHidden", blog.isHidden());
         values.put("plan_product_id", blog.getPlanID());
         values.put("plan_product_name_short", blog.getPlanShortName());
         values.put("capabilities", blog.getCapabilities());
