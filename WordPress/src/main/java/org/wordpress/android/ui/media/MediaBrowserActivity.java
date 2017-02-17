@@ -694,13 +694,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     };
 
     private void doBindDeleteService(Intent intent) {
-        bindService(intent, mDeleteConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
-        mDeleteServiceBound = true;
+        mDeleteServiceBound = bindService(intent, mDeleteConnection,
+                Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
     }
 
     private void doBindUploadService(Intent intent) {
-        bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
-        mUploadServiceBound = true;
+        mUploadServiceBound = bindService(intent, mUploadConnection,
+                Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
     }
 
     private void doUnbindDeleteService() {
