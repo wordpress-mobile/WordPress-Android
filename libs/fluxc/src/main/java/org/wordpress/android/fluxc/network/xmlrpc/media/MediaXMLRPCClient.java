@@ -190,14 +190,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
      */
     public void fetchAllMedia(final SiteModel site) {
-        if (site == null) {
-            AppLog.w(T.MEDIA, "No site given with FETCH_ALL_MEDIA request, dispatching error.");
-            // caller may be expecting a notification
-            MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyAllMediaFetched(null, null, error, null);
-            return;
-        }
-
         List<Object> params = getBasicParams(site, null);
         final MediaFilter filter = new MediaFilter();
         filter.number = MediaFilter.MAX_NUMBER;
@@ -243,7 +235,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaItem
      */
     private void fetchMedia(final SiteModel site, final MediaModel media, final boolean isFreshUpload) {
-        if (site == null || media == null) {
+        if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             notifyMediaFetched(site, media, error);
@@ -290,7 +282,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     public void deleteMedia(final SiteModel site, final MediaModel media) {
-        if (site == null || media == null) {
+        if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             notifyMediaDeleted(site, media, error);
