@@ -432,7 +432,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onStop() {
         if (mMediaUploadService != null) {
-            unbindService(mUploadConnection);
+            unbindService(mMediaUploadConnection);
         }
         super.onStop();
     }
@@ -1738,7 +1738,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private ServiceConnection mUploadConnection = new ServiceConnection() {
+    private ServiceConnection mMediaUploadConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMediaUploadService = (MediaUploadService.MediaUploadBinder) service;
@@ -1758,13 +1758,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
 
     private void doBindUploadService(Intent intent) {
-        mUploadServiceBound = bindService(intent, mUploadConnection,
+        mUploadServiceBound = bindService(intent, mMediaUploadConnection,
                 Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
     }
 
     private void doUnbindUploadService() {
         if (mUploadServiceBound) {
-            unbindService(mUploadConnection);
+            unbindService(mMediaUploadConnection);
             mUploadServiceBound = false;
         }
     }
