@@ -142,8 +142,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static android.R.attr.path;
-
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
         MediaUploadService.MediaUploadListener {
@@ -794,7 +792,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onUploadSuccess(MediaModel media) {
         if (mEditorMediaUploadListener != null && media.getFileName() != null) {
-            MediaModel pendingMedia = getPendingUploadWithName(media.getFileName());
+            MediaModel pendingMedia = getPendingUploadWithId(media.getId());
             if (pendingMedia != null) {
                 mEditorMediaUploadListener.onMediaUploadSucceeded(
                         String.valueOf(pendingMedia.getMediaId()),
@@ -804,9 +802,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private MediaModel getPendingUploadWithName(@NonNull String path) {
+    private MediaModel getPendingUploadWithId(@NonNull int id) {
         for (MediaModel media : mPendingUploads) {
-            if (media.getFileName().equals(path)) {
+            if (media.getId() == id) {
                 return media;
             }
         }
