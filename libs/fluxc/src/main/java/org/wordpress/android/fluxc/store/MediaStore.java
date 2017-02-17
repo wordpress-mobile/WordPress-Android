@@ -30,32 +30,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class MediaStore extends Store {
-    public static class MediaFilter {
-        public static final int NUMBER = 20;
-        public static final int ALL_NUMBER = -1;
-        public static final int MAX_NUMBER = 100;
-
-        public enum SortOrder {
-            DESCENDING, ASCENDING
-        }
-
-        public enum SortField {
-            DATE, TITLE, ID
-        }
-
-        public List<String> fields;
-        public int number;
-        public long postId;
-        public int offset;
-        public int page;
-        public SortOrder sortOrder;
-        public SortField sortField;
-        public String searchQuery;
-        public String after;
-        public String before;
-        public String mimeType;
-    }
-
     //
     // Payloads
     //
@@ -106,13 +80,15 @@ public class MediaStore extends Store {
         public SiteModel site;
         public MediaError error;
         public List<MediaModel> mediaList;
-        public MediaFilter filter;
+        public boolean loadedMore;
+        public boolean canLoadMore;
         public FetchMediaListResponsePayload(SiteModel site, List<MediaModel> mediaList, MediaError error,
-                                             MediaFilter filter) {
+                                             boolean loadedMore, boolean canLoadMore) {
             this.site = site;
             this.mediaList = mediaList;
             this.error = error;
-            this.filter = filter;
+            this.loadedMore = loadedMore;
+            this.canLoadMore = canLoadMore;
         }
     }
 
