@@ -30,6 +30,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class MediaStore extends Store {
+    public static final int NUM_MEDIA_PER_FETCH = 20;
+
     //
     // Payloads
     //
@@ -82,13 +84,17 @@ public class MediaStore extends Store {
         public List<MediaModel> mediaList;
         public boolean loadedMore;
         public boolean canLoadMore;
-        public FetchMediaListResponsePayload(SiteModel site, List<MediaModel> mediaList, MediaError error,
-                                             boolean loadedMore, boolean canLoadMore) {
+        public FetchMediaListResponsePayload(SiteModel site, List<MediaModel> mediaList, boolean loadedMore,
+                                             boolean canLoadMore) {
             this.site = site;
             this.mediaList = mediaList;
-            this.error = error;
             this.loadedMore = loadedMore;
             this.canLoadMore = canLoadMore;
+        }
+
+        public FetchMediaListResponsePayload(SiteModel site, MediaError error) {
+            this.site = site;
+            this.error = error;
         }
     }
 
@@ -495,7 +501,7 @@ public class MediaStore extends Store {
         if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mMediaRestClient.fetchAllMedia(payload.site, offset);
         } else {
-            mMediaXmlrpcClient.fetchAllMedia(payload.site);
+            mMediaXmlrpcClient.fetchAllMedia(payload.site, offset);
         }
     }
 
