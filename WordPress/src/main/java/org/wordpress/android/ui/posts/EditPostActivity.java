@@ -1758,13 +1758,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
 
     private void doBindUploadService(Intent intent) {
-        bindService(intent, mUploadConnection, Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
-        mUploadServiceBound = true;
+        mUploadServiceBound = bindService(intent, mUploadConnection,
+                Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
     }
 
     private void doUnbindUploadService() {
         if (mUploadServiceBound) {
             unbindService(mUploadConnection);
+            mUploadServiceBound = false;
         }
     }
 
