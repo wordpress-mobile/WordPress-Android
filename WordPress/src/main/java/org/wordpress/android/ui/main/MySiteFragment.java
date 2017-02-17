@@ -109,14 +109,7 @@ public class MySiteFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        Blog currentBlog = WordPress.getBlog(mBlogLocalId);
-        if (currentBlog.getAutomatedTransfer()) {
-            mBlogLocalId = WordPress.wpDB.getFirstVisibleAndNonAutomatedTransferBlogId();
-            currentBlog = WordPress.getBlog(mBlogLocalId);
-        }
-
-        final Blog blog = currentBlog;
-
+        final Blog blog = WordPress.getBlog(mBlogLocalId);
 
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshBlogDetails(blog);
@@ -334,7 +327,11 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    private void refreshBlogDetails(@Nullable final Blog blog) {
+    private void refreshBlogDetails(@Nullable Blog blog) {
+        if (blog != null && blog.getAutomatedTransfer()) {
+            mBlogLocalId = WordPress.wpDB.getFirstVisibleAndNonAutomatedTransferBlogId();
+            WordPress.setCurrentBlog(mBlogLocalId);
+        }
         if (!isAdded()) {
             return;
         }
