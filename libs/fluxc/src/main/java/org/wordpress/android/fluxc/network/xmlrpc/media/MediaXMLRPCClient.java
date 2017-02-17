@@ -161,8 +161,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                    AppLog.d(T.MEDIA, "media upload successful: " + media.getTitle());
                     MediaModel responseMedia = getMediaFromUploadResponse(response);
+                    AppLog.d(T.MEDIA, "media upload successful, local id=" + media.getId());
                     if (responseMedia != null) {
                         // We only get the media Id from the response
                         media.setMediaId(responseMedia.getMediaId());
@@ -257,8 +257,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 AppLog.v(T.MEDIA, "Fetched media for site via XMLRPC.GET_MEDIA_ITEM");
                 MediaModel responseMedia = getMediaFromXmlrpcResponse((HashMap) response);
                 if (responseMedia != null) {
-                    AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
+                    AppLog.v(T.MEDIA, "Fetched media with remoteId= " + media.getMediaId()
+                                      + " localId=" + media.getId());
                     responseMedia.setLocalSiteId(site.getId());
+                    // Keep the same local id after a fetch
+                    responseMedia.setId(media.getId());
                     if (isFreshUpload) {
                         notifyMediaUploaded(responseMedia, null);
                     } else {
