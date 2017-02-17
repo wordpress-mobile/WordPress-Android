@@ -241,11 +241,6 @@ public class ApiHelper {
                 return;
             }
 
-            if (blog.getAutomatedTransfer()) {
-                cancel(true);
-                return;
-            }
-
             mBlogIdentifier = new BlogIdentifier(blog.getUrl(), blog.getRemoteBlogId());
             if (refreshedBlogs.contains(mBlogIdentifier)) {
                 cancel(true);
