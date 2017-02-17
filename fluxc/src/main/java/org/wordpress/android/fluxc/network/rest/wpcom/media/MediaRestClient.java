@@ -47,7 +47,7 @@ import okhttp3.OkHttpClient;
  *
  * <ul>
  *     <li>Fetch existing media from a WP.com site
- *     (via {@link #fetchAllMedia(SiteModel)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
+ *     (via {@link #fetchAllMedia(SiteModel, int)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
  *     <li>Push new media to a WP.com site
  *     (via {@link #uploadMedia(SiteModel, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
@@ -59,9 +59,6 @@ import okhttp3.OkHttpClient;
 public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
     private Call mCurrentUploadCall;
-
-    private int mFetchAllOffset = 0;
-    private List<MediaModel> mFetchedMedia = new ArrayList<>();
 
     public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                            OkHttpClient.Builder okClientBuilder, AccessToken accessToken, UserAgent userAgent) {
@@ -123,7 +120,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchAllMedia(final SiteModel site) {
+    public void fetchAllMedia(final SiteModel site, int offset) {
         if (site == null) {
             AppLog.w(T.MEDIA, "No site given with FETCH_ALL_MEDIA request, dispatching error.");
             // caller may be expecting a notification
@@ -134,9 +131,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         final MediaFilter filter = new MediaFilter();
         filter.number = MediaFilter.ALL_NUMBER;
+        filter.offset = offset;
         final Map<String, String> params = new HashMap<>();
-        params.put("number", String.valueOf(MediaFilter.MAX_NUMBER));
-        params.put("offset", String.valueOf(mFetchAllOffset));
+        params.put("number", String.valueOf(MediaFilter.NUMBER));
+        params.put("offset", String.valueOf(offset));
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, params, MultipleMediaResponse.class,
                 new Listener<MultipleMediaResponse>() {
@@ -144,16 +142,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onResponse(MultipleMediaResponse response) {
                         List<MediaModel> responseMedia = getMediaListFromRestResponse(response, site.getId());
                         if (responseMedia != null) {
-                            mFetchedMedia.addAll(responseMedia);
-                            if (responseMedia.size() < MediaFilter.MAX_NUMBER) {
-                                AppLog.v(T.MEDIA, "Fetched all media for site. count=" + mFetchedMedia.size());
-                                notifyAllMediaFetched(site, mFetchedMedia, null, filter);
-                                mFetchAllOffset = 0;
-                                mFetchedMedia = new ArrayList<>();
-                            } else {
-                                mFetchAllOffset += MediaFilter.MAX_NUMBER;
-                                fetchAllMedia(site);
-                            }
+                            AppLog.v(T.MEDIA, "Fetched all media for site. count=" + responseMedia.size());
+                            notifyAllMediaFetched(site, responseMedia, null, filter);
                         } else {
                             AppLog.w(T.MEDIA, "could not parse Fetch all media response: " + response);
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
