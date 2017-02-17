@@ -100,7 +100,7 @@ public class MediaStore extends Store {
     }
 
     /**
-     * Actions: FETCH(ED)_ALL_MEDIA, PUSH(ED)_MEDIA, DELETE(D)_MEDIA, and REMOVE_MEDIA
+     * Actions: FETCH_MEDIA_LIST
      */
     public static class FetchedMediaListPayload extends Payload {
         public SiteModel site;
@@ -115,11 +115,6 @@ public class MediaStore extends Store {
             this.mediaList = mediaList;
             this.error = error;
             this.filter = filter;
-        }
-
-        @Override
-        public boolean isError() {
-            return error != null;
         }
     }
 
