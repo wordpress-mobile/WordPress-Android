@@ -218,7 +218,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Inject MediaStore mMediaStore;
 
     // Upload service
-    private MediaUploadService.MediaUploadBinder mUploadService;
+    private MediaUploadService.MediaUploadBinder mMediaUploadService;
     private boolean mUploadServiceBound;
 
     private SiteModel mSite;
@@ -431,7 +431,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onStop() {
-        if (mUploadService != null) {
+        if (mMediaUploadService != null) {
             unbindService(mUploadConnection);
         }
         super.onStop();
@@ -1741,18 +1741,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private ServiceConnection mUploadConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mUploadService = (MediaUploadService.MediaUploadBinder) service;
-            mUploadService.setListener(EditPostActivity.this);
+            mMediaUploadService = (MediaUploadService.MediaUploadBinder) service;
+            mMediaUploadService.setListener(EditPostActivity.this);
             if (!mPendingUploads.isEmpty()) {
                 for (MediaModel media : mPendingUploads) {
-                    mUploadService.addMediaToQueue(media);
+                    mMediaUploadService.addMediaToQueue(media);
                 }
             }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mUploadService = null;
+            mMediaUploadService = null;
         }
     };
 
@@ -1773,14 +1773,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Starts the upload service to upload selected media.
      */
     private void startMediaUploadService() {
-        if (mUploadService == null) {
+        if (mMediaUploadService == null) {
             Intent intent = new Intent(this, MediaUploadService.class);
             intent.putExtra(MediaUploadService.SITE_KEY, mSite);
             doBindUploadService(intent);
             startService(intent);
         } else if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             for (MediaModel media : mPendingUploads) {
-                mUploadService.addMediaToQueue(media);
+                mMediaUploadService.addMediaToQueue(media);
             }
         }
     }
@@ -1789,10 +1789,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Stops the upload service.
      */
     private void stopMediaUploadService() {
-        if (mUploadService != null) {
+        if (mMediaUploadService != null) {
             stopService(new Intent(this, MediaUploadService.class));
             unbindService(mUploadConnection);
-            mUploadService = null;
+            mMediaUploadService = null;
         }
     }
 
@@ -1898,7 +1898,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        if (mUploadService == null) {
+        if (mMediaUploadService == null) {
             startMediaUploadService();
         } else {
             // TODO: FluxC integration on retry?
