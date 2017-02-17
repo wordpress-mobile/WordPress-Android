@@ -1807,6 +1807,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         MediaModel media = mMediaStore.instantiateMediaModel();
+        AppLog.i(T.MEDIA, "New media instantiated localId=" + media.getId());
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
         String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
 
