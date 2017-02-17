@@ -856,7 +856,7 @@ public class WordPressDB {
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden",
-                             "plan_product_id", "plan_product_name_short", "capabilities"};
+                             "plan_product_id", "plan_product_name_short", "capabilities", "isAutomatedTransfer"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
