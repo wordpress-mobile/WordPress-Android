@@ -102,15 +102,13 @@ public class MediaStore extends Store {
     /**
      * Actions: FETCH_MEDIA_LIST
      */
-    public static class FetchedMediaListPayload extends Payload {
+    public static class FetchMediaListResponsePayload extends Payload {
         public SiteModel site;
         public MediaError error;
         public List<MediaModel> mediaList;
         public MediaFilter filter;
-        public FetchedMediaListPayload(SiteModel site, List<MediaModel> mediaList, MediaFilter filter) {
-            this(site, mediaList, null, filter);
-        }
-        public FetchedMediaListPayload(SiteModel site, List<MediaModel> mediaList, MediaError error, MediaFilter filter) {
+        public FetchMediaListResponsePayload(SiteModel site, List<MediaModel> mediaList, MediaError error,
+                                             MediaFilter filter) {
             this.site = site;
             this.mediaList = mediaList;
             this.error = error;
@@ -274,7 +272,7 @@ public class MediaStore extends Store {
                 handleMediaUploaded((ProgressPayload) action.getPayload());
                 break;
             case FETCHED_MEDIA_LIST:
-                handleAllMediaFetched((FetchedMediaListPayload) action.getPayload());
+                handleAllMediaFetched((FetchMediaListResponsePayload) action.getPayload());
                 break;
             case FETCHED_MEDIA:
                 handleMediaFetched((MediaPayload) action.getPayload());
@@ -582,7 +580,7 @@ public class MediaStore extends Store {
         emitChange(onMediaUploaded);
     }
 
-    private void handleAllMediaFetched(@NonNull FetchedMediaListPayload payload) {
+    private void handleAllMediaFetched(@NonNull FetchMediaListResponsePayload payload) {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCHED_MEDIA_LIST, payload.mediaList);
 
         if (!payload.isError()) {
