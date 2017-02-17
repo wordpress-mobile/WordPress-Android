@@ -25,6 +25,7 @@ public class FluxCUtils {
         mediaModel.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(file.getFilePath()));
         mediaModel.setMimeType(file.getMimeType());
         mediaModel.setThumbnailUrl(file.getThumbnailURL());
+        mediaModel.setUrl(file.getFileURL());
         mediaModel.setTitle(file.getTitle());
         mediaModel.setDescription(file.getDescription());
         mediaModel.setCaption(file.getCaption());
@@ -48,6 +49,7 @@ public class FluxCUtils {
         mediaFile.setFilePath(media.getFilePath());
         mediaFile.setMimeType(media.getMimeType());
         mediaFile.setThumbnailURL(media.getThumbnailUrl());
+        mediaFile.setFileURL(media.getUrl());
         mediaFile.setTitle(media.getTitle());
         mediaFile.setDescription(media.getDescription());
         mediaFile.setCaption(media.getCaption());
