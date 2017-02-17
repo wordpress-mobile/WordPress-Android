@@ -39,8 +39,8 @@ public class PhotoChooserFragment extends Fragment {
     }
 
     public interface OnPhotoChooserListener {
-        void onPhotoTapped(Uri mediaUri);
-        void onPhotoDoubleTapped(View view, Uri mediaUri);
+        void onItemTapped(Uri mediaUri);
+        void onItemDoubleTapped(View view, Uri mediaUri);
         void onSelectedCountChanged(int count);
     }
 
@@ -203,14 +203,14 @@ public class PhotoChooserFragment extends Fragment {
      */
     private final OnPhotoChooserListener mPhotoListener = new OnPhotoChooserListener() {
         @Override
-        public void onPhotoTapped(Uri mediaUri) {
+        public void onItemTapped(Uri mediaUri) {
             EditPostActivity activity = getEditPostActivity();
             activity.addMedia(mediaUri);
             activity.hidePhotoChooser();
         }
 
         @Override
-        public void onPhotoDoubleTapped(View view, Uri mediaUri) {
+        public void onItemDoubleTapped(View view, Uri mediaUri) {
             showPreview(view, mediaUri);
         }
 

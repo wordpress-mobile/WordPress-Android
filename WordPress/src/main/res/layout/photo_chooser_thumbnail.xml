@@ -23,24 +23,13 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <View
-        android:id="@+id/selected_frame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/photo_chooser_selected_background"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_selection_count"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/margin_large"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
         android:background="@drawable/shape_oval_blue"
         android:gravity="center"
         android:textColor="@color/white"

@@ -105,14 +105,19 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
         PhotoChooserItem item = getItemAtPosition(position);
 
-        int selectedIndex = isMultiSelectEnabled() ? mSelectedUris.indexOfUri(item.uri) : -1;
+        int selectedIndex = mIsMultiSelectEnabled ? mSelectedUris.indexOfUri(item.uri) : -1;
         if (selectedIndex > -1) {
-            holder.selectedFrame.setVisibility(View.VISIBLE);
             holder.txtSelectionCount.setVisibility(View.VISIBLE);
             holder.txtSelectionCount.setText(Integer.toString(selectedIndex + 1));
         } else {
-            holder.selectedFrame.setVisibility(View.GONE);
             holder.txtSelectionCount.setVisibility(View.GONE);
+        }
+
+        // reset thumbnail scale if it's still set when multiselect isn't enabled - this is
+        // due to the scale animation run when the item was selection
+        if (!mIsMultiSelectEnabled && holder.imgThumbnail.getScaleX() < 1.0f) {
+            holder.imgThumbnail.setScaleX(1.0f);
+            holder.imgThumbnail.setScaleY(1.0f);
         }
 
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
@@ -163,19 +168,29 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             return;
         }
 
+        boolean isSelected;
         Uri uri = getItemAtPosition(position).uri;
         int selectedIndex = mSelectedUris.indexOfUri(uri);
         if (selectedIndex > -1) {
             mSelectedUris.remove(selectedIndex);
+            isSelected = false;
         } else {
             mSelectedUris.add(uri);
+            isSelected = true;
         }
         notifyDataSetChangedNoFade();
 
-        boolean isSelected = mSelectedUris.contains(mMediaList.get(position).uri);
+        // animate the count
         AniUtils.startAnimation(holder.txtSelectionCount,
                 isSelected ? R.anim.cab_select : R.anim.cab_deselect);
         holder.txtSelectionCount.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+
+        // scale the thumbnail
+        if (isSelected) {
+            AniUtils.scale(holder.imgThumbnail, 1.0f, .8f, AniUtils.Duration.SHORT);
+        } else {
+            AniUtils.scale(holder.imgThumbnail, .8f, 1.0f, AniUtils.Duration.SHORT);
+        }
 
         if (mPhotoListener != null) {
             mPhotoListener.onSelectedCountChanged(getNumSelected());
@@ -214,7 +229,6 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
      */
     class ThumbnailViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imgThumbnail;
-        private final View selectedFrame;
         private final TextView txtSelectionCount;
         private final View videoOverlay;
         private final GestureDetector detector;
@@ -223,12 +237,8 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             super(view);
 
             imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
-            selectedFrame = view.findViewById(R.id.selected_frame);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
             videoOverlay = view.findViewById(R.id.image_video_overlay);
-
-            selectedFrame.getLayoutParams().width = mThumbWidth;
-            selectedFrame.getLayoutParams().height = mThumbHeight;
 
             imgThumbnail.getLayoutParams().width = mThumbWidth;
             imgThumbnail.getLayoutParams().height = mThumbHeight;
@@ -241,7 +251,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                         toggleSelection(ThumbnailViewHolder.this, position);
                     } else if (mPhotoListener != null) {
                         Uri uri = getItemAtPosition(position).uri;
-                        mPhotoListener.onPhotoTapped(uri);
+                        mPhotoListener.onItemTapped(uri);
                     }
                     return true;
                 }
@@ -250,7 +260,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                     int position = getAdapterPosition();
                     if (mPhotoListener != null) {
                         Uri uri = getItemAtPosition(position).uri;
-                        mPhotoListener.onPhotoDoubleTapped(itemView, uri);
+                        mPhotoListener.onItemDoubleTapped(itemView, uri);
                     }
                     return true;
                 }
