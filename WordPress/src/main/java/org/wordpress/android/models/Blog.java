@@ -50,6 +50,7 @@ public class Blog {
     private boolean isHidden;
     private long planID;
     private String planShortName;
+    private boolean isAutomatedTransfer;
 
     public Blog() {
     }
@@ -365,6 +366,14 @@ public class Blog {
 
     public String getBlogOptions() {
         return blogOptions;
+    }
+
+    public void setAutomatedTransfer(boolean automatedTransfer) {
+        isAutomatedTransfer = automatedTransfer;
+    }
+
+    public boolean getAutomatedTransfer() {
+        return isAutomatedTransfer;
     }
 
     public JSONObject getBlogOptionsJSONObject() {
