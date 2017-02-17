@@ -816,6 +816,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
     }
+
     private void launchPictureLibrary() {
         WordPressMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
@@ -1897,11 +1898,23 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        if (mMediaUploadService == null) {
-            startMediaUploadService();
-        } else {
-            // TODO: FluxC integration on retry?
+        MediaModel media = null;
+
+        List<MediaModel> localMediaList = mMediaStore.getLocalSiteMedia(mSite);
+        for (MediaModel localMedia : localMediaList) {
+            if (String.valueOf(localMedia.getId()).equals(mediaId)) {
+                media = localMedia;
+                break;
+            }
         }
+
+        if (media != null) {
+            media.setUploadState(UploadState.QUEUED.name());
+            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+            mPendingUploads.add(media);
+            startMediaUploadService();
+        }
+
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
     }
 
