@@ -115,7 +115,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.WPStoreUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -785,7 +785,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onUploadSuccess(MediaModel media) {
         if (mEditorMediaUploadListener != null && media != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                    WPStoreUtils.fromMediaModel(media));
+                    FluxCUtils.fromMediaModel(media));
         }
     }
 
@@ -1104,7 +1104,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         if (media != null) {
             trackAddMediaEvents(media.isVideo(), true);
-            mEditorFragment.appendMediaFile(WPStoreUtils.fromMediaModel(media), media.getUrl(), WordPress.sImageLoader);
+            mEditorFragment.appendMediaFile(FluxCUtils.fromMediaModel(media), media.getUrl(), WordPress.sImageLoader);
         }
     }
 
@@ -1158,7 +1158,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             while (matcher.find()) {
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
-                MediaFile mediaFile = WPStoreUtils.fromMediaModel(queueFileForUpload(uri,
+                MediaFile mediaFile = FluxCUtils.fromMediaModel(queueFileForUpload(uri,
                         getContentResolver().getType(uri), null, "failed"));
                 if (mediaFile == null) {
                     continue;
@@ -1441,7 +1441,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        MediaPayload payload = new MediaPayload(mSite, WPStoreUtils.fromMediaFile(mediaFile));
+        MediaPayload payload = new MediaPayload(mSite, FluxCUtils.fromMediaFile(mediaFile));
         mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(payload));
     }
 
@@ -1503,7 +1503,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri), null);
-        MediaFile mediaFile = WPStoreUtils.fromMediaModel(media);
+        MediaFile mediaFile = FluxCUtils.fromMediaModel(media);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
         }

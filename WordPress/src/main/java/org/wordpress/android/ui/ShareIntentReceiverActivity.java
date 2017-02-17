@@ -26,7 +26,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPStoreUtils;
+import org.wordpress.android.util.FluxCUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +116,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void finishIfNoVisibleBlogs() {
         // If not logged in, then ask to log in, else inform the user to set at least one blog
         // visible
-        if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
             startActivity(new Intent(this, SignInActivity.class));
             finish();
