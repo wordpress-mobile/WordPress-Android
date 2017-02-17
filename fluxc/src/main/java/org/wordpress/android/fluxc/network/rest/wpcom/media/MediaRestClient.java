@@ -8,26 +8,25 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
 
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
-import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
+import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
-import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
-import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
+import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
+import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -78,7 +77,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      */
     public void pushMedia(final SiteModel site, final MediaModel media) {
-        if (site == null || media == null) {
+        if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             notifyMediaPushed(site, media, error);
@@ -125,14 +124,6 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
     public void fetchAllMedia(final SiteModel site) {
-        if (site == null) {
-            AppLog.w(T.MEDIA, "No site given with FETCH_ALL_MEDIA request, dispatching error.");
-            // caller may be expecting a notification
-            MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyAllMediaFetched(null, null, error, null);
-            return;
-        }
-
         final MediaFilter filter = new MediaFilter();
         filter.number = MediaFilter.ALL_NUMBER;
         final Map<String, String> params = new HashMap<>();
@@ -175,7 +166,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * Gets a list of media items whose media IDs match the provided list.
      */
     public void fetchMedia(final SiteModel site, final MediaModel media) {
-        if (site == null || media == null) {
+        if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             notifyMediaFetched(site, media, error);
@@ -212,7 +203,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * Deletes media from a WP.com site whose media ID is in the provided list.
      */
     public void deleteMedia(final SiteModel site, final MediaModel media) {
-        if (site == null || media == null) {
+        if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             notifyMediaDeleted(site, media, error);
