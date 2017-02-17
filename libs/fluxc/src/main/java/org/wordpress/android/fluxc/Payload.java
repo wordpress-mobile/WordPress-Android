@@ -10,7 +10,7 @@ public abstract class Payload {
 
     public boolean isError() {
         try {
-            Field field = getClass().getDeclaredField("error");
+            Field field = getClass().getField("error");
             return field.get(this) != null;
         } catch (Exception e) {
             return true;
