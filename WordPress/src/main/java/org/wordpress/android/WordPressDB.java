@@ -201,7 +201,7 @@ public class WordPressDB {
     private static final String ADD_HOME_URL = "alter table accounts add homeURL text default '';";
 
     private static final String ADD_BLOG_OPTIONS = "alter table accounts add blog_options text default '';";
-    private static final String ADD_BLOG_AUTOMATED_TRANSER = "alter table accounts add isAutomatedTransfer boolean default false;";
+    private static final String ADD_BLOG_AUTOMATED_TRANSFER = "alter table accounts add isAutomatedTransfer boolean default false;";
 
     // add category parent id to keep track of category hierarchy
     private static final String ADD_PARENTID_IN_CATEGORIES = "alter table cats add parent_id integer default 0;";
@@ -446,7 +446,7 @@ public class WordPressDB {
                 db.execSQL(ADD_DRAFT_POST_LAST_NOTIFIED_DATE);
                 currentVersion++;
             case 51:
-                db.execSQL(ADD_BLOG_AUTOMATED_TRANSER);
+                db.execSQL(ADD_BLOG_AUTOMATED_TRANSFER);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
