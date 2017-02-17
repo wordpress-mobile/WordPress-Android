@@ -795,6 +795,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, error.message);
         } else {
             switch (error.type) {
+                case UNAUTHORIZED:
+                    mEditorMediaUploadListener.onMediaUploadFailed(localMediaId,
+                            getString(R.string.media_error_no_permission_upload));
+                    break;
                 default:
                     mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, getString(R.string.tap_to_try_again));
             }
