@@ -130,6 +130,9 @@ public class AppPrefs {
         // Self-hosted sites migration to FluxC
         SELF_HOSTED_SITES_MIGRATED_TO_FLUXC,
 
+        // Draft migration to FluxC
+        DRAFTS_MIGRATED_TO_FLUXC,
+
         // aztec editor available
         AZTEC_EDITOR_AVAILABLE,
     }
@@ -580,11 +583,19 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, migrated);
     }
 
-    public static boolean isSelfHostedSitesMigratedToFluxC() {
+    public static boolean wereSelfHostedSitesMigratedToFluxC() {
         return getBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, false);
     }
 
-    public static void setSelfHostedSitesMigratedToFluxC(boolean alreadyShown) {
-        setBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, alreadyShown);
+    public static void setSelfHostedSitesMigratedToFluxC(boolean migrated) {
+        setBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, migrated);
+    }
+
+    public static boolean wereDraftsMigratedToFluxC() {
+        return getBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, false);
+    }
+
+    public static void setDraftsMigratedToFluxC(boolean migrated) {
+        setBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, migrated);
     }
 }
