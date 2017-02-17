@@ -83,6 +83,23 @@ public class MediaStore extends Store {
     }
 
     /**
+     * Actions: FETCH_MEDIA_LIST
+     */
+    public static class FetchMediaListPayload extends Payload {
+        public SiteModel site;
+        public boolean loadMore;
+
+        public FetchMediaListPayload(SiteModel site) {
+            this.site = site;
+        }
+
+        public FetchMediaListPayload(SiteModel site, boolean loadMore) {
+            this.site = site;
+            this.loadMore = loadMore;
+        }
+    }
+
+    /**
      * Actions: FETCH(ED)_ALL_MEDIA, PUSH(ED)_MEDIA, DELETE(D)_MEDIA, and REMOVE_MEDIA
      */
     public static class MediaListPayload extends Payload {
@@ -243,8 +260,8 @@ public class MediaStore extends Store {
             case UPLOAD_MEDIA:
                 performUploadMedia((MediaPayload) action.getPayload());
                 break;
-            case FETCH_ALL_MEDIA:
-                performFetchAllMedia((MediaListPayload) action.getPayload());
+            case FETCH_MEDIA_LIST:
+                performFetchMediaList((FetchMediaListPayload) action.getPayload());
                 break;
             case FETCH_MEDIA:
                 performFetchMedia((MediaPayload) action.getPayload());
@@ -501,10 +518,13 @@ public class MediaStore extends Store {
         }
     }
 
-    private void performFetchAllMedia(MediaListPayload payload) {
-        List<MediaModel> mediaList = getAllSiteMedia(payload.site);
+    private void performFetchMediaList(FetchMediaListPayload payload) {
+        int offset = 0;
+        if (payload.loadMore) {
+            offset = getAllSiteMedia(payload.site).size();
+        }
         if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
-            mMediaRestClient.fetchAllMedia(payload.site, mediaList.size());
+            mMediaRestClient.fetchAllMedia(payload.site, offset);
         } else {
             mMediaXmlrpcClient.fetchAllMedia(payload.site);
         }
