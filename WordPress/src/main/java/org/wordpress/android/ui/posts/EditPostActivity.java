@@ -629,8 +629,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         // Disable format bar buttons while a media upload is in progress
-        if (!mMediaStore.getLocalSiteMedia(mSite).isEmpty() || mEditorFragment.isUploadingMedia() ||
-                mEditorFragment.isActionInProgress()) {
+        if (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress()) {
             ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
             return false;
         }
@@ -1807,6 +1806,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         MediaModel media = mMediaStore.instantiateMediaModel();
+        AppLog.i(T.MEDIA, "New media instantiated localId=" + media.getId());
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
         String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
 

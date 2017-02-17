@@ -152,7 +152,7 @@ public class MediaUploadService extends Service {
             uploadNextInQueue();
         } else if (event.completed) {
             // Upload completed
-            AppLog.i(T.MEDIA, event.media.getTitle() + " uploaded!");
+            AppLog.i(T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
             if (mListener != null) {
                 mListener.onUploadSuccess(event.media);
             }
