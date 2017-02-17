@@ -706,12 +706,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void doUnbindDeleteService() {
         if (mDeleteServiceBound) {
             unbindService(mDeleteConnection);
+            mDeleteServiceBound = false;
         }
     }
 
     private void doUnbindUploadService() {
         if (mUploadServiceBound) {
             unbindService(mUploadConnection);
+            mUploadServiceBound = false;
         }
     }
 

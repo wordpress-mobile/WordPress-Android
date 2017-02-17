@@ -1860,6 +1860,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void doUnbindUploadService() {
         if (mUploadServiceBound) {
             unbindService(mUploadConnection);
+            mUploadServiceBound = false;
         }
     }
 
