@@ -161,6 +161,10 @@ public class BlogUtils {
                     blog.setCapabilities(capabilities);
                     blogUpdated = true;
                 }
+                if (blog.getAutomatedTransfer()) {
+                    blog.setAutomatedTransfer(true);
+                    blogUpdated = true;
+                }
                 if (blogUpdated) {
                     WordPress.wpDB.saveBlog(blog);
                     return true;
