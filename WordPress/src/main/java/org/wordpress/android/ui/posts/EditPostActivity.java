@@ -1786,17 +1786,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /**
-     * Stops the upload service.
-     */
-    private void stopMediaUploadService() {
-        if (mMediaUploadService != null) {
-            stopService(new Intent(this, MediaUploadService.class));
-            unbindService(mUploadConnection);
-            mMediaUploadService = null;
-        }
-    }
-
-    /**
      * Queues a media file for upload and starts the MediaUploadService. Toasts will alert the user
      * if there are issues with the file.
      *
