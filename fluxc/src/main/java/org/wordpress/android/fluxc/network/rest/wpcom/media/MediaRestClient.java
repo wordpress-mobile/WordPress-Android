@@ -114,7 +114,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     /**
-     * Gets a list of all media items on a WP.com site.
+     * Gets a list of media items given the offset on a WP.com site.
      *
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
