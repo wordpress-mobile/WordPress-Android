@@ -328,10 +328,6 @@ public class MySiteFragment extends Fragment
     }
 
     private void refreshBlogDetails(@Nullable Blog blog) {
-        if (blog != null && blog.getAutomatedTransfer()) {
-            mBlogLocalId = WordPress.wpDB.getFirstVisibleAndNonAutomatedTransferBlogId();
-            WordPress.setCurrentBlog(mBlogLocalId);
-        }
         if (!isAdded()) {
             return;
         }
