@@ -430,14 +430,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onStop() {
-        if (mUploadService != null) {
-            unbindService(mUploadConnection);
-        }
-        super.onStop();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
 
