@@ -85,7 +85,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 51;
+    private static final int DATABASE_VERSION = 52;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -201,6 +201,7 @@ public class WordPressDB {
     private static final String ADD_HOME_URL = "alter table accounts add homeURL text default '';";
 
     private static final String ADD_BLOG_OPTIONS = "alter table accounts add blog_options text default '';";
+    private static final String ADD_BLOG_AUTOMATED_TRANSER = "alter table accounts add isAutomatedTransfer boolean default false;";
 
     // add category parent id to keep track of category hierarchy
     private static final String ADD_PARENTID_IN_CATEGORIES = "alter table cats add parent_id integer default 0;";
@@ -443,6 +444,9 @@ public class WordPressDB {
             case 50:
                 db.execSQL(ADD_DRAFT_POST_LAST_UPDATED_DATE);
                 db.execSQL(ADD_DRAFT_POST_LAST_NOTIFIED_DATE);
+                currentVersion++;
+            case 51:
+                db.execSQL(ADD_BLOG_AUTOMATED_TRANSER);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -756,6 +760,7 @@ public class WordPressDB {
         values.put("plan_product_id", blog.getPlanID());
         values.put("plan_product_name_short", blog.getPlanShortName());
         values.put("capabilities", blog.getCapabilities());
+        values.put("isAutomatedTransfer", blog.getAutomatedTransfer());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
