@@ -145,18 +145,22 @@ public class MediaUploadService extends Service {
         if (event.canceled) {
             // Upload canceled
             AppLog.i(T.MEDIA, "Upload successfully canceled.");
-            completeCurrentUpload();
             if (mListener != null) {
                 mListener.onUploadCanceled(event.media);
             }
+            completeCurrentUpload();
+            uploadNextInQueue();
         } else if (event.completed) {
+            // Upload completed
             AppLog.i(T.MEDIA, event.media.getTitle() + " uploaded!");
             if (mListener != null) {
                 mListener.onUploadSuccess(event.media);
             }
             mCurrentUpload.setMediaId(event.media.getMediaId());
             completeCurrentUpload();
+            uploadNextInQueue();
         } else {
+            // Upload Progress
             if (mListener != null) {
                 mListener.onUploadProgress(event.media, event.progress);
             }
@@ -170,6 +174,7 @@ public class MediaUploadService extends Service {
         if (mListener != null) {
             mListener.onUploadError(event.media, event.error);
         }
+        uploadNextInQueue();
     }
 
     private void uploadNextInQueue() {
@@ -303,7 +308,5 @@ public class MediaUploadService extends Service {
         } else {
             handleOnMediaUploadedSuccess(event);
         }
-
-        uploadNextInQueue();
     }
 }
