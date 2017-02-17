@@ -1602,6 +1602,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (MediaUtils.getImageWidthSettingFromString(blog.getMaxImageWidth()) != Integer.MAX_VALUE) {
             // If the user has selected a maximum image width for uploads, rescale the image accordingly
             path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(blog.getMaxImageWidth()));
+            if (path == null) {
+                AppLog.e(T.EDITOR, "Resized picture was null!");
+                ToastUtils.showToast(this, R.string.file_error_create, Duration.SHORT);
+                return false;
+            }
         }
 
         MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
