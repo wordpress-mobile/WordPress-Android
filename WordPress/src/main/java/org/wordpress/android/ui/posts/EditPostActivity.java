@@ -219,7 +219,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     // Upload service
     private MediaUploadService.MediaUploadBinder mMediaUploadService;
-    private boolean mUploadServiceBound;
+    private boolean mMediaUploadServiceBound;
 
     private SiteModel mSite;
 
@@ -1758,14 +1758,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
 
     private void doBindUploadService(Intent intent) {
-        mUploadServiceBound = bindService(intent, mMediaUploadConnection,
+        mMediaUploadServiceBound = bindService(intent, mMediaUploadConnection,
                 Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
     }
 
     private void doUnbindUploadService() {
-        if (mUploadServiceBound) {
+        if (mMediaUploadServiceBound) {
             unbindService(mMediaUploadConnection);
-            mUploadServiceBound = false;
+            mMediaUploadServiceBound = false;
         }
     }
 
