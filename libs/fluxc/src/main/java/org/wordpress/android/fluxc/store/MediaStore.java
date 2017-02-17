@@ -254,7 +254,7 @@ public class MediaStore extends Store {
                 handleMediaUploaded((ProgressPayload) action.getPayload());
                 break;
             case FETCHED_MEDIA_LIST:
-                handleAllMediaFetched((FetchMediaListResponsePayload) action.getPayload());
+                handleMediaListFetched((FetchMediaListResponsePayload) action.getPayload());
                 break;
             case FETCHED_MEDIA:
                 handleMediaFetched((MediaPayload) action.getPayload());
@@ -499,9 +499,9 @@ public class MediaStore extends Store {
             offset = getAllSiteMedia(payload.site).size();
         }
         if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
-            mMediaRestClient.fetchAllMedia(payload.site, offset);
+            mMediaRestClient.fetchMediaList(payload.site, offset);
         } else {
-            mMediaXmlrpcClient.fetchAllMedia(payload.site, offset);
+            mMediaXmlrpcClient.fetchMediaList(payload.site, offset);
         }
     }
 
@@ -562,7 +562,7 @@ public class MediaStore extends Store {
         emitChange(onMediaUploaded);
     }
 
-    private void handleAllMediaFetched(@NonNull FetchMediaListResponsePayload payload) {
+    private void handleMediaListFetched(@NonNull FetchMediaListResponsePayload payload) {
         OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCHED_MEDIA_LIST, payload.mediaList);
 
         if (!payload.isError()) {
