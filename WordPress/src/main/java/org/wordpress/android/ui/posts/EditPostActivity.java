@@ -779,6 +779,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                     FluxCUtils.fromMediaModel(media));
         }
+        for (MediaModel pendingUpload : mPendingUploads) {
+            if (media != null && pendingUpload.getId() == media.getId()) {
+                mPendingUploads.remove(pendingUpload);
+                break;
+            }
+        }
     }
 
     @Override
