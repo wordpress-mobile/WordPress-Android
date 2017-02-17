@@ -1028,7 +1028,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                String mediaId = mediaFile.getMediaId();
+                String mediaId = String.valueOf(mediaFile.getId());
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
                     if (mediaFile.isVideo()) {
                         String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
@@ -1131,7 +1131,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                String remoteUrl = Utils.escapeQuotes(mediaFile.getThumbnailURL());
+                String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
                 if (mimeType.contains("image")) {
                     String remoteMediaId = mediaFile.getMediaId();
                     mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + localMediaId +

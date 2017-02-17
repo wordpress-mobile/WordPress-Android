@@ -69,7 +69,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.WPStoreUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.List;
@@ -215,7 +215,7 @@ public class WPMainActivity extends AppCompatActivity {
 
 
         if (savedInstanceState == null) {
-            if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
@@ -555,7 +555,7 @@ public class WPMainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startWithNewAccount();
-                } else if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+                } else if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
                 }
@@ -634,7 +634,7 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed out
             resetFragments();
             ActivityLauncher.showSignInForResult(this);
@@ -670,7 +670,7 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void handleBlogRemoved() {
-        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ActivityLauncher.showSignInForResult(this);
         } else {
             SiteModel site = getSelectedSite();

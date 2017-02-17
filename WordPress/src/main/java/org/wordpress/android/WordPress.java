@@ -44,6 +44,7 @@ import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
@@ -75,7 +76,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPLegacyMigrationUtils;
-import org.wordpress.android.util.WPStoreUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -116,6 +117,7 @@ public class WordPress extends MultiDexApplication {
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -224,12 +226,14 @@ public class WordPress extends MultiDexApplication {
         sOAuthAuthenticator = mOAuthAuthenticator;
 
         // If the migration was not done and if we have something to migrate
-        if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.isSelfHostedSitesMigratedToFluxC())
+        if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.wereSelfHostedSitesMigratedToFluxC()
+            || !AppPrefs.wereDraftsMigratedToFluxC())
             && (WPLegacyMigrationUtils.hasSelfHostedSiteToMigrate(this)
-                || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null)) {
+                || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null
+                || WPLegacyMigrationUtils.hasDraftsToMigrate(this))) {
             sIsMigrationInProgress = true;
 
-            // Not connection? Then exit and ask the user to come back.
+            // No connection? Then exit and ask the user to come back.
             if (!NetworkUtils.isNetworkAvailable(this)) {
                 AppLog.i(T.DB, "No connection - aborting migration");
                 ToastUtils.showToast(this, getResources().getString(R.string.migration_error_not_connected),
@@ -318,23 +322,36 @@ public class WordPress extends MultiDexApplication {
     }
 
     private void migrateSelfHostedSites() {
-        if (!AppPrefs.isSelfHostedSitesMigratedToFluxC()) {
+        if (!AppPrefs.wereSelfHostedSitesMigratedToFluxC()) {
             List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
             if (siteList != null && !siteList.isEmpty()) {
                 AppLog.i(T.DB, "Finished migrating " + siteList.size() + " self-hosted sites - fetching site info");
+                AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
                 mRemainingSelfHostedSitesToFetch = siteList.size();
                 for (SiteModel siteModel : siteList) {
                     mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(siteModel));
                 }
+                return;
             } else {
                 AppLog.i(T.DB, "No self-hosted sites to migrate");
-                endMigration();
+                AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
             }
-            AppPrefs.setSelfHostedSitesMigratedToFluxC(true);
         } else {
             AppLog.i(T.DB, "Self-hosted sites have already been migrated");
-            endMigration();
         }
+
+        migrateDrafts();
+    }
+
+    private void migrateDrafts() {
+        // Migrate drafts to FluxC
+        if (!AppPrefs.wereDraftsMigratedToFluxC()) {
+            WPLegacyMigrationUtils.migrateDraftsFromDeprecatedDB(this, mDispatcher, mSiteStore);
+            AppPrefs.setDraftsMigratedToFluxC(true);
+        }
+
+        AppLog.i(T.DB, "Migration complete!");
+        endMigration();
     }
 
     private void endMigration() {
@@ -498,7 +515,7 @@ public class WordPress extends MultiDexApplication {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             flushHttpCache();
 
             // Analytics resets
@@ -532,8 +549,8 @@ public class WordPress extends MultiDexApplication {
             mRemainingSelfHostedSitesToFetch--;
             AppLog.i(T.DB, "Self-hosted sites remaining to fetch for migration: " + mRemainingSelfHostedSitesToFetch);
         } else {
-            AppLog.i(T.DB, "The last self-hosted site has been fetched - migration complete");
-            endMigration();
+            AppLog.i(T.DB, "The last self-hosted site has been fetched - starting draft migration");
+            migrateDrafts();
         }
     }
 
