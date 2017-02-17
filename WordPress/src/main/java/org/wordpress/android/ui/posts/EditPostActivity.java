@@ -84,7 +84,6 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -780,16 +779,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                     FluxCUtils.fromMediaModel(media));
         }
-        for (MediaModel pendingUpload : mPendingUploads) {
-            if (media != null && pendingUpload.getId() == media.getId()) {
-                mPendingUploads.remove(pendingUpload);
-                break;
-            }
-        }
+        removeMediaFromPendingList(media);
     }
 
     @Override
     public void onUploadCanceled(MediaModel media) {
+        removeMediaFromPendingList(media);
     }
 
     @Override
@@ -801,6 +796,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else {
             mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, error.message);
         }
+        removeMediaFromPendingList(media);
     }
 
     @Override
@@ -809,6 +805,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
     }
 
+    private void removeMediaFromPendingList(MediaModel mediaToClear) {
+        if (mediaToClear == null) {
+            return;
+        }
+        for (MediaModel pendingUpload : mPendingUploads) {
+            if (pendingUpload.getId() == mediaToClear.getId()) {
+                mPendingUploads.remove(pendingUpload);
+                break;
+            }
+        }
+    }
     private void launchPictureLibrary() {
         WordPressMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
