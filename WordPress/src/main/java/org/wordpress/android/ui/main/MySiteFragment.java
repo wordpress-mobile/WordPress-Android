@@ -464,6 +464,12 @@ public class MySiteFragment extends Fragment
     }
 
     private Blog udpateBlogObjectAndId() {
+        // this is needed, in the case this blog doesn't exist anymore locally after refreshing
+        // the database, calling setCurrentBLog will make currentblog null if mBlogLocalId doesn't
+        // exist, and thus then calling
+        // getCurrentBlog afterwards goes through the process of finding the next available blog, if
+        // an available blog is there (cascading through last active blog > first visible blogs >
+        // first hidden blog).
         WordPress.setCurrentBlog(mBlogLocalId);
         Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog != null) {
