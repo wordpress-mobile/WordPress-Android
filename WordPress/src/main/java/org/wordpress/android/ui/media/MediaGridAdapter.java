@@ -18,7 +18,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -109,7 +108,6 @@ public class MediaGridAdapter extends CursorAdapter {
 
         private final TextView stateTextView;
         private final ProgressBar progressUpload;
-        private final RelativeLayout uploadStateView;
 
         GridViewHolder(View view) {
             filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
@@ -122,7 +120,6 @@ public class MediaGridAdapter extends CursorAdapter {
 
             stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
             progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
-            uploadStateView = (RelativeLayout) view.findViewById(R.id.media_grid_item_upload_state_container);
         }
     }
 
@@ -245,7 +242,6 @@ public class MediaGridAdapter extends CursorAdapter {
                 if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
                     state = MediaUploadState.QUEUED.name();
                     holder.stateTextView.setVisibility(View.VISIBLE);
-                    holder.uploadStateView.setVisibility(View.VISIBLE);
                     holder.stateTextView.setText(state);
                     holder.stateTextView.setOnClickListener(new OnClickListener() {
                         @Override
@@ -260,7 +256,8 @@ public class MediaGridAdapter extends CursorAdapter {
                 }
 
             } else {
-                holder.uploadStateView.setVisibility(View.GONE);
+                holder.progressUpload.setVisibility(View.GONE);
+                holder.stateTextView.setVisibility(View.GONE);
             }
         }
 
