@@ -196,7 +196,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
                     String blogId = details.getString("blogid");
                     String username = AccountHelper.getDefaultAccount().getUserName();
                     BlogUtils.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, null, null, null,
-                            true, true, PlansConstants.DEFAULT_PLAN_ID_FOR_NEW_BLOG, null, null);
+                            true, true, PlansConstants.DEFAULT_PLAN_ID_FOR_NEW_BLOG, null, null, false);
                     AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
                     ToastUtils.showToast(getActivity(), R.string.new_blog_wpcom_created);
                 } catch (JSONException e) {
