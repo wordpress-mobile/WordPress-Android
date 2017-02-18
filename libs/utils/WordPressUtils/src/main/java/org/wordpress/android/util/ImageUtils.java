@@ -35,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 
 public class ImageUtils {
@@ -429,8 +430,53 @@ public class ImageUtils {
         return  filePath;
     }
 
-    private static float calculateScaleFactor(Bitmap bmpResized, int maxWidth) {
-        // Now calculate exact scale in order to resize accurately
+    private static boolean resizeImageAndWriteToStream(Context context,
+                                                    Uri imageUri,
+                                                    String fileExtension,
+                                                    int maxWidth,
+                                                    int orientation,
+                                                    int quality,
+                                                    OutputStream outStream) throws OutOfMemoryError, IOException {
+
+        String realFilePath = getRealFilePath(context, imageUri);
+
+        // get just the image bounds
+        BitmapFactory.Options optBounds = new BitmapFactory.Options();
+        optBounds.inJustDecodeBounds = true;
+
+        try {
+            BitmapFactory.decodeFile(realFilePath, optBounds);
+        } catch (OutOfMemoryError e) {
+            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error while decoding the original image: " + realFilePath, e);
+            throw e;
+        }
+
+        // determine correct scale value (should be power of 2)
+        // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
+        int scale = 1;
+        if (maxWidth > 0 && optBounds.outWidth > maxWidth) {
+            double d = Math.pow(2, (int) Math.round(Math.log(maxWidth / (double) optBounds.outWidth) / Math.log(0.5)));
+            scale = (int) d;
+        }
+
+        BitmapFactory.Options optActual = new BitmapFactory.Options();
+        optActual.inSampleSize = scale;
+
+        // Get the roughly resized bitmap
+        final Bitmap bmpResized;
+        try {
+            bmpResized = BitmapFactory.decodeFile(realFilePath, optActual);
+        } catch (OutOfMemoryError e) {
+            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error while decoding the original image: " + realFilePath, e);
+            throw e;
+        }
+
+        if (bmpResized == null) {
+            AppLog.e(AppLog.T.UTILS, "Can't decode the resized picture.");
+            throw new IOException("Can't decode the resized picture.");
+        }
+
+        // Resize the bitmap to exact size: calculate exact scale in order to resize accurately
         float percentage = (float) maxWidth / bmpResized.getWidth();
         float proportionateHeight = bmpResized.getHeight() * percentage;
         int finalHeight = (int) Math.rint(proportionateHeight);
@@ -438,8 +484,48 @@ public class ImageUtils {
         float scaleWidth = ((float) maxWidth) / bmpResized.getWidth();
         float scaleHeight = ((float) finalHeight) / bmpResized.getHeight();
 
-        return Math.min(scaleWidth, scaleHeight);
+        float scaleBy = Math.min(scaleWidth, scaleHeight);
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleBy, scaleBy);
+
+        // apply rotation
+        if (orientation != 0) {
+            matrix.setRotate(orientation);
+        }
+
+        Bitmap.CompressFormat fmt;
+        if (fileExtension.equalsIgnoreCase("png")) {
+            fmt = Bitmap.CompressFormat.PNG;
+        } else {
+            fmt = Bitmap.CompressFormat.JPEG;
+        }
+
+        final Bitmap bmpRotated;
+        try {
+            bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
+            bmpResized.recycle();
+        } catch (OutOfMemoryError e) {
+            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError while creating the resized bitmap", e);
+            throw e;
+        } catch (NullPointerException e) {
+            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1844
+            AppLog.e(AppLog.T.UTILS, "Bitmap.createBitmap has thrown a NPE internally. This should never happen!", e);
+            throw e;
+        }
+
+        if (bmpRotated == null) {
+            // Fix an issue where bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.
+            AppLog.e(AppLog.T.UTILS, "bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.");
+            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1848
+            throw new IOException("bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.");
+        }
+
+        boolean result = bmpRotated.compress(fmt, quality, outStream);
+        bmpRotated.recycle();
+        return result;
     }
+
 
     /**
      * Given the path to an image, resize the image down to within a maximum width
@@ -475,100 +561,51 @@ public class ImageUtils {
             return path;
         }
 
-        String realFilePath = getRealFilePath(context, imageUri);
-
-        // get just the image bounds
-        BitmapFactory.Options optBounds = new BitmapFactory.Options();
-        optBounds.inJustDecodeBounds = true;
+        File resizedImageFile;
+        FileOutputStream out;
 
         try {
-            BitmapFactory.decodeFile(realFilePath, optBounds);
-        } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error while decoding the original image: " + realFilePath, e);
-            return null;
-        }
-
-        // determine correct scale value (should be power of 2)
-        // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
-        int scale = 1;
-        if (maxWidth > 0 && optBounds.outWidth > maxWidth) {
-            double d = Math.pow(2, (int) Math.round(Math.log(maxWidth / (double) optBounds.outWidth) / Math.log(0.5)));
-            scale = (int) d;
-        }
-
-        BitmapFactory.Options optActual = new BitmapFactory.Options();
-        optActual.inSampleSize = scale;
-
-        // Get the roughly resized bitmap
-        final Bitmap bmpResized;
-        try {
-            bmpResized = BitmapFactory.decodeFile(realFilePath, optActual);
-        } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error while decoding the original image: " + realFilePath, e);
-            return null;
-        }
-
-        if (bmpResized == null) {
-            AppLog.e(AppLog.T.UTILS, "Can't decode the resized picture.");
-            return null;
-        }
-
-        // Resize the bitmap to exact size
-        float scaleBy = calculateScaleFactor(bmpResized, maxWidth);
-        Matrix matrix = new Matrix();
-        matrix.postScale(scaleBy, scaleBy);
-
-        // apply rotation
-        if (orientation != 0) {
-            matrix.setRotate(orientation);
-        }
-
-        Bitmap.CompressFormat fmt;
-        if (fileExtension.equalsIgnoreCase("png")) {
-            fmt = Bitmap.CompressFormat.PNG;
-        } else {
-            fmt = Bitmap.CompressFormat.JPEG;
-        }
-
-        final Bitmap bmpRotated;
-        try {
-            bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
-            bmpResized.recycle();
-        } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError while creating the resized bitmap", e);
-            return null;
-        } catch (NullPointerException e) {
-            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1844
-            AppLog.e(AppLog.T.UTILS, "Bitmap.createBitmap has thrown a NPE internally. This should never happen!", e);
-            return null;
-        }
-
-        if (bmpRotated == null) {
-            // Fix an issue where bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.
-            AppLog.e(AppLog.T.UTILS, "bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.");
-            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1848
-            return null;
+            resizedImageFile = File.createTempFile("wp-image-", fileExtension);
+            out = new FileOutputStream(resizedImageFile);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.POSTS, "Failed to create the temp file on storage. Use the full picture instead.");
+            return path;
+        } catch (SecurityException e) {
+            AppLog.e(AppLog.T.POSTS, "Can't write the tmp file due to security restrictions. Use the full picture instead.");
+            return path;
         }
 
         try {
-            File resizedImageFile = File.createTempFile("wp-image-", fileExtension);
-            FileOutputStream out = new FileOutputStream(resizedImageFile);
-            bmpRotated.compress(fmt, 90, out);
-            bmpRotated.recycle();
-            out.close();
-
-            String tempFilePath = resizedImageFile.getPath();
-
-            if (!TextUtils.isEmpty(tempFilePath)) {
-                return tempFilePath;
-            } else {
-                AppLog.e(AppLog.T.POSTS, "Failed to create resized image");
+            boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, maxWidth, orientation, 90, out);
+            if (!res) {
+                AppLog.w(AppLog.T.POSTS, "Failed to compress the resized image. Use the full picture instead.");
+                return path;
             }
         } catch (IOException e) {
-            AppLog.e(AppLog.T.POSTS, "Failed to create image temp file");
+            AppLog.e(AppLog.T.POSTS, "Failed to create resized image. Use the full picture instead.");
+            return path;
+        } catch (OutOfMemoryError e) {
+            AppLog.e(AppLog.T.POSTS, "Can't resize the picture due to low memory. Use the full picture instead.");
+            return path;
+        } finally {
+            // close the stream
+            try {
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+            }
         }
+
+        String tempFilePath = resizedImageFile.getPath();
+        if (!TextUtils.isEmpty(tempFilePath)) {
+            return tempFilePath;
+        } else {
+            AppLog.e(AppLog.T.POSTS, "Failed to create resized image. Use the full picture instead.");
+        }
+
         return path;
     }
+
 
     /**
      * nbradbury - 21-Feb-2014 - similar to createThumbnail but more efficient since it doesn't
@@ -578,87 +615,24 @@ public class ImageUtils {
                                                 Uri imageUri,
                                                 int maxWidth,
                                                 String fileExtension,
-                                                int rotation) {
+                                                int orientation) {
         if (context == null || imageUri == null || maxWidth <= 0)
             return null;
 
-        String filePath = getRealFilePath(context, imageUri);
-
-        // get just the image bounds
-        BitmapFactory.Options optBounds = new BitmapFactory.Options();
-        optBounds.inJustDecodeBounds = true;
-
-        try {
-            BitmapFactory.decodeFile(filePath, optBounds);
-        } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error in setting image: " + e);
-            return null;
-        }
-
-        // determine correct scale value (should be power of 2)
-        // http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/3549021#3549021
-        int scale = 1;
-        if (maxWidth > 0 && optBounds.outWidth > maxWidth) {
-            double d = Math.pow(2, (int) Math.round(Math.log(maxWidth / (double) optBounds.outWidth) / Math.log(0.5)));
-            scale = (int) d;
-        }
-
-        BitmapFactory.Options optActual = new BitmapFactory.Options();
-        optActual.inSampleSize = scale;
-
-        // Get the roughly resized bitmap
-        final Bitmap bmpResized;
-        try {
-            bmpResized = BitmapFactory.decodeFile(filePath, optActual);
-        } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error in setting image: " + e);
-            return null;
-        }
-
-        if (bmpResized == null) {
-            return null;
-        }
-
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-        float scaleBy = calculateScaleFactor(bmpResized, maxWidth);
-        // Resize the bitmap to exact size
-        Matrix matrix = new Matrix();
-        matrix.postScale(scaleBy, scaleBy);
-
-        // apply rotation
-        if (rotation != 0) {
-            matrix.setRotate(rotation);
-        }
-
-        Bitmap.CompressFormat fmt;
-        if (fileExtension != null && fileExtension.equalsIgnoreCase("png")) {
-            fmt = Bitmap.CompressFormat.PNG;
-        } else {
-            fmt = Bitmap.CompressFormat.JPEG;
-        }
-
-        final Bitmap bmpRotated;
         try {
-            bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
-            bmpResized.recycle();
+            boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, maxWidth, orientation, 90, stream);
+            if (!res) {
+                AppLog.w(AppLog.T.POSTS, "Failed to compress the resized image. Use the full picture instead.");
+                return null;
+            }
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.POSTS, "Failed to create resized image. Use the full picture instead.");
+            return null;
         } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error in setting image: " + e);
-            return null;
-        } catch (NullPointerException e) {
-            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1844
-            AppLog.e(AppLog.T.UTILS, "Bitmap.createBitmap has thrown a NPE internally. This should never happen: " + e);
+            AppLog.e(AppLog.T.POSTS, "Can't resize the picture due to low memory. Use the full picture instead.");
             return null;
         }
-
-        if (bmpRotated == null) {
-            // Fix an issue where bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.
-            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1848
-            return null;
-        }
-
-        bmpRotated.compress(fmt, 90, stream);
-        bmpRotated.recycle();
 
         return stream.toByteArray();
     }
