@@ -373,7 +373,7 @@ public class Blog {
         isAutomatedTransfer = automatedTransfer;
     }
 
-    public boolean getAutomatedTransfer() {
+    public boolean isAutomatedTransfer() {
         return isAutomatedTransfer;
     }
 

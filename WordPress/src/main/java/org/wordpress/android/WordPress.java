@@ -50,7 +50,6 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
-import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
@@ -430,7 +429,7 @@ public class WordPress extends MultiDexApplication {
      * try to select the first hidden blog. If there are no blogs at all, return null.
      */
     public static Blog getCurrentBlog() {
-        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId()) || currentBlog.getAutomatedTransfer()) {
+        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId()) || currentBlog.isAutomatedTransfer()) {
             attemptToRestoreLastActiveBlog();
         }
 
@@ -465,7 +464,7 @@ public class WordPress extends MultiDexApplication {
                 int id = Integer.valueOf(account.get("id").toString());
                 if (id == lastBlogId) {
                     Blog lastBlog  = getBlog(id);
-                    if (lastBlog != null && !lastBlog.getAutomatedTransfer()) {
+                    if (lastBlog != null && !lastBlog.isAutomatedTransfer()) {
                         setCurrentBlog(id);
                         return currentBlog;
                     }

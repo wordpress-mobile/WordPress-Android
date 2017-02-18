@@ -559,7 +559,7 @@ public class WordPressDB {
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
         values.put("capabilities", blog.getCapabilities());
-        values.put("isAutomatedTransfer", blog.getAutomatedTransfer());
+        values.put("isAutomatedTransfer", blog.isAutomatedTransfer());
         return db.insert(BLOGS_TABLE, null, values) > -1;
     }
 
@@ -764,7 +764,7 @@ public class WordPressDB {
         values.put("plan_product_id", blog.getPlanID());
         values.put("plan_product_name_short", blog.getPlanShortName());
         values.put("capabilities", blog.getCapabilities());
-        values.put("isAutomatedTransfer", blog.getAutomatedTransfer());
+        values.put("isAutomatedTransfer", blog.isAutomatedTransfer());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
