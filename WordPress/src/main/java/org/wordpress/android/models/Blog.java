@@ -369,8 +369,8 @@ public class Blog {
         return blogOptions;
     }
 
-    public void setAutomatedTransfer(boolean automatedTransfer) {
-        isAutomatedTransfer = automatedTransfer;
+    public void setAutomatedTransfer(boolean isAutomatedTransfer) {
+        this.isAutomatedTransfer = isAutomatedTransfer;
     }
 
     public boolean isAutomatedTransfer() {
