@@ -74,11 +74,6 @@ public class MediaStore extends Store {
             this.media = media;
             this.error = error;
         }
-
-        @Override
-        public boolean isError() {
-            return error != null;
-        }
     }
 
     /**
@@ -97,11 +92,6 @@ public class MediaStore extends Store {
             this.mediaList = mediaList;
             this.error = error;
             this.filter = filter;
-        }
-
-        @Override
-        public boolean isError() {
-            return error != null;
         }
     }
 
@@ -123,11 +113,6 @@ public class MediaStore extends Store {
             this.progress = progress;
             this.completed = completed;
             this.error = error;
-        }
-
-        @Override
-        public boolean isError() {
-            return error != null;
         }
     }
 
