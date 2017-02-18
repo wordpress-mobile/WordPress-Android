@@ -464,12 +464,15 @@ public class WordPress extends MultiDexApplication {
             for (Map<String, Object> account : accounts) {
                 int id = Integer.valueOf(account.get("id").toString());
                 if (id == lastBlogId) {
-                    setCurrentBlog(id);
-                    return currentBlog;
+                    Blog lastBlog  = getBlog(id);
+                    if (lastBlog != null && !lastBlog.getAutomatedTransfer()) {
+                        setCurrentBlog(id);
+                        return currentBlog;
+                    }
                 }
             }
         }
-        // Previous active blog is hidden or deleted
+        // Previous active blog is hidden or deleted or has become an automated transfer blog
         currentBlog = null;
         return null;
     }

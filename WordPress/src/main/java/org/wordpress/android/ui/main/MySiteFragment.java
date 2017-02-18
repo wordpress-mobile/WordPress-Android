@@ -459,7 +459,16 @@ public class MySiteFragment extends Fragment
         }
 
         // refresh current blog object so it gets updated with latest information coming from the server
+        Blog currentBlog = udpateBlogObjectAndId();
+        refreshBlogDetails(currentBlog);
+    }
+
+    private Blog udpateBlogObjectAndId() {
         WordPress.setCurrentBlog(mBlogLocalId);
-        refreshBlogDetails(WordPress.getCurrentBlog());
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog != null) {
+            mBlogLocalId = currentBlog.getLocalTableBlogId();
+        }
+        return currentBlog;
     }
 }
