@@ -161,7 +161,7 @@ public class BlogUtils {
                     blog.setCapabilities(capabilities);
                     blogUpdated = true;
                 }
-                if (isAutomatedTransfer) {
+                if (isAutomatedTransfer != blog.getAutomatedTransfer()) {
                     blog.setAutomatedTransfer(isAutomatedTransfer);
                     blogUpdated = true;
                 }
