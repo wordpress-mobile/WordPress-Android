@@ -20,14 +20,12 @@ public class MediaSqlUtils {
         return getAllSiteMediaQuery(siteModel).getAsCursor();
     }
 
+    public static List<MediaModel> getMediaWithStates(SiteModel site, List<String> uploadStates) {
+        return getMediaWithStatesQuery(site, uploadStates).getAsModel();
+    }
+
     public static WellCursor<MediaModel> getMediaWithStatesAsCursor(SiteModel site, List<String> uploadStates) {
-        return WellSql.select(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
-                .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
-                .endGroup().endWhere()
-                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
-                .getAsCursor();
+        return getMediaWithStatesQuery(site, uploadStates).getAsCursor();
     }
 
     public static WellCursor<MediaModel> getImagesWithStatesAsCursor(SiteModel site, List<String> uploadStates) {
@@ -55,6 +53,15 @@ public class MediaSqlUtils {
     private static SelectQuery<MediaModel> getAllSiteMediaQuery(SiteModel siteModel) {
         return WellSql.select(MediaModel.class)
                 .where().equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId()).endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
+    }
+
+    private static SelectQuery<MediaModel> getMediaWithStatesQuery(SiteModel site, List<String> uploadStates) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
+                .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
+                .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
