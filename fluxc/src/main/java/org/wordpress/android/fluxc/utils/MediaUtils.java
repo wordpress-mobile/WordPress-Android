@@ -19,7 +19,7 @@ public class MediaUtils {
             "jpg", "jpeg", "png", "gif"
     };
     public static final String[] SUPPORTED_VIDEO_SUBTYPES = {
-            "mp4", "m4v", "mov", "wmv", "avi", "mpg", "ogv", "3gp", "3g2"
+            "mp4", "m4v", "mov", "wmv", "avi", "mpg", "ogv", "3gp", "3g2", "mpeg", "quicktime", "webm"
     };
     public static final String[] SUPPORTED_AUDIO_SUBTYPES = {
             "mp3", "m4a", "ogg", "wav"
