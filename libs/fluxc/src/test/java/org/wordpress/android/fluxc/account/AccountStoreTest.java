@@ -12,16 +12,21 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
+import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 
 import java.lang.reflect.Method;
 
@@ -90,6 +95,20 @@ public class AccountStoreTest {
         privateMethod.invoke(testStore);
         Assert.assertFalse(testStore.hasAccessToken());
         Assert.assertNull(AccountSqlUtils.getAccountByLocalId(testAccount.getId()));
+    }
+
+    @Test
+    public void testPayloadIsError() throws Exception {
+        // AuthenticateErrorPayload masks the error field of its superclass (Payload)
+        AuthenticateErrorPayload payload1 = new AuthenticateErrorPayload(AuthenticationErrorType.GENERIC_ERROR);
+        Assert.assertTrue(payload1.isError());
+        payload1.error = null;
+        Assert.assertFalse(payload1.isError());
+
+        AuthenticatePayload payload2 = new AuthenticatePayload("", "");
+        Assert.assertFalse(payload2.isError());
+        payload2.error = new BaseNetworkError(GenericErrorType.NETWORK_ERROR);
+        Assert.assertTrue(payload2.isError());
     }
 
     private AccountRestClient getMockRestClient() {
