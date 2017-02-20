@@ -74,11 +74,6 @@ public class PostStore extends Store {
         public FetchPostsResponsePayload(PostError error) {
             this.error = error;
         }
-
-        @Override
-        public boolean isError() {
-            return error != null;
-        }
     }
 
     public static class RemotePostPayload extends Payload {
@@ -89,11 +84,6 @@ public class PostStore extends Store {
         public RemotePostPayload(PostModel post, SiteModel site) {
             this.post = post;
             this.site = site;
-        }
-
-        @Override
-        public boolean isError() {
-            return error != null;
         }
     }
 
