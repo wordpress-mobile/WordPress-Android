@@ -53,11 +53,6 @@ public class TaxonomyStore extends Store {
             this.error = error;
             this.taxonomy = taxonomy;
         }
-
-        @Override
-        public boolean isError() {
-            return error != null;
-        }
     }
 
     public static class RemoteTermPayload extends Payload {
@@ -68,11 +63,6 @@ public class TaxonomyStore extends Store {
         public RemoteTermPayload(TermModel term, SiteModel site) {
             this.term = term;
             this.site = site;
-        }
-
-        @Override
-        public boolean isError() {
-            return error != null;
         }
     }
 

@@ -45,12 +45,6 @@ public class AccountRestClient extends BaseWPComRestClient {
             this.account = account;
             this.error = error;
         }
-
-        public boolean isError() {
-            return error != null;
-        }
-
-        public BaseNetworkError error;
         public AccountModel account;
     }
 
@@ -58,10 +52,6 @@ public class AccountRestClient extends BaseWPComRestClient {
         public AccountPushSettingsResponsePayload(BaseNetworkError error) {
             this.error = error;
         }
-        public boolean isError() {
-            return error != null;
-        }
-        public BaseNetworkError error;
         public Map<String, Object> settings;
     }
 
@@ -76,11 +66,6 @@ public class AccountRestClient extends BaseWPComRestClient {
         public boolean isAvailable;
         public List<String> suggestions;
         public IsAvailableError error;
-
-        @Override
-        public boolean isError() {
-            return error != null;
-        }
     }
 
     public enum IsAvailable {
