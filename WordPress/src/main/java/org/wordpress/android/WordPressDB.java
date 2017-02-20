@@ -85,7 +85,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 51;
+    private static final int DATABASE_VERSION = 52;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -201,6 +201,7 @@ public class WordPressDB {
     private static final String ADD_HOME_URL = "alter table accounts add homeURL text default '';";
 
     private static final String ADD_BLOG_OPTIONS = "alter table accounts add blog_options text default '';";
+    private static final String ADD_BLOG_AUTOMATED_TRANSFER = "alter table accounts add isAutomatedTransfer boolean default 0;";
 
     // add category parent id to keep track of category hierarchy
     private static final String ADD_PARENTID_IN_CATEGORIES = "alter table cats add parent_id integer default 0;";
@@ -444,6 +445,9 @@ public class WordPressDB {
                 db.execSQL(ADD_DRAFT_POST_LAST_UPDATED_DATE);
                 db.execSQL(ADD_DRAFT_POST_LAST_NOTIFIED_DATE);
                 currentVersion++;
+            case 51:
+                db.execSQL(ADD_BLOG_AUTOMATED_TRANSFER);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -555,6 +559,7 @@ public class WordPressDB {
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
         values.put("capabilities", blog.getCapabilities());
+        values.put("isAutomatedTransfer", blog.isAutomatedTransfer());
         return db.insert(BLOGS_TABLE, null, values) > -1;
     }
 
@@ -641,6 +646,10 @@ public class WordPressDB {
 
     public int getFirstVisibleBlogId() {
         return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 0 LIMIT 1", null);
+    }
+
+    public int getFirstVisibleAndNonAutomatedTransferBlogId() {
+        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 0 AND isAutomatedTransfer = 0 LIMIT 1", null);
     }
 
     public int getFirstHiddenBlogId() {
@@ -752,10 +761,10 @@ public class WordPressDB {
         values.put("isHidden", blog.isHidden());
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
-        values.put("isHidden", blog.isHidden());
         values.put("plan_product_id", blog.getPlanID());
         values.put("plan_product_name_short", blog.getPlanShortName());
         values.put("capabilities", blog.getCapabilities());
+        values.put("isAutomatedTransfer", blog.isAutomatedTransfer());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -852,7 +861,7 @@ public class WordPressDB {
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden",
-                             "plan_product_id", "plan_product_name_short", "capabilities"};
+                             "plan_product_id", "plan_product_name_short", "capabilities", "isAutomatedTransfer"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -907,6 +916,7 @@ public class WordPressDB {
                     blog.setBlogOptions(c.getString(c.getColumnIndex("blog_options")));
                 }
                 blog.setAdmin(c.getInt(c.getColumnIndex("isAdmin")) > 0);
+                blog.setAutomatedTransfer(c.getInt(c.getColumnIndex("isAutomatedTransfer")) > 0);
                 blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
                 blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
                 blog.setPlanShortName(c.getString(c.getColumnIndex("plan_product_name_short")));

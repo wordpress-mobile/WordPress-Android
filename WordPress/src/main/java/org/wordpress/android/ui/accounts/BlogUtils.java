@@ -76,11 +76,12 @@ public class BlogUtils {
             if (blogMap.containsKey("planID")) {
                 planID = MapUtils.getMapLong(blogMap, "planID");
             }
+            boolean isAutomatedTransfer = MapUtils.getMapBool(blogMap, "isAutomatedTransfer");
             String planShortName = MapUtils.getMapStr(blogMap, "plan_product_name_short");
             String capabilities = MapUtils.getMapStr(blogMap, "capabilities");
 
             retValue |= addOrUpdateBlog(blogName, xmlrpc, homeUrl, blogId, username, password, httpUsername,
-                    httpPassword, isAdmin, isVisible, planID, planShortName, capabilities);
+                    httpPassword, isAdmin, isVisible, planID, planShortName, capabilities, isAutomatedTransfer);
         }
         return retValue;
     }
@@ -110,7 +111,7 @@ public class BlogUtils {
     public static boolean addOrUpdateBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId,
                                           String username, String password, String httpUsername, String httpPassword,
                                           boolean isAdmin, boolean isVisible,
-                                          long planID, String planShortName, String capabilities) {
+                                          long planID, String planShortName, String capabilities, boolean isAutomatedTransfer) {
         Blog blog;
         if (!WordPress.wpDB.isBlogInDatabase(Integer.parseInt(blogId), xmlRpcUrl)) {
             // The blog isn't in the app, so let's create it
@@ -129,6 +130,7 @@ public class BlogUtils {
             blog.setDotcomFlag(WPUrlUtils.isWordPressCom(xmlRpcUrl));
             // assigned later in getOptions call
             blog.setWpVersion("");
+            blog.setAutomatedTransfer(isAutomatedTransfer);
             blog.setAdmin(isAdmin);
             blog.setHidden(!isVisible);
             blog.setPlanID(planID);
@@ -157,6 +159,10 @@ public class BlogUtils {
                 }
                 if (blog.getCapabilities() == null || !blog.getCapabilities().equals(capabilities)) {
                     blog.setCapabilities(capabilities);
+                    blogUpdated = true;
+                }
+                if (isAutomatedTransfer != blog.isAutomatedTransfer()) {
+                    blog.setAutomatedTransfer(isAutomatedTransfer);
                     blogUpdated = true;
                 }
                 if (blogUpdated) {

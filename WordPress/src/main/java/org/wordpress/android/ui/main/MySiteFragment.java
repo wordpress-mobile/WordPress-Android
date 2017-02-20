@@ -319,7 +319,7 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    private void refreshBlogDetails(@Nullable final Blog blog) {
+    private void refreshBlogDetails(@Nullable Blog blog) {
         if (!isAdded()) {
             return;
         }
@@ -450,6 +450,23 @@ public class MySiteFragment extends Fragment
             return;
         }
 
-        refreshBlogDetails(WordPress.getBlog(mBlogLocalId));
+        // refresh current blog object so it gets updated with latest information coming from the server
+        Blog currentBlog = udpateBlogObjectAndId();
+        refreshBlogDetails(currentBlog);
+    }
+
+    private Blog udpateBlogObjectAndId() {
+        // this is needed, in the case this blog doesn't exist anymore locally after refreshing
+        // the database, calling setCurrentBLog will make currentblog null if mBlogLocalId doesn't
+        // exist, and thus then calling
+        // getCurrentBlog afterwards goes through the process of finding the next available blog, if
+        // an available blog is there (cascading through last active blog > first visible blogs >
+        // first hidden blog).
+        WordPress.setCurrentBlog(mBlogLocalId);
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog != null) {
+            mBlogLocalId = currentBlog.getLocalTableBlogId();
+        }
+        return currentBlog;
     }
 }
