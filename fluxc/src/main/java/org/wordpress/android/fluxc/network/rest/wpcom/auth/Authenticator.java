@@ -69,11 +69,6 @@ public class Authenticator {
     public static class AuthEmailResponsePayload extends Payload {
         public AuthEmailError error;
         public AuthEmailResponsePayload() {}
-
-        @Override
-        public boolean isError() {
-            return error != null;
-        }
     }
 
     @Inject

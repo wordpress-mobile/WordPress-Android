@@ -3,11 +3,18 @@ package org.wordpress.android.fluxc;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 
+import java.lang.reflect.Field;
+
 public abstract class Payload {
     public BaseNetworkError error;
 
     public boolean isError() {
-        return error != null;
+        try {
+            Field field = getClass().getField("error");
+            return field.get(this) != null;
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     @Override
