@@ -1851,8 +1851,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             filename += "." + fileExtension;
         }
 
-        boolean isVideo = mimeType.startsWith("video");
-        if (isVideo) {
+        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)) {
             media.setThumbnailUrl(getVideoThumbnail(path));
         }
 
