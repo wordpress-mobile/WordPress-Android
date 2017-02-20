@@ -496,7 +496,9 @@ public class MediaStore extends Store {
     private void performFetchMediaList(FetchMediaListPayload payload) {
         int offset = 0;
         if (payload.loadMore) {
-            offset = getAllSiteMedia(payload.site).size();
+            List<String> list = new ArrayList<>();
+            list.add(UploadState.UPLOADED.toString());
+            offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
         }
         if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
             mMediaRestClient.fetchMediaList(payload.site, offset);
