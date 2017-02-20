@@ -1784,7 +1784,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private String getVideoThumbnail(String videoPath) {
-        String thumbnailPath = "drawable://" + R.drawable.media_image_placeholder;
+        String thumbnailPath = null;
         try {
             File outputFile = File.createTempFile("thumb", ".png", getCacheDir());
             FileOutputStream outputStream = new FileOutputStream(outputFile);
