@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts.photochooser;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +15,9 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -52,21 +57,7 @@ public class PhotoChooserPreviewActivity extends AppCompatActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo();
         } else {
-            mImageView.setImageURI(mMediaUri);
-
-            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
-            attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-                @Override
-                public void onPhotoTap(View view, float v, float v2) {
-                    finish();
-                }
-            });
-            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                @Override
-                public void onViewTap(View view, float v, float v2) {
-                    finish();
-                }
-            });
+            loadImage();
         }
     }
 
@@ -77,6 +68,50 @@ public class PhotoChooserPreviewActivity extends AppCompatActivity {
         outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
     }
 
+    private void delayedFinish() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 1500);
+    }
+
+    private void loadImage() {
+        // load a scaled version of the image to prevent OOM exception
+        int maxWidth = DisplayUtils.getDisplayPixelWidth(this);
+        byte[] bytes = ImageUtils.createThumbnailFromUri(this, mMediaUri, maxWidth, null, 0);
+        if (bytes == null) {
+            ToastUtils.showToast(this, R.string.error_media_load);
+            delayedFinish();
+            return;
+        }
+
+        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        if (bmp == null) {
+            ToastUtils.showToast(this, R.string.error_media_load);
+            delayedFinish();
+            return;
+        }
+
+        mImageView.setImageBitmap(bmp);
+
+        // attach the photo zoomer
+        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float v, float v2) {
+                finish();
+            }
+        });
+        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float v, float v2) {
+                finish();
+            }
+        });
+    }
+
     private void playVideo() {
         final MediaController controls = new MediaController(this);
         mVideoView.setMediaController(controls);
@@ -84,12 +119,7 @@ public class PhotoChooserPreviewActivity extends AppCompatActivity {
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                }, 1500);
+                delayedFinish();
                 return false;
             }
         });
