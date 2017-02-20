@@ -8,6 +8,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
@@ -293,8 +296,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
-                    MediaStore.MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
-                    notifyMediaUploaded(media, error);
+                    notifyMediaUploaded(media, parseUploadError(response));
                 }
             }
 
@@ -310,6 +312,27 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     //
     // Helper methods to dispatch media actions
     //
+
+    private MediaError parseUploadError(okhttp3.Response response) {
+        MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
+        if (response.code() == 403) {
+            mediaError.type = MediaErrorType.UNAUTHORIZED;
+        }
+        try {
+            JSONObject body = new JSONObject(response.body().string());
+            JSONArray errors = body.getJSONArray("errors");
+            if (errors.length() == 1) {
+                JSONObject error = errors.getJSONObject(0);
+                // error.getString("error")) is always "upload_error"
+                if (error.has("message")) {
+                    mediaError.message = error.getString("message");
+                }
+            }
+        } catch (JSONException | IOException e) {
+            // no op
+        }
+        return mediaError;
+    }
 
     private void notifyMediaPushed(SiteModel site, MediaModel media, MediaError error) {
         MediaPayload payload = new MediaPayload(site, media, error);
