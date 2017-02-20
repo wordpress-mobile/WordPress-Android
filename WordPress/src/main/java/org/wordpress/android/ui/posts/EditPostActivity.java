@@ -1585,7 +1585,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaVisualEditor(Uri imageUri) {
-        String path = "";
+        String path;
         if (imageUri.toString().contains("content:")) {
             path = getPathFromContentUri(imageUri);
         } else {
@@ -1599,11 +1599,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         Blog blog = WordPress.getCurrentBlog();
+        // If the user has selected a maximum image width for uploads, rescale the image accordingly
         if (MediaUtils.getImageWidthSettingFromString(blog.getMaxImageWidth()) != Integer.MAX_VALUE) {
-            // If the user has selected a maximum image width for uploads, rescale the image accordingly
+            Map<String, Object> properties = new HashMap<String, Object>();
+            properties.put("resize_width", blog.getMaxImageWidth());
+            // Bump analytics about picture resized
+            AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO, properties);
             path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(blog.getMaxImageWidth()));
             if (path == null) {
                 AppLog.e(T.EDITOR, "Resized picture was null!");
+                AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR, properties);
                 ToastUtils.showToast(this, R.string.file_error_create, Duration.SHORT);
                 return false;
             }
