@@ -1795,7 +1795,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 thumbnailPath = outputFile.getAbsolutePath();
             }
         } catch (IOException e) {
-            // no op
+            AppLog.i(T.MEDIA, "Can't create thumbnail for video: " + videoPath);
         }
         return thumbnailPath;
     }
