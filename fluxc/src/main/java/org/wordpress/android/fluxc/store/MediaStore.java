@@ -76,7 +76,7 @@ public class MediaStore extends Store {
     }
 
     /**
-     * Actions: FETCH_MEDIA_LIST
+     * Actions: FETCHED_MEDIA_LIST
      */
     public static class FetchMediaListResponsePayload extends Payload {
         public SiteModel site;
