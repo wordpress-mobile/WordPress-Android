@@ -14,6 +14,8 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -104,6 +106,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -115,7 +118,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -125,6 +127,8 @@ import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -137,6 +141,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+
+import static android.R.attr.thumb;
+import static java.lang.System.out;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
@@ -1776,6 +1783,23 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    private String getVideoThumbnail(String videoPath) {
+        String thumbnailPath = "drawable://" + R.drawable.media_image_placeholder;
+        try {
+            File outputFile = File.createTempFile("thumb", ".png", getCacheDir());
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
+                    android.provider.MediaStore.Images.Thumbnails.MINI_KIND);
+            if (thumb != null) {
+                thumb.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                thumbnailPath = outputFile.getAbsolutePath();
+            }
+        } catch (IOException e) {
+            // no op
+        }
+        return thumbnailPath;
+    }
+
     /**
      * Queues a media file for upload and starts the MediaUploadService. Toasts will alert the user
      * if there are issues with the file.
@@ -1825,6 +1849,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (fileExtension == null) {
             fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
             filename += "." + fileExtension;
+        }
+
+        boolean isVideo = mimeType.startsWith("video");
+        if (isVideo) {
+            media.setThumbnailUrl(getVideoThumbnail(path));
         }
 
         media.setFileName(filename);
