@@ -793,17 +793,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         String localMediaId = String.valueOf(media.getId());
 
         // Display custom error depending on error type
-        // Eventually we'd want to use error.message here, but the media upload error messages from the WP.com REST API
-        // are not currently localized (they are over XML-RPC)
+        String errorMessage;
         switch (error.type) {
             case UNAUTHORIZED:
-                mEditorMediaUploadListener.onMediaUploadFailed(localMediaId,
-                        getString(R.string.media_error_no_permission_upload));
+                errorMessage = getString(R.string.media_error_no_permission_upload);
                 break;
             case GENERIC_ERROR:
             default:
-                mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, getString(R.string.tap_to_try_again));
+                errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
         }
+        mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, errorMessage);
+
         removeMediaFromPendingList(media);
     }
 
