@@ -54,6 +54,7 @@ public class FluxCUtils {
         mediaFile.setDescription(media.getDescription());
         mediaFile.setCaption(media.getCaption());
         mediaFile.setUploadState(media.getUploadState());
+        mediaFile.setVideo(media.getMimeType().startsWith("video"));
         return mediaFile;
     }
 }
