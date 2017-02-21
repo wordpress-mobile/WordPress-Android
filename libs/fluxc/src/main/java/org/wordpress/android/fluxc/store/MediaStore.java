@@ -143,6 +143,21 @@ public class MediaStore extends Store {
         }
     }
 
+    public class OnMediaListFetched extends OnChanged<MediaError> {
+        public SiteModel site;
+        public List<MediaModel> mediaList;
+        public boolean canLoadMore;
+        public OnMediaListFetched(SiteModel site, List<MediaModel> mediaList, boolean canLoadMore) {
+            this.site = site;
+            this.mediaList = mediaList;
+            this.canLoadMore = canLoadMore;
+        }
+        public OnMediaListFetched(SiteModel site, MediaError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
     public class OnMediaUploaded extends OnChanged<MediaError> {
         public MediaModel media;
         public float progress;
@@ -558,10 +573,10 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaListFetched(@NonNull FetchMediaListResponsePayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCHED_MEDIA_LIST, payload.mediaList);
+        OnMediaListFetched onMediaListFetched;
 
         if (payload.isError()) {
-            onMediaChanged.error = payload.error;
+            onMediaListFetched = new OnMediaListFetched(payload.site, payload.error);
         } else {
             // Clear existing media if this is a fresh fetch (loadMore = false in the original request)
             // This is the simplest way of keeping our local media in sync with remote media (in case of deletions)
@@ -573,9 +588,10 @@ public class MediaStore extends Store {
                     updateMedia(media, false);
                 }
             }
+            onMediaListFetched = new OnMediaListFetched(payload.site, payload.mediaList, payload.canLoadMore);
         }
 
-        emitChange(onMediaChanged);
+        emitChange(onMediaListFetched);
     }
 
     private void handleMediaFetched(@NonNull MediaPayload payload) {
