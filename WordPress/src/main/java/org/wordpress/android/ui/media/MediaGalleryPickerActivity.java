@@ -57,7 +57,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
 
-    private int mOldMediaSyncOffset = 0;
     private SiteModel mSite;
 
     @Inject Dispatcher mDispatcher;
@@ -275,16 +274,11 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     private void refreshMediaFromServer(int offset) {
-        if (offset == 0 || !mIsRefreshing) {
-            if (offset == mOldMediaSyncOffset) {
-                // we're pulling the same data again for some reason. Pull from the beginning.
-                offset = 0;
-            }
-            mOldMediaSyncOffset = offset;
+        if (!mIsRefreshing) {
             mIsRefreshing = true;
             mGridAdapter.setRefreshing(true);
 
-            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, false);
+            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, true);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
