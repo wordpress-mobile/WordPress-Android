@@ -14,6 +14,8 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -81,8 +83,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
-import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -104,6 +104,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -115,7 +116,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -125,18 +125,21 @@ import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+
+import static android.R.attr.thumb;
+import static java.lang.System.out;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
@@ -206,7 +209,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
-    private CountDownLatch mNewPostLatch;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -288,25 +290,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = true;
-                mNewPostLatch = new CountDownLatch(1);
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
                 categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
                 String postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
-                InstantiatePostPayload payload = new InstantiatePostPayload(mSite, mIsPage, categories, postFormat);
-                mDispatcher.dispatch(PostActionBuilder.newInstantiatePostAction(payload));
-
-                // Wait for the OnPostInstantiated event to initialize the post
-                try {
-                    mNewPostLatch.await(1000, TimeUnit.MILLISECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (mPost == null) {
-                    throw new RuntimeException("No callback received from INSTANTIATE_POST action");
-                }
+                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
             } else if (extras != null) {
                 // Load post passed in extras
                 mPost = (PostModel) extras.getSerializable(EXTRA_POST);
@@ -1803,6 +1792,23 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    private String getVideoThumbnail(String videoPath) {
+        String thumbnailPath = null;
+        try {
+            File outputFile = File.createTempFile("thumb", ".png", getCacheDir());
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
+                    android.provider.MediaStore.Images.Thumbnails.MINI_KIND);
+            if (thumb != null) {
+                thumb.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                thumbnailPath = outputFile.getAbsolutePath();
+            }
+        } catch (IOException e) {
+            AppLog.i(T.MEDIA, "Can't create thumbnail for video: " + videoPath);
+        }
+        return thumbnailPath;
+    }
+
     /**
      * Queues a media file for upload and starts the MediaUploadService. Toasts will alert the user
      * if there are issues with the file.
@@ -1852,6 +1858,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (fileExtension == null) {
             fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
             filename += "." + fileExtension;
+        }
+
+        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)) {
+            media.setThumbnailUrl(getVideoThumbnail(path));
         }
 
         media.setFileName(filename);
@@ -2047,12 +2057,5 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
                 break;
         }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.ASYNC)
-    public void onPostInstantiated(OnPostInstantiated event) {
-        mPost = event.post;
-        mNewPostLatch.countDown();
     }
 }
