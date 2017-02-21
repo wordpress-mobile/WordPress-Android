@@ -54,7 +54,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     private ArrayList<Long> mFilteredItems;
     private boolean mIsSelectOneItem;
-    private boolean mIsRefreshing;
+    private boolean mIsFetching;
     private boolean mHasRetrievedAllMedia;
 
     private SiteModel mSite;
@@ -155,7 +155,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        mIsRefreshing = false;
+        mIsFetching = false;
         if (event.isError()) {
             MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
             mHasRetrievedAllMedia = true;
@@ -274,8 +274,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     private void refreshMediaFromServer(int offset) {
-        if (!mIsRefreshing) {
-            mIsRefreshing = true;
+        if (!mIsFetching) {
+            mIsFetching = true;
             mGridAdapter.setRefreshing(true);
 
             FetchMediaListPayload payload = new FetchMediaListPayload(mSite, true);
