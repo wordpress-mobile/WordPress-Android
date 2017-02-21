@@ -629,7 +629,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
             if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
                 mediaToDelete.add(mediaModel);
-                mediaModel.setUploadState(MediaUploadState.DELETE.toString());
+                mediaModel.setUploadState(MediaUploadState.DELETE.name());
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
                 updateViews();
                 sanitizedIds.add(String.valueOf(currentId));
@@ -869,7 +869,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
-        media.setUploadState(MediaUploadState.QUEUED.toString());
+        media.setUploadState(MediaUploadState.QUEUED.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);
