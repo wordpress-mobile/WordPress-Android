@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.push.GCMMessageService;
@@ -45,7 +46,10 @@ public class PendingDraftsNotificationsUtils {
         long one_week_ago = now - NotificationsPendingDraftsReceiver.ONE_WEEK;
         long one_month_ago = now - NotificationsPendingDraftsReceiver.ONE_MONTH;
 
-        long dateLastUpdated = DateTimeUtils.timestampFromIso8601(post.getDateLocallyChanged());
+        long dateLastUpdated = 0;
+        if (!TextUtils.isEmpty(post.getDateLocallyChanged())) {
+            dateLastUpdated = DateTimeUtils.timestampFromIso8601(post.getDateLocallyChanged());
+        }
 
         // set alarms for one day + one week + one month if just over a day but less than a week,
         // set alarms for a week and another for a month, if over a week but less than a month
