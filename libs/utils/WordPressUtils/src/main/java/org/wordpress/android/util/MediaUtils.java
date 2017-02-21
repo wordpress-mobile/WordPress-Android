@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -266,10 +267,10 @@ public class MediaUtils {
                     mimeType = guessedContentType;
                 }
             } catch (MalformedURLException e) {
-                AppLog.e(AppLog.T.API, "MalformedURLException while trying to guess the content type for the file here " + mediaFile.getPath() + " with URLConnection", e);
+                AppLog.e(AppLog.T.MEDIA, "MalformedURLException while trying to guess the content type for the file here " + mediaFile.getPath() + " with URLConnection", e);
             }
             catch (IOException e) {
-                AppLog.e(AppLog.T.API, "Error while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
+                AppLog.e(AppLog.T.MEDIA, "Error while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
             }
         }
 
@@ -283,9 +284,9 @@ public class MediaUtils {
                 }
                 inputStream.close();
             } catch (FileNotFoundException e) {
-                AppLog.e(AppLog.T.API, "FileNotFoundException while trying to guess the content type for the file " + mediaFile.getPath(), e);
+                AppLog.e(AppLog.T.MEDIA, "FileNotFoundException while trying to guess the content type for the file " + mediaFile.getPath(), e);
             } catch (IOException e) {
-                AppLog.e(AppLog.T.API, "IOException while trying to guess the content type for the file " + mediaFile.getPath(), e);
+                AppLog.e(AppLog.T.MEDIA, "IOException while trying to guess the content type for the file " + mediaFile.getPath(), e);
             }
         }
 
@@ -332,5 +333,43 @@ public class MediaUtils {
         }
 
         return fileExtensionFromMimeType.toLowerCase();
+    }
+
+    public static String getPathFromContentUri(Context context, Uri imageUri) {
+        if(context == null || imageUri == null) {
+            return null;
+        }
+
+        String path = null;
+        String[] projection = new String[]{MediaStore.Images.Media.DATA};
+        Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
+        if (cur != null && cur.moveToFirst()) {
+            int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
+            path = cur.getString(dataColumn);
+        }
+        SqlUtils.closeCursor(cur);
+        return path;
+    }
+
+    public static long getVideoDurationMS(Context context, File file) {
+        if(context == null || file == null) {
+            AppLog.e(AppLog.T.MEDIA, "context and file can't be null.");
+            return 0L;
+        }
+        return getVideoDurationMS(context, Uri.fromFile(file));
+    }
+
+    public static long getVideoDurationMS(Context context, Uri videoUri) {
+        if(context == null || videoUri == null) {
+            AppLog.e(AppLog.T.MEDIA, "context and videoUri can't be null.");
+            return 0L;
+        }
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(context, videoUri);
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        if (time == null) {
+            return 0L;
+        }
+        return Long.parseLong(time);
     }
 }
