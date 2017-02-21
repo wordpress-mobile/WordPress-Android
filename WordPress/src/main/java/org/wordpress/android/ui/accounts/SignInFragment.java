@@ -154,8 +154,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
 
-    private RefreshSitesXMLRPCPayload mSelfhostedPayload;
-
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
     protected @Inject Dispatcher mDispatcher;
@@ -844,14 +842,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void signInAndFetchBlogListWPOrg() {
         startProgress(getString(R.string.signing_in));
         String url = EditTextUtils.getText(mUrlEditText).trim();
-
-        mSelfhostedPayload = new RefreshSitesXMLRPCPayload();
-        mSelfhostedPayload.username = mUsername;
-        mSelfhostedPayload.password = mPassword;
-        mSelfhostedPayload.url = url;
         // Self Hosted don't have any "Authentication" request, try to list sites with user/password
-        mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
-
+        mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(url));
     }
 
     private boolean checkNetworkConnectivity() {
@@ -1273,8 +1265,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
-        mSelfhostedPayload.url = event.xmlRpcEndpoint;
-        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(mSelfhostedPayload));
+        RefreshSitesXMLRPCPayload selfhostedPayload = new RefreshSitesXMLRPCPayload();
+        selfhostedPayload.username = mUsername;
+        selfhostedPayload.password = mPassword;
+        selfhostedPayload.url = event.xmlRpcEndpoint;
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(selfhostedPayload));
     }
 
     @SuppressWarnings("unused")
@@ -1294,7 +1289,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
+    public void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
         AppLog.e(T.API, "Discover error: " + error);
         endProgress();
         if (!isAdded()) {
@@ -1302,19 +1297,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
         switch (error) {
             case ERRONEOUS_SSL_CERTIFICATE:
-                mSelfhostedPayload.url = failedEndpoint;
-                    SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
-                            new Callback() {
-                                @Override
-                                public void certificateTrusted() {
-                                    if (mSelfhostedPayload == null) {
-                                        return;
-                                    }
-                                    // retry login with the same parameters
-                                    startProgress(getString(R.string.signing_in));
-                                    mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
+                SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
+                        new Callback() {
+                            @Override
+                            public void certificateTrusted() {
+                                if (failedEndpoint == null) {
+                                    return;
                                 }
-                            });
+                                // retry login with the same parameters
+                                startProgress(getString(R.string.signing_in));
+                                mDispatcher.dispatch(
+                                        AuthenticationActionBuilder.newDiscoverEndpointAction(failedEndpoint));
+                            }
+                        });
 
                 break;
             case HTTP_AUTH_REQUIRED:
