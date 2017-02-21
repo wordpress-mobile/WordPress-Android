@@ -533,7 +533,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         switch (event.cause) {
-            case FETCH_ALL_MEDIA:
+            case FETCH_MEDIA_LIST:
                 break;
             case DELETE_MEDIA:
                 if (event.mediaList == null || event.mediaList.isEmpty()) {

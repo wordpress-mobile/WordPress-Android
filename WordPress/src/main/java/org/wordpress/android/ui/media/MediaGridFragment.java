@@ -39,10 +39,9 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
@@ -384,7 +383,7 @@ public class MediaGridFragment extends Fragment
         }
 
         switch (event.cause) {
-            case FETCH_ALL_MEDIA:
+            case FETCHED_MEDIA_LIST:
                 if (event.mediaList != null) {
                     handleFetchAllMediaSuccess(event);
                 }
@@ -806,12 +805,8 @@ public class MediaGridFragment extends Fragment
             mGridAdapter.setRefreshing(true);
 
             // TODO: figure out how to integrate `auto` to callback
-            MediaFilter fetchFilter = new MediaFilter();
-            fetchFilter.offset = mMediaFetchOffset;
-            fetchFilter.number = NUM_PER_FETCH;
-            mMediaFetchOffset += NUM_PER_FETCH;
-            MediaListPayload payload = new MediaListPayload(mSite, null, fetchFilter);
-            mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
+            FetchMediaListPayload payload = new FetchMediaListPayload(mSite);
+            mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
 

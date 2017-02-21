@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -284,8 +284,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             mIsRefreshing = true;
             mGridAdapter.setRefreshing(true);
 
-            MediaListPayload payload = new MediaListPayload(mSite, null, null);
-            mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
+            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, false);
+            mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
 
