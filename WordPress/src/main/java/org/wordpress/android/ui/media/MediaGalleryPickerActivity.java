@@ -154,7 +154,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+    public void OnMediaListFetched(MediaStore.OnMediaListFetched event) {
         mIsFetching = false;
         if (event.isError()) {
             MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
@@ -177,7 +177,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             }
         } else {
             MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-            mHasRetrievedAllMedia = event.mediaList.size() == 0;
+            mHasRetrievedAllMedia = !event.canLoadMore;
             adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
             if (mMediaStore.getSiteMediaCount(mSite) == 0 && mHasRetrievedAllMedia) {
                 // There is no media at all
