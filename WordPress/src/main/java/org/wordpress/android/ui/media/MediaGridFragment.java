@@ -75,7 +75,6 @@ public class MediaGridFragment extends Fragment
     private static final String BUNDLE_HAS_RETRIEVED_ALL_MEDIA = "BUNDLE_HAS_RETRIEVED_ALL_MEDIA";
     private static final String BUNDLE_FILTER = "BUNDLE_FILTER";
     private static final String BUNDLE_EMPTY_VIEW_MESSAGE = "BUNDLE_EMPTY_VIEW_MESSAGE";
-    private static final String BUNDLE_FETCH_OFFSET = "BUNDLE_FETCH_OFFSET";
 
     private static final String BUNDLE_DATE_FILTER_SET = "BUNDLE_DATE_FILTER_SET";
     private static final String BUNDLE_DATE_FILTER_VISIBLE = "BUNDLE_DATE_FILTER_VISIBLE";
@@ -112,8 +111,6 @@ public class MediaGridFragment extends Fragment
     private TextView mEmptyViewTitle;
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
 
-    private int mOldMediaSyncOffset = 0;
-
     private boolean mIsDateFilterSet;
     private boolean mSpinnerHasLaunched;
 
@@ -124,8 +121,6 @@ public class MediaGridFragment extends Fragment
     private MenuItem mNewGalleryButton;
 
     private SiteModel mSite;
-
-    private int mMediaFetchOffset = 0;
 
     public interface MediaGridListener {
         void onMediaItemSelected(long mediaId);
@@ -248,7 +243,7 @@ public class MediaGridFragment extends Fragment
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
-                        fetchAllMedia(0);
+                        fetchAllMedia(false);
                     }
                 });
         restoreState(savedInstanceState);
@@ -269,9 +264,9 @@ public class MediaGridFragment extends Fragment
     }
 
     @Override
-    public void fetchMoreData(int offset) {
+    public void fetchMoreData() {
         if (!mHasRetrievedAllMedia) {
-            fetchAllMedia(offset);
+            fetchAllMedia(true);
         }
     }
 
@@ -404,7 +399,7 @@ public class MediaGridFragment extends Fragment
         if (isAdded() && mGridAdapter.getDataCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
-                    fetchAllMedia(0);
+                    fetchAllMedia(false);
                 }
             } else {
                 updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
@@ -640,7 +635,6 @@ public class MediaGridFragment extends Fragment
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
-        outState.putInt(BUNDLE_FETCH_OFFSET, mMediaFetchOffset);
 
         outState.putBoolean(BUNDLE_DATE_FILTER_SET, mIsDateFilterSet);
         outState.putBoolean(BUNDLE_DATE_FILTER_VISIBLE, (mDatePickerDialog != null && mDatePickerDialog.isShowing()));
@@ -771,7 +765,7 @@ public class MediaGridFragment extends Fragment
             showDatePicker();
     }
 
-    private void fetchAllMedia(int offset) {
+    private void fetchAllMedia(boolean loadMore) {
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
@@ -792,20 +786,14 @@ public class MediaGridFragment extends Fragment
             return;
         }
 
-        if (offset == 0 || !mIsRefreshing) {
-            if (offset == mOldMediaSyncOffset) {
-                // we're pulling the same data again for some reason. Pull from the beginning.
-                offset = 0;
-            }
-            mOldMediaSyncOffset = offset;
-
+        if (!mIsRefreshing) {
             mIsRefreshing = true;
             updateEmptyView(EmptyViewMessageType.LOADING);
             setRefreshing(true);
             mGridAdapter.setRefreshing(true);
 
             // TODO: figure out how to integrate `auto` to callback
-            FetchMediaListPayload payload = new FetchMediaListPayload(mSite);
+            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
