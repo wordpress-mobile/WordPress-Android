@@ -243,7 +243,7 @@ public class MediaSqlUtils {
     public static int deleteAllUploadedSiteMedia(SiteModel siteModel) {
         return WellSql.delete(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getSiteId())
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
                 .equals(MediaModelTable.UPLOAD_STATE, UploadState.UPLOADED.toString())
                 .endGroup().endWhere().execute();
     }
