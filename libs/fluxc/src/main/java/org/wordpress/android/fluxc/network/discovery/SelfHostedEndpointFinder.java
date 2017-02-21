@@ -26,9 +26,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -97,7 +95,7 @@ public class SelfHostedEndpointFinder {
         mBaseWPAPIRestClient = baseWPAPIRestClient;
     }
 
-    public void findEndpoint(final String url, final String username, final String password) {
+    public void findEndpoint(final String url) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -107,7 +105,7 @@ public class SelfHostedEndpointFinder {
                         wpRestEndpoint = discoverWPRESTEndpoint(url);
                     }
                     // TODO: Eventually make the XML-RPC discovery only run if WP-API discovery fails
-                    String xmlRpcEndpoint = verifyOrDiscoverXMLRPCEndpoint(url, username, password);
+                    String xmlRpcEndpoint = verifyOrDiscoverXMLRPCEndpoint(url);
                     DiscoveryResultPayload payload = new DiscoveryResultPayload(xmlRpcEndpoint, wpRestEndpoint);
                     mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
                 } catch (DiscoveryException e) {
@@ -123,8 +121,7 @@ public class SelfHostedEndpointFinder {
         }).start();
     }
 
-    private String verifyOrDiscoverXMLRPCEndpoint(final String siteUrl, final String httpUsername,
-                                                 final String httpPassword) throws DiscoveryException {
+    private String verifyOrDiscoverXMLRPCEndpoint(final String siteUrl) throws DiscoveryException {
         if (TextUtils.isEmpty(siteUrl)) {
             throw new DiscoveryException(DiscoveryError.INVALID_URL, siteUrl);
         }
@@ -133,12 +130,12 @@ public class SelfHostedEndpointFinder {
             throw new DiscoveryException(DiscoveryError.WORDPRESS_COM_SITE, siteUrl);
         }
 
-        String xmlrpcUrl = verifyXMLRPCUrl(siteUrl, httpUsername, httpPassword);
+        String xmlrpcUrl = verifyXMLRPCUrl(siteUrl);
 
         if (xmlrpcUrl == null) {
             AppLog.w(T.NUX, "The XML-RPC endpoint was not found by using our 'smart' cleaning approach. "
                             + "Time to start the Endpoint discovery process");
-            xmlrpcUrl = discoverXMLRPCEndpoint(siteUrl, httpUsername, httpPassword);
+            xmlrpcUrl = discoverXMLRPCEndpoint(siteUrl);
         }
 
         // Validate the XML-RPC URL we've found before. This check prevents a crash that can occur
@@ -180,15 +177,14 @@ public class SelfHostedEndpointFinder {
         return urlsToTry;
     }
 
-    private String verifyXMLRPCUrl(@NonNull final String siteUrl, final String httpUsername, final String httpPassword)
-            throws DiscoveryException {
+    private String verifyXMLRPCUrl(@NonNull final String siteUrl) throws DiscoveryException {
         // Ordered set of Strings that contains the URLs we want to try
         final LinkedHashSet<String> urlsToTry = getOrderedVerifyUrlsToTry(siteUrl);
 
         AppLog.i(T.NUX, "Calling system.listMethods on the following URLs: " + urlsToTry);
         for (String url : urlsToTry) {
             try {
-                if (checkXMLRPCEndpointValidity(url, httpUsername, httpPassword)) {
+                if (checkXMLRPCEndpointValidity(url)) {
                     // Endpoint found and works fine.
                     return url;
                 }
@@ -213,8 +209,7 @@ public class SelfHostedEndpointFinder {
     // Attempts to retrieve the XML-RPC url for a self-hosted site.
     // See diagrams here https://github.com/wordpress-mobile/WordPress-Android/issues/3805 for details about the
     // whole process.
-    private String discoverXMLRPCEndpoint(String siteUrl, String httpUsername, String httpPassword) throws
-            DiscoveryException {
+    private String discoverXMLRPCEndpoint(String siteUrl) throws DiscoveryException {
         // Ordered set of Strings that contains the URLs we want to try
         final Set<String> urlsToTry = new LinkedHashSet<>();
 
@@ -280,7 +275,7 @@ public class SelfHostedEndpointFinder {
         }
 
         if (URLUtil.isValidUrl(xmlrpcUrl)) {
-            if (checkXMLRPCEndpointValidity(xmlrpcUrl, httpUsername, httpPassword)) {
+            if (checkXMLRPCEndpointValidity(xmlrpcUrl)) {
                 // Endpoint found and works fine.
                 return xmlrpcUrl;
             }
@@ -364,10 +359,9 @@ public class SelfHostedEndpointFinder {
         return url;
     }
 
-    private boolean checkXMLRPCEndpointValidity(String url, String httpUsername, String httpPassword)
-            throws DiscoveryException {
+    private boolean checkXMLRPCEndpointValidity(String url) throws DiscoveryException {
         try {
-            Object[] methods = doSystemListMethodsXMLRPC(url, httpUsername, httpPassword);
+            Object[] methods = doSystemListMethodsXMLRPC(url);
             if (methods == null) {
                 AppLog.e(T.NUX, "The response of system.listMethods was empty for " + url);
                 return false;
@@ -405,8 +399,7 @@ public class SelfHostedEndpointFinder {
         return false;
     }
 
-    private Object[] doSystemListMethodsXMLRPC(String url, String httpUsername, String httpPassword) throws
-            DiscoveryException {
+    private Object[] doSystemListMethodsXMLRPC(String url) throws DiscoveryException {
         if (!UrlUtils.isValidUrlAndHostNotNull(url)) {
             AppLog.e(T.NUX, "Invalid URL: " + url);
             throw new DiscoveryException(DiscoveryError.INVALID_URL, url);
@@ -414,12 +407,8 @@ public class SelfHostedEndpointFinder {
 
         AppLog.i(T.NUX, "Trying system.listMethods on the following URL: " + url);
 
-        List<Object> params = new ArrayList<>(2);
-        params.add(httpUsername);
-        params.add(httpPassword);
-
         BaseRequestFuture<Object[]> future = BaseRequestFuture.newFuture();
-        DiscoveryXMLRPCRequest request = new DiscoveryXMLRPCRequest(url, XMLRPC.LIST_METHODS, params, future, future);
+        DiscoveryXMLRPCRequest request = new DiscoveryXMLRPCRequest(url, XMLRPC.LIST_METHODS, future, future);
         mXMLRPCClient.add(request);
         try {
             return future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
