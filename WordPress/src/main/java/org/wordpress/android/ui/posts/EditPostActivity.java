@@ -82,8 +82,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
-import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
@@ -135,8 +133,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -213,7 +209,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
-    private CountDownLatch mNewPostLatch;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -295,25 +290,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = true;
-                mNewPostLatch = new CountDownLatch(1);
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
                 categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
                 String postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
-                InstantiatePostPayload payload = new InstantiatePostPayload(mSite, mIsPage, categories, postFormat);
-                mDispatcher.dispatch(PostActionBuilder.newInstantiatePostAction(payload));
-
-                // Wait for the OnPostInstantiated event to initialize the post
-                try {
-                    mNewPostLatch.await(1000, TimeUnit.MILLISECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (mPost == null) {
-                    throw new RuntimeException("No callback received from INSTANTIATE_POST action");
-                }
+                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
             } else if (extras != null) {
                 // Load post passed in extras
                 mPost = (PostModel) extras.getSerializable(EXTRA_POST);
@@ -2036,12 +2018,5 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
                 break;
         }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.ASYNC)
-    public void onPostInstantiated(OnPostInstantiated event) {
-        mPost = event.post;
-        mNewPostLatch.countDown();
     }
 }
