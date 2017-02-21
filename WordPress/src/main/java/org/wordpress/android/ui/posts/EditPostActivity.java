@@ -172,9 +172,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
 
-    // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
-    private Map<Long, List<Long>> mPendingGalleryUploads = new HashMap<>();
-
     private List<String> mPendingVideoPressInfoRequests;
 
     /**
