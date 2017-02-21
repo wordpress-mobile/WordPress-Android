@@ -73,6 +73,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -83,7 +84,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -767,27 +767,50 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                     FluxCUtils.fromMediaModel(media));
         }
+        removeMediaFromPendingList(media);
     }
 
     @Override
     public void onUploadCanceled(MediaModel media) {
+        removeMediaFromPendingList(media);
     }
 
     @Override
     public void onUploadError(MediaModel media, MediaStore.MediaError error) {
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
         String localMediaId = String.valueOf(media.getId());
-        if (error.type == MediaErrorType.GENERIC_ERROR) {
-            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, getString(R.string.tap_to_try_again));
-        } else {
-            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, error.message);
+
+        // Display custom error depending on error type
+        String errorMessage;
+        switch (error.type) {
+            case UNAUTHORIZED:
+                errorMessage = getString(R.string.media_error_no_permission_upload);
+                break;
+            case GENERIC_ERROR:
+            default:
+                errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
         }
+        mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, errorMessage);
+
+        removeMediaFromPendingList(media);
     }
 
     @Override
     public void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());
         mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
+    }
+
+    private void removeMediaFromPendingList(MediaModel mediaToClear) {
+        if (mediaToClear == null) {
+            return;
+        }
+        for (MediaModel pendingUpload : mPendingUploads) {
+            if (pendingUpload.getId() == mediaToClear.getId()) {
+                mPendingUploads.remove(pendingUpload);
+                break;
+            }
+        }
     }
 
     private void launchPictureLibrary() {
@@ -1725,7 +1748,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mMediaUploadService.setListener(EditPostActivity.this);
             if (!mPendingUploads.isEmpty()) {
                 for (MediaModel media : mPendingUploads) {
-                    mMediaUploadService.addMediaToQueue(media);
+                    if (media.getUploadState().equals(UploadState.QUEUED.name())) {
+                        mMediaUploadService.addMediaToQueue(media);
+                    }
                 }
             }
         }
@@ -1760,7 +1785,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             startService(intent);
         } else if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             for (MediaModel media : mPendingUploads) {
-                mMediaUploadService.addMediaToQueue(media);
+                if (media.getUploadState().equals(UploadState.QUEUED.name())) {
+                    mMediaUploadService.addMediaToQueue(media);
+                }
             }
         }
     }
@@ -1842,7 +1869,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
-        media.setUploadState(MediaUploadState.QUEUED.toString());
+        media.setUploadState(UploadState.QUEUED.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
@@ -1889,11 +1916,23 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        if (mMediaUploadService == null) {
-            startMediaUploadService();
-        } else {
-            // TODO: FluxC integration on retry?
+        MediaModel media = null;
+
+        List<MediaModel> localMediaList = mMediaStore.getLocalSiteMedia(mSite);
+        for (MediaModel localMedia : localMediaList) {
+            if (String.valueOf(localMedia.getId()).equals(mediaId)) {
+                media = localMedia;
+                break;
+            }
         }
+
+        if (media != null) {
+            media.setUploadState(UploadState.QUEUED.name());
+            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+            mPendingUploads.add(media);
+            startMediaUploadService();
+        }
+
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
     }
 

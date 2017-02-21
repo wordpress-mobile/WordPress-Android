@@ -7,9 +7,4 @@ public enum MediaUploadState {
     DELETED,
     FAILED,
     UPLOADED;
-
-    @Override
-    public String toString() {
-        return this.name().toLowerCase();
-    }
 }
