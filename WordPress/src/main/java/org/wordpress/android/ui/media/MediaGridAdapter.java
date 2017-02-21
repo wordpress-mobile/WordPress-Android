@@ -18,7 +18,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -109,7 +108,6 @@ public class MediaGridAdapter extends CursorAdapter {
 
         private final TextView stateTextView;
         private final ProgressBar progressUpload;
-        private final RelativeLayout uploadStateView;
 
         GridViewHolder(View view) {
             filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
@@ -122,7 +120,6 @@ public class MediaGridAdapter extends CursorAdapter {
 
             stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
             progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
-            uploadStateView = (RelativeLayout) view.findViewById(R.id.media_grid_item_upload_state_container);
         }
     }
 
@@ -225,25 +222,26 @@ public class MediaGridAdapter extends CursorAdapter {
         // show upload state
         if (holder.stateTextView != null) {
             if (state != null && state.length() > 0) {
-                // show the progressbar only when the state is uploading
-                if (state.equalsIgnoreCase(MediaUploadState.UPLOADING.name()) ||
-                        state.equalsIgnoreCase(MediaUploadState.DELETE.name())) {
-                    holder.progressUpload.setVisibility(View.VISIBLE);
-                    holder.stateTextView.setVisibility(View.VISIBLE);
-                    holder.stateTextView.setText(state);
-                } else {
+                holder.stateTextView.setVisibility(View.VISIBLE);
+                holder.stateTextView.setText(state);
+
+                // hide the progressbar only if the state is Uploaded or failed
+                if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name()) ||
+                        state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
                     holder.progressUpload.setVisibility(View.GONE);
-                    if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
-                        holder.progressUpload.setVisibility(View.GONE);
-                        holder.stateTextView.setVisibility(View.GONE);
-                    }
+                } else {
+                    holder.progressUpload.setVisibility(View.VISIBLE);
+                }
+
+                // Hide the state text only if the it's Uploaded
+                if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
+                    holder.stateTextView.setVisibility(View.GONE);
                 }
 
                 // add onclick to retry failed uploads
                 if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
                     state = MediaUploadState.QUEUED.name();
                     holder.stateTextView.setVisibility(View.VISIBLE);
-                    holder.uploadStateView.setVisibility(View.VISIBLE);
                     holder.stateTextView.setText(state);
                     holder.stateTextView.setOnClickListener(new OnClickListener() {
                         @Override
@@ -258,7 +256,8 @@ public class MediaGridAdapter extends CursorAdapter {
                 }
 
             } else {
-                holder.uploadStateView.setVisibility(View.GONE);
+                holder.progressUpload.setVisibility(View.GONE);
+                holder.stateTextView.setVisibility(View.GONE);
             }
         }
 
