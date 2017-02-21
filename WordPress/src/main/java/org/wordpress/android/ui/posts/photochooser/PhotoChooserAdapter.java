@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
@@ -116,10 +117,11 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             holder.txtSelectionCount.setVisibility(View.GONE);
         }
 
-        // ensure thumbnail scale is reset when not selected
-        if (!mIsMultiSelectEnabled && holder.imgThumbnail.getScaleX() != SCALE_NORMAL) {
-            holder.imgThumbnail.setScaleX(SCALE_NORMAL);
-            holder.imgThumbnail.setScaleY(SCALE_NORMAL);
+        // make sure the thumbnail scale reflects its selection state
+        float scale = selectedIndex > -1 ? SCALE_SELECTED : SCALE_NORMAL;
+        if (holder.imgThumbnail.getScaleX() != scale) {
+            holder.imgThumbnail.setScaleX(scale);
+            holder.imgThumbnail.setScaleY(scale);
         }
 
         holder.videoOverlay.setVisibility(item.isVideo ? View.VISIBLE : View.GONE);
@@ -179,8 +181,8 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         } else {
             mSelectedUris.add(uri);
             isSelected = true;
+            holder.txtSelectionCount.setText(Integer.toString(mSelectedUris.size()));
         }
-        notifyDataSetChangedNoFade();
 
         // animate the count
         AniUtils.startAnimation(holder.txtSelectionCount,
@@ -197,6 +199,15 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         if (mPhotoListener != null) {
             mPhotoListener.onSelectedCountChanged(getNumSelected());
         }
+
+        // redraw the grid after the scale animation completes
+        long delayMs = AniUtils.Duration.SHORT.toMillis(mContext);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChangedNoFade();
+            }
+        }, delayMs);
     }
 
     private boolean isValidPosition(int position) {
