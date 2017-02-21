@@ -64,6 +64,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     private final ThumbnailLoader mThumbnailLoader;
     private final OnPhotoChooserListener mPhotoListener;
     private final OnAdapterLoadedListener mLoadedListener;
+    private final LayoutInflater mInflater;
     private final ArrayList<PhotoChooserItem> mMediaList = new ArrayList<>();
 
     public PhotoChooserAdapter(Context context,
@@ -73,6 +74,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         mContext = context;
         mPhotoListener = photoListener;
         mLoadedListener = loadedListener;
+        mInflater = LayoutInflater.from(context);
         mThumbnailLoader = new ThumbnailLoader(context);
         setHasStableIds(true);
     }
@@ -100,8 +102,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
 
     @Override
     public ThumbnailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.photo_chooser_thumbnail, parent, false);
+        View view = mInflater.inflate(R.layout.photo_chooser_thumbnail, parent, false);
         return new ThumbnailViewHolder(view);
     }
 
@@ -136,6 +137,10 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         return mMediaList.get(position);
     }
 
+    private boolean isValidPosition(int position) {
+        return position >= 0 && position < mMediaList.size();
+    }
+
     boolean isVideoUri(Uri uri) {
         int index = indexOfUri(uri);
         return index > -1 && getItemAtPosition(index).isVideo;
@@ -157,29 +162,21 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     }
 
     /*
-     * calls notifyDataSetChanged() with the ThumbnailLoader image fade disabled - used to
-     * prevent unnecessary flicker when changing existing items
+     * toggles the selection state of the item at the passed position
      */
-    private void notifyDataSetChangedNoFade() {
-        mThumbnailLoader.temporarilyDisableFade();
-        notifyDataSetChanged();
-    }
-
-    // TODO: should there be a limit to the number of items the user can select?
     private void toggleSelection(ThumbnailViewHolder holder, int position) {
-        if (!isValidPosition(position)) {
-            AppLog.w(AppLog.T.POSTS, "photo chooser > invalid position in toggleSelection");
+        PhotoChooserItem item = getItemAtPosition(position);
+        if (item == null) {
             return;
         }
 
         boolean isSelected;
-        Uri uri = getItemAtPosition(position).uri;
-        int selectedIndex = mSelectedUris.indexOfUri(uri);
+        int selectedIndex = mSelectedUris.indexOfUri(item.uri);
         if (selectedIndex > -1) {
             mSelectedUris.remove(selectedIndex);
             isSelected = false;
         } else {
-            mSelectedUris.add(uri);
+            mSelectedUris.add(item.uri);
             isSelected = true;
             holder.txtSelectionCount.setText(Integer.toString(mSelectedUris.size()));
         }
@@ -210,10 +207,6 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         }, delayMs);
     }
 
-    private boolean isValidPosition(int position) {
-        return position >= 0 && position < mMediaList.size();
-    }
-
     ArrayList<Uri> getSelectedURIs() {
         return mSelectedUris;
     }
@@ -235,6 +228,15 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             }
         }
         return -1;
+    }
+
+    /*
+     * calls notifyDataSetChanged() with the ThumbnailLoader image fade disabled - used to
+     * prevent unnecessary flicker when changing existing items
+     */
+    private void notifyDataSetChangedNoFade() {
+        mThumbnailLoader.temporarilyDisableFade();
+        notifyDataSetChanged();
     }
 
     /*
