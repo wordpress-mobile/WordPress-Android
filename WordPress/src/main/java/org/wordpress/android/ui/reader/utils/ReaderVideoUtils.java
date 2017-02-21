@@ -163,7 +163,7 @@ public class ReaderVideoUtils {
             }
         };
 
-        String url = "http://vimeo.com/api/v2/video/" + id + ".json";
+        String url = "https://vimeo.com/api/v2/video/" + id + ".json";
         JsonArrayRequest request = new JsonArrayRequest(url, listener, errorListener);
 
         WordPress.requestQueue.add(request);
