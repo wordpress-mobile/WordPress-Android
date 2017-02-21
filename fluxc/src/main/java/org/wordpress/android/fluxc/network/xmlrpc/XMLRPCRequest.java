@@ -44,7 +44,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
         mListener = listener;
         mMethod = method;
         // First params are always username/password
-        mParams = params.toArray();
+        mParams = (params == null ? null : params.toArray());
     }
 
     @Override

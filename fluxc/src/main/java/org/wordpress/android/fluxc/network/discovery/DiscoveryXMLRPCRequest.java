@@ -8,16 +8,13 @@ import org.wordpress.android.fluxc.action.AuthenticationAction;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 
-import java.util.List;
-
 /**
  * A custom XMLRPCRequest intended for XML-RPC discovery, which doesn't emit global
  * {@link AuthenticationAction#AUTHENTICATE_ERROR} events.
  */
 public class DiscoveryXMLRPCRequest extends XMLRPCRequest {
-    public DiscoveryXMLRPCRequest(String url, XMLRPC method, List<Object> params, Listener listener,
-                                  BaseErrorListener errorListener) {
-        super(url, method, params, listener, errorListener);
+    DiscoveryXMLRPCRequest(String url, XMLRPC method, Listener listener, BaseErrorListener errorListener) {
+        super(url, method, null, listener, errorListener);
     }
 
     @Override

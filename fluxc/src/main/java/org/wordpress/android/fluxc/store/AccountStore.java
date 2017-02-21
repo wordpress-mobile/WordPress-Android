@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
-import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -386,7 +385,7 @@ public class AccountStore extends Store {
                 handleAuthenticateError((AuthenticateErrorPayload) payload);
                 break;
             case DISCOVER_ENDPOINT:
-                discoverEndPoint((RefreshSitesXMLRPCPayload) payload);
+                discoverEndPoint((String) payload);
                 break;
             case DISCOVERY_RESULT:
                 discoveryResult((DiscoveryResultPayload) payload);
@@ -406,8 +405,8 @@ public class AccountStore extends Store {
         emitChange(event);
     }
 
-    private void discoverEndPoint(RefreshSitesXMLRPCPayload payload) {
-        mSelfHostedEndpointFinder.findEndpoint(payload.url, payload.username, payload.password);
+    private void discoverEndPoint(String payload) {
+        mSelfHostedEndpointFinder.findEndpoint(payload);
     }
 
     private void discoveryResult(DiscoveryResultPayload payload) {

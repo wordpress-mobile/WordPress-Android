@@ -7,14 +7,13 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.Di
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
-import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 
 @ActionEnum
 public enum AuthenticationAction implements IAction {
     // Remote actions
     @Action(payloadType = AuthenticatePayload.class)
     AUTHENTICATE,
-    @Action(payloadType = RefreshSitesXMLRPCPayload.class)
+    @Action(payloadType = String.class)
     DISCOVER_ENDPOINT,
     @Action(payloadType = String.class)
     SEND_AUTH_EMAIL,
