@@ -1099,7 +1099,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mediaFile == null) {
             return;
         }
-        trackAddMediaEvents(mediaFile.isVideo(), true);
+        trackAddMediaFromWPLibrary(mediaFile.isVideo(), mediaId);
         mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
     }
 
@@ -1182,7 +1182,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
                 if (uri != null && stringUri.contains("content:")) {
-                    path = getPathFromContentUri(uri);
+                    path = MediaUtils.getPathFromContentUri(this, uri);
                     if (path == null) {
                         continue;
                     }
@@ -1542,13 +1542,44 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         task.execute(apiArgs);
     }
 
-    private void trackAddMediaEvents(boolean isVideo, boolean fromMediaLibrary) {
+    /**
+     * Analytics about new media
+     *
+     * @param isVideo Whether is a video or not
+     * @param uri The URI of the media on the device, or null
+     * @param path The path of the media on the device, or null
+     */
+    private void trackAddMediaFromDevice(boolean isVideo, Uri uri, String path) {
+        if (TextUtils.isEmpty(path) && uri == null) {
+            AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!");
+            return;
+        }
+
+        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, path);
+
         if (isVideo) {
-            AnalyticsTracker.track(fromMediaLibrary ? Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY
-                    : Stat.EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY);
+            AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY, properties);
         } else {
-            AnalyticsTracker.track(fromMediaLibrary ? Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY
-                    : Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY, properties);
+        }
+    }
+
+    /**
+     * Analytics about media already available in the blog's library.
+     *
+     * @param isVideo Whether is a video or not
+     * @param mediaId The ID of the media in the WP blog's library, or null if device media.
+     */
+    private void trackAddMediaFromWPLibrary(boolean isVideo, String mediaId) {
+        if (TextUtils.isEmpty(mediaId)) {
+            AppLog.e(T.MEDIA, "Cannot track media events if both mediaIdis null!!");
+            return;
+        }
+
+        if (isVideo) {
+            AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY);
+        } else {
+            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
         }
     }
 
@@ -1562,32 +1593,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
-        trackAddMediaEvents(isVideo, false);
 
         if (mShowNewEditor || mShowAztecEditor) {
-            // TODO: add video param
-            return addMediaVisualEditor(mediaUri);
+            return addMediaVisualEditor(mediaUri, isVideo);
         } else {
             return addMediaLegacyEditor(mediaUri, isVideo);
         }
     }
 
-    private String getPathFromContentUri(Uri imageUri) {
-        String path = null;
-        String[] projection = new String[]{MediaStore.Images.Media.DATA};
-        Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
-        if (cur != null && cur.moveToFirst()) {
-            int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
-            path = cur.getString(dataColumn);
-        }
-        SqlUtils.closeCursor(cur);
-        return path;
-    }
-
-    private boolean addMediaVisualEditor(Uri imageUri) {
+    private boolean addMediaVisualEditor(Uri imageUri, boolean isVideo) {
         String path;
         if (imageUri.toString().contains("content:")) {
-            path = getPathFromContentUri(imageUri);
+            path = MediaUtils.getPathFromContentUri(this, imageUri);
         } else {
             // File is not in media library
             path = imageUri.toString().replace("file://", "");
@@ -1600,8 +1617,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         Blog blog = WordPress.getCurrentBlog();
         // If the user has selected a maximum image width for uploads, rescale the image accordingly
-        if (MediaUtils.getImageWidthSettingFromString(blog.getMaxImageWidth()) != Integer.MAX_VALUE) {
-            Map<String, Object> properties = new HashMap<String, Object>();
+        if (!isVideo && MediaUtils.getImageWidthSettingFromString(blog.getMaxImageWidth()) != Integer.MAX_VALUE) {
+            Map<String, Object> properties = new HashMap<>();
             properties.put("resize_width", blog.getMaxImageWidth());
             // Bump analytics about picture resized
             AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO, properties);
@@ -1614,6 +1631,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
+        trackAddMediaFromDevice(isVideo, null, path);
+
         MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
         if (mediaFile != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, WordPress.imageLoader);
@@ -1623,6 +1642,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
+        trackAddMediaFromDevice(isVideo, mediaUri, null);
         String mediaTitle;
         if (isVideo) {
             mediaTitle = getResources().getString(R.string.video);
