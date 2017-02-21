@@ -163,16 +163,25 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                    MediaModel responseMedia = getMediaFromUploadResponse(response);
-                    AppLog.d(T.MEDIA, "media upload successful, local id=" + media.getId());
-                    if (responseMedia != null) {
-                        // We only get the media Id from the response
-                        media.setMediaId(responseMedia.getMediaId());
+                    // HTTP_OK code doesn't mean the upload is successful, XML-RPC API returns code 200 with an
+                    // xml field "faultCode" on error.
+                    try {
+                        MediaModel responseMedia = getMediaFromUploadResponse(response);
+                        if (responseMedia != null) {
+                            AppLog.d(T.MEDIA, "media upload successful, local id=" + media.getId());
+                            // We only get the media Id from the response
+                            media.setMediaId(responseMedia.getMediaId());
+                        }
+                        fetchMedia(site, media, true);
+                    } catch (XMLRPCException fault) {
+                        AppLog.w(T.MEDIA, "media upload successful, local id=" + media.getId()
+                                          + " - " + response.message());
+                        MediaError mediaError = getMediaErrorFromXMLRPCException(fault);
+                        notifyMediaProgress(media, 0.f, mediaError);
                     }
-                    fetchMedia(site, media, true);
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response.message());
-                    MediaError error = new MediaError(fromHttpStatusCode(response.code()));
+                    MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
                     notifyMediaProgress(media, 0.f, error);
                 }
                 mCurrentUploadCall = null;
@@ -182,6 +191,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             public void onFailure(Call call, IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                error.message = e.getLocalizedMessage();
                 notifyMediaProgress(media, 0.f, error);
                 mCurrentUploadCall = null;
             }
@@ -418,7 +428,21 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return media;
     }
 
-    private MediaModel getMediaFromUploadResponse(okhttp3.Response response) {
+    private MediaError getMediaErrorFromXMLRPCException(XMLRPCException exception) {
+        MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
+        mediaError.message = exception.getLocalizedMessage();
+        if (exception instanceof XMLRPCFault) {
+            switch (((XMLRPCFault) exception).getFaultCode()) {
+                case 401:
+                    mediaError.type = MediaErrorType.UNAUTHORIZED;
+                    break;
+                default:
+            }
+        }
+        return mediaError;
+    }
+
+    private MediaModel getMediaFromUploadResponse(okhttp3.Response response) throws XMLRPCException {
         MediaModel media = new MediaModel();
         try {
             String data = new String(response.body().bytes(), "UTF-8");
@@ -427,7 +451,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             if (obj instanceof Map) {
                 media.setMediaId(MapUtils.getMapLong((Map) obj, "attachment_id"));
             }
-        } catch (IOException | XMLRPCException | XmlPullParserException e) {
+        } catch (IOException | XmlPullParserException e) {
             AppLog.w(AppLog.T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
             return null;
         }
