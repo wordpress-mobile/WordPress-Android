@@ -69,8 +69,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                              HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
         mOkHttpClient = okClientBuilder
-                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                .readTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
                 .build();
     }
 
