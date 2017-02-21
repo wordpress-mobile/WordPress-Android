@@ -95,7 +95,7 @@ public class MediaUtilsTest {
 
     @Test
     public void testSupportedVideoRecognition() {
-        final String[] unsupportedVideoTypes = {"flv", "webm", "vob", "yuv", "mpeg", "m2v"};
+        final String[] unsupportedVideoTypes = {"flv", "vob", "yuv", "m2v"};
         for (String supportedVideoType : MediaUtils.SUPPORTED_VIDEO_SUBTYPES) {
             String supportedVideoMimeType = MediaUtils.MIME_TYPE_VIDEO + supportedVideoType;
             Assert.assertTrue(MediaUtils.isSupportedVideoMimeType(supportedVideoMimeType));
@@ -172,12 +172,12 @@ public class MediaUtilsTest {
             String mimeType = MediaUtils.getMimeTypeForExtension(supportedImageExtension);
             Assert.assertNull(mimeType);
         }
-        final String[] unsupportedVideoTypes = {"flv", "webm", "vob", "yuv", "mpeg", "m2v"};
+        final String[] unsupportedVideoTypes = {"flv", "vob", "yuv", "m2v"};
         for (String supportedVideoExtension : unsupportedVideoTypes) {
             String mimeType = MediaUtils.getMimeTypeForExtension(supportedVideoExtension);
             Assert.assertNull(mimeType);
         }
-        final String[] unsupportedAudioTypes = {"m4p", "raw", "tta", "wma", "dss", "webm"};
+        final String[] unsupportedAudioTypes = {"m4p", "raw", "tta", "wma", "dss"};
         for (String supportedAudioExtension : unsupportedAudioTypes) {
             String mimeType = MediaUtils.getMimeTypeForExtension(supportedAudioExtension);
             Assert.assertNull(mimeType);
