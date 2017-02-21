@@ -71,8 +71,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                            OkHttpClient.Builder okClientBuilder, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mOkHttpClient = okClientBuilder
-                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                .readTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
                 .build();
     }
 
