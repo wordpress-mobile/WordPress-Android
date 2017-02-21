@@ -60,7 +60,7 @@ public class MediaGridAdapter extends CursorAdapter {
     private ArrayList<Long> mSelectedItems;
 
     public interface MediaGridAdapterCallback {
-        void fetchMoreData(int offset);
+        void fetchMoreData();
         void onRetryUpload(long mediaId);
         boolean isInMultiSelect();
     }
@@ -265,7 +265,7 @@ public class MediaGridAdapter extends CursorAdapter {
         int position = cursor.getPosition();
         if (position == mCursorDataCount - 1 && !mHasRetrievedAll) {
             if (mCallback != null) {
-                mCallback.fetchMoreData(mCursorDataCount);
+                mCallback.fetchMoreData();
             }
         }
     }

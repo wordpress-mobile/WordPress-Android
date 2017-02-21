@@ -230,9 +230,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void fetchMoreData(int offset) {
+    public void fetchMoreData() {
         if (!mHasRetrievedAllMedia) {
-            refreshMediaFromServer(offset);
+            refreshMediaFromServer(true);
         }
     }
 
@@ -269,16 +269,16 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             mGridAdapter.swapCursor(cursor);
         }
         if (cursor.getCount() == 0) {
-            refreshMediaFromServer(0);
+            refreshMediaFromServer(false);
         }
     }
 
-    private void refreshMediaFromServer(int offset) {
+    private void refreshMediaFromServer(boolean loadMore) {
         if (!mIsFetching) {
             mIsFetching = true;
             mGridAdapter.setRefreshing(true);
 
-            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, true);
+            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
