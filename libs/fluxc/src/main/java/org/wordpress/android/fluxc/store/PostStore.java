@@ -95,28 +95,6 @@ public class PostStore extends Store {
         }
     }
 
-    public static class InstantiatePostPayload extends Payload {
-        public SiteModel site;
-        public boolean isPage;
-        public List<Long> categoryIds;
-        public String postFormat;
-
-        public InstantiatePostPayload(SiteModel site, boolean isPage) {
-            this.site = site;
-            this.isPage = isPage;
-        }
-
-        /**
-         * Used to initialize a post with default category and post format
-         */
-        public InstantiatePostPayload(SiteModel site, boolean isPage, List<Long> categoryIds, String postFormat) {
-            this.site = site;
-            this.isPage = isPage;
-            this.categoryIds = categoryIds;
-            this.postFormat = postFormat;
-        }
-    }
-
     public static class PostError implements OnChangedError {
         public PostErrorType type;
         public String message;
@@ -149,14 +127,6 @@ public class PostStore extends Store {
         public OnPostChanged(int rowsAffected, boolean canLoadMore) {
             this.rowsAffected = rowsAffected;
             this.canLoadMore = canLoadMore;
-        }
-    }
-
-    public class OnPostInstantiated extends OnChanged<PostError> {
-        public PostModel post;
-
-        public OnPostInstantiated(PostModel post) {
-            this.post = post;
         }
     }
 
@@ -200,6 +170,31 @@ public class PostStore extends Store {
     @Override
     public void onRegister() {
         AppLog.d(AppLog.T.API, "PostStore onRegister");
+    }
+
+    public PostModel instantiatePostModel(SiteModel site, boolean isPage) {
+        return instantiatePostModel(site, isPage, null, null);
+    }
+
+    public PostModel instantiatePostModel(SiteModel site, boolean isPage, List<Long> categoryIds, String postFormat) {
+        PostModel post = new PostModel();
+        post.setLocalSiteId(site.getId());
+        post.setIsLocalDraft(true);
+        post.setIsPage(isPage);
+        post.setDateLocallyChanged((DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC())));
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            post.setCategoryIdList(categoryIds);
+        }
+        post.setPostFormat(postFormat);
+
+        // Insert the post into the db, updating the object to include the local ID
+        post = PostSqlUtils.insertPostForResult(post);
+
+        // id is set to -1 if insertion fails
+        if (post.getId() == -1) {
+            return null;
+        }
+        return post;
     }
 
     /**
@@ -303,9 +298,6 @@ public class PostStore extends Store {
                 break;
             case FETCHED_POST:
                 handleFetchSinglePostCompleted((FetchPostResponsePayload) action.getPayload());
-                break;
-            case INSTANTIATE_POST:
-                instantiatePost((InstantiatePostPayload) action.getPayload());
                 break;
             case PUSH_POST:
                 pushPost((RemotePostPayload) action.getPayload());
@@ -448,23 +440,6 @@ public class PostStore extends Store {
                 mPostXMLRPCClient.fetchPost(payload.post, payload.site, PostAction.PUSH_POST);
             }
         }
-    }
-
-    private void instantiatePost(InstantiatePostPayload payload) {
-        PostModel newPost = new PostModel();
-        newPost.setLocalSiteId(payload.site.getId());
-        newPost.setIsLocalDraft(true);
-        newPost.setIsPage(payload.isPage);
-        newPost.setDateLocallyChanged((DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC())));
-        if (payload.categoryIds != null && !payload.categoryIds.isEmpty()) {
-            newPost.setCategoryIdList(payload.categoryIds);
-        }
-        newPost.setPostFormat(payload.postFormat);
-
-        // Insert the post into the db, updating the object to include the local ID
-        newPost = PostSqlUtils.insertPostForResult(newPost);
-
-        emitChange(new OnPostInstantiated(newPost));
     }
 
     private void pushPost(RemotePostPayload payload) {
