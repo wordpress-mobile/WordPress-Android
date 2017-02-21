@@ -489,7 +489,7 @@ public class ImageUtils {
         Matrix matrix = new Matrix();
         matrix.postScale(scaleBy, scaleBy);
 
-        // apply rotation
+        // apply orientation
         if (orientation != 0) {
             matrix.setRotate(orientation);
         }
@@ -568,24 +568,24 @@ public class ImageUtils {
             resizedImageFile = File.createTempFile("wp-image-", fileExtension);
             out = new FileOutputStream(resizedImageFile);
         } catch (IOException e) {
-            AppLog.e(AppLog.T.POSTS, "Failed to create the temp file on storage. Use the full picture instead.");
+            AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage. Use the full picture instead.");
             return path;
         } catch (SecurityException e) {
-            AppLog.e(AppLog.T.POSTS, "Can't write the tmp file due to security restrictions. Use the full picture instead.");
+            AppLog.e(AppLog.T.MEDIA, "Can't write the tmp file due to security restrictions. Use the full picture instead.");
             return path;
         }
 
         try {
             boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, maxWidth, orientation, 90, out);
             if (!res) {
-                AppLog.w(AppLog.T.POSTS, "Failed to compress the resized image. Use the full picture instead.");
+                AppLog.w(AppLog.T.MEDIA, "Failed to compress the resized image. Use the full picture instead.");
                 return path;
             }
         } catch (IOException e) {
-            AppLog.e(AppLog.T.POSTS, "Failed to create resized image. Use the full picture instead.");
+            AppLog.e(AppLog.T.MEDIA, "Failed to create resized image. Use the full picture instead.");
             return path;
         } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.POSTS, "Can't resize the picture due to low memory. Use the full picture instead.");
+            AppLog.e(AppLog.T.MEDIA, "Can't resize the picture due to low memory. Use the full picture instead.");
             return path;
         } finally {
             // close the stream
@@ -593,6 +593,7 @@ public class ImageUtils {
                 out.flush();
                 out.close();
             } catch (IOException e) {
+                //nope
             }
         }
 
@@ -600,7 +601,7 @@ public class ImageUtils {
         if (!TextUtils.isEmpty(tempFilePath)) {
             return tempFilePath;
         } else {
-            AppLog.e(AppLog.T.POSTS, "Failed to create resized image. Use the full picture instead.");
+            AppLog.e(AppLog.T.MEDIA, "Failed to create resized image. Use the full picture instead.");
         }
 
         return path;
@@ -623,14 +624,14 @@ public class ImageUtils {
         try {
             boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, maxWidth, orientation, 90, stream);
             if (!res) {
-                AppLog.w(AppLog.T.POSTS, "Failed to compress the resized image. Use the full picture instead.");
+                AppLog.w(AppLog.T.MEDIA, "Failed to compress the resized image. Use the full picture instead.");
                 return null;
             }
         } catch (IOException e) {
-            AppLog.e(AppLog.T.POSTS, "Failed to create resized image. Use the full picture instead.");
+            AppLog.e(AppLog.T.MEDIA, "Failed to create resized image. Use the full picture instead.");
             return null;
         } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.POSTS, "Can't resize the picture due to low memory. Use the full picture instead.");
+            AppLog.e(AppLog.T.MEDIA, "Can't resize the picture due to low memory. Use the full picture instead.");
             return null;
         }
 
