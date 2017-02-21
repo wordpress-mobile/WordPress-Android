@@ -1572,7 +1572,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
     private void trackAddMediaFromWPLibrary(boolean isVideo, String mediaId) {
         if (TextUtils.isEmpty(mediaId)) {
-            AppLog.e(T.MEDIA, "Cannot track media events if both mediaIdis null!!");
+            AppLog.e(T.MEDIA, "Cannot track media events if mediaId is null!!");
             return;
         }
 
