@@ -1099,7 +1099,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mediaFile == null) {
             return;
         }
-        trackAddMediaFromWPLibrary(mediaFile.isVideo(), mediaId);
+        trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), mediaId);
         mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
     }
 
@@ -1549,7 +1549,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * @param uri The URI of the media on the device, or null
      * @param path The path of the media on the device, or null
      */
-    private void trackAddMediaFromDevice(boolean isVideo, Uri uri, String path) {
+    private void trackAddMediaFromDeviceEvents(boolean isVideo, Uri uri, String path) {
         if (TextUtils.isEmpty(path) && uri == null) {
             AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!");
             return;
@@ -1570,7 +1570,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * @param isVideo Whether is a video or not
      * @param mediaId The ID of the media in the WP blog's library, or null if device media.
      */
-    private void trackAddMediaFromWPLibrary(boolean isVideo, String mediaId) {
+    private void trackAddMediaFromWPLibraryEvents(boolean isVideo, String mediaId) {
         if (TextUtils.isEmpty(mediaId)) {
             AppLog.e(T.MEDIA, "Cannot track media events if mediaId is null!!");
             return;
@@ -1631,7 +1631,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
-        trackAddMediaFromDevice(isVideo, null, path);
+        trackAddMediaFromDeviceEvents(isVideo, null, path);
 
         MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
         if (mediaFile != null) {
@@ -1642,7 +1642,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
-        trackAddMediaFromDevice(isVideo, mediaUri, null);
+        trackAddMediaFromDeviceEvents(isVideo, mediaUri, null);
         String mediaTitle;
         if (isVideo) {
             mediaTitle = getResources().getString(R.string.video);
