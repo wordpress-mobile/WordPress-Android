@@ -25,12 +25,12 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
-import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
+import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -48,14 +48,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request.Builder;
-
-import static org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.fromHttpStatusCode;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
@@ -69,7 +68,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                              AccessToken accessToken, UserAgent userAgent,
                              HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
-        mOkHttpClient = okClientBuilder.build();
+        mOkHttpClient = okClientBuilder
+                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
+                .build();
     }
 
     @Override
