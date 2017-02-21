@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -236,7 +237,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         mIsMultiSelectEnabled = enable;
         mSelectedPositions.clear();
 
-        loadSites();
+        if (enable) {
+            loadSites();
+        }
     }
 
     int getNumSelected() {
@@ -338,25 +341,28 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         return hiddenSites;
     }
 
-    void setVisibilityForSelectedSites(boolean makeVisible) {
+    Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
         SiteList sites = getSelectedSites();
+        Set<SiteRecord> siteRecordSet = new HashSet<>();
         if (sites != null && sites.size() > 0) {
             for (SiteRecord site: sites) {
-                int index = mSites.indexOfSite(site);
+                int index = mAllSites.indexOfSite(site);
                 if (index > -1) {
-                    mSites.get(index).isHidden = !makeVisible;
+                    SiteRecord siteRecord = mAllSites.get(index);
+                    if (siteRecord.isHidden == makeVisible) {
+                        // add it to change set
+                        siteRecordSet.add(siteRecord);
+                    }
+                    siteRecord.isHidden = !makeVisible;
                 }
             }
         }
+        notifyDataSetChanged();
+        return siteRecordSet;
     }
 
     void loadSites() {
-        // TODO: STORES: Use the site store instead here
-        if (mIsTaskRunning) {
-            AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
-        } else {
-            new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
+        new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private SiteList filteredSitesByTextIfInSearchMode(SiteList sites) {
@@ -468,18 +474,18 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
                     // all self-hosted sites and all wp.com sites
                     return mSiteStore.getSites();
                 } else {
-                    // only wp.com sites
-                    return mSiteStore.getWPComSites();
+                    // only wp.com and jetpack sites
+                    return mSiteStore.getWPComAndJetpackSites();
                 }
             } else {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted sites plus visible wp.com sites
-                    List<SiteModel> out = mSiteStore.getVisibleWPComSites();
+                    // all self-hosted sites plus visible wp.com and jetpack sites
+                    List<SiteModel> out = mSiteStore.getVisibleWPComAndJetpackSites();
                     out.addAll(mSiteStore.getSelfHostedSites());
                     return out;
                 } else {
-                    // only visible wp.com blogs
-                    return mSiteStore.getVisibleWPComSites();
+                    // only visible wp.com and jetpack blogs
+                    return mSiteStore.getVisibleWPComAndJetpackSites();
                 }
             }
         }

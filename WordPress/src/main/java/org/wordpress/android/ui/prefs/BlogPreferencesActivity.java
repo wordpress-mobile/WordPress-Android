@@ -67,7 +67,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             return;
         }
 
-        if (mSite.isWPCom()) {
+        if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setHomeButtonEnabled(true);
@@ -99,7 +99,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             Button removeBlogButton = (Button) findViewById(R.id.remove_account);
 
             // remove blog & credentials apply only to dot org
-            if (mSite.isWPCom()) {
+            if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
                 View credentialsRL = findViewById(R.id.sectionContent);
                 credentialsRL.setVisibility(View.GONE);
                 removeBlogButton.setVisibility(View.GONE);
@@ -121,7 +121,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if (mSite.isWPCom() || mBlogDeleted) {
+        if (SiteUtils.isAccessibleViaWPComAPI(mSite) || mBlogDeleted) {
             return;
         }
 

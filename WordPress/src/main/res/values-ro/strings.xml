@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-20 19:13:06+0000
+Translation-Revision-Date: 2017-01-19 16:15:18+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.3.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Modulul Jetpack este conectat, dar extensia Statistici nu este activă. Contactează administratorul sitului.</string>
+	<string name="jetpack_stats_module_disabled_message">Modulul Jetpack este conectat, dar extensia Statistici nu este activă. Vrei să activezi Statisticile?</string>
+	<string name="jetpack_info">Informații Jetpack</string>
 	<string name="reader_photo_by">Fotografie de %s</string>
 	<string name="reader_label_visit">Vizitează</string>
 	<string name="all_your_sites">Toate siturile mele</string>
@@ -291,9 +294,9 @@ Language: ro
 	<string name="editor_page_title_placeholder">Titlu pagină</string>
 	<string name="editor_post_title_placeholder">Titlu articol</string>
 	<string name="email_address">Adresă email</string>
-	<string name="preference_show_visual_editor">Arată editorul vizual</string>
-	<string name="dlg_sure_to_delete_comments">Șterg permanent aceste comentarii?</string>
+	<string name="preference_editor_type">Arată editorul vizual</string>
 	<string name="preference_editor">Editor</string>
+	<string name="dlg_sure_to_delete_comments">Șterg permanent aceste comentarii?</string>
 	<string name="dlg_sure_to_delete_comment">Șterg permanent acest comentariu?</string>
 	<string name="mnu_comment_delete_permanently">Ștergere</string>
 	<string name="comment_deleted_permanently">Comentariu șters</string>

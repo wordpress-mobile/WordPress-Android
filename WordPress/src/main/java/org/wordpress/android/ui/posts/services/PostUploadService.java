@@ -56,6 +56,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static com.android.volley.Request.Method.HEAD;
+
 public class PostUploadService extends Service {
     private static final ArrayList<PostModel> mPostsList = new ArrayList<>();
     private static PostModel mCurrentUploadingPost = null;
@@ -214,7 +216,16 @@ public class PostUploadService extends Service {
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
             }
 
-            mPost.setContent(processPostMedia(mPost.getContent()));
+            String content = mPost.getContent();
+            // Get rid of ZERO WIDTH SPACE character that the Visual editor can insert
+            // at the beginning of the content.
+            // http://www.fileformat.info/info/unicode/char/200b/index.htm
+            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/5009
+            if (content.length() > 0 && content.charAt(0) == '\u200B') {
+                content = content.substring(1, content.length());
+            }
+            content = processPostMedia(content);
+            mPost.setContent(content);
 
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError) {

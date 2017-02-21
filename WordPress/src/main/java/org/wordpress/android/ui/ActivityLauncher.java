@@ -47,6 +47,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -161,17 +162,17 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void newGalleryPost(Activity context, SiteModel site, ArrayList<String> mediaIds) {
+    public static void newGalleryPost(Activity context, SiteModel site, ArrayList<Long> mediaIds) {
         if (site == null) return;
         // Create a new post object and assign default settings
         Intent intent = new Intent(context, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, mediaIds);
+        intent.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, ListUtils.toLongArray(mediaIds));
         intent.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
         context.startActivity(intent);
     }
 
-    public static void newMediaPost(Activity context, SiteModel site, String mediaId) {
+    public static void newMediaPost(Activity context, SiteModel site, long mediaId) {
         if (site == null) return;
         // Create a new post object and assign default settings
         Intent intent = new Intent(context, EditPostActivity.class);
@@ -210,7 +211,12 @@ public class ActivityLauncher {
         if (site.isWPCom()) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
         } else {
-            WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url);
+            // Add the original post URL to the list of allowed URLs.
+            // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
+            // from the passed URL, and internally redirects to it. EX:Published posts on a site with Plain
+            // permalink structure settings.
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
+            WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()});
         }
     }
 
@@ -289,14 +295,16 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+        activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
     public static void viewMediaGalleryPickerForSiteAndMediaIds(Activity activity, @NonNull SiteModel site,
-                                                     @NonNull ArrayList<String> mediaIds) {
+                                                     @NonNull ArrayList<Long> mediaIds) {
         Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, mediaIds);
+        if (!mediaIds.isEmpty()) {
+            intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, ListUtils.toLongArray(mediaIds));
+        }
         activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
 

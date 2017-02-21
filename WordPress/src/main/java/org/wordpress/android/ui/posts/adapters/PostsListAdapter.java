@@ -24,19 +24,24 @@ import android.widget.TextView;
 import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
-import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -89,7 +94,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final LayoutInflater mLayoutInflater;
 
+    @Inject Dispatcher mDispatcher;
     @Inject protected PostStore mPostStore;
+    @Inject protected MediaStore mMediaStore;
 
     public PostsListAdapter(Context context, @NonNull SiteModel site, boolean isPage) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -98,7 +105,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mLayoutInflater = LayoutInflater.from(context);
 
         mSite = site;
-        mIsStatsSupported = site.isWPCom() || site.isJetpack();
+        mIsStatsSupported = SiteUtils.isAccessibleViaWPComAPI(site) && site.getHasCapabilityViewStats();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int contentSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
@@ -707,8 +714,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 if (post.isLocalDraft()) {
                     imageUrl = null;
                 } else if (post.getFeaturedImageId() != 0) {
-                    // TODO: Get url from MediaStore
-                    imageUrl = WordPress.wpDB.getMediaThumbnailUrl(mSite.getId(), post.getFeaturedImageId());
+                    imageUrl = mMediaStore.getThumbnailUrlForSiteMediaWithId(mSite, post.getFeaturedImageId());
                     // If the imageUrl isn't found it means the featured image info hasn't been added to
                     // the local media library yet, so add to the list of media IDs to request info for
                     if (TextUtils.isEmpty(imageUrl)) {
@@ -738,8 +744,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 notifyDataSetChanged();
 
                 if (mediaIdsToUpdate.size() > 0) {
-                    // TODO: MediaStore
-                    PostMediaService.startService(WordPress.getContext(), mSite.getId(), mediaIdsToUpdate);
+                    for (Long mediaId : mediaIdsToUpdate) {
+                        MediaModel mediaToDownload = new MediaModel();
+                        mediaToDownload.setMediaId(mediaId);
+                        mediaToDownload.setLocalSiteId(mSite.getId());
+                        MediaPayload payload = new MediaPayload(mSite, mediaToDownload);
+                        mDispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload));
+                    }
                 }
             }
 

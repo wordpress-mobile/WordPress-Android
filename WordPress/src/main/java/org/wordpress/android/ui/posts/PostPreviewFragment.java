@@ -78,6 +78,10 @@ public class PostPreviewFragment extends Fragment {
         refreshPreview();
     }
 
+    public void setPost(PostModel post) {
+        mPost = post;
+    }
+
     void refreshPreview() {
         if (!isAdded()) return;
 

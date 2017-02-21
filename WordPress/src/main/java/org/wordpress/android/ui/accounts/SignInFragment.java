@@ -61,6 +61,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnDiscoveryResponse;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -71,7 +72,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
@@ -153,8 +153,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
 
-    private RefreshSitesXMLRPCPayload mSelfhostedPayload;
-
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
     protected @Inject Dispatcher mDispatcher;
@@ -174,6 +172,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private boolean mIsActivityFinishing;
     private boolean mInhibitMagicLogin; // Prevent showing magic links as that is only applicable for initial sign in
     private boolean mIsMagicLinksEnabled = true;
+
+    private JetpackCallbacks mJetpackCallbacks;
 
     public interface OnMagicLinkRequestInteraction {
         void onMagicLinkRequestSuccess(String email);
@@ -333,6 +333,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         } else {
             throw new RuntimeException(context.toString() + " must implement OnMagicLinkRequestInteraction");
         }
+        if (context instanceof JetpackCallbacks) {
+            mJetpackCallbacks = (JetpackCallbacks) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement JetpackCallbacks");
+        }
     }
 
     @Override
@@ -350,12 +355,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Insert authentication code if copied to clipboard
         } else if (TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.VISIBLE) {
             mTwoStepEditText.setText(getAuthCodeFromClipboard());
-        }
-
-        // show progress indicator while waiting for network response when migrating access token
-        if (AppPrefs.wasAccessTokenMigrated() && checkNetworkConnectivity()) {
-            startProgress(getString(R.string.access_token_migration_message));
-            return;
         }
 
         if (!mToken.isEmpty() && !mInhibitMagicLogin) {
@@ -505,7 +504,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 // Used to pass data to an eventual support service
                 intent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
                 intent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, Tag.ORIGIN_LOGIN_SCREEN_HELP);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
+                        (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
                 startActivity(intent);
             }
         };
@@ -641,7 +641,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     // Set blog for Jetpack auth
     public void setBlogAndCustomMessageForJetpackAuth(SiteModel site, String customAuthMessage) {
         mJetpackSite = site;
-        if(customAuthMessage != null && mJetpackAuthLabel != null) {
+        if (customAuthMessage != null && mJetpackAuthLabel != null) {
             mJetpackAuthLabel.setText(customAuthMessage);
         }
 
@@ -841,14 +841,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void signInAndFetchBlogListWPOrg() {
         startProgress(getString(R.string.signing_in));
         String url = EditTextUtils.getText(mUrlEditText).trim();
-
-        mSelfhostedPayload = new RefreshSitesXMLRPCPayload();
-        mSelfhostedPayload.username = mUsername;
-        mSelfhostedPayload.password = mPassword;
-        mSelfhostedPayload.url = url;
         // Self Hosted don't have any "Authentication" request, try to list sites with user/password
-        mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
-
+        mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(url));
     }
 
     private boolean checkNetworkConnectivity() {
@@ -1090,6 +1084,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
         bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
         bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
+                (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
         nuxAlert.setArguments(bundle);
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
@@ -1129,7 +1125,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
                 SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG,
                 faqAction, faqId, faqSection);
-
+        Bundle bundle = nuxAlert.getArguments();
+        bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
+                (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
+        nuxAlert.setArguments(bundle);
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
     }
@@ -1191,7 +1190,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         // Finish activity if sites have been fetched
         if (mSitesFetched && mAccountSettingsFetched && mAccountFetched) {
-            updateMigrationStatusIfNeeded();
             finishCurrentActivity();
         }
     }
@@ -1203,7 +1201,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(Stat.LOGIN_FAILED);
             showAuthError(event.error.type, event.error.message);
-            updateMigrationStatusIfNeeded();
             endProgress();
             return;
         }
@@ -1224,13 +1221,23 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         AppLog.i(T.NUX, "onSiteChanged: " + event.toString());
 
+        if (event.isError()) {
+            endProgress();
+            if (!isAdded()) {
+                return;
+            }
+            if (event.error.type == SiteErrorType.DUPLICATE_SITE) {
+                ToastUtils.showToast(getContext(), R.string.cannot_add_duplicate_site);
+            }
+            return;
+        }
+
         // Login Successful
         trackAnalyticsSignIn();
         mSitesFetched = true;
 
         // Finish activity if account settings have been fetched or if it's a wporg site
-        if (((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin())) {
-            updateMigrationStatusIfNeeded();
+        if (((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) && !event.isError()) {
             finishCurrentActivity();
         }
     }
@@ -1244,9 +1251,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
-
-        mSelfhostedPayload.url = event.xmlRpcEndpoint;
-        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(mSelfhostedPayload));
+        RefreshSitesXMLRPCPayload selfhostedPayload = new RefreshSitesXMLRPCPayload();
+        selfhostedPayload.username = mUsername;
+        selfhostedPayload.password = mPassword;
+        selfhostedPayload.url = event.xmlRpcEndpoint;
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(selfhostedPayload));
     }
 
     @SuppressWarnings("unused")
@@ -1267,7 +1276,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
+    public void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
         AppLog.e(T.API, "Discover error: " + error);
         endProgress();
         if (!isAdded()) {
@@ -1275,19 +1284,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
         switch (error) {
             case ERRONEOUS_SSL_CERTIFICATE:
-                mSelfhostedPayload.url = failedEndpoint;
-                    SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
-                            new Callback() {
-                                @Override
-                                public void certificateTrusted() {
-                                    if (mSelfhostedPayload == null) {
-                                        return;
-                                    }
-                                    // retry login with the same parameters
-                                    startProgress(getString(R.string.signing_in));
-                                    mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
+                SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
+                        new Callback() {
+                            @Override
+                            public void certificateTrusted() {
+                                if (failedEndpoint == null) {
+                                    return;
                                 }
-                            });
+                                // retry login with the same parameters
+                                startProgress(getString(R.string.signing_in));
+                                mDispatcher.dispatch(
+                                        AuthenticationActionBuilder.newDiscoverEndpointAction(failedEndpoint));
+                            }
+                        });
                 break;
             case HTTP_AUTH_REQUIRED:
                 askForHttpAuthCredentials(failedEndpoint);
@@ -1375,17 +1384,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
             // Fetch sites
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
-            // Setup legacy access token storage
-            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
             // Start Notification service
             NotificationsUpdateService.startService(getActivity().getApplicationContext());
-        }
-    }
-
-    private void updateMigrationStatusIfNeeded() {
-        if (AppPrefs.wasAccessTokenMigrated()) {
-            AppPrefs.setAccessTokenMigrated(false);
-            endProgress();
         }
     }
 }

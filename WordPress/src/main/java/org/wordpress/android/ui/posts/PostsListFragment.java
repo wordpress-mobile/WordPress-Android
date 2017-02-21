@@ -37,12 +37,11 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -81,6 +80,7 @@ public class PostsListFragment extends Fragment
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
+    private int mPostIdForPostToBeDeleted = 0;
 
     private final List<PostModel> mTrashedPosts = new ArrayList<>();
 
@@ -103,9 +103,10 @@ public class PostsListFragment extends Fragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        updateSiteOrFinishActivity(savedInstanceState);
+        EventBus.getDefault().register(this);
+        mDispatcher.register(this);
 
-        setRetainInstance(true);
+        updateSiteOrFinishActivity(savedInstanceState);
 
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
@@ -113,6 +114,14 @@ public class PostsListFragment extends Fragment
                 mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
+
+        super.onDestroy();
     }
 
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
@@ -358,25 +367,11 @@ public class PostsListFragment extends Fragment
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        mDispatcher.unregister(this);
-        super.onStop();
-    }
-
-    @Override
     public void onDetach() {
         if (mShouldCancelPendingDraftNotification) {
             // delete the pending draft notification if available
-            NativeNotificationsUtils.dismissNotification(
-                    NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
+            int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(mPostIdForPostToBeDeleted);
+            NativeNotificationsUtils.dismissNotification(pushId, getActivity());
             mShouldCancelPendingDraftNotification = false;
         }
         super.onDetach();
@@ -417,7 +412,7 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostSelected(PostModel post) {
-        onPostButtonClicked(PostListButton.BUTTON_PREVIEW, post);
+        onPostButtonClicked(PostListButton.BUTTON_EDIT, post);
     }
 
     /*
@@ -467,10 +462,7 @@ public class PostsListFragment extends Fragment
 
         post.setStatus(PostStatus.PUBLISHED.toString());
 
-        // also in case this postId was in our ignore list, delete it from the list as well
-        AppPrefs.deleteIdFromPendingDraftsIgnorePostIdList(post.getId());
-        PostUploadService.addPostToUploadAndTrackAnalytics(post);
-
+        PostUploadService.addPostToUpload(post);
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
         PostUtils.trackSavePostAnalytics(post, mSite);
@@ -537,27 +529,17 @@ public class PostsListFragment extends Fragment
                 if (post.isLocalDraft()) {
                     mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(post));
 
-                    mShouldCancelPendingDraftNotification = false;
-
                     // delete the pending draft notification if available
-                    NativeNotificationsUtils.dismissNotification(
-                            NotificationsPendingDraftsService.PENDING_DRAFTS_NOTIFICATION_ID, getActivity());
-
-                    // note that cancelling the notification dismisses not only the case where the notification was
-                    // about this very local draft but will also dismiss it even if there were several outstanding
-                    // pending drafts.
-                    // We don't re-run the service here to notify the user of other  pending drafts, because the
-                    // user is already looking at the blog post list, so it doesn't make sense bothering them
-
-                    // also in case this postId was in our ignore list, delete it from the list as well
-                    AppPrefs.deleteIdFromPendingDraftsIgnorePostIdList(post.getId());
+                    mShouldCancelPendingDraftNotification = false;
+                    int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.getId());
+                    NativeNotificationsUtils.dismissNotification(pushId, getActivity());
                 } else {
-                    RemotePostPayload payload = new RemotePostPayload(post, mSite);
-                    mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload));
+                    mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(new RemotePostPayload(post, mSite)));
                 }
             }
         });
 
+        mPostIdForPostToBeDeleted = post.getId();
         mShouldCancelPendingDraftNotification = true;
         snackbar.show();
     }

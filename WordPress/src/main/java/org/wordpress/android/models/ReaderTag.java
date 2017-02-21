@@ -18,8 +18,8 @@ public class ReaderTag implements Serializable, FilterCriteria {
     // these are the default tags, which aren't localized in the /read/menu/ response
     private static final String TAG_TITLE_LIKED = "Posts I Like";
     private static final String TAG_TITLE_DISCOVER = "Discover";
-    public  static final String TAG_TITLE_DEFAULT = TAG_TITLE_DISCOVER;
     public  static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
+    public  static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
 
     public ReaderTag(String slug,
                      String displayName,

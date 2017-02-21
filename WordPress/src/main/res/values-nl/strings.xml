@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-28 10:51:02+0000
+Translation-Revision-Date: 2017-02-07 12:32:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="jetpack_stats_module_disabled_message_not_admin">De Jetpack plugin is verbonden, maar de Stats module is niet actief. Neem contact op met de site beheerder.</string>
+	<string name="jetpack_stats_module_disabled_message">De Jetpack plugin is verbonden, maar de Stats module is niet actief. Wil je Stats activeren?</string>
+	<string name="jetpack_info">Jetpack info</string>
+	<string name="reader_photo_by">Foto van %s</string>
+	<string name="reader_label_visit">Bezoek</string>
+	<string name="all_your_sites">Al mijn sites</string>
+	<string name="pending_draft_more">Je hebt %d berichten als concept opgeslagen, maar ze nooit gepubliceerd. Tik om ze te controleren.</string>
+	<string name="pending_draft_one">Je hebt \'%1$s\' %2$d dagen geleden als concept opgeslagen, maar dit bericht nooit gepubliceerd.</string>
+	<string name="pending_draft_one_generic">Je hebt \'%s\' als concept opgeslagen, maar dit bericht nooit gepubliceerd.</string>
+	<string name="no_default_app_available_to_open_link">Kan de link niet openen</string>
+	<string name="notification_pending_drafts">Geef me een melding van openstaande concepten</string>
+	<string name="invalid_verification_code_format">Moet een zescijferig nummer zijn</string>
+	<string name="confirm_discard_changes">Niet-opgeslagen wijzigingen verwijderen?</string>
+	<string name="swipe_for_more">Veeg voor meer</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Je hebt geen toestemming om dit bericht te lezen. Probeer je eerst aan te melden op WordPress.com of gebruik in plaats daarvan de actieknop hierboven om een browser te openen.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Je hebt geen toestemming om dit bericht te lezen. Probeer je eerst aan te melden op WordPress.com.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Je hebt geen toestemming om dit bericht te lezen. Gebruik in plaats daarvan de actieknop hierboven om een browser te openen.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Je kunt niet liken terwijl je bent uitgelogd bij WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Je hebt die reactie al geliket</string>
+	<string name="reader_toast_err_comment_not_found">Reactie niet gevonden.</string>
+	<string name="reader_toast_err_cannot_like_post">Kan dit bericht niet liken</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com-bericht</string>
+	<string name="reader_title_deeplink">WordPress Reader</string>
+	<string name="error_notif_q_action_reply">Kan niet reageren op reactie. Probeer het later opnieuw.</string>
+	<string name="error_notif_q_action_approve">Kan reactie niet goedkeuren. Probeer het later opnieuw.</string>
+	<string name="error_notif_q_action_like">Kan reactie niet liken. Probeer het later opnieuw.</string>
+	<string name="notifications_label_new_notifications_subtitle">Tik om ze te tonen</string>
+	<string name="notifications_label_new_notifications">Nieuwe meldingen</string>
+	<string name="comment_q_action_replying">Bezig met reageren...</string>
+	<string name="comment_q_action_approving">Bezig met goedkeuren...</string>
+	<string name="comment_q_action_liking">Bezig met liken...</string>
+	<string name="comment_q_action_processing">Bezig met verwerken…</string>
+	<string name="comment_q_action_done_generic">Actie voltooid.</string>
+	<string name="comment_liked">Reactie geliket</string>
+	<string name="signout">Uitloggen</string>
+	<string name="sign_in_wpcom">Inloggen op WordPress.com</string>
 	<string name="reader_label_global_related_posts">Meer op WordPress.com</string>
 	<string name="reader_label_local_related_posts">Meer in %s</string>
 	<string name="preference_open_device_settings">Open apparaat instellingen</string>
@@ -97,6 +133,7 @@ Language: nl
 	<string name="invite_people">Mensen uitnodigen</string>
 	<string name="my_site_header_external">Extern</string>
 	<string name="send_link">Stuur link</string>
+	<string name="signup_succeed_signin_failed">Je account is aangemaakt maar er is een fout opgetreden bij het\n inloggen. Probeer je in te loggen met je nieuwe gebruikersnaam en wachtwoord.</string>
 	<string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
 	<string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
 	<string name="reader_empty_posts_in_search_description">Geen berichten gevonden voor %s in je taal.</string>

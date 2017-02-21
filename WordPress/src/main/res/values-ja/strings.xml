@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-13 12:00:38+0000
+Translation-Revision-Date: 2017-01-25 01:17:55+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.3.0-alpha
 Language: ja_JP
 -->
 <resources>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Jetpack プラグインは連携済みですが、統計情報モジュールが有効化されていません。サイト管理者に連絡してください。</string>
+	<string name="jetpack_stats_module_disabled_message">Jetpack プラグインは連携済みですが、統計情報モジュールが有効化されていません。有効化しますか ?</string>
+	<string name="jetpack_info">Jetpack 情報</string>
+	<string name="reader_photo_by">%s の写真</string>
+	<string name="reader_label_visit">表示</string>
+	<string name="all_your_sites">すべての参加サイト</string>
+	<string name="pending_draft_more">%d件の投稿の下書きを作成しましたが、公開していません。タップして確認してください。</string>
+	<string name="pending_draft_one">%2$d日前に下書き「%1$s」を作成しましたが、公開していません。</string>
+	<string name="pending_draft_one_generic">下書き「%s」を作成しましたが、公開していません。</string>
+	<string name="no_default_app_available_to_open_link">リンクを開けません</string>
+	<string name="notification_pending_drafts">保留中の下書きを通知する</string>
+	<string name="confirm_discard_changes">保存されていない変更を破棄しますか ?</string>
+	<string name="invalid_verification_code_format">6桁の数字にする必要があります</string>
+	<string name="swipe_for_more">スワイプしてさらに表示</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">この投稿を表示する権限がありません。最初に WordPress.com へのログインを試みるか、代わりに上部の操作ボタンを使用してブラウザーを開いてください。</string>
+	<string name="reader_err_get_post_not_authorized_signin">この投稿を表示する権限がありません。まず WordPress.com にログインしてみてください。</string>
+	<string name="reader_err_get_post_not_authorized_fallback">この投稿を表示する権限がありません。代わりに上の操作ボタンを使ってブラウザーを開いてみてください。</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">WordPress.com からログアウトしているときは「いいね」を付けることはできません</string>
+	<string name="reader_toast_err_already_liked">そのコメントにはすでに「いいね」を付けています</string>
+	<string name="reader_toast_err_comment_not_found">コメントはありません !</string>
+	<string name="reader_toast_err_cannot_like_post">この投稿に「いいね」を付けられませんでした</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com の投稿</string>
+	<string name="reader_title_deeplink">WordPress Reader</string>
+	<string name="error_notif_q_action_reply">コメントに返信できませんでした。後ほど、もう一度お試しください。</string>
+	<string name="error_notif_q_action_approve">コメントを承認できませんでした。後ほど、もう一度お試しください。</string>
+	<string name="error_notif_q_action_like">コメントに「いいね」を付けることができませんでした。後ほど、もう一度お試しください。</string>
+	<string name="notifications_label_new_notifications_subtitle">タップして表示</string>
+	<string name="notifications_label_new_notifications">新しい通知</string>
+	<string name="comment_q_action_replying">返信中…</string>
+	<string name="comment_q_action_approving">承認中...</string>
+	<string name="comment_q_action_liking">「いいね」を付けています…</string>
+	<string name="comment_q_action_processing">処理中…</string>
+	<string name="comment_q_action_done_generic">操作が完了しました。</string>
+	<string name="signout">ログアウト</string>
+	<string name="comment_liked">「いいね」を付けたコメント</string>
+	<string name="sign_in_wpcom">WordPress.com にログインする</string>
 	<string name="reader_label_global_related_posts">WordPress.com の詳細</string>
 	<string name="reader_label_local_related_posts">関連 (%s)</string>
 	<string name="preference_open_device_settings">デバイス設定を開く</string>
@@ -97,6 +133,7 @@ Language: ja_JP
 	<string name="send_link">リンクを送信</string>
 	<string name="my_site_header_external">外部</string>
 	<string name="invite_people">他の人を招待</string>
+	<string name="signup_succeed_signin_failed">アカウントが作成されましたが、ログイン中にエラーが発生しました。\n新しく作成したユーザー名とパスワードを使用してログインしてください。</string>
 	<string name="label_clear_search_history">検索履歴の削除</string>
 	<string name="dlg_confirm_clear_search_history">検索履歴を削除しますか ?</string>
 	<string name="reader_empty_posts_in_search_description">お使いの言語では %s に関する投稿は見つかりませんでした。</string>
@@ -131,6 +168,7 @@ Language: ja_JP
 	<string name="check_your_email">メールをご確認ください</string>
 	<string name="magic_link_unavailable_error_message">現在ご利用いただけません。パスワードを入力してください</string>
 	<string name="logging_in">ログインしています</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">メールで送信されたリンクですぐにログイン</string>
 	<string name="enter_your_password_instead">代わりにパスワードを入力</string>
 	<string name="web_address_dialog_hint">コメントする際に公開表示されます。</string>
 	<string name="username_email">メールアドレスまたはユーザー名</string>
@@ -256,7 +294,7 @@ Language: ja_JP
 	<string name="editor_page_title_placeholder">ページタイトル</string>
 	<string name="editor_post_title_placeholder">投稿タイトル</string>
 	<string name="email_address">メールアドレス</string>
-	<string name="preference_show_visual_editor">ビジュアルエディターを表示</string>
+	<string name="preference_editor_type">ビジュアルエディターを表示</string>
 	<string name="dlg_sure_to_delete_comments">これらのコメントを完全に削除しますか ?</string>
 	<string name="preference_editor">編集者</string>
 	<string name="dlg_sure_to_delete_comment">このコメントを完全に削除しますか ?</string>
@@ -301,6 +339,7 @@ Language: ja_JP
 	<string name="error_post_remote_site_settings">サイト情報を保存できませんでした</string>
 	<string name="error_fetch_remote_site_settings">サイト情報を取得できませんでした</string>
 	<string name="error_media_upload_connection">メディアのアップロード中に接続エラーが発生しました</string>
+	<string name="site_settings_disconnected_toast">ログアウトしたため編集を無効化しました。</string>
 	<string name="site_settings_unsupported_version_error">サポートされていない WordPress バージョン</string>
 	<string name="site_settings_multiple_links_dialog_description">この数より多くのリンクがコメントに含まれる場合、承認が必要です。</string>
 	<string name="site_settings_close_after_dialog_switch_text">自動的に閉じる</string>
@@ -367,6 +406,7 @@ Language: ja_JP
 	<string name="site_settings_paging_title">ページ送り</string>
 	<string name="site_settings_threading_title">スレッド化</string>
 	<string name="site_settings_sort_by_title">並び替え</string>
+	<string name="site_settings_account_required_title">ユーザーのログインを必須にする</string>
 	<string name="site_settings_identity_required_title">名前とメールを必須にする</string>
 	<string name="site_settings_receive_pingbacks_title">ピンバックを受け取る</string>
 	<string name="site_settings_send_pingbacks_title">ピンバックを送信</string>
@@ -530,6 +570,7 @@ Language: ja_JP
 	<string name="tabbar_accessibility_label_me">自分</string>
 	<string name="editor_toast_changes_saved">変更を保存しました</string>
 	<string name="passcodelock_prompt_message">PIN コードを入力</string>
+	<string name="push_auth_expired">リクエストの有効期限が切れています。もう一度試すには WordPress.com にログインしてください。</string>
 	<string name="ignore">無視</string>
 	<string name="stats_insights_most_popular_percent_views">表示数の%1$d%%</string>
 	<string name="stats_insights_best_ever">過去最高の表示数</string>
@@ -539,8 +580,11 @@ Language: ja_JP
 	<string name="stats_insights_today">今日の統計情報</string>
 	<string name="stats_insights_all_time">全期間の投稿、表示数、訪問者</string>
 	<string name="stats_insights">まとめ</string>
+	<string name="stats_sign_in_jetpack_different_com_account">統計情報を表示するには、Jetpack 連携の際に使用した WordPress.com アカウントにログインしてください。</string>
 	<string name="stats_other_recent_stats_moved_label">他の最近の統計をお探しですか?「まとめ」ページへ移動しました。</string>
+	<string name="me_disconnect_from_wordpress_com">WordPress.com からログアウト</string>
 	<string name="me_btn_login_logout">ログイン/ログアウト</string>
+	<string name="me_connect_to_wordpress_com">WordPress.com にログイン</string>
 	<string name="account_settings">アカウント設定</string>
 	<string name="me_btn_support">ヘルプ &amp; サポート</string>
 	<string name="site_picker_cant_hide_current_site">現在のサイトのため “%s” は非表示になりませんでした</string>
@@ -558,12 +602,14 @@ Language: ja_JP
 	<string name="my_site_header_publish">公開</string>
 	<string name="my_site_header_configuration">設定</string>
 	<string name="reader_label_new_posts_subtitle">タップして表示</string>
+	<string name="notifications_account_required">通知を受け取るには WordPress.com にログインしてください</string>
 	<string name="stats_unknown_author">不明な投稿者</string>
 	<string name="image_added">画像を追加しました</string>
 	<string name="deselect_all">すべて選択解除</string>
 	<string name="show">表示</string>
 	<string name="hide">隠す</string>
 	<string name="select_all">すべて選択</string>
+	<string name="sign_out_wpcom_confirm">アカウントからログアウトすると、ローカルの下書きおよび変更を含む @%s のすべての WordPress.com データがこのデバイスから削除されます。</string>
 	<string name="select_from_new_picker">新しいピッカーでの複数選択</string>
 	<string name="error_loading_videos">動画読み込みエラー</string>
 	<string name="stats_generic_error">必須の統計情報が読み込めませんでした</string>
@@ -600,6 +646,8 @@ Language: ja_JP
 	<string name="language">言語</string>
 	<string name="media_details_label_file_name">ファイル名</string>
 	<string name="media_details_label_file_type">ファイル形式</string>
+	<string name="auth_required">続けるにはログインしてください。</string>
+	<string name="sign_in_jetpack">Jetpack と連携するには WordPress.com アカウントにログインしてください。</string>
 	<string name="stats_empty_search_terms_desc">訪問者があなたのサイトを見つけるために検索したキーワードを見て、検索トラフィックについてより詳しく知りましょう。</string>
 	<string name="toast_err_post_uploading">アップロード中は投稿を開けません</string>
 	<string name="stats_view_authors">投稿者</string>
@@ -726,6 +774,7 @@ Language: ja_JP
 	<string name="pages_empty_list">ページはまだありません。新規作成してください。</string>
 	<string name="media_empty_list_custom_date">この期間のメディアはありません。</string>
 	<string name="posting_post">"%s" を投稿</string>
+	<string name="signing_out">ログアウト中…</string>
 	<string name="reader_label_comment_count_multi">コメント%,d件</string>
 	<string name="reader_label_comment_count_single">1件のコメント</string>
 	<string name="older_month">1ヶ月以上前</string>
@@ -968,9 +1017,11 @@ Language: ja_JP
 	<string name="account_two_step_auth_enabled">このアカウントでは2段階認証が有効化されています。WordPress.com のセキュリティ設定ページでアプリケーション用パスワードを生成してください。</string>
 	<string name="reader_empty_followed_blogs_description">右上のタグアイコンをタップし、お気に入りを発見してみてください。</string>
 	<string name="nux_add_selfhosted_blog">インストール型 WordPress ブログを追加</string>
+	<string name="nux_oops_not_selfhosted_blog">WordPress.com にログイン</string>
 	<string name="nux_tap_continue">次へ</string>
 	<string name="nux_welcome_create_account">アカウントを作成</string>
 	<string name="password_invalid">セキュリティ強度の高いパスワードが必要です。7文字以上の大文字・小文字・数字・記号を含むものにすることをおすすめします。</string>
+	<string name="signing_in">ログイン中…</string>
 	<string name="nux_tutorial_get_started_title">始めてみましょう</string>
 	<string name="media_add_popup_title">メディアライブラリに追加</string>
 	<string name="media_add_new_media_gallery">ギャラリーを作成</string>
@@ -999,6 +1050,7 @@ Language: ja_JP
 	<string name="limit_reached">上限に達しました。1分後にもう一度お試しいただけます。それより前にログインしようとすると、制限解除までの時間がさらに長くなります。エラーだと思われる場合はサポートにご連絡ください。</string>
 	<string name="reader_hint_comment_on_comment">コメントに返信…</string>
 	<string name="button_next">次へ</string>
+	<string name="connecting_wpcom">WordPress.com にログイン中</string>
 	<string name="themes">テーマ</string>
 	<string name="images">画像</string>
 	<string name="media_gallery_image_order_random">ランダム</string>
@@ -1059,6 +1111,7 @@ Language: ja_JP
 	<string name="custom_date">カスタム日付</string>
 	<string name="upload">アップロード</string>
 	<string name="discard">削除</string>
+	<string name="sign_in">ログイン</string>
 	<string name="notifications">通知</string>
 	<string name="note_reply_successful">返信を公開しました</string>
 	<string name="follows">フォロー</string>

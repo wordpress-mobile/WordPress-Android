@@ -102,16 +102,6 @@
     <string name="yesterday">Yesterday</string>
     <string name="days_ago">%d days ago</string>
 
-    <!-- MediaPicker -->
-    <string name="add_to_post">Add to Post</string>
-    <string name="media_picker_title">Select media</string>
-    <string name="take_photo">Take a photo</string>
-    <string name="take_video">Take a video</string>
-    <string name="tab_title_device_images">Device Images</string>
-    <string name="tab_title_device_videos">Device Videos</string>
-    <string name="tab_title_site_images">Site Images</string>
-    <string name="tab_title_site_videos">Site Videos</string>
-
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
     <string name="media_add_popup_capture_photo">Capture photo</string>
@@ -148,20 +138,6 @@
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
-    <string name="loading_videos">Loading videos</string>
-    <string name="loading_images">Loading images</string>
-    <string name="loading_blog_images">Fetching images</string>
-    <string name="loading_blog_videos">Fetching videos</string>
-    <string name="no_media">No media</string>
-    <string name="no_media_sources">Couldn\'t fetch media</string>
-    <string name="error_loading_images">Error loading images</string>
-    <string name="error_loading_videos">Error loading videos</string>
-    <string name="error_loading_blog_images">Unable to fetch images</string>
-    <string name="error_loading_blog_videos">Unable to fetch videos</string>
-    <string name="no_device_images">No images</string>
-    <string name="no_device_videos">No videos</string>
-    <string name="no_blog_images">No images</string>
-    <string name="no_blog_videos">No videos</string>
     <string name="upload_queued">Queued</string>
     <string name="media_file_type">File type: %s</string>
     <string name="media_file_name">File name: %s</string>
@@ -346,8 +322,13 @@
     <string name="comment_q_action_replying">Replying…</string>
 
     <!-- pending draft local notifications -->
-    <string name="pending_draft_one_generic">You drafted \'%s\' but never published it.</string>
-    <string name="pending_draft_one">You drafted \'%1$s\' %2$d days ago but never published it.</string>
+    <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
+    <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
+    <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
+    <string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
+    <string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+    <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+
     <string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
 
     <!-- edit comment view -->
@@ -403,7 +384,6 @@
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
-    <string name="select_from_new_picker">Multi-select with the new picker</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -642,7 +622,23 @@
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
-    <string name="preference_show_visual_editor">Show visual editor</string>
+    <string name="preference_editor_type">Set editor type</string>
+
+    <string name="preference_editor_legacy">Legacy</string>
+    <string name="preference_editor_visual">Visual</string>
+    <string name="preference_editor_aztec" translatable="false">Aztec</string>
+
+    <string-array name="editor_entries" translatable="false">
+        <item>@string/preference_editor_legacy</item>
+        <item>@string/preference_editor_visual</item>
+        <item>@string/preference_editor_aztec</item>
+    </string-array>
+
+    <string-array name="editor_entries_without_aztec" translatable="false">
+        <item>@string/preference_editor_legacy</item>
+        <item>@string/preference_editor_visual</item>
+    </string-array>
+
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -941,6 +937,10 @@
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
+    <string name="visual_editor_disabled">Visual Editor disabled</string>
+    <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
+    <string name="aztec_editor_disabled" translatable="false">Aztec Editor disabled</string>
+    <string name="aztec_editor_available" translatable="false">Aztec Editor available</string>
     <string name="new_editor_promo_button_label">Great, thanks!</string>
     <string name="new_editor_promo_title">Brand new editor</string>
     <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual
@@ -1060,8 +1060,13 @@
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
+    <string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
+    <string name="error_media_not_found">Media could not be found</string>
+    <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
+    <string name="error_media_parse_format">Could not parse response to %s media</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_upload_connection">A connection error occurred while uploading media</string>
+    <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
@@ -1104,8 +1109,8 @@
       Jetpack strings
     -->
     <string name="jetpack_info">Jetpack info</string>
-    <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
-    <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
+    <string name="jetpack_message">The Jetpack plugin must be installed and activated. Do you want to install or activate Jetpack?</string>
+    <string name="jetpack_message_not_admin">The Jetpack plugin is required. Contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_not_connected">Jetpack plugin not connected</string>
     <string name="jetpack_not_connected_message">The Jetpack plugin is installed, but not connected to WordPress.com. Do you want to connect Jetpack?</string>
@@ -1159,6 +1164,7 @@
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_hint_post_search">Search WordPress.com</string>
+    <string name="reader_hint_search_followed_sites">Search followed sites</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
@@ -1245,6 +1251,7 @@
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
+    <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
@@ -1345,9 +1352,12 @@
     <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
-    <string name="access_token_migration_message">Updating…</string>
+    <string name="migration_message">Migration in progress&#8230;</string>
+    <string name="migration_error_not_connected">Migration process failed: try launching the app when you have a
+        network connection.</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
     <string name="already_logged_in_wpcom_same_username">You\'re already logged in your WordPress.com account. Your site should appear in the site picker, make sure it\'s not hidden.</string>
+    <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>

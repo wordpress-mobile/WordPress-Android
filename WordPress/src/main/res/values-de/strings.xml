@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-10 13:48:13+0000
+Translation-Revision-Date: 2017-02-05 15:12:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.3.0-alpha
 Language: de
 -->
 <resources>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Versuche, dich zuerst auf WordPress.com anzumelden, oder öffne stattdessen über den oberen Aktions-Button einen Browser.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Öffne stattdessen über den Aktions-Button oben einen Browser.</string>
 	<string name="reader_label_global_related_posts">Mehr auf WordPress.com</string>
 	<string name="reader_label_local_related_posts">Mehr zu %s</string>
 	<string name="preference_open_device_settings">Geräte-Einstellungen öffnen</string>
@@ -131,6 +133,7 @@ Language: de
 	<string name="check_your_email">Überprüfe dein Postfach</string>
 	<string name="magic_link_unavailable_error_message">Zur Zeit nicht verfügbar. Bitte gib dein Passwort ein</string>
 	<string name="logging_in">Anmeldung läuft</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Lass dir einen Link für die sofortige Anmeldung per E-Mail zuschicken.</string>
 	<string name="enter_your_password_instead">Gib stattdessen dein Passwort ein</string>
 	<string name="web_address_dialog_hint">Wird mit deinem Kommentar veröffentlicht.</string>
 	<string name="username_email">E-Mail-Adresse oder Benutzername</string>
@@ -256,6 +259,7 @@ Language: de
 	<string name="editor_page_title_placeholder">Seitentitel</string>
 	<string name="editor_post_title_placeholder">Beitragstitel</string>
 	<string name="email_address">E-Mail-Adresse</string>
+	<string name="preference_editor_type">Visuellen Editor anzeigen</string>
 	<string name="preference_show_visual_editor">Visuellen Editor anzeigen</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Möchtest du diese Kommentare dauerhaft löschen?</string>
@@ -301,6 +305,7 @@ Language: de
 	<string name="error_post_remote_site_settings">Website-Info konnte nicht gespeichert werden</string>
 	<string name="error_fetch_remote_site_settings">Website-Info konnte nicht abgerufen werden</string>
 	<string name="error_media_upload_connection">Beim Hochladen von Medien ist ein Verbindungsfehler aufgetreten.</string>
+	<string name="site_settings_disconnected_toast">Abgemeldet, die Bearbeitung ist deaktiviert.</string>
 	<string name="site_settings_unsupported_version_error">Nicht unterstützte WordPress-Version</string>
 	<string name="site_settings_multiple_links_dialog_description">Kommentare mit mehr Links als hier angegeben müssen genehmigt werden.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Automatisch schließen</string>
@@ -539,8 +544,11 @@ Language: de
 	<string name="stats_insights_popular">Beliebtester Tag und Uhrzeit</string>
 	<string name="stats_insights_all_time">Beiträge, Aufrufe und Besucher für den gesamten Zeitraum</string>
 	<string name="stats_insights">Einsichten</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Um deine Statistiken anzuzeigen, melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendest.</string>
 	<string name="stats_other_recent_stats_moved_label">Suchst du nach deinen anderen, aktuellen Statistiken? Die findest du jetzt auf der Seite Einsichten.</string>
+	<string name="me_disconnect_from_wordpress_com">Bei WordPress.com abmelden</string>
 	<string name="me_btn_login_logout">Anmelden/Abmelden</string>
+	<string name="me_connect_to_wordpress_com">Bei WordPress.com anmelden</string>
 	<string name="site_picker_cant_hide_current_site">"%s" wurde nicht ausgeblendet, denn es ist die aktuelle Webseite</string>
 	<string name="me_btn_support">Hilfe &amp; Support</string>
 	<string name="account_settings">Kontoeinstellungen</string>
@@ -558,8 +566,10 @@ Language: de
 	<string name="my_site_btn_blog_posts">Blogbeiträge</string>
 	<string name="reader_label_new_posts_subtitle">Berühren zum Anzeigen</string>
 	<string name="my_site_header_configuration">Einrichtung</string>
+	<string name="notifications_account_required">Melde dich bei WordPress.com an, um Benachrichtigungen zu erhalten.</string>
 	<string name="stats_unknown_author">Unbekannter Autor</string>
 	<string name="image_added">Bild hinzugefügt</string>
+	<string name="sign_out_wpcom_confirm">Wenn du dich bei deinem Konto abmeldest, werden alle WordPress.com Daten von @%s von diesem Gerät entfernt, einschließlich aller lokal gespeicherten Entwürfe und Änderungen.</string>
 	<string name="select_all">Alle auswählen</string>
 	<string name="hide">Ausblenden</string>
 	<string name="show">Anzeigen</string>
@@ -580,6 +590,8 @@ Language: de
 	<string name="no_media">Keine Medien</string>
 	<string name="loading_images">Lade Bilder</string>
 	<string name="loading_videos">Lade Videos</string>
+	<string name="auth_required">Melde dich erneut an, um fortzufahren.</string>
+	<string name="sign_in_jetpack">Melde dich bei deinem WordPress.com-Konto an, um dich mit Jetpack zu verbinden.</string>
 	<string name="two_step_sms_sent">Der Überprüfungscode kommt per Textnachricht.</string>
 	<string name="two_step_footer_button">Sende Code via Textnachricht</string>
 	<string name="two_step_footer_label">Gib den Code aus der Authenticator-App ein.</string>
@@ -695,6 +707,7 @@ Language: de
 	<string name="delete_sure_page">Lösche diese Seite</string>
 	<string name="delete_sure">Lösche diesen Entwurf</string>
 	<string name="delete_sure_post">Lösche diesen Beitrag</string>
+	<string name="signing_out">Abmelden ...</string>
 	<string name="posting_post">Veröffentliche "%s"</string>
 	<string name="media_empty_list_custom_date">Keine Medien in diesem Zeitabschnitt</string>
 	<string name="pages_empty_list">Keine Seiten bisher. Warum nicht jetzt Eine erstellen?</string>
@@ -968,12 +981,14 @@ Language: de
 	<string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
 	<string name="select_time">Zeit auswählen</string>
 	<string name="nux_add_selfhosted_blog">Selbst-gehostete Website hinzufügen</string>
+	<string name="signing_in">Anmelden ...</string>
 	<string name="nux_welcome_create_account">Konto erstellen</string>
 	<string name="nux_tap_continue">Weiter</string>
 	<string name="password_invalid">Du benötigst ein sichereres Passwort. Stelle sicher, dass Du 7 oder mehr Zeichen benutzt und Groß- und Kleinbuchstaben enthalten sind, genau so wie Zahlen und Sonderzeichen.</string>
 	<string name="nux_tutorial_get_started_title">Los geht\'s!</string>
 	<string name="limit_reached">Limit erreicht. Du kannst es in 1 Minute nochmal versuchen. Ein weiterer Versuch vor Ablauf wird nur die Wartezeit verlängern, bis die Sperre aufgehoben wird. Falls du dies für einen Fehler hältst, kontaktiere bitte den Support.</string>
 	<string name="username_invalid">Ungültiger Benutzername</string>
+	<string name="connecting_wpcom">Bei WordPress.com anmelden</string>
 	<string name="button_next">Nächster</string>
 	<string name="create_account_wpcom">Erstelle ein Konto auf WordPress.com</string>
 	<string name="reader_empty_followed_tags">Du folgst keinen Schlagwörtern</string>

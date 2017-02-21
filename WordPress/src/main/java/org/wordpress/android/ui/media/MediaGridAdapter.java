@@ -18,16 +18,16 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
@@ -57,19 +57,19 @@ public class MediaGridAdapter extends CursorAdapter {
     private SiteModel mSite;
 
     // Must be an ArrayList (order is important for galleries)
-    private ArrayList<String> mSelectedItems;
+    private ArrayList<Long> mSelectedItems;
 
     public interface MediaGridAdapterCallback {
-        public void fetchMoreData(int offset);
-        public void onRetryUpload(String mediaId);
-        public boolean isInMultiSelect();
+        void fetchMoreData(int offset);
+        void onRetryUpload(long mediaId);
+        boolean isInMultiSelect();
     }
 
     interface BitmapReadyCallback {
         void onBitmapReady(Bitmap bitmap);
     }
 
-    private static enum ViewTypes {
+    private enum ViewTypes {
         LOCAL, NETWORK, PROGRESS, SPACER
     }
 
@@ -77,10 +77,10 @@ public class MediaGridAdapter extends CursorAdapter {
         super(context, c, flags);
         mContext = context;
         mSite = site;
-        mSelectedItems = new ArrayList<String>();
+        mSelectedItems = new ArrayList<>();
         mLocalImageWidth = context.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
         mInflater = LayoutInflater.from(context);
-        mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
+        mFilePathToCallbackMap = new HashMap<>();
         mHandler = new Handler();
         setImageLoader(imageLoader);
     }
@@ -89,11 +89,11 @@ public class MediaGridAdapter extends CursorAdapter {
         if (imageLoader != null) {
             mImageLoader = imageLoader;
         } else {
-            mImageLoader = WordPress.imageLoader;
+            mImageLoader = WordPress.sImageLoader;
         }
     }
 
-    public ArrayList<String> getSelectedItems() {
+    public ArrayList<Long> getSelectedItems() {
         return mSelectedItems;
     }
 
@@ -108,7 +108,6 @@ public class MediaGridAdapter extends CursorAdapter {
 
         private final TextView stateTextView;
         private final ProgressBar progressUpload;
-        private final RelativeLayout uploadStateView;
 
         GridViewHolder(View view) {
             filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
@@ -121,7 +120,6 @@ public class MediaGridAdapter extends CursorAdapter {
 
             stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
             progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
-            uploadStateView = (RelativeLayout) view.findViewById(R.id.media_grid_item_upload_state_container);
         }
     }
 
@@ -155,26 +153,26 @@ public class MediaGridAdapter extends CursorAdapter {
             view.setTag(holder);
         }
 
-        final String mediaId = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID));
+        final long mediaId = cursor.getLong(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
 
-        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
+        String state = cursor.getString(cursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         boolean isLocalFile = MediaUtils.isLocalFile(state);
 
         // file name
-        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
+        String fileName = cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_NAME));
         if (holder.filenameView != null) {
             holder.filenameView.setText(fileName);
         }
 
         // title of media
-        String title = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE));
+        String title = cursor.getString(cursor.getColumnIndex(MediaModelTable.TITLE));
         if (title == null || title.equals(""))
             title = fileName;
         holder.titleView.setText(title);
 
         // upload date
         if (holder.uploadDateView != null) {
-            String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
+            String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(MediaModelTable.UPLOAD_DATE)));
             holder.uploadDateView.setText(date);
         }
 
@@ -187,7 +185,7 @@ public class MediaGridAdapter extends CursorAdapter {
         }
 
         // get the file extension from the fileURL
-        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
+        String mimeType = cursor.getString(cursor.getColumnIndex(MediaModelTable.MIME_TYPE));
         String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
         fileExtension = fileExtension.toUpperCase();
         // file type
@@ -198,12 +196,12 @@ public class MediaGridAdapter extends CursorAdapter {
         }
 
         // dimensions
-        String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
+        String filePath = cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_PATH));
         TextView dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
         if (dimensionView != null) {
             if( MediaUtils.isValidImage(filePath)) {
-                int width = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
-                int height = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
+                int width = cursor.getInt(cursor.getColumnIndex(MediaModelTable.WIDTH));
+                int height = cursor.getInt(cursor.getColumnIndex(MediaModelTable.HEIGHT));
 
                 if (width > 0 && height > 0) {
                     String dimensions = width + "x" + height;
@@ -224,19 +222,27 @@ public class MediaGridAdapter extends CursorAdapter {
         // show upload state
         if (holder.stateTextView != null) {
             if (state != null && state.length() > 0) {
-                // show the progressbar only when the state is uploading
-                if (state.equals("uploading")) {
-                    holder.progressUpload.setVisibility(View.VISIBLE);
-                } else {
+                holder.stateTextView.setVisibility(View.VISIBLE);
+                holder.stateTextView.setText(state);
+
+                // hide the progressbar only if the state is Uploaded or failed
+                if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name()) ||
+                        state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
                     holder.progressUpload.setVisibility(View.GONE);
-                    if (state.equals("uploaded")) {
-                        holder.stateTextView.setVisibility(View.GONE);
-                    }
+                } else {
+                    holder.progressUpload.setVisibility(View.VISIBLE);
+                }
+
+                // Hide the state text only if the it's Uploaded
+                if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
+                    holder.stateTextView.setVisibility(View.GONE);
                 }
 
                 // add onclick to retry failed uploads
-                if (state.equals("failed")) {
-                    state = "retry";
+                if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
+                    state = MediaUploadState.QUEUED.name();
+                    holder.stateTextView.setVisibility(View.VISIBLE);
+                    holder.stateTextView.setText(state);
                     holder.stateTextView.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -246,14 +252,12 @@ public class MediaGridAdapter extends CursorAdapter {
                                 mCallback.onRetryUpload(mediaId);
                             }
                         }
-
                     });
                 }
 
-                holder.stateTextView.setText(state);
-                holder.uploadStateView.setVisibility(View.VISIBLE);
             } else {
-                holder.uploadStateView.setVisibility(View.GONE);
+                holder.progressUpload.setVisibility(View.GONE);
+                holder.stateTextView.setVisibility(View.GONE);
             }
         }
 
@@ -271,43 +275,37 @@ public class MediaGridAdapter extends CursorAdapter {
     }
 
     private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
-        final String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
+        final String filePath = cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_PATH));
+        imageView.setTag(filePath);
 
-        if (MediaUtils.isValidImage(filePath)) {
-            imageView.setTag(filePath);
-
-            Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-            } else {
-                imageView.setImageBitmap(null);
-
-                boolean shouldFetch = false;
-
-                List<BitmapReadyCallback> list;
-                if (mFilePathToCallbackMap.containsKey(filePath)) {
-                    list = mFilePathToCallbackMap.get(filePath);
-                } else {
-                    list = new ArrayList<MediaGridAdapter.BitmapReadyCallback>();
-                    shouldFetch = true;
-                    mFilePathToCallbackMap.put(filePath, list);
-                }
-                list.add(new BitmapReadyCallback() {
-                    @Override
-                    public void onBitmapReady(Bitmap bitmap) {
-                        if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath))
-                            imageView.setImageBitmap(bitmap);
-                    }
-                });
-
-
-                if (shouldFetch) {
-                    fetchBitmap(filePath);
-                }
-            }
+        Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
         } else {
-            // if not image, for now show no image.
             imageView.setImageBitmap(null);
+
+            boolean shouldFetch = false;
+
+            List<BitmapReadyCallback> list;
+            if (mFilePathToCallbackMap.containsKey(filePath)) {
+                list = mFilePathToCallbackMap.get(filePath);
+            } else {
+                list = new ArrayList<>();
+                shouldFetch = true;
+                mFilePathToCallbackMap.put(filePath, list);
+            }
+            list.add(new BitmapReadyCallback() {
+                @Override
+                public void onBitmapReady(Bitmap bitmap) {
+                    if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath)) {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                }
+            });
+
+            if (shouldFetch) {
+                fetchBitmap(filePath);
+            }
         }
     }
 
@@ -386,7 +384,7 @@ public class MediaGridAdapter extends CursorAdapter {
         }
 
         // regular cells
-        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
+        String state = cursor.getString(cursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         if (MediaUtils.isLocalFile(state))
             return ViewTypes.LOCAL.ordinal();
         else
@@ -408,7 +406,7 @@ public class MediaGridAdapter extends CursorAdapter {
     public Cursor swapCursor(Cursor newCursor) {
         if (newCursor == null) {
             mCursorDataCount = 0;
-            return super.swapCursor(newCursor);
+            return super.swapCursor(null);
         }
 
         mCursorDataCount = newCursor.getCount();
@@ -477,7 +475,7 @@ public class MediaGridAdapter extends CursorAdapter {
         mSelectedItems.clear();
     }
 
-    public boolean isItemSelected(String mediaId) {
+    public boolean isItemSelected(long mediaId) {
         return mSelectedItems.contains(mediaId);
     }
 
@@ -486,14 +484,14 @@ public class MediaGridAdapter extends CursorAdapter {
         if (cursor == null) {
             return;
         }
-        int columnIndex = cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID);
+        int columnIndex = cursor.getColumnIndex(MediaModelTable.MEDIA_ID);
         if (columnIndex != -1) {
-            String mediaId = cursor.getString(columnIndex);
+            long mediaId = cursor.getLong(columnIndex);
             setItemSelected(mediaId, selected);
         }
     }
 
-    public void setItemSelected(String mediaId, boolean selected) {
+    public void setItemSelected(long mediaId, boolean selected) {
         if (selected) {
             mSelectedItems.add(mediaId);
         } else {
@@ -504,9 +502,9 @@ public class MediaGridAdapter extends CursorAdapter {
 
     public void toggleItemSelected(int position) {
         Cursor cursor = (Cursor) getItem(position);
-        int columnIndex = cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID);
+        int columnIndex = cursor.getColumnIndex(MediaModelTable.MEDIA_ID);
         if (columnIndex != -1) {
-            String mediaId = cursor.getString(columnIndex);
+            long mediaId = cursor.getLong(columnIndex);
             if (mSelectedItems.contains(mediaId)) {
                 mSelectedItems.remove(mediaId);
             } else {
@@ -516,7 +514,7 @@ public class MediaGridAdapter extends CursorAdapter {
         }
     }
 
-    public void setSelectedItems(ArrayList<String> selectedItems) {
+    public void setSelectedItems(ArrayList<Long> selectedItems) {
         mSelectedItems = selectedItems;
         notifyDataSetChanged();
     }
