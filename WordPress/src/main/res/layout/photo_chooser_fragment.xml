@@ -10,7 +10,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
