@@ -24,8 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -415,10 +413,5 @@ public class MediaItemFragment extends Fragment {
             AppLog.e(AppLog.T.UTILS, e);
             ToastUtils.showToast(getActivity(), R.string.error_copy_to_clipboard);
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        // no-op
     }
 }

@@ -17,8 +17,6 @@ import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.DragSortListView.DropListener;
 import com.mobeta.android.dslv.DragSortListView.RemoveListener;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -237,10 +235,5 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
     @Override
     public void remove(int position) {
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        // no-op
     }
 }
