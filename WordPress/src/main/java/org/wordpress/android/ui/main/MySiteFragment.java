@@ -185,7 +185,11 @@ public class MySiteFragment extends Fragment
         mPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogPlans(getActivity(), getSelectedSite());
+                // TODO: Remove this condition when we fix showing WordPress.com plans for AT sites
+                // https://github.com/wordpress-mobile/WordPress-Android/issues/5121
+                if (getSelectedSite() != null && !getSelectedSite().isAutomatedTransfer()) {
+                    ActivityLauncher.viewBlogPlans(getActivity(), getSelectedSite());
+                }
             }
         });
 
@@ -368,7 +372,7 @@ public class MySiteFragment extends Fragment
         // Hide the Plan item if the Plans feature is not available for this blog
         String planShortName = site.getPlanShortName();
         if (!TextUtils.isEmpty(planShortName) && site.getHasCapabilityManageOptions()) {
-            if (site.isWPCom()) {
+            if (site.isWPCom() || site.isAutomatedTransfer()) {
                 mCurrentPlanNameTextView.setText(planShortName);
                 mPlanContainer.setVisibility(View.VISIBLE);
             } else {
