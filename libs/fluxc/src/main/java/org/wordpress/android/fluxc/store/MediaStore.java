@@ -133,10 +133,16 @@ public class MediaStore extends Store {
     public class OnMediaChanged extends OnChanged<MediaError> {
         public MediaAction cause;
         public List<MediaModel> mediaList;
-        public OnMediaChanged(MediaAction cause, List<MediaModel> mediaList) {
+        public OnMediaChanged(MediaAction cause) {
+            this(cause, new ArrayList<MediaModel>(), null);
+        }
+        public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList) {
             this(cause, mediaList, null);
         }
-        public OnMediaChanged(MediaAction cause, List<MediaModel> mediaList, MediaError error) {
+        public OnMediaChanged(MediaAction cause, MediaError error) {
+            this(cause, new ArrayList<MediaModel>(), error);
+        }
+        public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList, MediaError error) {
             this.cause = cause;
             this.mediaList = mediaList;
             this.error = error;
@@ -419,7 +425,7 @@ public class MediaStore extends Store {
 
     private void removeAllMedia() {
         MediaSqlUtils.deleteAllMedia();
-        OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_ALL_MEDIA, null);
+        OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_ALL_MEDIA);
         emitChange(event);
     }
 
@@ -428,7 +434,7 @@ public class MediaStore extends Store {
     //
 
     private void updateMedia(MediaModel media, boolean emit) {
-        OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA, new ArrayList<MediaModel>());
+        OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA);
 
         if (media == null) {
             event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
@@ -444,7 +450,7 @@ public class MediaStore extends Store {
     }
 
     private void removeMedia(MediaModel media) {
-        OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_MEDIA, new ArrayList<MediaModel>());
+        OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_MEDIA);
 
         if (media == null) {
             event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
@@ -550,7 +556,7 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaPushed(@NonNull MediaPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.PUSH_MEDIA, null, payload.error);
+        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.PUSH_MEDIA, payload.error);
         if (payload.media != null) {
             updateMedia(payload.media, false);
             onMediaChanged.mediaList = new ArrayList<>();
@@ -595,7 +601,7 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaFetched(@NonNull MediaPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_MEDIA, null, payload.error);
+        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_MEDIA, payload.error);
         if (payload.media != null) {
             MediaSqlUtils.insertOrUpdateMedia(payload.media);
             onMediaChanged.mediaList = new ArrayList<>();
@@ -605,7 +611,7 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaDeleted(@NonNull MediaPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETE_MEDIA, null, payload.error);
+        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETE_MEDIA, payload.error);
         if (payload.media != null) {
             MediaSqlUtils.deleteMedia(payload.media);
             onMediaChanged.mediaList = new ArrayList<>();
