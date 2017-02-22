@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.DragSortListView.DropListener;
 import com.mobeta.android.dslv.DragSortListView.RemoveListener;
+import com.wellsql.generated.MediaModelTable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -130,8 +131,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
         int size = mIds.size();
         for (int i = 0; i < size; i++) {
             while (cursor.moveToNext()) {
-                // TODO: Use MediaModel cursor here
-                long mediaId = cursor.getLong(cursor.getColumnIndex("mediaId"));
+                long mediaId = cursor.getLong(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
                 if (mediaId == mIds.get(i)) {
                     positions.put(i, cursor.getPosition());
                     cursor.moveToPosition(-1);
@@ -213,8 +213,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
             return;
         }
         cursor.moveToPosition(info.position);
-        // TODO: Use MediaModel cursor here
-        long mediaId = cursor.getLong(cursor.getColumnIndex("mediaId"));
+        long mediaId = cursor.getLong(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
 
         menu.add(ContextMenu.NONE, mIds.indexOf(mediaId), ContextMenu.NONE, R.string.delete);
     }
