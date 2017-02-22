@@ -295,7 +295,6 @@ public class MediaUploadService extends Service {
 
     // FluxC events
 
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
