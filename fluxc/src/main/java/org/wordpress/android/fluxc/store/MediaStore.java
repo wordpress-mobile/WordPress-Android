@@ -176,9 +176,10 @@ public class MediaStore extends Store {
         DB_QUERY_FAILURE,
 
         // network errors, occur in response to network requests
-        MEDIA_NOT_FOUND,
-        UNAUTHORIZED,
+        NOT_FOUND,
+        AUTHORIZATION_REQUIRED,
         PARSE_ERROR,
+        NOT_AUTHENTICATED,
 
         // unknown/unspecified
         GENERIC_ERROR;
@@ -186,9 +187,11 @@ public class MediaStore extends Store {
         public static MediaErrorType fromBaseNetworkError(BaseRequest.BaseNetworkError baseError) {
             switch (baseError.type) {
                 case NOT_FOUND:
-                    return MediaErrorType.MEDIA_NOT_FOUND;
+                    return MediaErrorType.NOT_FOUND;
+                case NOT_AUTHENTICATED:
+                    return MediaErrorType.NOT_AUTHENTICATED;
                 case AUTHORIZATION_REQUIRED:
-                    return MediaErrorType.UNAUTHORIZED;
+                    return MediaErrorType.AUTHORIZATION_REQUIRED;
                 case PARSE_ERROR:
                     return MediaErrorType.PARSE_ERROR;
                 default:
@@ -199,9 +202,9 @@ public class MediaStore extends Store {
         public static MediaErrorType fromHttpStatusCode(int code) {
             switch (code) {
                 case 404:
-                    return MediaErrorType.MEDIA_NOT_FOUND;
+                    return MediaErrorType.NOT_FOUND;
                 case 403:
-                    return MediaErrorType.UNAUTHORIZED;
+                    return MediaErrorType.NOT_AUTHENTICATED;
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }
