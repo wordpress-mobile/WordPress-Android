@@ -238,7 +238,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.v(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
                         MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
-                        if (mediaError == MediaErrorType.MEDIA_NOT_FOUND) {
+                        if (mediaError == MediaErrorType.NOT_FOUND) {
                             AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
                         }
                         notifyMediaDeleted(site, media, new MediaError(mediaError));
@@ -321,7 +321,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     private MediaError parseUploadError(okhttp3.Response response) {
         MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
         if (response.code() == 403) {
-            mediaError.type = MediaErrorType.UNAUTHORIZED;
+            mediaError.type = MediaErrorType.AUTHORIZATION_REQUIRED;
         }
         try {
             JSONObject body = new JSONObject(response.body().string());
