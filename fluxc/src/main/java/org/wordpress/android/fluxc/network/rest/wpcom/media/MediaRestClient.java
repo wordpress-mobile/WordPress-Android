@@ -8,6 +8,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
@@ -36,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -66,7 +70,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                            OkHttpClient.Builder okClientBuilder, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
-        mOkHttpClient = okClientBuilder.build();
+        mOkHttpClient = okClientBuilder
+                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                .readTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
+                .build();
     }
 
     @Override
@@ -230,7 +238,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.v(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
                         MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
-                        if (mediaError == MediaErrorType.MEDIA_NOT_FOUND) {
+                        if (mediaError == MediaErrorType.NOT_FOUND) {
                             AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
                         }
                         notifyMediaDeleted(site, media, new MediaError(mediaError));
@@ -293,8 +301,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
-                    MediaStore.MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
-                    notifyMediaUploaded(media, error);
+                    notifyMediaUploaded(media, parseUploadError(response));
                 }
             }
 
@@ -310,6 +317,34 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     //
     // Helper methods to dispatch media actions
     //
+
+    private MediaError parseUploadError(okhttp3.Response response) {
+        MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
+        if (response.code() == 403) {
+            mediaError.type = MediaErrorType.AUTHORIZATION_REQUIRED;
+        }
+        try {
+            JSONObject body = new JSONObject(response.body().string());
+            // Can be an array or errors
+            if (body.has("errors")) {
+                JSONArray errors = body.getJSONArray("errors");
+                if (errors.length() == 1) {
+                    JSONObject error = errors.getJSONObject(0);
+                    // error.getString("error")) is always "upload_error"
+                    if (error.has("message")) {
+                        mediaError.message = error.getString("message");
+                    }
+                }
+            }
+            // Or an object
+            if (body.has("message")) {
+                mediaError.message = body.getString("message");
+            }
+        } catch (JSONException | IOException e) {
+            // no op
+        }
+        return mediaError;
+    }
 
     private void notifyMediaPushed(SiteModel site, MediaModel media, MediaError error) {
         MediaPayload payload = new MediaPayload(site, media, error);
