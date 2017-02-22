@@ -273,6 +273,9 @@ public class HelpshiftHelper {
             mMetadata.put("blog-name-" + counter, site.getName());
             mMetadata.put("blog-url-" + counter, site.getUrl());
             mMetadata.put("blog-plan-" + counter, site.getPlanId());
+            if (site.isAutomatedTransfer()) {
+                mMetadata.put("is-automated-transfer-" + counter, "true");
+            }
             counter += 1;
         }
 

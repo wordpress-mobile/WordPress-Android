@@ -223,7 +223,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Intent intent = new Intent();
-        if (!com.helpshift.support.util.ListUtils.isEmpty(mGridAdapter.getSelectedItems())) {
+        if (!mGridAdapter.getSelectedItems().isEmpty()) {
             intent.putExtra(RESULT_IDS, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
         }
         setResult(RESULT_OK, intent);

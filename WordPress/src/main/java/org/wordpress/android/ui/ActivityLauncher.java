@@ -305,7 +305,7 @@ public class ActivityLauncher {
         if (!mediaIds.isEmpty()) {
             intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, ListUtils.toLongArray(mediaIds));
         }
-        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+        activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
     public static void viewMediaGalleryForSiteAndGallery(Activity activity, @NonNull SiteModel site,

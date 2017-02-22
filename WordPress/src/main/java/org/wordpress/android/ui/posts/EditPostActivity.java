@@ -80,7 +80,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -142,9 +141,6 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import static android.R.attr.thumb;
-import static java.lang.System.out;
-
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
         MediaUploadService.MediaUploadListener {
@@ -182,9 +178,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private Handler mHandler;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
-
-    // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
-    private Map<Long, List<Long>> mPendingGalleryUploads = new HashMap<>();
 
     private List<String> mPendingVideoPressInfoRequests;
 
@@ -930,7 +923,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // Display custom error depending on error type
         String errorMessage;
         switch (error.type) {
-            case UNAUTHORIZED:
+            case AUTHORIZATION_REQUIRED:
                 errorMessage = getString(R.string.media_error_no_permission_upload);
                 break;
             case GENERIC_ERROR:
@@ -1314,7 +1307,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
                 MediaFile mediaFile = FluxCUtils.fromMediaModel(queueFileForUpload(uri,
-                        getContentResolver().getType(uri), null, "failed"));
+                        getContentResolver().getType(uri), UploadState.FAILED));
                 if (mediaFile == null) {
                     continue;
                 }
@@ -1657,7 +1650,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri), null);
+        MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.fromMediaModel(media);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
@@ -1761,7 +1754,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
-            queueFileForUpload(mediaUri, getContentResolver().getType(mediaUri), null);
+            queueFileForUpload(mediaUri, getContentResolver().getType(mediaUri));
         }
     }
 
@@ -1856,10 +1849,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case FS_READ_PERMISSION_DENIED:
                     errorMessage = getString(R.string.error_media_insufficient_fs_permissions);
                     break;
-                case MEDIA_NOT_FOUND:
+                case NOT_FOUND:
                     errorMessage = getString(R.string.error_media_not_found);
                     break;
-                case UNAUTHORIZED:
+                case AUTHORIZATION_REQUIRED:
                     errorMessage = getString(R.string.error_media_unauthorized);
                     break;
                 case PARSE_ERROR:
@@ -1964,17 +1957,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     /**
      * Queues a media file for upload and starts the MediaUploadService. Toasts will alert the user
      * if there are issues with the file.
-     *
-     * @param path
-     *  local path of the media file to upload
-     * @param mediaIdOut
-     *  the new {@link org.wordpress.android.util.helpers.MediaFile} ID is added if non-null
      */
-    private MediaModel queueFileForUpload(Uri uri, String mimeType, ArrayList<Long> mediaIdOut) {
-        return queueFileForUpload(uri, mimeType, mediaIdOut, "queued");
+    private MediaModel queueFileForUpload(Uri uri, String mimeType) {
+        return queueFileForUpload(uri, mimeType, UploadState.QUEUED);
     }
 
-    private MediaModel queueFileForUpload(Uri uri, String mimeType, ArrayList<Long> mediaIdOut, String startingState) {
+    private MediaModel queueFileForUpload(Uri uri, String mimeType, UploadState startingState) {
         String path = getRealPathFromURI(uri);
 
         // Invalid file path
@@ -2021,7 +2009,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
-        media.setUploadState(UploadState.QUEUED.name());
+        media.setUploadState(startingState.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
