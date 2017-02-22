@@ -325,13 +325,20 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
         try {
             JSONObject body = new JSONObject(response.body().string());
-            JSONArray errors = body.getJSONArray("errors");
-            if (errors.length() == 1) {
-                JSONObject error = errors.getJSONObject(0);
-                // error.getString("error")) is always "upload_error"
-                if (error.has("message")) {
-                    mediaError.message = error.getString("message");
+            // Can be an array or errors
+            if (body.has("errors")) {
+                JSONArray errors = body.getJSONArray("errors");
+                if (errors.length() == 1) {
+                    JSONObject error = errors.getJSONObject(0);
+                    // error.getString("error")) is always "upload_error"
+                    if (error.has("message")) {
+                        mediaError.message = error.getString("message");
+                    }
                 }
+            }
+            // Or an object
+            if (body.has("message")) {
+                mediaError.message = body.getString("message");
             }
         } catch (JSONException | IOException e) {
             // no op
