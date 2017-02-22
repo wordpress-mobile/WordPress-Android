@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnNewUserCreated;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -252,11 +253,56 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mSiteUrlTextField.requestFocus();
     }
 
-    private void showSiteError(String message) {
+    private void showSiteError(NewSiteErrorType newUserError, String message) {
         if (!isAdded()) {
             return;
         }
-        showSiteUrlError(message);
+        switch (newUserError) {
+            case SITE_NAME_REQUIRED:
+                showSiteUrlError(getString(R.string.blog_name_required));
+                break;
+            case SITE_NAME_NOT_ALLOWED:
+                showSiteUrlError(getString(R.string.blog_name_not_allowed));
+                break;
+            case SITE_NAME_MUST_BE_AT_LEAST_FOUR_CHARACTERS:
+                showSiteUrlError(getString(R.string.blog_name_must_be_at_least_four_characters));
+                break;
+            case SITE_NAME_MUST_BE_LESS_THAN_SIXTY_FOUR_CHARACTERS:
+                showSiteUrlError(getString(R.string.blog_name_must_be_less_than_sixty_four_characters));
+                break;
+            case SITE_NAME_CONTAINS_INVALID_CHARACTERS:
+                showSiteUrlError(getString(R.string.blog_name_contains_invalid_characters));
+                break;
+            case SITE_NAME_CANT_BE_USED:
+                showSiteUrlError(getString(R.string.blog_name_cant_be_used));
+                break;
+            case SITE_NAME_ONLY_LOWERCASE_LETTERS_AND_NUMBERS:
+                showSiteUrlError(getString(R.string.blog_name_only_lowercase_letters_and_numbers));
+                break;
+            case SITE_NAME_MUST_INCLUDE_LETTERS:
+                showSiteUrlError(getString(R.string.blog_name_must_include_letters));
+                break;
+            case SITE_NAME_EXISTS:
+                showSiteUrlError(getString(R.string.blog_name_exists));
+                break;
+            case SITE_NAME_RESERVED:
+                showSiteUrlError(getString(R.string.blog_name_reserved));
+                break;
+            case SITE_NAME_RESERVED_BUT_MAY_BE_AVAILABLE:
+                showSiteUrlError(getString(R.string.blog_name_reserved_but_may_be_available));
+                break;
+            case SITE_NAME_INVALID:
+                showSiteUrlError(getString(R.string.blog_name_invalid));
+                break;
+            case SITE_TITLE_INVALID:
+                showSiteUrlError(getString(R.string.blog_title_invalid));
+                break;
+            default:
+            case GENERIC_ERROR:
+                // Show other errors on the URL field
+                showSiteUrlError(message);
+                break;
+        }
     }
 
     private void showUserError(NewUserErrorType newUserError, String message) {
@@ -265,33 +311,56 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
         switch (newUserError) {
             case USERNAME_ONLY_LOWERCASE_LETTERS_AND_NUMBERS:
-            case USERNAME_REQUIRED:
-            case USERNAME_NOT_ALLOWED:
-            case USERNAME_MUST_BE_AT_LEAST_FOUR_CHARACTERS:
-            case USERNAME_CONTAINS_INVALID_CHARACTERS:
-            case USERNAME_MUST_INCLUDE_LETTERS:
-            case USERNAME_RESERVED_BUT_MAY_BE_AVAILABLE:
-            case USERNAME_INVALID:
-                showUsernameError(message);
+                showUsernameError(getString(R.string.username_only_lowercase_letters_and_numbers));
                 break;
-            case USERNAME_EXISTS: // Returned error message for username_exists is too vague ("Invalid user input")
+            case USERNAME_REQUIRED:
+                showUsernameError(getString(R.string.username_required));
+                break;
+            case USERNAME_NOT_ALLOWED:
+                showUsernameError(getString(R.string.username_not_allowed));
+                break;
+            case USERNAME_MUST_BE_AT_LEAST_FOUR_CHARACTERS:
+                showUsernameError(getString(R.string.username_must_be_at_least_four_characters));
+                break;
+            case USERNAME_CONTAINS_INVALID_CHARACTERS:
+                showUsernameError(getString(R.string.username_contains_invalid_characters));
+                break;
+            case USERNAME_MUST_INCLUDE_LETTERS:
+                showUsernameError(getString(R.string.username_must_include_letters));
+                break;
+            case USERNAME_RESERVED_BUT_MAY_BE_AVAILABLE:
+                showUsernameError(getString(R.string.username_reserved_but_may_be_available));
+                break;
+            case USERNAME_INVALID:
+                showUsernameError(getString(R.string.username_invalid));
+                break;
+            case USERNAME_EXISTS:
                 showUsernameError(getString(R.string.username_exists));
                 AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_USERNAME_EXISTS);
                 break;
             case PASSWORD_INVALID:
-                showPasswordError(message);
+                showPasswordError(getString(R.string.password_invalid));
                 break;
             case EMAIL_CANT_BE_USED_TO_SIGNUP:
+                showEmailError(getString(R.string.email_cant_be_used_to_signup));
+                break;
             case EMAIL_INVALID:
+                showEmailError(getString(R.string.email_invalid));
+                break;
             case EMAIL_NOT_ALLOWED:
+                showEmailError(getString(R.string.email_not_allowed));
+                break;
             case EMAIL_RESERVED:
-                showEmailError(message);
+                showEmailError(getString(R.string.email_reserved));
                 break;
             case EMAIL_EXISTS:
-                showEmailError(message);
+                showEmailError(getString(R.string.email_exists));
                 AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_EMAIL_EXISTS);
                 break;
             default:
+            case GENERIC_ERROR:
+                // Show other errors on the first field (email)
+                showEmailError(message);
                 break;
         }
     }
@@ -609,7 +678,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         if (event.isError()) {
             endProgress();
             AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_FAILED);
-            showSiteError(event.error.message);
+            showSiteError(event.error.type, event.error.message);
             return;
         }
         if (event.dryRun) {
