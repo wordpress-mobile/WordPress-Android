@@ -79,7 +79,7 @@ public class MediaStore extends Store {
         public List<MediaModel> mediaList;
         public boolean loadedMore;
         public boolean canLoadMore;
-        public FetchMediaListResponsePayload(SiteModel site, List<MediaModel> mediaList, boolean loadedMore,
+        public FetchMediaListResponsePayload(SiteModel site, @NonNull List<MediaModel> mediaList, boolean loadedMore,
                                              boolean canLoadMore) {
             this.site = site;
             this.mediaList = mediaList;
@@ -88,6 +88,7 @@ public class MediaStore extends Store {
         }
 
         public FetchMediaListResponsePayload(SiteModel site, MediaError error) {
+            this.mediaList = new ArrayList<>();
             this.site = site;
             this.error = error;
         }
@@ -153,7 +154,7 @@ public class MediaStore extends Store {
         public SiteModel site;
         public List<MediaModel> mediaList;
         public boolean canLoadMore;
-        public OnMediaListFetched(SiteModel site, List<MediaModel> mediaList, boolean canLoadMore) {
+        public OnMediaListFetched(SiteModel site, @NonNull List<MediaModel> mediaList, boolean canLoadMore) {
             this.site = site;
             this.mediaList = mediaList;
             this.canLoadMore = canLoadMore;
