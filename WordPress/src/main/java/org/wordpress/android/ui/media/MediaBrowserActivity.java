@@ -526,11 +526,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
-        if (isFinishing())
+        if (isFinishing()) {
             return;
+        }
         String errorMessage = getString(message);
         if (!TextUtils.isEmpty(messageDetail)) {
-            errorMessage += ", " + messageDetail;
+            errorMessage += ". " + messageDetail;
         }
         ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
     }
