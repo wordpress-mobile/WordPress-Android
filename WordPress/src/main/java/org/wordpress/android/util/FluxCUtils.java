@@ -33,6 +33,7 @@ public class FluxCUtils {
         mediaModel.setId(file.getId());
         mediaModel.setUploadState(file.getUploadState());
         mediaModel.setLocalSiteId(Integer.valueOf(file.getBlogId()));
+        mediaModel.setVideoPressGuid(ShortcodeUtils.getVideoPressIdFromShortCode(file.getVideoPressShortCode()));
         return mediaModel;
     }
 
@@ -54,6 +55,8 @@ public class FluxCUtils {
         mediaFile.setDescription(media.getDescription());
         mediaFile.setCaption(media.getCaption());
         mediaFile.setUploadState(media.getUploadState());
+        mediaFile.setVideo(org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.getMimeType()));
+        mediaFile.setVideoPressShortCode(ShortcodeUtils.getVideoPressShortcodeFromId(media.getVideoPressGuid()));
         return mediaFile;
     }
 }

@@ -169,7 +169,7 @@ public class MediaUploadService extends Service {
 
     private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
         AppLog.w(T.MEDIA, "Error uploading media: " + event.error.message);
-        mCurrentUpload.setUploadState(MediaModel.UploadState.FAILED.toString());
+        mCurrentUpload.setUploadState(UploadState.FAILED.name());
         completeCurrentUpload();
         if (mListener != null) {
             mListener.onUploadError(event.media, event.error);
@@ -273,8 +273,9 @@ public class MediaUploadService extends Service {
     }
 
     private void dispatchUploadAction(@NonNull final MediaModel media) {
-        AppLog.i(T.MEDIA, "Dispatching upload action: " + media.getTitle());
-        media.setUploadState(UploadState.UPLOADING.toString());
+        AppLog.i(T.MEDIA, "Dispatching upload action for media with local id: " + media.getId() +
+                " and path: " + media.getFilePath());
+        media.setUploadState(UploadState.UPLOADING.name());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
         MediaPayload payload = new MediaPayload(mSite, media);
@@ -286,13 +287,13 @@ public class MediaUploadService extends Service {
     }
 
     private void dispatchCancelAction(@NonNull final MediaModel media) {
-        AppLog.i(T.MEDIA, "Dispatching cancel upload action: " + media.getFilePath());
+        AppLog.i(T.MEDIA, "Dispatching cancel upload action for media with local id: " + media.getId() +
+                " and path: " + media.getFilePath());
         MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
     // FluxC events
-
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)

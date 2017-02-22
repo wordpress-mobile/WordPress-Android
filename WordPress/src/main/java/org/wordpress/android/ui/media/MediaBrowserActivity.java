@@ -23,6 +23,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
@@ -56,6 +58,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -522,13 +525,24 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         // TODO
     }
 
+    private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
+        if (isFinishing()) {
+            return;
+        }
+        String errorMessage = getString(message);
+        if (!TextUtils.isEmpty(messageDetail)) {
+            errorMessage += ". " + messageDetail;
+        }
+        ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
         if (event.isError()) {
             AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.type
                                      + " - " + event.error.message);
-            ToastUtils.showToast(this, "Media error occurred: " + event.error.message, ToastUtils.Duration.LONG);
+            showMediaToastError(R.string.media_generic_error, event.error.message);
             return;
         }
 
@@ -578,14 +592,19 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                                      + " - " + event.error.message);
+            if (event.error.type == MediaErrorType.AUTHORIZATION_REQUIRED) {
+                showMediaToastError(R.string.media_error_no_permission, null);
+            } else {
+                showMediaToastError(R.string.media_upload_error, event.error.message);
+            }
         } else if (event.completed) {
             String title = "";
             if (event.media != null) {
                 title = event.media.getTitle();
             }
             AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
-            updateViews();
         }
+        updateViews();
     }
 
     public void onSavedEdit(long mediaId, boolean result) {
@@ -639,7 +658,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
             if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
                 mediaToDelete.add(mediaModel);
-                mediaModel.setUploadState(MediaUploadState.DELETE.toString());
+                mediaModel.setUploadState(MediaUploadState.DELETE.name());
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
                 updateViews();
                 sanitizedIds.add(String.valueOf(currentId));
@@ -879,7 +898,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
-        media.setUploadState(MediaUploadState.QUEUED.toString());
+        media.setUploadState(MediaUploadState.QUEUED.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);

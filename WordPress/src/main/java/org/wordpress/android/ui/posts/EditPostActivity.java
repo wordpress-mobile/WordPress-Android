@@ -14,6 +14,8 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -71,19 +73,16 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.fluxc.store.PostStore.InstantiatePostPayload;
-import org.wordpress.android.fluxc.store.PostStore.OnPostInstantiated;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -104,6 +103,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -115,7 +115,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -125,14 +124,14 @@ import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -173,9 +172,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
 
-    // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
-    private Map<Long, List<Long>> mPendingGalleryUploads = new HashMap<>();
-
     private List<String> mPendingVideoPressInfoRequests;
 
     /**
@@ -206,7 +202,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
-    private CountDownLatch mNewPostLatch;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -288,25 +283,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = true;
-                mNewPostLatch = new CountDownLatch(1);
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
                 categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
                 String postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
-                InstantiatePostPayload payload = new InstantiatePostPayload(mSite, mIsPage, categories, postFormat);
-                mDispatcher.dispatch(PostActionBuilder.newInstantiatePostAction(payload));
-
-                // Wait for the OnPostInstantiated event to initialize the post
-                try {
-                    mNewPostLatch.await(1000, TimeUnit.MILLISECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (mPost == null) {
-                    throw new RuntimeException("No callback received from INSTANTIATE_POST action");
-                }
+                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
             } else if (extras != null) {
                 // Load post passed in extras
                 mPost = (PostModel) extras.getSerializable(EXTRA_POST);
@@ -778,27 +760,50 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                     FluxCUtils.fromMediaModel(media));
         }
+        removeMediaFromPendingList(media);
     }
 
     @Override
     public void onUploadCanceled(MediaModel media) {
+        removeMediaFromPendingList(media);
     }
 
     @Override
     public void onUploadError(MediaModel media, MediaStore.MediaError error) {
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
         String localMediaId = String.valueOf(media.getId());
-        if (error.type == MediaErrorType.GENERIC_ERROR) {
-            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, getString(R.string.tap_to_try_again));
-        } else {
-            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, error.message);
+
+        // Display custom error depending on error type
+        String errorMessage;
+        switch (error.type) {
+            case AUTHORIZATION_REQUIRED:
+                errorMessage = getString(R.string.media_error_no_permission_upload);
+                break;
+            case GENERIC_ERROR:
+            default:
+                errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
         }
+        mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, errorMessage);
+
+        removeMediaFromPendingList(media);
     }
 
     @Override
     public void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());
         mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
+    }
+
+    private void removeMediaFromPendingList(MediaModel mediaToClear) {
+        if (mediaToClear == null) {
+            return;
+        }
+        for (MediaModel pendingUpload : mPendingUploads) {
+            if (pendingUpload.getId() == mediaToClear.getId()) {
+                mPendingUploads.remove(pendingUpload);
+                break;
+            }
+        }
     }
 
     private void launchPictureLibrary() {
@@ -1150,7 +1155,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
                 MediaFile mediaFile = FluxCUtils.fromMediaModel(queueFileForUpload(uri,
-                        getContentResolver().getType(uri), null, "failed"));
+                        getContentResolver().getType(uri), UploadState.FAILED));
                 if (mediaFile == null) {
                     continue;
                 }
@@ -1493,7 +1498,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri), null);
+        MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.fromMediaModel(media);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
@@ -1597,7 +1602,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
-            queueFileForUpload(mediaUri, getContentResolver().getType(mediaUri), null);
+            queueFileForUpload(mediaUri, getContentResolver().getType(mediaUri));
         }
     }
 
@@ -1692,10 +1697,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case FS_READ_PERMISSION_DENIED:
                     errorMessage = getString(R.string.error_media_insufficient_fs_permissions);
                     break;
-                case MEDIA_NOT_FOUND:
+                case NOT_FOUND:
                     errorMessage = getString(R.string.error_media_not_found);
                     break;
-                case UNAUTHORIZED:
+                case AUTHORIZATION_REQUIRED:
                     errorMessage = getString(R.string.error_media_unauthorized);
                     break;
                 case PARSE_ERROR:
@@ -1736,7 +1741,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mMediaUploadService.setListener(EditPostActivity.this);
             if (!mPendingUploads.isEmpty()) {
                 for (MediaModel media : mPendingUploads) {
-                    mMediaUploadService.addMediaToQueue(media);
+                    if (media.getUploadState().equals(UploadState.QUEUED.name())) {
+                        mMediaUploadService.addMediaToQueue(media);
+                    }
                 }
             }
         }
@@ -1771,25 +1778,39 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             startService(intent);
         } else if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             for (MediaModel media : mPendingUploads) {
-                mMediaUploadService.addMediaToQueue(media);
+                if (media.getUploadState().equals(UploadState.QUEUED.name())) {
+                    mMediaUploadService.addMediaToQueue(media);
+                }
             }
         }
+    }
+
+    private String getVideoThumbnail(String videoPath) {
+        String thumbnailPath = null;
+        try {
+            File outputFile = File.createTempFile("thumb", ".png", getCacheDir());
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
+                    android.provider.MediaStore.Images.Thumbnails.MINI_KIND);
+            if (thumb != null) {
+                thumb.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                thumbnailPath = outputFile.getAbsolutePath();
+            }
+        } catch (IOException e) {
+            AppLog.i(T.MEDIA, "Can't create thumbnail for video: " + videoPath);
+        }
+        return thumbnailPath;
     }
 
     /**
      * Queues a media file for upload and starts the MediaUploadService. Toasts will alert the user
      * if there are issues with the file.
-     *
-     * @param path
-     *  local path of the media file to upload
-     * @param mediaIdOut
-     *  the new {@link org.wordpress.android.util.helpers.MediaFile} ID is added if non-null
      */
-    private MediaModel queueFileForUpload(Uri uri, String mimeType, ArrayList<Long> mediaIdOut) {
-        return queueFileForUpload(uri, mimeType, mediaIdOut, "queued");
+    private MediaModel queueFileForUpload(Uri uri, String mimeType) {
+        return queueFileForUpload(uri, mimeType, UploadState.QUEUED);
     }
 
-    private MediaModel queueFileForUpload(Uri uri, String mimeType, ArrayList<Long> mediaIdOut, String startingState) {
+    private MediaModel queueFileForUpload(Uri uri, String mimeType, UploadState startingState) {
         String path = getRealPathFromURI(uri);
 
         // Invalid file path
@@ -1827,12 +1848,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             filename += "." + fileExtension;
         }
 
+        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)) {
+            media.setThumbnailUrl(getVideoThumbnail(path));
+        }
+
         media.setFileName(filename);
         media.setFilePath(path);
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
-        media.setUploadState(MediaUploadState.QUEUED.toString());
+        media.setUploadState(startingState.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
@@ -1879,11 +1904,23 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        if (mMediaUploadService == null) {
-            startMediaUploadService();
-        } else {
-            // TODO: FluxC integration on retry?
+        MediaModel media = null;
+
+        List<MediaModel> localMediaList = mMediaStore.getLocalSiteMedia(mSite);
+        for (MediaModel localMedia : localMediaList) {
+            if (String.valueOf(localMedia.getId()).equals(mediaId)) {
+                media = localMedia;
+                break;
+            }
         }
+
+        if (media != null) {
+            media.setUploadState(UploadState.QUEUED.name());
+            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+            mPendingUploads.add(media);
+            startMediaUploadService();
+        }
+
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
     }
 
@@ -2008,12 +2045,5 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
                 break;
         }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.ASYNC)
-    public void onPostInstantiated(OnPostInstantiated event) {
-        mPost = event.post;
-        mNewPostLatch.countDown();
     }
 }

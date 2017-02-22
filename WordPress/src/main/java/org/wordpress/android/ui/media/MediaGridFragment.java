@@ -817,7 +817,7 @@ public class MediaGridFragment extends Fragment
 
     private void handleFetchAllMediaError(MediaErrorType errorType) {
         AppLog.e(AppLog.T.MEDIA, "Media error occurred: " + errorType);
-        final boolean isPermissionError = (errorType == MediaErrorType.UNAUTHORIZED);
+        final boolean isPermissionError = (errorType == MediaErrorType.AUTHORIZATION_REQUIRED);
         if (getActivity() != null) {
             if (!isPermissionError) {
                 ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media),
