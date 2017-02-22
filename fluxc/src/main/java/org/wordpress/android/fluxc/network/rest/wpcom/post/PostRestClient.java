@@ -293,15 +293,7 @@ public class PostRestClient extends BaseWPComRestClient {
         params.put("categories", TextUtils.join(",", post.getCategoryIdList()));
         params.put("tags", TextUtils.join(",", post.getTagNameList()));
 
-        // Will remove any existing featured image if the empty string is sent
-        if (post.featuredImageHasChanged()) {
-            if (post.getFeaturedImageId() < 1 && !post.isLocalDraft()) {
-                // The featured image was removed from a live post
-                params.put("featured_image", "");
-            } else {
-                params.put("featured_image", String.valueOf(post.getFeaturedImageId()));
-            }
-        }
+        params.put("featured_image", post.getFeaturedImageId());
 
         if (post.hasLocation()) {
             // Location data was added to the post
