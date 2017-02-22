@@ -41,7 +41,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
@@ -371,19 +371,12 @@ public class MediaGridFragment extends Fragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(OnMediaChanged event) {
+    public void OnMediaListFetched(OnMediaListFetched event) {
         if (event.isError()) {
             handleFetchAllMediaError(event.error.type);
             return;
         }
-
-        switch (event.cause) {
-            case FETCHED_MEDIA_LIST:
-                if (event.mediaList != null) {
-                    handleFetchAllMediaSuccess(event);
-                }
-                break;
-        }
+        handleFetchAllMediaSuccess(event);
     }
 
     public void refreshSpinnerAdapter() {
@@ -798,14 +791,14 @@ public class MediaGridFragment extends Fragment
         }
     }
 
-    private void handleFetchAllMediaSuccess(OnMediaChanged event) {
+    private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
 
         Cursor mediaCursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
         adapter.swapCursor(mediaCursor);
 
-        mHasRetrievedAllMedia = event.mediaList.size() < NUM_PER_FETCH;
-        adapter.setHasRetrievedAll(true);
+        mHasRetrievedAllMedia = !event.canLoadMore;
+        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
 
         mIsRefreshing = false;
 
