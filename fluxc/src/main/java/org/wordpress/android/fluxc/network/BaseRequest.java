@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.net.ssl.SSLHandshakeException;
 
 public abstract class BaseRequest<T> extends Request<T> {
+    public static final int DEFAULT_REQUEST_TIMEOUT = 30000;
     public Uri mUri;
 
     public interface OnAuthFailedListener {
@@ -33,7 +34,6 @@ public abstract class BaseRequest<T> extends Request<T> {
     }
 
     private static final String USER_AGENT_HEADER = "User-Agent";
-    private static final int DEFAULT_REQUEST_TIMEOUT = 30000;
 
     protected OnAuthFailedListener mOnAuthFailedListener;
     protected final Map<String, String> mHeaders = new HashMap<>(2);
