@@ -153,8 +153,8 @@ public class MediaDeleteService extends Service {
         MediaModel media = event.mediaList.get(0);
 
         switch (event.error.type) {
-            case UNAUTHORIZED:
-                AppLog.v(T.MEDIA, "Unauthorized site access. Stopping MediaDeleteService.");
+            case AUTHORIZATION_REQUIRED:
+                AppLog.v(T.MEDIA, "Authorization required. Stopping MediaDeleteService.");
                 // stop delete service until authorized to perform actions on site
                 stopSelf();
                 break;
@@ -163,7 +163,7 @@ public class MediaDeleteService extends Service {
                 AppLog.d(T.MEDIA, "Null media argument supplied, skipping current delete.");
                 completeCurrentDelete();
                 break;
-            case MEDIA_NOT_FOUND:
+            case NOT_FOUND:
                 if (media == null) {
                     break;
                 }

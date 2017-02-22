@@ -143,6 +143,8 @@
     <string name="media_file_name">File name: %s</string>
     <string name="media_uploaded_on">Uploaded on: %s</string>
     <string name="media_dimensions">Dimensions: %s</string>
+    <string name="media_upload_error">Media upload error occurred</string>
+    <string name="media_generic_error">Media error occurred</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>

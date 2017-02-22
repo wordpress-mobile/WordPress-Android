@@ -776,7 +776,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // Display custom error depending on error type
         String errorMessage;
         switch (error.type) {
-            case UNAUTHORIZED:
+            case AUTHORIZATION_REQUIRED:
                 errorMessage = getString(R.string.media_error_no_permission_upload);
                 break;
             case GENERIC_ERROR:
@@ -1697,10 +1697,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case FS_READ_PERMISSION_DENIED:
                     errorMessage = getString(R.string.error_media_insufficient_fs_permissions);
                     break;
-                case MEDIA_NOT_FOUND:
+                case NOT_FOUND:
                     errorMessage = getString(R.string.error_media_not_found);
                     break;
-                case UNAUTHORIZED:
+                case AUTHORIZATION_REQUIRED:
                     errorMessage = getString(R.string.error_media_unauthorized);
                     break;
                 case PARSE_ERROR:
