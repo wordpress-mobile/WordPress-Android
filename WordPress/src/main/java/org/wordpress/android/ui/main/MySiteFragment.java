@@ -368,8 +368,13 @@ public class MySiteFragment extends Fragment
         // Hide the Plan item if the Plans feature is not available for this blog
         String planShortName = site.getPlanShortName();
         if (!TextUtils.isEmpty(planShortName) && site.getHasCapabilityManageOptions()) {
-            mCurrentPlanNameTextView.setText(planShortName);
-            mPlanContainer.setVisibility(View.VISIBLE);
+            if (site.isWPCom()) {
+                mCurrentPlanNameTextView.setText(planShortName);
+                mPlanContainer.setVisibility(View.VISIBLE);
+            } else {
+                // TODO: Support Jetpack plans
+                mPlanContainer.setVisibility(View.GONE);
+            }
         } else {
             mPlanContainer.setVisibility(View.GONE);
         }
