@@ -20,7 +20,6 @@ import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.util.ListUtils;
@@ -41,7 +40,6 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     private ArrayList<Long> mIds;
     private SiteModel mSite;
 
-    @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
 
     @Override
@@ -49,18 +47,6 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         updateSiteOrFinishActivity(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        mDispatcher.unregister(this);
-        super.onStop();
     }
 
     @Override

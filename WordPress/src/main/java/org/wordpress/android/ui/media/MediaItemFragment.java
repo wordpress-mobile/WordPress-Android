@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -58,7 +57,6 @@ public class MediaItemFragment extends Fragment {
 
     public static final String TAG = MediaItemFragment.class.getName();
 
-    @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
 
     private WPNetworkImageView mImageView;
@@ -108,18 +106,6 @@ public class MediaItemFragment extends Fragment {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        mDispatcher.unregister(this);
-        super.onStop();
     }
 
     @Override
