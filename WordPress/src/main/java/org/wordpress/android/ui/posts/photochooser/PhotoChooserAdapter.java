@@ -157,10 +157,6 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         }
     }
 
-    boolean isMultiSelectEnabled() {
-        return mIsMultiSelectEnabled;
-    }
-
     /*
      * toggles the selection state of the item at the passed position
      */
@@ -211,12 +207,6 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         return mSelectedUris;
     }
 
-    void setSelectedURIs(ArrayList<Uri> uriList) {
-        mSelectedUris.clear();
-        mSelectedUris.addAll(uriList);
-        notifyDataSetChangedNoFade();
-    }
-
     int getNumSelected() {
         return mIsMultiSelectEnabled ? mSelectedUris.size() : 0;
     }
@@ -262,7 +252,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (isMultiSelectEnabled()) {
+                    if (mIsMultiSelectEnabled) {
                         toggleSelection(ThumbnailViewHolder.this, position);
                     } else if (mPhotoListener != null) {
                         Uri uri = getItemAtPosition(position).uri;
@@ -282,7 +272,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 @Override
                 public void onLongPress(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (!isMultiSelectEnabled()) {
+                    if (!mIsMultiSelectEnabled) {
                         setMultiSelectEnabled(true);
                     }
                     toggleSelection(ThumbnailViewHolder.this, position);

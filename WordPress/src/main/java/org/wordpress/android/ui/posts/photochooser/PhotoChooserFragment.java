@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,10 +27,6 @@ import java.util.ArrayList;
 
 public class PhotoChooserFragment extends Fragment {
 
-    private static final String KEY_MULTI_SELECT_ENABLED = "multi_select_enabled";
-    private static final String KEY_SELECTED_ITEMS = "selected_items";
-    private static final String KEY_RESTORE_POSITION = "restore_position";
-
     static final int NUM_COLUMNS = 3;
 
     enum PhotoChooserIcon {
@@ -48,8 +45,8 @@ public class PhotoChooserFragment extends Fragment {
     private PhotoChooserAdapter mAdapter;
     private View mBottomBar;
     private ActionMode mActionMode;
-
-    private Bundle mRestoreState;
+    private GridLayoutManager mGridManager;
+    private Parcelable mRestoreState;
 
     public static PhotoChooserFragment newInstance() {
         Bundle args = new Bundle();
@@ -61,66 +58,8 @@ public class PhotoChooserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            restoreState(savedInstanceState);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        saveState(outState);
-    }
-
-    private int getRecyclerPosition() {
-        if (mRecycler == null) {
-            return 0;
-        }
-        return ((GridLayoutManager)mRecycler.getLayoutManager()).findFirstVisibleItemPosition();
-    }
-
-    private void setRecyclerPosition(int position) {
-        if (mRecycler != null) {
-            GridLayoutManager manager = (GridLayoutManager)mRecycler.getLayoutManager();
-            manager.scrollToPosition(position);
-        }
-    }
-
-    private void saveState(Bundle bundle) {
-        bundle.putInt(KEY_RESTORE_POSITION, getRecyclerPosition());
-        if (isMultiSelectEnabled()) {
-            bundle.putBoolean(KEY_MULTI_SELECT_ENABLED, true);
-            ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
-            if (uriList.size() == 0) return;
-
-            ArrayList<String> stringUris = new ArrayList<>();
-            for (Uri uri: uriList) {
-                stringUris.add(uri.toString());
-            }
-            bundle.putStringArrayList(KEY_SELECTED_ITEMS, stringUris);
-        }
-    }
-
-    private void restoreState(Bundle bundle) {
-        int position = bundle.getInt(KEY_RESTORE_POSITION);
-        if (position > 0) {
-            setRecyclerPosition(position);
-        }
-
-        if (bundle.getBoolean(KEY_MULTI_SELECT_ENABLED)) {
-            getAdapter().setMultiSelectEnabled(true);
-        }
-
-        if (bundle.containsKey(KEY_SELECTED_ITEMS)) {
-            ArrayList<String> strings = bundle.getStringArrayList(KEY_SELECTED_ITEMS);
-            if (strings != null && strings.size() > 0) {
-                ArrayList<Uri> uriList = new ArrayList<>();
-                for (String stringUri : strings) {
-                    uriList.add(Uri.parse(stringUri));
-                }
-                getAdapter().setSelectedURIs(uriList);
-            }
-        }
+        // retain the instance state since EditPostActivity has android:configChanges in the manifest
+        setRetainInstance(true);
     }
 
     @Override
@@ -232,7 +171,7 @@ public class PhotoChooserFragment extends Fragment {
         public void onAdapterLoaded(boolean isEmpty) {
             showEmptyView(isEmpty);
             if (mRestoreState != null) {
-                restoreState(mRestoreState);
+                mGridManager.onRestoreInstanceState(mRestoreState);
                 mRestoreState = null;
             }
         }
@@ -267,10 +206,6 @@ public class PhotoChooserFragment extends Fragment {
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
-    private boolean isMultiSelectEnabled() {
-        return mAdapter != null && mAdapter.isMultiSelectEnabled();
-    }
-
     private PhotoChooserAdapter getAdapter() {
         if (mAdapter == null) {
             mAdapter = new PhotoChooserAdapter(
@@ -285,14 +220,14 @@ public class PhotoChooserFragment extends Fragment {
      * populates the adapter with media stored on the device
      */
     public void loadDeviceMedia() {
-        // save the current recycler/adapter state so we can restore it after loading
-        if (mAdapter != null) {
-            mRestoreState = new Bundle();
-            saveState(mRestoreState);
+        // save the current state so we can restore it after loading
+        if (mGridManager != null) {
+            mRestoreState = mGridManager.onSaveInstanceState();
         }
 
+        mGridManager = new GridLayoutManager(getActivity(), NUM_COLUMNS);
+        mRecycler.setLayoutManager(mGridManager);
         mRecycler.setAdapter(getAdapter());
-        mRecycler.setLayoutManager(new GridLayoutManager(getActivity(), NUM_COLUMNS));
         getAdapter().loadDeviceMedia();
     }
 
