@@ -785,7 +785,6 @@ public class MediaGridFragment extends Fragment
             setRefreshing(true);
             mGridAdapter.setRefreshing(true);
 
-            // TODO: figure out how to integrate `auto` to callback
             FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
@@ -809,11 +808,6 @@ public class MediaGridFragment extends Fragment
                 public void run() {
                     refreshSpinnerAdapter();
                     updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                    // TODO: Keep a reference to auto-refresh flag, so we can use it here
-                    boolean auto = true;
-                    if (!auto) {
-                        mGridView.setSelection(0);
-                    }
                     mGridAdapter.setRefreshing(false);
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }
