@@ -434,10 +434,12 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mediaError.message = exception.getLocalizedMessage();
         if (exception instanceof XMLRPCFault) {
             switch (((XMLRPCFault) exception).getFaultCode()) {
-                case 401:
-                    mediaError.type = MediaErrorType.UNAUTHORIZED;
+                case 404:
+                    mediaError.type =  MediaErrorType.NOT_FOUND;
                     break;
-                default:
+                case 403:
+                    mediaError.type =  MediaErrorType.NOT_AUTHENTICATED;
+                    break;
             }
         }
         return mediaError;
