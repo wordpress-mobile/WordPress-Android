@@ -4,13 +4,14 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
+import org.wordpress.android.util.local.R;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
 public class DateTimeUtils {
     private DateTimeUtils() {
         throw new AssertionError();

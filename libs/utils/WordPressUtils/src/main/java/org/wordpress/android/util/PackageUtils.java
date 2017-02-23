@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import org.wordpress.android.util.local.BuildConfig;
+
 public class PackageUtils {
     /**
      * Return true if Debug build. false otherwise.

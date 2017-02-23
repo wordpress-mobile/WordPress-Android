@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.provider.Settings;
 
+import org.wordpress.android.util.local.R;
 /**
  * requires android.permission.ACCESS_NETWORK_STATE
  */
