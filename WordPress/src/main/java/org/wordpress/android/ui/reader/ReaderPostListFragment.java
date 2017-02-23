@@ -1572,20 +1572,6 @@ public class ReaderPostListFragment extends Fragment
         @Override
         protected ReaderTagList doInBackground(Void... voids) {
             ReaderTagList tagList = ReaderTagTable.getDefaultTags();
-
-            // translate default tags
-            // ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5240
-            Context context = getContext();
-            for (ReaderTag tag : tagList) {
-                if (tag.isDiscover()) {
-                    tag.setTagTitle(context.getString(R.string.reader_discover_default_tag));
-                } else if (tag.isFollowedSites()) {
-                    tag.setTagTitle(context.getString(R.string.reader_followed_default_tag));
-                } else if (tag.isPostsILike()) {
-                    tag.setTagTitle(context.getString(R.string.reader_liked_default_tag));
-                }
-            }
-
             tagList.addAll(ReaderTagTable.getCustomListTags());
             tagList.addAll(ReaderTagTable.getFollowedTags());
             return tagList;
