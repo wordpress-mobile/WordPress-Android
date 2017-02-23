@@ -185,11 +185,7 @@ public class MySiteFragment extends Fragment
         mPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Remove this condition when we fix showing WordPress.com plans for AT sites
-                // https://github.com/wordpress-mobile/WordPress-Android/issues/5121
-                if (getSelectedSite() != null && !getSelectedSite().isAutomatedTransfer()) {
-                    ActivityLauncher.viewBlogPlans(getActivity(), getSelectedSite());
-                }
+                ActivityLauncher.viewBlogPlans(getActivity(), getSelectedSite());
             }
         });
 
