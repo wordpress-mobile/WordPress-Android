@@ -35,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 
 public class ImageUtils {
@@ -398,71 +399,10 @@ public class ImageUtils {
         return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
     }
 
-    /**
-     * Given the path to an image, resize the image down to within a maximum width
-     * @param path the path to the original image
-     * @param maxWidth the maximum allowed width
-     * @return the path to the resized image
-     */
-    public static String createResizedImageWithMaxWidth(Context context, String path, int maxWidth) {
-        File file = new File(path);
-        if (!file.exists()) {
-            return path;
-        }
-
-        String mimeType = MediaUtils.getMediaFileMimeType(file);
-        if (mimeType.equals("image/gif")) {
-            // Don't rescale gifs to maintain their quality
-            return path;
-        }
-
-        String fileName = MediaUtils.getMediaFileName(file, mimeType);
-        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
-
-        int[] dimensions = getImageSize(Uri.fromFile(file), context);
-        int orientation = getImageOrientation(context, path);
-
-        if (dimensions[0] <= maxWidth) {
-            // Image width is within limits; don't resize
-            return path;
-        }
-
-        // Create resized image
-        byte[] bytes = ImageUtils.createThumbnailFromUri(context, Uri.parse(path), maxWidth, fileExtension, orientation);
-
-        if (bytes != null) {
-            try {
-                File resizedImageFile = File.createTempFile("wp-image-", fileExtension);
-                FileOutputStream out = new FileOutputStream(resizedImageFile);
-                out.write(bytes);
-                out.close();
-
-                String tempFilePath = resizedImageFile.getPath();
-
-                if (!TextUtils.isEmpty(tempFilePath)) {
-                    return tempFilePath;
-                } else {
-                    AppLog.e(AppLog.T.POSTS, "Failed to create resized image");
-                }
-            } catch (IOException e) {
-                AppLog.e(AppLog.T.POSTS, "Failed to create image temp file");
-            }
-        }
-
-        return path;
-    }
-
-    /**
-     * nbradbury - 21-Feb-2014 - similar to createThumbnail but more efficient since it doesn't
-     * require passing the full-size image as an array of bytes[]
-     */
-    public static byte[] createThumbnailFromUri(Context context,
-                                                Uri imageUri,
-                                                int maxWidth,
-                                                String fileExtension,
-                                                int rotation) {
-        if (context == null || imageUri == null || maxWidth <= 0)
+    private static String getRealFilePath(Context context, Uri imageUri) {
+        if (context == null || imageUri == null) {
             return null;
+        }
 
         String filePath = null;
         if (imageUri.toString().contains("content:")) {
@@ -487,15 +427,28 @@ public class ImageUtils {
             filePath = filePath.replace("file://", "");
         }
 
+        return  filePath;
+    }
+
+    private static boolean resizeImageAndWriteToStream(Context context,
+                                                    Uri imageUri,
+                                                    String fileExtension,
+                                                    int maxWidth,
+                                                    int orientation,
+                                                    int quality,
+                                                    OutputStream outStream) throws OutOfMemoryError, IOException {
+
+        String realFilePath = getRealFilePath(context, imageUri);
+
         // get just the image bounds
         BitmapFactory.Options optBounds = new BitmapFactory.Options();
         optBounds.inJustDecodeBounds = true;
 
         try {
-            BitmapFactory.decodeFile(filePath, optBounds);
+            BitmapFactory.decodeFile(realFilePath, optBounds);
         } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error in setting image: " + e);
-            return null;
+            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error while decoding the original image: " + realFilePath, e);
+            throw e;
         }
 
         // determine correct scale value (should be power of 2)
@@ -512,19 +465,18 @@ public class ImageUtils {
         // Get the roughly resized bitmap
         final Bitmap bmpResized;
         try {
-            bmpResized = BitmapFactory.decodeFile(filePath, optActual);
+            bmpResized = BitmapFactory.decodeFile(realFilePath, optActual);
         } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error in setting image: " + e);
-            return null;
+            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error while decoding the original image: " + realFilePath, e);
+            throw e;
         }
 
         if (bmpResized == null) {
-            return null;
+            AppLog.e(AppLog.T.UTILS, "Can't decode the resized picture.");
+            throw new IOException("Can't decode the resized picture.");
         }
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-        // Now calculate exact scale in order to resize accurately
+        // Resize the bitmap to exact size: calculate exact scale in order to resize accurately
         float percentage = (float) maxWidth / bmpResized.getWidth();
         float proportionateHeight = bmpResized.getHeight() * percentage;
         int finalHeight = (int) Math.rint(proportionateHeight);
@@ -534,17 +486,16 @@ public class ImageUtils {
 
         float scaleBy = Math.min(scaleWidth, scaleHeight);
 
-        // Resize the bitmap to exact size
         Matrix matrix = new Matrix();
         matrix.postScale(scaleBy, scaleBy);
 
-        // apply rotation
-        if (rotation != 0) {
-            matrix.setRotate(rotation);
+        // apply orientation
+        if (orientation != 0) {
+            matrix.setRotate(orientation);
         }
 
         Bitmap.CompressFormat fmt;
-        if (fileExtension != null && fileExtension.equalsIgnoreCase("png")) {
+        if (fileExtension.equalsIgnoreCase("png")) {
             fmt = Bitmap.CompressFormat.PNG;
         } else {
             fmt = Bitmap.CompressFormat.JPEG;
@@ -552,26 +503,137 @@ public class ImageUtils {
 
         final Bitmap bmpRotated;
         try {
-            bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix,
-                    true);
+            bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
+            bmpResized.recycle();
         } catch (OutOfMemoryError e) {
-            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error in setting image: " + e);
-            return null;
+            AppLog.e(AppLog.T.UTILS, "OutOfMemoryError while creating the resized bitmap", e);
+            throw e;
         } catch (NullPointerException e) {
             // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1844
-            AppLog.e(AppLog.T.UTILS, "Bitmap.createBitmap has thrown a NPE internally. This should never happen: " + e);
-            return null;
+            AppLog.e(AppLog.T.UTILS, "Bitmap.createBitmap has thrown a NPE internally. This should never happen!", e);
+            throw e;
         }
 
         if (bmpRotated == null) {
             // Fix an issue where bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.
+            AppLog.e(AppLog.T.UTILS, "bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.");
             // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1848
-            return null;
+            throw new IOException("bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.");
         }
 
-        bmpRotated.compress(fmt, 100, stream);
-        bmpResized.recycle();
+        boolean result = bmpRotated.compress(fmt, quality, outStream);
         bmpRotated.recycle();
+        return result;
+    }
+
+
+    /**
+     * Given the path to an image, resize the image down to within a maximum width
+     * @param path the path to the original image
+     * @param maxWidth the maximum allowed width
+     * @return the path to the resized image
+     */
+    public static String createResizedImageWithMaxWidth(Context context, String path, int maxWidth) {
+        File file = new File(path);
+        if (!file.exists()) {
+            return path;
+        }
+
+        String mimeType = MediaUtils.getMediaFileMimeType(file);
+        if (mimeType.equals("image/gif")) {
+            // Don't rescale gifs to maintain their quality
+            return path;
+        }
+
+        String fileName = MediaUtils.getMediaFileName(file, mimeType);
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
+
+        int[] dimensions = getImageSize(Uri.fromFile(file), context);
+        int orientation = getImageOrientation(context, path);
+
+        if (dimensions[0] <= maxWidth || maxWidth <= 0) {
+            // Image width is within limits; don't resize
+            return path;
+        }
+
+        Uri imageUri = Uri.parse(path);
+        if (context == null || imageUri == null) {
+            return path;
+        }
+
+        File resizedImageFile;
+        FileOutputStream out;
+
+        try {
+            resizedImageFile = File.createTempFile("wp-image-", fileExtension);
+            out = new FileOutputStream(resizedImageFile);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage. Use the full picture instead.");
+            return path;
+        } catch (SecurityException e) {
+            AppLog.e(AppLog.T.MEDIA, "Can't write the tmp file due to security restrictions. Use the full picture instead.");
+            return path;
+        }
+
+        try {
+            boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, maxWidth, orientation, 90, out);
+            if (!res) {
+                AppLog.w(AppLog.T.MEDIA, "Failed to compress the resized image. Use the full picture instead.");
+                return path;
+            }
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.MEDIA, "Failed to create resized image. Use the full picture instead.");
+            return path;
+        } catch (OutOfMemoryError e) {
+            AppLog.e(AppLog.T.MEDIA, "Can't resize the picture due to low memory. Use the full picture instead.");
+            return path;
+        } finally {
+            // close the stream
+            try {
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                //nope
+            }
+        }
+
+        String tempFilePath = resizedImageFile.getPath();
+        if (!TextUtils.isEmpty(tempFilePath)) {
+            return tempFilePath;
+        } else {
+            AppLog.e(AppLog.T.MEDIA, "Failed to create resized image. Use the full picture instead.");
+        }
+
+        return path;
+    }
+
+
+    /**
+     * nbradbury - 21-Feb-2014 - similar to createThumbnail but more efficient since it doesn't
+     * require passing the full-size image as an array of bytes[]
+     */
+    public static byte[] createThumbnailFromUri(Context context,
+                                                Uri imageUri,
+                                                int maxWidth,
+                                                String fileExtension,
+                                                int orientation) {
+        if (context == null || imageUri == null || maxWidth <= 0)
+            return null;
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        try {
+            boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, maxWidth, orientation, 90, stream);
+            if (!res) {
+                AppLog.w(AppLog.T.MEDIA, "Failed to compress the resized image. Use the full picture instead.");
+                return null;
+            }
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.MEDIA, "Failed to create resized image. Use the full picture instead.");
+            return null;
+        } catch (OutOfMemoryError e) {
+            AppLog.e(AppLog.T.MEDIA, "Can't resize the picture due to low memory. Use the full picture instead.");
+            return null;
+        }
 
         return stream.toByteArray();
     }
