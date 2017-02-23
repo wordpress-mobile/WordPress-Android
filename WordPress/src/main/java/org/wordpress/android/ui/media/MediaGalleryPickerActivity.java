@@ -23,7 +23,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -54,10 +54,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     private ArrayList<Long> mFilteredItems;
     private boolean mIsSelectOneItem;
-    private boolean mIsRefreshing;
+    private boolean mIsFetching;
     private boolean mHasRetrievedAllMedia;
 
-    private int mOldMediaSyncOffset = 0;
     private SiteModel mSite;
 
     @Inject Dispatcher mDispatcher;
@@ -155,8 +154,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        mIsRefreshing = false;
+    public void OnMediaListFetched(MediaStore.OnMediaListFetched event) {
+        mIsFetching = false;
         if (event.isError()) {
             MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
             mHasRetrievedAllMedia = true;
@@ -178,7 +177,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             }
         } else {
             MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-            mHasRetrievedAllMedia = event.mediaList.size() == 0;
+            mHasRetrievedAllMedia = !event.canLoadMore;
             adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
             if (mMediaStore.getSiteMediaCount(mSite) == 0 && mHasRetrievedAllMedia) {
                 // There is no media at all
@@ -231,9 +230,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void fetchMoreData(int offset) {
+    public void fetchMoreData() {
         if (!mHasRetrievedAllMedia) {
-            refreshMediaFromServer(offset);
+            refreshMediaFromServer(true);
         }
     }
 
@@ -270,22 +269,17 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             mGridAdapter.swapCursor(cursor);
         }
         if (cursor.getCount() == 0) {
-            refreshMediaFromServer(0);
+            refreshMediaFromServer(false);
         }
     }
 
-    private void refreshMediaFromServer(int offset) {
-        if (offset == 0 || !mIsRefreshing) {
-            if (offset == mOldMediaSyncOffset) {
-                // we're pulling the same data again for some reason. Pull from the beginning.
-                offset = 0;
-            }
-            mOldMediaSyncOffset = offset;
-            mIsRefreshing = true;
+    private void refreshMediaFromServer(boolean loadMore) {
+        if (!mIsFetching) {
+            mIsFetching = true;
             mGridAdapter.setRefreshing(true);
 
-            MediaListPayload payload = new MediaListPayload(mSite, null, null);
-            mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
+            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
+            mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
 

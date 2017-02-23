@@ -1419,11 +1419,6 @@
     <string name="site_privacy_hidden_desc">Discourage search engines from indexing this site</string>
     <string name="site_privacy_public_desc">Allow search engines to index this site</string>
 
-    <!-- Static URLs -->
-    <string name="privacy_settings_url" translatable="false">https://en.support.wordpress.com/privacy-settings</string>
-    <string name="language_settings_url" translatable="false">https://en.support.wordpress.com/language-settings</string>
-    <string name="role_info_url" translatable="false">https://en.support.wordpress.com/user-roles/</string>
-
     <string name="date_range_start_date">Start Date</string>
     <string name="date_range_end_date">End Date</string>
 
