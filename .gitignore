@@ -52,3 +52,9 @@ WordPress/src/androidTest/monkeys/*.png
 
 # Windows Backup
 *.bak
+
+# Buck
+/.buckconfig.local
+/.okbuck
+/.buckd
+/buck-out
