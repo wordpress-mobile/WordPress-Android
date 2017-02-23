@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -45,6 +46,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -409,8 +411,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         media.setDescription(MapUtils.getMapStr(response, "description"));
         media.setVideoPressGuid(MapUtils.getMapStr(response, "videopress_shortcode"));
         media.setThumbnailUrl(MapUtils.getMapStr(response, "thumbnail"));
-        media.setUploadDate(MapUtils.getMapDate(response, "date_created_gmt").toString());
-
+        Date uploadDate = MapUtils.getMapDate(response, "date_created_gmt");
+        media.setUploadDate(DateTimeUtils.iso8601UTCFromDate(uploadDate));
         String link = MapUtils.getMapStr(response, "link");
         String fileExtension = MediaUtils.getExtension(link);
         media.setUrl(link);

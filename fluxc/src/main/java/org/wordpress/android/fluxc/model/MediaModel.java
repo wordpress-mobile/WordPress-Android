@@ -27,7 +27,7 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
     @Column private long mAuthorId;
     @Column private String mGuid;
 
-    // Remote creation date
+    // Upload date, ISO 8601-formatted date in UTC
     @Column private String mUploadDate;
 
     // Remote Url's
