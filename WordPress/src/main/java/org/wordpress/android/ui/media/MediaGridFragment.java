@@ -85,8 +85,6 @@ public class MediaGridFragment extends Fragment
     private static final String BUNDLE_DATE_FILTER_END_MONTH = "BUNDLE_DATE_FILTER_END_MONTH";
     private static final String BUNDLE_DATE_FILTER_END_DAY = "BUNDLE_DATE_FILTER_END_DAY";
 
-    private static final int NUM_PER_FETCH = 20;
-
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
 
