@@ -1,0 +1,158 @@
+android_resource(
+	name = 'res_debug',
+	package = 'org.wordpress.android.analytics',
+	resource_union = True,
+	deps = [
+		'//.okbuck/cache:com.android.support.support-v13-25.1.1.aar',
+		'//.okbuck/cache:com.android.support.support-v4-25.1.1.aar',
+		'//.okbuck/cache:com.automattic.tracks-1.1.0.aar',
+		'//.okbuck/cache:com.mixpanel.android.mixpanel-android-4.6.4.aar',
+		'//.okbuck/cache:org.wordpress.utils-1.14.1.aar',
+	],
+	visibility = [
+		'PUBLIC',
+	],
+)
+
+android_build_config(
+	name = 'build_config_debug',
+	package = 'org.wordpress.android.analytics',
+	values = [
+		'String APPLICATION_ID = "org.wordpress.android.analytics"',
+		'String BUILD_TYPE = "debug"',
+		'String FLAVOR = ""',
+		'String VERSION_NAME = "1.2.0"',
+	],
+	visibility = [
+		'PUBLIC',
+	],
+)
+
+android_library(
+	name = 'src_debug',
+	srcs = glob([
+		'src/main/java/**/*.java',
+	]),
+	manifest = 'build/okbuck/debug/AndroidManifest.xml',
+	source = '7',
+	target = '7',
+	deps = [
+		'//.okbuck/cache:com.android.support.support-annotations-25.1.1.jar',
+		'//.okbuck/cache:com.android.support.support-v13-25.1.1.aar',
+		'//.okbuck/cache:com.android.support.support-v4-25.1.1.aar',
+		'//.okbuck/cache:com.automattic.tracks-1.1.0.aar',
+		'//.okbuck/cache:com.mcxiaoke.volley.library-1.0.18.jar',
+		'//.okbuck/cache:com.mixpanel.android.mixpanel-android-4.6.4.aar',
+		'//.okbuck/cache:commons-lang.commons-lang-2.6.jar',
+		'//.okbuck/cache:org.wordpress.utils-1.14.1.aar',
+		':build_config_debug',
+		':res_debug',
+	],
+	visibility = [
+		'PUBLIC',
+	],
+)
+
+genrule(
+	name = 'lint_debug',
+	srcs = [
+		'src/main/java',
+		'build/okbuck/debug',
+	],
+	out = 'lint_debug_out',
+	bash = '' \
+	'mkdir -p $OUT; ' \
+	'exec java ' \
+	'-Djava.awt.headless=true ' \
+	'-Xmx1024m ' \
+	'-classpath $(location //.okbuck/cache/lint:okbuck_lint) ' \
+	'com.android.tools.lint.Main ' \
+	'--classpath $(location :src_debug) ' \
+	'--exitcode ' \
+	'--fullpath ' \
+	'--xml "$OUT/lint-results.xml" ' \
+	'--html "$OUT/lint-results.html" ' \
+	'--sources src/main/java ' \
+	'build/okbuck/debug ' \
+	'',
+)
+
+android_resource(
+	name = 'res_release',
+	package = 'org.wordpress.android.analytics',
+	resource_union = True,
+	deps = [
+		'//.okbuck/cache:com.android.support.support-v13-25.1.1.aar',
+		'//.okbuck/cache:com.android.support.support-v4-25.1.1.aar',
+		'//.okbuck/cache:com.automattic.tracks-1.1.0.aar',
+		'//.okbuck/cache:com.mixpanel.android.mixpanel-android-4.6.4.aar',
+		'//.okbuck/cache:org.wordpress.utils-1.14.1.aar',
+	],
+	visibility = [
+		'PUBLIC',
+	],
+)
+
+android_build_config(
+	name = 'build_config_release',
+	package = 'org.wordpress.android.analytics',
+	values = [
+		'String APPLICATION_ID = "org.wordpress.android.analytics"',
+		'String BUILD_TYPE = "release"',
+		'String FLAVOR = ""',
+		'String VERSION_NAME = "1.2.0"',
+	],
+	visibility = [
+		'PUBLIC',
+	],
+)
+
+android_library(
+	name = 'src_release',
+	srcs = glob([
+		'src/main/java/**/*.java',
+	]),
+	manifest = 'build/okbuck/release/AndroidManifest.xml',
+	source = '7',
+	target = '7',
+	deps = [
+		'//.okbuck/cache:com.android.support.support-annotations-25.1.1.jar',
+		'//.okbuck/cache:com.android.support.support-v13-25.1.1.aar',
+		'//.okbuck/cache:com.android.support.support-v4-25.1.1.aar',
+		'//.okbuck/cache:com.automattic.tracks-1.1.0.aar',
+		'//.okbuck/cache:com.mcxiaoke.volley.library-1.0.18.jar',
+		'//.okbuck/cache:com.mixpanel.android.mixpanel-android-4.6.4.aar',
+		'//.okbuck/cache:commons-lang.commons-lang-2.6.jar',
+		'//.okbuck/cache:org.wordpress.utils-1.14.1.aar',
+		':build_config_release',
+		':res_release',
+	],
+	visibility = [
+		'PUBLIC',
+	],
+)
+
+genrule(
+	name = 'lint_release',
+	srcs = [
+		'src/main/java',
+		'build/okbuck/release',
+	],
+	out = 'lint_release_out',
+	bash = '' \
+	'mkdir -p $OUT; ' \
+	'exec java ' \
+	'-Djava.awt.headless=true ' \
+	'-Xmx1024m ' \
+	'-classpath $(location //.okbuck/cache/lint:okbuck_lint) ' \
+	'com.android.tools.lint.Main ' \
+	'--classpath $(location :src_release) ' \
+	'--exitcode ' \
+	'--fullpath ' \
+	'--xml "$OUT/lint-results.xml" ' \
+	'--html "$OUT/lint-results.html" ' \
+	'--sources src/main/java ' \
+	'build/okbuck/release ' \
+	'',
+)
+
