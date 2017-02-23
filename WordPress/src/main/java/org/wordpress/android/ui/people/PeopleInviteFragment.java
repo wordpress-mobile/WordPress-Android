@@ -44,6 +44,7 @@ import java.util.Map;
 
 public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
+    private static final String URL_USER_ROLES_DOCUMENTATION = "https://en.support.wordpress.com/user-roles/";
     private static final String FLAG_SUCCESS = "SUCCESS";
     private static final int MAX_NUMBER_OF_INVITEES = 10;
     private static final String[] USERNAME_DELIMITERS = {" ", ","};
@@ -221,7 +222,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         imgRoleInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.openUrlExternal(v.getContext(), getString(R.string.role_info_url));
+                ActivityLauncher.openUrlExternal(v.getContext(), URL_USER_ROLES_DOCUMENTATION);
             }
         });
 

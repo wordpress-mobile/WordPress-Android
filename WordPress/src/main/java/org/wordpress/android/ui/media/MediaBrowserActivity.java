@@ -547,8 +547,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         switch (event.cause) {
-            case FETCH_ALL_MEDIA:
-                break;
             case DELETE_MEDIA:
                 if (event.mediaList == null || event.mediaList.isEmpty()) {
                     break;
@@ -572,6 +570,18 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     }
                 }
             break;
+        }
+        updateViews();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void OnMediaListFetched(MediaStore.OnMediaListFetched event) {
+        if (event.isError()) {
+            AppLog.w(AppLog.T.MEDIA, "Received OnMediaListFetched error: " + event.error.type
+                    + " - " + event.error.message);
+            ToastUtils.showToast(this, "Media fetch error occurred: " + event.error.message, ToastUtils.Duration.LONG);
+            return;
         }
         updateViews();
     }
