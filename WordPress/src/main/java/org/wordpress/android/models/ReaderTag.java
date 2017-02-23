@@ -2,6 +2,8 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -174,7 +176,17 @@ public class ReaderTag implements Serializable, FilterCriteria {
     @Override
     public String getLabel() {
         if (tagType == ReaderTagType.DEFAULT) {
-            return getTagTitle();
+            // translate default tags
+            // ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5240
+            if (isDiscover()) {
+                return WordPress.getContext().getString(R.string.reader_discover_default_tag);
+            } else if (isFollowedSites()) {
+                return WordPress.getContext().getString(R.string.reader_followed_default_tag);
+            } else if (isPostsILike()) {
+                return WordPress.getContext().getString(R.string.reader_liked_default_tag);
+            } else {
+                return getTagTitle();
+            }
         } else if (isTagDisplayNameAlphaNumeric()) {
             return getTagDisplayName().toLowerCase();
         } else if (hasTagTitle()) {
