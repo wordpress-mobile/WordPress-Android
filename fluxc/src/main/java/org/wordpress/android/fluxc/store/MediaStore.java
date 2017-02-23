@@ -30,30 +30,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class MediaStore extends Store {
-    public static class MediaFilter {
-        public static final int ALL_NUMBER = -1;
-        public static final int MAX_NUMBER = 100;
-
-        public enum SortOrder {
-            DESCENDING, ASCENDING
-        }
-
-        public enum SortField {
-            DATE, TITLE, ID
-        }
-
-        public List<String> fields;
-        public int number;
-        public long postId;
-        public int offset;
-        public int page;
-        public SortOrder sortOrder;
-        public SortField sortField;
-        public String searchQuery;
-        public String after;
-        public String before;
-        public String mimeType;
-    }
+    public static final int NUM_MEDIA_PER_FETCH = 50;
 
     //
     // Payloads
@@ -77,21 +54,43 @@ public class MediaStore extends Store {
     }
 
     /**
-     * Actions: FETCH(ED)_ALL_MEDIA, PUSH(ED)_MEDIA, DELETE(D)_MEDIA, and REMOVE_MEDIA
+     * Actions: FETCH_MEDIA_LIST
      */
-    public static class MediaListPayload extends Payload {
+    public static class FetchMediaListPayload extends Payload {
+        public SiteModel site;
+        public boolean loadMore;
+
+        public FetchMediaListPayload(SiteModel site) {
+            this.site = site;
+        }
+
+        public FetchMediaListPayload(SiteModel site, boolean loadMore) {
+            this.site = site;
+            this.loadMore = loadMore;
+        }
+    }
+
+    /**
+     * Actions: FETCHED_MEDIA_LIST
+     */
+    public static class FetchMediaListResponsePayload extends Payload {
         public SiteModel site;
         public MediaError error;
         public List<MediaModel> mediaList;
-        public MediaFilter filter;
-        public MediaListPayload(SiteModel site, List<MediaModel> mediaList, MediaFilter filter) {
-            this(site, mediaList, null, filter);
-        }
-        public MediaListPayload(SiteModel site, List<MediaModel> mediaList, MediaError error, MediaFilter filter) {
+        public boolean loadedMore;
+        public boolean canLoadMore;
+        public FetchMediaListResponsePayload(SiteModel site, @NonNull List<MediaModel> mediaList, boolean loadedMore,
+                                             boolean canLoadMore) {
             this.site = site;
             this.mediaList = mediaList;
+            this.loadedMore = loadedMore;
+            this.canLoadMore = canLoadMore;
+        }
+
+        public FetchMediaListResponsePayload(SiteModel site, MediaError error) {
+            this.mediaList = new ArrayList<>();
+            this.site = site;
             this.error = error;
-            this.filter = filter;
         }
     }
 
@@ -147,6 +146,19 @@ public class MediaStore extends Store {
         public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList, MediaError error) {
             this.cause = cause;
             this.mediaList = mediaList;
+            this.error = error;
+        }
+    }
+
+    public class OnMediaListFetched extends OnChanged<MediaError> {
+        public SiteModel site;
+        public boolean canLoadMore;
+        public OnMediaListFetched(SiteModel site, boolean canLoadMore) {
+            this.site = site;
+            this.canLoadMore = canLoadMore;
+        }
+        public OnMediaListFetched(SiteModel site, MediaError error) {
+            this.site = site;
             this.error = error;
         }
     }
@@ -236,8 +248,8 @@ public class MediaStore extends Store {
             case UPLOAD_MEDIA:
                 performUploadMedia((MediaPayload) action.getPayload());
                 break;
-            case FETCH_ALL_MEDIA:
-                performFetchAllMedia((MediaListPayload) action.getPayload());
+            case FETCH_MEDIA_LIST:
+                performFetchMediaList((FetchMediaListPayload) action.getPayload());
                 break;
             case FETCH_MEDIA:
                 performFetchMedia((MediaPayload) action.getPayload());
@@ -254,8 +266,8 @@ public class MediaStore extends Store {
             case UPLOADED_MEDIA:
                 handleMediaUploaded((ProgressPayload) action.getPayload());
                 break;
-            case FETCHED_ALL_MEDIA:
-                handleAllMediaFetched((MediaListPayload) action.getPayload());
+            case FETCHED_MEDIA_LIST:
+                handleMediaListFetched((FetchMediaListResponsePayload) action.getPayload());
                 break;
             case FETCHED_MEDIA:
                 handleMediaFetched((MediaPayload) action.getPayload());
@@ -494,11 +506,17 @@ public class MediaStore extends Store {
         }
     }
 
-    private void performFetchAllMedia(MediaListPayload payload) {
+    private void performFetchMediaList(FetchMediaListPayload payload) {
+        int offset = 0;
+        if (payload.loadMore) {
+            List<String> list = new ArrayList<>();
+            list.add(UploadState.UPLOADED.toString());
+            offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
+        }
         if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
-            mMediaRestClient.fetchAllMedia(payload.site);
+            mMediaRestClient.fetchMediaList(payload.site, offset);
         } else {
-            mMediaXmlrpcClient.fetchAllMedia(payload.site);
+            mMediaXmlrpcClient.fetchMediaList(payload.site, offset);
         }
     }
 
@@ -562,19 +580,26 @@ public class MediaStore extends Store {
         emitChange(onMediaUploaded);
     }
 
-    private void handleAllMediaFetched(@NonNull MediaListPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_ALL_MEDIA, payload.mediaList);
+    private void handleMediaListFetched(@NonNull FetchMediaListResponsePayload payload) {
+        OnMediaListFetched onMediaListFetched;
 
-        if (!payload.isError()) {
-            MediaSqlUtils.deleteAllSiteMedia(payload.site);
+        if (payload.isError()) {
+            onMediaListFetched = new OnMediaListFetched(payload.site, payload.error);
+        } else {
+            // Clear existing media if this is a fresh fetch (loadMore = false in the original request)
+            // This is the simplest way of keeping our local media in sync with remote media (in case of deletions)
+            if (!payload.loadedMore) {
+                MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
+            }
             if (!payload.mediaList.isEmpty()) {
                 for (MediaModel media : payload.mediaList) {
                     updateMedia(media, false);
                 }
             }
+            onMediaListFetched = new OnMediaListFetched(payload.site, payload.canLoadMore);
         }
 
-        emitChange(onMediaChanged);
+        emitChange(onMediaListFetched);
     }
 
     private void handleMediaFetched(@NonNull MediaPayload payload) {

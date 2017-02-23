@@ -6,6 +6,7 @@ import com.yarolegovich.wellsql.WellCursor;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 
@@ -20,14 +21,12 @@ public class MediaSqlUtils {
         return getAllSiteMediaQuery(siteModel).getAsCursor();
     }
 
+    public static List<MediaModel> getMediaWithStates(SiteModel site, List<String> uploadStates) {
+        return getMediaWithStatesQuery(site, uploadStates).getAsModel();
+    }
+
     public static WellCursor<MediaModel> getMediaWithStatesAsCursor(SiteModel site, List<String> uploadStates) {
-        return WellSql.select(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
-                .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
-                .endGroup().endWhere()
-                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
-                .getAsCursor();
+        return getMediaWithStatesQuery(site, uploadStates).getAsCursor();
     }
 
     public static WellCursor<MediaModel> getImagesWithStatesAsCursor(SiteModel site, List<String> uploadStates) {
@@ -55,6 +54,15 @@ public class MediaSqlUtils {
     private static SelectQuery<MediaModel> getAllSiteMediaQuery(SiteModel siteModel) {
         return WellSql.select(MediaModel.class)
                 .where().equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId()).endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
+    }
+
+    private static SelectQuery<MediaModel> getMediaWithStatesQuery(SiteModel site, List<String> uploadStates) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
+                .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
+                .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
@@ -229,6 +237,14 @@ public class MediaSqlUtils {
         return WellSql.delete(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
+                .endGroup().endWhere().execute();
+    }
+
+    public static int deleteAllUploadedSiteMedia(SiteModel siteModel) {
+        return WellSql.delete(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
+                .equals(MediaModelTable.UPLOAD_STATE, UploadState.UPLOADED.toString())
                 .endGroup().endWhere().execute();
     }
 

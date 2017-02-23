@@ -26,8 +26,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestRespon
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
-import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
@@ -51,7 +50,7 @@ import okhttp3.OkHttpClient;
  *
  * <ul>
  *     <li>Fetch existing media from a WP.com site
- *     (via {@link #fetchAllMedia(SiteModel)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
+ *     (via {@link #fetchMediaList(SiteModel, int)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
  *     <li>Push new media to a WP.com site
  *     (via {@link #uploadMedia(SiteModel, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
@@ -63,9 +62,6 @@ import okhttp3.OkHttpClient;
 public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
     private Call mCurrentUploadCall;
-
-    private int mFetchAllOffset = 0;
-    private List<MediaModel> mFetchedMedia = new ArrayList<>();
 
     public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                            OkHttpClient.Builder okClientBuilder, AccessToken accessToken, UserAgent userAgent) {
@@ -126,38 +122,31 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     /**
-     * Gets a list of all media items on a WP.com site.
+     * Gets a list of media items given the offset on a WP.com site.
      *
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchAllMedia(final SiteModel site) {
-        final MediaFilter filter = new MediaFilter();
-        filter.number = MediaFilter.ALL_NUMBER;
+    public void fetchMediaList(final SiteModel site, final int offset) {
         final Map<String, String> params = new HashMap<>();
-        params.put("number", String.valueOf(MediaFilter.MAX_NUMBER));
-        params.put("offset", String.valueOf(mFetchAllOffset));
+        params.put("number", String.valueOf(MediaStore.NUM_MEDIA_PER_FETCH));
+        if (offset > 0) {
+            params.put("offset", String.valueOf(offset));
+        }
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, params, MultipleMediaResponse.class,
                 new Listener<MultipleMediaResponse>() {
                     @Override
                     public void onResponse(MultipleMediaResponse response) {
-                        List<MediaModel> responseMedia = getMediaListFromRestResponse(response, site.getId());
-                        if (responseMedia != null) {
-                            mFetchedMedia.addAll(responseMedia);
-                            if (responseMedia.size() < MediaFilter.MAX_NUMBER) {
-                                AppLog.v(T.MEDIA, "Fetched all media for site. count=" + mFetchedMedia.size());
-                                notifyAllMediaFetched(site, mFetchedMedia, null, filter);
-                                mFetchAllOffset = 0;
-                                mFetchedMedia = new ArrayList<>();
-                            } else {
-                                mFetchAllOffset += MediaFilter.MAX_NUMBER;
-                                fetchAllMedia(site);
-                            }
+                        List<MediaModel> mediaList = getMediaListFromRestResponse(response, site.getId());
+                        if (mediaList != null) {
+                            AppLog.v(T.MEDIA, "Fetched media list for site with size: " + mediaList.size());
+                            boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
+                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore);
                         } else {
                             AppLog.w(T.MEDIA, "could not parse Fetch all media response: " + response);
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            notifyAllMediaFetched(site, null, error, filter);
+                            notifyMediaListFetched(site, error);
                         }
                     }
                 }, new BaseRequest.BaseErrorListener() {
@@ -165,7 +154,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                        notifyAllMediaFetched(site, null, mediaError, filter);
+                        notifyMediaListFetched(site, mediaError);
                     }
         }));
     }
@@ -177,7 +166,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyMediaFetched(site, media, error);
+            notifyMediaFetched(site, null, error);
             return;
         }
 
@@ -363,9 +352,16 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyAllMediaFetched(SiteModel site, List<MediaModel> media, MediaError error, MediaFilter filter) {
-        MediaListPayload payload = new MediaListPayload(site, media, error, filter);
-        mDispatcher.dispatch(MediaActionBuilder.newFetchedAllMediaAction(payload));
+    private void notifyMediaListFetched(SiteModel site, @NonNull List<MediaModel> media,
+                                        boolean loadedMore, boolean canLoadMore) {
+        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
+                loadedMore, canLoadMore);
+        mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
+    }
+
+    private void notifyMediaListFetched(SiteModel site, MediaError error) {
+        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error);
+        mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
     private void notifyMediaFetched(SiteModel site, MediaModel media, MediaError error) {

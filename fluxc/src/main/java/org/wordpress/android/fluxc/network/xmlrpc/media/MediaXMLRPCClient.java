@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.xmlrpc.media;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Base64;
 
 import com.android.volley.RequestQueue;
@@ -25,10 +24,9 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
-import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
@@ -62,9 +60,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     private OkHttpClient mOkHttpClient;
     // track the network call to support cancelling
     private Call mCurrentUploadCall;
-
-    private int mFetchAllOffset = 0;
-    private List<MediaModel> mFetchedMedia = new ArrayList<>();
 
     public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient.Builder okClientBuilder,
                              AccessToken accessToken, UserAgent userAgent,
@@ -204,32 +199,27 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
      */
-    public void fetchAllMedia(final SiteModel site) {
+    public void fetchMediaList(final SiteModel site, final int offset) {
         List<Object> params = getBasicParams(site, null);
-        final MediaFilter filter = new MediaFilter();
-        filter.number = MediaFilter.MAX_NUMBER;
-        filter.offset = mFetchAllOffset;
-        params.add(getQueryParams(filter));
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("number", MediaStore.NUM_MEDIA_PER_FETCH);
+        if (offset > 0) {
+            queryParams.put("offset", offset);
+        }
+        params.add(queryParams);
 
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params, new Listener() {
             @Override
             public void onResponse(Object response) {
-                List<MediaModel> responseMedia = getMediaListFromXmlrpcResponse(response, site.getId());
-                if (responseMedia != null) {
-                    mFetchedMedia.addAll(responseMedia);
-                    if (responseMedia.size() < MediaFilter.MAX_NUMBER) {
-                        AppLog.v(T.MEDIA, "Fetched all media for site via XMLRPC.GET_MEDIA_LIBRARY");
-                        notifyAllMediaFetched(site, mFetchedMedia, null, filter);
-                        mFetchAllOffset = 0;
-                        mFetchedMedia = new ArrayList<>();
-                    } else {
-                        mFetchAllOffset += MediaFilter.MAX_NUMBER;
-                        fetchAllMedia(site);
-                    }
+                List<MediaModel> mediaList = getMediaListFromXmlrpcResponse(response, site.getId());
+                if (mediaList != null) {
+                    AppLog.v(T.MEDIA, "Fetched media list for site via XMLRPC.GET_MEDIA_LIBRARY");
+                    boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
+                    notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore);
                 } else {
                     AppLog.w(T.MEDIA, "could not parse XMLRPC.GET_MEDIA_LIBRARY response: " + response);
                     MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                    notifyAllMediaFetched(site, null, error, filter);
+                    notifyMediaListFetched(site, error);
                 }
             }
         }, new BaseRequest.BaseErrorListener() {
@@ -237,7 +227,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                 AppLog.e(T.MEDIA, "XMLRPC.GET_MEDIA_LIBRARY error response:", error.volleyError);
                 MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                notifyAllMediaFetched(site, null, mediaError, filter);
+                notifyMediaListFetched(site, mediaError);
             }
         }));
     }
@@ -253,7 +243,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyMediaFetched(site, media, error);
+            notifyMediaFetched(site, null, error);
             return;
         }
 
@@ -358,9 +348,16 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyAllMediaFetched(SiteModel site, List<MediaModel> media, MediaError error, MediaFilter filter) {
-        MediaListPayload payload = new MediaListPayload(site, media, error, filter);
-        mDispatcher.dispatch(MediaActionBuilder.newFetchedAllMediaAction(payload));
+    private void notifyMediaListFetched(SiteModel site, List<MediaModel> media,
+                                        boolean loadedMore, boolean canLoadMore) {
+        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
+                loadedMore, canLoadMore);
+        mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
+    }
+
+    private void notifyMediaListFetched(SiteModel site, MediaError error) {
+        FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error);
+        mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
     private void notifyMediaFetched(SiteModel site, MediaModel media, MediaError error) {
@@ -492,26 +489,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
 
         return false;
-    }
-
-    private Map<String, Object> getQueryParams(final MediaFilter filter) {
-        Map<String, Object> queryParams = null;
-        if (filter != null) {
-            queryParams = new HashMap<>();
-            if (filter.number > 0) {
-                queryParams.put("number", Math.min(filter.number, MediaFilter.MAX_NUMBER));
-            }
-            if (filter.offset > 0) {
-                queryParams.put("offset", filter.offset);
-            }
-            if (filter.postId > 0) {
-                queryParams.put("parent_id", filter.postId);
-            }
-            if (!TextUtils.isEmpty(filter.mimeType)) {
-                queryParams.put("mime_type", filter.mimeType);
-            }
-        }
-        return queryParams;
     }
 
     @NonNull
