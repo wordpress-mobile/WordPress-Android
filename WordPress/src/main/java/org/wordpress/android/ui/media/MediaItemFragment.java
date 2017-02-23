@@ -24,11 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -60,7 +57,6 @@ public class MediaItemFragment extends Fragment {
 
     public static final String TAG = MediaItemFragment.class.getName();
 
-    @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
 
     private WPNetworkImageView mImageView;
@@ -110,18 +106,6 @@ public class MediaItemFragment extends Fragment {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        mDispatcher.unregister(this);
-        super.onStop();
     }
 
     @Override
@@ -415,10 +399,5 @@ public class MediaItemFragment extends Fragment {
             AppLog.e(AppLog.T.UTILS, e);
             ToastUtils.showToast(getActivity(), R.string.error_copy_to_clipboard);
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        // no-op
     }
 }
