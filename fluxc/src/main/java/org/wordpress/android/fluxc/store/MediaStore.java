@@ -152,11 +152,9 @@ public class MediaStore extends Store {
 
     public class OnMediaListFetched extends OnChanged<MediaError> {
         public SiteModel site;
-        public List<MediaModel> mediaList;
         public boolean canLoadMore;
-        public OnMediaListFetched(SiteModel site, @NonNull List<MediaModel> mediaList, boolean canLoadMore) {
+        public OnMediaListFetched(SiteModel site, boolean canLoadMore) {
             this.site = site;
-            this.mediaList = mediaList;
             this.canLoadMore = canLoadMore;
         }
         public OnMediaListFetched(SiteModel site, MediaError error) {
@@ -598,7 +596,7 @@ public class MediaStore extends Store {
                     updateMedia(media, false);
                 }
             }
-            onMediaListFetched = new OnMediaListFetched(payload.site, payload.mediaList, payload.canLoadMore);
+            onMediaListFetched = new OnMediaListFetched(payload.site, payload.canLoadMore);
         }
 
         emitChange(onMediaListFetched);
