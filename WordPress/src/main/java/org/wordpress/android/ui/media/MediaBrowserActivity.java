@@ -348,54 +348,54 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.menu_new_media:
-                if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-                    showNewMediaMenu();
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (i == R.id.menu_new_media) {
+            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+                showNewMediaMenu();
+            }
+            return true;
+        } else if (i == R.id.menu_search) {
+            mSearchMenuItem = item;
+            MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+            MenuItemCompat.expandActionView(mSearchMenuItem);
+
+            mSearchView = (SearchView) item.getActionView();
+            mSearchView.setOnQueryTextListener(this);
+
+            // load last saved query
+            if (!TextUtils.isEmpty(mQuery)) {
+                onQueryTextSubmit(mQuery);
+                mSearchView.setQuery(mQuery, true);
+            }
+            return true;
+        } else if (i == R.id.menu_edit_media) {
+            long mediaId = mMediaItemFragment.getMediaId();
+
+            if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
+                // phone layout: hide item details, show and update edit fragment
+                FragmentManager fm = getFragmentManager();
+                mMediaEditFragment = MediaEditFragment.newInstance(mSite, mediaId);
+
+                FragmentTransaction ft = fm.beginTransaction();
+                if (mMediaItemFragment.isVisible()) {
+                    ft.hide(mMediaItemFragment);
                 }
-                return true;
-            case R.id.menu_search:
-                mSearchMenuItem = item;
-                MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
-                MenuItemCompat.expandActionView(mSearchMenuItem);
+                ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
+                ft.addToBackStack(null);
+                ft.commitAllowingStateLoss();
+            } else {
+                // tablet layout: update edit fragment
+                mMediaEditFragment.loadMedia(mediaId);
+            }
 
-                mSearchView = (SearchView) item.getActionView();
-                mSearchView.setOnQueryTextListener(this);
+            if (mSearchView != null) {
+                mSearchView.clearFocus();
+            }
 
-                // load last saved query
-                if (!TextUtils.isEmpty(mQuery)) {
-                    onQueryTextSubmit(mQuery);
-                    mSearchView.setQuery(mQuery, true);
-                }
-                return true;
-            case R.id.menu_edit_media:
-                long mediaId = mMediaItemFragment.getMediaId();
-
-                if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
-                    // phone layout: hide item details, show and update edit fragment
-                    FragmentManager fm = getFragmentManager();
-                    mMediaEditFragment = MediaEditFragment.newInstance(mSite, mediaId);
-
-                    FragmentTransaction ft = fm.beginTransaction();
-                    if (mMediaItemFragment.isVisible()) {
-                        ft.hide(mMediaItemFragment);
-                    }
-                    ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
-                    ft.addToBackStack(null);
-                    ft.commitAllowingStateLoss();
-                } else {
-                    // tablet layout: update edit fragment
-                    mMediaEditFragment.loadMedia(mediaId);
-                }
-
-                if (mSearchView != null) {
-                    mSearchView.clearFocus();
-                }
-
-                return true;
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
