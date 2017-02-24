@@ -1298,11 +1298,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
             // Create an <a href> element around links
             text = AutolinkUtils.autoCreateLinks(text);
-            if (mEditorFragment instanceof EditorFragment) {
-                mEditorFragment.setContent(text);
-            } else {
+            if (mEditorFragment instanceof LegacyEditorFragment) {
                 mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, getPost(),
                         getMaximumThumbnailWidthForEditor()));
+            } else {
+                mEditorFragment.setContent(text);
             }
         }
 
