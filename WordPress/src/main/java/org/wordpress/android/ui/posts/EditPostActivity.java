@@ -796,7 +796,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Update post object from fragment fields
         if (mEditorFragment != null) {
-            if (mShowNewEditor) {
+            if (mShowNewEditor || mShowAztecEditor) {
                 updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
                         (String) mEditorFragment.getContent());
             } else {
@@ -892,7 +892,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 // changes have been made, save the post and ask for the post list to refresh.
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
-                if (mShowNewEditor) {
+                if (mShowNewEditor || mShowAztecEditor) {
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
                     updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
                     savePostToDb();
