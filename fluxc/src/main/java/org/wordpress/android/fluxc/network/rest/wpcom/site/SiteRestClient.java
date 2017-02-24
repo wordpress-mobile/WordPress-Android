@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.site;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -52,6 +53,8 @@ public class SiteRestClient extends BaseWPComRestClient {
     public static final String VALIDATE_KEY = "validate";
     public static final String CLIENT_ID_KEY = "client_id";
     public static final String CLIENT_SECRET_KEY = "client_secret";
+
+    public static final int NEW_SITE_TIMEOUT_MS = 90000;
 
     private final AppSecrets mAppSecrets;
 
@@ -204,7 +207,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                 }
         );
 
-        request.disableRetries();
+        // Disable retries and increase timeout for site creation (it can sometimes take a long time to complete)
+        request.setRetryPolicy(new DefaultRetryPolicy(NEW_SITE_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         add(request);
     }
 
