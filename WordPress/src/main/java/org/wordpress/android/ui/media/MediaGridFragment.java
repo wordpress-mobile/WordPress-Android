@@ -39,10 +39,9 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaFilter;
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
-import org.wordpress.android.fluxc.store.MediaStore.MediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
@@ -76,7 +75,6 @@ public class MediaGridFragment extends Fragment
     private static final String BUNDLE_HAS_RETRIEVED_ALL_MEDIA = "BUNDLE_HAS_RETRIEVED_ALL_MEDIA";
     private static final String BUNDLE_FILTER = "BUNDLE_FILTER";
     private static final String BUNDLE_EMPTY_VIEW_MESSAGE = "BUNDLE_EMPTY_VIEW_MESSAGE";
-    private static final String BUNDLE_FETCH_OFFSET = "BUNDLE_FETCH_OFFSET";
 
     private static final String BUNDLE_DATE_FILTER_SET = "BUNDLE_DATE_FILTER_SET";
     private static final String BUNDLE_DATE_FILTER_VISIBLE = "BUNDLE_DATE_FILTER_VISIBLE";
@@ -86,8 +84,6 @@ public class MediaGridFragment extends Fragment
     private static final String BUNDLE_DATE_FILTER_END_YEAR = "BUNDLE_DATE_FILTER_END_YEAR";
     private static final String BUNDLE_DATE_FILTER_END_MONTH = "BUNDLE_DATE_FILTER_END_MONTH";
     private static final String BUNDLE_DATE_FILTER_END_DAY = "BUNDLE_DATE_FILTER_END_DAY";
-
-    private static final int NUM_PER_FETCH = 20;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -113,8 +109,6 @@ public class MediaGridFragment extends Fragment
     private TextView mEmptyViewTitle;
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
 
-    private int mOldMediaSyncOffset = 0;
-
     private boolean mIsDateFilterSet;
     private boolean mSpinnerHasLaunched;
 
@@ -125,8 +119,6 @@ public class MediaGridFragment extends Fragment
     private MenuItem mNewGalleryButton;
 
     private SiteModel mSite;
-
-    private int mMediaFetchOffset = 0;
 
     public interface MediaGridListener {
         void onMediaItemSelected(long mediaId);
@@ -249,7 +241,7 @@ public class MediaGridFragment extends Fragment
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
-                        fetchAllMedia(0);
+                        fetchMediaList(false);
                     }
                 });
         restoreState(savedInstanceState);
@@ -270,9 +262,9 @@ public class MediaGridFragment extends Fragment
     }
 
     @Override
-    public void fetchMoreData(int offset) {
+    public void fetchMoreData() {
         if (!mHasRetrievedAllMedia) {
-            fetchAllMedia(offset);
+            fetchMediaList(true);
         }
     }
 
@@ -377,19 +369,12 @@ public class MediaGridFragment extends Fragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(OnMediaChanged event) {
+    public void OnMediaListFetched(OnMediaListFetched event) {
         if (event.isError()) {
             handleFetchAllMediaError(event.error.type);
             return;
         }
-
-        switch (event.cause) {
-            case FETCH_ALL_MEDIA:
-                if (event.mediaList != null) {
-                    handleFetchAllMediaSuccess(event);
-                }
-                break;
-        }
+        handleFetchAllMediaSuccess(event);
     }
 
     public void refreshSpinnerAdapter() {
@@ -405,7 +390,7 @@ public class MediaGridFragment extends Fragment
         if (isAdded() && mGridAdapter.getDataCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
-                    fetchAllMedia(0);
+                    fetchMediaList(false);
                 }
             } else {
                 updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
@@ -641,7 +626,6 @@ public class MediaGridFragment extends Fragment
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
-        outState.putInt(BUNDLE_FETCH_OFFSET, mMediaFetchOffset);
 
         outState.putBoolean(BUNDLE_DATE_FILTER_SET, mIsDateFilterSet);
         outState.putBoolean(BUNDLE_DATE_FILTER_VISIBLE, (mDatePickerDialog != null && mDatePickerDialog.isShowing()));
@@ -772,7 +756,7 @@ public class MediaGridFragment extends Fragment
             showDatePicker();
     }
 
-    private void fetchAllMedia(int offset) {
+    private void fetchMediaList(boolean loadMore) {
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
@@ -793,36 +777,25 @@ public class MediaGridFragment extends Fragment
             return;
         }
 
-        if (offset == 0 || !mIsRefreshing) {
-            if (offset == mOldMediaSyncOffset) {
-                // we're pulling the same data again for some reason. Pull from the beginning.
-                offset = 0;
-            }
-            mOldMediaSyncOffset = offset;
-
+        if (!mIsRefreshing) {
             mIsRefreshing = true;
             updateEmptyView(EmptyViewMessageType.LOADING);
             setRefreshing(true);
             mGridAdapter.setRefreshing(true);
 
-            // TODO: figure out how to integrate `auto` to callback
-            MediaFilter fetchFilter = new MediaFilter();
-            fetchFilter.offset = mMediaFetchOffset;
-            fetchFilter.number = NUM_PER_FETCH;
-            mMediaFetchOffset += NUM_PER_FETCH;
-            MediaListPayload payload = new MediaListPayload(mSite, null, fetchFilter);
-            mDispatcher.dispatch(MediaActionBuilder.newFetchAllMediaAction(payload));
+            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
+            mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
 
-    private void handleFetchAllMediaSuccess(OnMediaChanged event) {
+    private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
 
         Cursor mediaCursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
         adapter.swapCursor(mediaCursor);
 
-        mHasRetrievedAllMedia = event.mediaList.size() < NUM_PER_FETCH;
-        adapter.setHasRetrievedAll(true);
+        mHasRetrievedAllMedia = !event.canLoadMore;
+        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
 
         mIsRefreshing = false;
 
@@ -833,11 +806,6 @@ public class MediaGridFragment extends Fragment
                 public void run() {
                     refreshSpinnerAdapter();
                     updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                    // TODO: Keep a reference to auto-refresh flag, so we can use it here
-                    boolean auto = true;
-                    if (!auto) {
-                        mGridView.setSelection(0);
-                    }
                     mGridAdapter.setRefreshing(false);
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }

@@ -63,7 +63,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     public static boolean isAccessible(SiteModel site) {
         // themes are only accessible to admin wordpress.com users
-        return site != null && SiteUtils.isAccessibleViaWPComAPI(site) && site.getHasCapabilityEditThemeOptions();
+        // TODO: Support themes for Jetpack and AT sites (and use SiteUtils.isAccessibleViaWPComAPI(site))
+        return site != null && site.isWPCom() && site.getHasCapabilityEditThemeOptions();
     }
 
     @Override
