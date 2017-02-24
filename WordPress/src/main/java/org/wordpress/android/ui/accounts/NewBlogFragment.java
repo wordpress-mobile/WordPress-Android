@@ -48,8 +48,6 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private boolean mSignoutOnCancelMode;
     private boolean mAutoCompleteUrl;
 
-    private NewSitePayload mNewSitePayload;
-
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -199,14 +197,14 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
 
-        startProgress(getString(R.string.validating_site_data));
+        startProgress(getString(R.string.creating_your_site));
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         final String siteTitle = EditTextUtils.getText(mSiteTitleTextField).trim();
         final String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
 
-        mNewSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, true);
-        mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
+        NewSitePayload newSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, false);
+        mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
         AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", URL: " + siteUrl);
     }
 
@@ -324,15 +322,6 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         if (event.isError()) {
             endProgress();
             showError(event.error.type, event.error.message);
-            return;
-        }
-        if (event.dryRun) {
-            // Site was validated - create it for real
-            mNewSitePayload.dryRun = false;
-            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
-            updateProgress(getString(R.string.creating_your_site));
-            AppLog.i(T.NUX, "Site validated! Creating site with title: " + mNewSitePayload.siteTitle + ", URL: "
-                    + mNewSitePayload.siteName);
             return;
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
