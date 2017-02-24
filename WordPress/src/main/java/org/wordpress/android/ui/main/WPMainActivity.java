@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -65,11 +64,11 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.List;
@@ -96,7 +95,6 @@ public class WPMainActivity extends AppCompatActivity {
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
-    @Inject MemorizingTrustManager mMemorizingTrustManager;
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
