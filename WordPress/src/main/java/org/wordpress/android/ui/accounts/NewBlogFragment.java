@@ -198,6 +198,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
 
+        startProgress(getString(R.string.validating_site_data));
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         final String siteTitle = EditTextUtils.getText(mSiteTitleTextField).trim();
@@ -205,7 +206,6 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
         mNewSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, true);
         mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
-        updateProgress(getString(R.string.create_new_blog_wpcom));
         AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", URL: " + siteUrl);
     }
 
@@ -329,6 +329,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             // Site was validated - create it for real
             mNewSitePayload.dryRun = false;
             mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
+            updateProgress(getString(R.string.creating_your_site));
             AppLog.i(T.NUX, "Site validated! Creating site with title: " + mNewSitePayload.siteTitle + ", URL: "
                     + mNewSitePayload.siteName);
             return;
