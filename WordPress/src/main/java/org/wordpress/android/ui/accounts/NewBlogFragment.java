@@ -44,6 +44,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mProgressTextSignIn;
     private WPTextView mCancelButton;
     private RelativeLayout mProgressBarSignIn;
+
     private boolean mSignoutOnCancelMode;
     private boolean mAutoCompleteUrl;
 
@@ -196,15 +197,15 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
 
+        startProgress(getString(R.string.creating_your_site));
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
-        final String siteName = EditTextUtils.getText(mSiteTitleTextField).trim();
+        final String siteTitle = EditTextUtils.getText(mSiteTitleTextField).trim();
         final String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
 
-        NewSitePayload newSitePayload = new NewSitePayload(siteName, siteUrl, language, SiteVisibility.PUBLIC, false);
+        NewSitePayload newSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, false);
         mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
-        updateProgress(getString(R.string.create_new_blog_wpcom));
-        AppLog.i(T.NUX, "User tries to create a new site, name: " + siteName + ", URL: " + siteUrl);
+        AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", URL: " + siteUrl);
     }
 
     @Override
