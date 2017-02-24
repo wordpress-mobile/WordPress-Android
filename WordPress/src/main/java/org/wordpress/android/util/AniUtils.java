@@ -197,6 +197,21 @@ public class AniUtils {
         }
     }
 
+    public static void scale(final View target, float scaleStart, float scaleEnd, Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, scaleStart, scaleEnd);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, scaleStart, scaleEnd);
+
+        ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(target, scaleX, scaleY);
+        animator.setDuration(duration.toMillis(target.getContext()));
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animator.start();
+    }
+
     public static void scaleIn(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
