@@ -57,7 +57,6 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
@@ -91,7 +90,7 @@ import javax.inject.Inject;
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
-        MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback, MediaUploadService.MediaUploadListener {
+        MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback {
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -500,31 +499,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         addMediaToUploadService(media);
     }
 
-    @Override
-    public void onUploadBegin(MediaModel media) {
-        // TODO: indicate in UI
-    }
-
-    @Override
-    public void onUploadSuccess(MediaModel media) {
-        // TODO: update UI
-    }
-
-    @Override
-    public void onUploadCanceled(MediaModel media) {
-        // TODO
-    }
-
-    @Override
-    public void onUploadError(MediaModel media, MediaError error) {
-        // TODO: update UI
-    }
-
-    @Override
-    public void onUploadProgress(MediaModel media, float progress) {
-        // TODO
-    }
-
     private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
         if (isFinishing()) {
             return;
@@ -707,7 +681,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         public void onServiceConnected(ComponentName className, IBinder service) {
             AppLog.i(T.MEDIA, "MediaUploadService connected");
             mUploadService = (MediaUploadService.MediaUploadBinder) service;
-            mUploadService.setListener(MediaBrowserActivity.this);
             if (!mPendingUploads.isEmpty()) {
                 for(MediaModel media : mPendingUploads) {
                     mUploadService.addMediaToQueue(media);
