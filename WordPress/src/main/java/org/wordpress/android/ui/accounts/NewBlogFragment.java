@@ -43,8 +43,11 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mProgressTextSignIn;
     private WPTextView mCancelButton;
     private RelativeLayout mProgressBarSignIn;
+
     private boolean mSignoutOnCancelMode;
     private boolean mAutoCompleteUrl;
+
+    private NewSitePayload mNewSitePayload;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -200,8 +203,8 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         final String siteTitle = EditTextUtils.getText(mSiteTitleTextField).trim();
         final String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
 
-        NewSitePayload newSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, false);
-        mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
+        mNewSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, true);
+        mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
         updateProgress(getString(R.string.create_new_blog_wpcom));
         AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", URL: " + siteUrl);
     }
@@ -320,6 +323,14 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         if (event.isError()) {
             endProgress();
             showError(event.error.type, event.error.message);
+            return;
+        }
+        if (event.dryRun) {
+            // Site was validated - create it for real
+            mNewSitePayload.dryRun = false;
+            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
+            AppLog.i(T.NUX, "Site validated! Creating site with title: " + mNewSitePayload.siteTitle + ", URL: "
+                    + mNewSitePayload.siteName);
             return;
         }
         // Site created, update sites
