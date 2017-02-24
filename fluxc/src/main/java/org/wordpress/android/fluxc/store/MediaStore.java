@@ -346,6 +346,10 @@ public class MediaStore extends Store {
         return media.size() > 0 ? media.get(0) : null;
     }
 
+    public MediaModel getMediaWithLocalId(int localMediaId) {
+        return MediaSqlUtils.getMediaWithLocalId(localMediaId);
+    }
+
     public List<MediaModel> getSiteMediaWithIds(SiteModel siteModel, List<Long> mediaIds) {
         return MediaSqlUtils.getSiteMediaWithIds(siteModel, mediaIds);
     }
