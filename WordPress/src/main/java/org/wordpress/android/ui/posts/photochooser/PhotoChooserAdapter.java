@@ -20,6 +20,7 @@ import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.OnPhotoC
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -347,13 +348,17 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 return;
             }
 
-            int idIndex = cursor.getColumnIndexOrThrow(ID_COL);
-            while (cursor.moveToNext()) {
-                PhotoChooserItem item = new PhotoChooserItem();
-                item._id = cursor.getLong(idIndex);
-                item.uri = Uri.withAppendedPath(baseUri, "" + item._id);
-                item.isVideo = isVideo;
-                tmpList.add(item);
+            try {
+                int idIndex = cursor.getColumnIndexOrThrow(ID_COL);
+                while (cursor.moveToNext()) {
+                    PhotoChooserItem item = new PhotoChooserItem();
+                    item._id = cursor.getLong(idIndex);
+                    item.uri = Uri.withAppendedPath(baseUri, "" + item._id);
+                    item.isVideo = isVideo;
+                    tmpList.add(item);
+                }
+            } finally {
+                SqlUtils.closeCursor(cursor);
             }
         }
 
