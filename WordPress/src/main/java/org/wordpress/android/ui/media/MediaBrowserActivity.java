@@ -630,7 +630,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (mediaModel == null) {
                 continue;
             }
+
             if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
+                if (MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
+                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+                    updateViews();
+                    sanitizedIds.add(String.valueOf(currentId));
+                    continue;
+                }
                 mediaToDelete.add(mediaModel);
                 mediaModel.setUploadState(MediaUploadState.DELETE.name());
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
