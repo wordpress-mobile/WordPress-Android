@@ -361,6 +361,9 @@ public class MediaItemFragment extends Fragment {
 
         if (itemId == R.id.menu_delete) {
             MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, getMediaId());
+            if (mediaModel == null) {
+                return true;
+            }
             boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(mediaModel);
             if (!canDeleteMedia) {
                 Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
