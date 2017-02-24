@@ -263,9 +263,8 @@ public class EditPostSettingsFragment extends Fragment
             rootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
         } else {
             // Default values
-            mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-            mPostFormats = new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard",
-                    "status", "video"};
+            mPostFormatTitles = getResources().getStringArray(R.array.post_format_display_names);
+            mPostFormats = getResources().getStringArray(R.array.post_format_keys);
             // If we have specific values for this site, use them
             List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
             if (postFormatModels.size() > 0) {
