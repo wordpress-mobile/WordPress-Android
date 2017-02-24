@@ -283,7 +283,23 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull Map<String, String> getFormats() {
-        if (mSettings.postFormats == null) mSettings.postFormats = new HashMap<>();
+        mSettings.postFormats = new HashMap<>();
+        String[] postFormatDisplayNames = mActivity.getResources().getStringArray(R.array.post_format_display_names);
+        String[] postFormatKeys = mActivity.getResources().getStringArray(R.array.post_format_keys);
+        // Add standard post format (only for .com)
+        mSettings.postFormats.put(STANDARD_POST_FORMAT_KEY, STANDARD_POST_FORMAT);
+        // Add default post formats
+        for (int i = 0; i < postFormatKeys.length && i < postFormatDisplayNames.length; ++i) {
+            mSettings.postFormats.put(postFormatKeys[i], postFormatDisplayNames[i]);
+        }
+        if (mSite == null) {
+            return mSettings.postFormats;
+        }
+        // Add (or replace) site-specific post formats
+        List<PostFormatModel> postFormats = mSiteStore.getPostFormats(mSite);
+        for (PostFormatModel postFormat : postFormats) {
+            mSettings.postFormats.put(postFormat.getSlug(), postFormat.getDisplayName());
+        }
         return mSettings.postFormats;
     }
 
@@ -709,7 +725,7 @@ public abstract class SiteSettingsInterface {
 
         if (fetchRemote) {
             fetchRemoteData();
-            fetchPostFormats();
+            mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
         }
 
         return this;
@@ -772,58 +788,6 @@ public abstract class SiteSettingsInterface {
     }
 
     /**
-     * Gets available post formats via XML-RPC. Since both self-hosted and .com sites retrieve the
-     * format list via XML-RPC there is no need to implement this in the sub-classes.
-     */
-    private void fetchPostFormats() {
-        XMLRPCClientInterface client = instantiateInterface();
-        if (client == null) return;
-
-        Map<String, String> args = new HashMap<>();
-        args.put(Param.SHOW_SUPPORTED_POST_FORMATS, "true");
-        Object[] params = {
-                String.valueOf(mSite.getSiteId()),
-                StringUtils.notNullStr(mSite.getUsername()),
-                StringUtils.notNullStr(mSite.getPassword()),
-                args};
-        client.callAsync(new XMLRPCCallback() {
-            @Override
-            public void onSuccess(long id, Object result) {
-                credentialsVerified(true);
-
-                if (result != null && result instanceof HashMap) {
-                    Map<?, ?> resultMap = (HashMap<?, ?>) result;
-                    Map allFormats;
-                    Object[] supportedFormats;
-                    if (resultMap.containsKey("supported")) {
-                        allFormats = (Map) resultMap.get("all");
-                        supportedFormats = (Object[]) resultMap.get("supported");
-                    } else {
-                        allFormats = resultMap;
-                        supportedFormats = allFormats.keySet().toArray();
-                    }
-
-                    mRemoteSettings.postFormats = new HashMap<>();
-                    mRemoteSettings.postFormats.put("standard", "Standard");
-                    for (Object supportedFormat : supportedFormats) {
-                        if (allFormats.containsKey(supportedFormat)) {
-                            mRemoteSettings.postFormats.put(supportedFormat.toString(), allFormats.get(supportedFormat).toString());
-                        }
-                    }
-                    mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
-                    SiteSettingsTable.saveSettings(mSettings);
-
-                    notifyUpdatedOnUiThread(null);
-                }
-            }
-
-            @Override
-            public void onFailure(long id, Exception error) {
-            }
-        }, Method.GET_POST_FORMATS, params);
-    }
-
-    /**
      * Notifies listener that credentials have been validated or are incorrect.
      */
     private void notifyCredentialsVerifiedOnUiThread(final Exception error) {
@@ -863,5 +827,16 @@ public abstract class SiteSettingsInterface {
                 mListener.onSettingsSaved(error);
             }
         });
+    }
+
+    // FluxC OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostFormatsChanged(OnPostFormatsChanged event) {
+        if (event.isError()) {
+            return;
+        }
+        notifyUpdatedOnUiThread(null);
     }
 }

@@ -101,8 +101,8 @@
             android:id="@+id/pref_default_format"
             android:key="@string/pref_key_site_format"
             android:title="@string/site_settings_default_format_title"
-            android:entries="@array/post_formats_array"
-            android:entryValues="@array/post_formats_array"
+            android:entries="@array/post_format_display_names"
+            android:entryValues="@array/post_format_display_names"
             app:longClickHint="@string/site_settings_format_hint" />
 
         <org.wordpress.android.ui.prefs.WPPreference
