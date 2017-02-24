@@ -207,9 +207,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                 }
         );
 
-        request.disableRetries();
-        request.setRetryPolicy(new DefaultRetryPolicy(NEW_SITE_TIMEOUT_MS,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        // Disable retries and increase timeout for site creation (it can sometimes take a long time to complete)
+        request.setRetryPolicy(new DefaultRetryPolicy(NEW_SITE_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         add(request);
     }
 
