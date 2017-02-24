@@ -8,27 +8,30 @@ import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.TextUtils;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SiteSettingsTable;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
-import org.xmlrpc.android.ApiHelper.Method;
-import org.xmlrpc.android.ApiHelper.Param;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCFactory;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * Interface for WordPress (.com and .org) Site Settings. The {@link SiteSettingsModel} class is
@@ -62,9 +65,7 @@ import java.util.Map;
  * This class is marked abstract. This is due to the fact that .org (self-hosted) and .com sites
  * expose different API's to query and edit their respective settings (even though the options
  * offered by each is roughly the same). To get an instance of this interface class use the
- * {@link SiteSettingsInterface#getInterface(Activity, SiteModel, SiteSettingsListener)} method. It will
- * determine which interface ({@link SelfHostedSiteSettings} or {@link DotComSiteSettings}) is
- * appropriate for the given blog.
+ * {@link SiteSettingsInterface#getInterface(Activity, SiteModel, SiteSettingsListener)} method.
  */
 
 public abstract class SiteSettingsInterface {
@@ -127,9 +128,9 @@ public abstract class SiteSettingsInterface {
 
         if (SiteUtils.isAccessibleViaWPComAPI(site)) {
             return new DotComSiteSettings(host, site, listener);
-        } else {
-            return new SelfHostedSiteSettings(host, site, listener);
         }
+        // Not implemented for self hosted sites
+        return null;
     }
 
     /**
@@ -205,16 +206,26 @@ public abstract class SiteSettingsInterface {
     protected final SiteSettingsListener mListener;
     protected final SiteSettingsModel mSettings;
     protected final SiteSettingsModel mRemoteSettings;
-
     private final Map<String, String> mLanguageCodes;
 
+    @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
+
     protected SiteSettingsInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
+        ((WordPress) host.getApplicationContext()).component().inject(this);
+        mDispatcher.register(this);
         mActivity = host;
         mSite = site;
         mListener = listener;
         mSettings = new SiteSettingsModel();
         mRemoteSettings = new SiteSettingsModel();
         mLanguageCodes = WPPrefUtils.generateLanguageMap(host);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        mDispatcher.unregister(this);
+        super.finalize();
     }
 
     public void saveSettings() {
@@ -711,14 +722,6 @@ public abstract class SiteSettingsInterface {
         Exception e = valid ? null : new AuthenticationError();
         if (mSettings.hasVerifiedCredentials != valid) notifyCredentialsVerifiedOnUiThread(e);
         mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = valid;
-    }
-
-    /**
-     * Helper method to create an XML-RPC interface for the current blog.
-     */
-    protected XMLRPCClientInterface instantiateInterface() {
-        if (mSite == null || mSite.getXmlRpcUrl() == null) return null;
-        return XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
     }
 
     /**
