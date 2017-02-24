@@ -132,6 +132,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected LinearLayout mTwoStepFooter;
 
     protected boolean mSelfHosted;
+    protected boolean mIsSelfHostedForced;
     protected boolean mEmailAutoCorrected;
     protected boolean mShouldSendTwoStepSMS;
     protected int mErroneousLogInCount;
@@ -383,6 +384,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mUrlEditText.setText(prefillUrl);
         }
         mSelfHosted = true;
+        mIsSelfHostedForced = true;
     }
 
     private void showPasswordFieldAndFocus() {
@@ -965,6 +967,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected boolean isUserDataValid() {
         final String username = EditTextUtils.getText(mUsernameEditText).trim();
         final String password = EditTextUtils.getText(mPasswordEditText).trim();
+        final String url = EditTextUtils.getText(mUrlEditText).trim();
         boolean retValue = true;
 
         if (password.equals("")) {
@@ -976,6 +979,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (username.equals("")) {
             mUsernameEditText.setError(getString(R.string.required_field));
             mUsernameEditText.requestFocus();
+            retValue = false;
+        }
+
+        if (mIsSelfHostedForced && url.equals("")) {
+            mUrlEditText.setError(getString(R.string.required_field));
+            mUrlEditText.requestFocus();
             retValue = false;
         }
 
