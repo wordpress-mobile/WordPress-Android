@@ -240,9 +240,8 @@ public class MediaGridAdapter extends CursorAdapter {
 
                 // add onclick to retry failed uploads
                 if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
-                    state = MediaUploadState.QUEUED.name();
                     holder.stateTextView.setVisibility(View.VISIBLE);
-                    holder.stateTextView.setText(state);
+                    holder.stateTextView.setText(context.getString(R.string.retry));
                     holder.stateTextView.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
