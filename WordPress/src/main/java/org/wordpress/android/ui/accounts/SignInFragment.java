@@ -1304,6 +1304,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 break;
             case INVALID_URL:
                 showUrlError(R.string.invalid_site_url_message);
+                AnalyticsTracker.track(Stat.LOGIN_INSERTED_INVALID_URL);
                 break;
             case MISSING_XMLRPC_METHOD:
                 showGenericErrorDialog(getResources().getString(R.string.xmlrpc_missing_method_error),
