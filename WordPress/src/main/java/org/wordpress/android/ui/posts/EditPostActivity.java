@@ -551,15 +551,29 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
+        // slide in the photo chooser
         if (!isPhotoChooserShowing()) {
             AniUtils.animateBottomBar(mPhotoChooserContainer, true);
         }
+
+        // fade in the overlay atop the editor, which effectively disables the editor
+        // until the chooser is closed
+        View overlay = findViewById(R.id.view_overlay);
+        if (overlay.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
+        }
+
     }
 
     public void hidePhotoChooser() {
         if (isPhotoChooserShowing()) {
             mPhotoChooserFragment.finishActionMode();
             AniUtils.animateBottomBar(mPhotoChooserContainer, false);
+        }
+
+        View overlay = findViewById(R.id.view_overlay);
+        if (overlay.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(overlay, AniUtils.Duration.MEDIUM);
         }
     }
 
