@@ -878,7 +878,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
-        media.setMediaId(System.currentTimeMillis());
         media.setUploadState(MediaUploadState.QUEUED.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
