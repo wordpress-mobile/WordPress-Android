@@ -393,17 +393,17 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mUsername = EditTextUtils.getText(mUsernameTextField).trim();
         mPassword = EditTextUtils.getText(mPasswordTextField).trim();
 
-        String siteName = siteUrlToSiteName(siteUrl);
+        String siteTitle = siteUrlToSiteName(siteUrl);
         String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
 
         mNewAccountPayload = new NewAccountPayload(mUsername, mPassword, mEmail, true);
-        mNewSitePayload = new NewSitePayload(siteName, siteUrl, language, SiteVisibility.PUBLIC, true);
+        mNewSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, true);
 
         mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(mNewAccountPayload));
         updateProgress(getString(R.string.validating_site_data));
 
         AppLog.i(T.NUX, "User tries to create a new account, username: " + mUsername + ", email: " + mEmail
-                + ", site name: " + siteName + ", site URL: " + siteUrl);
+                + ", site title: " + siteTitle + ", site URL: " + siteUrl);
     }
 
     private void finishCurrentActivity() {
@@ -689,6 +689,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(mNewAccountPayload));
             return;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
         // Site created, time to wrap up
         fetchSiteAndAccount();
     }
