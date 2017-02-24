@@ -970,19 +970,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         final String url = EditTextUtils.getText(mUrlEditText).trim();
         boolean retValue = true;
 
-        if (password.equals("")) {
+        if (TextUtils.isEmpty(password)) {
             mPasswordEditText.setError(getString(R.string.required_field));
             mPasswordEditText.requestFocus();
             retValue = false;
         }
 
-        if (username.equals("")) {
+        if (TextUtils.isEmpty(username)) {
             mUsernameEditText.setError(getString(R.string.required_field));
             mUsernameEditText.requestFocus();
             retValue = false;
         }
 
-        if (mIsSelfHostedForced && url.equals("")) {
+        if (mIsSelfHostedForced && TextUtils.isEmpty(url)) {
             mUrlEditText.setError(getString(R.string.required_field));
             mUrlEditText.requestFocus();
             retValue = false;
