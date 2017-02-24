@@ -121,8 +121,8 @@ public class MediaGridFragment extends Fragment
     private SiteModel mSite;
 
     public interface MediaGridListener {
-        void onMediaItemSelected(long mediaId);
-        void onRetryUpload(long mediaId);
+        void onMediaItemSelected(int localMediaId);
+        void onRetryUpload(int localMediaId);
     }
 
     public enum Filter {
@@ -343,7 +343,7 @@ public class MediaGridFragment extends Fragment
 
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        mGridAdapter.setItemSelected(position, checked);
+        mGridAdapter.setItemSelectedByPosition(position, checked);
         int selectCount = mGridAdapter.getSelectedItems().size();
         setFilterSpinnerVisible(selectCount == 0);
         mode.setTitle(String.format(getString(R.string.cab_selected), selectCount));
@@ -358,13 +358,13 @@ public class MediaGridFragment extends Fragment
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Cursor cursor = ((MediaGridAdapter) parent.getAdapter()).getCursor();
-        long mediaId = cursor.getLong(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
-        mListener.onMediaItemSelected(mediaId);
+        int localMediaId = cursor.getInt(cursor.getColumnIndex(MediaModelTable.ID));
+        mListener.onMediaItemSelected(localMediaId);
     }
 
     @Override
-    public void onRetryUpload(long mediaId) {
-        mListener.onRetryUpload(mediaId);
+    public void onRetryUpload(int localMediaId) {
+        mListener.onRetryUpload(localMediaId);
     }
 
     @SuppressWarnings("unused")
@@ -452,9 +452,9 @@ public class MediaGridFragment extends Fragment
         }
     }
 
-    public void removeFromMultiSelect(long mediaId) {
-        if (isInMultiSelect() && mGridAdapter.isItemSelected(mediaId)) {
-            mGridAdapter.setItemSelected(mediaId, false);
+    public void removeFromMultiSelect(int localMediaId) {
+        if (isInMultiSelect() && mGridAdapter.isItemSelected(localMediaId)) {
+            mGridAdapter.setItemSelectedByLocalId(localMediaId, false);
             setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
         }
     }
@@ -620,7 +620,7 @@ public class MediaGridFragment extends Fragment
     }
 
     private void saveState(Bundle outState) {
-        outState.putLongArray(BUNDLE_SELECTED_STATES, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
+        outState.putIntArray(BUNDLE_SELECTED_STATES, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridView.getFirstVisiblePosition());
         outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
@@ -680,7 +680,7 @@ public class MediaGridFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-        ArrayList<Long> ids = mGridAdapter.getSelectedItems();
+        ArrayList<Integer> ids = mGridAdapter.getSelectedItems();
         ActivityLauncher.newMediaPost(getActivity(), mSite, ids.iterator().next());
     }
 
@@ -698,8 +698,8 @@ public class MediaGridFragment extends Fragment
                                             mGridAdapter.getSelectedItems());
                                 }
                                 // update upload state
-                                for (Long itemId : mGridAdapter.getSelectedItems()) {
-                                    MediaModel media = mMediaStore.getSiteMediaWithId(mSite, itemId);
+                                for (int itemId : mGridAdapter.getSelectedItems()) {
+                                    MediaModel media = mMediaStore.getMediaWithLocalId(itemId);
                                     media.setUploadState(MediaUploadState.DELETE.name());
                                     mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
                                 }
@@ -729,7 +729,7 @@ public class MediaGridFragment extends Fragment
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
 
         if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
-            ArrayList<Long> selectedItems = ListUtils.fromLongArray(savedInstanceState.getLongArray(BUNDLE_SELECTED_STATES));
+            ArrayList<Integer> selectedItems = ListUtils.fromIntArray(savedInstanceState.getIntArray(BUNDLE_SELECTED_STATES));
             mGridAdapter.setSelectedItems(selectedItems);
             if (isInMultiSelectMode) {
                 setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);

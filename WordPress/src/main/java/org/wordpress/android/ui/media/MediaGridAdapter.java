@@ -57,11 +57,11 @@ public class MediaGridAdapter extends CursorAdapter {
     private SiteModel mSite;
 
     // Must be an ArrayList (order is important for galleries)
-    private ArrayList<Long> mSelectedItems;
+    private ArrayList<Integer> mSelectedItems;
 
     public interface MediaGridAdapterCallback {
         void fetchMoreData();
-        void onRetryUpload(long mediaId);
+        void onRetryUpload(int localMediaId);
         boolean isInMultiSelect();
     }
 
@@ -93,7 +93,7 @@ public class MediaGridAdapter extends CursorAdapter {
         }
     }
 
-    public ArrayList<Long> getSelectedItems() {
+    public ArrayList<Integer> getSelectedItems() {
         return mSelectedItems;
     }
 
@@ -153,7 +153,7 @@ public class MediaGridAdapter extends CursorAdapter {
             view.setTag(holder);
         }
 
-        final long mediaId = cursor.getLong(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
+        final int localMediaId = cursor.getInt(cursor.getColumnIndex(MediaModelTable.ID));
 
         String state = cursor.getString(cursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         boolean isLocalFile = MediaUtils.isLocalFile(state);
@@ -213,8 +213,8 @@ public class MediaGridAdapter extends CursorAdapter {
             }
         }
 
-        holder.frameLayout.setTag(mediaId);
-        holder.frameLayout.setChecked(mSelectedItems.contains(mediaId));
+        holder.frameLayout.setTag(localMediaId);
+        holder.frameLayout.setChecked(mSelectedItems.contains(localMediaId));
 
         // resizing layout to fit nicely into grid view
         updateGridWidth(context, holder.frameLayout);
@@ -248,7 +248,7 @@ public class MediaGridAdapter extends CursorAdapter {
                             if (!inMultiSelect()) {
                                 ((TextView) v).setText(R.string.upload_queued);
                                 v.setOnClickListener(null);
-                                mCallback.onRetryUpload(mediaId);
+                                mCallback.onRetryUpload(localMediaId);
                             }
                         }
                     });
@@ -474,46 +474,46 @@ public class MediaGridAdapter extends CursorAdapter {
         mSelectedItems.clear();
     }
 
-    public boolean isItemSelected(long mediaId) {
-        return mSelectedItems.contains(mediaId);
+    public boolean isItemSelected(int localMediaId) {
+        return mSelectedItems.contains(localMediaId);
     }
 
-    public void setItemSelected(int position, boolean selected) {
+    public void setItemSelectedByPosition(int position, boolean selected) {
         Cursor cursor = (Cursor) getItem(position);
         if (cursor == null) {
             return;
         }
-        int columnIndex = cursor.getColumnIndex(MediaModelTable.MEDIA_ID);
+        int columnIndex = cursor.getColumnIndex(MediaModelTable.ID);
         if (columnIndex != -1) {
-            long mediaId = cursor.getLong(columnIndex);
-            setItemSelected(mediaId, selected);
+            int localMediaId = cursor.getInt(columnIndex);
+            setItemSelectedByLocalId(localMediaId, selected);
         }
     }
 
-    public void setItemSelected(long mediaId, boolean selected) {
+    public void setItemSelectedByLocalId(int localMediaId, boolean selected) {
         if (selected) {
-            mSelectedItems.add(mediaId);
+            mSelectedItems.add(localMediaId);
         } else {
-            mSelectedItems.remove(mediaId);
+            mSelectedItems.remove(Integer.valueOf(localMediaId));
         }
         notifyDataSetChanged();
     }
 
     public void toggleItemSelected(int position) {
         Cursor cursor = (Cursor) getItem(position);
-        int columnIndex = cursor.getColumnIndex(MediaModelTable.MEDIA_ID);
+        int columnIndex = cursor.getColumnIndex(MediaModelTable.ID);
         if (columnIndex != -1) {
-            long mediaId = cursor.getLong(columnIndex);
-            if (mSelectedItems.contains(mediaId)) {
-                mSelectedItems.remove(mediaId);
+            int localMediaId = cursor.getInt(columnIndex);
+            if (mSelectedItems.contains(localMediaId)) {
+                mSelectedItems.remove(Integer.valueOf(localMediaId));
             } else {
-                mSelectedItems.add(mediaId);
+                mSelectedItems.add(localMediaId);
             }
             notifyDataSetChanged();
         }
     }
 
-    public void setSelectedItems(ArrayList<Long> selectedItems) {
+    public void setSelectedItems(ArrayList<Integer> selectedItems) {
         mSelectedItems = selectedItems;
         notifyDataSetChanged();
     }
