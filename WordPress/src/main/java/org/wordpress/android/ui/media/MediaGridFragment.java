@@ -719,7 +719,14 @@ public class MediaGridFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-        ActivityLauncher.newGalleryPost(getActivity(), mSite, mGridAdapter.getSelectedItems());
+
+        ArrayList<Long> remoteMediaIds = new ArrayList<>();
+        for (int localMediaId : mGridAdapter.getSelectedItems()) {
+            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(localMediaId);
+            remoteMediaIds.add(mediaModel.getMediaId());
+        }
+
+        ActivityLauncher.newGalleryPost(getActivity(), mSite, remoteMediaIds);
     }
 
     private void restoreState(Bundle savedInstanceState) {
