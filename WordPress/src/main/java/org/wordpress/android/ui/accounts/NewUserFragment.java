@@ -403,7 +403,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         updateProgress(getString(R.string.validating_site_data));
 
         AppLog.i(T.NUX, "User tries to create a new account, username: " + mUsername + ", email: " + mEmail
-                + ", site name: " + siteTitle + ", site URL: " + siteUrl);
+                + ", site title: " + siteTitle + ", site URL: " + siteUrl);
     }
 
     private void finishCurrentActivity() {
