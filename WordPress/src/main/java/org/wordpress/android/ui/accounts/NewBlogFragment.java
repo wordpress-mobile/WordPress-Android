@@ -18,6 +18,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -334,6 +335,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
                     + mNewSitePayload.siteName);
             return;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
         // Site created, update sites
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }

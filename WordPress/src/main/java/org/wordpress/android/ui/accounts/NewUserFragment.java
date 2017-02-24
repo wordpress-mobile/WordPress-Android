@@ -689,6 +689,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(mNewAccountPayload));
             return;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
         // Site created, time to wrap up
         fetchSiteAndAccount();
     }
