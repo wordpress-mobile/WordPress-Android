@@ -93,6 +93,7 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.PhotoChooserIcon;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -143,7 +144,7 @@ import javax.inject.Inject;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        MediaUploadService.MediaUploadListener {
+        MediaUploadService.MediaUploadListener, PhotoChooserFragment.PhotoChooserListener {
     public static final String EXTRA_POST = "postModel";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -577,6 +578,46 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    /*
+     * called by PhotoChooserFragment when user selects a single media uri
+     */
+    @Override
+    public void onPhotoChooserMediaChosen(@NonNull Uri uri) {
+        hidePhotoChooser();
+        addMedia(uri);
+    }
+
+    /*
+     * called by PhotoChooserFragment when user selects multiple media uris
+     */
+    @Override
+    public void onPhotoChooserMediaListChosen(@NonNull List<Uri> uriList) {
+        hidePhotoChooser();
+        for (Uri uri: uriList) {
+            addMedia(uri);
+        }
+    }
+
+    /*
+     * called by PhotoChooserFragment when user clicks an icon to launch the camera, native
+     * picker, or WP media picker
+     */
+    @Override
+    public void onPhotoChooserIconClicked(@NonNull PhotoChooserIcon icon) {
+        hidePhotoChooser();
+        switch (icon) {
+            case ANDROID_CAMERA:
+                launchCamera();
+                break;
+            case ANDROID_PICKER:
+                launchPictureLibrary();
+                break;
+            case WP_MEDIA:
+                startMediaGalleryAddActivity();
+                break;
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -967,7 +1008,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    public void launchPictureLibrary() {
+    private void launchPictureLibrary() {
         WordPressMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
@@ -1393,7 +1434,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    public void launchCamera() {
+    private void launchCamera() {
         WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
                 new WordPressMediaUtils.LaunchCameraCallback() {
                     @Override
@@ -1844,7 +1885,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return path;
     }
 
-    public void startMediaGalleryAddActivity() {
+    private void startMediaGalleryAddActivity() {
         ActivityLauncher.viewMediaGalleryPickerForSite(this, mSite);
     }
 
