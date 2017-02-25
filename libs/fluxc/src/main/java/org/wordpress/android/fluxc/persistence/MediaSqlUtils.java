@@ -92,6 +92,18 @@ public class MediaSqlUtils {
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
+    public static MediaModel getMediaWithLocalId(int localMediaId) {
+        List<MediaModel> result = WellSql.select(MediaModel.class).where()
+                .equals(MediaModelTable.ID, localMediaId)
+                .endWhere()
+                .getAsModel();
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return result.get(0);
+        }
+    }
+
     public static List<MediaModel> searchSiteMedia(SiteModel siteModel, String column, String searchTerm) {
         return searchSiteMediaQuery(siteModel, column, searchTerm).getAsModel();
     }
