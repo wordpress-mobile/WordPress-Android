@@ -495,7 +495,7 @@ public class ImageUtils {
         }
 
         Bitmap.CompressFormat fmt;
-        if (fileExtension.equalsIgnoreCase("png")) {
+        if (fileExtension != null && fileExtension.equalsIgnoreCase("png")) {
             fmt = Bitmap.CompressFormat.PNG;
         } else {
             fmt = Bitmap.CompressFormat.JPEG;
