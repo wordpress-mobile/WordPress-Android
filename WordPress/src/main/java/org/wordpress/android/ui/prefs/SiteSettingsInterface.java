@@ -8,27 +8,30 @@ import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.TextUtils;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SiteSettingsTable;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
-import org.xmlrpc.android.ApiHelper.Method;
-import org.xmlrpc.android.ApiHelper.Param;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCFactory;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * Interface for WordPress (.com and .org) Site Settings. The {@link SiteSettingsModel} class is
@@ -62,9 +65,7 @@ import java.util.Map;
  * This class is marked abstract. This is due to the fact that .org (self-hosted) and .com sites
  * expose different API's to query and edit their respective settings (even though the options
  * offered by each is roughly the same). To get an instance of this interface class use the
- * {@link SiteSettingsInterface#getInterface(Activity, SiteModel, SiteSettingsListener)} method. It will
- * determine which interface ({@link SelfHostedSiteSettings} or {@link DotComSiteSettings}) is
- * appropriate for the given blog.
+ * {@link SiteSettingsInterface#getInterface(Activity, SiteModel, SiteSettingsListener)} method.
  */
 
 public abstract class SiteSettingsInterface {
@@ -127,9 +128,9 @@ public abstract class SiteSettingsInterface {
 
         if (SiteUtils.isAccessibleViaWPComAPI(site)) {
             return new DotComSiteSettings(host, site, listener);
-        } else {
-            return new SelfHostedSiteSettings(host, site, listener);
         }
+        // Not implemented for self hosted sites
+        return null;
     }
 
     /**
@@ -205,16 +206,26 @@ public abstract class SiteSettingsInterface {
     protected final SiteSettingsListener mListener;
     protected final SiteSettingsModel mSettings;
     protected final SiteSettingsModel mRemoteSettings;
-
     private final Map<String, String> mLanguageCodes;
 
+    @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
+
     protected SiteSettingsInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
+        ((WordPress) host.getApplicationContext()).component().inject(this);
+        mDispatcher.register(this);
         mActivity = host;
         mSite = site;
         mListener = listener;
         mSettings = new SiteSettingsModel();
         mRemoteSettings = new SiteSettingsModel();
         mLanguageCodes = WPPrefUtils.generateLanguageMap(host);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        mDispatcher.unregister(this);
+        super.finalize();
     }
 
     public void saveSettings() {
@@ -272,7 +283,23 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull Map<String, String> getFormats() {
-        if (mSettings.postFormats == null) mSettings.postFormats = new HashMap<>();
+        mSettings.postFormats = new HashMap<>();
+        String[] postFormatDisplayNames = mActivity.getResources().getStringArray(R.array.post_format_display_names);
+        String[] postFormatKeys = mActivity.getResources().getStringArray(R.array.post_format_keys);
+        // Add standard post format (only for .com)
+        mSettings.postFormats.put(STANDARD_POST_FORMAT_KEY, STANDARD_POST_FORMAT);
+        // Add default post formats
+        for (int i = 0; i < postFormatKeys.length && i < postFormatDisplayNames.length; ++i) {
+            mSettings.postFormats.put(postFormatKeys[i], postFormatDisplayNames[i]);
+        }
+        if (mSite == null) {
+            return mSettings.postFormats;
+        }
+        // Add (or replace) site-specific post formats
+        List<PostFormatModel> postFormats = mSiteStore.getPostFormats(mSite);
+        for (PostFormatModel postFormat : postFormats) {
+            mSettings.postFormats.put(postFormat.getSlug(), postFormat.getDisplayName());
+        }
         return mSettings.postFormats;
     }
 
@@ -698,7 +725,7 @@ public abstract class SiteSettingsInterface {
 
         if (fetchRemote) {
             fetchRemoteData();
-            fetchPostFormats();
+            mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
         }
 
         return this;
@@ -711,14 +738,6 @@ public abstract class SiteSettingsInterface {
         Exception e = valid ? null : new AuthenticationError();
         if (mSettings.hasVerifiedCredentials != valid) notifyCredentialsVerifiedOnUiThread(e);
         mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = valid;
-    }
-
-    /**
-     * Helper method to create an XML-RPC interface for the current blog.
-     */
-    protected XMLRPCClientInterface instantiateInterface() {
-        if (mSite == null || mSite.getXmlRpcUrl() == null) return null;
-        return XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
     }
 
     /**
@@ -769,58 +788,6 @@ public abstract class SiteSettingsInterface {
     }
 
     /**
-     * Gets available post formats via XML-RPC. Since both self-hosted and .com sites retrieve the
-     * format list via XML-RPC there is no need to implement this in the sub-classes.
-     */
-    private void fetchPostFormats() {
-        XMLRPCClientInterface client = instantiateInterface();
-        if (client == null) return;
-
-        Map<String, String> args = new HashMap<>();
-        args.put(Param.SHOW_SUPPORTED_POST_FORMATS, "true");
-        Object[] params = {
-                String.valueOf(mSite.getSiteId()),
-                StringUtils.notNullStr(mSite.getUsername()),
-                StringUtils.notNullStr(mSite.getPassword()),
-                args};
-        client.callAsync(new XMLRPCCallback() {
-            @Override
-            public void onSuccess(long id, Object result) {
-                credentialsVerified(true);
-
-                if (result != null && result instanceof HashMap) {
-                    Map<?, ?> resultMap = (HashMap<?, ?>) result;
-                    Map allFormats;
-                    Object[] supportedFormats;
-                    if (resultMap.containsKey("supported")) {
-                        allFormats = (Map) resultMap.get("all");
-                        supportedFormats = (Object[]) resultMap.get("supported");
-                    } else {
-                        allFormats = resultMap;
-                        supportedFormats = allFormats.keySet().toArray();
-                    }
-
-                    mRemoteSettings.postFormats = new HashMap<>();
-                    mRemoteSettings.postFormats.put("standard", "Standard");
-                    for (Object supportedFormat : supportedFormats) {
-                        if (allFormats.containsKey(supportedFormat)) {
-                            mRemoteSettings.postFormats.put(supportedFormat.toString(), allFormats.get(supportedFormat).toString());
-                        }
-                    }
-                    mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
-                    SiteSettingsTable.saveSettings(mSettings);
-
-                    notifyUpdatedOnUiThread(null);
-                }
-            }
-
-            @Override
-            public void onFailure(long id, Exception error) {
-            }
-        }, Method.GET_POST_FORMATS, params);
-    }
-
-    /**
      * Notifies listener that credentials have been validated or are incorrect.
      */
     private void notifyCredentialsVerifiedOnUiThread(final Exception error) {
@@ -860,5 +827,16 @@ public abstract class SiteSettingsInterface {
                 mListener.onSettingsSaved(error);
             }
         });
+    }
+
+    // FluxC OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostFormatsChanged(OnPostFormatsChanged event) {
+        if (event.isError()) {
+            return;
+        }
+        notifyUpdatedOnUiThread(null);
     }
 }

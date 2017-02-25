@@ -966,7 +966,8 @@
     <string name="post_format_standard">Standard</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
-    <string-array name="post_formats_array" translatable="false">
+    <string-array name="post_format_display_names" translatable="false">
+        <item>@string/post_format_standard</item>
         <item>@string/post_format_aside</item>
         <item>@string/post_format_audio</item>
         <item>@string/post_format_chat</item>
@@ -974,7 +975,6 @@
         <item>@string/post_format_image</item>
         <item>@string/post_format_link</item>
         <item>@string/post_format_quote</item>
-        <item>@string/post_format_standard</item>
         <item>@string/post_format_status</item>
         <item>@string/post_format_video</item>
     </string-array>
