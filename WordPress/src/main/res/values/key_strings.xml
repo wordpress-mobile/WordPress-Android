@@ -271,6 +271,7 @@
     </string>
 
     <string-array name="post_format_keys" translatable="false">
+        <item>standard</item>
         <item>aside</item>
         <item>audio</item>
         <item>chat</item>
@@ -278,7 +279,6 @@
         <item>image</item>
         <item>link</item>
         <item>quote</item>
-        <item>standard</item>
         <item>status</item>
         <item>video</item>
     </string-array>

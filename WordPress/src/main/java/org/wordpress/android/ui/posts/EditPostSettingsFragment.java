@@ -269,13 +269,10 @@ public class EditPostSettingsFragment extends Fragment
             // If we have specific values for this site, use them
             List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
             for (PostFormatModel postFormatModel : postFormatModels) {
-                mPostFormatKeys.add(postFormatModel.getSlug());
-                mPostFormatNames.add(postFormatModel.getDisplayName());
-            }
-            // Prepend the "Standard" post format if it's not already in
-            if (mPostFormatKeys.contains(POST_FORMAT_STANDARD_KEY)) {
-                mPostFormatKeys.add(0, POST_FORMAT_STANDARD_KEY);
-                mPostFormatNames.add(0, getResources().getString(R.string.post_format_standard));
+                if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
+                    mPostFormatKeys.add(postFormatModel.getSlug());
+                    mPostFormatNames.add(postFormatModel.getDisplayName());
+                }
             }
 
             // Set up the Post Format spinner
