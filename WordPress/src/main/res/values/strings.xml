@@ -92,6 +92,7 @@
     <string name="send">Send</string>
     <string name="swipe_for_more">Swipe for more</string>
     <string name="no_default_app_available_to_open_link">Unable to open the link</string>
+    <string name="retry">Retry</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
