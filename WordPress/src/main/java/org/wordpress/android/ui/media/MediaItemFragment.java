@@ -77,10 +77,10 @@ public class MediaItemFragment extends Fragment {
         void onPause(Fragment fragment);
     }
 
-    public static MediaItemFragment newInstance(SiteModel site, long mediaId) {
+    public static MediaItemFragment newInstance(SiteModel site, int localMediaId) {
         MediaItemFragment fragment = new MediaItemFragment();
         Bundle args = new Bundle();
-        args.putLong(ARGS_MEDIA_ID, mediaId);
+        args.putInt(ARGS_MEDIA_ID, localMediaId);
         args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
         return fragment;
@@ -129,7 +129,7 @@ public class MediaItemFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mCallback.onResume(this);
-        loadMedia(getMediaId());
+        loadMedia(getLocalMediaId());
     }
 
     @Override
@@ -138,9 +138,9 @@ public class MediaItemFragment extends Fragment {
         mCallback.onPause(this);
     }
 
-    public long getMediaId() {
+    public int getLocalMediaId() {
         if (getArguments() != null) {
-            return getArguments().getLong(ARGS_MEDIA_ID);
+            return getArguments().getInt(ARGS_MEDIA_ID);
         } else {
             return MISSING_MEDIA_ID;
         }
@@ -165,13 +165,13 @@ public class MediaItemFragment extends Fragment {
         loadMedia(MISSING_MEDIA_ID);
     }
 
-    public void loadMedia(long mediaId) {
+    public void loadMedia(int localMediaId) {
         if (mSite == null)
             return;
 
         MediaModel mediaModel = null;
-        if (mediaId != MISSING_MEDIA_ID) {
-            mediaModel = mMediaStore.getSiteMediaWithId(mSite, mediaId);
+        if (localMediaId != MISSING_MEDIA_ID) {
+            mediaModel = mMediaStore.getMediaWithLocalId(localMediaId);
         }
 
         // if the id is null, get the first media item in the database
@@ -360,7 +360,10 @@ public class MediaItemFragment extends Fragment {
         int itemId = item.getItemId();
 
         if (itemId == R.id.menu_delete) {
-            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, getMediaId());
+            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(getLocalMediaId());
+            if (mediaModel == null) {
+                return true;
+            }
             boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(mediaModel);
             if (!canDeleteMedia) {
                 Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
@@ -372,8 +375,8 @@ public class MediaItemFragment extends Fragment {
                             R.string.delete, new OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ArrayList<Long> ids = new ArrayList<>(1);
-                                    ids.add(getMediaId());
+                                    ArrayList<Integer> ids = new ArrayList<>(1);
+                                    ids.add(getLocalMediaId());
                                     if (getActivity() instanceof MediaBrowserActivity) {
                                         ((MediaBrowserActivity) getActivity()).deleteMedia(ids);
                                     }

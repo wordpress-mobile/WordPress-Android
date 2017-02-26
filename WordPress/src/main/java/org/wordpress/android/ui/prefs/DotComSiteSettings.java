@@ -11,8 +11,8 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
-import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 
