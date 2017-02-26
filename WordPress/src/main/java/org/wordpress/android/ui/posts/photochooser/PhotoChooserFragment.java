@@ -199,6 +199,11 @@ public class PhotoChooserFragment extends Fragment {
      * populates the adapter with media stored on the device
      */
     public void reload() {
+        if (!isAdded()) {
+            AppLog.w(AppLog.T.POSTS, "Photo chooser > can't reload when not added");
+            return;
+        }
+
         // save the current state so we can restore it after loading
         if (mGridManager != null) {
             mRestoreState = mGridManager.onSaveInstanceState();
@@ -214,7 +219,15 @@ public class PhotoChooserFragment extends Fragment {
      * similar to the above but only repopulates if changes are detected
      */
     public void refresh() {
-        getAdapter().refresh(false);
+        if (!isAdded()) {
+            AppLog.w(AppLog.T.POSTS, "Photo chooser > can't refresh when not added");
+            return;
+        }
+        if (mGridManager == null || mAdapter == null) {
+            reload();
+        } else {
+            getAdapter().refresh(false);
+        }
     }
 
     public void finishActionMode() {
