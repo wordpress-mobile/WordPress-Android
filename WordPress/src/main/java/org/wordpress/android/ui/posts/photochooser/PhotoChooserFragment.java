@@ -239,24 +239,27 @@ public class PhotoChooserFragment extends Fragment {
      * detect changes to the media store so we can reflect them here
      */
     private void registerContentObserver() {
+        // TODO: this correctly intercepts additions but not photos sent to the trash
         mObserver = new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange, Uri uri) {
                 super.onChange(selfChange, uri);
-                AppLog.w(AppLog.T.POSTS, "Media changed > " + uri.toString());
-                getAdapter().reload();
+                AppLog.i(AppLog.T.POSTS, "Photo chooser media changed > " + uri.toString());
+                getAdapter().refresh();
             }
         };
 
         getActivity().getContentResolver().registerContentObserver(
                 MediaStore.Images.Media.INTERNAL_CONTENT_URI,
-                true,
+                false,
                 mObserver);
+        AppLog.i(AppLog.T.POSTS, "Photo chooser > registerContentObserver");
     }
 
     private void unregisterContentObserver() {
-        if (mObserver != null) {
+        if (mObserver != null && getActivity() != null) {
             getActivity().getContentResolver().unregisterContentObserver(mObserver);
+            AppLog.i(AppLog.T.POSTS, "Photo chooser > unregisterContentObserver");
         }
         mObserver = null;
     }

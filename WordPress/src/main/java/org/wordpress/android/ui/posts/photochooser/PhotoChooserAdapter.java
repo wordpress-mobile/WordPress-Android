@@ -84,15 +84,17 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         setHasStableIds(true);
     }
 
+    // loads the media list from scratch
     void loadDeviceMedia() {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
         mThumbWidth = displayWidth / NUM_COLUMNS;
         mThumbHeight = (int) (mThumbWidth * 0.75f);
-        new BuildDeviceMediaListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new BuildDeviceMediaListTask(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    void reload() {
-        new BuildDeviceMediaListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    // refreshes the list, only updating it if there are changes
+    void refresh() {
+        new BuildDeviceMediaListTask(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -315,7 +317,13 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
      */
     private class BuildDeviceMediaListTask extends AsyncTask<Void, Void, Boolean> {
         private final ArrayList<PhotoChooserItem> tmpList = new ArrayList<>();
+        private final boolean refresh;
         private static final String ID_COL = MediaStore.Images.Media._ID;
+
+        BuildDeviceMediaListTask(boolean refreshOnly) {
+            super();
+            refresh = refreshOnly;
+        }
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -341,16 +349,12 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 }
             });
 
-            // only return true if different than existing list
-            if (tmpList.size() != mMediaList.size()) {
+            // if we're refreshing return false if the list hasn't changed
+            if (refresh && isSameMediaList()) {
+                return false;
+            } else {
                 return true;
             }
-            for (PhotoChooserItem item: tmpList) {
-                if (indexOfUri(item.uri) == -1) {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private void addMedia(Uri baseUri, boolean isVideo) {
@@ -377,6 +381,19 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             } finally {
                 SqlUtils.closeCursor(cursor);
             }
+        }
+
+        // returns true if the media list built here is the same as the existing one
+        private boolean isSameMediaList() {
+            if (tmpList.size() != mMediaList.size()) {
+                return false;
+            }
+            for (int i = 0; i < tmpList.size(); i++) {
+                if (tmpList.get(i)._id != mMediaList.get(i)._id) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         @Override
