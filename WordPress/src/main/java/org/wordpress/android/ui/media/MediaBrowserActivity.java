@@ -57,7 +57,6 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
@@ -91,7 +90,7 @@ import javax.inject.Inject;
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
-        MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback, MediaUploadService.MediaUploadListener {
+        MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback {
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -372,12 +371,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 return true;
             case R.id.menu_edit_media:
-                long mediaId = mMediaItemFragment.getMediaId();
+                int localMediaId = mMediaItemFragment.getLocalMediaId();
 
                 if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
                     // phone layout: hide item details, show and update edit fragment
                     FragmentManager fm = getFragmentManager();
-                    mMediaEditFragment = MediaEditFragment.newInstance(mSite, mediaId);
+                    mMediaEditFragment = MediaEditFragment.newInstance(mSite, localMediaId);
 
                     FragmentTransaction ft = fm.beginTransaction();
                     if (mMediaItemFragment.isVisible()) {
@@ -388,7 +387,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     ft.commitAllowingStateLoss();
                 } else {
                     // tablet layout: update edit fragment
-                    mMediaEditFragment.loadMedia(mediaId);
+                    mMediaEditFragment.loadMedia(localMediaId);
                 }
 
                 if (mSearchView != null) {
@@ -460,7 +459,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onMediaItemSelected(long mediaId) {
+    public void onMediaItemSelected(int localMediaId) {
         final String tempQuery = mQuery;
 
         if (mSearchView != null) {
@@ -474,7 +473,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() == 0) {
             mMediaGridFragment.clearSelectedItems();
-            mMediaItemFragment = MediaItemFragment.newInstance(mSite, mediaId);
+            mMediaItemFragment = MediaItemFragment.newInstance(mSite, localMediaId);
 
             FragmentTransaction ft = fm.beginTransaction();
             ft.hide(mMediaGridFragment);
@@ -492,37 +491,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onRetryUpload(long mediaId) {
-        MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
+    public void onRetryUpload(int localMediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
         if (media == null) {
             return;
         }
         addMediaToUploadService(media);
-    }
-
-    @Override
-    public void onUploadBegin(MediaModel media) {
-        // TODO: indicate in UI
-    }
-
-    @Override
-    public void onUploadSuccess(MediaModel media) {
-        // TODO: update UI
-    }
-
-    @Override
-    public void onUploadCanceled(MediaModel media) {
-        // TODO
-    }
-
-    @Override
-    public void onUploadError(MediaModel media, MediaError error) {
-        // TODO: update UI
-    }
-
-    @Override
-    public void onUploadProgress(MediaModel media, float progress) {
-        // TODO
     }
 
     private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
@@ -557,11 +531,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 // If the media was deleted, remove it from multi select (if it was selected) and hide it from the
                 // detail view (if it was the one displayed)
                 for (MediaModel mediaModel : event.mediaList) {
-                    long mediaId = mediaModel.getMediaId();
-                    mMediaGridFragment.removeFromMultiSelect(mediaId);
+                    int localMediaId = mediaModel.getId();
+                    mMediaGridFragment.removeFromMultiSelect(localMediaId);
                     if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
-                            && mediaId == mMediaEditFragment.getMediaId()) {
-                        updateOnMediaChanged(String.valueOf(mediaModel.getLocalSiteId()), mediaId);
+                            && localMediaId == mMediaEditFragment.getLocalMediaId()) {
+                        updateOnMediaChanged(localMediaId);
                         if (mMediaEditFragment.isInLayout()) {
                             mMediaEditFragment.loadMedia(MediaEditFragment.MISSING_MEDIA_ID);
                         } else {
@@ -607,32 +581,30 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         updateViews();
     }
 
-    public void onSavedEdit(long mediaId, boolean result) {
+    public void onSavedEdit(int localMediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
             doPopBackStack(getFragmentManager());
 
             // refresh media item details (phone-only)
             if (mMediaItemFragment != null)
-                mMediaItemFragment.loadMedia(mediaId);
+                mMediaItemFragment.loadMedia(localMediaId);
 
             // refresh grid
             mMediaGridFragment.refreshMediaFromDB();
         }
     }
 
-    public void updateOnMediaChanged(String blogId, long mediaId) {
-        if (mediaId == -1) {
+    public void updateOnMediaChanged(int localMediaId) {
+        if (localMediaId == -1) {
             return;
         }
 
-        // TODO: should we?
-        mSite.setSiteId(Long.valueOf(blogId));
         // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
         // view (if it was the one displayed)
-        if (!mMediaStore.hasSiteMediaWithId(mSite, mediaId)) {
-            mMediaGridFragment.removeFromMultiSelect(mediaId);
+        if (mMediaStore.getMediaWithLocalId(localMediaId) == null) {
+            mMediaGridFragment.removeFromMultiSelect(localMediaId);
             if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
-                    && mediaId == mMediaEditFragment.getMediaId()) {
+                    && localMediaId == mMediaEditFragment.getLocalMediaId()) {
                 if (mMediaEditFragment.isInLayout()) {
                     mMediaEditFragment.loadMedia(MediaEditFragment.MISSING_MEDIA_ID);
                 } else {
@@ -643,7 +615,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         updateViews();
     }
 
-    public void deleteMedia(final ArrayList<Long> ids) {
+    public void deleteMedia(final ArrayList<Integer> ids) {
         Set<String> sanitizedIds = new HashSet<>(ids.size());
 
         // phone layout: pop the item fragment if it's visible
@@ -651,12 +623,19 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
         // Make sure there are no media in "uploading"
-        for (long currentId : ids) {
-            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, currentId);
+        for (int currentId : ids) {
+            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(currentId);
             if (mediaModel == null) {
                 continue;
             }
+
             if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
+                if (MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
+                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+                    updateViews();
+                    sanitizedIds.add(String.valueOf(currentId));
+                    continue;
+                }
                 mediaToDelete.add(mediaModel);
                 mediaModel.setUploadState(MediaUploadState.DELETE.name());
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
@@ -707,7 +686,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         public void onServiceConnected(ComponentName className, IBinder service) {
             AppLog.i(T.MEDIA, "MediaUploadService connected");
             mUploadService = (MediaUploadService.MediaUploadBinder) service;
-            mUploadService.setListener(MediaBrowserActivity.this);
             if (!mPendingUploads.isEmpty()) {
                 for(MediaModel media : mPendingUploads) {
                     mUploadService.addMediaToQueue(media);

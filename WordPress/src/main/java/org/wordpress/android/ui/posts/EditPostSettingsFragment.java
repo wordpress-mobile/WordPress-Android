@@ -47,8 +47,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -76,7 +76,6 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PermissionUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -92,6 +91,7 @@ import javax.inject.Inject;
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
     private static final String KEY_POST = "KEY_POST";
+    private static final String POST_FORMAT_STANDARD_KEY = "standard";
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final String CATEGORY_PREFIX_TAG = "category-";
@@ -123,8 +123,8 @@ public class EditPostSettingsFragment extends Fragment
     private String mCustomPubDate = "";
     private boolean mIsCustomPubDate;
 
-    private String[] mPostFormats;
-    private String[] mPostFormatTitles;
+    private ArrayList<String> mPostFormatKeys;
+    private ArrayList<String> mPostFormatNames;
 
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
@@ -263,46 +263,32 @@ public class EditPostSettingsFragment extends Fragment
             rootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
         } else {
             // Default values
-            mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-            mPostFormats = new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard",
-                    "status", "video"};
+            mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
+            mPostFormatNames = new ArrayList<>(
+                    Arrays.asList(getResources().getStringArray(R.array.post_format_display_names)));
             // If we have specific values for this site, use them
             List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
-            if (postFormatModels.size() > 0) {
-                int maxElements = postFormatModels.size();
-                if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
-                    maxElements += 1;
-                }
-                mPostFormats = new String[maxElements];
-                mPostFormatTitles = new String[maxElements];
-                int i = 0;
-                // Inject the "Standard" post format here since .com response doesn't include it
-                if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
-                    mPostFormats[i] = "standard";
-                    mPostFormatTitles[i] = getResources().getString(R.string.post_format_standard);
-                    i += 1;
-                }
-                for (PostFormatModel postFormatModel : postFormatModels) {
-                    mPostFormats[i] = postFormatModel.getSlug();
-                    mPostFormatTitles[i] = postFormatModel.getDisplayName();
-                    i += 1;
+            for (PostFormatModel postFormatModel : postFormatModels) {
+                if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
+                    mPostFormatKeys.add(postFormatModel.getSlug());
+                    mPostFormatNames.add(postFormatModel.getDisplayName());
                 }
             }
 
             // Set up the Post Format spinner
             mPostFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
             ArrayAdapter<String> pfAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item,
-                    mPostFormatTitles);
+                    mPostFormatNames);
             pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mPostFormatSpinner.setAdapter(pfAdapter);
-            String activePostFormat = "standard";
+            String activePostFormat = POST_FORMAT_STANDARD_KEY;
 
             if (!TextUtils.isEmpty(mPost.getPostFormat())) {
                 activePostFormat = mPost.getPostFormat();
             }
 
-            for (int i = 0; i < mPostFormats.length; i++) {
-                if (mPostFormats[i].equals(activePostFormat))
+            for (int i = 0; i < mPostFormatKeys.size(); i++) {
+                if (mPostFormatKeys.get(i).equals(activePostFormat))
                     mPostFormatSpinner.setSelection(i);
             }
 
@@ -671,9 +657,9 @@ public class EditPostSettingsFragment extends Fragment
             tags = EditTextUtils.getText(mTagsEditText);
 
             // post format
-            if (mPostFormats != null && mPostFormatSpinner != null &&
-                    mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
-                postFormat = mPostFormats[mPostFormatSpinner.getSelectedItemPosition()];
+            if (mPostFormatKeys != null && mPostFormatSpinner != null &&
+                mPostFormatSpinner.getSelectedItemPosition() < mPostFormatKeys.size()) {
+                postFormat = mPostFormatKeys.get(mPostFormatSpinner.getSelectedItemPosition());
             }
         }
 

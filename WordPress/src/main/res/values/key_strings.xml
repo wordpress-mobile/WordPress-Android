@@ -270,5 +270,19 @@
         [{\"include\": \"https://wordpress.com/.well-known/assetlinks.json\"}]
     </string>
 
+    <string-array name="post_format_keys" translatable="false">
+        <item>standard</item>
+        <item>aside</item>
+        <item>audio</item>
+        <item>chat</item>
+        <item>gallery</item>
+        <item>image</item>
+        <item>link</item>
+        <item>quote</item>
+        <item>status</item>
+        <item>video</item>
+    </string-array>
+
+
     <string name="wordpresscom_sample_post" translatable="false">https://en.blog.wordpress.com/2016/09/26/the-best-of-wordpress-september-2016/</string>
 </resources>
