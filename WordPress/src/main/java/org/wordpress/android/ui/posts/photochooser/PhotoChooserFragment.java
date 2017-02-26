@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts.photochooser;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -55,7 +54,6 @@ public class PhotoChooserFragment extends Fragment {
     private GridLayoutManager mGridManager;
     private Parcelable mRestoreState;
     private PhotoChooserListener mListener;
-    private ContentObserver mObserver;
 
     public static PhotoChooserFragment newInstance() {
         Bundle args = new Bundle();
@@ -91,7 +89,7 @@ public class PhotoChooserFragment extends Fragment {
             }
         });
 
-        loadDeviceMedia();
+        reload();
 
         return view;
     }
@@ -200,7 +198,7 @@ public class PhotoChooserFragment extends Fragment {
     /*
      * populates the adapter with media stored on the device
      */
-    public void loadDeviceMedia() {
+    public void reload() {
         // save the current state so we can restore it after loading
         if (mGridManager != null) {
             mRestoreState = mGridManager.onSaveInstanceState();
@@ -208,8 +206,15 @@ public class PhotoChooserFragment extends Fragment {
 
         mGridManager = new GridLayoutManager(getActivity(), NUM_COLUMNS);
         mRecycler.setLayoutManager(mGridManager);
-        mRecycler.setAdapter(getAdapter());
-        getAdapter().loadDeviceMedia();
+        mRecycler.swapAdapter(getAdapter(), true);
+        getAdapter().refresh(true);
+    }
+
+    /*
+     * similar to the above but only repopulates if changes are detected
+     */
+    public void refresh() {
+        getAdapter().refresh(false);
     }
 
     public void finishActionMode() {

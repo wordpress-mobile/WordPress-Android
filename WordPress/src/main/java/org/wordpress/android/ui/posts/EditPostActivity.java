@@ -509,7 +509,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mPhotoChooserFragment != null) {
-            mPhotoChooserFragment.loadDeviceMedia();
+            mPhotoChooserFragment.reload();
         }
     }
 
@@ -554,6 +554,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // slide in the photo chooser
         if (!isPhotoChooserShowing()) {
+            mPhotoChooserFragment.refresh();
             AniUtils.animateBottomBar(mPhotoChooserContainer, true);
         }
 

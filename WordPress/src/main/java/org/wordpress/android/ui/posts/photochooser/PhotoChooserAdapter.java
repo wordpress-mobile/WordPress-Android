@@ -84,17 +84,25 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         setHasStableIds(true);
     }
 
-    // loads the media list from scratch
-    void loadDeviceMedia() {
+    void refresh(boolean forceReload) {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
-        mThumbWidth = displayWidth / NUM_COLUMNS;
-        mThumbHeight = (int) (mThumbWidth * 0.75f);
-        new BuildDeviceMediaListTask(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+        int thumbWidth = displayWidth / NUM_COLUMNS;
+        int thumbHeight = (int) (thumbWidth * 0.75f);
+        boolean sizeChanged = thumbWidth != mThumbWidth || thumbHeight != mThumbHeight;
 
-    // refreshes the list, only updating it if there are changes
-    void refresh() {
-        new BuildDeviceMediaListTask(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        // if thumb sizes have changed (due to device rotation, or never being set), we must
+        // reload from scratch - otherwise we can do a refresh so the adapter is only loaded
+        // if there are changes
+        boolean mustReload;
+        if (sizeChanged) {
+            mThumbWidth = thumbWidth;
+            mThumbHeight = thumbHeight;
+            mustReload = true;
+        } else {
+            mustReload = forceReload;
+        }
+
+        new BuildDeviceMediaListTask(mustReload).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -313,16 +321,16 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     }
 
     /*
-     * builds the list of PhotoChooserItems from the device
+     * builds the list of media items from the device
      */
     private class BuildDeviceMediaListTask extends AsyncTask<Void, Void, Boolean> {
         private final ArrayList<PhotoChooserItem> tmpList = new ArrayList<>();
-        private final boolean refresh;
+        private final boolean reload;
         private static final String ID_COL = MediaStore.Images.Media._ID;
 
-        BuildDeviceMediaListTask(boolean refreshOnly) {
+        BuildDeviceMediaListTask(boolean mustReload) {
             super();
-            refresh = refreshOnly;
+            reload = mustReload;
         }
 
         @Override
@@ -349,12 +357,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 }
             });
 
-            // if we're refreshing return false if the list hasn't changed
-            if (refresh && isSameMediaList()) {
-                return false;
-            } else {
-                return true;
-            }
+            // if we're reloading then return true so the adapter is updated, otherwise only
+            // return true if changes are detected
+            return reload || !isSameMediaList();
         }
 
         private void addMedia(Uri baseUri, boolean isVideo) {
