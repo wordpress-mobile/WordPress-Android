@@ -557,7 +557,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (overlay.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
         }
-
     }
 
     public void hidePhotoChooser() {

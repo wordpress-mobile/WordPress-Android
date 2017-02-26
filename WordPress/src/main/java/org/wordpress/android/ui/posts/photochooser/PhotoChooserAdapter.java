@@ -336,17 +336,11 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // external (SDCARD) images
+            // images
             addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
 
-            // internal images
-            addMedia(MediaStore.Images.Media.INTERNAL_CONTENT_URI, false);
-
-            // external videos
+            // videos
             addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
-
-            // internal videos
-            addMedia(MediaStore.Video.Media.INTERNAL_CONTENT_URI, true);
 
             // sort by id in reverse (newest first)
             Collections.sort(tmpList, new Comparator<PhotoChooserItem>() {
