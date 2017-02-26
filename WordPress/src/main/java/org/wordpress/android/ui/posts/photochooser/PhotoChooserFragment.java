@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -107,13 +105,6 @@ public class PhotoChooserFragment extends Fragment {
             AppLog.e(AppLog.T.POSTS, e);
             throw new ClassCastException(context.toString() + " must implement PhotoChooserListener");
         }
-        registerContentObserver();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        unregisterContentObserver();
     }
 
     private void showBottomBar() {
@@ -233,35 +224,6 @@ public class PhotoChooserFragment extends Fragment {
         int numSelected = getAdapter().getNumSelected();
         String title = String.format(getString(R.string.cab_selected), numSelected);
         mActionMode.setTitle(title);
-    }
-
-    /*
-     * detect changes to the media store so we can reflect them here
-     */
-    private void registerContentObserver() {
-        // TODO: this correctly intercepts additions but not photos sent to the trash
-        mObserver = new ContentObserver(new Handler()) {
-            @Override
-            public void onChange(boolean selfChange, Uri uri) {
-                super.onChange(selfChange, uri);
-                AppLog.i(AppLog.T.POSTS, "Photo chooser media changed > " + uri.toString());
-                getAdapter().refresh();
-            }
-        };
-
-        getActivity().getContentResolver().registerContentObserver(
-                MediaStore.Images.Media.INTERNAL_CONTENT_URI,
-                false,
-                mObserver);
-        AppLog.i(AppLog.T.POSTS, "Photo chooser > registerContentObserver");
-    }
-
-    private void unregisterContentObserver() {
-        if (mObserver != null && getActivity() != null) {
-            getActivity().getContentResolver().unregisterContentObserver(mObserver);
-            AppLog.i(AppLog.T.POSTS, "Photo chooser > unregisterContentObserver");
-        }
-        mObserver = null;
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
