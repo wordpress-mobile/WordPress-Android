@@ -394,13 +394,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         });
 
-        // initialize the photo chooser if we already have the required permissions - if we
-        // don't, the permission request and initialization is deferred until the user
-        // explictly shows the chooser
-        if (enablePhotoChooser() && PermissionUtils.checkCameraAndStoragePermissions(this)) {
-            initPhotoChooser();
-        }
-
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
@@ -534,7 +527,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * user has requested to show the photo chooser
      */
     void showPhotoChooser() {
-        // request permission if we don't already have them
+        // request permissions if we don't already have them
         if (!PermissionUtils.checkCameraAndStoragePermissions(this)) {
             PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_CHOOSER_PERMISSION_REQUEST_CODE);
             return;
@@ -554,8 +547,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // slide in the photo chooser
         if (!isPhotoChooserShowing()) {
-            mPhotoChooserFragment.refresh();
             AniUtils.animateBottomBar(mPhotoChooserContainer, true);
+            mPhotoChooserFragment.refresh();
         }
 
         // fade in the overlay atop the editor, which effectively disables the editor
