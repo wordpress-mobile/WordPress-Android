@@ -25,7 +25,6 @@ import org.wordpress.android.util.SqlUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.NUM_COLUMNS;
@@ -89,6 +88,10 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
         mThumbWidth = displayWidth / NUM_COLUMNS;
         mThumbHeight = (int) (mThumbWidth * 0.75f);
+        new BuildDeviceMediaListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    void reload() {
         new BuildDeviceMediaListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -338,7 +341,16 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 }
             });
 
-            return true;
+            // only return true if different than existing list
+            if (tmpList.size() != mMediaList.size()) {
+                return true;
+            }
+            for (PhotoChooserItem item: tmpList) {
+                if (indexOfUri(item.uri) == -1) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void addMedia(Uri baseUri, boolean isVideo) {
@@ -368,10 +380,12 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            mMediaList.clear();
-            mMediaList.addAll(tmpList);
-            notifyDataSetChanged();
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                mMediaList.clear();
+                mMediaList.addAll(tmpList);
+                notifyDataSetChanged();
+            }
             if (mListener != null) {
                 mListener.onAdapterLoaded(isEmpty());
             }
