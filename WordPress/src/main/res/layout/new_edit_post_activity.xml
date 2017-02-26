@@ -10,6 +10,16 @@
         android:layout_above="@+id/photo_fragment_container"
         tools:context=".ui.posts.EditPostActivity" />
 
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/photo_fragment_container"
+        android:layout_marginBottom="@dimen/format_bar_height"
+        android:background="@color/translucent_grey_lighten_10"
+        android:clickable="true"
+        android:visibility="gone" />
+
     <FrameLayout
         android:id="@+id/photo_fragment_container"
         android:layout_width="match_parent"

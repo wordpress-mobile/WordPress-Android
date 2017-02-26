@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.OnPhotoChooserListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -25,6 +25,7 @@ import org.wordpress.android.util.SqlUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.NUM_COLUMNS;
@@ -34,7 +35,13 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_SELECTED = .85f;
 
-    interface OnAdapterLoadedListener {
+    /*
+     * used by this adapter to communicate with the owning fragment
+     */
+    protected interface PhotoChooserAdapterListener {
+        void onItemTapped(Uri mediaUri);
+        void onItemDoubleTapped(View view, Uri mediaUri);
+        void onSelectedCountChanged(int count);
         void onAdapterLoaded(boolean isEmpty);
     }
 
@@ -64,18 +71,15 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     private boolean mIsMultiSelectEnabled;
 
     private final ThumbnailLoader mThumbnailLoader;
-    private final OnPhotoChooserListener mPhotoListener;
-    private final OnAdapterLoadedListener mLoadedListener;
+    private final PhotoChooserAdapterListener mListener;
     private final LayoutInflater mInflater;
     private final ArrayList<PhotoChooserItem> mMediaList = new ArrayList<>();
 
     public PhotoChooserAdapter(Context context,
-                               OnPhotoChooserListener photoListener,
-                               OnAdapterLoadedListener loadedListener) {
+                               PhotoChooserAdapterListener listener) {
         super();
         mContext = context;
-        mPhotoListener = photoListener;
-        mLoadedListener = loadedListener;
+        mListener = listener;
         mInflater = LayoutInflater.from(context);
         mThumbnailLoader = new ThumbnailLoader(context);
         setHasStableIds(true);
@@ -198,8 +202,8 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             AniUtils.scale(holder.imgThumbnail, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
         }
 
-        if (mPhotoListener != null) {
-            mPhotoListener.onSelectedCountChanged(getNumSelected());
+        if (mListener != null) {
+            mListener.onSelectedCountChanged(getNumSelected());
         }
 
         // redraw the grid after the scale animation completes
@@ -212,8 +216,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         }, delayMs);
     }
 
+    @NonNull
     ArrayList<Uri> getSelectedURIs() {
-        return mSelectedUris;
+        return (ArrayList)mSelectedUris.clone();
     }
 
     int getNumSelected() {
@@ -264,9 +269,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                     if (isValidPosition(position)) {
                         if (mIsMultiSelectEnabled) {
                             toggleSelection(ThumbnailViewHolder.this, position);
-                        } else if (mPhotoListener != null) {
+                        } else if (mListener != null) {
                             Uri uri = getItemAtPosition(position).uri;
-                            mPhotoListener.onItemTapped(uri);
+                            mListener.onItemTapped(uri);
                         }
                     }
                     return true;
@@ -274,9 +279,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (isValidPosition(position) && mPhotoListener != null) {
+                    if (isValidPosition(position) && mListener != null) {
                         Uri uri = getItemAtPosition(position).uri;
-                        mPhotoListener.onItemDoubleTapped(itemView, uri);
+                        mListener.onItemDoubleTapped(itemView, uri);
                     }
                     return true;
                 }
@@ -367,8 +372,8 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             mMediaList.clear();
             mMediaList.addAll(tmpList);
             notifyDataSetChanged();
-            if (mLoadedListener != null) {
-                mLoadedListener.onAdapterLoaded(isEmpty());
+            if (mListener != null) {
+                mListener.onAdapterLoaded(isEmpty());
             }
         }
     }
