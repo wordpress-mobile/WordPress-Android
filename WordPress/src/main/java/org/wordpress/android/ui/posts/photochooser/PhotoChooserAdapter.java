@@ -231,7 +231,8 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
 
     @NonNull
     ArrayList<Uri> getSelectedURIs() {
-        return (ArrayList)mSelectedUris.clone();
+        //noinspection unchecked
+        return (ArrayList<Uri>)mSelectedUris.clone();
     }
 
     int getNumSelected() {
