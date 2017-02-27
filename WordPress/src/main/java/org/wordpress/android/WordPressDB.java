@@ -21,8 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WordPressDB {
     private static final String COLUMN_NAME_ID = "_id";
@@ -204,12 +202,6 @@ public class WordPressDB {
 
     public static void deleteDatabase(Context ctx) {
         ctx.deleteDatabase(DATABASE_NAME);
-    }
-
-    /**
-     * Deletes all the things! Use wisely.
-     */
-    public void dangerouslyDeleteAllContent() {
     }
 
     public boolean addQuickPressShortcut(int blogId, String name) {
