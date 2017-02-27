@@ -670,7 +670,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 PostUtils.trackSavePostAnalytics(mPost);
 
                 PostUploadService.addPostToUpload(mPost);
-                PostUploadService.setLegacyMode(!mShowNewEditor);
+                PostUploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
                 startService(new Intent(EditPostActivity.this, PostUploadService.class));
                 PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getLocalTablePostId());
                 setResult(RESULT_OK);
