@@ -206,6 +206,16 @@ public class PostUploadService extends Service {
         private boolean mHasImage, mHasVideo, mHasCategory;
 
         @Override
+        protected void onPostExecute(Boolean pushActionWasDispatched) {
+            if (!pushActionWasDispatched) {
+                // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
+                // will be handled in OnPostChanged instead of here
+                mPostUploadNotifier.updateNotificationError(mPost, mSite, mErrorMessage, mIsMediaError);
+                finishUpload();
+            }
+        }
+
+        @Override
         protected Boolean doInBackground(PostModel... posts) {
             mPost = posts[0];
 
