@@ -14,7 +14,7 @@ public class FluxCUtils {
         return accountStore.hasAccessToken() || siteStore.hasSelfHostedSite();
     }
 
-    public static MediaModel fromMediaFile(MediaFile file) {
+    public static MediaModel mediaModelFromMediaFile(MediaFile file) {
         if (file == null) {
             return null;
         }
@@ -37,9 +37,9 @@ public class FluxCUtils {
         return mediaModel;
     }
 
-    public static MediaFile fromMediaModel(MediaModel media) {
+    public static MediaFile mediaFileFromMediaModel(MediaModel media) {
         if (media == null) {
-            return  null;
+            return null;
         }
 
         MediaFile mediaFile = new MediaFile();
