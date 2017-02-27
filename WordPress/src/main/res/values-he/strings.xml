@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-02-05 10:30:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
@@ -10,8 +10,6 @@ Language: he_IL
 	<string name="reader_label_visit">ניתן לבקר בכתובת</string>
 	<string name="all_your_sites">כל האתרים שלי</string>
 	<string name="pending_draft_more">יצרת טיוטה ל-%d פוסטים, אבל מעולם לא פרסמת אותם. יש להקיש כדי לבדוק.</string>
-	<string name="pending_draft_one">יצרת טיוטה ל-\'%1$s\' לפני %2$d ימים, אבל מעולם לא פרסמת אותה.</string>
-	<string name="pending_draft_one_generic">יצרת טיוטה ל-\'%s\', אבל מעולם לא פרסמת אותה.</string>
 	<string name="no_default_app_available_to_open_link">אי אפשר לפתוח את הקישור</string>
 	<string name="notification_pending_drafts">קבלת הודעה על טיוטות בהמתנה</string>
 	<string name="invalid_verification_code_format">חייב להיות מספר בן שש ספרות</string>
@@ -291,7 +289,6 @@ Language: he_IL
 	<string name="editor_page_title_placeholder">כותרת עמוד</string>
 	<string name="editor_post_title_placeholder">כותרת הפוסט</string>
 	<string name="email_address">כתובת אימייל</string>
-	<string name="preference_editor_type">הצגת עורך ויזואלי</string>
 	<string name="preference_editor">עורך</string>
 	<string name="dlg_sure_to_delete_comments">האם למחוק תגובות אלה לצמיתות?</string>
 	<string name="dlg_sure_to_delete_comment">האם למחוק תגובה זו לצמיתות?</string>
