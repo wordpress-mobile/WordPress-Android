@@ -21,9 +21,11 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
@@ -34,6 +36,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
@@ -71,6 +74,7 @@ public class PostUploadService extends Service {
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject MediaStore mMediaStore;
 
     /**
      * Adds a post to the queue.
@@ -308,9 +312,12 @@ public class PostUploadService extends Service {
                 if (m.find()) {
                     String imageUri = m.group(1);
                     if (!imageUri.equals("")) {
-                        // TODO: MediaStore
-                        // MediaFile mediaFile = WordPress.wpDB.getMediaFile(imageUri, mPost);
-                        MediaFile mediaFile = new MediaFile();
+                        MediaModel mediaModel = mMediaStore.getPostMediaWithPath(mPost.getId(), imageUri);
+                        if (mediaModel == null) {
+                            mIsMediaError = true;
+                            continue;
+                        }
+                        MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
                         if (mediaFile != null) {
                             // Get image thumbnail for notification icon
                             Bitmap imageIcon = ImageUtils.getWPImageSpanThumbnailFromFilePath(
