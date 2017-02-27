@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-11-14 17:57:45+0000
 Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: cy_GB
 -->
 <resources>
@@ -256,8 +256,6 @@ Language: cy_GB
 	<string name="editor_page_title_placeholder">Teitl Tudalen</string>
 	<string name="editor_post_title_placeholder">Teitl Cofnod</string>
 	<string name="email_address">Cyfeiriad e-bost</string>
-	<string name="preference_editor_type">Dangos y golygydd gweledol</string>
-	<string name="preference_show_visual_editor">Dangos y golygydd gweledol</string>
 	<string name="preference_editor">Golygydd</string>
 	<string name="dlg_sure_to_delete_comments">Dileu\'r sylwadau hyn yn barhaol?</string>
 	<string name="dlg_sure_to_delete_comment">Dileu\'r sylwadau hyn yn barhaol?</string>

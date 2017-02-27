@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-21 09:37:45+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: ms
 -->
 <resources>
@@ -10,8 +10,6 @@ Language: ms
 	<string name="reader_label_visit">Lawat</string>
 	<string name="all_your_sites">Semua Laman Saya</string>
 	<string name="pending_draft_more">Anda telah mendraf %d kiriman tetapi tidak pernah menerbitkannya. Ketik untuk periksa.</string>
-	<string name="pending_draft_one">Anda telah mendraf \'%1$s\' %2$d hari yang lalu tetapi tidak pernah menerbitkannnya.</string>
-	<string name="pending_draft_one_generic">Anda telah mendraf \'%s\' tetapi tidak pernah menerbitkannya.</string>
 	<string name="no_default_app_available_to_open_link">Tidak dapat membuka pautan</string>
 	<string name="notification_pending_drafts">Beritahu saya tentang draf yang belum seleasi</string>
 	<string name="invalid_verification_code_format">Mestilah nombor enam angka</string>
@@ -291,7 +289,6 @@ Language: ms
 	<string name="editor_page_title_placeholder">Tajuk Halaman</string>
 	<string name="editor_post_title_placeholder">Tajuk Kiriman</string>
 	<string name="email_address">Alamat emel</string>
-	<string name="preference_editor_type">Tunjukkan penyunting visual</string>
 	<string name="preference_editor">Penyunting</string>
 	<string name="dlg_sure_to_delete_comments">Hapuskan ulasan ini secara kekal?</string>
 	<string name="dlg_sure_to_delete_comment">Hapuskan ulasan ini secara kekal?</string>

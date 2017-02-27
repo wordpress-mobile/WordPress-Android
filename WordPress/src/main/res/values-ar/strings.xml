@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-02-06 20:58:49+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
@@ -247,9 +247,8 @@ Language: ar
 	<string name="editor_page_title_placeholder">عنوان الصفحة</string>
 	<string name="editor_post_title_placeholder">عنوان المقالة</string>
 	<string name="email_address">عنوان البريد الإلكتروني</string>
-	<string name="preference_editor_type">إظهار محرر مرئي</string>
-	<string name="preference_editor">المحرر</string>
 	<string name="dlg_sure_to_delete_comments">هل ترغب في إزالة هذه التعليقات نهائيًا؟</string>
+	<string name="preference_editor">المحرر</string>
 	<string name="dlg_sure_to_delete_comment">هل ترغب في إزالة هذا التعليق نهائيًا؟</string>
 	<string name="mnu_comment_delete_permanently">حذف</string>
 	<string name="comment_deleted_permanently">تم حذف تعليق</string>
