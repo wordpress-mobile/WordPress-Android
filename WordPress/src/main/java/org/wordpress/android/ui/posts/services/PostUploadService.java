@@ -13,7 +13,6 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.text.TextUtils;
 import android.util.SparseArray;
-import android.webkit.MimeTypeMap;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -49,7 +48,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -481,44 +479,32 @@ public class PostUploadService extends Service {
             if (TextUtils.isEmpty(mimeType)) {
                 mimeType = MediaUtils.getMediaFileMimeType(videoFile);
             }
-            String videoName = MediaUtils.getMediaFileName(videoFile, mimeType);
 
-            // try to upload the video
-            Map<String, Object> m = new HashMap<String, Object>();
-            m.put("name", videoName);
-            m.put("type", mimeType);
-            m.put("bits", mediaFile);
-            m.put("overwrite", true);
+            CountDownLatch countDownLatch = new CountDownLatch(1);
+            MediaPayload payload = new MediaPayload(mSite, FluxCUtils.mediaModelFromMediaFile(mediaFile));
+            mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
-            Object[] params = {1, mSite.getUsername(), mSite.getPassword(), m};
-
-            File tempFile;
             try {
-                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
-                tempFile = createTempUploadFile(fileExtension);
-            } catch (IOException e) {
-                mErrorMessage = getResources().getString(R.string.file_error_create);
+                mMediaLatchMap.put(mediaFile.getId(), countDownLatch);
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                AppLog.e(T.POSTS, "CountDownLatch await interrupted for media file: " + mediaFile.getId() + " - " + e);
+                mIsMediaError = true;
+            }
+
+            MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
+
+            if (finishedMedia == null || !finishedMedia.getUploadState().equals(UploadState.UPLOADED.name())) {
+                mIsMediaError = true;
                 return null;
             }
 
-            // TODO: MediaStore
-            Object result = null;
-            // Object result = uploadFileHelper(params, tempFile);
-            Map<?, ?> resultMap = (HashMap<?, ?>) result;
-            if (resultMap != null && resultMap.containsKey("url")) {
-                String resultURL = resultMap.get("url").toString();
-                if (resultMap.containsKey(MediaFile.VIDEOPRESS_SHORTCODE_ID)) {
-                    resultURL = resultMap.get(MediaFile.VIDEOPRESS_SHORTCODE_ID).toString() + "\n";
-                } else {
-                    resultURL = String.format(
-                            "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-                            xRes, yRes, resultURL, mimeType, resultURL);
-                }
-
-                return resultURL;
+            if (!TextUtils.isEmpty(finishedMedia.getVideoPressGuid())) {
+                return "[wpvideo " + finishedMedia.getVideoPressGuid() + "]\n";
             } else {
-                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload);
-                return null;
+                return String.format(
+                        "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                        xRes, yRes, finishedMedia.getUrl(), mimeType, finishedMedia.getUrl());
             }
         }
 
@@ -553,10 +539,6 @@ public class PostUploadService extends Service {
 
             return pictureURL;
         }
-    }
-
-    private File createTempUploadFile(String fileExtension) throws IOException {
-        return File.createTempFile("wp-", fileExtension, mContext.getCacheDir());
     }
 
     /**
