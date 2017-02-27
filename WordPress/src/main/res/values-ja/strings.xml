@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-01-25 01:17:55+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
@@ -13,8 +13,6 @@ Language: ja_JP
 	<string name="reader_label_visit">表示</string>
 	<string name="all_your_sites">すべての参加サイト</string>
 	<string name="pending_draft_more">%d件の投稿の下書きを作成しましたが、公開していません。タップして確認してください。</string>
-	<string name="pending_draft_one">%2$d日前に下書き「%1$s」を作成しましたが、公開していません。</string>
-	<string name="pending_draft_one_generic">下書き「%s」を作成しましたが、公開していません。</string>
 	<string name="no_default_app_available_to_open_link">リンクを開けません</string>
 	<string name="notification_pending_drafts">保留中の下書きを通知する</string>
 	<string name="confirm_discard_changes">保存されていない変更を破棄しますか ?</string>
@@ -294,7 +292,6 @@ Language: ja_JP
 	<string name="editor_page_title_placeholder">ページタイトル</string>
 	<string name="editor_post_title_placeholder">投稿タイトル</string>
 	<string name="email_address">メールアドレス</string>
-	<string name="preference_editor_type">ビジュアルエディターを表示</string>
 	<string name="dlg_sure_to_delete_comments">これらのコメントを完全に削除しますか ?</string>
 	<string name="preference_editor">編集者</string>
 	<string name="dlg_sure_to_delete_comment">このコメントを完全に削除しますか ?</string>
