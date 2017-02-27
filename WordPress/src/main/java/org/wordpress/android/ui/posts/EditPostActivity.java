@@ -572,19 +572,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /*
-     * called by PhotoChooserFragment when user selects a single media uri
+     * called by PhotoChooserFragment when media is selected - may be a single item or a list of items
      */
     @Override
-    public void onPhotoChooserMediaChosen(@NonNull Uri uri) {
-        hidePhotoChooser();
-        addMedia(uri);
-    }
-
-    /*
-     * called by PhotoChooserFragment when user selects multiple media uris
-     */
-    @Override
-    public void onPhotoChooserMediaListChosen(@NonNull List<Uri> uriList) {
+    public void onPhotoChooserMediaChosen(@NonNull List<Uri> uriList) {
         hidePhotoChooser();
         for (Uri uri: uriList) {
             addMedia(uri);

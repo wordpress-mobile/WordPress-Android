@@ -42,8 +42,7 @@ public class PhotoChooserFragment extends Fragment {
      * parent activity must implement this listener
      */
     public interface PhotoChooserListener {
-        void onPhotoChooserMediaChosen(@NonNull Uri uri);
-        void onPhotoChooserMediaListChosen(@NonNull List<Uri> uriList);
+        void onPhotoChooserMediaChosen(@NonNull List<Uri> uriList);
         void onPhotoChooserIconClicked(@NonNull PhotoChooserIcon icon);
     }
 
@@ -129,7 +128,9 @@ public class PhotoChooserFragment extends Fragment {
     private final PhotoChooserAdapterListener mAdapterListener = new PhotoChooserAdapterListener() {
         @Override
         public void onItemTapped(Uri mediaUri) {
-            mListener.onPhotoChooserMediaChosen(mediaUri);
+            List<Uri> uriList = new ArrayList<>();
+            uriList.add(mediaUri);
+            mListener.onPhotoChooserMediaChosen(uriList);
         }
 
         @Override
@@ -263,7 +264,7 @@ public class PhotoChooserFragment extends Fragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.mnu_confirm_selection) {
                 ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
-                mListener.onPhotoChooserMediaListChosen(uriList);
+                mListener.onPhotoChooserMediaChosen(uriList);
                 return true;
             }
             return false;
