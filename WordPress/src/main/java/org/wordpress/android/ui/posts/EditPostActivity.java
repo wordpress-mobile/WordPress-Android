@@ -770,8 +770,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onUploadError(MediaModel media, MediaStore.MediaError error) {
-        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
         String localMediaId = String.valueOf(media.getId());
+
+        MediaFile mf = FluxCUtils.fromMediaModel(media);
+        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, mf.isVideo(), null, mf.getFilePath());
+        properties.put("error_type", error.type.name());
+        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED, properties);
 
         // Display custom error depending on error type
         String errorMessage;
