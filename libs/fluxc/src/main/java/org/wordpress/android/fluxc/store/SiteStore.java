@@ -143,6 +143,7 @@ public class SiteStore extends Store {
 
     public class OnNewSiteCreated extends OnChanged<NewSiteError> {
         public boolean dryRun;
+        public long newSiteRemoteId;
     }
 
     public class OnSiteDeleted extends OnChanged<DeleteSiteError> {
@@ -684,6 +685,7 @@ public class SiteStore extends Store {
         OnNewSiteCreated onNewSiteCreated = new OnNewSiteCreated();
         onNewSiteCreated.error = payload.error;
         onNewSiteCreated.dryRun = payload.dryRun;
+        onNewSiteCreated.newSiteRemoteId = payload.newSiteRemoteId;
         emitChange(onNewSiteCreated);
     }
 
