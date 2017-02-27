@@ -608,6 +608,7 @@ public class PostUploadService extends Service {
             mMediaLatchMap.remove(event.media.getId());
         } else if (!event.canceled && !event.isError()) {
             // TODO: Update media item progress in notification
+            mPostUploadNotifier.updateNotificationProgress(mCurrentUploadingPost, event.progress);
         }
     }
 }
