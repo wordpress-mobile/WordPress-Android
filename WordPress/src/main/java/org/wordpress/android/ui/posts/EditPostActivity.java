@@ -1540,20 +1540,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
         trackAddMediaFromDeviceEvents(isVideo, mediaUri, null);
-        String mediaTitle;
-        if (isVideo) {
-            mediaTitle = getResources().getString(R.string.video);
-        } else {
-            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, mediaUri.getEncodedPath());
-        }
 
-        MediaFile mediaFile = new MediaFile();
-        mediaFile.setPostID(mPost.getId());
-        mediaFile.setTitle(mediaTitle);
-        mediaFile.setFilePath(mediaUri.toString());
-        if (mediaUri.getEncodedPath() != null) {
-            mediaFile.setVideo(isVideo);
+        MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri), UploadState.QUEUED);
+        if (isVideo) {
+            mediaModel.setTitle(getResources().getString(R.string.video));
+        } else {
+            mediaModel.setTitle(ImageUtils.getTitleForWPImageSpan(this, mediaUri.getEncodedPath()));
         }
+        mediaModel.setPostId(mPost.getId());
+
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
+
+        MediaFile mediaFile = FluxCUtils.fromMediaModel(mediaModel);
         mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.sImageLoader);
         return true;
     }
