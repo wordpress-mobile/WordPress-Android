@@ -72,19 +72,25 @@ public class PhotoChooserFragment extends Fragment {
         mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onPhotoChooserIconClicked(PhotoChooserIcon.ANDROID_CAMERA);
+                if (mListener != null) {
+                    mListener.onPhotoChooserIconClicked(PhotoChooserIcon.ANDROID_CAMERA);
+                }
             }
         });
         mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onPhotoChooserIconClicked(PhotoChooserIcon.ANDROID_PICKER);
+                if (mListener != null) {
+                    mListener.onPhotoChooserIconClicked(PhotoChooserIcon.ANDROID_PICKER);
+                }
             }
         });
         mBottomBar.findViewById(R.id.icon_wpmedia).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onPhotoChooserIconClicked(PhotoChooserIcon.WP_MEDIA);
+                if (mListener != null) {
+                    mListener.onPhotoChooserIconClicked(PhotoChooserIcon.WP_MEDIA);
+                }
             }
         });
 
@@ -128,9 +134,11 @@ public class PhotoChooserFragment extends Fragment {
     private final PhotoChooserAdapterListener mAdapterListener = new PhotoChooserAdapterListener() {
         @Override
         public void onItemTapped(Uri mediaUri) {
-            List<Uri> uriList = new ArrayList<>();
-            uriList.add(mediaUri);
-            mListener.onPhotoChooserMediaChosen(uriList);
+            if (mListener != null) {
+                List<Uri> uriList = new ArrayList<>();
+                uriList.add(mediaUri);
+                mListener.onPhotoChooserMediaChosen(uriList);
+            }
         }
 
         @Override
@@ -262,7 +270,7 @@ public class PhotoChooserFragment extends Fragment {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if (item.getItemId() == R.id.mnu_confirm_selection) {
+            if (item.getItemId() == R.id.mnu_confirm_selection && mListener != null) {
                 ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
                 mListener.onPhotoChooserMediaChosen(uriList);
                 return true;
