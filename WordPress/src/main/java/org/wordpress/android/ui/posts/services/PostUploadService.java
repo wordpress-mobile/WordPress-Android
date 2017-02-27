@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.webkit.MimeTypeMap;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -20,12 +21,16 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
@@ -52,6 +57,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,6 +77,8 @@ public class PostUploadService extends Service {
 
     private Context mContext;
     private PostUploadNotifier mPostUploadNotifier;
+
+    private SparseArray<CountDownLatch> mMediaLatchMap = new SparseArray<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -192,7 +200,7 @@ public class PostUploadService extends Service {
 
         private String mErrorMessage = "";
         private boolean mIsMediaError = false;
-        private int featuredImageID = -1;
+        private long featuredImageID = -1;
 
         // Used for analytics
         private boolean mHasImage, mHasVideo, mHasCategory;
@@ -368,7 +376,6 @@ public class PostUploadService extends Service {
 
             Uri imageUri = Uri.parse(mediaFile.getFilePath());
             File imageFile = null;
-            String mimeType = "", path = "";
 
             if (imageUri.toString().contains("content:")) {
                 String[] projection = new String[]{Images.Media._ID, Images.Media.DATA, Images.Media.MIME_TYPE};
@@ -376,17 +383,14 @@ public class PostUploadService extends Service {
                 Cursor cur = mContext.getContentResolver().query(imageUri, projection, null, null, null);
                 if (cur != null && cur.moveToFirst()) {
                     int dataColumn = cur.getColumnIndex(Images.Media.DATA);
-                    int mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
 
                     String thumbData = cur.getString(dataColumn);
-                    mimeType = cur.getString(mimeTypeColumn);
                     imageFile = new File(thumbData);
-                    path = thumbData;
                     mediaFile.setFilePath(imageFile.getPath());
                 }
                 SqlUtils.closeCursor(cur);
             } else { // file is not in media library
-                path = imageUri.toString().replace("file://", "");
+                String path = imageUri.toString().replace("file://", "");
                 imageFile = new File(path);
                 mediaFile.setFilePath(path);
             }
@@ -397,20 +401,7 @@ public class PostUploadService extends Service {
                 return null;
             }
 
-            if (TextUtils.isEmpty(mimeType)) {
-                mimeType = MediaUtils.getMediaFileMimeType(imageFile);
-            }
-            String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
-
-            // Upload the full size picture if "Original Size" is selected in settings
-
-            Map<String, Object> parameters = new HashMap<String, Object>();
-            parameters.put("name", fileName);
-            parameters.put("type", mimeType);
-            parameters.put("bits", mediaFile);
-            parameters.put("overwrite", true);
-
-            String fullSizeUrl = uploadImageFile(parameters, mediaFile, mSite);
+            String fullSizeUrl = uploadImageFile(mediaFile, mSite);
             if (fullSizeUrl == null) {
                 mErrorMessage = mContext.getString(R.string.error_media_upload);
                 return null;
@@ -524,7 +515,6 @@ public class PostUploadService extends Service {
             }
         }
 
-
         private void setUploadPostErrorMessage(Exception e) {
             mErrorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(),
                     mPost.isPage() ? mContext.getResources().getText(R.string.page).toString() :
@@ -533,42 +523,32 @@ public class PostUploadService extends Service {
             AppLog.e(T.EDITOR, mErrorMessage, e);
         }
 
-        private String uploadImageFile(Map<String, Object> pictureParams, MediaFile mf, SiteModel site) {
-            // create temporary upload file
-            File tempFile;
+        private String uploadImageFile(MediaFile mediaFile, SiteModel site) {
+            CountDownLatch countDownLatch = new CountDownLatch(1);
+            MediaPayload payload = new MediaPayload(site, FluxCUtils.mediaModelFromMediaFile(mediaFile));
+            mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
+
             try {
-                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(mf.getFileName());
-                tempFile = createTempUploadFile(fileExtension);
-            } catch (IOException e) {
+                mMediaLatchMap.put(mediaFile.getId(), countDownLatch);
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                AppLog.e(T.POSTS, "CountDownLatch await interrupted for media file: " + mediaFile.getId() + " - " + e);
                 mIsMediaError = true;
-                mErrorMessage = mContext.getString(R.string.file_not_found);
-                return null;
             }
 
-            Object[] params = {1,
-                    StringUtils.notNullStr(mSite.getUsername()),
-                    StringUtils.notNullStr(mSite.getPassword()),
-                    pictureParams};
-            // Object result = uploadFileHelper(params, tempFile);
-            // TODO: MediaStore
-            Object result = null;
-            if (result == null) {
+            MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
+
+            if (finishedMedia == null || !finishedMedia.getUploadState().equals(UploadState.UPLOADED.name())) {
                 mIsMediaError = true;
                 return null;
             }
 
-            Map<?, ?> contentHash = (HashMap<?, ?>) result;
-            String pictureURL = contentHash.get("url").toString();
+            String pictureURL = finishedMedia.getUrl();
 
-            if (mf.isFeatured()) {
-                try {
-                    if (contentHash.get("id") != null) {
-                        featuredImageID = Integer.parseInt(contentHash.get("id").toString());
-                        if (!mf.isFeaturedInPost())
-                            return "";
-                    }
-                } catch (NumberFormatException e) {
-                    AppLog.e(T.POSTS, e);
+            if (mediaFile.isFeatured()) {
+                featuredImageID = finishedMedia.getMediaId();
+                if (!mediaFile.isFeaturedInPost()) {
+                    return "";
                 }
             }
 
@@ -610,5 +590,24 @@ public class PostUploadService extends Service {
         }
 
         finishUpload();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaUploaded(OnMediaUploaded event) {
+        // Event for unknown media, ignoring
+        if (event.media == null || mMediaLatchMap.get(event.media.getId()) == null) {
+            AppLog.w(T.POSTS, "Media event not recognized: " + event.media);
+            return;
+        }
+
+        if (event.completed) {
+            AppLog.i(T.POSTS, "Media upload completed for post. Media id: " + event.media.getId()
+                    + ", post id: " + mCurrentUploadingPost.getId());
+            mMediaLatchMap.get(event.media.getId()).countDown();
+            mMediaLatchMap.remove(event.media.getId());
+        } else if (!event.canceled && !event.isError()) {
+            // TODO: Update media item progress in notification
+        }
     }
 }
