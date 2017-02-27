@@ -211,7 +211,7 @@ public class PhotoChooserFragment extends Fragment {
 
         mGridManager = new GridLayoutManager(getActivity(), NUM_COLUMNS);
         mRecycler.setLayoutManager(mGridManager);
-        mRecycler.swapAdapter(getAdapter(), true);
+        mRecycler.setAdapter(getAdapter());
         getAdapter().refresh(true);
     }
 
