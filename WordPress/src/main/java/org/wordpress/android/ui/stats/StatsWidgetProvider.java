@@ -468,7 +468,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     }
 
     private static void refreshWidgets(Context context, int[] appWidgetIds, SiteStore siteStore) {
-        // TODO: STORES: This file must be refactored, we probably want a "WidgetManager" and keep the bare minimum
+        // TODO: FluxC: This file must be refactored, we probably want a "WidgetManager" and keep the bare minimum
         // here in the AppWidgetProvider.
         // if (!mAccountStore.isSignedIn()) {
         //     showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_no_account));
