@@ -139,7 +139,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         );
 
         // initialize the text & HTML
-        source.history = content.history;
+        source.setHistory(content.getHistory());
         content.setImageGetter(imageLoader);
 
         content.setOnMediaTappedListener(this);
