@@ -1371,7 +1371,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 mTwoStepEditText.setText(getAuthCodeFromClipboard());
                 break;
             case INVALID_REQUEST:
-                // TODO: STORES: could be specific?
+                // TODO: FluxC: could be specific?
             default:
                 // For all other kind of error, show a dialog with API Response error message
                 AppLog.e(T.NUX, "Server response: " + errorMessage);

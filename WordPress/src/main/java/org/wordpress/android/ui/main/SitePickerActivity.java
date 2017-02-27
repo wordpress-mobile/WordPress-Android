@@ -180,7 +180,7 @@ public class SitePickerActivity extends AppCompatActivity
 
         switch (requestCode) {
             case RequestCodes.ADD_ACCOUNT:
-            case RequestCodes.CREATE_BLOG:
+            case RequestCodes.CREATE_SITE:
                 if (resultCode != RESULT_CANCELED) {
                     getAdapter().loadSites();
                 }

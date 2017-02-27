@@ -541,7 +541,7 @@ public class WPMainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
-            case RequestCodes.CREATE_BLOG:
+            case RequestCodes.CREATE_SITE:
                 if (resultCode == RESULT_OK) {
                     MySiteFragment mySiteFragment = getMySiteFragment();
                     if (mySiteFragment != null) {
@@ -575,7 +575,7 @@ public class WPMainActivity extends AppCompatActivity {
                     }
                 }
                 break;
-            case RequestCodes.BLOG_SETTINGS:
+            case RequestCodes.SITE_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
                     handleBlogRemoved();
                 }

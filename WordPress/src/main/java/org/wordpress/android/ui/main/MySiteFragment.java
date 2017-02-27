@@ -276,17 +276,14 @@ public class MySiteFragment extends Fragment
                 // if user returned from adding a post via the FAB and it was saved as a local
                 // draft, briefly animate the background of the "Blog posts" view to give the
                 // user a cue as to where to go to return to that post
-                if (resultCode == Activity.RESULT_OK
-                        && getView() != null
-                        && data != null
+                if (resultCode == Activity.RESULT_OK && getView() != null && data != null
                         && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
                 break;
-            case RequestCodes.CREATE_BLOG:
-                // user created a new blog so, use and show that new one
-                // TODO: STORES: create a blog
-                // TODO: STORES: setSelectedSite(newly created site);
+            case RequestCodes.CREATE_SITE:
+                // user created a new blog, select it
+                // TODO: FluxC: setSelectedSite(newly created site);
                 break;
         }
     }

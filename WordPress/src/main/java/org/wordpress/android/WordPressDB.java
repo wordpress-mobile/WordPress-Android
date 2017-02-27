@@ -21,8 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WordPressDB {
     private static final String COLUMN_NAME_ID = "_id";
@@ -73,7 +71,6 @@ public class WordPressDB {
             AppLog.d(T.DB, "upgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
         }
 
-        // TODO: STORES: only migrate auth token and local drafts to wpstores, drop everything else.
         switch (currentVersion) {
             case 0:
                 // New install
@@ -158,7 +155,6 @@ public class WordPressDB {
                 resetThemeTable();
                 currentVersion++;
             case 38:
-                // TODO: STORES: kill this - updateDotcomFlag();
                 currentVersion++;
             case 39:
                 currentVersion++;
@@ -204,12 +200,6 @@ public class WordPressDB {
 
     public static void deleteDatabase(Context ctx) {
         ctx.deleteDatabase(DATABASE_NAME);
-    }
-
-    /**
-     * Deletes all the things! Use wisely.
-     */
-    public void dangerouslyDeleteAllContent() {
     }
 
     public boolean addQuickPressShortcut(int blogId, String name) {

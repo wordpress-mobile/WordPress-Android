@@ -73,7 +73,6 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mWebAddressPreference.setOnPreferenceChangeListener(this);
 
         // load site list asynchronously
-        // TODO: STORES: call the site store here
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

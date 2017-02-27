@@ -54,7 +54,7 @@ public class ReaderLikingUsersView extends LinearLayout {
                 // get avatar URLs of liking users up to the max, sized to fit
                 int maxAvatars = getMaxAvatars();
                 ReaderUserIdList avatarIds = ReaderLikeTable.getLikesForPost(post);
-                // TODO: STORES: probably a bad idea to have mAccountStore.getAccount().getUserId() here,
+                // TODO: Probably a bad idea to have mAccountStore.getAccount().getUserId() here,
                 // a view should not read the account state
                 final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(avatarIds, maxAvatars, mLikeAvatarSz,
                         mAccountStore.getAccount().getUserId());
