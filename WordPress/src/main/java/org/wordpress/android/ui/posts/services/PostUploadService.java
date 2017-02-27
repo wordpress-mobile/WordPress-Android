@@ -581,8 +581,6 @@ public class PostUploadService extends Service {
                     false);
             mFirstPublishPosts.remove(event.post.getId());
         } else {
-            // TODO: MediaStore?
-            // WordPress.wpDB.deleteMediaFilesForPost(mPost);
             mPostUploadNotifier.cancelNotification(event.post);
             boolean isFirstTimePublish = mFirstPublishPosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
@@ -606,7 +604,6 @@ public class PostUploadService extends Service {
             mMediaLatchMap.get(event.media.getId()).countDown();
             mMediaLatchMap.remove(event.media.getId());
         } else if (!event.canceled && !event.isError()) {
-            // TODO: Update media item progress in notification
             mPostUploadNotifier.updateNotificationProgress(mCurrentUploadingPost, event.progress);
         }
     }
