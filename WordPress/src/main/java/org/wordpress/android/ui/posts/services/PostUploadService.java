@@ -45,7 +45,6 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
@@ -64,8 +63,6 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-
-import static com.android.volley.Request.Method.HEAD;
 
 public class PostUploadService extends Service {
     private static final ArrayList<PostModel> mPostsList = new ArrayList<>();
@@ -315,7 +312,7 @@ public class PostUploadService extends Service {
             Matcher matcher = pattern.matcher(postContent);
 
             int totalMediaItems = 0;
-            List<String> imageTags = new ArrayList<String>();
+            List<String> imageTags = new ArrayList<>();
             while (matcher.find()) {
                 imageTags.add(matcher.group());
                 totalMediaItems++;
@@ -523,14 +520,6 @@ public class PostUploadService extends Service {
                 mErrorMessage = mContext.getResources().getString(R.string.error_media_upload);
                 return null;
             }
-        }
-
-        private void setUploadPostErrorMessage(Exception e) {
-            mErrorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(),
-                    mPost.isPage() ? mContext.getResources().getText(R.string.page).toString() :
-                            mContext.getResources().getText(R.string.post).toString()) + " - " + e.getMessage();
-            mIsMediaError = false;
-            AppLog.e(T.EDITOR, mErrorMessage, e);
         }
 
         private String uploadImageFile(MediaFile mediaFile, SiteModel site) {
