@@ -93,6 +93,7 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.PhotoChooserIcon;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -143,7 +144,7 @@ import javax.inject.Inject;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        MediaUploadService.MediaUploadListener {
+        MediaUploadService.MediaUploadListener, PhotoChooserFragment.PhotoChooserListener {
     public static final String EXTRA_POST = "postModel";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -393,13 +394,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         });
 
-        // initialize the photo chooser if we already have the required permissions - if we
-        // don't, the permission request and initialization is deferred until the user
-        // explictly shows the chooser
-        if (enablePhotoChooser() && PermissionUtils.checkCameraAndStoragePermissions(this)) {
-            initPhotoChooser();
-        }
-
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
@@ -508,7 +502,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mPhotoChooserFragment != null) {
-            mPhotoChooserFragment.loadDeviceMedia();
+            mPhotoChooserFragment.reload();
         }
     }
 
@@ -533,7 +527,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * user has requested to show the photo chooser
      */
     void showPhotoChooser() {
-        // request permission if we don't already have them
+        // request permissions if we don't already have them
         if (!PermissionUtils.checkCameraAndStoragePermissions(this)) {
             PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_CHOOSER_PERMISSION_REQUEST_CODE);
             return;
@@ -551,8 +545,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
+        // slide in the photo chooser
         if (!isPhotoChooserShowing()) {
             AniUtils.animateBottomBar(mPhotoChooserContainer, true);
+            mPhotoChooserFragment.refresh();
+        }
+
+        // fade in the overlay atop the editor, which effectively disables the editor
+        // until the chooser is closed
+        View overlay = findViewById(R.id.view_overlay);
+        if (overlay.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
         }
     }
 
@@ -560,6 +563,42 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (isPhotoChooserShowing()) {
             mPhotoChooserFragment.finishActionMode();
             AniUtils.animateBottomBar(mPhotoChooserContainer, false);
+        }
+
+        View overlay = findViewById(R.id.view_overlay);
+        if (overlay.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(overlay, AniUtils.Duration.MEDIUM);
+        }
+    }
+
+    /*
+     * called by PhotoChooserFragment when media is selected - may be a single item or a list of items
+     */
+    @Override
+    public void onPhotoChooserMediaChosen(@NonNull List<Uri> uriList) {
+        hidePhotoChooser();
+        for (Uri uri: uriList) {
+            addMedia(uri);
+        }
+    }
+
+    /*
+     * called by PhotoChooserFragment when user clicks an icon to launch the camera, native
+     * picker, or WP media picker
+     */
+    @Override
+    public void onPhotoChooserIconClicked(@NonNull PhotoChooserIcon icon) {
+        hidePhotoChooser();
+        switch (icon) {
+            case ANDROID_CAMERA:
+                launchCamera();
+                break;
+            case ANDROID_PICKER:
+                launchPictureLibrary();
+                break;
+            case WP_MEDIA:
+                startMediaGalleryAddActivity();
+                break;
         }
     }
 
@@ -953,7 +992,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    public void launchPictureLibrary() {
+    private void launchPictureLibrary() {
         WordPressMediaUtils.launchPictureLibrary(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
@@ -1379,7 +1418,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    public void launchCamera() {
+    private void launchCamera() {
         WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
                 new WordPressMediaUtils.LaunchCameraCallback() {
                     @Override
@@ -1830,7 +1869,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return path;
     }
 
-    public void startMediaGalleryAddActivity() {
+    private void startMediaGalleryAddActivity() {
         ActivityLauncher.viewMediaGalleryPickerForSite(this, mSite);
     }
 

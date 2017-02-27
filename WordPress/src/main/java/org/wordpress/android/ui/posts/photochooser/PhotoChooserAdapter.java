@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.OnPhotoChooserListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -34,7 +34,13 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_SELECTED = .85f;
 
-    interface OnAdapterLoadedListener {
+    /*
+     * used by this adapter to communicate with the owning fragment
+     */
+    protected interface PhotoChooserAdapterListener {
+        void onItemTapped(Uri mediaUri);
+        void onItemDoubleTapped(View view, Uri mediaUri);
+        void onSelectedCountChanged(int count);
         void onAdapterLoaded(boolean isEmpty);
     }
 
@@ -64,28 +70,39 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     private boolean mIsMultiSelectEnabled;
 
     private final ThumbnailLoader mThumbnailLoader;
-    private final OnPhotoChooserListener mPhotoListener;
-    private final OnAdapterLoadedListener mLoadedListener;
+    private final PhotoChooserAdapterListener mListener;
     private final LayoutInflater mInflater;
     private final ArrayList<PhotoChooserItem> mMediaList = new ArrayList<>();
 
     public PhotoChooserAdapter(Context context,
-                               OnPhotoChooserListener photoListener,
-                               OnAdapterLoadedListener loadedListener) {
+                               PhotoChooserAdapterListener listener) {
         super();
         mContext = context;
-        mPhotoListener = photoListener;
-        mLoadedListener = loadedListener;
+        mListener = listener;
         mInflater = LayoutInflater.from(context);
         mThumbnailLoader = new ThumbnailLoader(context);
         setHasStableIds(true);
     }
 
-    void loadDeviceMedia() {
+    void refresh(boolean forceReload) {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
-        mThumbWidth = displayWidth / NUM_COLUMNS;
-        mThumbHeight = (int) (mThumbWidth * 0.75f);
-        new BuildDeviceMediaListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        int thumbWidth = displayWidth / NUM_COLUMNS;
+        int thumbHeight = (int) (thumbWidth * 0.75f);
+        boolean sizeChanged = thumbWidth != mThumbWidth || thumbHeight != mThumbHeight;
+
+        // if thumb sizes have changed (due to device rotation, or never being set), we must
+        // reload from scratch - otherwise we can do a refresh so the adapter is only loaded
+        // if there are changes
+        boolean mustReload;
+        if (sizeChanged) {
+            mThumbWidth = thumbWidth;
+            mThumbHeight = thumbHeight;
+            mustReload = true;
+        } else {
+            mustReload = forceReload;
+        }
+
+        new BuildDeviceMediaListTask(mustReload).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -198,8 +215,8 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             AniUtils.scale(holder.imgThumbnail, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
         }
 
-        if (mPhotoListener != null) {
-            mPhotoListener.onSelectedCountChanged(getNumSelected());
+        if (mListener != null) {
+            mListener.onSelectedCountChanged(getNumSelected());
         }
 
         // redraw the grid after the scale animation completes
@@ -212,8 +229,10 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         }, delayMs);
     }
 
+    @NonNull
     ArrayList<Uri> getSelectedURIs() {
-        return mSelectedUris;
+        //noinspection unchecked
+        return (ArrayList<Uri>)mSelectedUris.clone();
     }
 
     int getNumSelected() {
@@ -264,9 +283,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                     if (isValidPosition(position)) {
                         if (mIsMultiSelectEnabled) {
                             toggleSelection(ThumbnailViewHolder.this, position);
-                        } else if (mPhotoListener != null) {
+                        } else if (mListener != null) {
                             Uri uri = getItemAtPosition(position).uri;
-                            mPhotoListener.onItemTapped(uri);
+                            mListener.onItemTapped(uri);
                         }
                     }
                     return true;
@@ -274,9 +293,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (isValidPosition(position) && mPhotoListener != null) {
+                    if (isValidPosition(position) && mListener != null) {
                         Uri uri = getItemAtPosition(position).uri;
-                        mPhotoListener.onItemDoubleTapped(itemView, uri);
+                        mListener.onItemDoubleTapped(itemView, uri);
                     }
                     return true;
                 }
@@ -303,25 +322,25 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     }
 
     /*
-     * builds the list of PhotoChooserItems from the device
+     * builds the list of media items from the device
      */
     private class BuildDeviceMediaListTask extends AsyncTask<Void, Void, Boolean> {
         private final ArrayList<PhotoChooserItem> tmpList = new ArrayList<>();
+        private final boolean reload;
         private static final String ID_COL = MediaStore.Images.Media._ID;
+
+        BuildDeviceMediaListTask(boolean mustReload) {
+            super();
+            reload = mustReload;
+        }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // external (SDCARD) images
+            // images
             addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
 
-            // internal images
-            addMedia(MediaStore.Images.Media.INTERNAL_CONTENT_URI, false);
-
-            // external videos
+            // videos
             addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
-
-            // internal videos
-            addMedia(MediaStore.Video.Media.INTERNAL_CONTENT_URI, true);
 
             // sort by id in reverse (newest first)
             Collections.sort(tmpList, new Comparator<PhotoChooserItem>() {
@@ -333,7 +352,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 }
             });
 
-            return true;
+            // if we're reloading then return true so the adapter is updated, otherwise only
+            // return true if changes are detected
+            return reload || !isSameMediaList();
         }
 
         private void addMedia(Uri baseUri, boolean isVideo) {
@@ -362,13 +383,28 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             }
         }
 
+        // returns true if the media list built here is the same as the existing one
+        private boolean isSameMediaList() {
+            if (tmpList.size() != mMediaList.size()) {
+                return false;
+            }
+            for (int i = 0; i < tmpList.size(); i++) {
+                if (tmpList.get(i)._id != mMediaList.get(i)._id) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            mMediaList.clear();
-            mMediaList.addAll(tmpList);
-            notifyDataSetChanged();
-            if (mLoadedListener != null) {
-                mLoadedListener.onAdapterLoaded(isEmpty());
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                mMediaList.clear();
+                mMediaList.addAll(tmpList);
+                notifyDataSetChanged();
+            }
+            if (mListener != null) {
+                mListener.onAdapterLoaded(isEmpty());
             }
         }
     }
