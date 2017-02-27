@@ -186,7 +186,6 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        // TODO: STORES: manage errors
         refreshDetails();
     }
 }

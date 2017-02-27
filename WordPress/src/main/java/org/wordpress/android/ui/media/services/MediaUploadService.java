@@ -264,7 +264,6 @@ public class MediaUploadService extends Service {
     }
 
     private boolean matchesInProgressMedia(final @NonNull MediaModel media) {
-        // TODO
         return mCurrentUpload != null && media.getLocalSiteId() == mCurrentUpload.getLocalSiteId();
     }
 

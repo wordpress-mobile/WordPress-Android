@@ -71,7 +71,6 @@ public class WordPressDB {
             AppLog.d(T.DB, "upgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
         }
 
-        // TODO: STORES: only migrate auth token and local drafts to wpstores, drop everything else.
         switch (currentVersion) {
             case 0:
                 // New install
@@ -156,7 +155,6 @@ public class WordPressDB {
                 resetThemeTable();
                 currentVersion++;
             case 38:
-                // TODO: STORES: kill this - updateDotcomFlag();
                 currentVersion++;
             case 39:
                 currentVersion++;
