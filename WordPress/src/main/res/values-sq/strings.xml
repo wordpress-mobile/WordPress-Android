@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-29 17:44:45+0000
+Translation-Revision-Date: 2017-02-15 10:01:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">S’ka sajte me përputhje</string>
+	<string name="reader_hint_search_followed_sites">Kërkoni te sajtet vijues</string>
+	<string name="preference_editor_type">Caktoni lloj përpunuesi</string>
+	<string name="preference_editor_legacy">I dikurshëm</string>
+	<string name="preference_editor_visual">Pamor</string>
+	<string name="visual_editor_disabled">Përpunuesi Pamor i çaktivizuar</string>
+	<string name="pending_draft_one_generic">Mos e lini varur! \'%1$s\' është në pritje të botimit.</string>
+	<string name="pending_draft_one_month">Mos e lini varur! \'%1$s\' është në pritje të botimit.</string>
+	<string name="pending_draft_one_week_2">\'%1$s\' mbetet skicë. Mos harroni ta botoni!</string>
+	<string name="pending_draft_one_week_1">Skica juaj \'%1$s\' po ju pret - garantoni botimin e saj!</string>
+	<string name="pending_draft_one_day_2">E dinit se \'%1$s\' është ende skicë? Botojeni de!</string>
+	<string name="pending_draft_one_day_1">Dje hartuat \'%1$s\'. Mos harroni ta botoni!</string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">Shtojca Jetpack është e lidhur, por moduli Statistika s’është aktiv. Lidhuni me përgjegjësin e sajtit.</string>
 	<string name="jetpack_stats_module_disabled_message">Shtojca Jetpack është e lidhur, por moduli Statistika s’është aktiv. Doni të aktivizohet Statistika?</string>
 	<string name="jetpack_info">Të dhëna mbi Jetpack-un</string>
@@ -13,8 +25,6 @@ Language: sq_AL
 	<string name="all_your_sites">Krejt Sajtet e Mi</string>
 	<string name="pending_draft_more">Keni skicuar %d postime, por s&amp;#8217;i botuat kurrë. Prekeni që të kontrolloni.</string>
 	<string name="reader_label_visit">Vizitë</string>
-	<string name="pending_draft_one">Keni skicuar \'%1$s\' %2$d ditë më parë, por s&amp;#8217;e botuat kurrë.</string>
-	<string name="pending_draft_one_generic">Keni skicuar \'%s\', por s&amp;#8217;e botuat kurrë.</string>
 	<string name="no_default_app_available_to_open_link">S’arrihet të hapet lidhja</string>
 	<string name="notification_pending_drafts">Njoftomë për skica në pritje të botimit</string>
 	<string name="invalid_verification_code_format">Duhet të jetë një numër me gjashtë shifra</string>
@@ -294,7 +304,6 @@ Language: sq_AL
 	<string name="editor_page_title_placeholder">Titull Faqeje</string>
 	<string name="editor_post_title_placeholder">Titull Postimi</string>
 	<string name="email_address">Adresë email</string>
-	<string name="preference_editor_type">Shfaq përpunuesin pamor</string>
 	<string name="dlg_sure_to_delete_comments">Të fshihen përgjithmonë këto komente?</string>
 	<string name="preference_editor">Përpunues</string>
 	<string name="dlg_sure_to_delete_comment">Të fshihet përgjithmonë ky koment?</string>

@@ -121,9 +121,10 @@ public class PlanUpdateService extends Service {
      * download plans for the specific site
      */
     private void downloadAvailablePlansForSite() {
-        // TODO: STORES: This must be moved to a store
+        // This should live in a PlanStore (FluxC side)
         long remoteBlogId = mSite.getSiteId();
-        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans", RestClientUtils.getRestLocaleParams(PlanUpdateService.this), null, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans",
+                RestClientUtils.getRestLocaleParams(PlanUpdateService.this), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response == null) {

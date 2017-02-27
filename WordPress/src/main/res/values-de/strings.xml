@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-05 15:12:28+0000
+Translation-Revision-Date: 2017-02-18 22:46:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Das Jetpack Plugin ist verbunden, aber das Statistik-Modul ist nicht aktiv. Bitte kontaktiere den Seiten-Administrator.</string>
+	<string name="jetpack_stats_module_disabled_message">Das Jetpack Plugin ist verbunden, aber das Statistik-Modul ist nicht aktiv. Möchtest du die Statistiken aktivieren?</string>
+	<string name="jetpack_info">Jetpack Info</string>
+	<string name="reader_photo_by">Foto von %s</string>
+	<string name="no_default_app_available_to_open_link">Der Link konnte nicht geöffnet werden.</string>
+	<string name="invalid_verification_code_format">Muss eine 6-stellige Zahl sein</string>
+	<string name="confirm_discard_changes">Nicht gespeicherte Änderungen verwerfen?</string>
+	<string name="swipe_for_more">Wischen für mehr</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Versuche, dich zuerst auf WordPress.com anzumelden, oder öffne stattdessen über den oberen Aktions-Button einen Browser.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Du hast nicht die erforderlichen Rechte, um diesen Beitrag anzusehen. Versuche zuerst dich auf WordPress.com anzumelden.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Öffne stattdessen über den Aktions-Button oben einen Browser.</string>
+	<string name="reader_toast_err_comment_not_found">Kommentar nicht gefunden!</string>
+	<string name="notifications_label_new_notifications_subtitle">Zum Anzeigen tippen</string>
+	<string name="notifications_label_new_notifications">Neue Benachrichtigungen</string>
+	<string name="comment_q_action_approving">Genehmigen ...</string>
+	<string name="comment_q_action_done_generic">Aktion erledigt!</string>
+	<string name="signout">Abmelden</string>
+	<string name="sign_in_wpcom">Bei WordPress.com anmelden</string>
 	<string name="reader_label_global_related_posts">Mehr auf WordPress.com</string>
 	<string name="reader_label_local_related_posts">Mehr zu %s</string>
 	<string name="preference_open_device_settings">Geräte-Einstellungen öffnen</string>
@@ -259,8 +275,6 @@ Language: de
 	<string name="editor_page_title_placeholder">Seitentitel</string>
 	<string name="editor_post_title_placeholder">Beitragstitel</string>
 	<string name="email_address">E-Mail-Adresse</string>
-	<string name="preference_editor_type">Visuellen Editor anzeigen</string>
-	<string name="preference_show_visual_editor">Visuellen Editor anzeigen</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Möchtest du diese Kommentare dauerhaft löschen?</string>
 	<string name="dlg_sure_to_delete_comment">Möchtest du diesen Kommentar dauerhaft löschen?</string>

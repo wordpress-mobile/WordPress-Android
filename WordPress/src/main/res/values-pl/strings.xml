@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-04 06:45:11+0000
+Translation-Revision-Date: 2017-02-21 15:17:37+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">Brak witryn spełniających kryteria wyszukiwania</string>
+	<string name="reader_hint_search_followed_sites">Przeszukaj obserwowane witryny</string>
+	<string name="visual_editor_disabled">Edytor wizualny został wyłączony </string>
+	<string name="preference_editor_visual">Wizualny</string>
+	<string name="preference_editor_legacy">Dotychczasowy</string>
+	<string name="preference_editor_type">Wybierz typ edytora</string>
+	<string name="pending_draft_one_generic">Nie pozostawiaj wpisu w zawieszeniu! \'%1$s\' czeka na zatwierdzenie. </string>
+	<string name="pending_draft_one_month">Nie pozostawiaj wpisu w zawieszeniu! \'%1$s\' czeka na zatwierdzenie</string>
+	<string name="pending_draft_one_week_2">\'%1$s\' pozostaje szkicem. Pamiętaj aby opublikować ten wpis! </string>
+	<string name="pending_draft_one_week_1">Twój szkic \'%1$s\' czeka na ciebie -  upewnij się że go opublikujesz! </string>
+	<string name="pending_draft_one_day_2">Czy wiesz że \'%1$s\' jest wciąż szkicem? Opublikuj ten wpis! </string>
+	<string name="pending_draft_one_day_1">Stworzyłeś wczoraj szkic  \'%1$s\'. Nie zapomnij go opublikować! </string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">Plugin Jetpack jest podłączony,  ale moduł statystyk nie został włączony. Skontaktuj się z administorem witryny. </string>
 	<string name="jetpack_stats_module_disabled_message">Plugin Jetpack jest podłączony,  ale moduł statystyk nie został włączony. Czy chcesz włączyć statystyki? </string>
 	<string name="jetpack_info">Informacje o Jetpack</string>
@@ -13,8 +25,6 @@ Language: pl
 	<string name="reader_label_visit">Przejdź do witryny</string>
 	<string name="all_your_sites">Wszystkie moje witryny </string>
 	<string name="pending_draft_more">Opracowałeś %d wpis/y/ów,  ale nie został/y przez ciebie  opublikowany/e. Stuknij aby to sprawdzić. </string>
-	<string name="pending_draft_one">%2$d dni temu opracowałeś wpis \'%1$s\' , ale nie został przez ciebie opublikowany. </string>
-	<string name="pending_draft_one_generic">Opracowałeś wpis \'%s\', ale nie został opublikowany. </string>
 	<string name="no_default_app_available_to_open_link">Nie można otworzyć odnośnika</string>
 	<string name="notification_pending_drafts">Powiadom o szkicach do zatw.</string>
 	<string name="invalid_verification_code_format">Musi zawierać 6 cyfr</string>
@@ -294,7 +304,6 @@ Language: pl
 	<string name="editor_page_title_placeholder">Tytuł strony</string>
 	<string name="editor_post_title_placeholder">Tytuł wpisu</string>
 	<string name="email_address">Adres e-mail</string>
-	<string name="preference_show_visual_editor">Pokaż edytor wizualny</string>
 	<string name="preference_editor">Edytor</string>
 	<string name="dlg_sure_to_delete_comments">Trwale usunąć te komentarze ?</string>
 	<string name="dlg_sure_to_delete_comment">Trwale usunąć ten komentarz ?</string>

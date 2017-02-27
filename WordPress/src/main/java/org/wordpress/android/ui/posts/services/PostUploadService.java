@@ -232,6 +232,10 @@ public class PostUploadService extends Service {
                 return false;
             }
 
+            if (mPost.getCategoryIdList().size() > 0) {
+                mHasCategory = true;
+            }
+
             // Support for legacy editor - images are identified as featured as they're being uploaded with the post
             if (mUseLegacyMode && featuredImageID != -1) {
                 mPost.setFeaturedImageId(featuredImageID);

@@ -527,9 +527,6 @@ public class WordPress extends MultiDexApplication {
             if (appLock != null) {
                 appLock.setPassword(null);
             }
-
-            // dangerously delete all content!
-            wpDB.dangerouslyDeleteAllContent();
         }
     }
 

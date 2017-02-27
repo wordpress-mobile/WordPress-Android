@@ -798,7 +798,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else if (itemId == R.id.menu_post_settings) {
             InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-            if (mShowNewEditor) {
+            if (mShowNewEditor || mShowAztecEditor) {
                 mEditPostSettingsFragment.updateFeaturedImage(mPost.getFeaturedImageId());
             }
             mViewPager.setCurrentItem(PAGE_SETTINGS);
@@ -864,7 +864,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 } else {
                     PostUploadService.addPostToUpload(mPost);
                 }
-                PostUploadService.setLegacyMode(!mShowNewEditor);
+                PostUploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
                 startService(new Intent(EditPostActivity.this, PostUploadService.class));
                 PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
                 setResult(RESULT_OK);
@@ -1049,7 +1049,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Update post object from fragment fields
         if (mEditorFragment != null) {
-            if (mShowNewEditor) {
+            if (mShowNewEditor || mShowAztecEditor) {
                 updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
                         (String) mEditorFragment.getContent());
             } else {
@@ -1150,7 +1150,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
-                if (mShowNewEditor) {
+                if (mShowNewEditor || mShowAztecEditor) {
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
                     updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
                     savePostToDb();
@@ -1268,7 +1268,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         public int getCount() {
-            return (mShowNewEditor ? NUM_PAGES_VISUAL_EDITOR : NUM_PAGES_LEGACY_EDITOR);
+            return ((mShowNewEditor || mShowAztecEditor) ? NUM_PAGES_VISUAL_EDITOR : NUM_PAGES_LEGACY_EDITOR);
         }
     }
 
@@ -1441,11 +1441,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
             // Create an <a href> element around links
             text = AutolinkUtils.autoCreateLinks(text);
-            if (mEditorFragment instanceof EditorFragment) {
-                mEditorFragment.setContent(text);
-            } else {
+            if (mEditorFragment instanceof LegacyEditorFragment) {
                 mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, mPost,
                         getMaximumThumbnailWidthForEditor()));
+            } else {
+                mEditorFragment.setContent(text);
             }
         }
 

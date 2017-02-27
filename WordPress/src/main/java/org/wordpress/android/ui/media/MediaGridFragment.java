@@ -773,7 +773,6 @@ public class MediaGridFragment extends Fragment
 
         // do not refresh if custom date filter is shown
         if (mFilter == Filter.CUSTOM_DATE) {
-            // TODO: could this be supported? What if media in list was deleted via web?
             setRefreshing(false);
             return;
         }
