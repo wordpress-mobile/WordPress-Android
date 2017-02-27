@@ -1357,14 +1357,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (imageSpans.length != 0) {
                 for (WPImageSpan wpIS : imageSpans) {
                     MediaFile mediaFile = wpIS.getMediaFile();
-                    if (mediaFile == null)
+                    if (mediaFile == null) {
                         continue;
+                    }
+
                     if (mediaFile.getMediaId() != null) {
                         updateMediaFileOnServer(mediaFile);
                     } else {
                         mediaFile.setFileName(wpIS.getImageSource().toString());
                         mediaFile.setFilePath(wpIS.getImageSource().toString());
-                        updateMediaFileOnServer(mediaFile);
                     }
 
                     int tagStart = postContent.getSpanStart(wpIS);
