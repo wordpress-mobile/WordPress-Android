@@ -91,7 +91,9 @@ public abstract class BaseUploadRequestBody extends RequestBody {
      * Custom Sink that reports progress to listener as bytes are written.
      */
     protected final class CountingSink extends ForwardingSink {
+        private static final int ON_PROGRESS_THROTTLE_RATE = 100;
         private long mBytesWritten = 0;
+        private long mLastTimeOnProgressCalled = 0;
 
         public CountingSink(Sink delegate) {
             super(delegate);
@@ -101,7 +103,13 @@ public abstract class BaseUploadRequestBody extends RequestBody {
         public void write(Buffer source, long byteCount) throws IOException {
             super.write(source, byteCount);
             mBytesWritten += byteCount;
-            mListener.onProgress(mMedia, getProgress(mBytesWritten));
+            long currentTimeMillis = System.currentTimeMillis();
+            // Call the mListener.onProgress callback at maximum every 100ms.
+            if ((currentTimeMillis - mLastTimeOnProgressCalled) > ON_PROGRESS_THROTTLE_RATE
+                || mLastTimeOnProgressCalled == 0) {
+                mLastTimeOnProgressCalled = currentTimeMillis;
+                mListener.onProgress(mMedia, getProgress(mBytesWritten));
+            }
         }
     }
 }
