@@ -1858,6 +1858,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return null;
         }
 
+        MediaModel media = buildMediaModel(uri, mimeType, startingState);
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+        mPendingUploads.add(media);
+        startMediaUploadService();
+
+        return media;
+    }
+
+    private MediaModel buildMediaModel(Uri uri, String mimeType, UploadState startingState) {
+        String path = getRealPathFromURI(uri);
+
         MediaModel media = mMediaStore.instantiateMediaModel();
         AppLog.i(T.MEDIA, "New media instantiated localId=" + media.getId());
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
@@ -1891,10 +1902,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setMimeType(mimeType);
         media.setUploadState(startingState.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
-
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-        mPendingUploads.add(media);
-        startMediaUploadService();
 
         return media;
     }
