@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.account.NewAccountResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
@@ -61,6 +60,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     public static class NewSiteResponsePayload extends Payload {
         public NewSiteResponsePayload() {
         }
+        public long newSiteRemoteId;
         public NewSiteError error;
         public boolean dryRun;
     }
@@ -187,13 +187,22 @@ public class SiteRestClient extends BaseWPComRestClient {
         body.put(CLIENT_ID_KEY, mAppSecrets.getAppId());
         body.put(CLIENT_SECRET_KEY, mAppSecrets.getAppSecret());
 
-        WPComGsonRequest<NewAccountResponse> request = WPComGsonRequest.buildPostRequest(url, body,
-                NewAccountResponse.class,
-                new Listener<NewAccountResponse>() {
+        WPComGsonRequest<NewSiteResponse> request = WPComGsonRequest.buildPostRequest(url, body,
+                NewSiteResponse.class,
+                new Listener<NewSiteResponse>() {
                     @Override
-                    public void onResponse(NewAccountResponse response) {
+                    public void onResponse(NewSiteResponse response) {
                         NewSiteResponsePayload payload = new NewSiteResponsePayload();
                         payload.dryRun = dryRun;
+                        long siteId = 0;
+                        if (response.blog_details != null) {
+                            try {
+                                siteId = Long.valueOf(response.blog_details.blogid);
+                            } catch (NumberFormatException e) {
+                                // No op: In dry run mode, returned newSiteRemoteId is "Array"
+                            }
+                        }
+                        payload.newSiteRemoteId = siteId;
                         mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload));
                     }
                 },
