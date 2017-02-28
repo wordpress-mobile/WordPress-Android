@@ -257,8 +257,8 @@ public class WPLegacyMigrationUtils {
                     postModel.setLocalSiteId(migratedSiteLocalId);
                     siteCursor.close();
                 } else {
-                    AppLog.i(T.DB, "Couldn't find site corresponding to draft in deprecated DB! " +
-                            "Site local id " + c.getInt(c.getColumnIndex("blogId")) +
+                    AppLog.d(T.DB, "Couldn't find site corresponding to draft in deprecated DB! " +
+                            "Site local id " + c.getInt(c.getColumnIndex("blogID")) +
                             " - Post title: " + c.getString(c.getColumnIndex("title")));
                     siteCursor.close();
                     continue;
