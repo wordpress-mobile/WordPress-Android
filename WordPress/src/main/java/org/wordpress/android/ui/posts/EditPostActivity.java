@@ -773,7 +773,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         String localMediaId = String.valueOf(media.getId());
 
         Map<String, Object> properties = null;
-        MediaFile mf = FluxCUtils.fromMediaModel(media);
+        MediaFile mf = FluxCUtils.mediaFileFromMediaModel(media);
         if (mf != null) {
             properties = AnalyticsUtils.getMediaProperties(this, mf.isVideo(), null, mf.getFilePath());
             properties.put("error_type", error.type.name());
