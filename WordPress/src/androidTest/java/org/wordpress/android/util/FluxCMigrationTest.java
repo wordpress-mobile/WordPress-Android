@@ -69,6 +69,8 @@ public class FluxCMigrationTest extends InstrumentationTestCase {
         List<PostModel> posts = WPLegacyMigrationUtils.getDraftsFromDeprecatedDB(mRenamingTargetAppContext, mSiteStore);
         AppLog.d(AppLog.T.DB, "Extracted " + posts.size() + " drafts from legacy DB");
 
-        assertEquals(1, posts.size());
+        assertEquals(2, posts.size());
+        assertEquals("", posts.get(0).getTitle());
+        assertEquals("This is a title", posts.get(1).getTitle());
     }
 }
