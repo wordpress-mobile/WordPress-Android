@@ -97,21 +97,13 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             mUsernameET = (EditText) findViewById(R.id.username);
             mPasswordET = (EditText) findViewById(R.id.password);
             Button removeBlogButton = (Button) findViewById(R.id.remove_account);
-
-            // remove blog & credentials apply only to dot org
-            if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
-                View credentialsRL = findViewById(R.id.sectionContent);
-                credentialsRL.setVisibility(View.GONE);
-                removeBlogButton.setVisibility(View.GONE);
-            } else {
-                removeBlogButton.setVisibility(View.VISIBLE);
-                removeBlogButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        removeBlogWithConfirmation();
-                    }
-                });
-            }
+            removeBlogButton.setVisibility(View.VISIBLE);
+            removeBlogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    removeBlogWithConfirmation();
+                }
+            });
 
             loadSettingsForBlog();
         }
