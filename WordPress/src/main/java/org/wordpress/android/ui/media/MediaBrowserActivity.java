@@ -550,7 +550,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnMediaListFetched(MediaStore.OnMediaListFetched event) {
+    public void onMediaListFetched(MediaStore.OnMediaListFetched event) {
         if (event.isError()) {
             AppLog.w(AppLog.T.MEDIA, "Received OnMediaListFetched error: " + event.error.type
                     + " - " + event.error.message);

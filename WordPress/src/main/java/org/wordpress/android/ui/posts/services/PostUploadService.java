@@ -56,8 +56,6 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static com.android.volley.Request.Method.HEAD;
-
 public class PostUploadService extends Service {
     private static final ArrayList<PostModel> mPostsList = new ArrayList<>();
     private static PostModel mCurrentUploadingPost = null;
@@ -374,7 +372,6 @@ public class PostUploadService extends Service {
                     String thumbData = cur.getString(dataColumn);
                     mimeType = cur.getString(mimeTypeColumn);
                     imageFile = new File(thumbData);
-                    path = thumbData;
                     mediaFile.setFilePath(imageFile.getPath());
                 }
                 SqlUtils.closeCursor(cur);

@@ -154,7 +154,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnMediaListFetched(MediaStore.OnMediaListFetched event) {
+    public void onMediaListFetched(MediaStore.OnMediaListFetched event) {
         mIsFetching = false;
         if (event.isError()) {
             MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
