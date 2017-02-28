@@ -1208,6 +1208,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeNonSelfHostedPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
     }
 
     private void removeNonJetpackPreferences() {
