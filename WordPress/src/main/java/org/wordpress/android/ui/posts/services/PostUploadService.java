@@ -575,7 +575,7 @@ public class PostUploadService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
         // Event for unknown media, ignoring
-        if (event.media == null || mMediaLatchMap.get(event.media.getId()) == null) {
+        if (event.media == null || mCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
             AppLog.w(T.POSTS, "Media event not recognized: " + event.media);
             return;
         }
