@@ -411,7 +411,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
                 if (bitmapToShow == null) {
                     ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                    bitmapToShow = BitmapFactory.decodeResource(getResources(), R.drawable.media_image_placeholder);
+                    bitmapToShow = BitmapFactory.decodeResource(getResources(), R.drawable.ic_gridicons_image);
                 }
                 content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
 
