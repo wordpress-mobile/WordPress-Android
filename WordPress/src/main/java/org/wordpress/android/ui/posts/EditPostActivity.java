@@ -561,6 +561,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (overlay.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
         }
+
+        // disable the formatting toolbar while photo chooser is showing
+        if (mAztecEditorFragment != null) {
+            mAztecEditorFragment.enableFormattingToolbar(false);
+        }
     }
 
     public void hidePhotoChooser() {
@@ -572,6 +577,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         View overlay = findViewById(R.id.view_overlay);
         if (overlay.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(overlay, AniUtils.Duration.MEDIUM);
+        }
+
+        if (mAztecEditorFragment != null) {
+            mAztecEditorFragment.enableFormattingToolbar(true);
         }
     }
 
@@ -604,6 +613,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 startMediaGalleryAddActivity();
                 break;
         }
+    }
+
+    /*
+     * user tapped the close button above the photo chooser to hide it
+     */
+    @Override
+    public void onPhotoChooserRequestClose() {
+        hidePhotoChooser();
     }
 
     @Override

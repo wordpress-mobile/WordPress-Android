@@ -44,6 +44,7 @@ public class PhotoChooserFragment extends Fragment {
     public interface PhotoChooserListener {
         void onPhotoChooserMediaChosen(@NonNull List<Uri> uriList);
         void onPhotoChooserIconClicked(@NonNull PhotoChooserIcon icon);
+        void onPhotoChooserRequestClose();
     }
 
     private RecyclerView mRecycler;

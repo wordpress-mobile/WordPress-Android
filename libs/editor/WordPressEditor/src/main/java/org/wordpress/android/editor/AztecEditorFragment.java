@@ -330,6 +330,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
     }
 
+    public void enableFormattingToolbar(boolean enable) {
+        formattingToolbar.enableFormatButtons(enable);
+    }
+
     @Override
     public boolean isActionInProgress() {
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
