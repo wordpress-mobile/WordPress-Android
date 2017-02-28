@@ -131,7 +131,7 @@ public class WordPress extends MultiDexApplication {
         return mAppComponent;
     }
 
-    // FluxC migration
+    // FluxC migration - drop the migration code after wpandroid 7.8
     public static boolean sIsMigrationInProgress;
     private static MigrationListener sMigrationListener;
     private int mRemainingSelfHostedSitesToFetch;
@@ -830,6 +830,11 @@ public class WordPress extends MultiDexApplication {
 
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
+
+                // Don't update sites or delete expired stats if migration is in progress
+                if (sIsMigrationInProgress) {
+                    return;
+                }
 
                 // Rate limited WPCom blog list update
                 mUpdateSiteList.runIfNotLimited();
