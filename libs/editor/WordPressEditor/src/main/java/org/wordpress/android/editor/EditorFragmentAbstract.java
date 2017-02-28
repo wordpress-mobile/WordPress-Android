@@ -2,7 +2,6 @@ package org.wordpress.android.editor;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spanned;
@@ -22,7 +21,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setContent(CharSequence text);
     public abstract CharSequence getTitle() throws IllegalEditorStateException;
     public abstract CharSequence getContent() throws IllegalEditorStateException;
-    public abstract void appendMediaFile(Context ctx, MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
+    public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
     public abstract boolean isUploadingMedia();

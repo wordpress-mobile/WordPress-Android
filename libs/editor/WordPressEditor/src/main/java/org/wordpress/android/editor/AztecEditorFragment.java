@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -384,7 +383,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     }
 
     @Override
-    public void appendMediaFile(final Context ctx, final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
+    public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
         final String safeMediaUrl = Utils.escapeQuotes(mediaUrl);
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
@@ -407,10 +406,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
 
                 // load a scaled version of the image to prevent OOM exception
-                int maxWidth = DisplayUtils.getDisplayPixelWidth(ctx);
-                Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(ctx, safeMediaUrl, maxWidth);
+                int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+                Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
                 if (bitmapToShow == null) {
-                    ToastUtils.showToast(ctx, R.string.error_media_load);
+                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
                 }
                 content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
 

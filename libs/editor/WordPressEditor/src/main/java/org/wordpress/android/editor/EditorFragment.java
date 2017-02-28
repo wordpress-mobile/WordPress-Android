@@ -1015,7 +1015,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void appendMediaFile(final Context ctx, final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
+    public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
         if (!mDomHasLoaded) {
             // If the DOM hasn't loaded yet, we won't be able to add media to the ZSSEditor
             // Place them in a queue to be handled when the DOM loaded callback is received
@@ -1256,7 +1256,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     editorHasFocus = true;
 
                     for (Map.Entry<String, MediaFile> entry : mWaitingMediaFiles.entrySet()) {
-                        appendMediaFile(EditorFragment.this.getActivity(), entry.getValue(), entry.getKey(), null);
+                        appendMediaFile(entry.getValue(), entry.getKey(), null);
                     }
                     mWaitingMediaFiles.clear();
                 }
