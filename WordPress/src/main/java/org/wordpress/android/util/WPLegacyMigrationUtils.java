@@ -43,7 +43,7 @@ public class WPLegacyMigrationUtils {
      * The access token has historically existed in preferences and two DB tables.
      */
     public static String migrateAccessTokenToAccountStore(Context context, Dispatcher dispatcher) {
-        String token = getLatestDeprecatedAccessToken(context);
+        String token = getLatestDeprecatedAccessToken(context.getApplicationContext());
 
         // updating from previous app version
         if (!TextUtils.isEmpty(token)) {
@@ -60,7 +60,7 @@ public class WPLegacyMigrationUtils {
      * Existing sites are retained in the deprecated accounts table after migration.
      */
     public static List<SiteModel> migrateSelfHostedSitesFromDeprecatedDB(Context context, Dispatcher dispatcher) {
-        List<SiteModel> siteList = getSelfHostedSitesFromDeprecatedDB(context);
+        List<SiteModel> siteList = getSelfHostedSitesFromDeprecatedDB(context.getApplicationContext());
         if (siteList != null) {
             AppLog.i(T.DB, "Starting migration of " + siteList.size() + " self-hosted sites to FluxC");
             for (SiteModel siteModel : siteList) {
@@ -77,7 +77,7 @@ public class WPLegacyMigrationUtils {
      * Existing posts are retained in the deprecated posts table after migration.
      */
     public static void migrateDraftsFromDeprecatedDB(Context context, Dispatcher dispatcher, SiteStore siteStore) {
-        List<PostModel> postList = getDraftsFromDeprecatedDB(context, siteStore);
+        List<PostModel> postList = getDraftsFromDeprecatedDB(context.getApplicationContext(), siteStore);
         if (postList != null) {
             AppLog.i(T.DB, "Starting migration of " + postList.size() + " drafts to FluxC");
             for (PostModel postModel : postList) {
@@ -105,7 +105,7 @@ public class WPLegacyMigrationUtils {
     private static String getAccessTokenFromTable(Context context, String tableName) {
         String token = null;
         try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
             Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN
                     + " FROM " + tableName + " WHERE local_id=0", null);
             if (c.moveToFirst() && c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN) != -1) {
@@ -121,7 +121,7 @@ public class WPLegacyMigrationUtils {
 
     public static boolean hasSelfHostedSiteToMigrate(Context context) {
         try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
             String[] fields = new String[]{"username", "password", "url", "homeURL", "blogId", "api_blogid"};
 
             // To exclude the jetpack sites we need to check for empty password
@@ -147,7 +147,7 @@ public class WPLegacyMigrationUtils {
     private static List<SiteModel> getSelfHostedSitesFromDeprecatedDB(Context context) {
         List<SiteModel> siteList = new ArrayList<>();
         try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
             String[] fields = new String[]{"username", "password", "url", "homeURL", "blogId", "api_blogid"};
 
             // To exclude the jetpack sites we need to check for empty password
@@ -186,7 +186,7 @@ public class WPLegacyMigrationUtils {
 
     public static boolean hasDraftsToMigrate(Context context) {
         try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
 
             String byString = "localDraft=1 OR isLocalChange=1";
             Cursor c = db.query(DEPRECATED_POSTS_TABLE, null, byString, null, null, null, null);
@@ -204,7 +204,7 @@ public class WPLegacyMigrationUtils {
     private static List<PostModel> getDraftsFromDeprecatedDB(Context context, SiteStore siteStore) {
         List<PostModel> postList = new ArrayList<>();
         try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
 
             String byString = "localDraft=1 OR isLocalChange=1";
             Cursor c = db.query(DEPRECATED_POSTS_TABLE, null, byString, null, null, null, null);
