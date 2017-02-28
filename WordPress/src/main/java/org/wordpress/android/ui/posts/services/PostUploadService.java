@@ -580,6 +580,18 @@ public class PostUploadService extends Service {
             return;
         }
 
+        if (event.isError()) {
+            SiteModel site = mSiteStore.getSiteByLocalId(mCurrentUploadingPost.getLocalSiteId());
+
+            // TODO: We should interpret event.error.type and pass our own string rather than use error.message
+            String message = TextUtils.isEmpty(event.error.message) ? event.error.type.toString() : event.error.message;
+            mPostUploadNotifier.updateNotificationError(mCurrentUploadingPost, site, message, true);
+
+            mFirstPublishPosts.remove(mCurrentUploadingPost.getId());
+            finishUpload();
+            return;
+        }
+
         if (event.completed) {
             AppLog.i(T.POSTS, "Media upload completed for post. Media id: " + event.media.getId()
                     + ", post id: " + mCurrentUploadingPost.getId());
