@@ -657,10 +657,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         boolean isAccessibleViaWPComAPI = SiteUtils.isAccessibleViaWPComAPI(mSite);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
-        if (isAccessibleViaWPComAPI) {
-            removeSelfHostedOnlyPreferences();
+        if (!isAccessibleViaWPComAPI) {
+            // self-hosted, non-jetpack site
+            removeNonSelfHostedPreferences();
+        } else if (mSite.isJetpackConnected()) {
+            // jetpack site
+            removeNonJetpackPreferences();
         } else {
-            removeDotComOnlyPreferences();
+            // wp.com site
+            removeNonDotComPreferences();
         }
 
         // hide Admin options depending of capabilities on this site
@@ -1200,12 +1205,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
     }
 
-    private void removeDotComOnlyPreferences() {
+    private void removeNonSelfHostedPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
     }
 
-    private void removeSelfHostedOnlyPreferences() {
+    private void removeNonJetpackPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
+    }
+
+    private void removeNonDotComPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_delete_site_screen);
     }
