@@ -132,6 +132,7 @@ public class WPLegacyMigrationUtils {
             c.moveToFirst();
             for (int i = 0; i < numRows; i++) {
                 if (!TextUtils.isEmpty(c.getString(5))) {
+                    c.moveToNext();
                     continue;
                 }
                 c.close();
@@ -160,6 +161,7 @@ public class WPLegacyMigrationUtils {
                 // If the api_blogid field is set, that's probably a Jetpack site that is not connected to the main
                 // account, so we want to skip it.
                 if (!TextUtils.isEmpty(c.getString(5))) {
+                    c.moveToNext();
                     continue;
                 }
 
@@ -260,6 +262,7 @@ public class WPLegacyMigrationUtils {
                     AppLog.d(T.DB, "Couldn't find site corresponding to draft in deprecated DB! " +
                             "Site local id " + c.getInt(c.getColumnIndex("blogID")) +
                             " - Post title: " + c.getString(c.getColumnIndex("title")));
+                    c.moveToNext();
                     siteCursor.close();
                     continue;
                 }
