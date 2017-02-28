@@ -267,8 +267,9 @@ public class WPLegacyMigrationUtils {
                 postModel.setIsLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
                 postModel.setIsLocallyChanged(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))));
 
-                if (!c.getString(c.getColumnIndex("postid")).equals("")) {
-                    postModel.setRemotePostId(Long.valueOf(c.getString(c.getColumnIndex("postid"))));
+                String postId = c.getString(c.getColumnIndex("postid"));
+                if (!TextUtils.isEmpty(postId)) {
+                    postModel.setRemotePostId(Long.valueOf(postId));
                 }
 
                 postModel.setTitle(StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title"))));
