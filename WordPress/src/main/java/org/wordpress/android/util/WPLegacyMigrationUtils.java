@@ -162,14 +162,29 @@ public class WPLegacyMigrationUtils {
                 if (!TextUtils.isEmpty(c.getString(5))) {
                     continue;
                 }
-                SiteModel siteModel = new SiteModel();
-                siteModel.setUsername(c.getString(0));
-                // Decrypt password before migrating since we no longer encrypt passwords in FluxC
-                String encryptedPwd = c.getString(1);
-                siteModel.setPassword(decryptPassword(encryptedPwd));
 
+                String username = c.getString(0);
+                String encryptedPwd = c.getString(1);
                 String xmlrpcUrl = c.getString(2);
+
+                if (TextUtils.isEmpty(username)) {
+                    AppLog.d(T.DB, "Found a self-hosted site with no username - skipping it.");
+                    c.moveToNext();
+                    continue;
+                }
+
+                if (TextUtils.isEmpty(xmlrpcUrl)) {
+                    AppLog.d(T.DB, "Found a self-hosted site with no XML-RPC URL - skipping it.");
+                    c.moveToNext();
+                    continue;
+                }
+
+                SiteModel siteModel = new SiteModel();
+                siteModel.setUsername(username);
+                // Decrypt password before migrating since we no longer encrypt passwords in FluxC
+                siteModel.setPassword(decryptPassword(encryptedPwd));
                 siteModel.setXmlRpcUrl(xmlrpcUrl);
+
                 String url = c.getString(3);
                 siteModel.setUrl(url);
 
