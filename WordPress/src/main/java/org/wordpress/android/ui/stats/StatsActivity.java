@@ -112,6 +112,18 @@ public class StatsActivity extends AppCompatActivity
             return;
         }
 
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.stats_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -145,12 +157,11 @@ public class StatsActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
             mThereWasAnErrorLoadingStats = savedInstanceState.getBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS);
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
-            if(yScrollPosition != 0) {
+            if (yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
                     public void run() {
                         if (!isFinishing()) {
@@ -160,8 +171,6 @@ public class StatsActivity extends AppCompatActivity
                 }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         } else if (getIntent() != null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
             } else if (getIntent().hasExtra(ARG_DESIRED_TIMEFRAME)) {
@@ -178,12 +187,6 @@ public class StatsActivity extends AppCompatActivity
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, mSite);
                 }
             }
-        }
-
-        if (mSite == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            finish();
-            return;
         }
 
         if (!mAccountStore.hasAccessToken()) {
