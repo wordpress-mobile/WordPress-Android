@@ -186,7 +186,9 @@ public class WPLegacyMigrationUtils {
                 siteModel.setXmlRpcUrl(xmlrpcUrl);
 
                 String url = c.getString(3);
-                siteModel.setUrl(url);
+                if (!TextUtils.isEmpty(url)) {
+                    siteModel.setUrl(url);
+                }
 
                 siteModel.setSelfHostedSiteId(c.getLong(4));
                 siteList.add(siteModel);
