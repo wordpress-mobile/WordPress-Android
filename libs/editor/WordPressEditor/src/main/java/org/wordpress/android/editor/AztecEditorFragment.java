@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -410,6 +411,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
                 if (bitmapToShow == null) {
                     ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                    try {
+                        bitmapToShow = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.media_image_placeholder);
+                    } catch (OutOfMemoryError e) {
+                    }
                 }
                 content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
 
