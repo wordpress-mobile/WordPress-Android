@@ -412,7 +412,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 if (bitmapToShow == null) {
                     ToastUtils.showToast(getActivity(), R.string.error_media_load);
                     try {
-                        bitmapToShow = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.media_image_placeholder);
+                        bitmapToShow = BitmapFactory.decodeResource(getResources(), R.drawable.media_image_placeholder);
                     } catch (OutOfMemoryError e) {
                     }
                 }
