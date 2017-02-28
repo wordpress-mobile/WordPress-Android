@@ -592,12 +592,18 @@ public class PostUploadService extends Service {
             return;
         }
 
+        if (event.canceled) {
+            // Not implemented
+            return;
+        }
+
         if (event.completed) {
             AppLog.i(T.POSTS, "Media upload completed for post. Media id: " + event.media.getId()
                     + ", post id: " + mCurrentUploadingPost.getId());
             mMediaLatchMap.get(event.media.getId()).countDown();
             mMediaLatchMap.remove(event.media.getId());
-        } else if (!event.canceled && !event.isError()) {
+        } else {
+            // Progress update
             mPostUploadNotifier.updateNotificationProgress(mCurrentUploadingPost, event.progress);
         }
     }
