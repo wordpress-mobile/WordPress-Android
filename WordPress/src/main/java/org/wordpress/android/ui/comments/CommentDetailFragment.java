@@ -377,7 +377,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setupSuggestionServiceAndAdapter() {
-        if (!isAdded() || !SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+        if (!isAdded() || mSite == null || !SiteUtils.isAccessibleViaWPComAPI(mSite)) {
             return;
         }
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mSite.getSiteId());

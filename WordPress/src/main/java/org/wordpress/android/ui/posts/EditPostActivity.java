@@ -944,7 +944,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onUploadSuccess(MediaModel media) {
         if (mEditorMediaUploadListener != null && media != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                    FluxCUtils.fromMediaModel(media));
+                    FluxCUtils.mediaFileFromMediaModel(media));
         }
         removeMediaFromPendingList(media);
     }
@@ -956,8 +956,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onUploadError(MediaModel media, MediaStore.MediaError error) {
-        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
         String localMediaId = String.valueOf(media.getId());
+
+        Map<String, Object> properties = null;
+        MediaFile mf = FluxCUtils.mediaFileFromMediaModel(media);
+        if (mf != null) {
+            properties = AnalyticsUtils.getMediaProperties(this, mf.isVideo(), null, mf.getFilePath());
+            properties.put("error_type", error.type.name());
+        }
+        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED, properties);
 
         // Display custom error depending on error type
         String errorMessage;
@@ -1290,7 +1297,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void addExistingMediaToEditor(long mediaId) {
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         if (media != null) {
-            MediaFile mediaFile = FluxCUtils.fromMediaModel(media);
+            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
             trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
             mEditorFragment.appendMediaFile(mediaFile, media.getUrl(), WordPress.sImageLoader);
         }
@@ -1346,7 +1353,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             while (matcher.find()) {
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
-                MediaFile mediaFile = FluxCUtils.fromMediaModel(queueFileForUpload(uri,
+                MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(queueFileForUpload(uri,
                         getContentResolver().getType(uri), UploadState.FAILED));
                 if (mediaFile == null) {
                     continue;
@@ -1548,14 +1555,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (imageSpans.length != 0) {
                 for (WPImageSpan wpIS : imageSpans) {
                     MediaFile mediaFile = wpIS.getMediaFile();
-                    if (mediaFile == null)
+                    if (mediaFile == null) {
                         continue;
+                    }
+
                     if (mediaFile.getMediaId() != null) {
                         updateMediaFileOnServer(mediaFile);
                     } else {
                         mediaFile.setFileName(wpIS.getImageSource().toString());
                         mediaFile.setFilePath(wpIS.getImageSource().toString());
-                        updateMediaFileOnServer(mediaFile);
                     }
 
                     int tagStart = postContent.getSpanStart(wpIS);
@@ -1629,7 +1637,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        MediaPayload payload = new MediaPayload(mSite, FluxCUtils.fromMediaFile(mediaFile));
+        MediaPayload payload = new MediaPayload(mSite, FluxCUtils.mediaModelFromMediaFile(mediaFile));
         mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(payload));
     }
 
@@ -1720,7 +1728,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
-        MediaFile mediaFile = FluxCUtils.fromMediaModel(media);
+        MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
         trackAddMediaFromDeviceEvents(isVideo, null, path);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
@@ -1731,20 +1739,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
         trackAddMediaFromDeviceEvents(isVideo, mediaUri, null);
-        String mediaTitle;
-        if (isVideo) {
-            mediaTitle = getResources().getString(R.string.video);
-        } else {
-            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, mediaUri.getEncodedPath());
-        }
 
-        MediaFile mediaFile = new MediaFile();
-        mediaFile.setPostID(mPost.getId());
-        mediaFile.setTitle(mediaTitle);
-        mediaFile.setFilePath(mediaUri.toString());
-        if (mediaUri.getEncodedPath() != null) {
-            mediaFile.setVideo(isVideo);
+        MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri), UploadState.QUEUED);
+        if (isVideo) {
+            mediaModel.setTitle(getResources().getString(R.string.video));
+        } else {
+            mediaModel.setTitle(ImageUtils.getTitleForWPImageSpan(this, mediaUri.getEncodedPath()));
         }
+        mediaModel.setPostId(mPost.getId());
+
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
+
+        MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
         mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.sImageLoader);
         return true;
     }
@@ -2049,6 +2055,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return null;
         }
 
+        MediaModel media = buildMediaModel(uri, mimeType, startingState);
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+        mPendingUploads.add(media);
+        startMediaUploadService();
+
+        return media;
+    }
+
+    private MediaModel buildMediaModel(Uri uri, String mimeType, UploadState startingState) {
+        String path = getRealPathFromURI(uri);
+
         MediaModel media = mMediaStore.instantiateMediaModel();
         AppLog.i(T.MEDIA, "New media instantiated localId=" + media.getId());
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
@@ -2082,10 +2099,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setMimeType(mimeType);
         media.setUploadState(startingState.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
-
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-        mPendingUploads.add(media);
-        startMediaUploadService();
 
         return media;
     }
