@@ -45,7 +45,7 @@ public class FluxCMigrationTest extends InstrumentationTestCase {
         super.setUp();
     }
 
-    public void testSelfHostedSiteMigration() throws Exception {
+    public void testSelfHostedSiteMigration() {
         TestUtils.loadDBFromDump(mRenamingTargetAppContext, mTestContext, "FluxC-migration.sql");
 
         List<SiteModel> sites = WPLegacyMigrationUtils.getSelfHostedSitesFromDeprecatedDB(mRenamingTargetAppContext);
