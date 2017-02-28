@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -408,19 +407,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
 
                 // load a scaled version of the image to prevent OOM exception
-                Bitmap bitmapToShow = null;
-                Uri curUri = Uri.parse(safeMediaUrl);
                 int maxWidth = DisplayUtils.getDisplayPixelWidth(ctx);
-                byte[] bytes = ImageUtils.createThumbnailFromUri(ctx, curUri, maxWidth, null, 0);
-                if (bytes == null) {
-                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                } else {
-                    bitmapToShow = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    if (bitmapToShow == null) {
-                        ToastUtils.showToast(ctx, R.string.error_media_load);
-                    }
+                Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(ctx, safeMediaUrl, maxWidth);
+                if (bitmapToShow == null) {
+                    ToastUtils.showToast(ctx, R.string.error_media_load);
                 }
-
                 content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
 
                 // set intermediate shade overlay
