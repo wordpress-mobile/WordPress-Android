@@ -654,16 +654,18 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         sortLanguages();
 
+        boolean isAccessibleViaWPComAPI = SiteUtils.isAccessibleViaWPComAPI(mSite);
+
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
-        if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+        if (isAccessibleViaWPComAPI) {
             removeSelfHostedOnlyPreferences();
         } else {
             removeDotComOnlyPreferences();
         }
 
         // hide Admin options depending of capabilities on this site
-        if ((!mSite.isWPCom() && !mSite.isSelfHostedAdmin())
-            || (mSite.isWPCom() && !mSite.getHasCapabilityManageOptions())) {
+        if ((!isAccessibleViaWPComAPI && !mSite.isSelfHostedAdmin())
+            || (isAccessibleViaWPComAPI && !mSite.getHasCapabilityManageOptions())) {
             hideAdminRequiredPreferences();
         }
     }
