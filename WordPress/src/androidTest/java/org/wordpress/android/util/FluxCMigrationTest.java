@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.SiteStore;
 
@@ -53,5 +54,21 @@ public class FluxCMigrationTest extends InstrumentationTestCase {
 
         // Expect two self-hosted sites (one normal, one blank except for username, password, and XML-RPC URL)
         assertEquals(2, sites.size());
+    }
+
+    public void testDraftMigration() throws DuplicateSiteException {
+        TestUtils.loadDBFromDump(mRenamingTargetAppContext, mTestContext, "FluxC-migration.sql");
+
+        // Migrate sites first so that SiteStore is populated
+        List<SiteModel> sites = WPLegacyMigrationUtils.getSelfHostedSitesFromDeprecatedDB(mRenamingTargetAppContext);
+        for (SiteModel site : sites) {
+            SiteSqlUtils.insertOrUpdateSite(site);
+        }
+        AppLog.d(AppLog.T.DB, "Added " + mSiteStore.getSitesCount() + " sites to SiteStore");
+
+        List<PostModel> posts = WPLegacyMigrationUtils.getDraftsFromDeprecatedDB(mRenamingTargetAppContext, mSiteStore);
+        AppLog.d(AppLog.T.DB, "Extracted " + posts.size() + " drafts from legacy DB");
+
+        assertEquals(1, posts.size());
     }
 }
