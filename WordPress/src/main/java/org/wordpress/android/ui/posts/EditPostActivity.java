@@ -259,6 +259,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
+        //AppPrefs.setAztecEditorAvailable(true);
+        //AppPrefs.setAztecEditorEnabled(true);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
@@ -479,9 +481,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 && mPhotoChooserContainer.getVisibility() == View.VISIBLE;
     }
 
-    // TODO: this is a placeholder for now so we can return False to switch back to the old seven-item menu
+    /*
+     * native photo chooser is only enabled for the Aztec editor
+     */
     private boolean enablePhotoChooser() {
-        return true;
+        return mShowAztecEditor;
     }
 
     /*
@@ -876,22 +880,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        // TODO: right now we intercept the editor's request for a context menu to display the
-        // photo chooser instead - at some point this should be rewritten so the editor requests
-        // the photo chooser to be shown directly
+        // if we're using the native photo chooser, ignore the request - if we're not using
+        // the photo chooser, then this will show the "seven item menu monstrosity"
         if (enablePhotoChooser()) {
-            if (!isPhotoChooserShowing()) {
-                showPhotoChooser();
-            } else {
-                hidePhotoChooser();
-            }
+            return;
+        }
+        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+            super.openContextMenu(view);
         } else {
-            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-                super.openContextMenu(view);
-            } else {
-                AppLockManager.getInstance().setExtendedTimeout();
-                mMenuView = view;
-            }
+            AppLockManager.getInstance().setExtendedTimeout();
+            mMenuView = view;
         }
     }
 
@@ -2114,7 +2112,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onAddMediaClicked() {
-        // no op
+        if (enablePhotoChooser()) {
+            if (!isPhotoChooserShowing()) {
+                showPhotoChooser();
+            } else {
+                hidePhotoChooser();
+            }
+        }
     }
 
     @Override
