@@ -526,8 +526,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     break;
                 }
 
-                MediaModel media = event.mediaList.get(0);
-
                 // If the media was deleted, remove it from multi select (if it was selected) and hide it from the
                 // detail view (if it was the one displayed)
                 for (MediaModel mediaModel : event.mediaList) {

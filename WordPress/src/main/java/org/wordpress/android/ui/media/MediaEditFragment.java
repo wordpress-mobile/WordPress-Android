@@ -63,8 +63,6 @@ public class MediaEditFragment extends Fragment {
 
     private MediaEditFragmentCallback mCallback;
 
-    private boolean mIsMediaUpdating = false;
-
     private int mLocalMediaId = MISSING_MEDIA_ID;
     private ScrollView mScrollView;
     private View mLinearLayout;
@@ -355,7 +353,6 @@ public class MediaEditFragment extends Fragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        mIsMediaUpdating = false;
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
             Toast.makeText(getActivity(), event.isError() ? R.string.media_edit_failure : R.string.media_edit_success,
