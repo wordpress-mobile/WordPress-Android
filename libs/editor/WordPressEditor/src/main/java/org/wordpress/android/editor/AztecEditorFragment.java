@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -41,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
@@ -383,7 +385,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     }
 
     @Override
-    public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
+    public void appendMediaFile(final Context ctx, final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
         final String safeMediaUrl = Utils.escapeQuotes(mediaUrl);
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
@@ -405,9 +407,21 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 attrs.addAttribute("", "data-wpid", "data-wpid", "string", localMediaId);
                 attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
 
-                Bitmap bitmap = BitmapFactory.decodeFile(safeMediaUrl);
+                // load a scaled version of the image to prevent OOM exception
+                Bitmap bitmapToShow = null;
+                Uri curUri = Uri.parse(safeMediaUrl);
+                int maxWidth = DisplayUtils.getDisplayPixelWidth(ctx);
+                byte[] bytes = ImageUtils.createThumbnailFromUri(ctx, curUri, maxWidth, null, 0);
+                if (bytes == null) {
+                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                } else {
+                    bitmapToShow = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    if (bitmapToShow == null) {
+                        ToastUtils.showToast(ctx, R.string.error_media_load);
+                    }
+                }
 
-                content.insertMedia(new BitmapDrawable(getResources(), bitmap), attrs);
+                content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
 
                 // set intermediate shade overlay
                 content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,

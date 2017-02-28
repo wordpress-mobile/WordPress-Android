@@ -1108,7 +1108,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (media != null) {
             MediaFile mediaFile = FluxCUtils.fromMediaModel(media);
             trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
-            mEditorFragment.appendMediaFile(mediaFile, media.getUrl(), WordPress.sImageLoader);
+            mEditorFragment.appendMediaFile(this, mediaFile, media.getUrl(), WordPress.sImageLoader);
         }
     }
 
@@ -1539,7 +1539,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         MediaFile mediaFile = FluxCUtils.fromMediaModel(media);
         trackAddMediaFromDeviceEvents(isVideo, null, path);
         if (media != null) {
-            mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
+            mEditorFragment.appendMediaFile(this, mediaFile, path, WordPress.sImageLoader);
         }
 
         return true;
@@ -1561,7 +1561,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mediaUri.getEncodedPath() != null) {
             mediaFile.setVideo(isVideo);
         }
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.sImageLoader);
+        mEditorFragment.appendMediaFile(this, mediaFile, mediaFile.getFilePath(), WordPress.sImageLoader);
         return true;
     }
 

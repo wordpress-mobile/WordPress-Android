@@ -1113,7 +1113,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     @Override
-    public void appendMediaFile(final MediaFile mediaFile, final String imageUrl, final ImageLoader imageLoader) {
+    public void appendMediaFile(final Context ctx, final MediaFile mediaFile, final String imageUrl, final ImageLoader imageLoader) {
         addMediaFile(mediaFile, imageUrl, imageLoader, mContentEditText.getSelectionStart(), mContentEditText.getSelectionEnd());
     }
 
