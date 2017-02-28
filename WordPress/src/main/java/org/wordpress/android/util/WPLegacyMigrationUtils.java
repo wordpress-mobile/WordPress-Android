@@ -102,7 +102,7 @@ public class WPLegacyMigrationUtils {
         return latestToken;
     }
 
-    private static String getAccessTokenFromTable(Context context, String tableName) {
+    static String getAccessTokenFromTable(Context context, String tableName) {
         String token = null;
         try {
             SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
@@ -144,7 +144,7 @@ public class WPLegacyMigrationUtils {
         }
     }
 
-    private static List<SiteModel> getSelfHostedSitesFromDeprecatedDB(Context context) {
+    static List<SiteModel> getSelfHostedSitesFromDeprecatedDB(Context context) {
         List<SiteModel> siteList = new ArrayList<>();
         try {
             SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
@@ -201,7 +201,7 @@ public class WPLegacyMigrationUtils {
         }
     }
 
-    private static List<PostModel> getDraftsFromDeprecatedDB(Context context, SiteStore siteStore) {
+    static List<PostModel> getDraftsFromDeprecatedDB(Context context, SiteStore siteStore) {
         List<PostModel> postList = new ArrayList<>();
         try {
             SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
