@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermResponsePayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsPayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload;
-import org.wordpress.android.fluxc.store.TaxonomyStore.InstantiateTermPayload;
 import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 
 @ActionEnum
@@ -34,12 +33,6 @@ public enum TaxonomyAction implements IAction {
     PUSHED_TERM,
 
     // Local actions
-    @Action(payloadType = SiteModel.class)
-    INSTANTIATE_CATEGORY,
-    @Action(payloadType = SiteModel.class)
-    INSTANTIATE_TAG,
-    @Action(payloadType = InstantiateTermPayload.class)
-    INSTANTIATE_TERM,
     @Action(payloadType = TermModel.class)
     UPDATE_TERM,
     @Action
