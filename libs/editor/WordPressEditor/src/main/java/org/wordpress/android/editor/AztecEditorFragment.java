@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -41,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
@@ -409,9 +409,18 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 attrs.addAttribute("", "data-wpid", "data-wpid", "string", localMediaId);
                 attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
 
-                Bitmap bitmap = BitmapFactory.decodeFile(safeMediaUrl);
-
-                content.insertMedia(new BitmapDrawable(getResources(), bitmap), attrs);
+                // load a scaled version of the image to prevent OOM exception
+                int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+                Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
+               if (bitmapToShow != null) {
+                    content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
+                } else {
+                    // Use a placeholder
+                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                    Drawable d = getResources().getDrawable(R.drawable.ic_gridicons_image);
+                    d.setBounds(0, 0, maxWidth, maxWidth);
+                    content.insertMedia(d, attrs);
+                }
 
                 // set intermediate shade overlay
                 content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,
@@ -476,6 +485,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+        if(!isAdded()) {
+            return;
+        }
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
@@ -519,6 +531,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
+        if(!isAdded()) {
+            return;
+        }
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             AttributesWithClass attributesWithClass = new AttributesWithClass(
@@ -532,6 +547,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void onMediaUploadFailed(final String localMediaId, final String errorMessage) {
+        if(!isAdded()) {
+            return;
+        }
         MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             switch (mediaType) {

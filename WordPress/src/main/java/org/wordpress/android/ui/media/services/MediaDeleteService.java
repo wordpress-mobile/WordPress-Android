@@ -46,10 +46,6 @@ public class MediaDeleteService extends Service {
             getDeleteQueue().remove(media);
             deleteNextInQueue();
         }
-
-        public List<MediaModel> getCompletedItems() {
-            return getCompletedItems();
-        }
     }
 
     private final IBinder mBinder = new MediaDeleteBinder();

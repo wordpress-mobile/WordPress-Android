@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -62,8 +63,6 @@ public class MediaEditFragment extends Fragment {
     private String mCaptionOriginal;
 
     private MediaEditFragmentCallback mCallback;
-
-    private boolean mIsMediaUpdating = false;
 
     private int mLocalMediaId = MISSING_MEDIA_ID;
     private ScrollView mScrollView;
@@ -354,8 +353,7 @@ public class MediaEditFragment extends Fragment {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        mIsMediaUpdating = false;
+    public void onMediaChanged(OnMediaChanged event) {
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
             Toast.makeText(getActivity(), event.isError() ? R.string.media_edit_failure : R.string.media_edit_success,

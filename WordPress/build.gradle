@@ -116,7 +116,7 @@ dependencies {
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
-    androidTestCompile 'org.mockito:mockito-core:+'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestCompile 'com.squareup.okio:okio:1.9.0' // explicitly compile okio to match the version needed by ucrop
 
