@@ -323,7 +323,14 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setTimezone(from.options.timezone);
         }
         if (from.plan != null) {
-            site.setPlanId(from.plan.product_id);
+            try {
+                site.setPlanId(Long.valueOf(from.plan.product_id));
+            } catch (NumberFormatException e) {
+                // VIP sites return a String plan ID ('vip') rather than a number
+                if (from.plan.product_id.equals("vip")) {
+                    site.setPlanId(SiteWPComRestResponse.VIP_PLAN_ID);
+                }
+            }
             site.setPlanShortName(from.plan.product_name_short);
         }
         if (from.capabilities != null) {
