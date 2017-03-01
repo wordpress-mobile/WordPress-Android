@@ -266,8 +266,8 @@
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_image"
             android:key="@string/pref_key_optimize_image"
-            android:title="@string/site_settings_optimize_image"
-            app:longClickHint="@string/site_settings_optimize_image_hint" />
+            android:title="@string/site_settings_optimize_images"
+            app:longClickHint="@string/site_settings_optimize_images_hint" />
 
     </PreferenceCategory>
 
