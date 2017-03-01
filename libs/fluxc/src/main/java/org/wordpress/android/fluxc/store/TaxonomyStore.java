@@ -74,16 +74,6 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    public static class InstantiateTermPayload extends Payload {
-        public SiteModel site;
-        public TaxonomyModel taxonomy;
-
-        public InstantiateTermPayload(SiteModel site, TaxonomyModel taxonomy) {
-            this.site = site;
-            this.taxonomy = taxonomy;
-        }
-    }
-
     // OnChanged events
     public static class OnTaxonomyChanged extends OnChanged<TaxonomyError> {
         public int rowsAffected;
@@ -97,14 +87,6 @@ public class TaxonomyStore extends Store {
 
         public OnTaxonomyChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
-        }
-    }
-
-    public static class OnTermInstantiated extends OnChanged<TaxonomyError> {
-        public TermModel term;
-
-        public OnTermInstantiated(TermModel term) {
-            this.term = term;
         }
     }
 
@@ -168,6 +150,33 @@ public class TaxonomyStore extends Store {
     @Override
     public void onRegister() {
         AppLog.d(AppLog.T.API, "TaxonomyStore onRegister");
+    }
+
+    public TermModel instantiateCategory(SiteModel site) {
+        return instantiateTermModel(site, DEFAULT_TAXONOMY_CATEGORY);
+    }
+
+    public TermModel instantiateTag(SiteModel site) {
+        return instantiateTermModel(site, DEFAULT_TAXONOMY_TAG);
+    }
+
+    public TermModel instantiateTerm(SiteModel site, TaxonomyModel taxonomy) {
+        return instantiateTermModel(site, taxonomy.getName());
+    }
+
+    private TermModel instantiateTermModel(SiteModel site, String taxonomyName) {
+        TermModel newTerm = new TermModel();
+        newTerm.setLocalSiteId(site.getId());
+        newTerm.setTaxonomy(taxonomyName);
+
+        // Insert the term into the db, updating the object to include the local ID
+        newTerm = TaxonomySqlUtils.insertTermForResult(newTerm);
+
+        // id is set to -1 if insertion fails
+        if (newTerm.getId() == -1) {
+            return null;
+        }
+        return newTerm;
     }
 
     /**
@@ -273,16 +282,6 @@ public class TaxonomyStore extends Store {
                 break;
             case FETCHED_TERM:
                 handleFetchSingleTermCompleted((FetchTermResponsePayload) action.getPayload());
-                break;
-            case INSTANTIATE_CATEGORY:
-                instantiateTerm((SiteModel) action.getPayload(), DEFAULT_TAXONOMY_CATEGORY);
-                break;
-            case INSTANTIATE_TAG:
-                instantiateTerm((SiteModel) action.getPayload(), DEFAULT_TAXONOMY_TAG);
-                break;
-            case INSTANTIATE_TERM:
-                InstantiateTermPayload payload = (InstantiateTermPayload) action.getPayload();
-                instantiateTerm(payload.site, payload.taxonomy.getName());
                 break;
             case PUSH_TERM:
                 pushTerm((RemoteTermPayload) action.getPayload());
@@ -394,17 +393,6 @@ public class TaxonomyStore extends Store {
                 mTaxonomyXMLRPCClient.fetchTerm(payload.term, payload.site, TaxonomyAction.PUSH_TERM);
             }
         }
-    }
-
-    private void instantiateTerm(SiteModel site, String taxonomy) {
-        TermModel newTerm = new TermModel();
-        newTerm.setLocalSiteId(site.getId());
-        newTerm.setTaxonomy(taxonomy);
-
-        // Insert the term into the db, updating the object to include the local ID
-        newTerm = TaxonomySqlUtils.insertTermForResult(newTerm);
-
-        emitChange(new OnTermInstantiated(newTerm));
     }
 
     private void pushTerm(RemoteTermPayload payload) {
