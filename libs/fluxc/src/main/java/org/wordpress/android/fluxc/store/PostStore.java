@@ -115,7 +115,7 @@ public class PostStore extends Store {
     }
 
     // OnChanged events
-    public class OnPostChanged extends OnChanged<PostError> {
+    public static class OnPostChanged extends OnChanged<PostError> {
         public int rowsAffected;
         public boolean canLoadMore;
         public PostAction causeOfChange;
@@ -130,7 +130,7 @@ public class PostStore extends Store {
         }
     }
 
-    public class OnPostUploaded extends OnChanged<PostError> {
+    public static class OnPostUploaded extends OnChanged<PostError> {
         public PostModel post;
 
         public OnPostUploaded(PostModel post) {
