@@ -149,7 +149,7 @@ public class WPLegacyMigrationUtils {
         List<SiteModel> siteList = new ArrayList<>();
         try {
             SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
-            String[] fields = new String[]{"username", "password", "url", "homeURL", "blogId", "api_blogid"};
+            String[] fields = new String[]{"username", "password", "url", "homeURL", "blogId", "api_blogid", "isAdmin"};
 
             // To exclude the jetpack sites we need to check for empty password
             String byString = String.format("dotcomFlag=0 AND NOT(dotcomFlag=0 AND password='%s')",
@@ -193,6 +193,8 @@ public class WPLegacyMigrationUtils {
                 }
 
                 siteModel.setSelfHostedSiteId(c.getLong(4));
+                siteModel.setIsSelfHostedAdmin(SqlUtils.sqlToBool(c.getInt(6)));
+
                 siteList.add(siteModel);
                 c.moveToNext();
             }
