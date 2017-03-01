@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -14,10 +15,6 @@ import org.wordpress.android.widgets.WPTextView;
 import java.util.Calendar;
 
 public class AboutActivity extends AppCompatActivity implements OnClickListener {
-    private static final String URL_TOS = "http://en.wordpress.com/tos";
-    private static final String URL_AUTOMATTIC = "http://automattic.com";
-    private static final String URL_PRIVACY_POLICY = "/privacy";
-
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -47,11 +44,11 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
         String url;
         int id = v.getId();
         if (id == R.id.about_url) {
-            url = URL_AUTOMATTIC;
+            url = Constants.URL_AUTOMATTIC;
         } else if (id == R.id.about_tos) {
-            url = URL_TOS;
+            url = Constants.URL_TOS;
         } else if (id == R.id.about_privacy) {
-            url = URL_AUTOMATTIC + URL_PRIVACY_POLICY;
+            url = Constants.URL_PRIVACY_POLICY;
         } else {
             return;
         }

@@ -1159,6 +1159,11 @@
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_recommended_blogs">Sites you may like</string>
 
+    <!-- Default tags -->
+    <string name="reader_discover_default_tag">Discover</string>
+    <string name="reader_followed_default_tag">Followed Sites</string>
+    <string name="reader_liked_default_tag">Posts I Like</string>
+
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
 
@@ -1424,11 +1429,6 @@
     <string name="site_privacy_private_desc">I would like my site to be private, visible only to users I choose</string>
     <string name="site_privacy_hidden_desc">Discourage search engines from indexing this site</string>
     <string name="site_privacy_public_desc">Allow search engines to index this site</string>
-
-    <!-- Static URLs -->
-    <string name="privacy_settings_url" translatable="false">https://en.support.wordpress.com/privacy-settings</string>
-    <string name="language_settings_url" translatable="false">https://en.support.wordpress.com/language-settings</string>
-    <string name="role_info_url" translatable="false">https://en.support.wordpress.com/user-roles/</string>
 
     <string name="date_range_start_date">Start Date</string>
     <string name="date_range_end_date">End Date</string>

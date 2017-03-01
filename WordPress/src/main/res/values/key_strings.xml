@@ -124,6 +124,8 @@
         <item>1800</item>
         <item>1900</item>
         <item>2000</item>
+        <item>2500</item>
+        <item>3000</item>
     </string-array>
 
     <!-- Preference Values -->
@@ -163,6 +165,8 @@
         <item>1800</item>
         <item>1900</item>
         <item>2000</item>
+        <item>2500</item>
+        <item>3000</item>
     </string-array>
 
     <!-- App Settings - Editor -->

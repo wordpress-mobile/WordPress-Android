@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-27 15:22:29+0000
+Translation-Revision-Date: 2017-02-15 11:05:13+0000
 Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 != 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n % 100 != 81 && n % 100 != 91);
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: is
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">Engir vefir fundust</string>
+	<string name="reader_hint_search_followed_sites">Leita í vefjum sem þú fylgir</string>
+	<string name="visual_editor_disabled">Slökkt er á sjónrænum ritli</string>
+	<string name="preference_editor_type">Skilgreina tegund ritils</string>
+	<string name="preference_editor_visual">Ritþór</string>
+	<string name="preference_editor_legacy">Eldri</string>
+	<string name="pending_draft_one_generic">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
+	<string name="pending_draft_one_month">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
+	<string name="pending_draft_one_week_2">‘%1$s’ er enn í drögum. Mundu eftir að birta hana!</string>
+	<string name="pending_draft_one_week_1">Drögin að ‘%1$s’ bíða þín - vertu viss um að birta þau!</string>
+	<string name="pending_draft_one_day_2">Vissir þú að ‘%1$s’ er enn í drögum? Birtu!</string>
+	<string name="pending_draft_one_day_1">Þú skrifaðir drög að ‘%1$s’ í gær. Ekki gleyma að birta!</string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">Jetpack viðbótin er tengd, en tölfræðieiningin er ekki virk. Hafðu samband við vefstjóra.</string>
 	<string name="jetpack_stats_module_disabled_message">Jetpack viðbótin er tengd, en tölfræðieiningin er ekki virk. Viltu virkja tölfræðina?</string>
 	<string name="jetpack_info">Jetpack upplýsingar</string>
@@ -13,8 +25,6 @@ Language: is
 	<string name="all_your_sites">Allir mínir vefir</string>
 	<string name="reader_label_visit">Heimsækja</string>
 	<string name="pending_draft_more">Þú hefur skrifað %d drög en aldrei birt þau. Ýttu til þess að skoða.</string>
-	<string name="pending_draft_one">Þú skrifaðir drög að \'%1$s\' fyrir %2$d dögum síðan en birtir aldrei.</string>
-	<string name="pending_draft_one_generic">Þú skrifaðir drög að \'%s\' en birtir aldrei.</string>
 	<string name="no_default_app_available_to_open_link">Gat ekki opnað tengilinn</string>
 	<string name="notification_pending_drafts">Láta mig vita ef drög bíða</string>
 	<string name="confirm_discard_changes">Hætta við óvistaðar breytingar?</string>
@@ -294,7 +304,6 @@ Language: is
 	<string name="editor_page_title_placeholder">Titill síðu</string>
 	<string name="editor_post_title_placeholder">Titill</string>
 	<string name="email_address">Netfang</string>
-	<string name="preference_show_visual_editor">Sýna sjónrænan ritil</string>
 	<string name="preference_editor">Ritstjóri</string>
 	<string name="dlg_sure_to_delete_comments">Eyða þessum athugasemdum endanlega?</string>
 	<string name="dlg_sure_to_delete_comment">Eyða þessari athugasemd endanlega?</string>
