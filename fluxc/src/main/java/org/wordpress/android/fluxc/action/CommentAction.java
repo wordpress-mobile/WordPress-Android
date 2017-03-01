@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
-import org.wordpress.android.fluxc.store.CommentStore.InstantiateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
@@ -43,8 +42,6 @@ public enum CommentAction implements IAction {
     LIKED_COMMENT,
 
     // Local actions
-    @Action(payloadType = InstantiateCommentPayload.class)
-    INSTANTIATE_COMMENT,
     @Action(payloadType = CommentModel.class)
     UPDATE_COMMENT,
     @Action(payloadType = SiteModel.class)
