@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="24.0"
+        android:viewportHeight="24.0">
+    <!-- @color/wp_grey_darken_20 -->
+    <path
+        android:fillColor="#ff4f748e"
+        android:pathData="M13,9.5C13,8.672 13.672,8 14.5,8S16,8.672 16,9.5S15.328,11 14.5,11S13,10.328 13,9.5zM22,6v12c0,1.105 -0.895,2 -2,2H4c-1.105,0 -2,-0.895 -2,-2V6c0,-1.105 0.895,-2 2,-2h16C21.105,4 22,4.895 22,6zM20,6H4v7.444L8,9l5.895,6.55l1.587,-1.851c0.798,-0.931 2.239,-0.931 3.037,0L20,15.427V6z"/>
+</vector>
