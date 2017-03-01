@@ -49,7 +49,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private boolean mIsAutomatedTransfer;
 
     // WPCom specifics
-    @Column private boolean mIsVisible;
+    @Column private boolean mIsVisible = true;
     @Column private boolean mIsPrivate;
     @Column private boolean mIsVideoPressSupported;
     @Column private long mPlanId;
