@@ -131,7 +131,7 @@ public class MediaStore extends Store {
         }
     }
 
-    public class OnMediaChanged extends OnChanged<MediaError> {
+    public static class OnMediaChanged extends OnChanged<MediaError> {
         public MediaAction cause;
         public List<MediaModel> mediaList;
         public OnMediaChanged(MediaAction cause) {
@@ -150,7 +150,7 @@ public class MediaStore extends Store {
         }
     }
 
-    public class OnMediaListFetched extends OnChanged<MediaError> {
+    public static class OnMediaListFetched extends OnChanged<MediaError> {
         public SiteModel site;
         public boolean canLoadMore;
         public OnMediaListFetched(SiteModel site, boolean canLoadMore) {
@@ -163,7 +163,7 @@ public class MediaStore extends Store {
         }
     }
 
-    public class OnMediaUploaded extends OnChanged<MediaError> {
+    public static class OnMediaUploaded extends OnChanged<MediaError> {
         public MediaModel media;
         public float progress;
         public boolean completed;
