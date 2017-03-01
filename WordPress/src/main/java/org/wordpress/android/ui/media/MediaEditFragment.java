@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -352,7 +353,7 @@ public class MediaEditFragment extends Fragment {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+    public void onMediaChanged(OnMediaChanged event) {
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
             Toast.makeText(getActivity(), event.isError() ? R.string.media_edit_failure : R.string.media_edit_success,
